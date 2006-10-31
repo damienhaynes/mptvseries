@@ -25,6 +25,7 @@ namespace WindowPlugins.GUITVSeries
 
         private List<Panel> m_paneList = new List<Panel>();
 
+
         public ConfigurationForm()
         {
 #if DEBUG
@@ -34,6 +35,7 @@ namespace WindowPlugins.GUITVSeries
 
             InitializeComponent();
             DBTVSeries.AttachLog(ref listBox_Log);
+            
             DBTVSeries.Log("**** Plugin started in configuration mode ***");
             InitSettingsTreeAndPanes();
 
@@ -41,12 +43,57 @@ namespace WindowPlugins.GUITVSeries
             LoadExpressions();
             LoadTree();
 
+            
+
             String sInterface = DBOnlineMirror.Interface;
 
-
+            GUITVSeries.LocalParse.worker.ProgressChanged += new ProgressChangedEventHandler(parser_ProgressChanged);
+            GUITVSeries.LocalParse.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(parser_Completed);
+            
 //             this.m_Database.Open();
 //             this.treeView_Library.Select();
 //             this.LoadTree();
+
+
+        }
+
+        void parser_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.Result;
+
+            foreach (parseResult progress in results)
+            {
+                //foreach (ListViewItem.ListViewSubItem sub in progress.item.SubItems)
+                //{
+                //    if (!listView_ParsingResults.Columns.Contains(sub.Text))
+                //    {
+                //        // add a column for that match
+                //        ColumnHeader newcolumn = new ColumnHeader();
+                //        newcolumn.Name = sub.Text;
+                //        newcolumn.Text = sub.Text;
+                //        listView_ParsingResults.Columns.Add(newcolumn);
+                //    }
+                //}
+                    if (!progress.sucess)
+                        listBox_Results.Items.Add("Parsing failed for " + progress.filename);
+                    if(progress.failedSeason || progress.failedEpisode)
+                        listBox_Results.Items.Add(progress.exception + " for " + progress.filename);
+                    listView_ParsingResults.Items.Add(progress.item);
+                    listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
+                    // only do that once in a while, it's really slow
+                }
+                this.progressBar_Parsing.Value = 100;
+                listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                
+        }
+
+        void parser_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            parseResult progress = (parseResult)e.UserState;
+
+            listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            this.progressBar_Parsing.Value = e.ProgressPercentage;
+
         }
 
         private void InitSettingsTreeAndPanes()
@@ -105,74 +152,8 @@ namespace WindowPlugins.GUITVSeries
             listBox_Results.Items.Add("Getting all files...");
             listBox_Results.Refresh();
 
-
-            String[] files = Filelister.GetFiles();
-            int nFailed = 0;
-            int nCount = 0;
-            foreach (String file in files)
-            {
-                FilenameParser parser = new FilenameParser(file);
-                ListViewItem item = new ListViewItem(file);
-                item.UseItemStyleForSubItems = true;
-
-                foreach (KeyValuePair<string, string> match in parser.Matches)
-                {
-                    if (!listView_ParsingResults.Columns.ContainsKey(match.Key))
-                    {
-                        // add a column for that match
-                        ColumnHeader newcolumn = new ColumnHeader();
-                        newcolumn.Name = match.Key;
-                        newcolumn.Text = match.Key;
-                        listView_ParsingResults.Columns.Add(newcolumn);
-                    }
-
-                    ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, match.Value);
-                    subItem.Name = match.Key;
-                    item.SubItems.Add(subItem);
-                }
-
-                // make sure we have all the necessary data for a full match
-                if (!parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) ||
-                    !parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) ||
-                    !parser.Matches.ContainsKey(DBSeries.cParsedName))
-                {
-                    item.ForeColor = System.Drawing.Color.White;
-                    item.BackColor = System.Drawing.Color.Tomato;
-                    listBox_Results.Items.Add("Parsing failed for " + file);
-                    nFailed++;
-
-                }
-                else
-                {
-                    // make sure episode & season are properly matched (numerical values)
-                    try { Convert.ToInt32(parser.Matches[DBEpisode.cSeasonIndex]); }
-                    catch (System.FormatException)
-                    {
-                        item.UseItemStyleForSubItems = false;
-                        item.SubItems[DBEpisode.cSeasonIndex].ForeColor = System.Drawing.Color.White;
-                        item.SubItems[DBEpisode.cSeasonIndex].BackColor = System.Drawing.Color.Tomato;
-                        nFailed++;
-                        listBox_Results.Items.Add("Season not numerical for " + file);
-                    }
-                    try { Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]); }
-                    catch (System.FormatException)
-                    {
-                        item.UseItemStyleForSubItems = false;
-                        item.SubItems[DBEpisode.cEpisodeIndex].ForeColor = System.Drawing.Color.White;
-                        item.SubItems[DBEpisode.cEpisodeIndex].BackColor = System.Drawing.Color.Tomato;
-                        nFailed++;
-                        listBox_Results.Items.Add("Episode not numerical for " + file);
-                    }
-                }
-
-                listView_ParsingResults.Items.Add(item);
-                listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
-                // only do that once in a while, it's really slow
-
-                if (nCount % 10 == 0)
-                    listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                nCount++;
-            }
+            GUITVSeries.LocalParse.doParse();
+            
 
             foreach (ColumnHeader header in listView_ParsingResults.Columns)
             {
@@ -182,7 +163,7 @@ namespace WindowPlugins.GUITVSeries
                     header.Width = 80;
             }
 
-            listBox_Results.Items.Add(nFailed + " failed out of " + files.Length + " parsed files.");
+            //listBox_Results.Items.Add(nFailed + " failed out of " + files.Length + " parsed files.");
         }
 
         private void LoadImportPathes()
