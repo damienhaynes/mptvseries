@@ -9,7 +9,7 @@ namespace WindowPlugins.GUITVSeries
     {
         List<DBSeries> m_SeriesList = new List<DBSeries>();
         int m_nCurrentSeriesIndex = -1;
-        public delegate void GetSeriesEpisodesCompletedHandler(object sender);
+        public delegate void GetSeriesEpisodesCompletedHandler();
 
         /// <summary>
         /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
@@ -22,8 +22,10 @@ namespace WindowPlugins.GUITVSeries
             MatchSeries_Next();
         }
 
+
         private void MatchSeries_Next()
         {
+            
             if (m_nCurrentSeriesIndex == -1)
             {
                 SQLCondition condition = new SQLCondition(new DBSeries());
@@ -90,8 +92,11 @@ namespace WindowPlugins.GUITVSeries
             m_nCurrentSeriesIndex = 0;
 
             // blabla do your work and then
-            
-            this.GetSeriesEpisodesCompleted.Invoke(this);
+
+            if (GetSeriesEpisodesCompleted != null) // only if any subscribers exist
+            {
+                this.GetSeriesEpisodesCompleted.Invoke();
+            }
         }
     }
 }

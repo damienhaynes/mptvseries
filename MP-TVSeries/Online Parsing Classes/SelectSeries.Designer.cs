@@ -74,6 +74,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnOK.TabIndex = 3;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCnl
             // 
@@ -99,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listItems);
             this.Name = "SelectSeries";
-            this.Text = "SelectSeries";
+            this.Text = "Unable to automatically determine correct series";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -48,5 +48,10 @@ namespace WindowPlugins.GUITVSeries
         {
             cancelled = true;
         }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
