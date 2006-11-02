@@ -55,7 +55,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // create table if it doesn't exist already
             SQLCondition condition = new SQLCondition(new DBSeason());
-            condition.Add(cSeriesName, sSeriesName);
+            condition.Add(cSeriesName, sSeriesName, true);
             String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cIndex;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();

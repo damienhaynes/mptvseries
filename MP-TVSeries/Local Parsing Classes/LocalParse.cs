@@ -8,18 +8,17 @@ namespace WindowPlugins.GUITVSeries
 {
     public class LocalParse
     {
-        public static BackgroundWorker worker = new BackgroundWorker();
+        public BackgroundWorker worker = new BackgroundWorker();
 
-        static LocalParse()
+        public LocalParse()
         {
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
-
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
         }
 
 
-        static void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             String[] files = Filelister.GetFiles();
             List<parseResult> results = new List<parseResult>();
@@ -46,7 +45,7 @@ namespace WindowPlugins.GUITVSeries
                     !parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) ||
                     !parser.Matches.ContainsKey(DBSeries.cParsedName))
                 {
-                    progressReporter.sucess = false;
+                    progressReporter.success = false;
                     progressReporter.exception = "Parsing failed for " + file;
                     item.ForeColor = System.Drawing.Color.White;
                     item.BackColor = System.Drawing.Color.Tomato;
@@ -84,27 +83,28 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.filename = file;
                 progressReporter.item = item;
                 progressReporter.parser = parser;
-                
-                if(nCount++ % 50 == 0)
-                    worker.ReportProgress(Convert.ToInt32(100.0 / files.Length * nCount), null);
                 results.Add(progressReporter);
+
+                if (nCount++ % 50 == 0)
+                {
+                    worker.ReportProgress(Convert.ToInt32(100.0 / files.Length * nCount), results);
+                    results = new List<parseResult>();
+                }
                 
                 //nCount++;
             }
             e.Result = results;
         }
 
-        public static void doParse()
+        public void DoParse()
         {
             worker.RunWorkerAsync();
         }
-
-
     }
 
     public class parseResult
     {
-        public bool sucess = true;
+        public bool success = true;
         public bool failedSeason = false;
         public bool failedEpisode = false;
         public ListViewItem item;

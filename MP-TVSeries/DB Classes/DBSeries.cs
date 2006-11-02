@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -14,10 +15,31 @@ namespace WindowPlugins.GUITVSeries
         public const String cID = "ID";
         public const String cPrettyName = "Pretty_Name";
         public const String cStatus = "Status";
-        public const String cFirstAired = "First_Aired";
         public const String cGenre = "Genre";
-        public const String cBannerFileName = "BannerFileName";
         public const String cSummary = "Summary";
+        public const String cBannerFileName = "BannerFileName";
+
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+        public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+
+        static DBSeries()
+        {
+            s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
+            s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
+            s_FieldToDisplayNameMap.Add(cPrettyName, "Pretty Name");
+            s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
+            s_FieldToDisplayNameMap.Add(cGenre, "Genre");
+            s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");
+
+            s_OnlineToFieldMap.Add("id", cID);
+            s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
+            s_OnlineToFieldMap.Add("Status", cStatus);
+            s_OnlineToFieldMap.Add("Genre", cGenre);
+            s_OnlineToFieldMap.Add("Overview", cSummary);
+
+            // make sure the table is created on first run
+            DBSeries dummy = new DBSeries();
+        }
 
         public DBSeries()
             : base(cTableName)
@@ -41,7 +63,6 @@ namespace WindowPlugins.GUITVSeries
             this[cID] = 0;
             this[cPrettyName] = String.Empty;
             this[cStatus] = String.Empty;
-            this[cFirstAired] = String.Empty;
             this[cGenre] = String.Empty;
             this[cBannerFileName] = String.Empty;
             this[cSummary] = String.Empty;
@@ -54,10 +75,17 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cID, new DBField(DBField.cTypeInt));
             AddColumn(cPrettyName, new DBField(DBField.cTypeString));
             AddColumn(cStatus, new DBField(DBField.cTypeString));
-            AddColumn(cFirstAired, new DBField(DBField.cTypeString));
             AddColumn(cGenre, new DBField(DBField.cTypeString));
             AddColumn(cBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cSummary, new DBField(DBField.cTypeString));
+        }
+
+        public String Label(String fieldName)
+        {
+            if (s_FieldToDisplayNameMap.ContainsKey(fieldName))
+                return s_FieldToDisplayNameMap[fieldName];
+            else
+                return fieldName;
         }
 
         // function override to search on both this & the onlineEpisode
@@ -90,9 +118,14 @@ namespace WindowPlugins.GUITVSeries
             return Get(sqlQuery);
         }
 
-        public static List<DBSeries> Get(String sqlQuery)
+        public static List<DBSeries> Get(SQLCondition condition)
         {
-            DBSeries dummy = new DBSeries();
+            String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cParsedName;
+            return Get(sqlQuery);
+        }
+
+        private static List<DBSeries> Get(String sqlQuery)
+        {
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeries> outList = new List<DBSeries>();
             if (results.Rows.Count > 0)

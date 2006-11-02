@@ -10,7 +10,8 @@ namespace WindowPlugins.GUITVSeries
     {
         public static bool bTableUpdateDone = false;
 
-        public static String sDBVersion = "DBVersion";
+        public const String cDBVersion = "DBVersion";
+        public const String cOnlineParseEnabled = "OnlineParseEnabled";
 
         private static void UpdateTable()
         {
@@ -39,7 +40,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static bool SetOptions(String property, String value)
+        public static bool SetOptions(String property, DBValue value)
         {
             try
             {
@@ -51,9 +52,9 @@ namespace WindowPlugins.GUITVSeries
                 DatabaseUtility.RemoveInvalidChars(ref convertedvalue);
                 String sqlQuery;
                 if (GetOptions(convertedProperty) == null)
-                    sqlQuery = "insert into options (option_id, name, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
+                    sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
                 else
-                    sqlQuery = "update options set value = '" + value + "' where name = '" + convertedProperty + "'";
+                    sqlQuery = "update options set value = '" + value + "' where property = '" + convertedProperty + "'";
                 DBTVSeries.Execute(sqlQuery);
                 return true;
             }
@@ -64,7 +65,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static String GetOptions(String property)
+        public static DBValue GetOptions(String property)
         {
             try
             {
@@ -72,7 +73,7 @@ namespace WindowPlugins.GUITVSeries
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
 
-                string sqlQuery = "select value from options where name = '" + convertedProperty + "'";
+                string sqlQuery = "select value from options where property = '" + convertedProperty + "'";
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (results.Rows.Count > 0)
                     return DatabaseUtility.Get(results, 0, "value");

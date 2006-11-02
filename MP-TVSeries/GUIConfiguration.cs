@@ -21,8 +21,6 @@ namespace WindowPlugins.GUITVSeries
         private const String sNodeExpressions = "import_pathes";
         private const String sNodeTest = "import_pathes";
 
-        private bool m_PropertySaveRequired = false;
-
         private List<Panel> m_paneList = new List<Panel>();
 
 
@@ -37,65 +35,14 @@ namespace WindowPlugins.GUITVSeries
             DBTVSeries.AttachLog(ref listBox_Log);
             
             DBTVSeries.Log("**** Plugin started in configuration mode ***");
-            InitSettingsTreeAndPanes();
 
+            InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
             LoadTree();
-
-            
-
-            String sInterface = DBOnlineMirror.Interface;
-
-            GUITVSeries.LocalParse.worker.ProgressChanged += new ProgressChangedEventHandler(parser_ProgressChanged);
-            GUITVSeries.LocalParse.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(parser_Completed);
-            
-//             this.m_Database.Open();
-//             this.treeView_Library.Select();
-//             this.LoadTree();
-
-
         }
 
-        void parser_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {
-            List<parseResult> results = (List<parseResult>)e.Result;
-
-            foreach (parseResult progress in results)
-            {
-                //foreach (ListViewItem.ListViewSubItem sub in progress.item.SubItems)
-                //{
-                //    if (!listView_ParsingResults.Columns.Contains(sub.Text))
-                //    {
-                //        // add a column for that match
-                //        ColumnHeader newcolumn = new ColumnHeader();
-                //        newcolumn.Name = sub.Text;
-                //        newcolumn.Text = sub.Text;
-                //        listView_ParsingResults.Columns.Add(newcolumn);
-                //    }
-                //}
-                    if (!progress.sucess)
-                        listBox_Results.Items.Add("Parsing failed for " + progress.filename);
-                    if(progress.failedSeason || progress.failedEpisode)
-                        listBox_Results.Items.Add(progress.exception + " for " + progress.filename);
-                    listView_ParsingResults.Items.Add(progress.item);
-                    listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
-                    // only do that once in a while, it's really slow
-                }
-                this.progressBar_Parsing.Value = 100;
-                listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                
-        }
-
-        void parser_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            parseResult progress = (parseResult)e.UserState;
-
-            listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.progressBar_Parsing.Value = e.ProgressPercentage;
-
-        }
-
+        #region Init
         private void InitSettingsTreeAndPanes()
         {
             m_paneList.Add(panel_ImportPathes);
@@ -113,57 +60,6 @@ namespace WindowPlugins.GUITVSeries
             }
 
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
-        }
-
-        public void StartParsingTest(bool bForceRefresh)
-        {
-            if (!bForceRefresh && listView_ParsingResults.Items.Count > 0)
-                return;
-
-            listView_ParsingResults.Items.Clear();
-            listView_ParsingResults.Columns.Clear();
-            // add mandatory columns
-            ColumnHeader columnFileName = new ColumnHeader();
-            columnFileName.Name = "FileName";
-            columnFileName.Text = "FileName";
-            listView_ParsingResults.Columns.Add(columnFileName);
-
-            ColumnHeader columnSeriesName = new ColumnHeader();
-            columnSeriesName.Name = DBSeries.cParsedName;
-            columnSeriesName.Text = "Parsed Series Name";
-            listView_ParsingResults.Columns.Add(columnSeriesName);
-
-            ColumnHeader columnSeasonNumber = new ColumnHeader();
-            columnSeasonNumber.Name = DBEpisode.cSeasonIndex;
-            columnSeasonNumber.Text = "Season ID";
-            listView_ParsingResults.Columns.Add(columnSeasonNumber);
-
-            ColumnHeader columnEpisodeNumber = new ColumnHeader();
-            columnEpisodeNumber.Name = DBEpisode.cEpisodeIndex;
-            columnEpisodeNumber.Text = "Episode ID";
-            listView_ParsingResults.Columns.Add(columnEpisodeNumber);
-
-            ColumnHeader columnEpisodeTitle = new ColumnHeader();
-            columnEpisodeTitle.Name = DBEpisode.cEpisodeName;
-            columnEpisodeTitle.Text = "Episode Title";
-            listView_ParsingResults.Columns.Add(columnEpisodeTitle);
-
-            listBox_Results.Items.Clear();
-            listBox_Results.Items.Add("Getting all files...");
-            listBox_Results.Refresh();
-
-            GUITVSeries.LocalParse.doParse();
-            
-
-            foreach (ColumnHeader header in listView_ParsingResults.Columns)
-            {
-                header.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                header.Width += 10;
-                if (header.Width < 80)
-                    header.Width = 80;
-            }
-
-            //listBox_Results.Items.Add(nFailed + " failed out of " + files.Length + " parsed files.");
         }
 
         private void LoadImportPathes()
@@ -197,6 +93,139 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void LoadExpressions()
+        {
+            DBExpression[] expressions = DBExpression.GetAll();
+            if (expressions == null || expressions.Length == 0)
+            {
+                // no expressions in the db => put the default ones
+                DBExpression expression = new DBExpression();
+                expression[DBExpression.cIndex] = "0";
+                expression[DBExpression.cEnabled] = "1";
+                expression[DBExpression.cType] = DBExpression.cType_Simple;
+                expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>";
+                expression.Commit();
+
+                expression[DBExpression.cIndex] = "1";
+                expression[DBExpression.cExpression] = @"\<series>\Season <season>\Episode <episode> - <title>";
+                expression.Commit();
+
+                expression[DBExpression.cType] = DBExpression.cType_Regexp;
+                expression[DBExpression.cIndex] = "2";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)";
+                expression.Commit();
+
+                expression[DBExpression.cIndex] = "3";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)";
+                expression.Commit();
+
+                expression[DBExpression.cIndex] = "4";
+                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
+                expression.Commit();
+
+                // refresh
+                expressions = DBExpression.GetAll();
+            }
+
+            // load them up in the datagrid
+
+            //             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
+            //             {
+            //                 if (field.Key != DBExpression.cIndex)
+            //                 {
+            //                     DataGridViewCheckBoxColumn column = new DataGridBoolColumn();
+            //                     column.Name = field.Key;
+            //                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //                     dataGridView_Expressions.Columns.Add(column);
+            //                 }
+            //             }
+
+            if (dataGridView_Expressions.Columns.Count == 0)
+            {
+                DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
+                columnEnabled.Name = DBExpression.cEnabled;
+                columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Expressions.Columns.Add(columnEnabled);
+
+                DataGridViewComboBoxColumn columnType = new DataGridViewComboBoxColumn();
+                columnType.Name = DBExpression.cType;
+                columnType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                DataGridViewComboBoxCell comboCellTemplate = new DataGridViewComboBoxCell();
+                comboCellTemplate.Items.Add(DBExpression.cType_Simple);
+                comboCellTemplate.Items.Add(DBExpression.cType_Regexp);
+                columnType.CellTemplate = comboCellTemplate;
+                dataGridView_Expressions.Columns.Add(columnType);
+
+                DataGridViewTextBoxColumn columnExpression = new DataGridViewTextBoxColumn();
+                columnExpression.Name = DBExpression.cExpression;
+                columnExpression.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView_Expressions.Columns.Add(columnExpression);
+            }
+            dataGridView_Expressions.Rows.Clear();
+            dataGridView_Expressions.Rows.Add(expressions.Length);
+
+            foreach (DBExpression expression in expressions)
+            {
+                DataGridViewRow row = dataGridView_Expressions.Rows[expression[DBExpression.cIndex]];
+                row.Cells[DBExpression.cEnabled].Value = (Boolean)expression[DBExpression.cEnabled];
+                DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
+                comboCell.Items.Add(DBExpression.cType_Simple);
+                comboCell.Items.Add(DBExpression.cType_Regexp);
+                comboCell.Value = (String)expression[DBExpression.cType];
+                row.Cells[DBExpression.cType] = comboCell;
+                row.Cells[DBExpression.cExpression].Value = (String)expression[DBExpression.cExpression];
+            }
+        }
+
+        private void LoadTree()
+        {
+            TreeView root = this.treeView_Library;
+            root.Nodes.Clear();
+
+            List<DBSeries> seriesList = DBSeries.Get();
+            if (seriesList.Count == 0)
+            {
+                return;
+            }
+
+            foreach (DBSeries series in seriesList)
+            {
+                TreeNode seriesNode = new TreeNode(series[DBSeries.cPrettyName]);
+                seriesNode.Name = DBSeries.cTableName;
+                seriesNode.Tag = (DBSeries)series;
+                seriesNode.Expand();
+                root.Nodes.Add(seriesNode);
+
+                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cParsedName].ToString());
+                foreach (DBSeason season in seasonsList)
+                {
+                    TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
+                    seasonNode.Name = DBSeason.cTableName;
+                    seasonNode.Tag = (DBSeason)season;
+                    seriesNode.Nodes.Add(seasonNode);
+
+
+                    List<DBEpisode> episodesList = DBEpisode.Get((String)series[DBSeries.cParsedName], (int)season[DBSeason.cIndex], false);
+
+                    foreach (DBEpisode episode in episodesList)
+                    {
+                        String sEpisodeName = (String)episode[DBEpisode.cEpisodeName];
+                        TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
+                        episodeNode.Name = DBEpisode.cTableName;
+                        episodeNode.Tag = (DBEpisode)episode;
+                        //                         if (!System.IO.File.Exists(episode))
+                        //                         {
+                        //                             episodeNode.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+                        //                         }
+
+                        seasonNode.Nodes.Add(episodeNode);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Import Handling
         private void dataGridView_ImportPathes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             DBImportPath importPath = new DBImportPath();
@@ -252,94 +281,9 @@ namespace WindowPlugins.GUITVSeries
         {
             SaveAllImportPathes();
         }
+        #endregion
 
-
-
-        private void LoadExpressions()
-        {
-            DBExpression[] expressions = DBExpression.GetAll();
-            if (expressions == null || expressions.Length == 0)
-            {
-                // no expressions in the db => put the default ones
-                DBExpression expression = new DBExpression();
-                expression[DBExpression.cIndex] = "0";
-                expression[DBExpression.cEnabled] = "1";
-                expression[DBExpression.cType] = DBExpression.cType_Simple;
-                expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "1";
-                expression[DBExpression.cExpression] = @"\<series>\Season <season>\Episode <episode> - <title>";
-                expression.Commit();
-
-                expression[DBExpression.cType] = DBExpression.cType_Regexp;
-                expression[DBExpression.cIndex] = "2";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "3";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "4";
-                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
-                expression.Commit();
-                
-                // refresh
-                expressions = DBExpression.GetAll();
-            }
-            
-            // load them up in the datagrid
-
-//             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
-//             {
-//                 if (field.Key != DBExpression.cIndex)
-//                 {
-//                     DataGridViewCheckBoxColumn column = new DataGridBoolColumn();
-//                     column.Name = field.Key;
-//                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-//                     dataGridView_Expressions.Columns.Add(column);
-//                 }
-//             }
-
-            if (dataGridView_Expressions.Columns.Count == 0)
-            {
-                DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
-                columnEnabled.Name = DBExpression.cEnabled;
-                columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader; 
-                dataGridView_Expressions.Columns.Add(columnEnabled);
-
-                DataGridViewComboBoxColumn columnType = new DataGridViewComboBoxColumn();
-                columnType.Name = DBExpression.cType;
-                columnType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                DataGridViewComboBoxCell comboCellTemplate = new DataGridViewComboBoxCell();
-                comboCellTemplate.Items.Add(DBExpression.cType_Simple);
-                comboCellTemplate.Items.Add(DBExpression.cType_Regexp);
-                columnType.CellTemplate = comboCellTemplate;
-                dataGridView_Expressions.Columns.Add(columnType);
-
-                DataGridViewTextBoxColumn columnExpression = new DataGridViewTextBoxColumn();
-                columnExpression.Name = DBExpression.cExpression;
-                columnExpression.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dataGridView_Expressions.Columns.Add(columnExpression);
-            }
-            dataGridView_Expressions.Rows.Clear();
-            dataGridView_Expressions.Rows.Add(expressions.Length);
-
-            foreach (DBExpression expression in expressions) 
-            {
-                DataGridViewRow row = dataGridView_Expressions.Rows[expression[DBExpression.cIndex]];
-                row.Cells[DBExpression.cEnabled].Value = (Boolean)expression[DBExpression.cEnabled];
-                DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
-                comboCell.Items.Add(DBExpression.cType_Simple);
-                comboCell.Items.Add(DBExpression.cType_Regexp);
-                comboCell.Value = (String)expression[DBExpression.cType];
-                row.Cells[DBExpression.cType] = comboCell;
-                row.Cells[DBExpression.cExpression].Value = (String)expression[DBExpression.cExpression];
-            }
-
-        }
-
+        #region Expressions Handling
         private void dataGridView_Expressions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             DBExpression expression = new DBExpression();
@@ -411,85 +355,107 @@ namespace WindowPlugins.GUITVSeries
                 dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
             }
         }
+        #endregion
 
-        private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
+        #region Test Parsing Handling
+        void TestParsing_FillList(List<parseResult> results)
         {
-            foreach (Panel pane in m_paneList)
+            foreach (parseResult progress in results)
             {
-                if (pane.Name == e.Node.Name)
+                foreach (KeyValuePair<String, String> MatchPair in progress.parser.Matches)
                 {
-                    pane.Visible = true;
+                    if (!listView_ParsingResults.Columns.ContainsKey(MatchPair.Key))
+                    {
+                        // add a column for that match
+                        ColumnHeader newcolumn = new ColumnHeader();
+                        newcolumn.Name = MatchPair.Key;
+                        newcolumn.Text = MatchPair.Key;
+                        listView_ParsingResults.Columns.Add(newcolumn);
+                    }
                 }
-                else
-                    pane.Visible = false;
+                if (!progress.success)
+                    listBox_Results.Items.Add("Parsing failed for " + progress.filename);
+                if (progress.failedSeason || progress.failedEpisode)
+                    listBox_Results.Items.Add(progress.exception + " for " + progress.filename);
+                listView_ParsingResults.Items.Add(progress.item);
+                listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
+                // only do that once in a while, it's really slow
             }
+            listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
-            // special behavior for some nodes
-            if (e.Node.Name == panel_ParsingTest.Name)
-                StartParsingTest(false);
+            foreach (ColumnHeader header in listView_ParsingResults.Columns)
+            {
+                header.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                header.Width += 10;
+                if (header.Width < 80)
+                    header.Width = 80;
+            }
         }
 
-
-        private void LocalParse()
+        void TestParsing_LocalParseCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
-            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
-            
-            // retrieve all local files, and import
-            String[] files = Filelister.GetFiles();
-            foreach (String file in files)
-            {
-                FilenameParser parser = new FilenameParser(file);
+            List<parseResult> results = (List<parseResult>)e.Result;
+            TestParsing_FillList(results);
+            this.progressBar_Parsing.Value = 100;
+        }
 
-                // make sure we have all the necessary data for a full match
-                if (parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) &&
-                    parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) &&
-                    parser.Matches.ContainsKey(DBSeries.cParsedName))
-                {
-                    // make sure episode & season are properly matched (numerical values)
-                    int nSeason = 0;
-                    int nEpisode = 0;
-                    bool bProperFormat = true;
-                    try 
-                    {
-                        nEpisode = Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]);
-                        nSeason = Convert.ToInt32(parser.Matches[DBEpisode.cSeasonIndex]); 
-                    }
-                    catch (System.FormatException)
-                    {
-                        bProperFormat = false;
-                    }
-                    if (bProperFormat)
-                    {
-                        // ok, we are sure it's valid now
-                        // series first
-                        DBSeries series = new DBSeries(parser.Matches[DBSeries.cParsedName]);
-                        // not much to do here except commiting the series
-                        series.Commit();
+        void TestParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.UserState;
+            this.progressBar_Parsing.Value = e.ProgressPercentage;
+            TestParsing_FillList(results);
+        }
 
-                        // season now
-                        DBSeason season = new DBSeason(parser.Matches[DBSeries.cParsedName], nSeason);
-                        season.Commit();
+        void TestParsing_Start(bool bForceRefresh)
+        {
+            if (!bForceRefresh && listView_ParsingResults.Items.Count > 0)
+                return;
 
-                        // then episode
-                        DBEpisode episode = new DBEpisode(file);
-                        bool bNewFile = false;
-                        if (episode[DBEpisode.cImportProcessed] != 2)
-                        {
-                            bNewFile = true;
-                        }
-                        episode[DBEpisode.cImportProcessed] = 1;
+            listView_ParsingResults.Items.Clear();
+            listView_ParsingResults.Columns.Clear();
+            // add mandatory columns
+            ColumnHeader columnFileName = new ColumnHeader();
+            columnFileName.Name = "FileName";
+            columnFileName.Text = "FileName";
+            listView_ParsingResults.Columns.Add(columnFileName);
 
-                        foreach (KeyValuePair<string, string> match in parser.Matches)
-                        {
-                            episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
-                            if (bNewFile || episode[match.Key].ToString() != match.Value)
-                                episode[match.Key] = match.Value;
-                        }
-                        episode.Commit();
-                    }
-                }
-            }
+            ColumnHeader columnSeriesName = new ColumnHeader();
+            columnSeriesName.Name = DBSeries.cParsedName;
+            columnSeriesName.Text = "Parsed Series Name";
+            listView_ParsingResults.Columns.Add(columnSeriesName);
+
+            ColumnHeader columnSeasonNumber = new ColumnHeader();
+            columnSeasonNumber.Name = DBEpisode.cSeasonIndex;
+            columnSeasonNumber.Text = "Season ID";
+            listView_ParsingResults.Columns.Add(columnSeasonNumber);
+
+            ColumnHeader columnEpisodeNumber = new ColumnHeader();
+            columnEpisodeNumber.Name = DBEpisode.cEpisodeIndex;
+            columnEpisodeNumber.Text = "Episode ID";
+            listView_ParsingResults.Columns.Add(columnEpisodeNumber);
+
+            ColumnHeader columnEpisodeTitle = new ColumnHeader();
+            columnEpisodeTitle.Name = DBEpisode.cEpisodeName;
+            columnEpisodeTitle.Text = "Episode Title";
+            listView_ParsingResults.Columns.Add(columnEpisodeTitle);
+
+            listBox_Results.Items.Clear();
+            listBox_Results.Items.Add("Getting all files...");
+            listBox_Results.Refresh();
+
+            LocalParse runner = new LocalParse();
+            runner.worker.ProgressChanged += new ProgressChangedEventHandler(TestParsing_LocalParseProgress);
+            runner.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(TestParsing_LocalParseCompleted);
+            runner.DoParse();
+        }
+        #endregion
+
+        #region Local Parsing
+        void LocalParsing_LocalParseCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.Result;
+            this.progressBar_Parsing.Value = 100;
+            LocalParsing_ProcessResults(results);
 
             // now, remove all episodes still processed = 0, the weren't find in the scan
             DBEpisode.Clear(DBEpisode.cImportProcessed, 2);
@@ -498,65 +464,77 @@ namespace WindowPlugins.GUITVSeries
             LoadTree();
         }
 
-        private void OnlineParse()
+        void LocalParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
         {
-
+            List<parseResult> results = (List<parseResult>)e.UserState;
+            this.progressBar_Parsing.Value = e.ProgressPercentage;
+            LocalParsing_ProcessResults(results);
         }
 
-
-        private void LoadTree()
+        void LocalParsing_ProcessResults(List<parseResult> results)
         {
-            TreeView root = this.treeView_Library;
-            root.Nodes.Clear();
-
-            List<DBSeries> seriesList = DBSeries.Get();
-            if (seriesList.Count == 0)
+            foreach (parseResult progress in results)
             {
-                return;
-            }
-
-            foreach (DBSeries series in seriesList)
-            {
-                TreeNode seriesNode = new TreeNode(series[DBSeries.cPrettyName]);
-                seriesNode.Name = DBSeries.cTableName;
-                seriesNode.Tag = (DBSeries)series;
-                seriesNode.Expand();
-                root.Nodes.Add(seriesNode);
-
-                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cParsedName].ToString());
-                foreach (DBSeason season in seasonsList)
+                if (progress.success)
                 {
-                    TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
-                    seasonNode.Name = DBSeason.cTableName;
-                    seasonNode.Tag = (DBSeason)season;
-                    seriesNode.Nodes.Add(seasonNode);
+                    int nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
+                    int nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
 
+                    // ok, we are sure it's valid now
+                    // series first
+                    DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
+                    // not much to do here except commiting the series
+                    series.Commit();
 
-                    List<DBEpisode> episodesList = DBEpisode.Get((String)series[DBSeries.cParsedName], (int)season[DBSeason.cIndex], false);
+                    // season now
+                    DBSeason season = new DBSeason(progress.parser.Matches[DBSeries.cParsedName], nSeason);
+                    season.Commit();
 
-                    foreach (DBEpisode episode in episodesList)
+                    // then episode
+                    DBEpisode episode = new DBEpisode(progress.filename);
+                    bool bNewFile = false;
+                    if (episode[DBEpisode.cImportProcessed] != 2)
                     {
-                        String sEpisodeName = (String)episode[DBEpisode.cEpisodeName];
-                        TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
-                        episodeNode.Name = DBEpisode.cTableName;
-                        episodeNode.Tag = (DBEpisode)episode;
-//                         if (!System.IO.File.Exists(episode))
-//                         {
-//                             episodeNode.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
-//                         }
-
-                        seasonNode.Nodes.Add(episodeNode);
+                        bNewFile = true;
                     }
+                    episode[DBEpisode.cImportProcessed] = 1;
+
+                    foreach (KeyValuePair<string, string> match in progress.parser.Matches)
+                    {
+                        episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
+                        if (bNewFile || episode[match.Key].ToString() != match.Value)
+                            episode[match.Key] = match.Value;
+                    }
+                    episode.Commit();
                 }
             }
         }
 
+        private void LocalParsing_Start()
+        {
+            // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
+            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
+
+            LocalParse runner = new LocalParse();
+            runner.worker.ProgressChanged += new ProgressChangedEventHandler(LocalParsing_LocalParseProgress);
+            runner.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(LocalParsing_LocalParseCompleted);
+            runner.DoParse();
+        }
+        #endregion Handling
+
+
+        private void OnlineParsing_Start()
+        {
+            OnlineParse runner = new OnlineParse();
+            runner.Start();
+        }
+        
+        #region Series treeview handling
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //////////////////////////////////////////////////////////////////////////////
             #region Clears all fields so new data can be entered
 
-            this.m_PropertySaveRequired = false;
             this.detailsPropertyBindingSource.Clear();
             try
             {
@@ -688,12 +666,6 @@ namespace WindowPlugins.GUITVSeries
             */
         }
 
-
-        private void button_Start_Click(object sender, EventArgs e)
-        {
-            LocalParse();
-        }
-
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             TreeNode node = treeView_Library.SelectedNode;
@@ -723,20 +695,46 @@ namespace WindowPlugins.GUITVSeries
                     break;
             }
         }
+        #endregion
+
+        #region UI actions
+
+        private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            foreach (Panel pane in m_paneList)
+            {
+                if (pane.Name == e.Node.Name)
+                {
+                    pane.Visible = true;
+                }
+                else
+                    pane.Visible = false;
+            }
+
+            // special behavior for some nodes
+            if (e.Node.Name == panel_ParsingTest.Name)
+                TestParsing_Start(false);
+        }
+
+        private void button_Start_Click(object sender, EventArgs e)
+        {
+            LocalParsing_Start();
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+            {
+                OnlineParsing_Start();
+            }
+        }
 
         private void button_TestReparse_Click(object sender, EventArgs e)
         {
-            StartParsingTest(true);
+            TestParsing_Start(true);
         }
+        #endregion
 
-
-
-
-
-
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        private void checkBox_OnlineSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cOnlineParseEnabled, checkBox_OnlineSearch.Checked);
+        }
     }
 
     public class DetailsProperty

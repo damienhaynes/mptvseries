@@ -194,7 +194,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
                 SQLCondition conditions = new SQLCondition(new DBEpisode());
-                conditions.Add(cSeriesParsedName, sSeriesName);
+                conditions.Add(cSeriesParsedName, sSeriesName, true);
                 sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cSeasonIndex) + "," + Q(cEpisodeIndex);
             }
             else
@@ -202,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
-                conditions.Add(cSeriesParsedName, sSeriesName);
+                conditions.Add(cSeriesParsedName, sSeriesName, true);
                 // stupid trick for how MP handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
                 sqlQuery = "select " + what + " left join " + cTableName + " on " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cSeasonIndex) + "," + DBOnlineEpisode.Q(cEpisodeIndex);
             }
@@ -232,8 +232,8 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
                 SQLCondition conditions = new SQLCondition(new DBEpisode());
-                conditions.Add(cSeriesParsedName, sSeriesName);
-                conditions.Add(cSeasonIndex, nSeasonIndex);
+                conditions.Add(cSeriesParsedName, sSeriesName, true);
+                conditions.Add(cSeasonIndex, nSeasonIndex, true);
                 sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cEpisodeIndex);
             }
             else
@@ -241,8 +241,8 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
-                conditions.Add(cSeriesParsedName, sSeriesName);
-                conditions.Add(cSeasonIndex, nSeasonIndex);
+                conditions.Add(cSeriesParsedName, sSeriesName, true);
+                conditions.Add(cSeasonIndex, nSeasonIndex, true);
                 // stupid trick for how MP handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
                 sqlQuery = "select " + what + " left join " + cTableName + " on " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
             }

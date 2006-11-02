@@ -17,6 +17,17 @@ namespace WindowPlugins.GUITVSeries
 
         private static String s_sCurrentInterface = String.Empty;
         private static String s_sCurrentBanner = String.Empty;
+        private static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+
+        static DBOnlineMirror()
+        {
+            s_OnlineToFieldMap.Add("id", cID);
+            s_OnlineToFieldMap.Add("interface", cInterface);
+            s_OnlineToFieldMap.Add("banners", cBanners);
+
+            // make sure the table is created on first run
+            DBOnlineMirror dummy = new DBOnlineMirror();
+        }
 
         private DBOnlineMirror()
             : base(cTableName)
@@ -83,28 +94,19 @@ namespace WindowPlugins.GUITVSeries
             {
                 // create a new OnlineMirror object
                 DBOnlineMirror mirror = new DBOnlineMirror();
+
                 foreach (XmlNode propertyNode in itemNode.ChildNodes)
                 {
-                    // map known fields
-                    switch (propertyNode.Name)
+                    if (s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                        mirror[s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                    else
                     {
-                        case "id":
-                            mirror[cID] = propertyNode.InnerText;
-                            break;
-
-                        case "interface":
-                            mirror[cInterface] = propertyNode.InnerText;
-                            break;
-
-                        case "banners":
-                            mirror[cBanners] = propertyNode.InnerText;
-                            break;
-
-                        default:
-                            // no need to add anything here;
-                            break;
+                        // we don't know that field, add it to the series table
+                        mirror.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                        mirror[propertyNode.Name] = propertyNode.InnerText;
                     }
                 }
+
                 mirror.Commit();
             }
             return true;
@@ -139,7 +141,6 @@ namespace WindowPlugins.GUITVSeries
 
         private static List<DBOnlineMirror> Get()
         {
-            DBOnlineMirror dummy = new DBOnlineMirror();
             String sqlQuery = "select * from " + cTableName + " order by " + cID;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBOnlineMirror> outList = new List<DBOnlineMirror>();

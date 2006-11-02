@@ -226,6 +226,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OnlineSearch.TabIndex = 5;
             this.checkBox_OnlineSearch.Text = "Enable Online Database data retrieval";
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
+            this.checkBox_OnlineSearch.CheckedChanged += new System.EventHandler(this.checkBox_OnlineSearch_CheckedChanged);
             // 
             // checkBox1
             // 

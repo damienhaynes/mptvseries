@@ -284,7 +284,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_fields[PrimaryKey()].Value = Value;
                 SQLCondition condition = new SQLCondition(this);
-                condition.Add(PrimaryKey(), m_fields[PrimaryKey()].Value);
+                condition.Add(PrimaryKey(), m_fields[PrimaryKey()].Value, true);
                 String sqlQuery = "select * from " + m_tableName + " where " + condition;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                 return Read(ref records, 0);
@@ -447,7 +447,7 @@ namespace WindowPlugins.GUITVSeries
             m_table = table;
         }
 
-        public void Add(String sField, DBValue value)
+        public void Add(String sField, DBValue value, bool bEqual)
         {
             if (m_sConditions != String.Empty)
                 m_sConditions += " and ";
@@ -458,11 +458,11 @@ namespace WindowPlugins.GUITVSeries
                 switch (m_table.m_fields[sField].Type)
                 {
                     case DBField.cTypeInt:
-                        m_sConditions += m_table.m_tableName+ "." + sField + " = " + value;
+                        m_sConditions += m_table.m_tableName+ "." + sField + (bEqual?" = ":" != ") + value;
                         break;
 
                     case DBField.cTypeString:
-                        m_sConditions += m_table.m_tableName + "." + sField + " = '" + ((String)value).Replace("'", "''") + "'";
+                        m_sConditions += m_table.m_tableName + "." + sField + (bEqual ? " = '" : " != '") + ((String)value).Replace("'", "''") + "'";
                         break;
                 }
             }
