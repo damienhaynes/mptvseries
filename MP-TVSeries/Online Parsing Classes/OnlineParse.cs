@@ -9,6 +9,12 @@ namespace WindowPlugins.GUITVSeries
     {
         List<DBSeries> m_SeriesList = new List<DBSeries>();
         int m_nCurrentSeriesIndex = -1;
+        public delegate void GetSeriesEpisodesCompletedHandler(object sender);
+
+        /// <summary>
+        /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
+        /// </summary>
+        public event GetSeriesEpisodesCompletedHandler GetSeriesEpisodesCompleted;
 
         public void Start()
         {
@@ -52,12 +58,18 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries UserChosenSeries = results.listSeries[0];
                 if (results.listSeries.Count > 1)
                 {
-                    // TODO: create show the series selection form, pass it the list of dbseries, let the user select one series & return
+                    SelectSeries userSelection = new SelectSeries();
+                    userSelection.addSeriesToSelection(results.listSeries);
+                    userSelection.ShowDialog();
+                    UserChosenSeries = userSelection.userChoice;
                 }
 
-                // set the ID on the current series with the one from the chosen one
-                m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID] = UserChosenSeries[DBSeries.cID];
-                m_SeriesList[m_nCurrentSeriesIndex].Commit();
+                if (UserChosenSeries != null) // make sure selection was not cancelled
+                {
+                    // set the ID on the current series with the one from the chosen one
+                    m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID] = UserChosenSeries[DBSeries.cID];
+                    m_SeriesList[m_nCurrentSeriesIndex].Commit();
+                }
             }
 
             // process next entry
@@ -76,6 +88,10 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(DBSeries.cParsedName, 0, false);
             m_SeriesList = DBSeries.Get(condition);
             m_nCurrentSeriesIndex = 0;
+
+            // blabla do your work and then
+            
+            this.GetSeriesEpisodesCompleted.Invoke(this);
         }
     }
 }
