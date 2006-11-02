@@ -43,7 +43,7 @@ namespace WindowPlugins.GUITVSeries
 
         static public implicit operator Boolean(DBValue value)
         {
-            if (value.value != "0")
+            if (value.value != "0" && value.value != "")
                 return true;
             else
                 return false;
@@ -52,12 +52,14 @@ namespace WindowPlugins.GUITVSeries
 
         static public implicit operator int(DBValue value)
         {
-            return Convert.ToInt32(value.value);
+            try { return Convert.ToInt32(value.value); }
+            catch (System.FormatException) { return 0; }
         }
 
         static public implicit operator long(DBValue value)
         {
-            return Convert.ToInt64(value.value);
+            try { return Convert.ToInt64(value.value); }
+            catch (System.FormatException) { return 0; }
         }
 
         static public implicit operator DBValue(String value)

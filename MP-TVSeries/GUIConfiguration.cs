@@ -60,6 +60,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
+
+            checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
         }
 
         private void LoadImportPathes()

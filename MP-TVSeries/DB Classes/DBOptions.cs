@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
                 DatabaseUtility.RemoveInvalidChars(ref convertedvalue);
                 String sqlQuery;
-                if (GetOptions(convertedProperty) == null)
+                if (GetOptions(convertedProperty) == "")
                     sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
                 else
                     sqlQuery = "update options set value = '" + value + "' where property = '" + convertedProperty + "'";
@@ -82,7 +82,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DBTVSeries.Log("An Error Occurred (" + ex.Message + ").");
             }
-            return null;
+            return new DBValue("");
         }
     };
 }
