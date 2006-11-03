@@ -18,6 +18,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void Start()
         {
+            
             // asynchronous execution: we start with GetSeries, and the execution path goes on through the various worker events
             MatchSeries_Next(true);
         }
@@ -62,23 +63,28 @@ namespace WindowPlugins.GUITVSeries
             {
                 DBTVSeries.Log("Found " + m_SeriesList.Count + " matching names for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
                 DBSeries UserChosenSeries = results.listSeries[0];
+
+                SelectSeries userSelection;
                 if (results.listSeries.Count > 1)
                 {
-                    SelectSeries userSelection = new SelectSeries();
+                    // User has three choices:
+                    // 1) Pick a series from the list
+                    // 2) Simply skip
+                    // 3) Skip and never ask for this series again
+                    userSelection =  = new SelectSeries();
                     userSelection.addSeriesToSelection(results.listSeries);
                     userSelection.ShowDialog();
                     UserChosenSeries = userSelection.userChoice;
                 }
 
-                // TODO: we need 3 buttons in the series selection dialog
-                // 1st button: use this show
-                // 2nd button: Discard, Don't ask this show again (basically the show isn't listed online)
-                // 3rd button: Discard, ask again next time (basically a simple cancel)
-
                 if (UserChosenSeries != null) // make sure selection was not cancelled
                 {
                     // set the ID on the current series with the one from the chosen one
-                    m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID] = UserChosenSeries[DBSeries.cID];
+                    if (userSelection != null && userSelection.neverAskAgain) // user selected to never ask for this again
+                        m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID] = -1; // ID -1 means it will be skipped in the future
+                    else
+                        m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID] = UserChosenSeries[DBSeries.cID];
+                    
                     m_SeriesList[m_nCurrentSeriesIndex].Commit();
                 }
             }
@@ -99,6 +105,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLCondition condition = new SQLCondition(new DBSeries());
                 // all series that have an onlineID ( != 0)
                 condition.Add(DBSeries.cID, 0, false);
+                condition.Add(DBSeries.cID, -1, false); // for series that were
                 m_SeriesList = DBSeries.Get(condition);
                 m_nCurrentSeriesIndex = 0;
             }

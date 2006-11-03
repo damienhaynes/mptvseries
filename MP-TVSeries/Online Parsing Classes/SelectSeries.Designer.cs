@@ -33,6 +33,7 @@ namespace WindowPlugins.GUITVSeries
             this.label1 = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCnl = new System.Windows.Forms.Button();
+            this.btnnever = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listbox_Series
@@ -80,13 +81,23 @@ namespace WindowPlugins.GUITVSeries
             // btnCnl
             // 
             this.btnCnl.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCnl.Location = new System.Drawing.Point(262, 257);
+            this.btnCnl.Location = new System.Drawing.Point(247, 257);
             this.btnCnl.Name = "btnCnl";
-            this.btnCnl.Size = new System.Drawing.Size(75, 23);
+            this.btnCnl.Size = new System.Drawing.Size(90, 23);
             this.btnCnl.TabIndex = 4;
-            this.btnCnl.Text = "Cancel";
+            this.btnCnl.Text = "Skip this time";
             this.btnCnl.UseVisualStyleBackColor = true;
             this.btnCnl.Click += new System.EventHandler(this.btnCnl_Click);
+            // 
+            // btnnever
+            // 
+            this.btnnever.Location = new System.Drawing.Point(119, 257);
+            this.btnnever.Name = "btnnever";
+            this.btnnever.Size = new System.Drawing.Size(122, 23);
+            this.btnnever.TabIndex = 5;
+            this.btnnever.Text = "Skip/Never ask again";
+            this.btnnever.UseVisualStyleBackColor = true;
+            this.btnnever.Click += new System.EventHandler(this.btnnever_Click);
             // 
             // SelectSeries
             // 
@@ -95,6 +106,7 @@ namespace WindowPlugins.GUITVSeries
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCnl;
             this.ClientSize = new System.Drawing.Size(430, 286);
+            this.Controls.Add(this.btnnever);
             this.Controls.Add(this.btnCnl);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.label1);
@@ -114,5 +126,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCnl;
+        private System.Windows.Forms.Button btnnever;
     }
 }

@@ -12,6 +12,7 @@ namespace WindowPlugins.GUITVSeries
     {
         List<DBSeries> _series;
         bool cancelled = false;
+        bool neveragain = false;
 
         public SelectSeries()
         {
@@ -22,10 +23,17 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                if (cancelled)
+                if (cancelled || neverAskAgain)
                     return null;
                 else
                     return _series[this.listbox_Series.SelectedIndex]; 
+            }
+        }
+        public bool neverAskAgain
+        {
+            get
+            {
+                return neveragain;
             }
         }
 
@@ -52,6 +60,11 @@ namespace WindowPlugins.GUITVSeries
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnnever_Click(object sender, EventArgs e)
+        {
+            neveragain = true;
         }
     }
 }
