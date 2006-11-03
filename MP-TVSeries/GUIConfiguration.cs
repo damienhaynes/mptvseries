@@ -223,6 +223,8 @@ namespace WindowPlugins.GUITVSeries
                     seasonNode.Name = DBSeason.cTableName;
                     seasonNode.Tag = (DBSeason)season;
                     seriesNode.Nodes.Add(seasonNode);
+                    // default a season node to disabled, reenable it if an episode node is valid
+                    seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
 
 
                     List<DBEpisode> episodesList = DBEpisode.Get((String)series[DBSeries.cParsedName], (int)season[DBSeason.cIndex], false);
@@ -233,10 +235,14 @@ namespace WindowPlugins.GUITVSeries
                         TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
                         episodeNode.Name = DBEpisode.cTableName;
                         episodeNode.Tag = (DBEpisode)episode;
-                        //                         if (!System.IO.File.Exists(episode))
-                        //                         {
-                        //                             episodeNode.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
-                        //                         }
+                        if (episode[DBEpisode.cFilename] == "")
+                        {
+                            episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                        }
+                        else 
+                        {
+                            seasonNode.ForeColor = treeView_Library.ForeColor;
+                        }
 
                         seasonNode.Nodes.Add(episodeNode);
                     }
