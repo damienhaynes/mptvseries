@@ -64,14 +64,14 @@ namespace WindowPlugins.GUITVSeries
                 DBTVSeries.Log("Found " + m_SeriesList.Count + " matching names for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
                 DBSeries UserChosenSeries = results.listSeries[0];
 
-                SelectSeries userSelection;
+                SelectSeries userSelection = null;
                 if (results.listSeries.Count > 1)
                 {
                     // User has three choices:
                     // 1) Pick a series from the list
                     // 2) Simply skip
                     // 3) Skip and never ask for this series again
-                    userSelection =  = new SelectSeries();
+                    userSelection = new SelectSeries();
                     userSelection.addSeriesToSelection(results.listSeries);
                     userSelection.ShowDialog();
                     UserChosenSeries = userSelection.userChoice;
