@@ -14,9 +14,14 @@ namespace WindowPlugins.GUITVSeries
             return Generic(sServer + "/GetMirrors.php");
         }
 
-        static public XmlNodeList FindSeries(String sSeriesName)
+        static public XmlNodeList GetSeries(String sSeriesName)
         {
             return Generic(DBOnlineMirror.Interface + "/GetSeries.php?seriesname=" + sSeriesName.Replace(' ', '+'));
+        }
+
+        static public XmlNodeList GetEpisodes(int nSeriesID)
+        {
+            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID);
         }
 
         static private XmlNodeList Generic(String sUrl)

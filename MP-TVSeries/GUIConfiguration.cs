@@ -61,7 +61,25 @@ namespace WindowPlugins.GUITVSeries
 
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
 
-            checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == "")
+                checkBox_OnlineSearch.Checked = true;
+            else
+                checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
+
+            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
+                checkBox_FullSeriesRetrieval.Checked = false;
+            else
+                checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
+
+            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
+                checkBox_AutoChooseSeries.Checked = false;
+            else
+                checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
+
+            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
+                checkBox_LocalDataOverride.Checked = true;
+            else
+                checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
         }
 
         private void LoadImportPathes()
@@ -528,7 +546,14 @@ namespace WindowPlugins.GUITVSeries
         private void OnlineParsing_Start()
         {
             OnlineParse runner = new OnlineParse();
+            runner.GetSeriesEpisodesCompleted += new OnlineParse.GetSeriesEpisodesCompletedHandler(runner_GetSeriesEpisodesCompleted);
             runner.Start();
+        }
+
+        void runner_GetSeriesEpisodesCompleted()
+        {
+            MessageBox.Show("Parsing complete");
+            LoadTree();
         }
         
         #region Series treeview handling
@@ -737,6 +762,22 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cOnlineParseEnabled, checkBox_OnlineSearch.Checked);
         }
+
+        private void checkBox_FullSeriesRetrieval_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cFullSeriesRetrieval, checkBox_FullSeriesRetrieval.Checked);
+        }
+
+        private void checkBox_AutoChooseSeries_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoChooseSeries, checkBox_AutoChooseSeries.Checked);
+        }
+
+        private void checkBox_LocalDataOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cLocalDataOverride, checkBox_LocalDataOverride.Checked);
+        }
+
     }
 
     public class DetailsProperty

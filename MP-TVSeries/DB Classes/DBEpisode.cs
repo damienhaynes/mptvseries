@@ -20,6 +20,20 @@ namespace WindowPlugins.GUITVSeries
         public const String cWatched = "Watched";          // tag to know if episode has been watched already (overrides the local file's tag)
         public const String cEpisodeSummary = "Summary";
 
+        public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+
+        static DBOnlineEpisode()
+        {
+            s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
+            s_OnlineToFieldMap.Add("EpisodeNumber", cEpisodeIndex);
+            s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
+            s_OnlineToFieldMap.Add("id", cID);
+            s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
+
+            // make sure the table is created on first run
+            DBOnlineEpisode dummy = new DBOnlineEpisode();
+        }
+
         public DBOnlineEpisode()
             : base(cTableName)
         {
@@ -87,6 +101,30 @@ namespace WindowPlugins.GUITVSeries
         public const String cImportProcessed = "ImportProcessed";
 
         private DBOnlineEpisode m_onlineEpisode = null;
+
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+        public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+
+        static DBEpisode()
+        {
+            s_FieldToDisplayNameMap.Add(cFilename, "Local FileName");
+            s_FieldToDisplayNameMap.Add(cSeasonIndex, "Season Index");
+            s_FieldToDisplayNameMap.Add(cEpisodeIndex, "Episode Index");
+            s_FieldToDisplayNameMap.Add(cEpisodeName, "Episode Name");
+            s_FieldToDisplayNameMap.Add(cWatched, "Watched");
+            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cID, "Episode ID");
+            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cSeriesID, "Series ID");
+            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cEpisodeSummary, "Overview");
+
+            s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
+            s_OnlineToFieldMap.Add("EpisodeNumber", cEpisodeIndex);
+            s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
+            s_OnlineToFieldMap.Add("id", DBOnlineEpisode.cID);
+            s_OnlineToFieldMap.Add("Overview", DBOnlineEpisode.cEpisodeSummary);
+
+            // make sure the table is created on first run
+            DBSeries dummy = new DBSeries();
+        }
 
         public DBEpisode() 
             : base(cTableName)

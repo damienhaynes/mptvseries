@@ -8,7 +8,7 @@ namespace WindowPlugins.GUITVSeries
     class OnlineParse
     {
         List<DBSeries> m_SeriesList = new List<DBSeries>();
-        int m_nCurrentSeriesIndex = -1;
+        int m_nCurrentSeriesIndex = 0;
         public delegate void GetSeriesEpisodesCompletedHandler();
 
         /// <summary>
@@ -19,29 +19,32 @@ namespace WindowPlugins.GUITVSeries
         public void Start()
         {
             // asynchronous execution: we start with GetSeries, and the execution path goes on through the various worker events
-            MatchSeries_Next();
+            MatchSeries_Next(true);
         }
 
 
-        private void MatchSeries_Next()
+        private void MatchSeries_Next(bool bStart)
         {
-            
-            if (m_nCurrentSeriesIndex == -1)
+
+            if (bStart)
             {
+                DBTVSeries.Log("*********  Starting GetSeries  *********");
                 SQLCondition condition = new SQLCondition(new DBSeries());
                 // all series that don't have an onlineID ( = 0)
                 condition.Add(DBSeries.cID, 0, true);
                 m_SeriesList = DBSeries.Get(condition);
                 m_nCurrentSeriesIndex = 0;
+                DBTVSeries.Log("Found " + m_SeriesList.Count + " Series without an online ID, looking for them");
             }
             else 
             {
                 m_nCurrentSeriesIndex++;
             }
+
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
                 // we did all our series. Go to the next step, the episode retrieval
-                GetSeriesEpisodes();
+                MatchEpisodes_Next(true);
             }
             else
             {
@@ -57,6 +60,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (results.listSeries.Count > 0)
             {
+                DBTVSeries.Log("Found " + m_SeriesList.Count + " matching names for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
                 DBSeries UserChosenSeries = results.listSeries[0];
                 if (results.listSeries.Count > 1)
                 {
@@ -66,6 +70,11 @@ namespace WindowPlugins.GUITVSeries
                     UserChosenSeries = userSelection.userChoice;
                 }
 
+                // TODO: we need 3 buttons in the series selection dialog
+                // 1st button: use this show
+                // 2nd button: Discard, Don't ask this show again (basically the show isn't listed online)
+                // 3rd button: Discard, ask again next time (basically a simple cancel)
+
                 if (UserChosenSeries != null) // make sure selection was not cancelled
                 {
                     // set the ID on the current series with the one from the chosen one
@@ -73,30 +82,108 @@ namespace WindowPlugins.GUITVSeries
                     m_SeriesList[m_nCurrentSeriesIndex].Commit();
                 }
             }
+            else 
+            {
+                DBTVSeries.Log("No matching names found for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+            }
 
-            // process next entry
-             MatchSeries_Next();
+            // process next series
+             MatchSeries_Next(false);
         }
 
-        void GetSeriesEpisodes()
+        void MatchEpisodes_Next(bool bStart)
         {
-            // stop there for now;
-            // TODO: need an event system to notify the GUIConfiguration that this process has ended
+            if (bStart)
+            {
+                DBTVSeries.Log("*********  Starting GetEpisodes  *********");
+                SQLCondition condition = new SQLCondition(new DBSeries());
+                // all series that have an onlineID ( != 0)
+                condition.Add(DBSeries.cID, 0, false);
+                m_SeriesList = DBSeries.Get(condition);
+                m_nCurrentSeriesIndex = 0;
+            }
+            else
+            {
+                m_nCurrentSeriesIndex++;
+            }
+
+            if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
+            {
+                // we did all our series. Go to the next step, the series data update
+                UpdateSeries();
+            }
+            else
+            {
+                DBTVSeries.Log("Looking for the episodes of " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+                GetEpisodes episodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
+                episodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
+                episodesParser.DoParse();
+            }
+        }
 
 
-            // get all series with 
-            SQLCondition condition = new SQLCondition(new DBSeries());
-            // all series that have an onlineID ( != 0)
-            condition.Add(DBSeries.cParsedName, 0, false);
-            m_SeriesList = DBSeries.Get(condition);
-            m_nCurrentSeriesIndex = 0;
+        void OnlineParsing_GetEpisodesCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            GetEpisodesResults results = (GetEpisodesResults)e.Result;
 
-            // blabla do your work and then
+            if (results.listEpisodes.Count > 0)
+            {
+                DBTVSeries.Log("Found " + results.listEpisodes.Count + " episodes for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+                if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == true)
+                {
+                    // add all online episodes in the local db
+                    foreach (DBOnlineEpisode onlineEpisode in results.listEpisodes)
+                    {
+                        // season if not there yet
+                        DBSeason season = new DBSeason(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                        season.Commit();
 
+                        DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
+                        newOnlineEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
+                        newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                        newOnlineEpisode[DBOnlineEpisode.cSeriesID] = m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID];
+                        newOnlineEpisode.Commit();
+                    }
+                }
+                else
+                {
+                    // look for the episodes for that series, and compare / update the values
+                    List<DBEpisode> episodeList = DBEpisode.Get(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName], true);
+
+                    foreach (DBOnlineEpisode onlineEpisode in results.listEpisodes)
+                    {
+                        foreach (DBEpisode localEpisode in episodeList)
+                        {
+                            if ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
+                                (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex])
+                            {
+                                DBTVSeries.Log(localEpisode[DBOnlineEpisode.cID] + " identified");
+                                // update data
+                                localEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
+                                localEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                localEpisode[DBOnlineEpisode.cSeriesID] = m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID];
+                                localEpisode.Commit();
+                                // remove the localEpisode from the list (we found it)
+                                episodeList.Remove(localEpisode);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // process next series
+            MatchEpisodes_Next(false);
+        }
+
+        void UpdateSeries()
+        {
             if (GetSeriesEpisodesCompleted != null) // only if any subscribers exist
             {
                 this.GetSeriesEpisodesCompleted.Invoke();
             }
+
         }
+
     }
 }

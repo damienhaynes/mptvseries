@@ -25,23 +25,23 @@ namespace WindowPlugins.GUITVSeries
                 if (cancelled)
                     return null;
                 else
-                    return _series[this.listItems.SelectedIndex]; 
+                    return _series[this.listbox_Series.SelectedIndex]; 
             }
         }
 
         public void addSeriesToSelection(List<DBSeries> series)
         {
-            this.listItems.Items.Clear();
+            this.listbox_Series.Items.Clear();
             _series = series;
             foreach (DBSeries item in _series)
             {
-                this.listItems.Items.Add(item[DBSeries.cPrettyName]); 
+                this.listbox_Series.Items.Add(item[DBSeries.cPrettyName]); 
             }
         }
 
         private void listItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.textBox1.Text = _series[this.listItems.SelectedIndex][DBSeries.cPrettyName];
+            this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBSeries.cSummary]; 
         }
 
         private void btnCnl_Click(object sender, EventArgs e)

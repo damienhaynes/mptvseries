@@ -6,14 +6,14 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class GetSeries
+    class GetEpisodes
     {
         public BackgroundWorker m_Worker = new BackgroundWorker();
-        private String m_SeriesName;
+        private int m_nSeriesID;
 
-        public GetSeries(String sSeriesName)
+        public GetEpisodes(int nSeriesID)
         {
-            m_SeriesName = sSeriesName;
+            m_nSeriesID = nSeriesID;
             m_Worker.WorkerReportsProgress = true;
             m_Worker.WorkerSupportsCancellation = true;
             m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
@@ -26,26 +26,26 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            XmlNodeList nodeList = ZsoriParser.GetSeries(m_SeriesName);
+            XmlNodeList nodeList = ZsoriParser.GetEpisodes(m_nSeriesID);
             if (nodeList != null)
             {
-                GetSeriesResults results = new GetSeriesResults();
+                GetEpisodesResults results = new GetEpisodesResults();
 
                 foreach (XmlNode itemNode in nodeList)
                 {
-                    DBSeries series = new DBSeries();
+                    DBOnlineEpisode episode = new DBOnlineEpisode();
                     foreach (XmlNode propertyNode in itemNode.ChildNodes)
                     {
-                        if (DBSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                            series[DBSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                        if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                            episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                         else
                         {
                             // we don't know that field, add it to the series table
-                            series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                            series[propertyNode.Name] = propertyNode.InnerText;
+                            episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                            episode[propertyNode.Name] = propertyNode.InnerText;
                         }
                     }
-                    results.listSeries.Add(series);
+                    results.listEpisodes.Add(episode);
                 }
 
                 e.Result = results;
@@ -53,8 +53,8 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 
-    class GetSeriesResults
+    class GetEpisodesResults
     {
-        public List<DBSeries> listSeries = new List<DBSeries>();
+        public List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
     };
 }

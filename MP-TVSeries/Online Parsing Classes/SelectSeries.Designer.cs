@@ -28,34 +28,35 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void InitializeComponent()
         {
-            this.listItems = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.listbox_Series = new System.Windows.Forms.ListBox();
+            this.textbox_Summary = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCnl = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // listItems
+            // listbox_Series
             // 
-            this.listItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.listbox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.listItems.FormattingEnabled = true;
-            this.listItems.Location = new System.Drawing.Point(12, 38);
-            this.listItems.Name = "listItems";
-            this.listItems.Size = new System.Drawing.Size(406, 147);
-            this.listItems.TabIndex = 0;
-            this.listItems.SelectedIndexChanged += new System.EventHandler(this.listItems_SelectedIndexChanged);
+            this.listbox_Series.FormattingEnabled = true;
+            this.listbox_Series.Location = new System.Drawing.Point(12, 38);
+            this.listbox_Series.Name = "listbox_Series";
+            this.listbox_Series.Size = new System.Drawing.Size(406, 121);
+            this.listbox_Series.TabIndex = 0;
+            this.listbox_Series.SelectedIndexChanged += new System.EventHandler(this.listItems_SelectedIndexChanged);
             // 
-            // textBox1
+            // textbox_Summary
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.textbox_Summary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(12, 191);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(406, 60);
-            this.textBox1.TabIndex = 1;
+            this.textbox_Summary.Location = new System.Drawing.Point(12, 165);
+            this.textbox_Summary.Multiline = true;
+            this.textbox_Summary.Name = "textbox_Summary";
+            this.textbox_Summary.ReadOnly = true;
+            this.textbox_Summary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textbox_Summary.Size = new System.Drawing.Size(406, 86);
+            this.textbox_Summary.TabIndex = 1;
             // 
             // label1
             // 
@@ -97,8 +98,8 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.btnCnl);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.listItems);
+            this.Controls.Add(this.textbox_Summary);
+            this.Controls.Add(this.listbox_Series);
             this.Name = "SelectSeries";
             this.Text = "Unable to automatically determine correct series";
             this.ResumeLayout(false);
@@ -108,8 +109,8 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        private System.Windows.Forms.ListBox listItems;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ListBox listbox_Series;
+        private System.Windows.Forms.TextBox textbox_Summary;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCnl;

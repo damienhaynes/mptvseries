@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings = new System.Windows.Forms.TreeView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox_LocalDataOverride = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoChooseSeries = new System.Windows.Forms.CheckBox();
             this.checkBox_FullSeriesRetrieval = new System.Windows.Forms.CheckBox();
             this.panel_ParsingTest = new System.Windows.Forms.Panel();
@@ -207,7 +207,7 @@ namespace WindowPlugins.GUITVSeries
             // panel_OnlineData
             // 
             this.panel_OnlineData.Controls.Add(this.checkBox_OnlineSearch);
-            this.panel_OnlineData.Controls.Add(this.checkBox1);
+            this.panel_OnlineData.Controls.Add(this.checkBox_LocalDataOverride);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoChooseSeries);
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
             this.panel_OnlineData.Location = new System.Drawing.Point(177, 6);
@@ -228,16 +228,17 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
             this.checkBox_OnlineSearch.CheckedChanged += new System.EventHandler(this.checkBox_OnlineSearch_CheckedChanged);
             // 
-            // checkBox1
+            // checkBox_LocalDataOverride
             // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.checkBox_LocalDataOverride.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.Location = new System.Drawing.Point(4, 78);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(496, 17);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "Online data should override data from file parsing (series name, episode name)";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(4, 78);
+            this.checkBox_LocalDataOverride.Name = "checkBox_LocalDataOverride";
+            this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(496, 17);
+            this.checkBox_LocalDataOverride.TabIndex = 2;
+            this.checkBox_LocalDataOverride.Text = "Online data should override data from file parsing (series name, episode name)";
+            this.checkBox_LocalDataOverride.UseVisualStyleBackColor = true;
+            this.checkBox_LocalDataOverride.CheckedChanged += new System.EventHandler(this.checkBox_LocalDataOverride_CheckedChanged);
             // 
             // checkBox_AutoChooseSeries
             // 
@@ -247,9 +248,9 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoChooseSeries.Name = "checkBox_AutoChooseSeries";
             this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(496, 17);
             this.checkBox_AutoChooseSeries.TabIndex = 1;
-            this.checkBox_AutoChooseSeries.Text = "Don\'t ask for input when a series\' name doesn\'t have an exact match in the Online" +
-                " Database";
+            this.checkBox_AutoChooseSeries.Text = "Auto-Choose series when multiple entries are returned from the Online Database";
             this.checkBox_AutoChooseSeries.UseVisualStyleBackColor = true;
+            this.checkBox_AutoChooseSeries.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseSeries_CheckedChanged);
             // 
             // checkBox_FullSeriesRetrieval
             // 
@@ -263,6 +264,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_FullSeriesRetrieval.Text = "Retrieve episode information for the whole series (instead of only for the availa" +
                 "ble parsed episodes)";
             this.checkBox_FullSeriesRetrieval.UseVisualStyleBackColor = true;
+            this.checkBox_FullSeriesRetrieval.CheckedChanged += new System.EventHandler(this.checkBox_FullSeriesRetrieval_CheckedChanged);
             // 
             // panel_ParsingTest
             // 
@@ -660,7 +662,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Panel panel_OnlineData;
         private System.Windows.Forms.CheckBox checkBox_FullSeriesRetrieval;
         private System.Windows.Forms.CheckBox checkBox_AutoChooseSeries;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox_LocalDataOverride;
         private System.Windows.Forms.CheckBox checkBox_OnlineSearch;
         private System.Windows.Forms.Button button_Start;
         private System.Windows.Forms.ProgressBar progressBar_Parsing;

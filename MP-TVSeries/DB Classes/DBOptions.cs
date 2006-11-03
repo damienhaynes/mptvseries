@@ -12,6 +12,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cDBVersion = "DBVersion";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
+        public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
+        public const String cAutoChooseSeries = "AutoChooseSeries";
+        public const String cLocalDataOverride = "LocalDataOverride";
 
         private static void UpdateTable()
         {
