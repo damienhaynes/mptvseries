@@ -29,12 +29,6 @@ namespace WindowPlugins.GUITVSeries
                 InitValues();
         }
 
-        private void InitValues()
-        {
-            this[cEnabled] = 0;
-            this[cPath] = String.Empty;
-        }
-
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )

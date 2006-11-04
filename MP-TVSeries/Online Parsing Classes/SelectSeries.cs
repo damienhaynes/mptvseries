@@ -14,9 +14,10 @@ namespace WindowPlugins.GUITVSeries
         bool cancelled = false;
         bool neveragain = false;
 
-        public SelectSeries()
+        public SelectSeries(String sLocalSeriesName)
         {
             InitializeComponent();
+            label_LocalSeriesName.Text = sLocalSeriesName;
         }
 
         public DBSeries userChoice
@@ -57,13 +58,9 @@ namespace WindowPlugins.GUITVSeries
             cancelled = true;
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void btnnever_Click(object sender, EventArgs e)
         {
+            cancelled = true;
             neveragain = true;
         }
     }

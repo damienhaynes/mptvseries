@@ -10,6 +10,8 @@ namespace WindowPlugins.GUITVSeries
     {
         public BackgroundWorker m_Worker = new BackgroundWorker();
         private int m_nSeriesID;
+        private int m_nSeasonIndex = -1;
+        private int m_nEpisodeIndex = -1;
 
         public GetEpisodes(int nSeriesID)
         {
@@ -19,6 +21,17 @@ namespace WindowPlugins.GUITVSeries
             m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
         }
 
+        public GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)
+        {
+            m_nSeriesID = nSeriesID;
+            m_nSeasonIndex = nSeasonIndex;
+            m_nEpisodeIndex = nEpisodeIndex;
+            m_Worker.WorkerReportsProgress = true;
+            m_Worker.WorkerSupportsCancellation = true;
+            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+
+        }
+
         public void DoParse()
         {
             m_Worker.RunWorkerAsync();
@@ -26,7 +39,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            XmlNodeList nodeList = ZsoriParser.GetEpisodes(m_nSeriesID);
+            XmlNodeList nodeList = null;
+            if (m_nEpisodeIndex != -1 && m_nSeasonIndex != -1)
+                nodeList = ZsoriParser.GetEpisodes(m_nSeriesID, m_nSeasonIndex, m_nEpisodeIndex);
+            else
+                nodeList = ZsoriParser.GetEpisodes(m_nSeriesID);
+
             if (nodeList != null)
             {
                 GetEpisodesResults results = new GetEpisodesResults();

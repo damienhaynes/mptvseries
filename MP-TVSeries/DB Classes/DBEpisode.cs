@@ -13,7 +13,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cCompositeID = "CompositeID";         // composite string used for primary index, based on series, season & episode
         public const String cSeriesParsedName = DBSeries.cParsedName;
         public const String cID = "EpisodeID";                    // onlineDB episodeID
-        public const String cSeriesID = "SeriesID";               // onlineDB seriesID
         public const String cSeasonIndex = "SeasonIndex";         // season index
         public const String cEpisodeIndex = "EpisodeIndex";       // episode index
         public const String cEpisodeName = "EpisodeName";         // episode name
@@ -21,6 +20,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeSummary = "Summary";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+
+        public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
         static DBOnlineEpisode()
         {
@@ -52,33 +53,40 @@ namespace WindowPlugins.GUITVSeries
             this[cEpisodeIndex] = nEpisodeIndex;
         }
 
-        private void InitValues()
-        {
-            base[cSeriesParsedName] = String.Empty;
-            this[cSeasonIndex] = 0;
-            this[cEpisodeIndex] = 0;
-            this[cEpisodeName] = String.Empty;
-
-            this[cID] = 0;
-            this[cSeriesID] = 0;
-            this[cEpisodeName] = String.Empty;
-            this[cWatched] = 0;
-            this[cEpisodeSummary] = String.Empty;
-        }
-
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cCompositeID, new DBField(DBField.cTypeString, true));
-            AddColumn(cID, new DBField(DBField.cTypeInt));
-            AddColumn(cSeriesParsedName, new DBField(DBField.cTypeString));
-            AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
+            base.AddColumn(cCompositeID, new DBField(DBField.cTypeString, true));
+            base.AddColumn(cID, new DBField(DBField.cTypeInt));
+            base.AddColumn(cSeriesParsedName, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
+            base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
 
-            AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            AddColumn(cWatched, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
+            base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
+
+            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            {
+                if (!s_fields.ContainsKey(pair.Key))
+                    s_fields.Add(pair.Key, pair.Value);
+            }
+        }
+
+        public override bool AddColumn(string sName, DBField field)
+        {
+            if (!s_fields.ContainsKey(sName))
+            {
+                s_fields.Add(sName, field);
+                return base.AddColumn(sName, field);
+            }
+            else
+            {
+                // we globally know about this key already, so don't call the base
+                if (!m_fields.ContainsKey(sName))
+                    m_fields.Add(sName, field);
+                return false;
+            }
         }
 
         public static new String Q(String sField)
@@ -96,7 +104,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSeriesParsedName = DBSeries.cParsedName;
         public const String cSeasonIndex = DBOnlineEpisode.cSeasonIndex;
         public const String cEpisodeIndex = DBOnlineEpisode.cEpisodeIndex;
-        public const String cEpisodeName =DBOnlineEpisode.cEpisodeName;
+        public const String cEpisodeName = "LocalEpisodeName";
         public const String cWatched = DBOnlineEpisode.cWatched;
         public const String cImportProcessed = "ImportProcessed";
 
@@ -105,15 +113,18 @@ namespace WindowPlugins.GUITVSeries
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
 
+        public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
+
         static DBEpisode()
         {
             s_FieldToDisplayNameMap.Add(cFilename, "Local FileName");
+            s_FieldToDisplayNameMap.Add(cCompositeID, "Composite Episode ID");
+            s_FieldToDisplayNameMap.Add(DBSeries.cParsedName, "Series Parsed Name");
             s_FieldToDisplayNameMap.Add(cSeasonIndex, "Season Index");
             s_FieldToDisplayNameMap.Add(cEpisodeIndex, "Episode Index");
             s_FieldToDisplayNameMap.Add(cEpisodeName, "Episode Name");
             s_FieldToDisplayNameMap.Add(cWatched, "Watched");
             s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cID, "Episode ID");
-            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cSeriesID, "Series ID");
             s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cEpisodeSummary, "Overview");
 
             s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
@@ -124,6 +135,14 @@ namespace WindowPlugins.GUITVSeries
 
             // make sure the table is created on first run
             DBSeries dummy = new DBSeries();
+        }
+
+        public static String PrettyFieldName(String sFieldName)
+        {
+            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+                return s_FieldToDisplayNameMap[sFieldName];
+            else
+                return sFieldName;
         }
 
         public DBEpisode() 
@@ -146,28 +165,74 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void InitValues()
-        {
-            base[cCompositeID] = String.Empty;
-            base[cSeriesParsedName] = String.Empty;
-            base[cSeasonIndex] = 0;
-            base[cEpisodeIndex] = 0;
-            base[cEpisodeName] = String.Empty;
-            base[cImportProcessed] = 0;
-            base[cWatched] = 0;
-        }
-
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cFilename, new DBField(DBField.cTypeString, true));
-            AddColumn(cCompositeID, new DBField(DBField.cTypeString));
-            AddColumn(cSeriesParsedName, new DBField(DBField.cTypeString));
-            AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
-            AddColumn(cImportProcessed, new DBField(DBField.cTypeInt));
-            AddColumn(cWatched, new DBField(DBField.cTypeInt));
+            base.AddColumn(cFilename, new DBField(DBField.cTypeString, true));
+            base.AddColumn(cCompositeID, new DBField(DBField.cTypeString));
+            base.AddColumn(cSeriesParsedName, new DBField(DBField.cTypeString));
+            base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
+            base.AddColumn(cImportProcessed, new DBField(DBField.cTypeInt));
+            base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
+
+            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            {
+                if (!s_fields.ContainsKey(pair.Key))
+                    s_fields.Add(pair.Key, pair.Value);
+            }
+        }
+
+        public override bool AddColumn(string sName, DBField field)
+        {
+            if (!s_fields.ContainsKey(sName))
+            {
+                s_fields.Add(sName, field);
+                return base.AddColumn(sName, field);
+            }
+            else
+            {
+                // we globally know about this key already, so don't call the base
+                if (!m_fields.ContainsKey(sName))
+                    m_fields.Add(sName, field);
+                return false;
+            }
+        }
+
+        public DBOnlineEpisode onlineEpisode
+        {
+            get { return m_onlineEpisode; }
+        }
+
+        public override List<String> FieldNames
+        {
+            get
+            {
+                List<String> outList = new List<String>();
+                // some ordering: I want some fields to come up first
+                outList.Add(cSeriesParsedName);
+                outList.Add(cSeasonIndex);
+                outList.Add(cEpisodeIndex);
+                outList.Add(cCompositeID);
+
+                foreach (KeyValuePair<string, DBField> pair in m_fields)
+                {
+                    if (outList.IndexOf(pair.Key) == -1)
+                        outList.Add(pair.Key);
+                }
+                if (m_onlineEpisode != null)
+                {
+                    foreach (KeyValuePair<string, DBField> pair in m_onlineEpisode.m_fields)
+                    {
+                        if (outList.IndexOf(pair.Key) == -1)
+                            outList.Add(pair.Key);
+                    }
+                }
+
+
+                return outList;
+            }
         }
 
         // function override to search on both this & the onlineEpisode
@@ -175,17 +240,27 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                DBValue retVal = null;
-
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {
-                    retVal = m_onlineEpisode[fieldName];
-                }
+                    DBValue retVal = null;
+                    switch (fieldName)
+                    {
+                        case cEpisodeName:
+                            retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                            if (retVal == null || retVal == String.Empty)
+                                retVal = base[cEpisodeName];
+                            return retVal;
 
-                if (retVal == null || retVal == String.Empty)
-                    retVal = base[fieldName];
-                return retVal;
+                        default:
+                            retVal = m_onlineEpisode[fieldName];
+                            if (retVal == null || retVal == String.Empty)
+                                retVal = base[fieldName];
+                            return retVal;
+                    }
+                }
+                else
+                    return base[fieldName];
             }
 
             set
@@ -195,8 +270,10 @@ namespace WindowPlugins.GUITVSeries
                     switch (fieldName)
                     {
                         case cImportProcessed:
-                            // the only flag we are not rerouting to the onlineEpisode if it exists
+                        case cEpisodeName:
+                            // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
+
 
                         default:
                             m_onlineEpisode[fieldName] = value;
@@ -226,63 +303,56 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(String sSeriesName, Boolean bExistingFilesOnly)
         {
-            String sqlQuery = String.Empty;
+            SQLCondition conditions = null;
             if (bExistingFilesOnly)
             {
-                SQLWhat what = new SQLWhat(new DBEpisode());
-                what.Add(new DBOnlineEpisode());
-                SQLCondition conditions = new SQLCondition(new DBEpisode());
+                conditions = new SQLCondition(new DBEpisode());
                 conditions.Add(cSeriesParsedName, sSeriesName, true);
-                sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cSeasonIndex) + "," + Q(cEpisodeIndex);
             }
             else
             {
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
-                SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
+                conditions = new SQLCondition(new DBOnlineEpisode());
                 conditions.Add(cSeriesParsedName, sSeriesName, true);
-                // stupid trick for how MP handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cSeasonIndex) + "," + DBOnlineEpisode.Q(cEpisodeIndex);
             }
 
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-            List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
-            {
-                for (int index = 0; index < results.Rows.Count; index++)
-                {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(ref results, index);
-                    outList.Add(episode);
-                }
-            }
-            return outList;
+            return Get(conditions);
         }
-
 
         public static List<DBEpisode> Get(String sSeriesName, int nSeasonIndex, Boolean bExistingFilesOnly)
         {
-            String sqlQuery = String.Empty;
+            SQLCondition conditions = null;
             if (bExistingFilesOnly)
             {
-                SQLWhat what = new SQLWhat(new DBEpisode());
-                what.Add(new DBOnlineEpisode());
-                SQLCondition conditions = new SQLCondition(new DBEpisode());
+                conditions = new SQLCondition(new DBEpisode());
                 conditions.Add(cSeriesParsedName, sSeriesName, true);
                 conditions.Add(cSeasonIndex, nSeasonIndex, true);
-                sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cEpisodeIndex);
             }
             else
             {
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
-                SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
+                conditions = new SQLCondition(new DBOnlineEpisode());
                 conditions.Add(cSeriesParsedName, sSeriesName, true);
                 conditions.Add(cSeasonIndex, nSeasonIndex, true);
+            }
+
+            return Get(conditions);
+        }
+
+        public static List<DBEpisode> Get(SQLCondition conditions)
+        {
+            String sqlQuery = String.Empty;
+            if (conditions.TableName == DBOnlineEpisode.cTableName)
+            {
+                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
+                what.AddWhat(new DBEpisode());
                 // stupid trick for how MP handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
                 sqlQuery = "select " + what + " left join " + cTableName + " on " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+            }
+            else
+            {
+                SQLWhat what = new SQLWhat(new DBEpisode());
+                what.Add(new DBOnlineEpisode());
+                sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cEpisodeIndex);
+
             }
 
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);

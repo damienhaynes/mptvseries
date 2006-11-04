@@ -41,6 +41,14 @@ namespace WindowPlugins.GUITVSeries
             DBSeries dummy = new DBSeries();
         }
 
+        static String PrettyFieldName(String sFieldName)
+        {
+            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+                return s_FieldToDisplayNameMap[sFieldName];
+            else
+                return sFieldName;
+        }
+
         public DBSeries()
             : base(cTableName)
         {
@@ -56,16 +64,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 InitValues();
             }
-        }
-
-        private void InitValues()
-        {
-            this[cID] = 0;
-            this[cPrettyName] = String.Empty;
-            this[cStatus] = String.Empty;
-            this[cGenre] = String.Empty;
-            this[cBannerFileName] = String.Empty;
-            this[cSummary] = String.Empty;
         }
 
         private void InitColumns()

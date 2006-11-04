@@ -38,18 +38,23 @@ namespace WindowPlugins.GUITVSeries
 
         static public implicit operator String(DBValue value)
         {
+            if (value == null)
+                return "";
+
             return value.value;
         }
 
         static public implicit operator Boolean(DBValue value)
         {
+            if (value == null)
+                return false;
+
             if (value.value != "0" && value.value != "")
                 return true;
             else
                 return false;
         }
-
-
+        
         static public implicit operator int(DBValue value)
         {
             try { return Convert.ToInt32(value.value); }
@@ -179,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool AddColumn(String sName, DBField field)
+        public virtual bool AddColumn(String sName, DBField field)
         {
             // verify if we already have that field avail
             if (!m_fields.ContainsKey(sName))
@@ -219,6 +224,28 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
+        public virtual void InitValues()
+        {
+            foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+            {
+                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
+                {
+                    switch (fieldPair.Value.Type)
+                    {
+                        case DBField.cTypeInt:
+                            fieldPair.Value.Value = 0;
+                            break;
+
+                        case DBField.cTypeString:
+                            fieldPair.Value.Value = "";
+                            break;
+                    }
+                }
+            }
+            m_CommitNeeded = true;
+        }
+
+
         public virtual DBValue this[String fieldName]
         {
             get 
@@ -248,6 +275,19 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public virtual List<String> FieldNames
+        {
+            get
+            {
+                List<String> outList = new List<String>();
+                foreach (KeyValuePair<string, DBField> pair in m_fields)
+                {
+                    outList.Add(pair.Key);
+                }
+                return outList;
+            }
+        }
+
         public static String Q(String sField)
         {
             return sField;
@@ -264,6 +304,7 @@ namespace WindowPlugins.GUITVSeries
                     else
                         field.Value.Value = DatabaseUtility.Get(records, index, m_tableName + "." + field.Key);
                 }
+                m_CommitNeeded = false;
                 return true;
             }
             return false;
@@ -447,6 +488,11 @@ namespace WindowPlugins.GUITVSeries
         public SQLCondition(DBTable table)
         {
             m_table = table;
+        }
+
+        public String TableName
+        {
+            get { return m_table.m_tableName; }
         }
 
         public void Add(String sField, DBValue value, bool bEqual)

@@ -16,6 +16,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoChooseSeries = "AutoChooseSeries";
         public const String cLocalDataOverride = "LocalDataOverride";
 
+        public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
+        public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
+
         private static void UpdateTable()
         {
             try

@@ -17,7 +17,6 @@ namespace WindowPlugins.GUITVSeries
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
         }
 
-
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             String[] files = Filelister.GetFiles();

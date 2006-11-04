@@ -72,6 +72,8 @@
     <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
+    <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

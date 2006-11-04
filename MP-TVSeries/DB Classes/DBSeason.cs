@@ -15,6 +15,24 @@ namespace WindowPlugins.GUITVSeries
         public const String cIndex = "SeasonIndex";
         public const String cBannerFileName = "BannerFileName";
 
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+
+        static DBSeason()
+        {
+            s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
+            s_FieldToDisplayNameMap.Add(cSeriesName, "Series Parsed Name");
+            s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
+            s_FieldToDisplayNameMap.Add(cBannerFileName, "Banner FileName");
+        }
+
+        public static String PrettyFieldName(String sFieldName)
+        {
+            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+                return s_FieldToDisplayNameMap[sFieldName];
+            else
+                return sFieldName;
+        }
+
         public DBSeason()
             : base(cTableName)
         {
@@ -28,18 +46,12 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             String sSeasonID = SeriesName + "_s" + nSeasonIndex;
-
-            this[cSeriesName] = SeriesName;
-            this[cIndex] = nSeasonIndex;
             if (!ReadPrimary(sSeasonID))
             {
                 InitValues();
             }
-        }
-
-        private void InitValues()
-        {
-            this[cBannerFileName] = String.Empty;
+            this[cSeriesName] = SeriesName;
+            this[cIndex] = nSeasonIndex;
         }
 
         private void InitColumns()

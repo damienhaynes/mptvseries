@@ -46,12 +46,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void InitValues()
-        {
-            this[cInterface] = String.Empty;
-            this[cBanners] = String.Empty;
-        }
-
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )

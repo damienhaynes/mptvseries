@@ -33,13 +33,6 @@ namespace WindowPlugins.GUITVSeries
                 InitValues();
         }
 
-        private void InitValues()
-        {
-            this[cEnabled] = 0;
-            this[cType] = String.Empty;
-            this[cExpression] = String.Empty;
-        }
-
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )

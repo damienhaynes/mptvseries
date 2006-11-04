@@ -488,6 +488,12 @@ namespace WindowPlugins.GUITVSeries
 
             // and refresh tree
             LoadTree();
+
+            // now on with online parsing
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+            {
+                OnlineParsing_Start();
+            }
         }
 
         void LocalParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
@@ -551,12 +557,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void OnlineParsing_Start()
         {
-            OnlineParse runner = new OnlineParse();
-            runner.GetSeriesEpisodesCompleted += new OnlineParse.GetSeriesEpisodesCompletedHandler(runner_GetSeriesEpisodesCompleted);
+            OnlineParsing runner = new OnlineParsing();
+            runner.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
             runner.Start();
         }
 
-        void runner_GetSeriesEpisodesCompleted()
+        void runner_OnlineParsingCompleted()
         {
             MessageBox.Show("Parsing complete");
             LoadTree();
@@ -597,10 +603,35 @@ namespace WindowPlugins.GUITVSeries
 //                     if (filename != String.Empty)
 //                         this.pictureBox_Series.Image = Image.FromFile(filename);
 
-                    AddPropertyBindingSource("Season Number", DBEpisode.cSeasonIndex, episode[DBEpisode.cSeasonIndex], false);
-                    AddPropertyBindingSource("Episode Number", DBEpisode.cEpisodeIndex, episode[DBEpisode.cEpisodeIndex]);
-                    AddPropertyBindingSource("Episode Title", DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName]);
+                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                    foreach (String key in episode.FieldNames)
+                    {
+                        switch (key)
+                        {
+                            case DBEpisode.cSeasonIndex:
+                            case DBEpisode.cEpisodeIndex:
+                            case DBEpisode.cSeriesParsedName:
+                            case DBEpisode.cCompositeID:
+                            case DBEpisode.cFilename:
+                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
+                                break;
+
+                            case DBEpisode.cEpisodeName:
+                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), DBOnlineEpisode.cEpisodeName, episode[key]);
+                                break;
+
+                            case DBOnlineEpisode.cEpisodeName:
+                                // this one is going to be shown via DBEpisode.cEpisodeName
+                                break;
+
+                            default:
+                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                break;
+
+                        }
+                    }
                     break;
+
                 #endregion
                 //////////////////////////////////////////////////////////////////////////////
 
@@ -613,7 +644,21 @@ namespace WindowPlugins.GUITVSeries
                     if (filename != String.Empty)
                         this.pictureBox_Series.Image = Image.FromFile(filename);
 
-                    AddPropertyBindingSource("Season Number", DBSeason.cIndex, "Season " + season[DBSeason.cIndex], false);
+                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                    foreach (String key in season.FieldNames)
+                    {
+                        switch (key)
+                        {
+                            case DBSeason.cBannerFileName:
+                                AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key]);
+                                break;
+
+                            default:
+                                AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
+                                break;
+
+                        }
+                    }
                     break;
                 #endregion
 
@@ -628,17 +673,21 @@ namespace WindowPlugins.GUITVSeries
                         if (filename != String.Empty)
                             this.pictureBox_Series.Image = Image.FromFile(filename);
 
-                        String genres = series[DBSeries.cGenre];
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in series.FieldNames)
+                        {
+                            switch (key)
+                            {
+                                case DBSeries.cParsedName:
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key], false);
+                                    break;
 
-                        AddPropertyBindingSource("Series Parsed Name", DBSeries.cParsedName, series[DBSeries.cParsedName], false);
-                        AddPropertyBindingSource("Series Pretty Name", DBSeries.cPrettyName, series[DBSeries.cPrettyName]);
-                        AddPropertyBindingSource("Genre", DBSeries.cGenre, series[DBSeries.cGenre]);
-//                         AddPropertyBindingSource("Network", series[DBSeries.cNet]);
-//                         AddPropertyBindingSource("Duration", series.Duration);
-//                         AddPropertyBindingSource("Status", series.Status);
-//                         AddPropertyBindingSource("Premiered", series.Premiered);
-//                         AddPropertyBindingSource("Airs", series.Airs);
-//                         AddPropertyBindingSource("Series Description", series.Description);
+                                default:
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key]);
+                                    break;
+
+                            }
+                        }
                     }
                     break;
 
@@ -752,10 +801,7 @@ namespace WindowPlugins.GUITVSeries
         private void button_Start_Click(object sender, EventArgs e)
         {
             LocalParsing_Start();
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
-            {
-                OnlineParsing_Start();
-            }
+            // wait for local parsing to complete for online processing
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)

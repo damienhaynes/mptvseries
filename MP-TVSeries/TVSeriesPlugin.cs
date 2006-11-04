@@ -22,7 +22,7 @@ namespace MediaPortal.GUI.Video
         // Returns the name of the plugin which is shown in the plugin menu
         public string PluginName()
         {
-            return "My TV Series";
+            return "MP-TV Series";
         }
 
         // Returns the description of the plugin is shown in the plugin menu
@@ -34,7 +34,7 @@ namespace MediaPortal.GUI.Video
         // Returns the author of the plugin which is shown in the plugin menu
         public string Author()
         {
-            return "WeeToddDid (Luc Theriault)";
+            return "Zeflash, based on the work of WeeToddDid (Luc Theriault)";
         }
 
         // show the setup dialog
