@@ -18,6 +18,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeName = "EpisodeName";         // episode name
         public const String cWatched = "Watched";          // tag to know if episode has been watched already (overrides the local file's tag)
         public const String cEpisodeSummary = "Summary";
+        public const String cOnlineImportProcessed = "OnlineImportProcessed";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
 
@@ -65,6 +66,7 @@ namespace WindowPlugins.GUITVSeries
 
             base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
+            base.AddColumn(cOnlineImportProcessed, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -106,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeIndex = DBOnlineEpisode.cEpisodeIndex;
         public const String cEpisodeName = "LocalEpisodeName";
         public const String cWatched = DBOnlineEpisode.cWatched;
-        public const String cImportProcessed = "ImportProcessed";
+        public const String cImportProcessed = "LocalImportProcessed";
 
         private DBOnlineEpisode m_onlineEpisode = null;
 

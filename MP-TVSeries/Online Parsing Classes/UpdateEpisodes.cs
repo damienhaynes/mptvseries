@@ -28,50 +28,53 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            XmlNodeList nodeList = null;
-            nodeList = ZsoriParser.UpdateEpisodes(m_sEpisodesIDs, m_nUpdateEpisodesTimeStamp);
-
-            if (nodeList != null)
+            if (m_sEpisodesIDs != String.Empty)
             {
-                UpdateEpisodesResults results = new UpdateEpisodesResults();
-                
-                foreach (XmlNode itemNode in nodeList)
+                XmlNodeList nodeList = null;
+                nodeList = ZsoriParser.UpdateEpisodes(m_sEpisodesIDs, m_nUpdateEpisodesTimeStamp);
+
+                if (nodeList != null)
                 {
-                    // first return item SHOULD ALWAYS be the sync time (hope so at least!)
-                    if (itemNode.ChildNodes[0].Name == "SyncTime")
+                    UpdateEpisodesResults results = new UpdateEpisodesResults();
+
+                    foreach (XmlNode itemNode in nodeList)
                     {
-                        results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
-                    }
-                    else 
-                    {
-                        DBOnlineEpisode episode = new DBOnlineEpisode();
-                        foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                        // first return item SHOULD ALWAYS be the sync time (hope so at least!)
+                        if (itemNode.ChildNodes[0].Name == "SyncTime")
                         {
-                            if (propertyNode.Name == "IncorrectID")
+                            results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                        }
+                        else
+                        {
+                            DBOnlineEpisode episode = new DBOnlineEpisode();
+                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
                             {
-                                // alert! drop this series, the ID doesn't match anything anymore for some reason
-                                results.listIncorrectIDs.Add(episode[DBOnlineEpisode.cID]);
-                                episode = null;
-                                break;
-                            }
-                            else
-                            {
-                                if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                    episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                if (propertyNode.Name == "IncorrectID")
+                                {
+                                    // alert! drop this series, the ID doesn't match anything anymore for some reason
+                                    results.listIncorrectIDs.Add(episode[DBOnlineEpisode.cID]);
+                                    episode = null;
+                                    break;
+                                }
                                 else
                                 {
-                                    // we don't know that field, add it to the series table
-                                    episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                                    episode[propertyNode.Name] = propertyNode.InnerText;
+                                    if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                                        episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                    else
+                                    {
+                                        // we don't know that field, add it to the series table
+                                        episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                                        episode[propertyNode.Name] = propertyNode.InnerText;
+                                    }
                                 }
                             }
+                            if (episode != null)
+                                results.listEpisodes.Add(episode);
                         }
-                        if (episode != null)
-                            results.listEpisodes.Add(episode);
                     }
-                }
 
-                e.Result = results;
+                    e.Result = results;
+                }
             }
         }
     }

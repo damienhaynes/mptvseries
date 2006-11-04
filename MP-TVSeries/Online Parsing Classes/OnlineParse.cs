@@ -14,8 +14,13 @@ namespace WindowPlugins.GUITVSeries
         List<DBEpisode> m_EpisodeList = new List<DBEpisode>();
         int m_nCurrentEpisodeIndex = 0;
 
+        bool m_bSeries_UpdateEmpty = false;
+        bool m_bEpisodes_UpdateEmpty = false;
+
         Dictionary<int, DBSeries> m_IDToSeriesMap = new Dictionary<int,DBSeries>();
         Dictionary<int, DBEpisode> m_IDToEpisodesMap = new Dictionary<int, DBEpisode>();
+
+        bool m_bReparseNeeded = false;
 
 
         public delegate void OnlineParsingProgressHandler(int nProgress);
@@ -40,7 +45,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (bStart)
             {
-                DBTVSeries.Log("*********  Starting GetSeries  *********");
+                DBTVSeries.Log("*********  GetSeries - unknown series  *********");
                 SQLCondition condition = new SQLCondition(new DBSeries());
                 // all series that don't have an onlineID ( = 0)
                 condition.Add(DBSeries.cID, 0, true);
@@ -76,8 +81,9 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries UserChosenSeries = results.listSeries[0];
 
                 SelectSeries userSelection = null;
-                if (results.listSeries.Count > 1)
+                if (results.listSeries.Count > 1 && UserChosenSeries[DBSeries.cPrettyName].ToString().ToLowerInvariant() != m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName].ToString().ToLowerInvariant())
                 {
+                    // 
                     // User has three choices:
                     // 1) Pick a series from the list
                     // 2) Simply skip
@@ -139,7 +145,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
                 // we did all our series. Go to the next step, the series data update
-                UpdateSeries();
+                UpdateSeries(true);
             }
             else
             {
@@ -165,7 +171,6 @@ namespace WindowPlugins.GUITVSeries
             if (bStart)
             {
                 // build the list of unidentified episodes
-                DBTVSeries.Log("*********  Starting GetEpisodes  *********");
                 SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
                 conditions.Add(DBOnlineEpisode.cSeriesParsedName, m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName], true);
                 conditions.Add(DBOnlineEpisode.cID, 0, true);
@@ -252,7 +257,7 @@ namespace WindowPlugins.GUITVSeries
                             if ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
                                 (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex])
                             {
-                                DBTVSeries.Log(localEpisode[DBOnlineEpisode.cID] + " identified");
+                                DBTVSeries.Log(localEpisode[DBOnlineEpisode.cCompositeID] + " identified");
                                 // update data
                                 localEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
                                 if (m_EpisodeList[m_nCurrentEpisodeIndex][DBOnlineEpisode.cEpisodeName] == "")
@@ -271,18 +276,37 @@ namespace WindowPlugins.GUITVSeries
             MatchEpisodes_Next(false);
         }
 
-        void UpdateSeries()
+        void UpdateSeries(bool bUpdateEmptySeries)
         {
             m_SeriesList.Clear();
             m_EpisodeList.Clear();
 
+            long nUpdateSeriesTimeStamp = 0;
             // now retrieve the info about the series
-            DBTVSeries.Log("*********  Starting UpdateSeries  *********");
             SQLCondition condition = new SQLCondition(new DBSeries());
             // all series that have an onlineID ( != 0)
             condition.Add(DBSeries.cID, 0, false);
             condition.Add(DBSeries.cID, -1, false);
+            if (bUpdateEmptySeries)
+            {
+                DBTVSeries.Log("*********  UpdateSeries - retrieve unknown series  *********");
+                // and that never had data imported from the online DB
+                condition.Add(DBSeries.cOnlineImportProcessed, 0, true);
+                // in that case, don't use the lasttime of import
+                nUpdateSeriesTimeStamp = 0;
+            }
+            else
+            {
+                DBTVSeries.Log("*********  UpdateSeries - refresh series  *********");
+                // and that already had data imported from the online DB
+                condition.Add(DBSeries.cOnlineImportProcessed, 0, false);
+                nUpdateSeriesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp);
+            }
+            m_bSeries_UpdateEmpty = bUpdateEmptySeries;
+
             List<DBSeries> SeriesList = DBSeries.Get(condition);
+
+            m_IDToSeriesMap.Clear();
             // build the map for faster retrieval
             foreach (DBSeries series in SeriesList)
                 m_IDToSeriesMap.Add(series[DBSeries.cID], series);
@@ -299,7 +323,7 @@ namespace WindowPlugins.GUITVSeries
 
             // use the last known timestamp from when we updated the series
             DBTVSeries.Log("Updating " + SeriesList.Count + " Series");
-            UpdateSeries updateSeries = new UpdateSeries(sSeriesIDs, (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp));
+            UpdateSeries updateSeries = new UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
             updateSeries.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateSeriesCompleted);
             updateSeries.DoParse();
         }
@@ -307,60 +331,107 @@ namespace WindowPlugins.GUITVSeries
         void OnlineParsing_UpdateSeriesCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             UpdateSeriesResults results = (UpdateSeriesResults)e.Result;
-
-            foreach (DBSeries onlineSeries in results.listSeries)
+            
+            if (results != null)
             {
-                DBTVSeries.Log("Updating data for " + onlineSeries[DBSeries.cPrettyName]);
-                // find the corresponding series in our list
-                DBSeries localSeries = m_IDToSeriesMap[onlineSeries[DBSeries.cID]];
-
-                if (localSeries != null)
+                foreach (DBSeries onlineSeries in results.listSeries)
                 {
-                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
-                    foreach (String key in onlineSeries.FieldNames)
+                    DBTVSeries.Log("Updating data for " + onlineSeries[DBSeries.cPrettyName]);
+                    // find the corresponding series in our list
+                    DBSeries localSeries = m_IDToSeriesMap[onlineSeries[DBSeries.cID]];
+
+                    if (localSeries != null)
                     {
-                        if (key != DBSeries.cParsedName)
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in onlineSeries.FieldNames)
                         {
-                            localSeries.AddColumn(key, new DBField(DBField.cTypeString));
-                            localSeries[key] = onlineSeries[key];
+                            if (key != DBSeries.cParsedName)
+                            {
+                                localSeries.AddColumn(key, new DBField(DBField.cTypeString));
+                                localSeries[key] = onlineSeries[key];
+                            }
                         }
+                        localSeries[DBSeries.cOnlineImportProcessed] = 1;
+                        localSeries.Commit();
                     }
-                    localSeries.Commit();
+                    else
+                    {
+                        // hopefully the server will NEVER return an ID I didn't asked for!
+                    }
+                }
+
+                // now process incorrect IDs if any
+                foreach (int nIncorrectID in results.listIncorrectIDs)
+                {
+                    m_bReparseNeeded = true;
+                    DBTVSeries.Log("Incorrect SeriesID found! ID=" + nIncorrectID + " for local series '" + m_IDToSeriesMap[nIncorrectID][DBSeries.cParsedName] + "'");
+                    // reset the seriesID of this series
+                    m_IDToSeriesMap[nIncorrectID][DBSeries.cID] = 0;
+                    m_IDToSeriesMap[nIncorrectID][DBSeries.cOnlineImportProcessed] = 0;
+                    m_IDToSeriesMap[nIncorrectID].Commit();
+                }
+            }
+
+            if (m_bSeries_UpdateEmpty)
+            {
+                // now do an regular update (refresh, with timestamp) on all the series
+                UpdateSeries(false);
+            }
+            else 
+            {
+                // save last series timestamp
+                if (results != null)
+                    DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, results.m_nServerTimeStamp);
+
+                // now update the episodes
+                UpdateEpisodes_Next(true, true);
+            }
+        }
+
+        void UpdateEpisodes_Next(bool bUpdateEmptyEpisodes, bool bStart)
+        {
+            // now retrieve the info about the series
+            if (bStart)
+            {
+                SQLCondition condition = new SQLCondition(new DBOnlineEpisode());
+                // all series that have an onlineID ( != 0)
+                condition.Add(DBOnlineEpisode.cID, 0, false);
+
+                if (bUpdateEmptyEpisodes)
+                {
+                    DBTVSeries.Log("*********  UpdateEpisodes - retrieve unknown episodes  *********");
+                    // and that never had data imported from the online DB
+                    condition.Add(DBOnlineEpisode.cOnlineImportProcessed, 0, true);
                 }
                 else
                 {
-                    // hopefully the server will NEVER return an ID I didn't asked for!
+                    DBTVSeries.Log("*********  UpdateEpisodes - refresh episodes  *********");
+                    // and that already had data imported from the online DB
+                    condition.Add(DBOnlineEpisode.cOnlineImportProcessed, 0, false);
                 }
+                m_bEpisodes_UpdateEmpty = bUpdateEmptyEpisodes;
+
+                m_EpisodeList = DBEpisode.Get(condition);
+                m_nCurrentEpisodeIndex = 0;
             }
 
-            // now process incorrect IDs if any
-            foreach (int nIncorrectID in results.listIncorrectIDs)
+            long nUpdateEpisodesTimeStamp = 0;
+            // in that case, don't use the lasttime of import
+            if (!bUpdateEmptyEpisodes)
+                nUpdateEpisodesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateEpisodesTimeStamp);
+
+            m_IDToEpisodesMap.Clear();
+            int nCount = 0;
+            while ((nCount < 100 || nUpdateEpisodesTimeStamp != 0) && m_EpisodeList.Count > 0)
             {
-                DBTVSeries.Log("Incorrect SeriesID found! ID=" + nIncorrectID + " for local series '" + m_IDToSeriesMap[nIncorrectID][DBSeries.cParsedName] + "'");
-                // reset the seriesID of this series
-                m_IDToSeriesMap[nIncorrectID][DBSeries.cID] = 0;
-                m_IDToSeriesMap[nIncorrectID].Commit();
+                DBEpisode episode = m_EpisodeList[0];
+                m_EpisodeList.RemoveAt(0);
+                if (!m_IDToEpisodesMap.ContainsKey(episode[DBOnlineEpisode.cID]))
+                    m_IDToEpisodesMap.Add(episode[DBOnlineEpisode.cID], episode);
+
+                nCount++;
+                m_nCurrentEpisodeIndex++;
             }
-
-            // save last series timestamp
-            DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, results.m_nServerTimeStamp);
-
-            // now update the episodes
-            UpdateEpisodes();
-
-        }
-
-        void UpdateEpisodes()
-        {
-            // now retrieve the info about the series
-            DBTVSeries.Log("*********  Starting UpdateEpisodes  *********");
-            SQLCondition condition = new SQLCondition(new DBOnlineEpisode());
-            // all series that have an onlineID ( != 0)
-            condition.Add(DBOnlineEpisode.cID, 0, false);
-            List<DBEpisode> EpisodeList = DBEpisode.Get(condition);
-            // build the map for faster retrieval
-            foreach (DBEpisode episode in EpisodeList)
-                m_IDToEpisodesMap.Add(episode[DBOnlineEpisode.cID], episode);
 
             // generate a comma separated list of all the series ID
             String sEpisodeIDs = String.Empty;
@@ -373,8 +444,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // use the last known timestamp from when we updated the series
-            DBTVSeries.Log("Updating " + EpisodeList.Count + " Episodes");
-            UpdateEpisodes updateEpisodes = new UpdateEpisodes(sEpisodeIDs, (long)DBOption.GetOptions(DBOption.cUpdateEpisodesTimeStamp));
+            DBTVSeries.Log("Updating " + m_IDToEpisodesMap.Count + " Episodes, " + m_EpisodeList.Count + " left");
+            UpdateEpisodes updateEpisodes = new UpdateEpisodes(sEpisodeIDs, nUpdateEpisodesTimeStamp);
             updateEpisodes.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateEpisodesCompleted);
             updateEpisodes.DoParse();
         }
@@ -383,56 +454,86 @@ namespace WindowPlugins.GUITVSeries
         {
             UpdateEpisodesResults results = (UpdateEpisodesResults)e.Result;
 
-            foreach (DBOnlineEpisode onlineEpisode in results.listEpisodes)
+            if (results != null)
             {
-                DBTVSeries.Log("Updating data for " + onlineEpisode[DBEpisode.cCompositeID]);
-                // find the corresponding series in our list
-                DBEpisode localEpisode = m_IDToEpisodesMap[onlineEpisode[DBOnlineEpisode.cID]];
-
-                if (localEpisode != null)
+                foreach (DBOnlineEpisode onlineEpisode in results.listEpisodes)
                 {
-                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
-                    foreach (String key in onlineEpisode.FieldNames)
-                    {
-                        switch (key)
-                        {
-                            case DBOnlineEpisode.cCompositeID:
-                            case DBEpisode.cSeriesParsedName:
-                                // do nothing here, it would break the DB links
-                                break;
+                    // find the corresponding series in our list
+                    DBEpisode localEpisode = m_IDToEpisodesMap[onlineEpisode[DBOnlineEpisode.cID]];
+                    DBTVSeries.Log("Updating data for " + localEpisode[DBEpisode.cCompositeID]);
 
-                            default:
-                                localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
-                                localEpisode[key] = onlineEpisode[key];
-                                break;
+                    if (localEpisode != null)
+                    {
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in onlineEpisode.FieldNames)
+                        {
+                            switch (key)
+                            {
+                                case DBOnlineEpisode.cCompositeID:
+                                case DBEpisode.cSeriesParsedName:
+                                    // do nothing here, it would break the DB links
+                                    break;
+
+                                default:
+                                    localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
+                                    localEpisode[key] = onlineEpisode[key];
+                                    break;
+                            }
                         }
+                        localEpisode[DBOnlineEpisode.cOnlineImportProcessed] = 1;
+                        localEpisode.Commit();
                     }
-                    localEpisode.Commit();
+                    else
+                    {
+                        // hopefully the server will NEVER return an ID I didn't asked for!
+                    }
+                }
+
+                // now process incorrect IDs if any
+                foreach (int nIncorrectID in results.listIncorrectIDs)
+                {
+                    m_bReparseNeeded = true;
+                    DBTVSeries.Log("Incorrect EpisodeID found! ID=" + nIncorrectID + " for episode '" + m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cCompositeID] + "'");
+                    // reset the seriesID of this series
+                    m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cID] = 0;
+                    m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cOnlineImportProcessed] = 0;
+                    m_IDToEpisodesMap[nIncorrectID].Commit();
+                }
+            }
+
+            if (m_EpisodeList.Count > 0)
+            {
+                // next batch
+                UpdateEpisodes_Next(m_bEpisodes_UpdateEmpty, false);
+            }
+            else 
+            {
+                if (m_bEpisodes_UpdateEmpty)
+                {
+                    // now refresh existing episodes
+                    UpdateEpisodes_Next(false, true);
                 }
                 else
                 {
-                    // hopefully the server will NEVER return an ID I didn't asked for!
+                    // save last episodes timestamp
+                    if (results != null)
+                        DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, results.m_nServerTimeStamp);
+
+                    if (m_bReparseNeeded)
+                    {
+                        // we ran into some incorrect IDS, do it all again
+                        MatchSeries_Next(true);
+                    }
+                    else
+                    {
+                        // and we are done
+                        if (OnlineParsingCompleted != null) // only if any subscribers exist
+                        {
+                            this.OnlineParsingCompleted.Invoke();
+                        }
+                    }
                 }
             }
-
-            // now process incorrect IDs if any
-            foreach (int nIncorrectID in results.listIncorrectIDs)
-            {
-                DBTVSeries.Log("Incorrect EpisodeID found! ID=" + nIncorrectID + " for episode '" + m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cCompositeID] + "'");
-                // reset the seriesID of this series
-                m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cID] = 0;
-                m_IDToEpisodesMap[nIncorrectID].Commit();
-            }
-
-            // save last episodes timestamp
-            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, results.m_nServerTimeStamp);
-
-            // and we are done
-            if (OnlineParsingCompleted != null) // only if any subscribers exist
-            {
-                this.OnlineParsingCompleted.Invoke();
-            }
         }
-
     }
 }

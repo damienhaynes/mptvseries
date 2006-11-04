@@ -89,7 +89,6 @@ namespace WindowPlugins.GUITVSeries
             this.btnCnl.TabIndex = 4;
             this.btnCnl.Text = "Skip this time";
             this.btnCnl.UseVisualStyleBackColor = true;
-            this.btnCnl.Click += new System.EventHandler(this.btnCnl_Click);
             // 
             // btnnever
             // 
@@ -100,7 +99,6 @@ namespace WindowPlugins.GUITVSeries
             this.btnnever.TabIndex = 5;
             this.btnnever.Text = "Skip/Never ask again";
             this.btnnever.UseVisualStyleBackColor = true;
-            this.btnnever.Click += new System.EventHandler(this.btnnever_Click);
             // 
             // label2
             // 

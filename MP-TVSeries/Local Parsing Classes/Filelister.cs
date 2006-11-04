@@ -4,11 +4,18 @@ using System.Text;
 
 namespace WindowPlugins.GUITVSeries
 {
+    class PathPair
+    {
+        public String sMatch_FileName;
+        public String sFull_FileName;
+    };
+
     class Filelister
     {
-        public static String[] GetFiles()
+
+        public static List<PathPair> GetFiles()
         {
-            String[] files = new String[0];
+            List<PathPair> outList = new List<PathPair>();
             DBImportPath[] importPathes = DBImportPath.GetAll();
 
             if (importPathes != null)
@@ -19,25 +26,21 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBTVSeries.Log("Searching for all supported videos files within " + importPath[DBImportPath.cPath] + " and it's subfolders.");
                         String[] localFiles = FilesinFolder(importPath[DBImportPath.cPath].ToString());
-                        String[] trimmedLocalFiles = new String[localFiles.Length];
+
                         // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
-                        int i = 0;
                         foreach (String localFile in localFiles)
                         {
-                            trimmedLocalFiles[i] = localFile.Substring(importPath[DBImportPath.cPath].ToString().Length + 1);
-                            i++;
+                            PathPair pair = new PathPair();
+                            pair.sFull_FileName = localFile;
+                            pair.sMatch_FileName = localFile.Substring(importPath[DBImportPath.cPath].ToString().Length + 1);
+                            outList.Add(pair);
                         }
 
-                        String[] newArray = new String[files.Length + trimmedLocalFiles.Length];
-                        if (files.Length > 0)
-                            files.CopyTo(newArray, 0);
-                        trimmedLocalFiles.CopyTo(newArray, files.Length);
-                        files = newArray;
-                        DBTVSeries.Log("Found " + trimmedLocalFiles.Length + " supported video files.");
+                        DBTVSeries.Log("Found " + localFiles.Length + " supported video files.");
                     }
                 }
             }
-            return files;
+            return outList;
         }
 
         private static String[] JoinArrays(String[] arrayA, String[] arrayB)

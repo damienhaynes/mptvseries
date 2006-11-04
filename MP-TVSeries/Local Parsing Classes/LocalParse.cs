@@ -19,15 +19,15 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            String[] files = Filelister.GetFiles();
+            List<PathPair> files = Filelister.GetFiles();
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
             int nFailed = 0;
             int nCount = 0;
-            foreach (String file in files)
+            foreach (PathPair file in files)
             {
-                FilenameParser parser = new FilenameParser(file);
-                ListViewItem item = new ListViewItem(file);
+                FilenameParser parser = new FilenameParser(file.sMatch_FileName);
+                ListViewItem item = new ListViewItem(file.sMatch_FileName);
                 item.UseItemStyleForSubItems = true;
                 
                 progressReporter = new parseResult();
@@ -79,14 +79,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                progressReporter.filename = file;
+                progressReporter.match_filename = file.sMatch_FileName;
+                progressReporter.full_filename = file.sFull_FileName;
                 progressReporter.item = item;
                 progressReporter.parser = parser;
                 results.Add(progressReporter);
 
                 if (nCount++ % 50 == 0)
                 {
-                    worker.ReportProgress(Convert.ToInt32(100.0 / files.Length * nCount), results);
+                    worker.ReportProgress(Convert.ToInt32(100.0 / files.Count * nCount), results);
                     results = new List<parseResult>();
                 }
                 
@@ -109,6 +110,7 @@ namespace WindowPlugins.GUITVSeries
         public ListViewItem item;
         public string exception;
         public FilenameParser parser;
-        public string filename;
+        public string match_filename;
+        public string full_filename;
     }
 }

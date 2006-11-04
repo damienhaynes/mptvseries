@@ -18,6 +18,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cGenre = "Genre";
         public const String cSummary = "Summary";
         public const String cBannerFileName = "BannerFileName";
+        public const String cOnlineImportProcessed = "OnlineImportProcessed";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -76,6 +77,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cGenre, new DBField(DBField.cTypeString));
             AddColumn(cBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cSummary, new DBField(DBField.cTypeString));
+            AddColumn(cOnlineImportProcessed, new DBField(DBField.cTypeInt));
         }
 
         public String Label(String fieldName)

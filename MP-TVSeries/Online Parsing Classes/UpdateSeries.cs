@@ -28,50 +28,53 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            XmlNodeList nodeList = null;
-            nodeList = ZsoriParser.UpdateSeries(m_sSeriesIDs, m_nUpdateSeriesTimeStamp);
-
-            if (nodeList != null)
+            if (m_sSeriesIDs != String.Empty)
             {
-                UpdateSeriesResults results = new UpdateSeriesResults();
-                
-                foreach (XmlNode itemNode in nodeList)
+                XmlNodeList nodeList = null;
+                nodeList = ZsoriParser.UpdateSeries(m_sSeriesIDs, m_nUpdateSeriesTimeStamp);
+
+                if (nodeList != null)
                 {
-                    // first return item SHOULD ALWAYS be the sync time (hope so at least!)
-                    if (itemNode.ChildNodes[0].Name == "SyncTime")
+                    UpdateSeriesResults results = new UpdateSeriesResults();
+
+                    foreach (XmlNode itemNode in nodeList)
                     {
-                        results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
-                    }
-                    else 
-                    {
-                        DBSeries series = new DBSeries();
-                        foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                        // first return item SHOULD ALWAYS be the sync time (hope so at least!)
+                        if (itemNode.ChildNodes[0].Name == "SyncTime")
                         {
-                            if (propertyNode.Name == "IncorrectID")
+                            results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                        }
+                        else
+                        {
+                            DBSeries series = new DBSeries();
+                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
                             {
-                                // alert! drop this series, the ID doesn't match anything anymore for some reason
-                                results.listIncorrectIDs.Add(series[DBSeries.cID]);
-                                series = null;
-                                break;
-                            }
-                            else
-                            {
-                                if (DBSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                    series[DBSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                if (propertyNode.Name == "IncorrectID")
+                                {
+                                    // alert! drop this series, the ID doesn't match anything anymore for some reason
+                                    results.listIncorrectIDs.Add(series[DBSeries.cID]);
+                                    series = null;
+                                    break;
+                                }
                                 else
                                 {
-                                    // we don't know that field, add it to the series table
-                                    series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                                    series[propertyNode.Name] = propertyNode.InnerText;
+                                    if (DBSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                                        series[DBSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                    else
+                                    {
+                                        // we don't know that field, add it to the series table
+                                        series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                                        series[propertyNode.Name] = propertyNode.InnerText;
+                                    }
                                 }
                             }
+                            if (series != null)
+                                results.listSeries.Add(series);
                         }
-                        if (series != null)
-                            results.listSeries.Add(series);
                     }
-                }
 
-                e.Result = results;
+                    e.Result = results;
+                }
             }
         }
     }

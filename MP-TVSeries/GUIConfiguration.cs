@@ -400,9 +400,9 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 if (!progress.success)
-                    listBox_Results.Items.Add("Parsing failed for " + progress.filename);
+                    listBox_Results.Items.Add("Parsing failed for " + progress.match_filename);
                 if (progress.failedSeason || progress.failedEpisode)
-                    listBox_Results.Items.Add(progress.exception + " for " + progress.filename);
+                    listBox_Results.Items.Add(progress.exception + " for " + progress.match_filename);
                 listView_ParsingResults.Items.Add(progress.item);
                 listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
                 // only do that once in a while, it's really slow
@@ -523,7 +523,7 @@ namespace WindowPlugins.GUITVSeries
                     season.Commit();
 
                     // then episode
-                    DBEpisode episode = new DBEpisode(progress.filename);
+                    DBEpisode episode = new DBEpisode(progress.full_filename);
                     bool bNewFile = false;
                     if (episode[DBEpisode.cImportProcessed] != 2)
                     {

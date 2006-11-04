@@ -11,8 +11,6 @@ namespace WindowPlugins.GUITVSeries
     public partial class SelectSeries : Form
     {
         List<DBSeries> _series;
-        bool cancelled = false;
-        bool neveragain = false;
 
         public SelectSeries(String sLocalSeriesName)
         {
@@ -24,17 +22,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                if (cancelled || neverAskAgain)
-                    return null;
-                else
-                    return _series[this.listbox_Series.SelectedIndex]; 
-            }
-        }
-        public bool neverAskAgain
-        {
-            get
-            {
-                return neveragain;
+                return _series[this.listbox_Series.SelectedIndex]; 
             }
         }
 
@@ -51,17 +39,6 @@ namespace WindowPlugins.GUITVSeries
         private void listItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBSeries.cSummary]; 
-        }
-
-        private void btnCnl_Click(object sender, EventArgs e)
-        {
-            cancelled = true;
-        }
-
-        private void btnnever_Click(object sender, EventArgs e)
-        {
-            cancelled = true;
-            neveragain = true;
         }
     }
 }
