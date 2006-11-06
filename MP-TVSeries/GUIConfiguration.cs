@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
@@ -17,12 +18,9 @@ namespace WindowPlugins.GUITVSeries
 {
     public partial class ConfigurationForm : Form
     {
-        private const String sNodeImportPathes ="import_pathes";
-        private const String sNodeExpressions = "import_pathes";
-        private const String sNodeTest = "import_pathes";
-
         private List<Panel> m_paneList = new List<Panel>();
-
+        private TreeNode nodeEdited = null;
+        private DateTime m_timingStart = new DateTime();
 
         public ConfigurationForm()
         {
@@ -245,6 +243,11 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         seasonNode.Nodes.Add(episodeNode);
+                    }
+                    if (episodesList.Count == 0)
+                    {
+                        // no episodes => no season node
+                        seriesNode.Nodes.Remove(seasonNode);
                     }
                 }
             }
@@ -494,6 +497,11 @@ namespace WindowPlugins.GUITVSeries
             {
                 OnlineParsing_Start();
             }
+            else
+            {
+                TimeSpan span = DateTime.Now - m_timingStart;
+                DBTVSeries.Log("Parsing Completed in " + span);
+            }
         }
 
         void LocalParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
@@ -544,9 +552,9 @@ namespace WindowPlugins.GUITVSeries
 
         private void LocalParsing_Start()
         {
+            m_timingStart = DateTime.Now;
             // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
-
             LocalParse runner = new LocalParse();
             runner.worker.ProgressChanged += new ProgressChangedEventHandler(LocalParsing_LocalParseProgress);
             runner.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(LocalParsing_LocalParseCompleted);
@@ -558,13 +566,21 @@ namespace WindowPlugins.GUITVSeries
         private void OnlineParsing_Start()
         {
             OnlineParsing runner = new OnlineParsing();
+            runner.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
             runner.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
             runner.Start();
         }
 
+        void runner_OnlineParsingProgress(int nProgress)
+        {
+            this.progressBar_Parsing.Value = nProgress;
+        }
+
         void runner_OnlineParsingCompleted()
         {
-            MessageBox.Show("Parsing complete");
+            this.progressBar_Parsing.Value = 100;
+            TimeSpan span = DateTime.Now - m_timingStart;
+            DBTVSeries.Log("Parsing Completed in " + span);
             LoadTree();
         }
         
@@ -598,36 +614,42 @@ namespace WindowPlugins.GUITVSeries
                 #region When Episode Nodes is Clicked
 
                 case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
-//                     String filename = this.m_Database.GetSeries(episode.SeriesIndex).GetImageBanner();
-//                     if (filename != String.Empty)
-//                         this.pictureBox_Series.Image = Image.FromFile(filename);
-
-                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
-                    foreach (String key in episode.FieldNames)
                     {
-                        switch (key)
+                        DBEpisode episode = (DBEpisode)node.Tag;
+                        // assume an episode is always in a season which is always in a series
+                        DBSeries series = (DBSeries)node.Parent.Parent.Tag;
+
+                        String filename = series.Banner;
+                        if (filename != String.Empty)
+                            this.pictureBox_Series.Image = Image.FromFile(filename);
+
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in episode.FieldNames)
                         {
-                            case DBEpisode.cSeasonIndex:
-                            case DBEpisode.cEpisodeIndex:
-                            case DBEpisode.cSeriesParsedName:
-                            case DBEpisode.cCompositeID:
-                            case DBEpisode.cFilename:
-                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
-                                break;
+                            switch (key)
+                            {
+                                case DBEpisode.cSeasonIndex:
+                                case DBEpisode.cEpisodeIndex:
+                                case DBEpisode.cSeriesParsedName:
+                                case DBEpisode.cCompositeID:
+                                case DBEpisode.cFilename:
+                                case DBOnlineEpisode.cID:
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
+                                    break;
 
-                            case DBEpisode.cEpisodeName:
-                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), DBOnlineEpisode.cEpisodeName, episode[key]);
-                                break;
+                                case DBEpisode.cEpisodeName:
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), DBOnlineEpisode.cEpisodeName, episode[key]);
+                                    break;
 
-                            case DBOnlineEpisode.cEpisodeName:
-                                // this one is going to be shown via DBEpisode.cEpisodeName
-                                break;
+                                case DBOnlineEpisode.cEpisodeName:
+                                    // this one is going to be shown via DBEpisode.cEpisodeName
+                                    break;
 
-                            default:
-                                AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
-                                break;
+                                default:
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
 
+                            }
                         }
                     }
                     break;
@@ -639,24 +661,43 @@ namespace WindowPlugins.GUITVSeries
                 #region When Season Nodes is Clicked
 
                 case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    String filename = season[DBSeason.cBannerFileName];
-                    if (filename != String.Empty)
-                        this.pictureBox_Series.Image = Image.FromFile(filename);
-
-                    // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
-                    foreach (String key in season.FieldNames)
                     {
-                        switch (key)
+                        DBSeason season = (DBSeason)node.Tag;
+
+                        comboBox_BannerSelection.Items.Clear();
+                        // populate banner dropdown
+                        foreach (String filename in season.BannerList)
                         {
-                            case DBSeason.cBannerFileName:
-                                AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key]);
-                                break;
+                            BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
+                            comboBox_BannerSelection.Items.Add(newItem);
+                        }
 
-                            default:
-                                AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
-                                break;
+                        if (season.Banner != String.Empty)
+                        {
+                            this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                            foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
+                                if (comboItem.sFullPath == season.Banner)
+                                {
+                                    comboBox_BannerSelection.SelectedItem = comboItem;
+                                    break;
+                                }
+                        }
 
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in season.FieldNames)
+                        {
+                            switch (key)
+                            {
+                                case DBSeason.cBannerFileNames:
+                                case DBSeason.cCurrentBannerFileName:
+                                    // hide those, they are handled via Banner & BannerList
+                                    break;
+
+                                default:
+                                    AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
+                                    break;
+
+                            }
                         }
                     }
                     break;
@@ -668,19 +709,41 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeries.cTableName:
                     {
                         DBSeries series = (DBSeries)node.Tag;
-                        filename = series[DBSeries.cBannerFileName];
 
-                        if (filename != String.Empty)
-                            this.pictureBox_Series.Image = Image.FromFile(filename);
+                        comboBox_BannerSelection.Items.Clear();
+                        // populate banner dropdown
+                        foreach (String filename in series.BannerList)
+                        {
+                            BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
+                            comboBox_BannerSelection.Items.Add(newItem);
+                        }
+
+                        if (series.Banner != String.Empty)
+                        {
+                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                            foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
+                                if (comboItem.sFullPath == series.Banner)
+                                {
+                                    comboBox_BannerSelection.SelectedItem = comboItem;
+                                    break;
+                                }
+                        }
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in series.FieldNames)
                         {
                             switch (key)
                             {
+                                case DBSeries.cBannerFileNames:
+                                case DBSeries.cCurrentBannerFileName:
+                                    // hide those, they are handled via Banner & BannerList
+                                    break;
+
                                 case DBSeries.cParsedName:
+                                case DBSeries.cID:
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key], false);
                                     break;
+
 
                                 default:
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key]);
@@ -729,6 +792,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
+            nodeEdited = treeView_Library.SelectedNode;
             /*
             if (this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString() == "Filename")
             {
@@ -750,30 +814,29 @@ namespace WindowPlugins.GUITVSeries
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            TreeNode node = treeView_Library.SelectedNode;
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
-            switch (node.Name)
+            switch (nodeEdited.Name)
             {
                 case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
+                    DBSeries series = (DBSeries)nodeEdited.Tag;
                     series[(String)cell.Tag] = (String)cell.Value;
                     series.Commit();
                     if (series[DBSeries.cPrettyName] != String.Empty)
-                        node.Text = series[DBSeries.cPrettyName];
+                        nodeEdited.Text = series[DBSeries.cPrettyName];
                     break;
 
                 case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
+                    DBSeason season = (DBSeason)nodeEdited.Tag;
                     season[(String)cell.Tag] = (String)cell.Value;
                     season.Commit();
                     break;
 
                 case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
+                    DBEpisode episode = (DBEpisode)nodeEdited.Tag;
                     episode[(String)cell.Tag] = (String)cell.Value;
                     episode.Commit();
                     if (episode[DBEpisode.cEpisodeName] != String.Empty)
-                        node.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
+                        nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
                     break;
             }
         }
@@ -830,7 +893,63 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cLocalDataOverride, checkBox_LocalDataOverride.Checked);
         }
 
+        private void comboBox_BannerSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (treeView_Library.SelectedNode.Name)
+            {
+                case DBSeries.cTableName:
+                    {
+                        DBSeries series = (DBSeries)treeView_Library.SelectedNode.Tag;
+                        series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        series.Commit();
+                    }
+                    break;
+
+                case DBSeason.cTableName:
+                    {
+                        DBSeason season = (DBSeason)treeView_Library.SelectedNode.Tag;
+                        season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                        season.Commit();
+                    }
+                    break;
+
+                case DBEpisode.cTableName:
+                    {
+                        DBSeries series = (DBSeries)treeView_Library.SelectedNode.Parent.Parent.Tag;
+                        series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        series.Commit();
+                    }
+                    break;
+            }   
+        }
+
+        private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
     }
+
+    public class BannerComboItem
+    {
+        public String sName = String.Empty;
+        public String sFullPath;
+
+        public BannerComboItem(String sName, String sFullPath)
+        {
+            this.sName = sName;
+            this.sFullPath = sFullPath;
+        }
+
+        public override String ToString()
+        {
+            return sName;
+        }
+
+    };
+
 
     public class DetailsProperty
     {

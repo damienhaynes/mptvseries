@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
+using System.IO;
 using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
@@ -13,7 +14,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesName = DBSeries.cParsedName;
         public const String cIndex = "SeasonIndex";
-        public const String cBannerFileName = "BannerFileName";
+        public const String cBannerFileNames = "BannerFileNames";
+        public const String cCurrentBannerFileName = "CurrentBannerFileName";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -22,7 +24,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
             s_FieldToDisplayNameMap.Add(cSeriesName, "Series Parsed Name");
             s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
-            s_FieldToDisplayNameMap.Add(cBannerFileName, "Banner FileName");
+            s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
+            s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -60,7 +63,60 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cID, new DBField(DBField.cTypeString, true));
             AddColumn(cSeriesName, new DBField(DBField.cTypeString));
             AddColumn(cIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cBannerFileName, new DBField(DBField.cTypeString));
+            AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
+            AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
+        }
+
+        public String Banner
+        {
+            get
+            {
+                if (base[cCurrentBannerFileName] == String.Empty)
+                    return String.Empty;
+
+                if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
+                    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
+                else
+                    return base[cCurrentBannerFileName];
+            }
+            set
+            {
+                base[cCurrentBannerFileName] = value;
+            }
+        }
+
+        public List<String> BannerList
+        {
+            get
+            {
+                List<String> outList = new List<string>();
+                String sList = base[cBannerFileNames];
+                if (sList == String.Empty)
+                    return outList;
+
+                String[] split = sList.Split(new char[] { '|' });
+                foreach (String filename in split)
+                {
+                    if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
+                        outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
+                    else
+                        outList.Add(filename);
+                }
+                return outList;
+            }
+            set
+            {
+                String sIn = String.Empty;
+                foreach (String filename in value)
+                {
+                    if (sIn == String.Empty)
+                        sIn += filename;
+                    else
+                        sIn += "," + filename;
+                }
+                base[cBannerFileNames] = sIn;
+
+            }
         }
 
         public static List<DBSeason> Get(String sSeriesName)

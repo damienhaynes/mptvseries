@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using System.IO;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
@@ -17,7 +18,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cStatus = "Status";
         public const String cGenre = "Genre";
         public const String cSummary = "Summary";
-        public const String cBannerFileName = "BannerFileName";
+        public const String cBannerFileNames = "BannerFileNames";
+        public const String cCurrentBannerFileName = "CurrentBannerFileName";
         public const String cOnlineImportProcessed = "OnlineImportProcessed";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -31,6 +33,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
             s_FieldToDisplayNameMap.Add(cGenre, "Genre");
             s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");
+            s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
+            s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
 
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
@@ -75,17 +79,10 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cPrettyName, new DBField(DBField.cTypeString));
             AddColumn(cStatus, new DBField(DBField.cTypeString));
             AddColumn(cGenre, new DBField(DBField.cTypeString));
-            AddColumn(cBannerFileName, new DBField(DBField.cTypeString));
+            AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
+            AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cSummary, new DBField(DBField.cTypeString));
             AddColumn(cOnlineImportProcessed, new DBField(DBField.cTypeInt));
-        }
-
-        public String Label(String fieldName)
-        {
-            if (s_FieldToDisplayNameMap.ContainsKey(fieldName))
-                return s_FieldToDisplayNameMap[fieldName];
-            else
-                return fieldName;
         }
 
         // function override to search on both this & the onlineEpisode
@@ -109,6 +106,58 @@ namespace WindowPlugins.GUITVSeries
             set
             {
                 base[fieldName] = value;
+            }
+        }
+
+        public String Banner
+        {
+            get
+            {
+                if (base[cCurrentBannerFileName] == String.Empty)
+                    return String.Empty;
+
+                if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
+                    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
+                else
+                    return base[cCurrentBannerFileName];
+            }
+            set
+            {
+                base[cCurrentBannerFileName] = value;
+            }
+        }
+
+        public List<String> BannerList
+        {
+            get
+            {
+                List<String> outList = new List<string>();
+                String sList = base[cBannerFileNames];
+                if (sList == String.Empty)
+                    return outList;
+
+                String[] split = sList.Split(new char[]{'|'});
+                foreach (String filename in split)
+                {
+                    if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
+                        outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
+                    else
+                        outList.Add(filename);
+                }
+                return outList;
+            }
+            set
+            {
+                String sIn = String.Empty;
+                foreach (String filename in value)
+                {
+                    if (sIn == String.Empty)
+                        sIn += filename;
+                    else
+                        sIn += "," + filename;
+                }
+                base[cBannerFileNames] = sIn;
+
             }
         }
 

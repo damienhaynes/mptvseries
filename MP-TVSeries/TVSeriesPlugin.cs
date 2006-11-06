@@ -185,7 +185,7 @@ namespace MediaPortal.GUI.Video
                             GUIListItem item = new GUIListItem(series[DBSeries.cPrettyName]);
 //                            item.Label2 = series.Airs;
                             item.TVTag = series;
-                            String filename = series[DBSeries.cBannerFileName];
+                            String filename = series.Banner;
                             if (filename != String.Empty)
                                 item.IconImage = item.IconImageBig = filename;
                             item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Series_OnItemSelected);
@@ -210,8 +210,8 @@ namespace MediaPortal.GUI.Video
                             try
                             {
                                 GUIListItem item = new GUIListItem("Season " + season[DBSeason.cIndex]);
-                                String filename = season[DBSeason.cBannerFileName];
-                                if (filename == String.Empty) filename = this.m_SelectedSeries[DBSeries.cBannerFileName];
+                                String filename = season.Banner;
+                                if (filename == String.Empty) filename = this.m_SelectedSeries.Banner;
                                 if (filename != String.Empty)
                                 {
                                     item.IconImage = filename;
@@ -600,7 +600,7 @@ namespace MediaPortal.GUI.Video
             DBSeries series = (DBSeries)item.TVTag;
             try
             {
-                String filename = series[DBSeries.cBannerFileName];
+                String filename = series.Banner;
                 if (filename != null)
                 {
                     this.m_Image.SetFileName(filename);

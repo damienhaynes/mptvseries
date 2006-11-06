@@ -14,13 +14,14 @@ namespace WindowPlugins.GUITVSeries
         private StreamWriter m_LogStream;
         private System.Windows.Forms.ListBox m_ListLog;
         private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
+
         private delegate void newMsghandler(string input);
-        private delegate int itemAddDel(string msg);
         private event newMsghandler newMsg;
 
         public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
         {
             this.m_ListLog = notifier;
+            this.newMsg +=new newMsghandler(LogWriter_newMsg);
         }
         public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
         {
@@ -39,22 +40,54 @@ namespace WindowPlugins.GUITVSeries
             logfile += @"\Log\MP-TVSeries.log";
 #endif
             this.m_filename = logfile;
-            newMsg += new newMsghandler(LogWriter_newMsg);
         }
 
         void LogWriter_newMsg(string entry)
         {
+           
 
-            if (this.m_ListLog != null)
+        }
+
+
+        public void Write(String entry)
+        {
+            lock (typeof(LogWriter))
             {
-                itemAddDel del = new itemAddDel(m_ListLog.Items.Add);
+                if (File.Exists(this.m_filename))
+                    this.m_LogStream = File.AppendText(this.m_filename);
+                else
+                    this.m_LogStream = File.CreateText(this.m_filename);
 
-                m_ListLog.Invoke(del, entry);
-                int nTopIndex = m_ListLog.Items.Count - m_ListLog.Height / m_ListLog.ItemHeight;
-                if (nTopIndex < 0)
-                    nTopIndex = 0;
-                m_ListLog.TopIndex = nTopIndex;
+                this.m_LogStream.WriteLine(DateTime.Now + " - " + entry);
+                this.m_LogStream.Flush();
+
+                this.m_LogStream.Close();
+                this.m_LogStream.Dispose();
+
+                newMsg.Invoke(entry);
             }
+            Log_Write(entry);
+        }
+
+        public void Log_Write(String entry)
+        {
+            if (m_ListLog != null)
+            {
+                if (m_ListLog.InvokeRequired)
+                {
+                    newMsghandler d = new newMsghandler(Write);
+                    m_ListLog.Invoke(d, new object[] { entry });
+                }
+                else
+                {
+                    m_ListLog.Items.Add(entry);
+                    int nTopIndex = m_ListLog.Items.Count - m_ListLog.Height / m_ListLog.ItemHeight;
+                    if (nTopIndex < 0)
+                        nTopIndex = 0;
+                    m_ListLog.TopIndex = nTopIndex;
+                }
+            }
+
             //if (this.m_DlgProgress != null)
             //{
             //    int lineSize = 50;
@@ -79,26 +112,6 @@ namespace WindowPlugins.GUITVSeries
             //    }
             //    this.m_DlgProgress.Progress();
             //}
-        }
-
-        public void Write(String entry)
-        {
-            lock (typeof(LogWriter))
-            {
-                
-
-                if (File.Exists(this.m_filename))
-                    this.m_LogStream = File.AppendText(this.m_filename);
-                else
-                    this.m_LogStream = File.CreateText(this.m_filename);
-
-                this.m_LogStream.WriteLine(DateTime.Now + " - " + entry);
-                this.m_LogStream.Flush();
-
-                this.m_LogStream.Close();
-                this.m_LogStream.Dispose();
-            }
-                
         }
     }
 }

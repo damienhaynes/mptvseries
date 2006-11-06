@@ -69,6 +69,7 @@
     <Compile Include="DB Classes\DBSeries.cs" />
     <Compile Include="Local Parsing Classes\Filelister.cs" />
     <Compile Include="Local Parsing Classes\ParserFilename.cs" />
+    <Compile Include="Online Parsing Classes\GetBanner.cs" />
     <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
@@ -80,7 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="DB Classes\ZsoriParser.cs" />
+    <Compile Include="Online Parsing Classes\ZsoriParser.cs" />
     <Compile Include="Online Parsing Classes\SelectSeries.cs">
       <SubType>Form</SubType>
     </Compile>

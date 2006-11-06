@@ -14,14 +14,17 @@ namespace WindowPlugins.GUITVSeries
         List<DBEpisode> m_EpisodeList = new List<DBEpisode>();
         int m_nCurrentEpisodeIndex = 0;
 
-        bool m_bSeries_UpdateEmpty = false;
-        bool m_bEpisodes_UpdateEmpty = false;
+        bool m_bSeries_UpdateNew = false;
+        bool m_bEpisodes_UpdateNew = false;
+        bool m_bSeriesBanners_UpdateNew = false;
 
         Dictionary<int, DBSeries> m_IDToSeriesMap = new Dictionary<int,DBSeries>();
         Dictionary<int, DBEpisode> m_IDToEpisodesMap = new Dictionary<int, DBEpisode>();
 
         bool m_bReparseNeeded = false;
 
+        // used for progress only
+        int m_nTotalUpdateEpisode = 0;
 
         public delegate void OnlineParsingProgressHandler(int nProgress);
         public delegate void OnlineParsingCompletedHandler();
@@ -42,7 +45,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void MatchSeries_Next(bool bStart)
         {
-
             if (bStart)
             {
                 DBTVSeries.Log("*********  GetSeries - unknown series  *********");
@@ -58,8 +60,11 @@ namespace WindowPlugins.GUITVSeries
                 m_nCurrentSeriesIndex++;
             }
 
+            if (m_SeriesList.Count > 0)
+                this.OnlineParsingProgress.Invoke(10 * m_nCurrentSeriesIndex / m_SeriesList.Count);
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
+                this.OnlineParsingProgress.Invoke(10);
                 // we did all our series. Go to the next step, the episode retrieval
                 MatchEpisodes_Next(true);
             }
@@ -122,7 +127,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // process next series
-             MatchSeries_Next(false);
+            MatchSeries_Next(false);
         }
 
         void MatchEpisodes_Next(bool bStart)
@@ -142,8 +147,11 @@ namespace WindowPlugins.GUITVSeries
                 m_nCurrentSeriesIndex++;
             }
 
+            if (m_SeriesList.Count > 0)
+                this.OnlineParsingProgress.Invoke(10 + (30 * m_nCurrentSeriesIndex / m_SeriesList.Count));
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
+                this.OnlineParsingProgress.Invoke(40);
                 // we did all our series. Go to the next step, the series data update
                 UpdateSeries(true);
             }
@@ -302,7 +310,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(DBSeries.cOnlineImportProcessed, 0, false);
                 nUpdateSeriesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp);
             }
-            m_bSeries_UpdateEmpty = bUpdateEmptySeries;
+            m_bSeries_UpdateNew = bUpdateEmptySeries;
 
             List<DBSeries> SeriesList = DBSeries.Get(condition);
 
@@ -372,23 +380,152 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            if (m_bSeries_UpdateEmpty)
+            if (m_bSeries_UpdateNew)
             {
+                this.OnlineParsingProgress.Invoke(45);
                 // now do an regular update (refresh, with timestamp) on all the series
                 UpdateSeries(false);
             }
             else 
             {
+                this.OnlineParsingProgress.Invoke(50);
                 // save last series timestamp
                 if (results != null)
                     DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, results.m_nServerTimeStamp);
 
-                // now update the episodes
-                UpdateEpisodes_Next(true, true);
+                UpdateBanners(true, true);
             }
         }
 
-        void UpdateEpisodes_Next(bool bUpdateEmptyEpisodes, bool bStart)
+        void UpdateBanners(bool bUpdateNewSeries, bool bStart)
+        {
+            if (bStart)
+            {
+                SQLCondition condition = new SQLCondition(new DBSeries());
+                // all series that don't have an onlineID ( = 0)
+                condition.Add(DBSeries.cID, 0, false);
+                condition.Add(DBSeries.cID, -1, false);
+                if (bUpdateNewSeries)
+                {
+                    DBTVSeries.Log("*********  UpdateBanners - retrieve banners for new series  *********");
+                    // and that never had data imported from the online DB
+                    condition.Add(DBSeries.cOnlineImportProcessed, 2, false);
+                }
+                else
+                {
+                    DBTVSeries.Log("*********  UpdateBanners - refresh banners for new series  *********");
+                    // and that already had data imported from the online DB
+                    condition.Add(DBSeries.cOnlineImportProcessed, 2, true);
+                }
+                m_bSeriesBanners_UpdateNew = bUpdateNewSeries;
+                m_SeriesList = DBSeries.Get(condition);
+                m_nCurrentSeriesIndex = 0;
+                DBTVSeries.Log("Looking for banners on " + m_SeriesList.Count + " Series");
+            }
+            else
+            {
+                m_nCurrentSeriesIndex++;
+            }
+
+            if (m_SeriesList.Count > 0)
+                this.OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries?0:10) + (10 * m_nCurrentSeriesIndex / m_SeriesList.Count));
+            else
+                this.OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries ? 10 : 20));
+
+            long nUpdateBannersTimeStamp = 0;
+            // in that case, don't use the lasttime of import
+            if (!bUpdateNewSeries)
+                nUpdateBannersTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateBannersTimeStamp);
+
+            if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
+            {
+                if (m_bSeriesBanners_UpdateNew)
+                {
+                    // refresh existing banners
+                    UpdateBanners(false, true);
+                }
+                else
+                {
+                    // now that the update is done, copy the timestamp from the series update into the banner one
+                    // HACK: we need a value returned from the server
+                    DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp));
+
+                    // now update the episodes
+                    UpdateEpisodes_Next(true, true);
+                }
+            }
+            else
+            {
+                if (m_bSeriesBanners_UpdateNew)
+                    DBTVSeries.Log("Downloading banners for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+                else
+                    DBTVSeries.Log("Refreshing banners for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+                GetBanner bannerUpdater = new GetBanner(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], nUpdateBannersTimeStamp);
+                bannerUpdater.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateBannersCompleted);
+                bannerUpdater.DoParse();
+            }
+        }
+
+        void OnlineParsing_UpdateBannersCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            GetBannersResults results = (GetBannersResults)e.Result;
+            String sLastTextBanner = String.Empty;
+            String sLastGraphicalBanner = String.Empty;
+
+            foreach (BannerSeries bannerSeries in results.bannerSeriesList)
+            {
+                if (m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames].ToString().IndexOf(bannerSeries.sBannerFileName) == -1)
+                {
+                    if (m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames] == String.Empty)
+                        m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
+                    else
+                    {
+                        DBTVSeries.Log("New banner found for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName] + " : " + bannerSeries.sOnlineBannerPath);
+                        m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames] += "|" + bannerSeries.sBannerFileName;
+                    }
+                }
+                // prefer graphical
+                if (bannerSeries.bGraphical)
+                    sLastGraphicalBanner = bannerSeries.sBannerFileName;
+                else
+                    sLastTextBanner = bannerSeries.sBannerFileName;
+            }
+            // use the last banner as the current one (if any graphical found)
+            // otherwise use the first available
+            if (sLastGraphicalBanner != String.Empty)
+                m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cCurrentBannerFileName] = sLastGraphicalBanner;
+            else
+                m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cCurrentBannerFileName] = sLastTextBanner;
+
+            m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cOnlineImportProcessed] = 2;
+            m_SeriesList[m_nCurrentSeriesIndex].Commit();
+
+            foreach (BannerSeason bannerSeason in results.bannerSeasonList)
+            {
+                DBSeason season = new DBSeason(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName], bannerSeason.nIndex);
+                if (season[DBSeason.cBannerFileNames].ToString().IndexOf(bannerSeason.sBannerFileName) == -1)
+                {
+                    if (season[DBSeason.cBannerFileNames] == String.Empty)
+                    {
+                        season[DBSeason.cBannerFileNames] += bannerSeason.sBannerFileName;
+                    }
+                    else
+                    {
+                        season[DBSeason.cBannerFileNames] += "|" + bannerSeason.sBannerFileName;
+                        DBTVSeries.Log("New banner found for " + season[DBSeason.cID] + " : " + bannerSeason.sOnlineBannerPath);
+                    }
+                }
+                // use the last banner as the current one
+                season[DBSeason.cCurrentBannerFileName] = bannerSeason.sBannerFileName;
+                season.Commit();
+            }
+
+            // process next series
+            UpdateBanners(m_bSeriesBanners_UpdateNew, false);
+        }
+
+
+        void UpdateEpisodes_Next(bool bUpdateNewEpisodes, bool bStart)
         {
             // now retrieve the info about the series
             if (bStart)
@@ -396,8 +533,9 @@ namespace WindowPlugins.GUITVSeries
                 SQLCondition condition = new SQLCondition(new DBOnlineEpisode());
                 // all series that have an onlineID ( != 0)
                 condition.Add(DBOnlineEpisode.cID, 0, false);
+                condition.Add(DBOnlineEpisode.cID, -1, false);
 
-                if (bUpdateEmptyEpisodes)
+                if (bUpdateNewEpisodes)
                 {
                     DBTVSeries.Log("*********  UpdateEpisodes - retrieve unknown episodes  *********");
                     // and that never had data imported from the online DB
@@ -409,20 +547,26 @@ namespace WindowPlugins.GUITVSeries
                     // and that already had data imported from the online DB
                     condition.Add(DBOnlineEpisode.cOnlineImportProcessed, 0, false);
                 }
-                m_bEpisodes_UpdateEmpty = bUpdateEmptyEpisodes;
+                m_bEpisodes_UpdateNew = bUpdateNewEpisodes;
 
                 m_EpisodeList = DBEpisode.Get(condition);
+                m_nTotalUpdateEpisode = m_EpisodeList.Count;
                 m_nCurrentEpisodeIndex = 0;
             }
 
+            if (m_nTotalUpdateEpisode > 0)
+                this.OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 0 : 15) + (15 * m_nCurrentEpisodeIndex / m_nTotalUpdateEpisode));
+            else
+                this.OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 15 : 30));
+
             long nUpdateEpisodesTimeStamp = 0;
             // in that case, don't use the lasttime of import
-            if (!bUpdateEmptyEpisodes)
+            if (!bUpdateNewEpisodes)
                 nUpdateEpisodesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateEpisodesTimeStamp);
 
             m_IDToEpisodesMap.Clear();
             int nCount = 0;
-            while ((nCount < 100 || nUpdateEpisodesTimeStamp != 0) && m_EpisodeList.Count > 0)
+            while ((nCount < 400 || nUpdateEpisodesTimeStamp != 0) && m_EpisodeList.Count > 0)
             {
                 DBEpisode episode = m_EpisodeList[0];
                 m_EpisodeList.RemoveAt(0);
@@ -504,11 +648,11 @@ namespace WindowPlugins.GUITVSeries
             if (m_EpisodeList.Count > 0)
             {
                 // next batch
-                UpdateEpisodes_Next(m_bEpisodes_UpdateEmpty, false);
+                UpdateEpisodes_Next(m_bEpisodes_UpdateNew, false);
             }
             else 
             {
-                if (m_bEpisodes_UpdateEmpty)
+                if (m_bEpisodes_UpdateNew)
                 {
                     // now refresh existing episodes
                     UpdateEpisodes_Next(false, true);

@@ -130,7 +130,6 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
-
     // table class - used as a base for table objects (series, episodes, etc)
     // holds a field hash table, includes an update mechanism to keep the DB tables in sync
     public class DBTable
@@ -497,12 +496,12 @@ namespace WindowPlugins.GUITVSeries
 
         public void Add(String sField, DBValue value, bool bEqual)
         {
-            if (m_sConditions != String.Empty)
-                m_sConditions += " and ";
-
             // filter with available fields only
             if (m_table.m_fields.ContainsKey(sField))
             {
+                if (m_sConditions != String.Empty)
+                    m_sConditions += " and ";
+
                 switch (m_table.m_fields[sField].Type)
                 {
                     case DBField.cTypeInt:

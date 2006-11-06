@@ -34,9 +34,14 @@ namespace WindowPlugins.GUITVSeries
             return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs);
         }
 
-        static public XmlNodeList UpdateEpisodes(String sEpisodesIDs, long nUpdateSeriesTimeStamp)
+        static public XmlNodeList UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sEpisodesIDs);
+            return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateEpisodesTimeStamp + "&idlist=" + sEpisodesIDs);
+        }
+
+        static public XmlNodeList GetBanners(int nSeriesID, long nUpdateBannersTimeStamp)
+        {
+            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp);
         }
 
         static private XmlNodeList Generic(String sUrl)

@@ -17,6 +17,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cLocalDataOverride = "LocalDataOverride";
 
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
+        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
 
         private static void UpdateTable()
