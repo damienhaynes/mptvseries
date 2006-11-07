@@ -17,6 +17,16 @@ namespace WindowPlugins.GUITVSeries
             return value;
         }
 
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public DBValue(String value)
         {
             this.value = value;
@@ -85,6 +95,29 @@ namespace WindowPlugins.GUITVSeries
         static public implicit operator DBValue(long value)
         {
             return new DBValue(value);
+        }
+
+        static public bool operator == (DBValue first, DBValue second)
+        {
+            if ((object)first == null || (object)second == null)
+            {
+                if ((object)first == null && (object)second == null)
+                    return true;
+                else
+                    return false;
+            }
+            return first.value == second.value;
+        }
+
+        static public bool operator != (DBValue first, DBValue second)
+        {
+            if ((object)first == null || (object)second == null)
+            {
+                if ((object)first == null && (object)second == null)
+                    return false;
+                else
+                    return true;
+            } return first.value != second.value;
         }
     };
 

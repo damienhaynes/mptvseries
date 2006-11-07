@@ -8,6 +8,14 @@ namespace WindowPlugins.GUITVSeries
 {
     class OnlineParsing
     {
+        LocalParse m_localParser = null;
+        GetSeries m_GetSeriesParser = null;
+        GetEpisodes m_GetEpisodesParser = null;
+        UpdateSeries m_UpdateSeriesParser = null;
+        GetBanner m_GetBannerParser = null;
+        UpdateEpisodes m_updateEpisodesParser = null;
+
+        bool m_bAbort = false;
         bool m_bFullSeriesRetrieval = false;
         List<DBSeries> m_SeriesList = new List<DBSeries>();
         int m_nCurrentSeriesIndex = 0;
@@ -35,13 +43,110 @@ namespace WindowPlugins.GUITVSeries
         public event OnlineParsingProgressHandler OnlineParsingProgress;
         public event OnlineParsingCompletedHandler OnlineParsingCompleted;
 
+        public void Cancel()
+        {
+            m_bAbort = true;
+        }
+
         public void Start()
         {
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
-            // asynchronous execution: we start with GetSeries, and the execution path goes on through the various worker events
-            MatchSeries_Next(true);
+
+            // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
+            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
+            m_localParser = new LocalParse();
+            m_localParser.worker.ProgressChanged += new ProgressChangedEventHandler(LocalParsing_LocalParseProgress);
+            m_localParser.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(LocalParsing_LocalParseCompleted);
+            m_localParser.DoParse();
         }
 
+        void LocalParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
+        {
+            if (m_bAbort)
+            {
+                if (m_localParser != null)
+                {
+                    m_localParser.worker.CancelAsync();
+                    m_localParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
+            List<parseResult> results = (List<parseResult>)e.UserState;
+            LocalParsing_ProcessResults(results);
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(e.ProgressPercentage / 10);
+            else
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(e.ProgressPercentage);
+        }
+
+        void LocalParsing_LocalParseCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.Result;
+            if (OnlineParsingProgress != null) // only if any subscribers exist
+                OnlineParsingProgress.Invoke(10);
+            LocalParsing_ProcessResults(results);
+
+            // now, remove all episodes still processed = 0, the weren't find in the scan
+            DBEpisode.Clear(DBEpisode.cImportProcessed, 2);
+
+            // now on with online parsing
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+            {
+                // asynchronous execution: we start with GetSeries, and the execution path goes on through the various worker events
+                MatchSeries_Next(true);
+            }
+            else
+            {
+                // and we are done
+                if (OnlineParsingCompleted != null) // only if any subscribers exist
+                {
+                    this.OnlineParsingCompleted.Invoke();
+                }
+            }
+        }
+
+        void LocalParsing_ProcessResults(List<parseResult> results)
+        {
+            foreach (parseResult progress in results)
+            {
+                if (progress.success)
+                {
+                    int nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
+                    int nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
+
+                    // ok, we are sure it's valid now
+                    // series first
+                    DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
+                    // not much to do here except commiting the series
+                    series.Commit();
+
+                    // season now
+                    DBSeason season = new DBSeason(progress.parser.Matches[DBSeries.cParsedName], nSeason);
+                    season.Commit();
+
+                    // then episode
+                    DBEpisode episode = new DBEpisode(progress.full_filename);
+                    bool bNewFile = false;
+                    if (episode[DBEpisode.cImportProcessed] != 2)
+                    {
+                        bNewFile = true;
+                    }
+                    episode[DBEpisode.cImportProcessed] = 1;
+
+                    foreach (KeyValuePair<string, string> match in progress.parser.Matches)
+                    {
+                        episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
+                        if (bNewFile || episode[match.Key].ToString() != match.Value)
+                            episode[match.Key] = match.Value;
+                    }
+                    episode.Commit();
+                }
+            }
+        }
 
         private void MatchSeries_Next(bool bStart)
         {
@@ -61,23 +166,36 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (m_SeriesList.Count > 0)
-                this.OnlineParsingProgress.Invoke(10 * m_nCurrentSeriesIndex / m_SeriesList.Count);
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(10 + (10 * m_nCurrentSeriesIndex / m_SeriesList.Count));
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
-                this.OnlineParsingProgress.Invoke(10);
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(20);
                 // we did all our series. Go to the next step, the episode retrieval
                 MatchEpisodes_Next(true);
             }
             else
             {
-                GetSeries seriesParser = new GetSeries(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                seriesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetSeriesCompleted);
-                seriesParser.DoParse();
+                m_GetSeriesParser = new GetSeries(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
+                m_GetSeriesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetSeriesCompleted);
+                m_GetSeriesParser.DoParse();
             }
         }
 
         void OnlineParsing_GetSeriesCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_GetSeriesParser != null)
+                {
+                    m_GetSeriesParser.m_Worker.CancelAsync();
+                    m_GetSeriesParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             GetSeriesResults results = (GetSeriesResults)e.Result;
 
             if (results.listSeries.Count > 0)
@@ -148,10 +266,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (m_SeriesList.Count > 0)
-                this.OnlineParsingProgress.Invoke(10 + (30 * m_nCurrentSeriesIndex / m_SeriesList.Count));
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(20 + (20 * m_nCurrentSeriesIndex / m_SeriesList.Count));
             if (m_nCurrentSeriesIndex >= m_SeriesList.Count)
             {
-                this.OnlineParsingProgress.Invoke(40);
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(40);
                 // we did all our series. Go to the next step, the series data update
                 UpdateSeries(true);
             }
@@ -160,9 +280,9 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bFullSeriesRetrieval)
                 {
                     DBTVSeries.Log("Looking for all the episodes of " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                    GetEpisodes episodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
-                    episodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
-                    episodesParser.DoParse();
+                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
+                    m_GetEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
+                    m_GetEpisodesParser.DoParse();
                 }
                 else
                 {
@@ -200,23 +320,34 @@ namespace WindowPlugins.GUITVSeries
                 if (m_EpisodeList.Count < 5)
                 {
                     DBTVSeries.Log("Looking for the single episode " + m_EpisodeList[m_nCurrentEpisodeIndex][DBOnlineEpisode.cCompositeID]);
-                    GetEpisodes episodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], m_EpisodeList[m_nCurrentEpisodeIndex][DBEpisode.cSeasonIndex], m_EpisodeList[m_nCurrentEpisodeIndex][DBEpisode.cEpisodeIndex]);
-                    episodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesLocalOnlyCompleted);
-                    episodesParser.DoParse();
+                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], m_EpisodeList[m_nCurrentEpisodeIndex][DBEpisode.cSeasonIndex], m_EpisodeList[m_nCurrentEpisodeIndex][DBEpisode.cEpisodeIndex]);
+                    m_GetEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesLocalOnlyCompleted);
+                    m_GetEpisodesParser.DoParse();
                 }
                 else
                 {
                     // no need to do single matches for many episodes, it's more efficient to do it all at once
                     DBTVSeries.Log("Looking for all the episodes of " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                    GetEpisodes episodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
-                    episodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
-                    episodesParser.DoParse();
+                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
+                    m_GetEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
+                    m_GetEpisodesParser.DoParse();
                 }
             }
         }
 
         void OnlineParsing_GetEpisodesLocalOnlyCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_GetEpisodesParser != null)
+                {
+                    m_GetEpisodesParser.m_Worker.CancelAsync();
+                    m_GetEpisodesParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             GetEpisodesResults results = (GetEpisodesResults)e.Result;
 
             if (results.listEpisodes.Count > 0)
@@ -231,9 +362,19 @@ namespace WindowPlugins.GUITVSeries
             MatchEpisodeLocalOnly_Next(false);            
         }
 
-
         void OnlineParsing_GetEpisodesCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_GetEpisodesParser != null)
+                {
+                    m_GetEpisodesParser.m_Worker.CancelAsync();
+                    m_GetEpisodesParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             GetEpisodesResults results = (GetEpisodesResults)e.Result;
 
             if (results.listEpisodes.Count > 0)
@@ -331,13 +472,24 @@ namespace WindowPlugins.GUITVSeries
 
             // use the last known timestamp from when we updated the series
             DBTVSeries.Log("Updating " + SeriesList.Count + " Series");
-            UpdateSeries updateSeries = new UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
-            updateSeries.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateSeriesCompleted);
-            updateSeries.DoParse();
+            m_UpdateSeriesParser = new UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
+            m_UpdateSeriesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateSeriesCompleted);
+            m_UpdateSeriesParser.DoParse();
         }
 
         void OnlineParsing_UpdateSeriesCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_UpdateSeriesParser != null)
+                {
+                    m_UpdateSeriesParser.m_Worker.CancelAsync();
+                    m_UpdateSeriesParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             UpdateSeriesResults results = (UpdateSeriesResults)e.Result;
             
             if (results != null)
@@ -382,13 +534,15 @@ namespace WindowPlugins.GUITVSeries
 
             if (m_bSeries_UpdateNew)
             {
-                this.OnlineParsingProgress.Invoke(45);
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(45);
                 // now do an regular update (refresh, with timestamp) on all the series
                 UpdateSeries(false);
             }
             else 
             {
-                this.OnlineParsingProgress.Invoke(50);
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(50);
                 // save last series timestamp
                 if (results != null)
                     DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, results.m_nServerTimeStamp);
@@ -428,9 +582,11 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (m_SeriesList.Count > 0)
-                this.OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries?0:10) + (10 * m_nCurrentSeriesIndex / m_SeriesList.Count));
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries ? 0 : 10) + (10 * m_nCurrentSeriesIndex / m_SeriesList.Count));
             else
-                this.OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries ? 10 : 20));
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(50 + (bUpdateNewSeries ? 10 : 20));
 
             long nUpdateBannersTimeStamp = 0;
             // in that case, don't use the lasttime of import
@@ -460,14 +616,25 @@ namespace WindowPlugins.GUITVSeries
                     DBTVSeries.Log("Downloading banners for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
                 else
                     DBTVSeries.Log("Refreshing banners for " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                GetBanner bannerUpdater = new GetBanner(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], nUpdateBannersTimeStamp);
-                bannerUpdater.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateBannersCompleted);
-                bannerUpdater.DoParse();
+                m_GetBannerParser = new GetBanner(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], nUpdateBannersTimeStamp);
+                m_GetBannerParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateBannersCompleted);
+                m_GetBannerParser.DoParse();
             }
         }
 
         void OnlineParsing_UpdateBannersCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_GetBannerParser != null)
+                {
+                    m_GetBannerParser.m_Worker.CancelAsync();
+                    m_GetBannerParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             GetBannersResults results = (GetBannersResults)e.Result;
             String sLastTextBanner = String.Empty;
             String sLastGraphicalBanner = String.Empty;
@@ -555,9 +722,11 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (m_nTotalUpdateEpisode > 0)
-                this.OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 0 : 15) + (15 * m_nCurrentEpisodeIndex / m_nTotalUpdateEpisode));
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 0 : 15) + (15 * m_nCurrentEpisodeIndex / m_nTotalUpdateEpisode));
             else
-                this.OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 15 : 30));
+                if (OnlineParsingProgress != null) // only if any subscribers exist
+                    OnlineParsingProgress.Invoke(70 + (bUpdateNewEpisodes ? 15 : 30));
 
             long nUpdateEpisodesTimeStamp = 0;
             // in that case, don't use the lasttime of import
@@ -589,13 +758,24 @@ namespace WindowPlugins.GUITVSeries
 
             // use the last known timestamp from when we updated the series
             DBTVSeries.Log("Updating " + m_IDToEpisodesMap.Count + " Episodes, " + m_EpisodeList.Count + " left");
-            UpdateEpisodes updateEpisodes = new UpdateEpisodes(sEpisodeIDs, nUpdateEpisodesTimeStamp);
-            updateEpisodes.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateEpisodesCompleted);
-            updateEpisodes.DoParse();
+            m_updateEpisodesParser = new UpdateEpisodes(sEpisodeIDs, nUpdateEpisodesTimeStamp);
+            m_updateEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_UpdateEpisodesCompleted);
+            m_updateEpisodesParser.DoParse();
         }
 
         void OnlineParsing_UpdateEpisodesCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (m_bAbort)
+            {
+                if (m_updateEpisodesParser != null)
+                {
+                    m_updateEpisodesParser.m_Worker.CancelAsync();
+                    m_updateEpisodesParser = null;
+                    Aborted();
+                }
+                return;
+            }
+
             UpdateEpisodesResults results = (UpdateEpisodesResults)e.Result;
 
             if (results != null)
@@ -678,6 +858,11 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+        }
+
+        private void Aborted()
+        {
+            this.OnlineParsingCompleted.Invoke();
         }
     }
 }

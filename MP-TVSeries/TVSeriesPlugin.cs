@@ -81,7 +81,7 @@ namespace MediaPortal.GUI.Video
         ///          false : plugin does not need its own button on home</returns>
         public bool GetHome(out string strButtonText, out string strButtonImage, out string strButtonImageFocus, out string strPictureImage)
         {
-            strButtonText = "My TV Series";
+            strButtonText = "MP-TVSeries";
             strButtonImage = String.Empty;
             strButtonImageFocus = String.Empty;
             strPictureImage = String.Empty;
@@ -177,7 +177,6 @@ namespace MediaPortal.GUI.Video
                 case "Series":
                     int selectedIndex = 0;
                     int count = 0;
-                    DBSeries.Get();
                     foreach (DBSeries series in DBSeries.Get())
                     {
                         try
@@ -272,7 +271,7 @@ namespace MediaPortal.GUI.Video
 
                     break;
                 case "Episode":
-                    selectedIndex = 0;
+                    selectedIndex = -1;
                     count = 0;
                     foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], true))
                     {
@@ -281,12 +280,21 @@ namespace MediaPortal.GUI.Video
                             GUIListItem item = new GUIListItem(episode[DBEpisode.cEpisodeIndex] + ": " + episode[DBEpisode.cEpisodeName]);
 
 //                            item.Label2 = episode.Aired;
-                            item.Shaded = episode[DBEpisode.cWatched] != 0;
+                            item.IsRemote = episode[DBEpisode.cWatched] != 0;
                             item.Label3 = episode[DBEpisode.cWatched] != 0 ? "" : "*";
                             item.TVTag = episode;
 
-                            if (this.m_SelectedEpisode != null && episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
-                                selectedIndex = count;
+                            if (this.m_SelectedEpisode != null)
+                            {
+                                if (episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
+                                    selectedIndex = count;
+                            }
+                            else
+                            {
+                                // select the first that is not watched
+                                if (episode[DBEpisode.cWatched] != 0 && selectedIndex == -1)
+                                    selectedIndex = count;
+                            }
 
                             item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Episode_OnItemSelected);
                             this.m_Facade.Add(item);
@@ -298,9 +306,9 @@ namespace MediaPortal.GUI.Video
                         count++;
                     }
                     this.m_Button_Back.Focus = false;
-                    this.m_Facade.ListView.ShadedColor = 0x50ff0000;
                     this.m_Facade.Focus = true;
-                    this.m_Facade.SelectedListItemIndex = selectedIndex;
+                    if (selectedIndex != -1)
+                        this.m_Facade.SelectedListItemIndex = selectedIndex;
                     this.Episode_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
                     break;
             }
@@ -320,7 +328,37 @@ namespace MediaPortal.GUI.Video
                 GUIListItem currentitem = this.m_Facade.SelectedListItem;
                 if (currentitem == null) return;
 
-                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                switch (this.m_ListLevel)
+                {
+                    case "Episode":
+                        {
+                            DBEpisode episode = (DBEpisode)currentitem.TVTag;
+                            GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                            if (dlg == null) return;
+                            dlg.Reset();
+                            dlg.SetHeading(924); // menu
+                            GUIListItem pItem = new GUIListItem("Toggle Watched Flag");
+                            dlg.Add(pItem);
+                            dlg.DoModal(GetID);
+                            if (dlg.SelectedId == -1) return;
+
+                            switch (dlg.SelectedId)
+                            {
+                                case 1:
+                                    // toggle watched
+                                    if (episode[DBEpisode.cWatched] == 0)
+                                        episode[DBEpisode.cWatched] = 1;
+                                    else
+                                        episode[DBEpisode.cWatched] = 0;
+                                    episode.Commit();
+                                    LoadFacade();
+                                    break;
+                            }
+                        }
+                        break;
+                }
+
+/*                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
                 if (dlg == null) return;
                 dlg.Reset();
                 dlg.SetHeading(924); // menu
@@ -470,6 +508,7 @@ namespace MediaPortal.GUI.Video
                         this.LoadFacade();
                         break;
                 }
+ */
             }
             catch (Exception ex)
             {
@@ -597,72 +636,63 @@ namespace MediaPortal.GUI.Video
 
         private void Series_OnItemSelected(GUIListItem item, GUIControl parent)
         {
+            if (item == null)
+                return;
+
             DBSeries series = (DBSeries)item.TVTag;
-            try
+            if (this.m_Image != null)
             {
                 String filename = series.Banner;
                 if (filename != null)
                 {
                     this.m_Image.SetFileName(filename);
-                    this.m_Image.AllocResources();
                     this.m_Image.KeepAspectRatio = true;
                 }
             }
-            catch { }
-            try
-            {
+            if (this.m_Title != null)
                 this.m_Title.Label = series[DBSeries.cPrettyName];
-            }
-            catch { }
-            try
-            {
+
+            if (this.m_Genre != null)
                 this.m_Genre.Label = series[DBSeries.cGenre];
-            }
-            catch { }
-            try
-            {
+
+            if (this.m_Description != null)
                 this.m_Description.Label = (String)series[DBSeries.cSummary] + (char)10 + (char)13;
-            }
-            catch { }
         }
+
         private void Season_OnItemSelected(GUIListItem item, GUIControl parent)
         {
+            if (item == null)
+                return;
+
             DBSeason season = (DBSeason)item.TVTag;
-            try
+            if (this.m_Image != null)
             {
+                String filename = season.Banner;
+                if (filename != null)
+                {
+                    this.m_Image.SetFileName(filename);
+                    this.m_Image.KeepAspectRatio = true;
+                }
+            }
+            if (this.m_Title != null)
                 this.m_Title.Label = this.m_SelectedSeries[DBSeries.cPrettyName] + " Season " + season[DBSeason.cIndex];
-            }
-            catch { }
-            try
-            {
+            if (this.m_Genre != null)
                 this.m_Genre.Label = this.m_SelectedSeries[DBSeries.cGenre];
-            }
-            catch { }
-            try
-            {
+            if (this.m_Description != null)
                 this.m_Description.Label = (String)this.m_SelectedSeries[DBSeries.cSummary] + (char)10 + (char)13;
-            }
-            catch { }
         }
         private void Episode_OnItemSelected(GUIListItem item, GUIControl parent)
         {
-            DBEpisode episode = (DBEpisode)item.TVTag;
-            try
-            {
-                this.m_Title.Label = this.m_SelectedSeason[DBSeason.cIndex] + ": " + episode[DBEpisode.cEpisodeName];
-            }
-            catch { }
-            try
-            {
-                this.m_Genre.Label = this.m_SelectedSeries[DBSeries.cGenre];
-            }
-            catch { }
-            try
-            {
-                this.m_Description.Label = (String)episode[DBOnlineEpisode.cEpisodeSummary] + (char)10 + (char)13;
-            }
-            catch { }
+            if (item == null)
+                return;
 
+            DBEpisode episode = (DBEpisode)item.TVTag;
+            if (this.m_Title != null)
+                this.m_Title.Label = this.m_SelectedSeason[DBSeason.cIndex] + ": " + episode[DBEpisode.cEpisodeName];
+            if (this.m_Genre != null)
+                this.m_Genre.Label = this.m_SelectedSeries[DBSeries.cGenre];
+            if (this.m_Description != null)
+                this.m_Description.Label = (String)episode[DBOnlineEpisode.cEpisodeSummary] + (char)10 + (char)13;
         }
 
     }

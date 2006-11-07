@@ -20,6 +20,7 @@ namespace WindowPlugins.GUITVSeries
     {
         private List<Panel> m_paneList = new List<Panel>();
         private TreeNode nodeEdited = null;
+        private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
 
         public ConfigurationForm()
@@ -479,96 +480,22 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        #region Local Parsing
-        void LocalParsing_LocalParseCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void Parsing_Start()
         {
-            List<parseResult> results = (List<parseResult>)e.Result;
-            this.progressBar_Parsing.Value = 100;
-            LocalParsing_ProcessResults(results);
-
-            // now, remove all episodes still processed = 0, the weren't find in the scan
-            DBEpisode.Clear(DBEpisode.cImportProcessed, 2);
-
-            // and refresh tree
-            LoadTree();
-
-            // now on with online parsing
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+            if (m_parser != null)
             {
-                OnlineParsing_Start();
+                m_parser.Cancel();
+                button_Start.Enabled = false;
             }
             else
             {
-                TimeSpan span = DateTime.Now - m_timingStart;
-                DBTVSeries.Log("Parsing Completed in " + span);
+                button_Start.Text = "Abort";
+                m_timingStart = DateTime.Now;
+                m_parser = new OnlineParsing();
+                m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
+                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
+                m_parser.Start();
             }
-        }
-
-        void LocalParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
-        {
-            List<parseResult> results = (List<parseResult>)e.UserState;
-            this.progressBar_Parsing.Value = e.ProgressPercentage;
-            LocalParsing_ProcessResults(results);
-        }
-
-        void LocalParsing_ProcessResults(List<parseResult> results)
-        {
-            foreach (parseResult progress in results)
-            {
-                if (progress.success)
-                {
-                    int nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
-                    int nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
-
-                    // ok, we are sure it's valid now
-                    // series first
-                    DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
-                    // not much to do here except commiting the series
-                    series.Commit();
-
-                    // season now
-                    DBSeason season = new DBSeason(progress.parser.Matches[DBSeries.cParsedName], nSeason);
-                    season.Commit();
-
-                    // then episode
-                    DBEpisode episode = new DBEpisode(progress.full_filename);
-                    bool bNewFile = false;
-                    if (episode[DBEpisode.cImportProcessed] != 2)
-                    {
-                        bNewFile = true;
-                    }
-                    episode[DBEpisode.cImportProcessed] = 1;
-
-                    foreach (KeyValuePair<string, string> match in progress.parser.Matches)
-                    {
-                        episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
-                        if (bNewFile || episode[match.Key].ToString() != match.Value)
-                            episode[match.Key] = match.Value;
-                    }
-                    episode.Commit();
-                }
-            }
-        }
-
-        private void LocalParsing_Start()
-        {
-            m_timingStart = DateTime.Now;
-            // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
-            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
-            LocalParse runner = new LocalParse();
-            runner.worker.ProgressChanged += new ProgressChangedEventHandler(LocalParsing_LocalParseProgress);
-            runner.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(LocalParsing_LocalParseCompleted);
-            runner.DoParse();
-        }
-        #endregion Handling
-
-
-        private void OnlineParsing_Start()
-        {
-            OnlineParsing runner = new OnlineParsing();
-            runner.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
-            runner.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-            runner.Start();
         }
 
         void runner_OnlineParsingProgress(int nProgress)
@@ -581,6 +508,13 @@ namespace WindowPlugins.GUITVSeries
             this.progressBar_Parsing.Value = 100;
             TimeSpan span = DateTime.Now - m_timingStart;
             DBTVSeries.Log("Parsing Completed in " + span);
+            button_Start.Text = "Start Import";
+            button_Start.Enabled = true;
+
+            m_parser.OnlineParsingProgress -= new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
+            m_parser.OnlineParsingCompleted -= new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
+            m_parser = null;
+
             LoadTree();
         }
         
@@ -863,8 +797,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void button_Start_Click(object sender, EventArgs e)
         {
-            LocalParsing_Start();
-            // wait for local parsing to complete for online processing
+            Parsing_Start();
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)

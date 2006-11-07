@@ -14,14 +14,11 @@ namespace WindowPlugins.GUITVSeries
         private StreamWriter m_LogStream;
         private System.Windows.Forms.ListBox m_ListLog;
         private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
-
-        private delegate void newMsghandler(string input);
-        private event newMsghandler newMsg;
+        private delegate void Log_WriteCallback(string input);
 
         public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
         {
             this.m_ListLog = notifier;
-            this.newMsg +=new newMsghandler(LogWriter_newMsg);
         }
         public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
         {
@@ -42,12 +39,6 @@ namespace WindowPlugins.GUITVSeries
             this.m_filename = logfile;
         }
 
-        void LogWriter_newMsg(string entry)
-        {
-           
-
-        }
-
 
         public void Write(String entry)
         {
@@ -63,8 +54,6 @@ namespace WindowPlugins.GUITVSeries
 
                 this.m_LogStream.Close();
                 this.m_LogStream.Dispose();
-
-                newMsg.Invoke(entry);
             }
             Log_Write(entry);
         }
@@ -75,7 +64,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_ListLog.InvokeRequired)
                 {
-                    newMsghandler d = new newMsghandler(Write);
+                    Log_WriteCallback d = new Log_WriteCallback(Write);
                     m_ListLog.Invoke(d, new object[] { entry });
                 }
                 else

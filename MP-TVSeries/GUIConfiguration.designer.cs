@@ -592,18 +592,18 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.progressBar_Parsing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar_Parsing.Location = new System.Drawing.Point(80, 7);
+            this.progressBar_Parsing.Location = new System.Drawing.Point(119, 7);
             this.progressBar_Parsing.Name = "progressBar_Parsing";
-            this.progressBar_Parsing.Size = new System.Drawing.Size(717, 20);
+            this.progressBar_Parsing.Size = new System.Drawing.Size(678, 20);
             this.progressBar_Parsing.TabIndex = 3;
             // 
             // button_Start
             // 
             this.button_Start.Location = new System.Drawing.Point(8, 6);
             this.button_Start.Name = "button_Start";
-            this.button_Start.Size = new System.Drawing.Size(66, 23);
+            this.button_Start.Size = new System.Drawing.Size(105, 23);
             this.button_Start.TabIndex = 4;
-            this.button_Start.Text = "Start";
+            this.button_Start.Text = "Start Import";
             this.button_Start.UseVisualStyleBackColor = true;
             this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
             // 
