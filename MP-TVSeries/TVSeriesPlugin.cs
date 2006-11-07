@@ -292,7 +292,7 @@ namespace MediaPortal.GUI.Video
                             else
                             {
                                 // select the first that is not watched
-                                if (episode[DBEpisode.cWatched] != 0 && selectedIndex == -1)
+                                if (episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
                                     selectedIndex = count;
                             }
 
