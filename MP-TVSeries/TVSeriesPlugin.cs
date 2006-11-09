@@ -246,7 +246,7 @@ namespace MediaPortal.GUI.Video
                 case "Episode":
                     selectedIndex = -1;
                     count = 0;
-                    foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], false))
+                    foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                     {
                         try
                         {
@@ -265,8 +265,8 @@ namespace MediaPortal.GUI.Video
                             }
                             else
                             {
-                                // select the first that is not watched
-                                if (episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
+                                // select the first that has a file and is not watched
+                                if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
                                     selectedIndex = count;
                             }
 
@@ -314,23 +314,22 @@ namespace MediaPortal.GUI.Video
                         {
                             DBEpisode episode = (DBEpisode)currentitem.TVTag;
                             pItem = new GUIListItem("Toggle watched flag");
-                            pItem.ItemId = 1;
                             dlg.Add(pItem);
+                            pItem.ItemId = 1;
                         }
                         break;
                 }
 
                 pItem = new GUIListItem("");
-                pItem.ItemId = 0;
                 dlg.Add(pItem);
 
-                pItem = new GUIListItem("Only show episodes with a local file (current value: " + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)?"on":"off") + ")");
+                pItem = new GUIListItem("Only show episodes with a local file (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)?"on":"off") + ")");
+                dlg.Add(pItem);
                 pItem.ItemId = 100 + 1;
-                dlg.Add(pItem);
 
-                pItem = new GUIListItem("Hide the episode's summary on unwatched episodes (current value: " + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)? "on" : "off") + ")");
-                pItem.ItemId = 100 + 2;
+                pItem = new GUIListItem("Hide the episode's summary on unwatched episodes (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)? "on" : "off") + ")");
                 dlg.Add(pItem);
+                pItem.ItemId = 100 + 2;
 
 
                 dlg.DoModal(GetID);
@@ -346,10 +345,11 @@ namespace MediaPortal.GUI.Video
                                 case 1:
                                     // toggle watched
                                     DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                    if (episode[DBEpisode.cWatched] == 0)
-                                        episode[DBEpisode.cWatched] = 1;
-                                    else
-                                        episode[DBEpisode.cWatched] = 0;
+                                    episode[DBEpisode.cWatched] = episode[DBEpisode.cWatched] == 0;
+//                                     if (episode[DBEpisode.cWatched] == 0)
+//                                         episode[DBEpisode.cWatched] = 1;
+//                                     else
+//                                         episode[DBEpisode.cWatched] = 0;
                                     episode.Commit();
                                     LoadFacade();
                                     break;
@@ -659,8 +659,14 @@ namespace MediaPortal.GUI.Video
                 String filename = series.Banner;
                 if (filename != null)
                 {
-                    this.m_Image.SetFileName(filename);
-                    this.m_Image.KeepAspectRatio = true;
+                    // SetFileName needs to be tried/catched, as it can fail because we are on another thread. This sucks, but IMHO it's a design problem 
+                    // of Mediaportal: all events should be sent on the main thread.
+                    try
+                    {
+                        this.m_Image.SetFileName(filename);
+                        this.m_Image.KeepAspectRatio = true;
+                    }
+                    catch {}
                 }
             }
             if (m_Season_Image != null)
@@ -689,7 +695,13 @@ namespace MediaPortal.GUI.Video
                 String filename = season.Banner;
                 if (filename != null)
                 {
-                    this.m_Season_Image.SetFileName(filename);
+                    // SetFileName needs to be tried/catched, as it can fail because we are on another thread. This sucks, but IMHO it's a design problem 
+                    // of Mediaportal: all events should be sent on the main thread.
+                    try
+                    {
+                        this.m_Season_Image.SetFileName(filename);
+                    }
+                    catch { }
                 }
             }
             if (this.m_Title != null)
@@ -711,7 +723,7 @@ namespace MediaPortal.GUI.Video
                 GUIControl.SetControlLabel(GetID, m_Genre.GetID, m_SelectedSeries[DBSeries.cGenre]);
             if (this.m_Description != null)
             {
-                if (episode[DBOnlineEpisode.cWatched] != 0)
+                if (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) != true || episode[DBOnlineEpisode.cWatched] != 0)
                     GUIControl.SetControlLabel(GetID, m_Description.GetID, (String)episode[DBOnlineEpisode.cEpisodeSummary] + (char)10 + (char)13);
                 else
                     GUIControl.SetControlLabel(GetID, m_Description.GetID, "Episode Summary hidden as you didn't watched it yet");
