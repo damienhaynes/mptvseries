@@ -188,7 +188,7 @@ namespace WindowPlugins.GUITVSeries
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
 
-            List<DBSeries> seriesList = DBSeries.Get();
+            List<DBSeries> seriesList = DBSeries.Get(false);
             if (seriesList.Count == 0)
             {
                 return;
@@ -202,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
                 seriesNode.Expand();
                 root.Nodes.Add(seriesNode);
 
-                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cParsedName].ToString());
+                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cParsedName].ToString(), false);
                 foreach (DBSeason season in seasonsList)
                 {
                     TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
@@ -614,6 +614,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 case DBSeason.cBannerFileNames:
                                 case DBSeason.cCurrentBannerFileName:
+                                case DBSeason.cHasLocalFiles:
                                     // hide those, they are handled via Banner & BannerList
                                     break;
 
@@ -660,6 +661,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 case DBSeries.cBannerFileNames:
                                 case DBSeries.cCurrentBannerFileName:
+                                case DBSeason.cHasLocalFiles:
                                     // hide those, they are handled via Banner & BannerList
                                     break;
 

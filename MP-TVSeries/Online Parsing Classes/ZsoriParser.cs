@@ -19,9 +19,9 @@ namespace WindowPlugins.GUITVSeries
             return Generic(DBOnlineMirror.Interface + "/GetSeries.php?seriesname=" + sSeriesName.Replace(' ', '+'));
         }
 
-        static public XmlNodeList GetEpisodes(int nSeriesID)
+        static public XmlNodeList GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID);
+            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&lasttime=" + nGetEpisodesTimeStamp);
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)

@@ -20,6 +20,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSummary = "Summary";
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
+        public const String cHasLocalFiles = "HasLocalFiles";
         public const String cOnlineDataImported = "OnlineDataImported";
         public const String cBannersDownloaded = "BannersDownloaded";
         // Online data imported flag values while updating:
@@ -89,6 +90,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cSummary, new DBField(DBField.cTypeString));
             AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
             AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
+            AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
         }
 
         // function override to search on both this & the onlineEpisode
@@ -167,20 +169,28 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static void GlobalSet(String sKey, object Value)
+        public static void GlobalSet(String sKey, DBValue Value)
         {
             GlobalSet(sKey, Value, new SQLCondition(new DBSeries()));
         }
 
-        public static void GlobalSet(String sKey, object Value, SQLCondition condition)
+        public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
             GlobalSet(new DBSeries(), sKey, Value, condition);
         }
 
-        public static List<DBSeries> Get()
+        public static List<DBSeries> Get(bool bExistingFilesOnly)
         {
-            String sqlQuery = "select * from " + cTableName + " order by " + cParsedName;
-            return Get(sqlQuery);
+            if (bExistingFilesOnly)
+            {
+                SQLCondition condition = new SQLCondition(new DBSeries());
+                condition.Add(cHasLocalFiles, 0, false);
+                return Get("select * from " + cTableName + " where " + condition + " order by " + cParsedName);
+            }
+            else
+            {
+                return Get("select * from " + cTableName + " order by " + cParsedName);
+            }
         }
 
         public static List<DBSeries> Get(SQLCondition condition)

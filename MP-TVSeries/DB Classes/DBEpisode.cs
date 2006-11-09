@@ -412,12 +412,12 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static void GlobalSet(String sKey, object Value)
+        public static void GlobalSet(String sKey, DBValue Value)
         {
             GlobalSet(sKey, Value, new SQLCondition(new DBEpisode()));
         }
 
-        public static void GlobalSet(String sKey, object Value, SQLCondition condition)
+        public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
             GlobalSet(new DBOnlineEpisode(), sKey, Value, condition);
             GlobalSet(new DBEpisode(), sKey, Value, condition);

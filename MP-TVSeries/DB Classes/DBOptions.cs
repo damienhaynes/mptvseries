@@ -16,6 +16,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoChooseSeries = "AutoChooseSeries";
         public const String cLocalDataOverride = "LocalDataOverride";
 
+        public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
@@ -61,6 +62,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) == "")
                     SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, true);
+
+                if (GetOptions(DBOption.cGetEpisodesTimeStamp) == "")
+                    SetOptions(DBOption.cGetEpisodesTimeStamp, 0);
 
                 if (GetOptions(DBOption.cUpdateSeriesTimeStamp) == "")
                     SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);

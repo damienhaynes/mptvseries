@@ -178,9 +178,9 @@ namespace MediaPortal.GUI.Video
             switch (this.m_ListLevel)
             {
                 case "Series":
-                    int selectedIndex = 0;
+                    int selectedIndex = -1;
                     int count = 0;
-                    foreach (DBSeries series in DBSeries.Get())
+                    foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                     {
                         try
                         {
@@ -190,11 +190,22 @@ namespace MediaPortal.GUI.Video
                             String filename = series.Banner;
                             if (filename != String.Empty)
                                 item.IconImage = item.IconImageBig = filename;
-                            item.IsRemote = true;
+                            item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
                             item.IsDownloading = true;
                             item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Series_OnItemSelected);
-                            if (this.m_SelectedSeries != null && series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
-                                selectedIndex = count;
+
+                            if (this.m_SelectedSeries != null)
+                            {
+                                if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
+                                    selectedIndex = count;
+                            }
+                            else
+                            {
+                                // select the first that has a file
+                                if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                    selectedIndex = count;
+                            }
+
                             this.m_Facade.Add(item);
                         }
                         catch (Exception ex)
@@ -203,14 +214,15 @@ namespace MediaPortal.GUI.Video
                         }
                         count++;
                     }
-                    this.m_Facade.SelectedListItemIndex = selectedIndex;
+                    if (selectedIndex != -1)
+                        this.m_Facade.SelectedListItemIndex = selectedIndex;
                     this.Series_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
                     break;
                 case "Season":
-                    selectedIndex = 0;
+                    selectedIndex = -1;
                     count = 0;
 
-                    foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName]))
+                    foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                     {
                         try
                         {
@@ -222,13 +234,22 @@ namespace MediaPortal.GUI.Video
                                 item.IconImage = filename;
                                 item.IconImageBig = filename;
                             }
-                            item.IsRemote = true;
+                            item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                             item.IsDownloading = true;
                             item.TVTag = season;
                             item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Season_OnItemSelected);
 
-                            if (this.m_SelectedSeason != null && this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
-                                selectedIndex = count;
+                            if (this.m_SelectedSeason != null)
+                            {
+                                if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                    selectedIndex = count;
+                            }
+                            else
+                            {
+                                // select the first that has a file
+                                if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                    selectedIndex = count;
+                            } 
                             this.m_Facade.Add(item);
                         }
                         catch (Exception ex)
@@ -236,10 +257,11 @@ namespace MediaPortal.GUI.Video
                             this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
                         }
                         count++;
-                    }                    
+                    }
 
 
-                    this.m_Facade.SelectedListItemIndex = selectedIndex;
+                    if (selectedIndex != -1)
+                        this.m_Facade.SelectedListItemIndex = selectedIndex;
                     this.Season_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
 
                     break;
@@ -252,8 +274,7 @@ namespace MediaPortal.GUI.Video
                         {
                             GUIListItem item = new GUIListItem(episode[DBEpisode.cEpisodeIndex] + ": " + episode[DBEpisode.cEpisodeName]);
 
-                            // waiting for szori to go to ISO date, otherwise it's just messy (and way too long!)
-//                            item.Label2 = episode[DBOnlineEpisode.cFirstAired];
+                            item.Label2 = episode[DBOnlineEpisode.cFirstAired];
                             item.IsRemote = episode[DBEpisode.cFilename] != "";
                             item.IsDownloading = episode[DBEpisode.cWatched] == 0;
                             item.TVTag = episode;
@@ -671,7 +692,11 @@ namespace MediaPortal.GUI.Video
             }
             if (m_Season_Image != null)
             {
-                m_Season_Image.FreeResources();
+                try
+                {
+                    m_Season_Image.FreeResources();
+                }
+                catch { }
             }
 
             if (this.m_Title != null)

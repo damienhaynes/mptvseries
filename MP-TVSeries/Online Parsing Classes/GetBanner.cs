@@ -37,85 +37,93 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (XmlNode itemNode in nodeList)
                 {
-                    String sType = String.Empty;
-                    foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                        if (propertyNode.Name == "Type")
-                        {
-                            sType = propertyNode.InnerText;
-                            break;
-                        }
-
-                    switch (sType)
+                    // first return item SHOULD ALWAYS be the sync time (hope so at least!)
+                    if (itemNode.ChildNodes[0].Name == "SyncTime")
                     {
-                        case "series":
-                            BannerSeries bannerSeries = new BannerSeries();
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                        results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                    }
+                    else
+                    {
+                        String sType = String.Empty;
+                        foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                            if (propertyNode.Name == "Type")
                             {
-                                switch (propertyNode.Name)
-                                {
-                                    case "SeriesName":
-                                        bannerSeries.sSeriesName = propertyNode.InnerText;
-                                        break;
-
-                                    case "BannerType":
-                                        switch (propertyNode.InnerText)
-                                        {
-                                            case "text":
-                                                bannerSeries.bGraphical = false;
-                                                break;
-
-                                            default:
-                                                bannerSeries.bGraphical = true;
-                                                break;
-                                        }
-                                        break;
-
-                                    case "BannerPath":
-                                        {
-                                            bannerSeries.sOnlineBannerPath = propertyNode.InnerText;
-                                        }
-                                        break;
-                                }
+                                sType = propertyNode.InnerText;
+                                break;
                             }
-                            results.bannerSeriesList.Add(bannerSeries);
-                            break; 
 
-                        case "season":
-                            BannerSeason bannerSeason = new BannerSeason();
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                            {
-                                switch (propertyNode.Name)
+                        switch (sType)
+                        {
+                            case "series":
+                                BannerSeries bannerSeries = new BannerSeries();
+                                foreach (XmlNode propertyNode in itemNode.ChildNodes)
                                 {
-                                    case "SeriesName":
-                                        bannerSeason.sSeriesName = propertyNode.InnerText;
-                                        break;
+                                    switch (propertyNode.Name)
+                                    {
+                                        case "SeriesName":
+                                            bannerSeries.sSeriesName = propertyNode.InnerText;
+                                            break;
 
-                                    case "Season":
-                                        bannerSeason.nIndex = Convert.ToInt32(propertyNode.InnerText);
-                                        break;
+                                        case "BannerType":
+                                            switch (propertyNode.InnerText)
+                                            {
+                                                case "text":
+                                                    bannerSeries.bGraphical = false;
+                                                    break;
 
-                                    case "BannerType":
-                                        switch (propertyNode.InnerText)
-                                        {
-                                            case "text":
-                                                bannerSeason.bGraphical = false;
-                                                break;
+                                                default:
+                                                    bannerSeries.bGraphical = true;
+                                                    break;
+                                            }
+                                            break;
 
-                                            default:
-                                                bannerSeason.bGraphical = true;
-                                                break;
-                                        }
-                                        break;
-
-                                    case "BannerPath":
-                                        {
-                                            bannerSeason.sOnlineBannerPath = propertyNode.InnerText;
-                                        }
-                                        break;
+                                        case "BannerPath":
+                                            {
+                                                bannerSeries.sOnlineBannerPath = propertyNode.InnerText;
+                                            }
+                                            break;
+                                    }
                                 }
-                            }
-                            results.bannerSeasonList.Add(bannerSeason);
-                            break;
+                                results.bannerSeriesList.Add(bannerSeries);
+                                break;
+
+                            case "season":
+                                BannerSeason bannerSeason = new BannerSeason();
+                                foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                                {
+                                    switch (propertyNode.Name)
+                                    {
+                                        case "SeriesName":
+                                            bannerSeason.sSeriesName = propertyNode.InnerText;
+                                            break;
+
+                                        case "Season":
+                                            bannerSeason.nIndex = Convert.ToInt32(propertyNode.InnerText);
+                                            break;
+
+                                        case "BannerType":
+                                            switch (propertyNode.InnerText)
+                                            {
+                                                case "text":
+                                                    bannerSeason.bGraphical = false;
+                                                    break;
+
+                                                default:
+                                                    bannerSeason.bGraphical = true;
+                                                    break;
+                                            }
+                                            break;
+
+                                        case "BannerPath":
+                                            {
+                                                bannerSeason.sOnlineBannerPath = propertyNode.InnerText;
+                                            }
+                                            break;
+                                    }
+                                }
+                                results.bannerSeasonList.Add(bannerSeason);
+                                break;
+                        }
                     }
                 }
 
@@ -182,6 +190,7 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBannersResults
     {
+        public long m_nServerTimeStamp = 0;
         public List<BannerSeries> bannerSeriesList = new List<BannerSeries>();
         public List<BannerSeason> bannerSeasonList = new List<BannerSeason>();
     };

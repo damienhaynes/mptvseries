@@ -464,7 +464,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static void GlobalSet(DBTable obj, String sKey, object Value, SQLCondition conditions)
+        public static void GlobalSet(DBTable obj, String sKey, DBValue Value, SQLCondition conditions)
         {
             if (obj.m_fields.ContainsKey(sKey))
             {
@@ -472,11 +472,11 @@ namespace WindowPlugins.GUITVSeries
                 switch (obj.m_fields[sKey].Type)
                 {
                     case DBField.cTypeInt:
-                        sqlQuery += Value.ToString();
+                        sqlQuery += Value;
                         break;
 
                     case DBField.cTypeString:
-                        sqlQuery += "'" + Value.ToString() + "'";
+                        sqlQuery += "'" + Value + "'";
                         break;
                 }
                 if (conditions != "")

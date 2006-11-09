@@ -43,7 +43,7 @@ namespace WindowPlugins.GUITVSeries
             this.listbox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.listbox_Series.FormattingEnabled = true;
-            this.listbox_Series.Location = new System.Drawing.Point(12, 64);
+            this.listbox_Series.Location = new System.Drawing.Point(12, 66);
             this.listbox_Series.Name = "listbox_Series";
             this.listbox_Series.Size = new System.Drawing.Size(406, 95);
             this.listbox_Series.TabIndex = 0;
@@ -53,7 +53,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textbox_Summary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textbox_Summary.Location = new System.Drawing.Point(12, 165);
+            this.textbox_Summary.Location = new System.Drawing.Point(12, 166);
             this.textbox_Summary.Multiline = true;
             this.textbox_Summary.Name = "textbox_Summary";
             this.textbox_Summary.ReadOnly = true;

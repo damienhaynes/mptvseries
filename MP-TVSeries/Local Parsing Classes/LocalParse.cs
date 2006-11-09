@@ -64,6 +64,7 @@ namespace WindowPlugins.GUITVSeries
                         nFailed++;
 
                         progressReporter.failedSeason = true;
+                        progressReporter.success = false;
                         progressReporter.exception = "Season not numerical";
                     }
                     try { Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]); }
@@ -75,6 +76,7 @@ namespace WindowPlugins.GUITVSeries
                         nFailed++;
 
                         progressReporter.failedEpisode = true;
+                        progressReporter.success = false;
                         progressReporter.exception += "Episode not numerical";
                     }
                 }

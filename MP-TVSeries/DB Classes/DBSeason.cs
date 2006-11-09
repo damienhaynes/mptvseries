@@ -16,6 +16,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cIndex = "SeasonIndex";
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
+        public const String cHasLocalFiles = "HasLocalFiles";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -65,6 +66,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cIndex, new DBField(DBField.cTypeInt));
             AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
             AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
+            AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
         }
 
         public String Banner
@@ -119,11 +121,23 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static List<DBSeason> Get(String sSeriesName)
+        public static void GlobalSet(String sKey, DBValue Value)
+        {
+            GlobalSet(sKey, Value, new SQLCondition(new DBSeason()));
+        }
+
+        public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
+        {
+            GlobalSet(new DBSeason(), sKey, Value, condition);
+        }
+
+        public static List<DBSeason> Get(String sSeriesName, Boolean bExistingFilesOnly)
         {
             // create table if it doesn't exist already
             SQLCondition condition = new SQLCondition(new DBSeason());
             condition.Add(cSeriesName, sSeriesName, true);
+            if (bExistingFilesOnly)
+                condition.Add(cHasLocalFiles, 0, false);
             String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cIndex;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();

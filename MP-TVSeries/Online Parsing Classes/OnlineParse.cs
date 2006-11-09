@@ -21,6 +21,8 @@ namespace WindowPlugins.GUITVSeries
         int m_nCurrentSeriesIndex = 0;
         List<DBEpisode> m_EpisodeList = new List<DBEpisode>();
         int m_nCurrentEpisodeIndex = 0;
+        long m_nGetEpisodesTimeStamp = 0;
+        long m_nUpdateBannersTimeStamp = 0;
 
         bool m_bSeries_UpdateNew = false;
         bool m_bEpisodes_UpdateNew = false;
@@ -54,6 +56,9 @@ namespace WindowPlugins.GUITVSeries
 
             // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
+            // also clear all season & series for local files
+            DBSeries.GlobalSet(DBSeries.cHasLocalFiles, false);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, false);
             m_localParser = new LocalParse();
             m_localParser.worker.ProgressChanged += new ProgressChangedEventHandler(LocalParsing_LocalParseProgress);
             m_localParser.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(LocalParsing_LocalParseCompleted);
@@ -121,11 +126,13 @@ namespace WindowPlugins.GUITVSeries
                     // ok, we are sure it's valid now
                     // series first
                     DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
+                    series[DBSeries.cHasLocalFiles] = 1;
                     // not much to do here except commiting the series
                     series.Commit();
 
                     // season now
                     DBSeason season = new DBSeason(progress.parser.Matches[DBSeries.cParsedName], nSeason);
+                    season[DBSeason.cHasLocalFiles] = 1;
                     season.Commit();
 
                     // then episode
@@ -259,6 +266,7 @@ namespace WindowPlugins.GUITVSeries
 
         void MatchEpisodes_Next(bool bStart)
         {
+            long nGetEpisodesTimeStamp = 0;
             if (bStart)
             {
                 DBTVSeries.Log("*********  Starting GetEpisodes  *********");
@@ -273,6 +281,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(DBSeries.cID, -1, false); // for series that were
                 m_SeriesList = DBSeries.Get(condition);
                 m_nCurrentSeriesIndex = 0;
+                nGetEpisodesTimeStamp = DBOption.GetOptions(DBOption.cGetEpisodesTimeStamp);
             }
             else
             {
@@ -286,6 +295,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (OnlineParsingProgress != null) // only if any subscribers exist
                     OnlineParsingProgress.Invoke(40);
+                // now that the retrieval is done, use the first timestamp we got back (in case episodes would have been edited while we were importing)
+                DBOption.SetOptions(DBOption.cGetEpisodesTimeStamp, m_nGetEpisodesTimeStamp);
+
                 // we did all our series. Go to the next step, the series data update
                 UpdateSeries(true);
             }
@@ -294,7 +306,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bFullSeriesRetrieval)
                 {
                     DBTVSeries.Log("Looking for all the episodes of " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
+                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], nGetEpisodesTimeStamp);
                     m_GetEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
                     m_GetEpisodesParser.DoParse();
                 }
@@ -342,7 +354,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // no need to do single matches for many episodes, it's more efficient to do it all at once
                     DBTVSeries.Log("Looking for all the episodes of " + m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cParsedName]);
-                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID]);
+                    m_GetEpisodesParser = new GetEpisodes(m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cID], 0);
                     m_GetEpisodesParser.m_Worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnlineParsing_GetEpisodesCompleted);
                     m_GetEpisodesParser.DoParse();
                 }
@@ -434,6 +446,9 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+
+            if (m_nGetEpisodesTimeStamp == 0)
+                m_nGetEpisodesTimeStamp = results.m_nServerTimeStamp;
 
             // process next series
             MatchEpisodes_Next(false);
@@ -617,9 +632,8 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    // now that the update is done, copy the timestamp from the series update into the banner one
-                    // HACK: we need a value returned from the server
-                    DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp));
+                    // now that the update is done, use the first timestamp we got back (in case banners would have been edited while we were importing)
+                    DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, m_nUpdateBannersTimeStamp);
 
                     // now update the episodes
                     UpdateEpisodes_Next(true, true);
@@ -679,7 +693,7 @@ namespace WindowPlugins.GUITVSeries
             else
                 m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cCurrentBannerFileName] = sLastTextBanner;
 
-            m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames] = 2;
+            m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannersDownloaded] = 2;
             m_SeriesList[m_nCurrentSeriesIndex].Commit();
 
             foreach (BannerSeason bannerSeason in results.bannerSeasonList)
@@ -702,10 +716,11 @@ namespace WindowPlugins.GUITVSeries
                 season.Commit();
             }
 
+            if (m_nUpdateBannersTimeStamp == 0)
+                m_nUpdateBannersTimeStamp = results.m_nServerTimeStamp;
             // process next series
             UpdateBanners(m_bSeriesBanners_UpdateNew, false);
         }
-
 
         void UpdateEpisodes_Next(bool bUpdateNewEpisodes, bool bStart)
         {
