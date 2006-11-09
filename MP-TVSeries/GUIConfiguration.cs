@@ -60,25 +60,12 @@ namespace WindowPlugins.GUITVSeries
 
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
 
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == "")
-                checkBox_OnlineSearch.Checked = true;
-            else
-                checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
-
-            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
-                checkBox_FullSeriesRetrieval.Checked = false;
-            else
-                checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
-
-            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
-                checkBox_AutoChooseSeries.Checked = false;
-            else
-                checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
-
-            if (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) == "")
-                checkBox_LocalDataOverride.Checked = true;
-            else
-                checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
+            checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
+            checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
+            checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
+            checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
+            checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
+            checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
         }
 
         private void LoadImportPathes()
@@ -264,7 +251,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (cell.Value == null)
                     return;
-                if (cell.ValueType.Name == "Boolean")
+                if (cell.ValueType == typeof(Boolean))
                     importPath[cell.OwningColumn.Name] =(Boolean)cell.Value;
                 else
                     importPath[cell.OwningColumn.Name] = (String)cell.Value;
@@ -277,7 +264,10 @@ namespace WindowPlugins.GUITVSeries
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
             {
                 if (dataGridView_ImportPathes.NewRowIndex == e.RowIndex)
+                {
                     dataGridView_ImportPathes.Rows.Add();
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                }
 
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     folderBrowserDialog1.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
@@ -862,6 +852,16 @@ namespace WindowPlugins.GUITVSeries
         private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
         {
 
+        }
+
+        private void checkBox_Episode_MatchingLocalFile_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
+        }
+
+        private void checkBox_Episode_HideUnwatchedSummary_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, checkBox_Episode_HideUnwatchedSummary.Checked);
         }
     }
 

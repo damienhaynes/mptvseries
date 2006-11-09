@@ -463,6 +463,27 @@ namespace WindowPlugins.GUITVSeries
                 return false;
             }
         }
+
+        public static void GlobalSet(DBTable obj, String sKey, object Value, SQLCondition conditions)
+        {
+            if (obj.m_fields.ContainsKey(sKey))
+            {
+                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey + "=";
+                switch (obj.m_fields[sKey].Type)
+                {
+                    case DBField.cTypeInt:
+                        sqlQuery += Value.ToString();
+                        break;
+
+                    case DBField.cTypeString:
+                        sqlQuery += "'" + Value.ToString() + "'";
+                        break;
+                }
+                if (conditions != "")
+                    sqlQuery += " where " + conditions;
+                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            }
+        }
     };
 
     public class SQLWhat

@@ -20,7 +20,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cSummary = "Summary";
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
-        public const String cOnlineImportProcessed = "OnlineImportProcessed";
+        public const String cOnlineDataImported = "OnlineDataImported";
+        public const String cBannersDownloaded = "BannersDownloaded";
+        // Online data imported flag values while updating:
+        // 0: the series just got an ID, the update series hasn't run on it yet
+        // 1: online data is marked as "old", and needs a refresh
+        // 2: online data up to date.
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -82,7 +87,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
             AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cSummary, new DBField(DBField.cTypeString));
-            AddColumn(cOnlineImportProcessed, new DBField(DBField.cTypeInt));
+            AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
+            AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
         }
 
         // function override to search on both this & the onlineEpisode
@@ -159,6 +165,16 @@ namespace WindowPlugins.GUITVSeries
                 base[cBannerFileNames] = sIn;
 
             }
+        }
+
+        public static void GlobalSet(String sKey, object Value)
+        {
+            GlobalSet(sKey, Value, new SQLCondition(new DBSeries()));
+        }
+
+        public static void GlobalSet(String sKey, object Value, SQLCondition condition)
+        {
+            GlobalSet(new DBSeries(), sKey, Value, condition);
         }
 
         public static List<DBSeries> Get()

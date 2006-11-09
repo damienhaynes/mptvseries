@@ -153,7 +153,16 @@ namespace WindowPlugins.GUITVSeries
             if (bStart)
             {
                 DBTVSeries.Log("*********  GetSeries - unknown series  *********");
+                // mark existing online data as "old", needs a refresh
                 SQLCondition condition = new SQLCondition(new DBSeries());
+                condition.Add(DBSeries.cOnlineDataImported, 2, true);
+                DBSeries.GlobalSet(DBSeries.cOnlineDataImported, 1, condition);
+                // mark existing banners as "old", needs a refresh too
+                condition = new SQLCondition(new DBSeries());
+                condition.Add(DBSeries.cBannersDownloaded, 2, true);
+                DBSeries.GlobalSet(DBSeries.cBannersDownloaded, 1, condition);
+
+                condition = new SQLCondition(new DBSeries());
                 // all series that don't have an onlineID ( = 0)
                 condition.Add(DBSeries.cID, 0, true);
                 m_SeriesList = DBSeries.Get(condition);
@@ -253,7 +262,12 @@ namespace WindowPlugins.GUITVSeries
             if (bStart)
             {
                 DBTVSeries.Log("*********  Starting GetEpisodes  *********");
-                SQLCondition condition = new SQLCondition(new DBSeries());
+                // mark existing online data as "old", needs a refresh
+                SQLCondition condition = new SQLCondition(new DBOnlineEpisode());
+                condition.Add(DBOnlineEpisode.cOnlineDataImported, 2, true);
+                DBEpisode.GlobalSet(DBOnlineEpisode.cOnlineDataImported, 1);
+
+                condition = new SQLCondition(new DBSeries());
                 // all series that have an onlineID ( != 0)
                 condition.Add(DBSeries.cID, 0, false);
                 condition.Add(DBSeries.cID, -1, false); // for series that were
@@ -440,15 +454,15 @@ namespace WindowPlugins.GUITVSeries
             {
                 DBTVSeries.Log("*********  UpdateSeries - retrieve unknown series  *********");
                 // and that never had data imported from the online DB
-                condition.Add(DBSeries.cOnlineImportProcessed, 0, true);
+                condition.Add(DBSeries.cOnlineDataImported, 0, true);
                 // in that case, don't use the lasttime of import
                 nUpdateSeriesTimeStamp = 0;
             }
             else
             {
                 DBTVSeries.Log("*********  UpdateSeries - refresh series  *********");
-                // and that already had data imported from the online DB
-                condition.Add(DBSeries.cOnlineImportProcessed, 0, false);
+                // and that already had data imported from the online DB (but not the new ones, that are set to 2)
+                condition.Add(DBSeries.cOnlineDataImported, 1, true);
                 nUpdateSeriesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp);
             }
             m_bSeries_UpdateNew = bUpdateEmptySeries;
@@ -511,7 +525,8 @@ namespace WindowPlugins.GUITVSeries
                                 localSeries[key] = onlineSeries[key];
                             }
                         }
-                        localSeries[DBSeries.cOnlineImportProcessed] = 1;
+                        // data import completed; set to 2 (data up to date)
+                        localSeries[DBSeries.cOnlineDataImported] = 2;
                         localSeries.Commit();
                     }
                     else
@@ -527,7 +542,7 @@ namespace WindowPlugins.GUITVSeries
                     DBTVSeries.Log("Incorrect SeriesID found! ID=" + nIncorrectID + " for local series '" + m_IDToSeriesMap[nIncorrectID][DBSeries.cParsedName] + "'");
                     // reset the seriesID of this series
                     m_IDToSeriesMap[nIncorrectID][DBSeries.cID] = 0;
-                    m_IDToSeriesMap[nIncorrectID][DBSeries.cOnlineImportProcessed] = 0;
+                    m_IDToSeriesMap[nIncorrectID][DBSeries.cOnlineDataImported] = 0;
                     m_IDToSeriesMap[nIncorrectID].Commit();
                 }
             }
@@ -563,13 +578,13 @@ namespace WindowPlugins.GUITVSeries
                 {
                     DBTVSeries.Log("*********  UpdateBanners - retrieve banners for new series  *********");
                     // and that never had data imported from the online DB
-                    condition.Add(DBSeries.cOnlineImportProcessed, 2, false);
+                    condition.Add(DBSeries.cBannersDownloaded, 0, true);
                 }
                 else
                 {
                     DBTVSeries.Log("*********  UpdateBanners - refresh banners for new series  *********");
                     // and that already had data imported from the online DB
-                    condition.Add(DBSeries.cOnlineImportProcessed, 2, true);
+                    condition.Add(DBSeries.cBannersDownloaded, 1, true);
                 }
                 m_bSeriesBanners_UpdateNew = bUpdateNewSeries;
                 m_SeriesList = DBSeries.Get(condition);
@@ -664,7 +679,7 @@ namespace WindowPlugins.GUITVSeries
             else
                 m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cCurrentBannerFileName] = sLastTextBanner;
 
-            m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cOnlineImportProcessed] = 2;
+            m_SeriesList[m_nCurrentSeriesIndex][DBSeries.cBannerFileNames] = 2;
             m_SeriesList[m_nCurrentSeriesIndex].Commit();
 
             foreach (BannerSeason bannerSeason in results.bannerSeasonList)
@@ -706,13 +721,13 @@ namespace WindowPlugins.GUITVSeries
                 {
                     DBTVSeries.Log("*********  UpdateEpisodes - retrieve unknown episodes  *********");
                     // and that never had data imported from the online DB
-                    condition.Add(DBOnlineEpisode.cOnlineImportProcessed, 0, true);
+                    condition.Add(DBOnlineEpisode.cOnlineDataImported, 0, true);
                 }
                 else
                 {
                     DBTVSeries.Log("*********  UpdateEpisodes - refresh episodes  *********");
                     // and that already had data imported from the online DB
-                    condition.Add(DBOnlineEpisode.cOnlineImportProcessed, 0, false);
+                    condition.Add(DBOnlineEpisode.cOnlineDataImported, 1, true);
                 }
                 m_bEpisodes_UpdateNew = bUpdateNewEpisodes;
 
@@ -804,7 +819,8 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                             }
                         }
-                        localEpisode[DBOnlineEpisode.cOnlineImportProcessed] = 1;
+                        // update to date info
+                        localEpisode[DBOnlineEpisode.cOnlineDataImported] = 2;
                         localEpisode.Commit();
                     }
                     else
@@ -820,7 +836,7 @@ namespace WindowPlugins.GUITVSeries
                     DBTVSeries.Log("Incorrect EpisodeID found! ID=" + nIncorrectID + " for episode '" + m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cCompositeID] + "'");
                     // reset the seriesID of this series
                     m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cID] = 0;
-                    m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cOnlineImportProcessed] = 0;
+                    m_IDToEpisodesMap[nIncorrectID][DBOnlineEpisode.cOnlineDataImported] = 0;
                     m_IDToEpisodesMap[nIncorrectID].Commit();
                 }
             }

@@ -18,10 +18,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeName = "EpisodeName";         // episode name
         public const String cWatched = "Watched";          // tag to know if episode has been watched already (overrides the local file's tag)
         public const String cEpisodeSummary = "Summary";
-        public const String cOnlineImportProcessed = "OnlineImportProcessed";
+        public const String cFirstAired = "FirstAired";
+        public const String cOnlineDataImported = "OnlineDataImported";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
-
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
         static DBOnlineEpisode()
@@ -31,6 +31,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
+            s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
 
             // make sure the table is created on first run
             DBOnlineEpisode dummy = new DBOnlineEpisode();
@@ -66,7 +67,8 @@ namespace WindowPlugins.GUITVSeries
 
             base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
-            base.AddColumn(cOnlineImportProcessed, new DBField(DBField.cTypeInt));
+            base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
+            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -412,22 +414,13 @@ namespace WindowPlugins.GUITVSeries
 
         public static void GlobalSet(String sKey, object Value)
         {
-            DBEpisode dummy = new DBEpisode();
-            if (dummy.m_fields.ContainsKey(sKey))
-            {
-                String sqlQuery = "update " + cTableName + " SET " + sKey + "=";
-                switch (dummy.m_fields[sKey].Type)
-                {
-                    case DBField.cTypeInt:
-                        sqlQuery += Value.ToString();
-                        break;
+            GlobalSet(sKey, Value, new SQLCondition(new DBEpisode()));
+        }
 
-                    case DBField.cTypeString:
-                        sqlQuery += "'" + Value.ToString() + "'";
-                        break;
-                }
-                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-            }
+        public static void GlobalSet(String sKey, object Value, SQLCondition condition)
+        {
+            GlobalSet(new DBOnlineEpisode(), sKey, Value, condition);
+            GlobalSet(new DBEpisode(), sKey, Value, condition);
         }
 
         public static new String Q(String sField)

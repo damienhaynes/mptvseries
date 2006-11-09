@@ -77,6 +77,13 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log = new System.Windows.Forms.ListBox();
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.button_Start = new System.Windows.Forms.Button();
+            this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
+            this.checkBox_Episode_OnlyShowLocalFiles = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl_Details.SuspendLayout();
             this.tabPage_Details.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -101,6 +108,8 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).BeginInit();
             this.panel_Expressions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).BeginInit();
+            this.tabPage_MP_DisplayControl.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -135,6 +144,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.tabControl_Details.Controls.Add(this.tabPage_Details);
             this.tabControl_Details.Controls.Add(this.tabPage_Import);
+            this.tabControl_Details.Controls.Add(this.tabPage_MP_DisplayControl);
             this.tabControl_Details.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl_Details.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Details.Margin = new System.Windows.Forms.Padding(0);
@@ -607,6 +617,89 @@ namespace WindowPlugins.GUITVSeries
             this.button_Start.UseVisualStyleBackColor = true;
             this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
             // 
+            // tabPage_MP_DisplayControl
+            // 
+            this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox4);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox3);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox2);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox1);
+            this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_MP_DisplayControl.Name = "tabPage_MP_DisplayControl";
+            this.tabPage_MP_DisplayControl.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(805, 479);
+            this.tabPage_MP_DisplayControl.TabIndex = 5;
+            this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
+            this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.checkBox_Episode_HideUnwatchedSummary);
+            this.groupBox4.Controls.Add(this.checkBox_Episode_OnlyShowLocalFiles);
+            this.groupBox4.Location = new System.Drawing.Point(4, 312);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(795, 167);
+            this.groupBox4.TabIndex = 1;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Episode View Settings";
+            // 
+            // checkBox_Episode_HideUnwatchedSummary
+            // 
+            this.checkBox_Episode_HideUnwatchedSummary.AutoSize = true;
+            this.checkBox_Episode_HideUnwatchedSummary.Location = new System.Drawing.Point(6, 43);
+            this.checkBox_Episode_HideUnwatchedSummary.Name = "checkBox_Episode_HideUnwatchedSummary";
+            this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(318, 17);
+            this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 1;
+            this.checkBox_Episode_HideUnwatchedSummary.Text = "Hide Episode summary if the episode hasn\'t been watched yet";
+            this.checkBox_Episode_HideUnwatchedSummary.UseVisualStyleBackColor = true;
+            this.checkBox_Episode_HideUnwatchedSummary.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedSummary_CheckedChanged);
+            // 
+            // checkBox_Episode_MatchingLocalFile
+            // 
+            this.checkBox_Episode_OnlyShowLocalFiles.AutoSize = true;
+            this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_MatchingLocalFile";
+            this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(238, 17);
+            this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 0;
+            this.checkBox_Episode_OnlyShowLocalFiles.Text = "Show only episodes with a matching local file";
+            this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
+            this.checkBox_Episode_OnlyShowLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_Episode_MatchingLocalFile_CheckedChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Location = new System.Drawing.Point(4, 211);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(795, 95);
+            this.groupBox3.TabIndex = 1;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Season View Settings";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Location = new System.Drawing.Point(4, 110);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(795, 95);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Series View Settings";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Location = new System.Drawing.Point(4, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(795, 97);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "General Settings";
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -614,7 +707,7 @@ namespace WindowPlugins.GUITVSeries
             this.ClientSize = new System.Drawing.Size(813, 505);
             this.Controls.Add(this.tabControl_Details);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(300, 200);
+            this.MinimumSize = new System.Drawing.Size(500, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MP-TV Series Configuration v0.1";
@@ -642,6 +735,9 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).EndInit();
             this.panel_Expressions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).EndInit();
+            this.tabPage_MP_DisplayControl.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -688,5 +784,12 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ListBox listBox_Log;
         private System.Windows.Forms.Button button_TestReparse;
         private System.Windows.Forms.ComboBox comboBox_BannerSelection;
+        private System.Windows.Forms.TabPage tabPage_MP_DisplayControl;
+        private System.Windows.Forms.CheckBox checkBox_Episode_OnlyShowLocalFiles;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedSummary;
     }
 }

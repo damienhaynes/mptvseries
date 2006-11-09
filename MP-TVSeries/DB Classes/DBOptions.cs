@@ -20,6 +20,62 @@ namespace WindowPlugins.GUITVSeries
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
 
+        public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
+        public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
+
+        static DBOption()
+        {
+            try
+            {
+                SQLiteResultSet results;
+                results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                if (results != null && results.Rows.Count > 0)
+                {
+                    // table is already there, perfect
+                }
+                else
+                {
+                    // no table, create it
+                    String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
+                    DBTVSeries.Execute(sQuery);
+                }
+
+                if (GetOptions(DBOption.cDBVersion) == "")
+                    SetOptions(DBOption.cDBVersion, 1);
+
+                // update default values if not there already
+                if (GetOptions(DBOption.cOnlineParseEnabled) == "")
+                    SetOptions(DBOption.cOnlineParseEnabled, true);
+
+                if (GetOptions(DBOption.cFullSeriesRetrieval) == "")
+                    SetOptions(DBOption.cFullSeriesRetrieval, false);
+
+                if (GetOptions(DBOption.cAutoChooseSeries) == "")
+                    SetOptions(DBOption.cAutoChooseSeries, false);
+
+                if (GetOptions(DBOption.cLocalDataOverride) == "")
+                    SetOptions(DBOption.cLocalDataOverride, true);
+
+                if (GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) == "")
+                    SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, true);
+
+                if (GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) == "")
+                    SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, true);
+
+                if (GetOptions(DBOption.cUpdateSeriesTimeStamp) == "")
+                    SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
+
+                if (GetOptions(DBOption.cUpdateBannersTimeStamp) == "")
+                    SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
+
+                if (GetOptions(DBOption.cUpdateEpisodesTimeStamp) == "")
+                    SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+            }
+            catch (Exception ex)
+            {
+                DBTVSeries.Log("DBOption.UpdateTable failed (" + ex.Message + ").");
+            }
+        }
         private static void UpdateTable()
         {
             try
@@ -51,7 +107,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                UpdateTable();
+//                UpdateTable();
                 String convertedProperty = property;
                 String convertedvalue = value;
 
@@ -76,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                UpdateTable();
+//                UpdateTable();
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
 
