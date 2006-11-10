@@ -34,6 +34,7 @@ namespace WindowPlugins.GUITVSeries
 #else
             logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of Windows folder
             logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of plugin folder
+            Directory.CreateDirectory(logfile + @"\Log");
             logfile += @"\Log\MP-TVSeries.log";
 #endif
             this.m_filename = logfile;

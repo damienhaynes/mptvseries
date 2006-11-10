@@ -5,6 +5,7 @@ using SQLite.NET;
 using MediaPortal.Database;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -593,6 +594,7 @@ namespace WindowPlugins.GUITVSeries
 #else
             databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of Windows folder
             databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of plugin folder
+            Directory.CreateDirectory(databaseFile + @"\Database");
             databaseFile += @"\Database\TVSeriesDatabase4.db3";
 #endif
 

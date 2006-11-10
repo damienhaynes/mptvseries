@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries
             WebClient client = new WebClient();
             Stream data = client.OpenRead(sUrl);
             StreamReader reader = new StreamReader(data);
-            String sXmlData = reader.ReadToEnd();
+            String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
             data.Close();
             reader.Close();
 

@@ -90,7 +90,10 @@ namespace MediaPortal.GUI.Video
 
         #endregion
 
-        private String m_ListLevel = "Series";
+        private const String cListLevelSeries = "Series";
+        private const String cListLevelSeasons = "Seasons";
+        private const String cListLevelEpisodes = "Episodes";
+        private String m_ListLevel = cListLevelSeries;
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
         private DBEpisode m_SelectedEpisode;
@@ -177,7 +180,7 @@ namespace MediaPortal.GUI.Video
             this.m_Facade.Clear();
             switch (this.m_ListLevel)
             {
-                case "Series":
+                case cListLevelSeries:
                     int selectedIndex = -1;
                     int count = 0;
                     foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
@@ -192,7 +195,6 @@ namespace MediaPortal.GUI.Video
                                 item.IconImage = item.IconImageBig = filename;
                             item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
                             item.IsDownloading = true;
-                            item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Series_OnItemSelected);
 
                             if (this.m_SelectedSeries != null)
                             {
@@ -216,9 +218,9 @@ namespace MediaPortal.GUI.Video
                     }
                     if (selectedIndex != -1)
                         this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    this.Series_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
+                    Series_OnItemSelected(this.m_Facade.SelectedListItem);
                     break;
-                case "Season":
+                case cListLevelSeasons:
                     selectedIndex = -1;
                     count = 0;
 
@@ -237,7 +239,6 @@ namespace MediaPortal.GUI.Video
                             item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                             item.IsDownloading = true;
                             item.TVTag = season;
-                            item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Season_OnItemSelected);
 
                             if (this.m_SelectedSeason != null)
                             {
@@ -262,10 +263,10 @@ namespace MediaPortal.GUI.Video
 
                     if (selectedIndex != -1)
                         this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    this.Season_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
+                    this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
 
                     break;
-                case "Episode":
+                case cListLevelEpisodes:
                     selectedIndex = -1;
                     count = 0;
                     foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
@@ -291,7 +292,6 @@ namespace MediaPortal.GUI.Video
                                     selectedIndex = count;
                             }
 
-                            item.OnItemSelected += new MediaPortal.GUI.Library.GUIListItem.ItemSelectedHandler(Episode_OnItemSelected);
                             this.m_Facade.Add(item);
                         }
                         catch (Exception ex)
@@ -304,7 +304,7 @@ namespace MediaPortal.GUI.Video
                     this.m_Facade.Focus = true;
                     if (selectedIndex != -1)
                         this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    this.Episode_OnItemSelected(this.m_Facade.SelectedListItem, this.m_Facade);
+                    this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
                     break;
             }
         }
@@ -331,7 +331,7 @@ namespace MediaPortal.GUI.Video
 
                 switch (this.m_ListLevel)
                 {
-                    case "Episode":
+                    case cListLevelEpisodes:
                         {
                             DBEpisode episode = (DBEpisode)currentitem.TVTag;
                             pItem = new GUIListItem("Toggle watched flag");
@@ -359,7 +359,7 @@ namespace MediaPortal.GUI.Video
                 // specific context settings
                 switch (this.m_ListLevel)
                 {
-                    case "Episode":
+                    case cListLevelEpisodes:
                         {
                             switch (dlg.SelectedId)
                             {
@@ -433,7 +433,7 @@ namespace MediaPortal.GUI.Video
                         playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_VIDEO_TEMP;
                         PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_VIDEO_TEMP);
                         playlist.Clear();
-                        if (this.m_ListLevel == "Series")
+                        if (this.m_ListLevel == cListLevelSeries)
                         {
                             DBSeries series = (DBSeries)currentitem.TVTag;
                             foreach (DBEpisode episode in DBEpisode.Get(series[DBSeries.cParsedName], true))
@@ -446,7 +446,7 @@ namespace MediaPortal.GUI.Video
                                 playlist.Add(itemNew);
                             }
                         }
-                        else if (this.m_ListLevel == "Season")
+                        else if (this.m_ListLevel == cListLevelSeasons)
                         {
                             DBSeason season = (DBSeason)currentitem.TVTag;
                             foreach (DBEpisode episode in DBEpisode.Get(this.m_SelectedSeries[DBSeries.cParsedName], season[DBSeason.cIndex], true))
@@ -459,7 +459,7 @@ namespace MediaPortal.GUI.Video
                                 playlist.Add(itemNew);
                             }
                         }
-                        else if (this.m_ListLevel == "Episode")
+                        else if (this.m_ListLevel == cListLevelEpisodes)
                         {
                             DBEpisode episode = (DBEpisode)currentitem.TVTag;
                             PlayListItem itemNew = new PlayListItem();
@@ -564,21 +564,22 @@ namespace MediaPortal.GUI.Video
             }
             base.OnAction(action);
         }
+
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
             if (control == this.m_Button_Back)
             {
                 switch (this.m_ListLevel)
                 {
-                    case "Series":
+                    case cListLevelSeries:
                         GUIWindowManager.ShowPreviousWindow();
                         break;
-                    case "Season":
-                        this.m_ListLevel = "Series";
+                    case cListLevelSeasons:
+                        this.m_ListLevel = cListLevelSeries;
                         this.m_SelectedSeason = null;
                         break;
-                    case "Episode":
-                        this.m_ListLevel = "Season";
+                    case cListLevelEpisodes:
+                        this.m_ListLevel = cListLevelSeasons;
                         this.m_SelectedEpisode = null;
                         break;
                 }
@@ -607,19 +608,19 @@ namespace MediaPortal.GUI.Video
             {
                 switch (this.m_ListLevel)
                 {
-                    case "Series":
-                        this.m_ListLevel = "Season";
+                    case cListLevelSeries:
+                        this.m_ListLevel = cListLevelSeasons;
                         this.m_SelectedSeries = (DBSeries)this.m_Facade.SelectedListItem.TVTag;
                         this.LoadFacade();
                         this.m_Facade.Focus = true;
                         break;
-                    case "Season":
-                        this.m_ListLevel = "Episode";
+                    case cListLevelSeasons:
+                        this.m_ListLevel = cListLevelEpisodes;
                         this.m_SelectedSeason = (DBSeason)this.m_Facade.SelectedListItem.TVTag;
                         this.LoadFacade();
                         this.m_Facade.Focus = true;
                         break;
-                    case "Episode":
+                    case cListLevelEpisodes:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         this.m_SelectedEpisode[DBEpisode.cWatched] = 1;
                         this.m_SelectedEpisode.Commit();
@@ -669,7 +670,37 @@ namespace MediaPortal.GUI.Video
             base.OnClicked(controlId, control, actionType);
         }
 
-        private void Series_OnItemSelected(GUIListItem item, GUIControl parent)
+        public override bool OnMessage(GUIMessage message)
+        {
+            switch (message.Message)
+            {
+                case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
+                    {
+                        int iControl = message.SenderControlId;
+                        if (iControl == (int)m_Facade.GetID)
+                        {
+                            switch (this.m_ListLevel)
+                            {
+                                case cListLevelSeries:
+                                    Series_OnItemSelected(m_Facade.SelectedListItem);
+                                    break;
+
+                                case cListLevelSeasons:
+                                    Season_OnItemSelected(m_Facade.SelectedListItem);
+                                    break;
+
+                                case cListLevelEpisodes:
+                                    Episode_OnItemSelected(m_Facade.SelectedListItem);
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+            }
+            return base.OnMessage(message);
+        }
+
+        private void Series_OnItemSelected(GUIListItem item)
         {
             if (item == null)
                 return;
@@ -709,7 +740,7 @@ namespace MediaPortal.GUI.Video
                 GUIControl.SetControlLabel(GetID, m_Description.GetID, (String)series[DBSeries.cSummary] + (char)10 + (char)13);
         }
 
-        private void Season_OnItemSelected(GUIListItem item, GUIControl parent)
+        private void Season_OnItemSelected(GUIListItem item)
         {
             if (item == null)
                 return;
@@ -736,7 +767,7 @@ namespace MediaPortal.GUI.Video
             if (this.m_Description != null)
                 GUIControl.SetControlLabel(GetID, m_Description.GetID, (String)this.m_SelectedSeries[DBSeries.cSummary] + (char)10 + (char)13);
         }
-        private void Episode_OnItemSelected(GUIListItem item, GUIControl parent)
+        private void Episode_OnItemSelected(GUIListItem item)
         {
             if (item == null)
                 return;
