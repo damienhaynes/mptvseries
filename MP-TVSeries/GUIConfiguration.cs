@@ -635,6 +635,10 @@ namespace WindowPlugins.GUITVSeries
             m_parser.OnlineParsingCompleted -= new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
             m_parser = null;
 
+            // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
+            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
+            DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
+
             LoadTree();
         }
         
