@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="GUIConfiguration.cs">
       <SubType>Form</SubType>
     </Compile>

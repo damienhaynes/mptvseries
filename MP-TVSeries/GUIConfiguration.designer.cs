@@ -29,14 +29,17 @@ namespace WindowPlugins.GUITVSeries
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.columnHeader_Series = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Title = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Season = new System.Windows.Forms.ColumnHeader();
@@ -58,16 +61,16 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
             this.splitContainerImportSettings = new System.Windows.Forms.SplitContainer();
             this.treeView_Settings = new System.Windows.Forms.TreeView();
+            this.panel_StringReplacements = new System.Windows.Forms.Panel();
+            this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.checkBox_LocalDataOverride = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoChooseSeries = new System.Windows.Forms.CheckBox();
             this.checkBox_FullSeriesRetrieval = new System.Windows.Forms.CheckBox();
             this.panel_ParsingTest = new System.Windows.Forms.Panel();
-            this.splitContainer_parsingtest = new System.Windows.Forms.SplitContainer();
             this.button_TestReparse = new System.Windows.Forms.Button();
             this.listView_ParsingResults = new System.Windows.Forms.ListView();
-            this.listBox_Results = new System.Windows.Forms.ListBox();
             this.panel_ImportPathes = new System.Windows.Forms.Panel();
             this.dataGridView_ImportPathes = new System.Windows.Forms.DataGridView();
             this.panel_Expressions = new System.Windows.Forms.Panel();
@@ -84,6 +87,13 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDown_AutoOnlineDataRefresh = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_AutoScanLocal = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_AutoOnlineDataRefresh = new System.Windows.Forms.CheckBox();
+            this.checkBox_AutoScanLocal = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl_Details.SuspendLayout();
             this.tabPage_Details.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -99,17 +109,19 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel1.SuspendLayout();
             this.splitContainerImportSettings.Panel2.SuspendLayout();
             this.splitContainerImportSettings.SuspendLayout();
+            this.panel_StringReplacements.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.panel_OnlineData.SuspendLayout();
             this.panel_ParsingTest.SuspendLayout();
-            this.splitContainer_parsingtest.Panel1.SuspendLayout();
-            this.splitContainer_parsingtest.Panel2.SuspendLayout();
-            this.splitContainer_parsingtest.SuspendLayout();
             this.panel_ImportPathes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).BeginInit();
             this.panel_Expressions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).BeginInit();
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -225,14 +237,14 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.dataGridView1.DataSource = this.detailsPropertyBindingSource;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle11;
             this.dataGridView1.Location = new System.Drawing.Point(0, 148);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
@@ -326,12 +338,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainerImportSettings.Panel2
             // 
+            this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_StringReplacements);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_OnlineData);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ParsingTest);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_Expressions);
             this.splitContainerImportSettings.Size = new System.Drawing.Size(805, 308);
-            this.splitContainerImportSettings.SplitterDistance = 113;
+            this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
             // 
             // treeView_Settings
@@ -339,9 +352,52 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Settings.Location = new System.Drawing.Point(0, 0);
             this.treeView_Settings.Name = "treeView_Settings";
-            this.treeView_Settings.Size = new System.Drawing.Size(113, 308);
+            this.treeView_Settings.Size = new System.Drawing.Size(151, 308);
             this.treeView_Settings.TabIndex = 153;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
+            // 
+            // panel_StringReplacements
+            // 
+            this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
+            this.panel_StringReplacements.Location = new System.Drawing.Point(236, 216);
+            this.panel_StringReplacements.Name = "panel_StringReplacements";
+            this.panel_StringReplacements.Size = new System.Drawing.Size(157, 75);
+            this.panel_StringReplacements.TabIndex = 155;
+            this.panel_StringReplacements.Tag = "String Replacements";
+            // 
+            // dataGridView_Replace
+            // 
+            this.dataGridView_Replace.AllowUserToResizeColumns = false;
+            this.dataGridView_Replace.AllowUserToResizeRows = false;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
+            this.dataGridView_Replace.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView_Replace.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dataGridView_Replace.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dataGridView_Replace.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Replace.DefaultCellStyle = dataGridViewCellStyle13;
+            this.dataGridView_Replace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView_Replace.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView_Replace.Name = "dataGridView_Replace";
+            this.dataGridView_Replace.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
+            this.dataGridView_Replace.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            this.dataGridView_Replace.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.RowTemplate.Height = 18;
+            this.dataGridView_Replace.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Replace.Size = new System.Drawing.Size(157, 75);
+            this.dataGridView_Replace.StandardTab = true;
+            this.dataGridView_Replace.TabIndex = 150;
+            this.dataGridView_Replace.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_UserDeletedRow);
+            this.dataGridView_Replace.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_Replace_CellEndEdit);
             // 
             // panel_OnlineData
             // 
@@ -351,7 +407,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
             this.panel_OnlineData.Location = new System.Drawing.Point(177, 6);
             this.panel_OnlineData.Name = "panel_OnlineData";
-            this.panel_OnlineData.Size = new System.Drawing.Size(503, 114);
+            this.panel_OnlineData.Size = new System.Drawing.Size(465, 114);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
             // 
@@ -361,7 +417,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_OnlineSearch.Location = new System.Drawing.Point(4, 7);
             this.checkBox_OnlineSearch.Name = "checkBox_OnlineSearch";
-            this.checkBox_OnlineSearch.Size = new System.Drawing.Size(496, 17);
+            this.checkBox_OnlineSearch.Size = new System.Drawing.Size(458, 17);
             this.checkBox_OnlineSearch.TabIndex = 5;
             this.checkBox_OnlineSearch.Text = "Enable Online Database data retrieval";
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
@@ -373,7 +429,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(4, 78);
             this.checkBox_LocalDataOverride.Name = "checkBox_LocalDataOverride";
-            this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(496, 17);
+            this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(458, 17);
             this.checkBox_LocalDataOverride.TabIndex = 2;
             this.checkBox_LocalDataOverride.Text = "Online data should override data from file parsing (series name, episode name)";
             this.checkBox_LocalDataOverride.UseVisualStyleBackColor = true;
@@ -385,7 +441,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_AutoChooseSeries.Location = new System.Drawing.Point(4, 54);
             this.checkBox_AutoChooseSeries.Name = "checkBox_AutoChooseSeries";
-            this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(496, 17);
+            this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(458, 17);
             this.checkBox_AutoChooseSeries.TabIndex = 1;
             this.checkBox_AutoChooseSeries.Text = "Auto-Choose series when multiple entries are returned from the Online Database";
             this.checkBox_AutoChooseSeries.UseVisualStyleBackColor = true;
@@ -398,7 +454,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_FullSeriesRetrieval.AutoEllipsis = true;
             this.checkBox_FullSeriesRetrieval.Location = new System.Drawing.Point(4, 30);
             this.checkBox_FullSeriesRetrieval.Name = "checkBox_FullSeriesRetrieval";
-            this.checkBox_FullSeriesRetrieval.Size = new System.Drawing.Size(496, 17);
+            this.checkBox_FullSeriesRetrieval.Size = new System.Drawing.Size(458, 17);
             this.checkBox_FullSeriesRetrieval.TabIndex = 0;
             this.checkBox_FullSeriesRetrieval.Text = "Retrieve episode information for the whole series (instead of only for the availa" +
                 "ble parsed episodes)";
@@ -407,32 +463,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_ParsingTest
             // 
-            this.panel_ParsingTest.Controls.Add(this.splitContainer_parsingtest);
+            this.panel_ParsingTest.Controls.Add(this.button_TestReparse);
+            this.panel_ParsingTest.Controls.Add(this.listView_ParsingResults);
             this.panel_ParsingTest.Location = new System.Drawing.Point(2, 167);
             this.panel_ParsingTest.Name = "panel_ParsingTest";
             this.panel_ParsingTest.Size = new System.Drawing.Size(157, 113);
             this.panel_ParsingTest.TabIndex = 156;
             this.panel_ParsingTest.Tag = "Parsing Test";
-            // 
-            // splitContainer_parsingtest
-            // 
-            this.splitContainer_parsingtest.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer_parsingtest.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer_parsingtest.Margin = new System.Windows.Forms.Padding(0);
-            this.splitContainer_parsingtest.Name = "splitContainer_parsingtest";
-            this.splitContainer_parsingtest.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer_parsingtest.Panel1
-            // 
-            this.splitContainer_parsingtest.Panel1.Controls.Add(this.button_TestReparse);
-            this.splitContainer_parsingtest.Panel1.Controls.Add(this.listView_ParsingResults);
-            // 
-            // splitContainer_parsingtest.Panel2
-            // 
-            this.splitContainer_parsingtest.Panel2.Controls.Add(this.listBox_Results);
-            this.splitContainer_parsingtest.Size = new System.Drawing.Size(157, 113);
-            this.splitContainer_parsingtest.SplitterDistance = 78;
-            this.splitContainer_parsingtest.TabIndex = 0;
             // 
             // button_TestReparse
             // 
@@ -457,20 +494,11 @@ namespace WindowPlugins.GUITVSeries
             this.listView_ParsingResults.Location = new System.Drawing.Point(0, 0);
             this.listView_ParsingResults.MultiSelect = false;
             this.listView_ParsingResults.Name = "listView_ParsingResults";
-            this.listView_ParsingResults.Size = new System.Drawing.Size(123, 76);
+            this.listView_ParsingResults.Size = new System.Drawing.Size(123, 113);
             this.listView_ParsingResults.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView_ParsingResults.TabIndex = 49;
             this.listView_ParsingResults.UseCompatibleStateImageBehavior = false;
             this.listView_ParsingResults.View = System.Windows.Forms.View.Details;
-            // 
-            // listBox_Results
-            // 
-            this.listBox_Results.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox_Results.FormattingEnabled = true;
-            this.listBox_Results.Location = new System.Drawing.Point(0, 0);
-            this.listBox_Results.Name = "listBox_Results";
-            this.listBox_Results.Size = new System.Drawing.Size(157, 30);
-            this.listBox_Results.TabIndex = 50;
             // 
             // panel_ImportPathes
             // 
@@ -485,27 +513,27 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_ImportPathes.AllowUserToResizeColumns = false;
             this.dataGridView_ImportPathes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
             this.dataGridView_ImportPathes.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_ImportPathes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_ImportPathes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_ImportPathes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle16;
             this.dataGridView_ImportPathes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_ImportPathes.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_ImportPathes.Name = "dataGridView_ImportPathes";
             this.dataGridView_ImportPathes.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_ImportPathes.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle17;
             this.dataGridView_ImportPathes.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_ImportPathes.RowTemplate.Height = 18;
             this.dataGridView_ImportPathes.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -525,14 +553,14 @@ namespace WindowPlugins.GUITVSeries
             this.panel_Expressions.Name = "panel_Expressions";
             this.panel_Expressions.Size = new System.Drawing.Size(157, 77);
             this.panel_Expressions.TabIndex = 155;
-            this.panel_Expressions.Tag = "Expressions";
+            this.panel_Expressions.Tag = "Parsing Expressions";
             // 
             // dataGridView_Expressions
             // 
             this.dataGridView_Expressions.AllowUserToResizeColumns = false;
             this.dataGridView_Expressions.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
             this.dataGridView_Expressions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -540,21 +568,21 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Expressions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_Expressions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle19;
             this.dataGridView_Expressions.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_Expressions.MultiSelect = false;
             this.dataGridView_Expressions.Name = "dataGridView_Expressions";
             this.dataGridView_Expressions.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_Expressions.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.dataGridView_Expressions.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Expressions.RowTemplate.Height = 18;
             this.dataGridView_Expressions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -592,10 +620,11 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox_Log.FormattingEnabled = true;
+            this.listBox_Log.HorizontalScrollbar = true;
             this.listBox_Log.Location = new System.Drawing.Point(0, 33);
             this.listBox_Log.Name = "listBox_Log";
             this.listBox_Log.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.listBox_Log.Size = new System.Drawing.Size(805, 121);
+            this.listBox_Log.Size = new System.Drawing.Size(805, 134);
             this.listBox_Log.TabIndex = 5;
             // 
             // progressBar_Parsing
@@ -656,11 +685,11 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedSummary.UseVisualStyleBackColor = true;
             this.checkBox_Episode_HideUnwatchedSummary.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedSummary_CheckedChanged);
             // 
-            // checkBox_Episode_MatchingLocalFile
+            // checkBox_Episode_OnlyShowLocalFiles
             // 
             this.checkBox_Episode_OnlyShowLocalFiles.AutoSize = true;
             this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_MatchingLocalFile";
+            this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
             this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(238, 17);
             this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 0;
             this.checkBox_Episode_OnlyShowLocalFiles.Text = "Show only episodes with a matching local file";
@@ -693,12 +722,77 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.numericUpDown_AutoOnlineDataRefresh);
+            this.groupBox1.Controls.Add(this.numericUpDown_AutoScanLocal);
+            this.groupBox1.Controls.Add(this.checkBox_AutoOnlineDataRefresh);
+            this.groupBox1.Controls.Add(this.checkBox_AutoScanLocal);
             this.groupBox1.Location = new System.Drawing.Point(4, 7);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(795, 97);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(330, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "hour(s)";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(317, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(49, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "minute(s)";
+            // 
+            // numericUpDown_AutoOnlineDataRefresh
+            // 
+            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(286, 42);
+            this.numericUpDown_AutoOnlineDataRefresh.Name = "numericUpDown_AutoOnlineDataRefresh";
+            this.numericUpDown_AutoOnlineDataRefresh.Size = new System.Drawing.Size(38, 20);
+            this.numericUpDown_AutoOnlineDataRefresh.TabIndex = 1;
+            this.numericUpDown_AutoOnlineDataRefresh.ValueChanged += new System.EventHandler(this.numericUpDown_AutoOnlineDataRefresh_ValueChanged);
+            // 
+            // numericUpDown_AutoScanLocal
+            // 
+            this.numericUpDown_AutoScanLocal.Location = new System.Drawing.Point(273, 20);
+            this.numericUpDown_AutoScanLocal.Name = "numericUpDown_AutoScanLocal";
+            this.numericUpDown_AutoScanLocal.Size = new System.Drawing.Size(38, 20);
+            this.numericUpDown_AutoScanLocal.TabIndex = 1;
+            this.numericUpDown_AutoScanLocal.ValueChanged += new System.EventHandler(this.numericUpDown_AutoScanLocal_ValueChanged);
+            // 
+            // checkBox_AutoOnlineDataRefresh
+            // 
+            this.checkBox_AutoOnlineDataRefresh.AutoSize = true;
+            this.checkBox_AutoOnlineDataRefresh.Location = new System.Drawing.Point(7, 43);
+            this.checkBox_AutoOnlineDataRefresh.Name = "checkBox_AutoOnlineDataRefresh";
+            this.checkBox_AutoOnlineDataRefresh.Size = new System.Drawing.Size(277, 17);
+            this.checkBox_AutoOnlineDataRefresh.TabIndex = 0;
+            this.checkBox_AutoOnlineDataRefresh.Text = "Automatically query the server for updated data every";
+            this.checkBox_AutoOnlineDataRefresh.UseVisualStyleBackColor = true;
+            this.checkBox_AutoOnlineDataRefresh.CheckedChanged += new System.EventHandler(this.checkBox_AutoOnlineDataRefresh_CheckedChanged);
+            // 
+            // checkBox_AutoScanLocal
+            // 
+            this.checkBox_AutoScanLocal.AccessibleDescription = "";
+            this.checkBox_AutoScanLocal.AutoSize = true;
+            this.checkBox_AutoScanLocal.Location = new System.Drawing.Point(7, 20);
+            this.checkBox_AutoScanLocal.Name = "checkBox_AutoScanLocal";
+            this.checkBox_AutoScanLocal.Size = new System.Drawing.Size(260, 17);
+            this.checkBox_AutoScanLocal.TabIndex = 0;
+            this.checkBox_AutoScanLocal.Text = "Automatically scan for new files periodically every ";
+            this.toolTip1.SetToolTip(this.checkBox_AutoScanLocal, "When checked, the plugin will automatically scan for new or removed files, and wi" +
+                    "ll go online trying to fetch data for those");
+            this.checkBox_AutoScanLocal.UseVisualStyleBackColor = true;
+            this.checkBox_AutoScanLocal.CheckedChanged += new System.EventHandler(this.checkBox_AutoScanLocal_CheckedChanged);
             // 
             // ConfigurationForm
             // 
@@ -726,11 +820,10 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel1.ResumeLayout(false);
             this.splitContainerImportSettings.Panel2.ResumeLayout(false);
             this.splitContainerImportSettings.ResumeLayout(false);
+            this.panel_StringReplacements.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
             this.panel_OnlineData.ResumeLayout(false);
             this.panel_ParsingTest.ResumeLayout(false);
-            this.splitContainer_parsingtest.Panel1.ResumeLayout(false);
-            this.splitContainer_parsingtest.Panel2.ResumeLayout(false);
-            this.splitContainer_parsingtest.ResumeLayout(false);
             this.panel_ImportPathes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).EndInit();
             this.panel_Expressions.ResumeLayout(false);
@@ -738,6 +831,10 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -770,9 +867,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.SplitContainer splitContainerImportSettings;
         private System.Windows.Forms.Panel panel_Expressions;
         private System.Windows.Forms.Panel panel_ParsingTest;
-        private System.Windows.Forms.ListView listView_ParsingResults;
-        private System.Windows.Forms.ListBox listBox_Results;
-        private System.Windows.Forms.SplitContainer splitContainer_parsingtest;
         private System.Windows.Forms.Panel panel_OnlineData;
         private System.Windows.Forms.CheckBox checkBox_FullSeriesRetrieval;
         private System.Windows.Forms.CheckBox checkBox_AutoChooseSeries;
@@ -782,7 +876,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ProgressBar progressBar_Parsing;
         private System.Windows.Forms.SplitContainer splitContainer_SettingsOutput;
         private System.Windows.Forms.ListBox listBox_Log;
-        private System.Windows.Forms.Button button_TestReparse;
         private System.Windows.Forms.ComboBox comboBox_BannerSelection;
         private System.Windows.Forms.TabPage tabPage_MP_DisplayControl;
         private System.Windows.Forms.CheckBox checkBox_Episode_OnlyShowLocalFiles;
@@ -791,5 +884,16 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedSummary;
+        private System.Windows.Forms.CheckBox checkBox_AutoScanLocal;
+        private System.Windows.Forms.NumericUpDown numericUpDown_AutoScanLocal;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBox_AutoOnlineDataRefresh;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericUpDown_AutoOnlineDataRefresh;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Panel panel_StringReplacements;
+        private System.Windows.Forms.DataGridView dataGridView_Replace;
+        private System.Windows.Forms.Button button_TestReparse;
+        private System.Windows.Forms.ListView listView_ParsingResults;
     }
 }

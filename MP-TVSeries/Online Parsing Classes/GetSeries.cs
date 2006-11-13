@@ -8,29 +8,18 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetSeries
     {
-        public BackgroundWorker m_Worker = new BackgroundWorker();
-        private String m_SeriesName;
+        private List<DBSeries> listSeries = new List<DBSeries>();
+
+        public List<DBSeries> Results
+        {
+            get { return listSeries; }
+        }
 
         public GetSeries(String sSeriesName)
         {
-            m_SeriesName = sSeriesName;
-            m_Worker.WorkerReportsProgress = true;
-            m_Worker.WorkerSupportsCancellation = true;
-            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-        }
-
-        public void DoParse()
-        {
-            m_Worker.RunWorkerAsync();
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            XmlNodeList nodeList = ZsoriParser.GetSeries(m_SeriesName);
+            XmlNodeList nodeList = ZsoriParser.GetSeries(sSeriesName);
             if (nodeList != null)
             {
-                GetSeriesResults results = new GetSeriesResults();
-
                 foreach (XmlNode itemNode in nodeList)
                 {
                     DBSeries series = new DBSeries();
@@ -45,16 +34,10 @@ namespace WindowPlugins.GUITVSeries
                             series[propertyNode.Name] = propertyNode.InnerText;
                         }
                     }
-                    results.listSeries.Add(series);
+                    listSeries.Add(series);
                 }
-
-                e.Result = results;
             }
         }
-    }
 
-    class GetSeriesResults
-    {
-        public List<DBSeries> listSeries = new List<DBSeries>();
-    };
+    }
 }

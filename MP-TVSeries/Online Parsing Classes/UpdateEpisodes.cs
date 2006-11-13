@@ -8,41 +8,41 @@ namespace WindowPlugins.GUITVSeries
 {
     class UpdateEpisodes
     {
-        public BackgroundWorker m_Worker = new BackgroundWorker();
-        private String m_sEpisodesIDs;
-        private long m_nUpdateEpisodesTimeStamp;
+        private long m_nServerTimeStamp = 0;
+        private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
+        private List<int> listIncorrectIDs = new List<int>();
+
+        public long ServerTimeStamp
+        {
+            get { return m_nServerTimeStamp; }
+        }
+
+        public List<DBOnlineEpisode> Results
+        {
+            get { return listEpisodes; }
+        }
+
+        public List<int> BadIds
+        {
+            get { return listIncorrectIDs; }
+        }
+
 
         public UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
         {
-            m_sEpisodesIDs = sEpisodesIDs;
-            m_nUpdateEpisodesTimeStamp = nUpdateEpisodesTimeStamp;
-            m_Worker.WorkerReportsProgress = true;
-            m_Worker.WorkerSupportsCancellation = true;
-            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-        }
-
-        public void DoParse()
-        {
-            m_Worker.RunWorkerAsync();
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (m_sEpisodesIDs != String.Empty)
+            if (sEpisodesIDs != String.Empty)
             {
                 XmlNodeList nodeList = null;
-                nodeList = ZsoriParser.UpdateEpisodes(m_sEpisodesIDs, m_nUpdateEpisodesTimeStamp);
+                nodeList = ZsoriParser.UpdateEpisodes(sEpisodesIDs, nUpdateEpisodesTimeStamp);
 
                 if (nodeList != null)
                 {
-                    UpdateEpisodesResults results = new UpdateEpisodesResults();
-
                     foreach (XmlNode itemNode in nodeList)
                     {
                         // first return item SHOULD ALWAYS be the sync time (hope so at least!)
                         if (itemNode.ChildNodes[0].Name == "SyncTime")
                         {
-                            results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                            m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
                         }
                         else
                         {
@@ -52,7 +52,7 @@ namespace WindowPlugins.GUITVSeries
                                 if (propertyNode.Name == "IncorrectID")
                                 {
                                     // alert! drop this series, the ID doesn't match anything anymore for some reason
-                                    results.listIncorrectIDs.Add(episode[DBOnlineEpisode.cID]);
+                                    listIncorrectIDs.Add(episode[DBOnlineEpisode.cID]);
                                     episode = null;
                                     break;
                                 }
@@ -69,20 +69,11 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                             if (episode != null)
-                                results.listEpisodes.Add(episode);
+                                listEpisodes.Add(episode);
                         }
                     }
-
-                    e.Result = results;
                 }
             }
         }
     }
-
-    class UpdateEpisodesResults
-    {
-        public long m_nServerTimeStamp = 0;
-        public List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
-        public List<int> listIncorrectIDs = new List<int>();
-    };
 }

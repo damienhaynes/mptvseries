@@ -6,6 +6,7 @@ using MediaPortal.Dialogs;
 using MediaPortal.Util;
 using MediaPortal.Playlists;
 using WindowPlugins.GUITVSeries;
+using System.Threading;
 
 namespace MediaPortal.GUI.Video
 {
@@ -100,6 +101,14 @@ namespace MediaPortal.GUI.Video
         public LogWriter m_Logs = new LogWriter();
         private VideoHandler m_VideoHandler;
 
+        private TimerCallback timerDelegate = null;
+        private System.Threading.Timer scanTimer = null;
+        private OnlineParsing m_parserUpdater = null;
+        private int m_nLocalScanLapse = 0;
+        private int m_nUpdateScanLapse = 0;
+        private DateTime m_LastLocalScan = DateTime.MinValue;
+        private DateTime m_LastUpdateScan = DateTime.MinValue;
+
         #region Skin Variables
         [SkinControlAttribute(2)]
         protected GUIButtonControl m_Button_Back = null;
@@ -172,140 +181,162 @@ namespace MediaPortal.GUI.Video
 
             m_VideoHandler = new VideoHandler();
 
+            try
+            {
+                m_LastLocalScan = DateTime.Parse(DBOption.GetOptions(DBOption.cLocalScanLastTime));
+            }
+            catch {}
+            try
+            {
+                m_LastUpdateScan = DateTime.Parse(DBOption.GetOptions(DBOption.cUpdateScanLastTime));
+            }
+            catch {}
+
+            if (DBOption.GetOptions(DBOption.cAutoScanLocalFiles))
+                m_nLocalScanLapse = DBOption.GetOptions(DBOption.cAutoScanLocalFilesLapse);
+            if (DBOption.GetOptions(DBOption.cAutoUpdateOnlineData))
+                m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
+
+            // timer check every 10 seconds
+            timerDelegate = new TimerCallback(Clock);
+            scanTimer = new System.Threading.Timer(timerDelegate, null, 10000, 10000);
             return Load(xmlSkin);
         }
 
         void LoadFacade()
         {
-            this.m_Facade.Clear();
-            switch (this.m_ListLevel)
+            if (this.m_Facade != null)
             {
-                case cListLevelSeries:
-                    int selectedIndex = -1;
-                    int count = 0;
-                    foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
-                    {
-                        try
+                this.m_Facade.Clear();
+                switch (this.m_ListLevel)
+                {
+                    case cListLevelSeries:
+                        int selectedIndex = -1;
+                        int count = 0;
+                        foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                         {
-                            GUIListItem item = new GUIListItem(series[DBSeries.cPrettyName]);
-//                            item.Label2 = series.Airs;
-                            item.TVTag = series;
-                            String filename = series.Banner;
-                            if (filename != String.Empty)
-                                item.IconImage = item.IconImageBig = filename;
-                            item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
-                            item.IsDownloading = true;
-
-                            if (this.m_SelectedSeries != null)
+                            try
                             {
-                                if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
-                                    selectedIndex = count;
-                            }
-                            else
-                            {
-                                // select the first that has a file
-                                if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                    selectedIndex = count;
-                            }
+                                GUIListItem item = new GUIListItem(series[DBSeries.cPrettyName]);
+                                //                            item.Label2 = series.Airs;
+                                item.TVTag = series;
+                                String filename = series.Banner;
+                                if (filename != String.Empty)
+                                    item.IconImage = item.IconImageBig = filename;
+                                item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
+                                item.IsDownloading = true;
 
-                            this.m_Facade.Add(item);
+                                if (this.m_SelectedSeries != null)
+                                {
+                                    if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
+                                        selectedIndex = count;
+                                }
+                                else
+                                {
+                                    // select the first that has a file
+                                    if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                        selectedIndex = count;
+                                }
+
+                                this.m_Facade.Add(item);
+                            }
+                            catch (Exception ex)
+                            {
+                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                            }
+                            count++;
                         }
-                        catch (Exception ex)
+                        if (selectedIndex != -1)
+                            this.m_Facade.SelectedListItemIndex = selectedIndex;
+                        Series_OnItemSelected(this.m_Facade.SelectedListItem);
+                        break;
+                    case cListLevelSeasons:
+                        selectedIndex = -1;
+                        count = 0;
+
+                        foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                         {
-                            this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
-                        }
-                        count++;
-                    }
-                    if (selectedIndex != -1)
-                        this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    Series_OnItemSelected(this.m_Facade.SelectedListItem);
-                    break;
-                case cListLevelSeasons:
-                    selectedIndex = -1;
-                    count = 0;
-
-                    foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
-                    {
-                        try
-                        {
-                            GUIListItem item = new GUIListItem("Season " + season[DBSeason.cIndex]);
-                            String filename = season.Banner;
-                            if (filename == String.Empty) filename = this.m_SelectedSeries.Banner;
-                            if (filename != String.Empty)
+                            try
                             {
-                                item.IconImage = filename;
-                                item.IconImageBig = filename;
+                                GUIListItem item = new GUIListItem("Season " + season[DBSeason.cIndex]);
+                                String filename = season.Banner;
+                                if (filename == String.Empty) filename = this.m_SelectedSeries.Banner;
+                                if (filename != String.Empty)
+                                {
+                                    item.IconImage = filename;
+                                    item.IconImageBig = filename;
+                                }
+                                item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
+                                item.IsDownloading = true;
+                                item.TVTag = season;
+
+                                if (this.m_SelectedSeason != null)
+                                {
+                                    if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                        selectedIndex = count;
+                                }
+                                else
+                                {
+                                    // select the first that has a file
+                                    if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                        selectedIndex = count;
+                                }
+                                this.m_Facade.Add(item);
                             }
-                            item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                            item.IsDownloading = true;
-                            item.TVTag = season;
-
-                            if (this.m_SelectedSeason != null)
+                            catch (Exception ex)
                             {
-                                if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
-                                    selectedIndex = count;
+                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
                             }
-                            else
-                            {
-                                // select the first that has a file
-                                if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                    selectedIndex = count;
-                            } 
-                            this.m_Facade.Add(item);
+                            count++;
                         }
-                        catch (Exception ex)
+
+
+                        if (selectedIndex != -1)
+                            this.m_Facade.SelectedListItemIndex = selectedIndex;
+                        this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
+
+                        break;
+                    case cListLevelEpisodes:
+                        selectedIndex = -1;
+                        count = 0;
+                        foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                         {
-                            this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
-                        }
-                        count++;
-                    }
-
-
-                    if (selectedIndex != -1)
-                        this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
-
-                    break;
-                case cListLevelEpisodes:
-                    selectedIndex = -1;
-                    count = 0;
-                    foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
-                    {
-                        try
-                        {
-                            GUIListItem item = new GUIListItem(episode[DBEpisode.cEpisodeIndex] + ": " + episode[DBEpisode.cEpisodeName]);
-
-                            item.Label2 = episode[DBOnlineEpisode.cFirstAired];
-                            item.IsRemote = episode[DBEpisode.cFilename] != "";
-                            item.IsDownloading = episode[DBEpisode.cWatched] == 0;
-                            item.TVTag = episode;
-
-                            if (this.m_SelectedEpisode != null)
+                            try
                             {
-                                if (episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
-                                    selectedIndex = count;
+                                GUIListItem item = new GUIListItem(episode[DBEpisode.cEpisodeIndex] + ": " + episode[DBEpisode.cEpisodeName]);
+
+                                item.Label2 = episode[DBOnlineEpisode.cFirstAired];
+                                item.IsRemote = episode[DBEpisode.cFilename] != "";
+                                item.IsDownloading = episode[DBEpisode.cWatched] == 0;
+                                item.TVTag = episode;
+
+                                if (this.m_SelectedEpisode != null)
+                                {
+                                    if (episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
+                                        selectedIndex = count;
+                                }
+                                else
+                                {
+                                    // select the first that has a file and is not watched
+                                    if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
+                                        selectedIndex = count;
+                                }
+
+                                this.m_Facade.Add(item);
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                // select the first that has a file and is not watched
-                                if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
-                                    selectedIndex = count;
+                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
                             }
-
-                            this.m_Facade.Add(item);
+                            count++;
                         }
-                        catch (Exception ex)
-                        {
-                            this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
-                        }
-                        count++;
-                    }
-                    this.m_Button_Back.Focus = false;
-                    this.m_Facade.Focus = true;
-                    if (selectedIndex != -1)
-                        this.m_Facade.SelectedListItemIndex = selectedIndex;
-                    this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
-                    break;
+                        this.m_Button_Back.Focus = false;
+                        this.m_Facade.Focus = true;
+                        if (selectedIndex != -1)
+                            this.m_Facade.SelectedListItemIndex = selectedIndex;
+                        this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
+                        break;
+                }
             }
         }
 
@@ -670,6 +701,58 @@ namespace MediaPortal.GUI.Video
             base.OnClicked(controlId, control, actionType);
         }
 
+        public void Clock(Object stateInfo)
+        {
+            if (m_parserUpdater == null)
+            {
+                // need to not be doing something yet (we don't want to accumulate parser objects !)
+                bool bLocalScanNeeded = false;
+                bool bUpdateScanNeeded = false;
+                if (m_nLocalScanLapse > 0)
+                {
+                    TimeSpan tsLocal = DateTime.Now - m_LastLocalScan;
+                    if ((int)tsLocal.TotalMinutes > m_nLocalScanLapse)
+                        bLocalScanNeeded = true;
+                }
+
+                if (m_nUpdateScanLapse > 0)
+                {
+                    TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
+                    if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
+                        bUpdateScanNeeded = true;
+                }
+
+                if (bLocalScanNeeded || bUpdateScanNeeded)
+                {
+                    // do scan
+                    m_parserUpdater = new OnlineParsing();
+                    m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+                    m_parserUpdater.Start(bLocalScanNeeded, bUpdateScanNeeded);
+                }
+            }
+            base.Process();
+        }
+
+        void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
+        {
+            if (m_parserUpdater != null)
+            {
+                if (m_parserUpdater.LocalScan)
+                {
+                    m_LastLocalScan = DateTime.Now;
+                    DBOption.SetOptions(DBOption.cLocalScanLastTime, m_LastLocalScan.ToString());
+                }
+                if (m_parserUpdater.UpdateScan)
+                {
+                    m_LastUpdateScan = DateTime.Now;
+                    DBOption.SetOptions(DBOption.cUpdateScanLastTime, m_LastUpdateScan.ToString());
+                }
+                m_parserUpdater = null;
+                if (bDataUpdated)
+                    LoadFacade();
+            }
+        }
+
         public override bool OnMessage(GUIMessage message)
         {
             switch (message.Message)
@@ -706,6 +789,7 @@ namespace MediaPortal.GUI.Video
                 return;
 
             DBSeries series = (DBSeries)item.TVTag;
+            m_SelectedSeries = series;
             if (this.m_Image != null)
             {
                 String filename = series.Banner;
@@ -774,7 +858,7 @@ namespace MediaPortal.GUI.Video
 
             DBEpisode episode = (DBEpisode)item.TVTag;
             if (this.m_Title != null)
-                GUIControl.SetControlLabel(GetID, m_Title.GetID, this.m_SelectedSeason[DBSeason.cIndex] + ": " + episode[DBEpisode.cEpisodeName]);
+                GUIControl.SetControlLabel(GetID, m_Title.GetID, this.m_SelectedSeason[DBSeason.cIndex]+"x"+episode[DBEpisode.cEpisodeIndex] + ": " + episode[DBEpisode.cEpisodeName]);
             if (this.m_Genre != null)
                 GUIControl.SetControlLabel(GetID, m_Genre.GetID, m_SelectedSeries[DBSeries.cGenre]);
             if (this.m_Description != null)

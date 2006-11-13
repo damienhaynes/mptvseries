@@ -348,14 +348,16 @@ namespace WindowPlugins.GUITVSeries
             {
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
-                // stupid trick for how MP handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+//                what.Add(DBSeries.Q(DBSeries.cID));
+                // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
+
+                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
             }
             else
             {
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + " where " + conditions + " and " + cTableName + "." + cCompositeID + "==" + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " order by " + Q(cEpisodeIndex);
+                sqlQuery = "select " + what + " where " + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " order by " + Q(cEpisodeIndex);
 
             }
 

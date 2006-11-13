@@ -38,6 +38,7 @@ namespace WindowPlugins.GUITVSeries
             InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
+            LoadReplacements();
             LoadTree();
         }
 
@@ -46,6 +47,7 @@ namespace WindowPlugins.GUITVSeries
         {
             m_paneList.Add(panel_ImportPathes);
             m_paneList.Add(panel_Expressions);
+            m_paneList.Add(panel_StringReplacements);
             m_paneList.Add(panel_ParsingTest);
             m_paneList.Add(panel_OnlineData);
 
@@ -66,6 +68,19 @@ namespace WindowPlugins.GUITVSeries
             checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
+
+            checkBox_AutoScanLocal.Checked = DBOption.GetOptions(DBOption.cAutoScanLocalFiles);
+            numericUpDown_AutoScanLocal.Enabled = checkBox_AutoScanLocal.Checked;
+            int nValue = DBOption.GetOptions(DBOption.cAutoScanLocalFilesLapse);
+            numericUpDown_AutoScanLocal.Minimum = 1;
+            numericUpDown_AutoScanLocal.Maximum = 180;
+            numericUpDown_AutoScanLocal.Value = nValue;
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
+            numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
+            nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
+            numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
+            numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
+            numericUpDown_AutoOnlineDataRefresh.Value = nValue;
         }
 
         private void LoadImportPathes()
@@ -129,6 +144,11 @@ namespace WindowPlugins.GUITVSeries
                 expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
                 expression.Commit();
 
+                expression[DBExpression.cIndex] = "5";
+                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+)(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
+                expression.Commit();
+                
+
                 // refresh
                 expressions = DBExpression.GetAll();
             }
@@ -180,6 +200,78 @@ namespace WindowPlugins.GUITVSeries
                 comboCell.Value = (String)expression[DBExpression.cType];
                 row.Cells[DBExpression.cType] = comboCell;
                 row.Cells[DBExpression.cExpression].Value = (String)expression[DBExpression.cExpression];
+            }
+        }
+
+        private void LoadReplacements()
+        {
+            DBReplacements[] replacements = DBReplacements.GetAll();
+            if (replacements == null || replacements.Length == 0)
+            {
+                // no replacements in the db => put the default ones
+                DBReplacements replacement = new DBReplacements();
+                replacement[DBReplacements.cIndex] = "0";
+                replacement[DBReplacements.cEnabled] = "1";
+                replacement[DBReplacements.cToReplace] = ".";
+                replacement[DBReplacements.cWith] = @"<space>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "1";
+                replacement[DBReplacements.cToReplace] = "_";
+                replacement[DBReplacements.cWith] = @"<space>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "2";
+                replacement[DBReplacements.cToReplace] = "-<space>";
+                replacement[DBReplacements.cWith] = @"<empty>";
+                replacement.Commit();
+
+                // refresh
+                replacements = DBReplacements.GetAll();
+            }
+
+            // load them up in the datagrid
+
+            //             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
+            //             {
+            //                 if (field.Key != DBExpression.cIndex)
+            //                 {
+            //                     DataGridViewCheckBoxColumn column = new DataGridBoolColumn();
+            //                     column.Name = field.Key;
+            //                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //                     dataGridView_Expressions.Columns.Add(column);
+            //                 }
+            //             }
+
+            if (dataGridView_Replace.Columns.Count == 0)
+            {
+                DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
+                columnEnabled.Name = DBReplacements.cEnabled;
+                columnEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cEnabled);
+                columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Replace.Columns.Add(columnEnabled);
+
+                DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
+                columnToReplace.Name = DBReplacements.cToReplace;
+                columnToReplace.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cToReplace);
+                columnToReplace.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView_Replace.Columns.Add(columnToReplace);
+
+                DataGridViewTextBoxColumn columnWith = new DataGridViewTextBoxColumn();
+                columnWith.Name = DBReplacements.cWith;
+                columnWith.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cWith);
+                columnWith.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView_Replace.Columns.Add(columnWith);
+            }
+            dataGridView_Replace.Rows.Clear();
+            dataGridView_Replace.Rows.Add(replacements.Length);
+
+            foreach (DBReplacements replacement in replacements)
+            {
+                DataGridViewRow row = dataGridView_Replace.Rows[replacement[DBReplacements.cIndex]];
+                row.Cells[DBReplacements.cEnabled].Value = (Boolean)replacement[DBReplacements.cEnabled];
+                row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
+                row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
             }
         }
 
@@ -377,6 +469,47 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        #region Expressions Handling
+        private void dataGridView_Replace_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            DBReplacements replacement = new DBReplacements();
+            replacement[DBReplacements.cIndex] = e.RowIndex.ToString();
+            foreach (DataGridViewCell cell in dataGridView_Replace.Rows[e.RowIndex].Cells)
+            {
+                if (cell.Value == null)
+                    return;
+                if (cell.ValueType.Name == "Boolean")
+                    replacement[cell.OwningColumn.Name] = (Boolean)cell.Value;
+                else
+                    replacement[cell.OwningColumn.Name] = (String)cell.Value;
+            }
+            replacement.Commit();
+        }
+
+        private void SaveAllReplacements()
+        {
+            // need to save back all the rows
+            DBReplacements.ClearAll();
+
+            foreach (DataGridViewRow row in dataGridView_Expressions.Rows)
+            {
+                if (row.Index != dataGridView_Expressions.NewRowIndex)
+                {
+                    DBReplacements replacement = new DBReplacements();
+                    replacement[DBReplacements.cIndex] = row.Index.ToString();
+                    foreach (DataGridViewCell cell in row.Cells)
+                        replacement[cell.OwningColumn.Name] = (String)cell.Value;
+                    replacement.Commit();
+                }
+            }
+        }
+
+        private void dataGridView_Replace_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            SaveAllReplacements();
+        }
+        #endregion
+
         #region Test Parsing Handling
         void TestParsing_FillList(List<parseResult> results)
         {
@@ -394,9 +527,9 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 if (!progress.success)
-                    listBox_Results.Items.Add("Parsing failed for " + progress.match_filename);
+                    DBTVSeries.Log("Parsing failed for " + progress.match_filename);
                 if (progress.failedSeason || progress.failedEpisode)
-                    listBox_Results.Items.Add(progress.exception + " for " + progress.match_filename);
+                    DBTVSeries.Log(progress.exception + " for " + progress.match_filename);
                 listView_ParsingResults.Items.Add(progress.item);
                 listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
                 // only do that once in a while, it's really slow
@@ -412,17 +545,16 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void TestParsing_LocalParseCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void TestParsing_LocalParseCompleted(List<parseResult> results)
         {
-            List<parseResult> results = (List<parseResult>)e.Result;
             TestParsing_FillList(results);
+            DBTVSeries.Log("Parsing test completed");
             this.progressBar_Parsing.Value = 100;
         }
 
-        void TestParsing_LocalParseProgress(object sender, ProgressChangedEventArgs e)
+        void TestParsing_LocalParseProgress(int nProgress, List<parseResult> results)
         {
-            List<parseResult> results = (List<parseResult>)e.UserState;
-            this.progressBar_Parsing.Value = e.ProgressPercentage;
+            this.progressBar_Parsing.Value = nProgress;
             TestParsing_FillList(results);
         }
 
@@ -459,14 +591,12 @@ namespace WindowPlugins.GUITVSeries
             columnEpisodeTitle.Text = "Episode Title";
             listView_ParsingResults.Columns.Add(columnEpisodeTitle);
 
-            listBox_Results.Items.Clear();
-            listBox_Results.Items.Add("Getting all files...");
-            listBox_Results.Refresh();
+            DBTVSeries.Log("Parsing test beginning, getting all files...");
 
             LocalParse runner = new LocalParse();
-            runner.worker.ProgressChanged += new ProgressChangedEventHandler(TestParsing_LocalParseProgress);
-            runner.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(TestParsing_LocalParseCompleted);
-            runner.DoParse();
+            runner.LocalParseProgress += new LocalParse.LocalParseProgressHandler(TestParsing_LocalParseProgress);
+            runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler(TestParsing_LocalParseCompleted);
+            runner.DoParse(true);
         }
         #endregion
 
@@ -484,7 +614,7 @@ namespace WindowPlugins.GUITVSeries
                 m_parser = new OnlineParsing();
                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-                m_parser.Start();
+                m_parser.Start(true, true);
             }
         }
 
@@ -493,7 +623,7 @@ namespace WindowPlugins.GUITVSeries
             this.progressBar_Parsing.Value = nProgress;
         }
 
-        void runner_OnlineParsingCompleted()
+        void runner_OnlineParsingCompleted(bool bDataUpdated)
         {
             this.progressBar_Parsing.Value = 100;
             TimeSpan span = DateTime.Now - m_timingStart;
@@ -864,6 +994,28 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_Episode_HideUnwatchedSummary_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, checkBox_Episode_HideUnwatchedSummary.Checked);
+        }
+
+        private void numericUpDown_AutoScanLocal_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoScanLocalFilesLapse, (int)numericUpDown_AutoScanLocal.Value);
+        }
+
+        private void checkBox_AutoScanLocal_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoScanLocalFiles, checkBox_AutoScanLocal.Checked);
+            numericUpDown_AutoScanLocal.Enabled = checkBox_AutoScanLocal.Checked;
+        }
+
+        private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
+            numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
+        }
+
+        private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
         }
     }
 

@@ -8,13 +8,19 @@ namespace WindowPlugins.GUITVSeries
 {
     public class LocalParse
     {
-        public BackgroundWorker worker = new BackgroundWorker();
 
-        public LocalParse()
+        private bool m_bAsync = false;
+        private BackgroundWorker worker = null;
+        private List<parseResult> m_results;
+
+        public delegate void LocalParseProgressHandler(int nProgress, List<parseResult> results);
+        public delegate void LocalParseCompletedHandler(List<parseResult> results);
+        public event LocalParseProgressHandler LocalParseProgress;
+        public event LocalParseCompletedHandler LocalParseCompleted;
+
+        public List<parseResult> Results
         {
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            get { return m_results; }
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -87,7 +93,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.parser = parser;
                 results.Add(progressReporter);
 
-                if (nCount++ % 50 == 0)
+                if (m_bAsync && nCount++ % 50 == 0)
                 {
                     worker.ReportProgress(Convert.ToInt32(100.0 / files.Count * nCount), results);
                     results = new List<parseResult>();
@@ -98,9 +104,39 @@ namespace WindowPlugins.GUITVSeries
             e.Result = results;
         }
 
-        public void DoParse()
+        public void DoParse(bool bAsync)
         {
-            worker.RunWorkerAsync();
+            m_bAsync = bAsync;
+            if (bAsync)
+            {
+                worker = new BackgroundWorker();
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+                worker.RunWorkerAsync();
+            }
+            else
+            {
+                DoWorkEventArgs e = new DoWorkEventArgs(null);
+                worker_DoWork(null, e);
+                m_results = (List<parseResult>)e.Result;
+            }
+        }
+
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.Result;
+            if (LocalParseCompleted != null)
+                LocalParseCompleted.Invoke(results);
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            List<parseResult> results = (List<parseResult>)e.UserState;
+            if (LocalParseProgress != null)
+                LocalParseProgress.Invoke(e.ProgressPercentage, results);
         }
     }
 

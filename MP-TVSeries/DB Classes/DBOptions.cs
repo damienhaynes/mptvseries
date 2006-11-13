@@ -15,11 +15,18 @@ namespace WindowPlugins.GUITVSeries
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
         public const String cLocalDataOverride = "LocalDataOverride";
+        public const String cAutoScanLocalFiles = "AutoScanLocalFiles";
+        public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
+        public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
+        public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
 
         public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
+
+        public const String cLocalScanLastTime = "LocalScanLastTime";
+        public const String cUpdateScanLastTime = "UpdateScanLastTime";
 
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
@@ -74,6 +81,24 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(DBOption.cUpdateEpisodesTimeStamp) == "")
                     SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+
+                if (GetOptions(DBOption.cAutoScanLocalFiles) == "")
+                    SetOptions(DBOption.cAutoScanLocalFiles, true);
+
+                if (GetOptions(DBOption.cAutoScanLocalFilesLapse) == "")
+                    SetOptions(DBOption.cAutoScanLocalFilesLapse, 5);
+
+                if (GetOptions(DBOption.cAutoUpdateOnlineData) == "")
+                    SetOptions(DBOption.cAutoUpdateOnlineData, true);
+
+                if (GetOptions(DBOption.cAutoUpdateOnlineDataLapse) == "")
+                    SetOptions(DBOption.cAutoUpdateOnlineDataLapse, 12);
+
+                if (GetOptions(DBOption.cLocalScanLastTime) == "")
+                    SetOptions(DBOption.cLocalScanLastTime, 0);
+
+                if (GetOptions(DBOption.cUpdateScanLastTime) == "")
+                    SetOptions(DBOption.cUpdateScanLastTime, 0);
             }
             catch (Exception ex)
             {

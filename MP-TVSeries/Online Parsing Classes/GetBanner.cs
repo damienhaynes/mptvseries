@@ -8,39 +8,55 @@ using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
+    class BannerSeries
+    {
+        public bool bGraphical = false;
+        public String sSeriesName = String.Empty;
+        public String sOnlineBannerPath = String.Empty;
+        public String sBannerFileName = String.Empty;
+    };
+
+    class BannerSeason
+    {
+        public int nIndex = 0;
+        public bool bGraphical = false;
+        public String sSeriesName = String.Empty;
+        public String sOnlineBannerPath = String.Empty;
+        public String sBannerFileName = String.Empty;
+    };
+
     class GetBanner
     {
-        public BackgroundWorker m_Worker = new BackgroundWorker();
-        private int m_nSeriesID;
-        private long m_nUpdateBannersTimeStamp = 0;
+        private long m_nServerTimeStamp = 0;
+        private List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
+        private List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
+
+        public long ServerTimeStamp
+        {
+            get { return m_nServerTimeStamp; }
+        }
+
+        public List<BannerSeries> bannerSeriesList
+        {
+            get { return m_bannerSeriesList; }
+        }
+
+        public List<BannerSeason> bannerSeasonList
+        {
+            get { return m_bannerSeasonList; }
+        }
 
         public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp)
         {
-            m_nSeriesID = nSeriesID;
-            m_nUpdateBannersTimeStamp = nUpdateBannersTimeStamp;
-            m_Worker.WorkerReportsProgress = true;
-            m_Worker.WorkerSupportsCancellation = true;
-            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-        }
-
-        public void DoParse()
-        {
-            m_Worker.RunWorkerAsync();
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            XmlNodeList nodeList = ZsoriParser.GetBanners(m_nSeriesID, m_nUpdateBannersTimeStamp);
+            XmlNodeList nodeList = ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp);
             if (nodeList != null)
             {
-                GetBannersResults results = new GetBannersResults();
-
                 foreach (XmlNode itemNode in nodeList)
                 {
                     // first return item SHOULD ALWAYS be the sync time (hope so at least!)
                     if (itemNode.ChildNodes[0].Name == "SyncTime")
                     {
-                        results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                        m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
                     }
                     else
                     {
@@ -84,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
                                             break;
                                     }
                                 }
-                                results.bannerSeriesList.Add(bannerSeries);
+                                m_bannerSeriesList.Add(bannerSeries);
                                 break;
 
                             case "season":
@@ -121,7 +137,7 @@ namespace WindowPlugins.GUITVSeries
                                             break;
                                     }
                                 }
-                                results.bannerSeasonList.Add(bannerSeason);
+                                m_bannerSeasonList.Add(bannerSeason);
                                 break;
                         }
                     }
@@ -130,7 +146,7 @@ namespace WindowPlugins.GUITVSeries
                 String sBannersBasePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
 
                 // now that we have all the paths, download all the files
-                foreach (BannerSeries bannerSeries in results.bannerSeriesList)
+                foreach (BannerSeries bannerSeries in m_bannerSeriesList)
                 {
                     bannerSeries.sBannerFileName =  bannerSeries.sSeriesName.Replace(' ', '_') + @"\" + bannerSeries.sOnlineBannerPath.Replace('/', '_');
                     // check if banner is already there (don't download twice)
@@ -149,7 +165,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                foreach (BannerSeason bannerSeason in results.bannerSeasonList)
+                foreach (BannerSeason bannerSeason in m_bannerSeasonList)
                 {
                     bannerSeason.sBannerFileName = bannerSeason.sSeriesName.Replace(' ', '_') + @"\" + bannerSeason.sOnlineBannerPath.Replace('/', '_');
                     if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
@@ -166,32 +182,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 } 
-                e.Result = results;
             }
         }
     }
-
-    class BannerSeries
-    {
-        public bool bGraphical = false;
-        public String sSeriesName = String.Empty;
-        public String sOnlineBannerPath = String.Empty;
-        public String sBannerFileName = String.Empty;
-    };
-
-    class BannerSeason
-    {
-        public int nIndex = 0;
-        public bool bGraphical = false;
-        public String sSeriesName = String.Empty;
-        public String sOnlineBannerPath = String.Empty;
-        public String sBannerFileName = String.Empty;
-    };
-
-    class GetBannersResults
-    {
-        public long m_nServerTimeStamp = 0;
-        public List<BannerSeries> bannerSeriesList = new List<BannerSeries>();
-        public List<BannerSeason> bannerSeasonList = new List<BannerSeason>();
-    };
 }

@@ -57,24 +57,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                
-
-                // no replacing for now
-//                 foreach (SearchReplace item in stringReplacements)
-//                 {
-//                     String searchString = item.GetSearch
-//                         .ToLower()
-//                         .Replace("<space>", " ");
-// 
-//                     String replaceString = item.GetReplace
-//                         .ToLower()
-//                         .Replace("<space>", " ")
-//                         .Replace("<empty>", "");
-// 
-//                     episodeDetailsName = episodeDetailsName.Replace(searchString, replaceString);
-//                     episodeDetailsFull = episodeDetailsFull.Replace(searchString, replaceString);
-//                 }
-
                 foreach (String pattern in sExpressions)
                 {
                     string _Pattern;
@@ -98,7 +80,26 @@ namespace WindowPlugins.GUITVSeries
                             string GroupValue = matchResults.Groups[i].Value;
 
                             if (GroupValue != "" && GroupName != "unknown")
+                            {
+                                foreach (DBReplacements replacement in DBReplacements.GetAll())
+                                {
+                                    String searchString = replacement[DBReplacements.cToReplace];
+                                    searchString = searchString
+                                        .ToLower()
+                                        .Replace("<space>", " ");
+
+                                    String replaceString = replacement[DBReplacements.cWith];
+                                    replaceString = replaceString
+                                        .ToLower()
+                                        .Replace("<space>", " ")
+                                        .Replace("<empty>", "");
+
+                                    GroupValue = GroupValue.Replace(searchString, replaceString);
+                                }
+
+                                GroupValue = GroupValue.Trim();
                                 m_Matches.Add(GroupName, GroupValue);
+                            }
                         }
                         // stop on the first successful match
                         m_RegexpMatched = _Pattern;
@@ -108,7 +109,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("And error ocured in the 'FilenameParser' function (" + ex.ToString() + ")");
+                DBTVSeries.Log("And error occured in the 'FilenameParser' function (" + ex.ToString() + ")");
             }
         }
 
@@ -150,17 +151,17 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // other tags coming? put lazy *, otherwise put a greedy one
                     if (SimpleExpression.IndexOf('<', closeTagLocation) != -1)
-                        finalRegEx += String.Format("(?<{0}>.*?)", field);
+                        finalRegEx += String.Format(@"(?<{0}>[^\\]*?)", field);
                     else
-                        finalRegEx += String.Format("(?<{0}>.*)", field);
+                        finalRegEx += String.Format(@"(?<{0}>[^\\]*)", field);
                 }
                 else
                 {
                     // other tags coming? put lazy *, otherwise put a greedy one
                     if (SimpleExpression.IndexOf('<', closeTagLocation) != -1)
-                        finalRegEx += "(.*?)";
+                        finalRegEx += @"([^\\]*?)";
                     else
-                        finalRegEx += "(.*)";
+                        finalRegEx += @"([^\\]*)";
                 }
             }
 

@@ -8,55 +8,45 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetEpisodes
     {
-        public BackgroundWorker m_Worker = new BackgroundWorker();
-        private int m_nSeriesID;
-        private int m_nSeasonIndex = -1;
-        private int m_nEpisodeIndex = -1;
-        private long m_nGetEpisodesTimeStamp = 0;
+        private long m_nServerTimeStamp = 0;
+        private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
+
+        public long ServerTimeStamp
+        {
+            get { return m_nServerTimeStamp; }
+        }
+
+        public List<DBOnlineEpisode> Results
+        {
+            get { return listEpisodes; }
+        }
 
         public GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp)
         {
-            m_nSeriesID = nSeriesID;
-            m_nGetEpisodesTimeStamp = nGetEpisodesTimeStamp;
-            m_Worker.WorkerReportsProgress = true;
-            m_Worker.WorkerSupportsCancellation = true;
-            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp);
         }
 
         public GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)
         {
-            m_nSeriesID = nSeriesID;
-            m_nSeasonIndex = nSeasonIndex;
-            m_nEpisodeIndex = nEpisodeIndex;
-            m_Worker.WorkerReportsProgress = true;
-            m_Worker.WorkerSupportsCancellation = true;
-            m_Worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-
+            Work(nSeriesID, nSeasonIndex, nEpisodeIndex, 0);
         }
 
-        public void DoParse()
-        {
-            m_Worker.RunWorkerAsync();
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp)
         {
             XmlNodeList nodeList = null;
-            if (m_nEpisodeIndex != -1 && m_nSeasonIndex != -1)
-                nodeList = ZsoriParser.GetEpisodes(m_nSeriesID, m_nSeasonIndex, m_nEpisodeIndex);
+            if (nEpisodeIndex != -1 && nSeasonIndex != -1)
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex);
             else
-                nodeList = ZsoriParser.GetEpisodes(m_nSeriesID, m_nGetEpisodesTimeStamp);
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nGetEpisodesTimeStamp);
 
             if (nodeList != null)
             {
-                GetEpisodesResults results = new GetEpisodesResults();
-
                 foreach (XmlNode itemNode in nodeList)
                 {
                     // first return item SHOULD ALWAYS be the sync time (hope so at least!)
                     if (itemNode.ChildNodes[0].Name == "SyncTime")
                     {
-                        results.m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
+                        m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
                     }
                     else
                     {
@@ -72,18 +62,10 @@ namespace WindowPlugins.GUITVSeries
                                 episode[propertyNode.Name] = propertyNode.InnerText;
                             }
                         }
-                        results.listEpisodes.Add(episode);
+                        listEpisodes.Add(episode);
                     }
                 }
-
-                e.Result = results;
             }
         }
     }
-
-    class GetEpisodesResults
-    {
-        public long m_nServerTimeStamp = 0;
-        public List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
-    };
 }
