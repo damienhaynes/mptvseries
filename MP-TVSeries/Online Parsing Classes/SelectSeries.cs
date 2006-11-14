@@ -11,11 +11,21 @@ namespace WindowPlugins.GUITVSeries
     public partial class SelectSeries : Form
     {
         List<DBSeries> _series;
+        String m_sSeriesName = String.Empty;
 
-        public SelectSeries(String sLocalSeriesName)
+        public SelectSeries(String sLocalSeriesName, bool bSelect)
         {
             InitializeComponent();
-            label_LocalSeriesName.Text = sLocalSeriesName;
+            textbox_LocalSeriesName.Text = sLocalSeriesName;
+            if (!bSelect)
+            {
+                this.listbox_Series.Items.Add("No Match Found, try to enter another name for the show");
+                btnOK.Text = "Search Again";
+            }
+            else
+            {
+                btnOK.Text = "OK";
+            }
         }
 
         public DBSeries userChoice
@@ -24,6 +34,11 @@ namespace WindowPlugins.GUITVSeries
             {
                 return _series[this.listbox_Series.SelectedIndex]; 
             }
+        }
+
+        public String SeriesName
+        {
+            get { return m_sSeriesName; }
         }
 
         public void addSeriesToSelection(List<DBSeries> series)
@@ -38,7 +53,18 @@ namespace WindowPlugins.GUITVSeries
 
         private void listItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBSeries.cSummary]; 
+            if (listbox_Series.SelectedIndex != -1)
+            {
+                this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBSeries.cSummary];
+                btnOK.Text = "OK";
+            }
+        }
+
+        private void textbox_LocalSeriesName_TextChanged(object sender, EventArgs e)
+        {
+            btnOK.Text = "Search Again";
+            listbox_Series.SelectedIndex = -1;
+            m_sSeriesName = textbox_LocalSeriesName.Text;
         }
     }
 }

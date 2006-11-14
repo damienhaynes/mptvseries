@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Threading;
 using System.Text;
 
 namespace WindowPlugins.GUITVSeries
@@ -73,6 +74,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             DBTVSeries.Log("***************************************************************************");
             DBTVSeries.Log("*******************       Parsing Starting      ***************************");
             DBTVSeries.Log("***************************************************************************");
@@ -194,7 +196,9 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // now, remove all episodes still processed = 0, the weren't find in the scan
-            DBEpisode.Clear(DBEpisode.cImportProcessed, 2);
+            SQLCondition condition = new SQLCondition(new DBEpisode());
+            condition.Add(DBEpisode.cImportProcessed, 2, true);
+            DBEpisode.Clear(condition);
         }
 
         void GetSeries()
@@ -229,52 +233,90 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(10 + (10 * nIndex / seriesList.Count));
                 nIndex++;
 
-                GetSeries GetSeriesParser = new GetSeries(series[DBSeries.cParsedName]);
-
-                if (GetSeriesParser.Results.Count > 0)
+                bool bDone = false;
+                String sSeriesNameToSearch = series[DBSeries.cParsedName];
+                while (!bDone)
                 {
-                    DBTVSeries.Log("Found " + GetSeriesParser.Results.Count + " matching names for " + series[DBSeries.cParsedName]);
-                    DBSeries UserChosenSeries = GetSeriesParser.Results[0];
+                    GetSeries GetSeriesParser = new GetSeries(sSeriesNameToSearch);
 
-                    SelectSeries userSelection = null;
-                    if (GetSeriesParser.Results.Count > 1 && UserChosenSeries[DBSeries.cPrettyName].ToString().ToLowerInvariant() != series[DBSeries.cParsedName].ToString().ToLowerInvariant())
+                    if (GetSeriesParser.Results.Count > 0)
                     {
-                        // 
-                        // User has three choices:
-                        // 1) Pick a series from the list
-                        // 2) Simply skip
-                        // 3) Skip and never ask for this series again
-                        userSelection = new SelectSeries(series[DBSeries.cParsedName]);
+                        DBTVSeries.Log("Found " + GetSeriesParser.Results.Count + " matching names for " + sSeriesNameToSearch);
+                        DBSeries UserChosenSeries = GetSeriesParser.Results[0];
+
+                        SelectSeries userSelection = null;
+                        if (GetSeriesParser.Results.Count > 1 && UserChosenSeries[DBSeries.cPrettyName].ToString().ToLowerInvariant() != sSeriesNameToSearch.ToLowerInvariant())
+                        {
+                            // 
+                            // User has three choices:
+                            // 1) Pick a series from the list
+                            // 2) Simply skip
+                            // 3) Skip and never ask for this series again
+                            userSelection = new SelectSeries(sSeriesNameToSearch, true);
+                            userSelection.addSeriesToSelection(GetSeriesParser.Results);
+                            DialogResult result = userSelection.ShowDialog();
+                            switch (result)
+                            {
+                                case DialogResult.Cancel:
+                                    UserChosenSeries = null;
+                                    bDone = true;
+                                    break;
+
+                                case DialogResult.Ignore:
+                                    UserChosenSeries = null;
+                                    series[DBSeries.cID] = -1; // ID -1 means it will be skipped in the future
+                                    series.Commit();
+                                    bDone = true;
+                                    break;
+
+                                case DialogResult.OK:
+                                    if (sSeriesNameToSearch != userSelection.SeriesName)
+                                    {
+                                        sSeriesNameToSearch = userSelection.SeriesName;
+                                        UserChosenSeries = null;
+                                    }
+                                    else
+                                    {
+                                        UserChosenSeries = userSelection.userChoice;
+                                        bDone = true;
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                            bDone = true;
+
+                        if (UserChosenSeries != null) // make sure selection was not cancelled
+                        {
+                            // set the ID on the current series with the one from the chosen one
+                            series[DBSeries.cID] = UserChosenSeries[DBSeries.cID];
+                            series.Commit();
+                        }
+                    }
+                    else
+                    {
+                        DBTVSeries.Log("No matching names found for " + sSeriesNameToSearch);
+                        // ask for an alternative name
+                        SelectSeries userSelection = new SelectSeries(sSeriesNameToSearch, false);
                         userSelection.addSeriesToSelection(GetSeriesParser.Results);
                         DialogResult result = userSelection.ShowDialog();
                         switch (result)
                         {
                             case DialogResult.Cancel:
-                                UserChosenSeries = null;
+                                bDone = true;
                                 break;
 
                             case DialogResult.Ignore:
-                                UserChosenSeries = null;
                                 series[DBSeries.cID] = -1; // ID -1 means it will be skipped in the future
                                 series.Commit();
+                                bDone = true;
                                 break;
 
                             case DialogResult.OK:
-                                UserChosenSeries = userSelection.userChoice;
+                                sSeriesNameToSearch = userSelection.SeriesName;
                                 break;
                         }
                     }
-
-                    if (UserChosenSeries != null) // make sure selection was not cancelled
-                    {
-                        // set the ID on the current series with the one from the chosen one
-                        series[DBSeries.cID] = UserChosenSeries[DBSeries.cID];
-                        series.Commit();
-                    }
-                }
-                else
-                {
-                    DBTVSeries.Log("No matching names found for " + series[DBSeries.cParsedName]);
                 }
             }
         }
@@ -299,12 +341,6 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(DBSeries.cID, 0, false);
             condition.Add(DBSeries.cID, -1, false); // for series that were marked as ignored
             
-            if (!m_bUpdateScan && m_bFullSeriesRetrieval)
-            {
-                condition.Add(DBSeries.cOnlineDataImported, 0, true);
-                nGetEpisodesTimeStamp = 0;
-            }
-
             List<DBSeries> seriesList = DBSeries.Get(condition);
             int nIndex = 0;
 
@@ -319,6 +355,11 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bFullSeriesRetrieval)
                 {
                     DBTVSeries.Log("Looking for all the episodes of " + series[DBSeries.cParsedName]);
+                    if (series[DBSeries.cOnlineDataImported] == 0)
+                    {
+                        nGetEpisodesTimeStamp = 0;
+                    }
+
                     GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
                     if (episodesParser.Results.Count > 0)
                     {

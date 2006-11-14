@@ -35,7 +35,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnCnl = new System.Windows.Forms.Button();
             this.btnnever = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.label_LocalSeriesName = new System.Windows.Forms.Label();
+            this.textbox_LocalSeriesName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // listbox_Series
@@ -72,8 +72,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // btnOK
             // 
+            this.btnOK.AutoSize = true;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(343, 257);
+            this.btnOK.Location = new System.Drawing.Point(12, 258);
+            this.btnOK.MinimumSize = new System.Drawing.Size(75, 0);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 3;
@@ -83,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
             // btnCnl
             // 
             this.btnCnl.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCnl.Location = new System.Drawing.Point(247, 257);
+            this.btnCnl.Location = new System.Drawing.Point(200, 257);
             this.btnCnl.Name = "btnCnl";
             this.btnCnl.Size = new System.Drawing.Size(90, 23);
             this.btnCnl.TabIndex = 4;
@@ -93,7 +95,7 @@ namespace WindowPlugins.GUITVSeries
             // btnnever
             // 
             this.btnnever.DialogResult = System.Windows.Forms.DialogResult.Ignore;
-            this.btnnever.Location = new System.Drawing.Point(119, 257);
+            this.btnnever.Location = new System.Drawing.Point(296, 257);
             this.btnnever.Name = "btnnever";
             this.btnnever.Size = new System.Drawing.Size(122, 23);
             this.btnnever.TabIndex = 5;
@@ -103,21 +105,19 @@ namespace WindowPlugins.GUITVSeries
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 13);
+            this.label2.Location = new System.Drawing.Point(9, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(99, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Local Series Name:";
             // 
-            // label_LocalSeriesName
+            // textbox_LocalSeriesName
             // 
-            this.label_LocalSeriesName.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label_LocalSeriesName.Location = new System.Drawing.Point(12, 28);
-            this.label_LocalSeriesName.Name = "label_LocalSeriesName";
-            this.label_LocalSeriesName.Size = new System.Drawing.Size(406, 18);
-            this.label_LocalSeriesName.TabIndex = 7;
-            this.label_LocalSeriesName.Text = "label3";
-            this.label_LocalSeriesName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.textbox_LocalSeriesName.Location = new System.Drawing.Point(12, 26);
+            this.textbox_LocalSeriesName.Name = "textbox_LocalSeriesName";
+            this.textbox_LocalSeriesName.Size = new System.Drawing.Size(406, 20);
+            this.textbox_LocalSeriesName.TabIndex = 8;
+            this.textbox_LocalSeriesName.TextChanged += new System.EventHandler(this.textbox_LocalSeriesName_TextChanged);
             // 
             // SelectSeries
             // 
@@ -126,7 +126,7 @@ namespace WindowPlugins.GUITVSeries
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCnl;
             this.ClientSize = new System.Drawing.Size(430, 286);
-            this.Controls.Add(this.label_LocalSeriesName);
+            this.Controls.Add(this.textbox_LocalSeriesName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnnever);
             this.Controls.Add(this.btnCnl);
@@ -150,6 +150,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button btnCnl;
         private System.Windows.Forms.Button btnnever;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label_LocalSeriesName;
+        private System.Windows.Forms.TextBox textbox_LocalSeriesName;
     }
 }

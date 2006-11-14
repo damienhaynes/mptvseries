@@ -987,7 +987,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
         {
-
         }
 
         private void checkBox_Episode_MatchingLocalFile_CheckedChanged(object sender, EventArgs e)
@@ -1020,6 +1019,89 @@ namespace WindowPlugins.GUITVSeries
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+        }
+
+        private void treeView_Library_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                TreeNode nodeDeleted = treeView_Library.SelectedNode;
+                switch (nodeDeleted.Name)
+                {
+                    case DBSeries.cTableName:
+                        if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DBSeries series = (DBSeries)nodeDeleted.Tag;
+                            SQLCondition condition = new SQLCondition(new DBEpisode());
+                            condition.Add(DBEpisode.cSeriesParsedName, series[DBSeries.cParsedName], true);
+                            DBEpisode.Clear(condition);
+                            condition = new SQLCondition(new DBOnlineEpisode());
+                            condition.Add(DBOnlineEpisode.cSeriesParsedName, series[DBSeries.cParsedName], true);
+                            DBOnlineEpisode.Clear(condition);
+
+                            condition = new SQLCondition(new DBSeason());
+                            condition.Add(DBSeason.cSeriesName, series[DBSeries.cParsedName], true);
+                            DBSeason.Clear(condition);
+
+                            condition = new SQLCondition(new DBSeries());
+                            condition.Add(DBSeries.cParsedName, series[DBSeries.cParsedName], true);
+                            DBSeries.Clear(condition);
+
+                            treeView_Library.Nodes.Remove(nodeDeleted);
+                        }
+                        break;
+
+                    case DBSeason.cTableName:
+                        if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DBSeason season = (DBSeason)nodeDeleted.Tag;
+
+                            SQLCondition condition = new SQLCondition(new DBEpisode());
+                            condition.Add(DBEpisode.cSeriesParsedName, season[DBSeason.cSeriesName], true);
+                            condition.Add(DBEpisode.cSeasonIndex, season[DBSeason.cIndex], true);
+                            DBEpisode.Clear(condition);
+                            condition = new SQLCondition(new DBOnlineEpisode());
+                            condition.Add(DBOnlineEpisode.cSeriesParsedName, season[DBSeason.cSeriesName], true);
+                            condition.Add(DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], true);
+                            DBOnlineEpisode.Clear(condition);
+
+                            condition = new SQLCondition(new DBSeason());
+                            condition.Add(DBSeason.cID, season[DBSeason.cID], true);
+                            DBSeason.Clear(condition);
+
+                            treeView_Library.Nodes.Remove(nodeDeleted);
+                        }
+                        break;
+
+                    case DBEpisode.cTableName:
+                        if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                            SQLCondition condition = new SQLCondition(new DBEpisode());
+                            condition.Add(DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], true);
+                            DBEpisode.Clear(condition);
+                            condition = new SQLCondition(new DBOnlineEpisode());
+                            condition.Add(DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], true);
+                            DBOnlineEpisode.Clear(condition);
+                            treeView_Library.Nodes.Remove(nodeDeleted);
+                        }
+                        break;
+                }
+                if (treeView_Library.Nodes.Count == 0)
+                {
+                    // also clear the data pane
+                    this.detailsPropertyBindingSource.Clear();
+                    try
+                    {
+                        if (this.pictureBox_Series.Image != null)
+                        {
+                            this.pictureBox_Series.Image.Dispose();
+                            this.pictureBox_Series.Image = null;
+                        }
+                    }
+                    catch { }
+                }
+            }
         }
     }
 

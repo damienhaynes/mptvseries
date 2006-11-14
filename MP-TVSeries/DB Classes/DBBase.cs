@@ -485,6 +485,14 @@ namespace WindowPlugins.GUITVSeries
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             }
         }
+
+        public static void Clear(DBTable obj, SQLCondition conditions)
+        {
+            String sqlQuery = "delete from " + obj.m_tableName;
+            if (conditions != "")
+                sqlQuery += " where " + conditions;
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+        }
     };
 
     public class SQLWhat
