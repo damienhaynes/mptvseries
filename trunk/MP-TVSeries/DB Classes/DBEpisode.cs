@@ -97,6 +97,11 @@ namespace WindowPlugins.GUITVSeries
         {
             return cTableName + "." + sField;
         }
+
+        public static void Clear(SQLCondition conditions)
+        {
+            Clear(new DBOnlineEpisode(), conditions);
+        }
     };
 
     public class DBEpisode : DBTable
@@ -377,41 +382,26 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
-        public static void Clear(List<DBEpisode> episodes)
-        {
-            String sqlQuery = "delete from " + cTableName;
-            if (episodes != null && episodes.Count > 0)
-            {
-                sqlQuery += " where " + cFilename + " in (";
-                foreach (DBEpisode episode in episodes)
-                {
-                    if (episode[cFilename] != String.Empty)
-                        sqlQuery += "'" + episode[cFilename] + "',";
-                }
-                sqlQuery = sqlQuery.Substring(sqlQuery.Length - 1);
-                sqlQuery += ")";
-            }
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-        }
+//         public static void Clear(List<DBEpisode> episodes)
+//         {
+//             String sqlQuery = "delete from " + cTableName;
+//             if (episodes != null && episodes.Count > 0)
+//             {
+//                 sqlQuery += " where " + cFilename + " in (";
+//                 foreach (DBEpisode episode in episodes)
+//                 {
+//                     if (episode[cFilename] != String.Empty)
+//                         sqlQuery += "'" + episode[cFilename] + "',";
+//                 }
+//                 sqlQuery = sqlQuery.Substring(sqlQuery.Length - 1);
+//                 sqlQuery += ")";
+//             }
+//             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+//         }
 
-        public static void Clear(String sKey, object value)
+        public static void Clear(SQLCondition conditions)
         {
-            DBEpisode dummy = new DBEpisode();
-            if (dummy.m_fields.ContainsKey(sKey))
-            {
-                String sqlQuery = "delete from " + cTableName + " where " + sKey + "=";
-                switch (dummy.m_fields[sKey].Type)
-                {
-                    case DBField.cTypeInt:
-                        sqlQuery += value.ToString();
-                        break;
-
-                    case DBField.cTypeString:
-                        sqlQuery += "'" + value.ToString() + "'";
-                        break;
-                }
-                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-            }
+            Clear(new DBEpisode(), conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)

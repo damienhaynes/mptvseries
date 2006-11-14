@@ -121,6 +121,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public static void Clear(SQLCondition conditions)
+        {
+            Clear(new DBSeason(), conditions);
+        }
+
         public static void GlobalSet(String sKey, DBValue Value)
         {
             GlobalSet(sKey, Value, new SQLCondition(new DBSeason()));
