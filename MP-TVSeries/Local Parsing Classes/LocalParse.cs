@@ -38,13 +38,6 @@ namespace WindowPlugins.GUITVSeries
                 
                 progressReporter = new parseResult();
 
-                foreach (KeyValuePair<string, string> match in parser.Matches)
-                {
-                    ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, match.Value);
-                    subItem.Name = match.Key;
-                    item.SubItems.Add(subItem);
-                }
-
                 // make sure we have all the necessary data for a full match
                 if (!parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) ||
                     !parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) ||
@@ -52,8 +45,6 @@ namespace WindowPlugins.GUITVSeries
                 {
                     progressReporter.success = false;
                     progressReporter.exception = "Parsing failed for " + file;
-                    item.ForeColor = System.Drawing.Color.White;
-                    item.BackColor = System.Drawing.Color.Tomato;
                     
                     nFailed++;
 
@@ -64,32 +55,23 @@ namespace WindowPlugins.GUITVSeries
                     try { Convert.ToInt32(parser.Matches[DBEpisode.cSeasonIndex]); }
                     catch (System.FormatException)
                     {
-                        item.UseItemStyleForSubItems = false;
-                        item.SubItems[DBEpisode.cSeasonIndex].ForeColor = System.Drawing.Color.White;
-                        item.SubItems[DBEpisode.cSeasonIndex].BackColor = System.Drawing.Color.Tomato;
                         nFailed++;
-
                         progressReporter.failedSeason = true;
                         progressReporter.success = false;
-                        progressReporter.exception = "Season not numerical";
+                        progressReporter.exception = "Season not numerical ";
                     }
                     try { Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]); }
                     catch (System.FormatException)
                     {
-                        item.UseItemStyleForSubItems = false;
-                        item.SubItems[DBEpisode.cEpisodeIndex].ForeColor = System.Drawing.Color.White;
-                        item.SubItems[DBEpisode.cEpisodeIndex].BackColor = System.Drawing.Color.Tomato;
                         nFailed++;
-
                         progressReporter.failedEpisode = true;
                         progressReporter.success = false;
-                        progressReporter.exception += "Episode not numerical";
+                        progressReporter.exception += "Episode not numerical ";
                     }
                 }
 
                 progressReporter.match_filename = file.sMatch_FileName;
                 progressReporter.full_filename = file.sFull_FileName;
-                progressReporter.item = item;
                 progressReporter.parser = parser;
                 results.Add(progressReporter);
 
@@ -145,7 +127,6 @@ namespace WindowPlugins.GUITVSeries
         public bool success = true;
         public bool failedSeason = false;
         public bool failedEpisode = false;
-        public ListViewItem item;
         public string exception;
         public FilenameParser parser;
         public string match_filename;

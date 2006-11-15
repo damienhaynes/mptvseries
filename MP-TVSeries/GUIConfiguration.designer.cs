@@ -421,6 +421,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OnlineSearch.Size = new System.Drawing.Size(458, 17);
             this.checkBox_OnlineSearch.TabIndex = 5;
             this.checkBox_OnlineSearch.Text = "Enable Online Database data retrieval";
+            this.toolTip1.SetToolTip(this.checkBox_OnlineSearch, "When not checked, no online data will be pulled out");
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
             this.checkBox_OnlineSearch.CheckedChanged += new System.EventHandler(this.checkBox_OnlineSearch_CheckedChanged);
             // 
@@ -434,6 +435,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_LocalDataOverride.TabIndex = 2;
             this.checkBox_LocalDataOverride.Text = "Online data should override data from file parsing (series name, episode name)";
             this.checkBox_LocalDataOverride.UseVisualStyleBackColor = true;
+            this.checkBox_LocalDataOverride.Visible = false;
             this.checkBox_LocalDataOverride.CheckedChanged += new System.EventHandler(this.checkBox_LocalDataOverride_CheckedChanged);
             // 
             // checkBox_AutoChooseSeries
@@ -445,6 +447,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(458, 17);
             this.checkBox_AutoChooseSeries.TabIndex = 1;
             this.checkBox_AutoChooseSeries.Text = "Auto-Choose series when multiple entries are returned from the Online Database";
+            this.toolTip1.SetToolTip(this.checkBox_AutoChooseSeries, "When checked, if there is exactly one exact match in the returned list, it will b" +
+                    "e used. Otherwise, in any conflicting case the choose series dialog will pop up");
             this.checkBox_AutoChooseSeries.UseVisualStyleBackColor = true;
             this.checkBox_AutoChooseSeries.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseSeries_CheckedChanged);
             // 
@@ -457,8 +461,9 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_FullSeriesRetrieval.Name = "checkBox_FullSeriesRetrieval";
             this.checkBox_FullSeriesRetrieval.Size = new System.Drawing.Size(458, 17);
             this.checkBox_FullSeriesRetrieval.TabIndex = 0;
-            this.checkBox_FullSeriesRetrieval.Text = "Retrieve episode information for the whole series (instead of only for the availa" +
-                "ble parsed episodes)";
+            this.checkBox_FullSeriesRetrieval.Text = "Retrieve episode information for the whole series";
+            this.toolTip1.SetToolTip(this.checkBox_FullSeriesRetrieval, "When unchecked, online data will be pulled out only for the existing episode. Oth" +
+                    "erwise all seasons / episodes will be fetched");
             this.checkBox_FullSeriesRetrieval.UseVisualStyleBackColor = true;
             this.checkBox_FullSeriesRetrieval.CheckedChanged += new System.EventHandler(this.checkBox_FullSeriesRetrieval_CheckedChanged);
             // 
@@ -480,6 +485,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_TestReparse.Name = "button_TestReparse";
             this.button_TestReparse.Size = new System.Drawing.Size(28, 31);
             this.button_TestReparse.TabIndex = 153;
+            this.toolTip1.SetToolTip(this.button_TestReparse, "Redo a local parsing test");
             this.button_TestReparse.UseVisualStyleBackColor = true;
             this.button_TestReparse.Click += new System.EventHandler(this.button_TestReparse_Click);
             // 
@@ -683,6 +689,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(318, 17);
             this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 1;
             this.checkBox_Episode_HideUnwatchedSummary.Text = "Hide Episode summary if the episode hasn\'t been watched yet";
+            this.toolTip1.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, "Prevents the summary to be displayed for episodes not already marked as watched (" +
+                    "prevents spoilers!)");
             this.checkBox_Episode_HideUnwatchedSummary.UseVisualStyleBackColor = true;
             this.checkBox_Episode_HideUnwatchedSummary.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedSummary_CheckedChanged);
             // 
@@ -694,6 +702,9 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(238, 17);
             this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 0;
             this.checkBox_Episode_OnlyShowLocalFiles.Text = "Show only episodes with a matching local file";
+            this.toolTip1.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, "When checked, only episodes / seasons / series with a matching local file will be" +
+                    " displayed in MP; otherwise all episodes are listed. That setting can be changed" +
+                    " from MP");
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
             this.checkBox_Episode_OnlyShowLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_Episode_MatchingLocalFile_CheckedChanged);
             // 
@@ -778,6 +789,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoOnlineDataRefresh.Size = new System.Drawing.Size(277, 17);
             this.checkBox_AutoOnlineDataRefresh.TabIndex = 0;
             this.checkBox_AutoOnlineDataRefresh.Text = "Automatically query the server for updated data every";
+            this.toolTip1.SetToolTip(this.checkBox_AutoOnlineDataRefresh, "When checked, the plugin will automatically ask for a refresh of the online data " +
+                    "every x hours");
             this.checkBox_AutoOnlineDataRefresh.UseVisualStyleBackColor = true;
             this.checkBox_AutoOnlineDataRefresh.CheckedChanged += new System.EventHandler(this.checkBox_AutoOnlineDataRefresh_CheckedChanged);
             // 

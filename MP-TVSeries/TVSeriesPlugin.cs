@@ -585,15 +585,19 @@ namespace MediaPortal.GUI.Video
 
         public override void OnAction(Action action)
         {
-            if (action.wID == Action.ActionType.ACTION_CANCEL_IMPORT)
-                MessageBox.Show("Test");
-            if (action.wID == Action.ActionType.ACTION_PARENT_DIR)
+            switch (action.wID)
             {
-                // simulate a back
-                OnClicked(this.m_Button_Back.GetID, this.m_Button_Back, action.wID);
-                return;
+                case Action.ActionType.ACTION_PARENT_DIR:
+                case Action.ActionType.ACTION_HOME:
+                case Action.ActionType.ACTION_PREVIOUS_MENU:
+                    // simulate a back
+                    OnClicked(this.m_Button_Back.GetID, this.m_Button_Back, action.wID);
+                    break;
+
+                default:
+                    base.OnAction(action);
+                    break;
             }
-            base.OnAction(action);
         }
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)

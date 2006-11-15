@@ -241,11 +241,22 @@ namespace WindowPlugins.GUITVSeries
 
                     if (GetSeriesParser.Results.Count > 0)
                     {
-                        DBTVSeries.Log("Found " + GetSeriesParser.Results.Count + " matching names for " + sSeriesNameToSearch);
+                        DBTVSeries.Log("Found " + GetSeriesParser.Results.Count + " matching results for " + sSeriesNameToSearch);
+                        // find out if our name is found in multiple results
+                        int SubStringCount = 0;
+                        int ExactMatchCount = 0;
+                        foreach (DBSeries onlineSeries in GetSeriesParser.Results)
+                        {
+                            if (onlineSeries[DBSeries.cPrettyName].ToString().ToLower().IndexOf(sSeriesNameToSearch.ToLower()) != -1)
+                                SubStringCount++;
+                            if (onlineSeries[DBSeries.cPrettyName].ToString().ToLower() == sSeriesNameToSearch.ToLower())
+                                ExactMatchCount++;
+                        }
+
                         DBSeries UserChosenSeries = GetSeriesParser.Results[0];
 
                         SelectSeries userSelection = null;
-                        if (GetSeriesParser.Results.Count > 1 && UserChosenSeries[DBSeries.cPrettyName].ToString().ToLowerInvariant() != sSeriesNameToSearch.ToLowerInvariant())
+                        if (ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
                         {
                             // 
                             // User has three choices:
@@ -355,10 +366,13 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bFullSeriesRetrieval)
                 {
                     DBTVSeries.Log("Looking for all the episodes of " + series[DBSeries.cParsedName]);
-                    if (series[DBSeries.cOnlineDataImported] == 0)
-                    {
+                    SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
+                    conditions.Add(DBOnlineEpisode.cSeriesParsedName, series[DBSeries.cParsedName], true);
+                    conditions.Add(DBOnlineEpisode.cID, 0, true);
+                    List<DBEpisode> episodesList = DBEpisode.Get(conditions);
+                    // if we have unidentified episodes, let's retrieve the full list
+                    if (episodesList.Count > 0)
                         nGetEpisodesTimeStamp = 0;
-                    }
 
                     GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
                     if (episodesParser.Results.Count > 0)
@@ -412,7 +426,7 @@ namespace WindowPlugins.GUITVSeries
                     else
                     {
                         // no need to do single matches for many episodes, it's more efficient to do it all at once
-                        GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
+                        GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], 0);
                         if (episodesParser.Results.Count > 0)
                         {
                             DBTVSeries.Log("Found " + episodesParser.Results.Count + " episodes for " + series[DBSeries.cParsedName]);
