@@ -124,28 +124,28 @@ namespace WindowPlugins.GUITVSeries
                 expression[DBExpression.cIndex] = "0";
                 expression[DBExpression.cEnabled] = "1";
                 expression[DBExpression.cType] = DBExpression.cType_Simple;
-                expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>";
+                expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>.<ext>";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "1";
-                expression[DBExpression.cExpression] = @"\<series>\Season <season>\Episode <episode> - <title>";
+                expression[DBExpression.cExpression] = @"\<series>\Season <season>\Episode <episode> - <title>.<ext>";
                 expression.Commit();
 
                 expression[DBExpression.cType] = DBExpression.cType_Regexp;
                 expression[DBExpression.cIndex] = "2";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)\.(?<ext>[^.]*)";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "3";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)\.(?<ext>[^.]*)";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "4";
-                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
+                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "5";
-                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+)(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?:[^.]*)$";
+                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
                 
 
@@ -469,7 +469,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        #region Expressions Handling
+        #region Replacements Handling
         private void dataGridView_Replace_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             DBReplacements replacement = new DBReplacements();
@@ -526,11 +526,51 @@ namespace WindowPlugins.GUITVSeries
                         listView_ParsingResults.Columns.Add(newcolumn);
                     }
                 }
+
+                ListViewItem item = new ListViewItem(progress.match_filename);
+                item.SubItems[0].Name = listView_ParsingResults.Columns[0].Name;
+
+
+
+                foreach (ColumnHeader column in listView_ParsingResults.Columns)
+                {
+                    if (column.Index > 0)
+                    {
+                        ListViewItem.ListViewSubItem subItem = null;
+                        if (progress.parser.Matches.ContainsKey(column.Name))
+                            subItem = new ListViewItem.ListViewSubItem(item, progress.parser.Matches[column.Name]);
+                        else
+                            subItem = new ListViewItem.ListViewSubItem(item, "");
+                        subItem.Name = column.Name;
+                        item.SubItems.Add(subItem);
+                    }
+                }
+
+                if (progress.failedSeason)
+                {
+                    item.UseItemStyleForSubItems = false;
+                    item.SubItems[DBEpisode.cSeasonIndex].ForeColor = System.Drawing.Color.White;
+                    item.SubItems[DBEpisode.cSeasonIndex].BackColor = System.Drawing.Color.Tomato;
+                }
+
+                if (progress.failedEpisode)
+                {
+                    item.UseItemStyleForSubItems = false;
+                    item.SubItems[DBEpisode.cEpisodeIndex].ForeColor = System.Drawing.Color.White;
+                    item.SubItems[DBEpisode.cEpisodeIndex].BackColor = System.Drawing.Color.Tomato;
+                }
+
+                if (!progress.success && !progress.failedEpisode && !progress.failedSeason)
+                {
+                    item.ForeColor = System.Drawing.Color.White;
+                    item.BackColor = System.Drawing.Color.Tomato;
+                }
+
                 if (!progress.success)
                     DBTVSeries.Log("Parsing failed for " + progress.match_filename);
                 if (progress.failedSeason || progress.failedEpisode)
                     DBTVSeries.Log(progress.exception + " for " + progress.match_filename);
-                listView_ParsingResults.Items.Add(progress.item);
+                listView_ParsingResults.Items.Add(item);
                 listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
                 // only do that once in a while, it's really slow
             }

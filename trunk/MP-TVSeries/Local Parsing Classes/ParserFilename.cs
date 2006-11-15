@@ -47,11 +47,12 @@ namespace WindowPlugins.GUITVSeries
                                 sExpression = expression[DBExpression.cExpression];
                                 break;
                         }
+                        sExpression = sExpression.ToLower();
                         // replace series, season and episode by the valid DBEpisode column names
-                        sExpression = sExpression.Replace("series", DBSeries.cParsedName);
-                        sExpression = sExpression.Replace("season", DBEpisode.cSeasonIndex);
-                        sExpression = sExpression.Replace("episode", DBEpisode.cEpisodeIndex);
-                        sExpression = sExpression.Replace("title", DBEpisode.cEpisodeName);
+                        sExpression = sExpression.Replace("<series>", "<" + DBSeries.cParsedName + ">");
+                        sExpression = sExpression.Replace("<season>", "<" + DBEpisode.cSeasonIndex + ">");
+                        sExpression = sExpression.Replace("<episode>", "<" + DBEpisode.cEpisodeIndex + ">");
+                        sExpression = sExpression.Replace("<title>", "<" + DBEpisode.cEpisodeName + ">");
 
                         sExpressions.Add(sExpression);
                     }
@@ -159,9 +160,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // other tags coming? put lazy *, otherwise put a greedy one
                     if (SimpleExpression.IndexOf('<', closeTagLocation) != -1)
-                        finalRegEx += @"([^\\]*?)";
+                        finalRegEx += @"(?:[^\\]*?)";
                     else
-                        finalRegEx += @"([^\\]*)";
+                        finalRegEx += @"(?:[^\\]*)";
                 }
             }
 

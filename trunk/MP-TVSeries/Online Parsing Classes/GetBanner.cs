@@ -27,6 +27,7 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
+        private const String cInvalidFileChars = " \":<>?*|/\\";
         private long m_nServerTimeStamp = 0;
         private List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
         private List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
@@ -148,7 +149,14 @@ namespace WindowPlugins.GUITVSeries
                 // now that we have all the paths, download all the files
                 foreach (BannerSeries bannerSeries in m_bannerSeriesList)
                 {
-                    bannerSeries.sBannerFileName =  bannerSeries.sSeriesName.Replace(' ', '_') + @"\" + bannerSeries.sOnlineBannerPath.Replace('/', '_');
+                    String sBannerSeriesName = bannerSeries.sSeriesName;
+                    String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
+                    foreach (char c in cInvalidFileChars)
+                    {
+                        sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
+                        sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
+                    }
+                    bannerSeries.sBannerFileName = sBannerSeriesName + @"\" + sOnlineBannerPath;
                     // check if banner is already there (don't download twice)
                     if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
                     {
@@ -167,7 +175,14 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (BannerSeason bannerSeason in m_bannerSeasonList)
                 {
-                    bannerSeason.sBannerFileName = bannerSeason.sSeriesName.Replace(' ', '_') + @"\" + bannerSeason.sOnlineBannerPath.Replace('/', '_');
+                    String sBannerSeriesName = bannerSeason.sSeriesName;
+                    String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
+                    foreach (char c in cInvalidFileChars)
+                    {
+                        sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
+                        sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
+                    }
+                    bannerSeason.sBannerFileName = sBannerSeriesName + @"\" + sOnlineBannerPath;
                     if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
                     {
                         WebClient webClient = new WebClient();
