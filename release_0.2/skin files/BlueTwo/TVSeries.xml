@@ -1,0 +1,178 @@
+<window>
+	<id>0</id>
+	<defaultcontrol>2</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<define>#header.hover:hover_my tv series.png</define>
+	<controls>
+		<control>
+			<description>BG</description>
+			<type>image</type>
+			<id>1</id>
+			<posX>0</posX>
+			<posY>0</posY>
+			<width>720</width>
+			<height>576</height>
+			<texture>background.png</texture>
+		</control>
+		<control>
+			<description>Number of Files Label</description>
+			<type>label</type>
+			<id>1</id>
+			<posX>260</posX>
+			<posY>530</posY>
+			<label>#itemcount</label>
+			<align>left</align>
+			<textcolor>White</textcolor>
+		</control>
+		<control>
+			<type>image</type>
+			<id>1</id>
+			<posX>75</posX>
+			<posY>370</posY>
+			<texture>#header.hover</texture>
+		</control>
+		<control>
+			<type>image</type>
+			<description>Series Logo</description>
+			<id>30</id>
+			<posX>60</posX>
+			<posY>54</posY>
+			<width>620</width>
+			<height>100</height>
+			<texture></texture>
+		  <centered>yes</centered>
+		  <keepaspectratio>yes</keepaspectratio>
+		</control>
+		<control>
+			<type>image</type>
+			<description>Logo</description>
+			<id>68</id>
+			<posX>60</posX>
+			<posY>16</posY>
+			<texture>tvseries_logo.png</texture>
+		</control>
+		<control>
+			<type>textbox</type>
+			<description>Title</description>
+			<id>40</id>
+			<posX>60</posX>
+			<posY>158</posY>
+			<width>620</width>
+			<textcolor>FFFFFFFF</textcolor>
+			<font>font16</font>
+		</control>
+		<control>
+			<type>textbox</type>
+			<description>Genre</description>
+			<id>33</id>
+			<posX>60</posX>
+			<posY>184</posY>
+			<width>620</width>
+			<align>right</align>
+			<textcolor>FFA9D0F7</textcolor>
+			<font>font13</font>
+		</control>
+		<control>
+			<type>textboxscrollup</type>
+			<description>Description</description>
+			<id>31</id>
+			<posX>60</posX>
+			<posY>210</posY>
+			<width>620</width>
+			<height>90</height>
+			<seperator>-----------------------------------------------------------------------------------------------------------------------</seperator>
+			<colordiffuse>ffffffff</colordiffuse>
+			<textcolor>FFFFFFFF</textcolor>
+			<font>font13</font>
+		</control>
+		<control>
+			<type>group</type>
+			<layout>StackLayout</layout>
+			<description>group element</description>
+			<animation>FlyInFromLeft</animation>
+			<posX>60</posX>
+			<posY>312</posY>
+			<control>
+				<description>Back</description>
+				<type>button</type>
+				<id>2</id>
+				<onright>50</onright>
+				<onup>5</onup>
+				<ondown>3</ondown>
+				<label>Back</label>
+			</control>
+			<control>
+				<description>View-As button</description>
+				<type>button</type>
+				<id>3</id>
+				<onright>50</onright>
+				<onup>2</onup>
+				<ondown>4</ondown>
+				<label>100</label>
+			</control>
+		</control>
+		
+	<!-- season image background -->
+	 <control>
+      <type>image</type>
+      <description>Season image</description>
+      <id>46</id>
+      <posX>550</posX>
+      <posY>312</posY>
+      <width>130</width>
+      <height>200</height>
+	  <centered>yes</centered>
+	  <keepaspectratio>yes</keepaspectratio>
+	  <colordiffuse>30FFFFFF</colordiffuse>
+      <texture></texture>
+    </control>
+
+		<control>
+			<type>group</type>
+			<description>group element</description>
+			<id>28</id>
+			<animation>FlyInFromTop</animation>
+			<control>
+				<description>composite control consisting of a list control and a thumbnail panel</description>
+				<type>facadeview</type>
+				<id>50</id>
+				<control>
+					<description>listcontrol</description>
+					<type>listcontrol</type>
+					<id>50</id>
+					<posX>260</posX>
+					<posY>312</posY>
+					<height>250</height>
+					<onleft>2</onleft>
+					<onright>2</onright>
+					<onup>2</onup>
+					<ondown>2</ondown>
+					<spaceBetweenItems>2</spaceBetweenItems>
+          <remoteColor>FFa6c3e1</remoteColor>       <!-- watched color -->
+          <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color (normal) -->
+          <textcolor>FF78ace0</textcolor>						<!-- local file not present color -->
+          <textcolor2>FF78ace0</textcolor2>						<!-- local file not present color  column 2-->
+          <textcolor3>FF78ace0</textcolor3>						<!-- local file not present color column 3-->
+				</control>
+				<control>
+					<description>Thumbnail Panel</description>
+					<type>thumbnailpanel</type>
+					<id>50</id>
+					<posX>260</posX>
+					<posY>312</posY>
+					<height>230</height>
+					<onleft>2</onleft>
+					<onright>2</onright>
+					<onup>2</onup>
+					<ondown>2</ondown>
+          <remoteColor>FFa6c3e1</remoteColor>       <!-- watched color -->
+          <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color (normal) -->
+          <textcolor>FF78ace0</textcolor>						<!-- local file not present color -->
+          <textcolor2>FF78ace0</textcolor2>						<!-- local file not present color  column 2-->
+          <textcolor3>FF78ace0</textcolor3>						<!-- local file not present color column 3-->
+				</control>
+			</control>
+		</control>
+		<import>common.facade.xml</import>
+	</controls>
+</window>
