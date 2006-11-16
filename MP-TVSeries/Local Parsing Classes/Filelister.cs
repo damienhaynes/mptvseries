@@ -24,7 +24,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (importPath[DBImportPath.cEnabled] != 0)
                     {
-                        DBTVSeries.Log("Searching for all supported videos files within " + importPath[DBImportPath.cPath] + " and it's subfolders.");
+                        MPTVSeriesLog.Write("Searching for all supported videos files within " + importPath[DBImportPath.cPath] + " and it's subfolders.");
                         String[] localFiles = FilesinFolder(importPath[DBImportPath.cPath].ToString());
 
                         // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
                             outList.Add(pair);
                         }
 
-                        DBTVSeries.Log("Found " + localFiles.Length + " supported video files.");
+                        MPTVSeriesLog.Write("Found " + localFiles.Length + " supported video files.");
                     }
                 }
             }
@@ -74,7 +74,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
             }
             return (new String[0]);
         }

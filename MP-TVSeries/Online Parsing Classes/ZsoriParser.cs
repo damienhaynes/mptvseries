@@ -46,18 +46,20 @@ namespace WindowPlugins.GUITVSeries
 
         static private XmlNodeList Generic(String sUrl)
         {
+            MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug);
             WebClient client = new WebClient();
             Stream data = client.OpenRead(sUrl);
             StreamReader reader = new StreamReader(data);
             String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
             data.Close();
             reader.Close();
-
+            MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug, false);
+            MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
             try
             {
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(sXmlData);
-
                 // skip xml node
                 XmlNode root = doc.FirstChild.NextSibling;
                 if (root.Name == "Items")
@@ -68,7 +70,7 @@ namespace WindowPlugins.GUITVSeries
             catch (XmlException e)
             {
                 // bummer
-                DBTVSeries.Log("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
+                MPTVSeriesLog.Write("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
             }
             return null;
         }

@@ -168,7 +168,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         catch (WebException)
                         {
-                            DBTVSeries.Log("Banner download failed (" + bannerSeries.sOnlineBannerPath + ")");
+                            MPTVSeriesLog.Write("Banner download failed (" + bannerSeries.sOnlineBannerPath + ")");
                         }
                     }
                 }
@@ -193,7 +193,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         catch (WebException)
                         {
-                            DBTVSeries.Log("Banner download failed (" + bannerSeason.sOnlineBannerPath + ")");
+                            MPTVSeriesLog.Write("Banner download failed (" + bannerSeason.sOnlineBannerPath + ")");
                         }
                     }
                 } 

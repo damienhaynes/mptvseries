@@ -207,7 +207,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else 
                 {
-                    DBTVSeries.Log("parsing of CREATE TABLE failed!!!");
+                    MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
                 }
 
 
@@ -250,7 +250,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception ex)
                 {
-                    DBTVSeries.Log(m_tableName + " table.AddColumn failed (" + ex.Message + ").");
+                    MPTVSeriesLog.Write(m_tableName + " table.AddColumn failed (" + ex.Message + ").");
                     return false;
                 }
             }
@@ -303,7 +303,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (SystemException)
                 {
-                    DBTVSeries.Log("Cast exception when trying to assign " + value + " to field " + fieldName + " in table " + m_tableName);
+                    MPTVSeriesLog.Write("Cast exception when trying to assign " + value + " to field " + fieldName + " in table " + m_tableName);
                 }
             }
         }
@@ -367,7 +367,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("An Error Occurred (" + ex.Message + ").");
+                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
             }
             return false;
         }
@@ -460,7 +460,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("An Error Occurred (" + ex.Message + ").");
+                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
                 return false;
             }
         }
@@ -590,7 +590,6 @@ namespace WindowPlugins.GUITVSeries
     {
         #region private & init stuff
         private static SQLiteClient m_db = null;
-        private static LogWriter m_log = new LogWriter();
 
         private static void InitDB()
         {
@@ -616,23 +615,15 @@ namespace WindowPlugins.GUITVSeries
                 m_db.Execute("PRAGMA full_column_names=0;\n");
                 m_db.Execute("PRAGMA short_column_names=0;\n");
 
-                m_log.Write("Sucessfully opened database '" + databaseFile + "'.");
+                MPTVSeriesLog.Write("Sucessfully opened database '" + databaseFile + "'.");
             }
             catch (Exception ex)
             {
-                m_log.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ").");
             }
         }
         #endregion
 
-        public static void AttachLog(ref System.Windows.Forms.ListBox listBox)
-        {
-            m_log.AddNotifier(ref listBox);
-        }
-        public static void Log(String sLog)
-        {
-            m_log.Write(sLog);
-        }
 
         public static SQLiteResultSet Execute(String sCommand)
         {
@@ -640,14 +631,17 @@ namespace WindowPlugins.GUITVSeries
             {
                 InitDB();
             }
-
+            SQLite.NET.SQLiteResultSet result;
             try
             {
-                return m_db.Execute(sCommand);
+                MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.Debug);
+                result = m_db.Execute(sCommand);
+                MPTVSeriesLog.Write("Sucess, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.Debug);
+                return result;
             }
             catch (Exception ex)
             {
-                m_log.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
                 return new SQLiteResultSet();
             }
         }
