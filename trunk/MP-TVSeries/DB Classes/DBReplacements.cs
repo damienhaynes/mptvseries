@@ -86,7 +86,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("Error in DBReplacements.Get (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Error in DBReplacements.Get (" + ex.Message + ").");
             }
             return null;
         }

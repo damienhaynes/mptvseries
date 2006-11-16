@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("Error in DBImportPath.Get (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Error in DBImportPath.Get (" + ex.Message + ").");
             }
             return null;
         }

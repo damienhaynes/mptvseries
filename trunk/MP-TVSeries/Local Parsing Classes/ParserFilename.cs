@@ -110,7 +110,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("And error occured in the 'FilenameParser' function (" + ex.ToString() + ")");
+                MPTVSeriesLog.Write("And error occured in the 'FilenameParser' function (" + ex.ToString() + ")");
             }
         }
 

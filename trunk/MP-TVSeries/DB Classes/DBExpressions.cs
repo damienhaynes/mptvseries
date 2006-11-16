@@ -71,7 +71,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("Error in DBExpression.Get (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Error in DBExpression.Get (" + ex.Message + ").");
             }
             return null;
         }

@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("DBOption.UpdateTable failed (" + ex.Message + ").");
+                MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
             }
         }
         private static void UpdateTable()
@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("DBOption.UpdateTable failed (" + ex.Message + ").");
+                MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
             }
         }
 
@@ -152,7 +152,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("An Error Occurred (" + ex.Message + ").");
+                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
                 return false;
             }
         }
@@ -172,7 +172,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                DBTVSeries.Log("An Error Occurred (" + ex.Message + ").");
+                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
             }
             return new DBValue("");
         }

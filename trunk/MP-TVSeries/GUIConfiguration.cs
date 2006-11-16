@@ -31,10 +31,10 @@ namespace WindowPlugins.GUITVSeries
 
 
             InitializeComponent();
-            DBTVSeries.AttachLog(ref listBox_Log);
+            MPTVSeriesLog.AddNotifier(ref listBox_Log);
             
-            DBTVSeries.Log("**** Plugin started in configuration mode ***");
-
+            MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
+            this.comboBox1.SelectedIndex = 0;
             InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
@@ -567,9 +567,9 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (!progress.success)
-                    DBTVSeries.Log("Parsing failed for " + progress.match_filename);
+                    MPTVSeriesLog.Write("Parsing failed for " + progress.match_filename);
                 if (progress.failedSeason || progress.failedEpisode)
-                    DBTVSeries.Log(progress.exception + " for " + progress.match_filename);
+                    MPTVSeriesLog.Write(progress.exception + " for " + progress.match_filename);
                 listView_ParsingResults.Items.Add(item);
                 listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
                 // only do that once in a while, it's really slow
@@ -588,7 +588,7 @@ namespace WindowPlugins.GUITVSeries
         void TestParsing_LocalParseCompleted(List<parseResult> results)
         {
             TestParsing_FillList(results);
-            DBTVSeries.Log("Parsing test completed");
+            MPTVSeriesLog.Write("Parsing test completed");
             this.progressBar_Parsing.Value = 100;
         }
 
@@ -631,7 +631,7 @@ namespace WindowPlugins.GUITVSeries
             columnEpisodeTitle.Text = "Episode Title";
             listView_ParsingResults.Columns.Add(columnEpisodeTitle);
 
-            DBTVSeries.Log("Parsing test beginning, getting all files...");
+            MPTVSeriesLog.Write("Parsing test beginning, getting all files...");
 
             LocalParse runner = new LocalParse();
             runner.LocalParseProgress += new LocalParse.LocalParseProgressHandler(TestParsing_LocalParseProgress);
@@ -667,7 +667,7 @@ namespace WindowPlugins.GUITVSeries
         {
             this.progressBar_Parsing.Value = 100;
             TimeSpan span = DateTime.Now - m_timingStart;
-            DBTVSeries.Log("Parsing Completed in " + span);
+            MPTVSeriesLog.Write("Parsing Completed in " + span);
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
 
@@ -1142,6 +1142,13 @@ namespace WindowPlugins.GUITVSeries
                     catch { }
                 }
             }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.comboBox1.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
+            else if (this.comboBox1.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
+            else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
         }
     }
 

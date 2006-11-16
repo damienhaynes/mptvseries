@@ -8,24 +8,43 @@ using System.Reflection.Emit;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class LogWriter
+    public class MPTVSeriesLog // can't call it Log because MP's own Log is called that
     {
-        private String m_filename;
-        private StreamWriter m_LogStream;
-        private System.Windows.Forms.ListBox m_ListLog;
-        private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
+        public enum LogLevel
+        {
+            Normal,
+            Debug
+        }
+
+        static private LogLevel _selectedLogLevel = LogLevel.Normal;
+	    public static LogLevel selectedLogLevel
+	    {
+		    get { return _selectedLogLevel;}
+		    set {
+                    if (value != _selectedLogLevel)
+                    {
+                        Write("Switched LogLevel to: " + value.ToString());
+                        _selectedLogLevel = value;
+                    }
+                }
+	    }
+
+        static private String m_filename;
+        static private StreamWriter m_LogStream;
+        static private System.Windows.Forms.ListBox m_ListLog;
+        static private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
         private delegate void Log_WriteCallback(string input);
 
-        public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
+        static public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
         {
-            this.m_ListLog = notifier;
+            m_ListLog = notifier;
         }
-        public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
+        static public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
         {
-            this.m_DlgProgress = notifier;
+            m_DlgProgress = notifier;
         }
 
-        public LogWriter()
+        static MPTVSeriesLog()
         {
             String logfile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
@@ -37,29 +56,81 @@ namespace WindowPlugins.GUITVSeries
             Directory.CreateDirectory(logfile + @"\Log");
             logfile += @"\Log\MP-TVSeries.log";
 #endif
-            this.m_filename = logfile;
+            m_filename = logfile;
         }
 
-
-        public void Write(String entry)
+        /// <summary>
+        /// Use this for Std. Log entries, only show up in LogLevel.Normal
+        /// </summary>
+        /// <param name="entry"></param>
+        static public void Write(String entry)
         {
-            lock (typeof(LogWriter))
-            {
-                if (File.Exists(this.m_filename))
-                    this.m_LogStream = File.AppendText(this.m_filename);
-                else
-                    this.m_LogStream = File.CreateText(this.m_filename);
-
-                this.m_LogStream.WriteLine(DateTime.Now + " - " + entry);
-                this.m_LogStream.Flush();
-
-                this.m_LogStream.Close();
-                this.m_LogStream.Dispose();
-            }
-            Log_Write(entry);
+            Write(entry, LogLevel.Normal);
         }
 
-        public void Log_Write(String entry)
+        /// <summary>
+        /// To avoid having to join values if not needed in lower LogLevels use this
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="param"></param>
+        /// <param name="level"></param>
+        static public void Write(String entry, int param, LogLevel level)
+        {
+            // speed things up so for 2 strings they will only get joined if really needed, 
+            // otherwise all those debug calls will be slog
+            if ((int)level <= (int)selectedLogLevel)
+            {
+                Write(entry + param.ToString(), level);
+            }
+        }
+
+        /// <summary>
+        /// To avoid having to join values if not needed in lower LogLevels use this
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="param"></param>
+        /// <param name="level"></param>
+        static public void Write(String entry, String param, LogLevel level)
+        {
+            // speed things up so for 2 strings they will only get joined if really needed, 
+            // otherwise all those debug calls will be slog
+            if ((int)level <= (int)selectedLogLevel)
+            {
+                Write(entry + param, level);
+            }
+        }
+
+        /// <summary>
+        /// Use this for Std. Log entries, only show up in LogLevel.Normal
+        /// </summary>
+        /// <param name="entry"></param>
+        static public void Write(String entry, LogLevel level)
+        {
+            Write(entry, level, true);
+        }
+
+        static public void Write(string entry, LogLevel level, bool singleLine)
+        {
+            if ((int)level <= (int)selectedLogLevel)
+            {
+                lock (typeof(MPTVSeriesLog))
+                {
+                    if (File.Exists(m_filename))
+                        m_LogStream = File.AppendText(m_filename);
+                    else
+                        m_LogStream = File.CreateText(m_filename);
+                    if(singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
+                    else m_LogStream.Write(DateTime.Now + " - \n" + entry);
+                    m_LogStream.Flush();
+
+                    m_LogStream.Close();
+                    m_LogStream.Dispose();
+                }
+                if (level != LogLevel.Debug) Log_Write(entry);
+            }
+        }
+
+        static public void Log_Write(String entry)
         {
             if (m_ListLog != null)
             {

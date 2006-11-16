@@ -98,7 +98,6 @@ namespace MediaPortal.GUI.Video
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
         private DBEpisode m_SelectedEpisode;
-        public LogWriter m_Logs = new LogWriter();
         private VideoHandler m_VideoHandler;
 
         private TimerCallback timerDelegate = null;
@@ -175,9 +174,9 @@ namespace MediaPortal.GUI.Video
 
         public override bool Init()
         {
-            this.m_Logs.Write("**** Plugin started in MediaPortal ***");
+            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
-            this.m_Logs.Write("Loading XML Skin: " + xmlSkin);
+            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
 
             m_VideoHandler = new VideoHandler();
 
@@ -242,7 +241,7 @@ namespace MediaPortal.GUI.Video
                             }
                             catch (Exception ex)
                             {
-                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
                             }
                             count++;
                         }
@@ -285,7 +284,7 @@ namespace MediaPortal.GUI.Video
                             }
                             catch (Exception ex)
                             {
-                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
+                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
                             }
                             count++;
                         }
@@ -326,7 +325,7 @@ namespace MediaPortal.GUI.Video
                             }
                             catch (Exception ex)
                             {
-                                this.m_Logs.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
+                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
                             }
                             count++;
                         }
@@ -578,7 +577,7 @@ namespace MediaPortal.GUI.Video
             }
             catch (Exception ex)
             {
-                this.m_Logs.Write("The 'OnShowContextMenu' function has generated an error: " + ex.Message);
+                MPTVSeriesLog.Write("The 'OnShowContextMenu' function has generated an error: " + ex.Message);
             }
 
         }
@@ -660,7 +659,7 @@ namespace MediaPortal.GUI.Video
                         this.m_SelectedEpisode[DBEpisode.cWatched] = 1;
                         this.m_SelectedEpisode.Commit();
                         this.LoadFacade();
-
+                       
                         m_VideoHandler.ResumeOrPlay(this.m_SelectedEpisode[DBEpisode.cFilename]);
                         /*
                         GUIDialogOK pDlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);

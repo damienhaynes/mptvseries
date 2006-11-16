@@ -89,6 +89,7 @@ namespace WindowPlugins.GUITVSeries
         public void DoParse(bool bAsync)
         {
             m_bAsync = bAsync;
+            MPTVSeriesLog.Write("Starting Parsing operation - Async: ", bAsync.ToString(), MPTVSeriesLog.LogLevel.Debug);
             if (bAsync)
             {
                 worker = new BackgroundWorker();
@@ -104,11 +105,13 @@ namespace WindowPlugins.GUITVSeries
                 DoWorkEventArgs e = new DoWorkEventArgs(null);
                 worker_DoWork(null, e);
                 m_results = (List<parseResult>)e.Result;
+                MPTVSeriesLog.Write("Finished Parsing operation - Async: False", MPTVSeriesLog.LogLevel.Debug);
             }
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            MPTVSeriesLog.Write("Finished Parsing operation - Async: True", MPTVSeriesLog.LogLevel.Debug);
             List<parseResult> results = (List<parseResult>)e.Result;
             if (LocalParseCompleted != null)
                 LocalParseCompleted.Invoke(results);
