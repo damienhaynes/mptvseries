@@ -187,7 +187,7 @@ namespace WindowPlugins.GUITVSeries
                         else
                         {
                             episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
-                            if (bNewFile || episode[match.Key].ToString() != match.Value)
+                            if (bNewFile || (episode[match.Key] != null && episode[match.Key] != match.Value))
                                 episode[match.Key] = match.Value;
                         }
                     }
@@ -337,7 +337,7 @@ namespace WindowPlugins.GUITVSeries
 
         void GetEpisodes()
         {
-            long nGetEpisodesTimeStamp = DBOption.GetOptions(DBOption.cGetEpisodesTimeStamp);
+            long nGetEpisodesTimeStamp = 0;
             long nReturnedGetEpisodesTimeStamp = 0;
 
             MPTVSeriesLog.Write("*********  Starting GetEpisodes  *********");
@@ -366,7 +366,7 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(20 + (20 * nIndex / seriesList.Count));
                 nIndex++;
 
-                if (m_bFullSeriesRetrieval)
+                if (m_bFullSeriesRetrieval && m_bUpdateScan)
                 {
                     MPTVSeriesLog.Write("Looking for all the episodes of " + series[DBSeries.cParsedName]);
                     SQLCondition conditions = new SQLCondition(new DBOnlineEpisode());
@@ -376,6 +376,8 @@ namespace WindowPlugins.GUITVSeries
                     // if we have unidentified episodes, let's retrieve the full list
                     if (episodesList.Count > 0)
                         nGetEpisodesTimeStamp = 0;
+                    else
+                        nGetEpisodesTimeStamp = DBOption.GetOptions(DBOption.cGetEpisodesTimeStamp);
 
                     GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
                     if (episodesParser.Results.Count > 0)
@@ -458,7 +460,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            if (m_bFullSeriesRetrieval && m_bUpdateScan)
+            if (m_bFullSeriesRetrieval && nReturnedGetEpisodesTimeStamp != 0)
                 // now that the retrieval is done, use the first timestamp we got back (in case episodes would have been edited while we were importing)
                 DBOption.SetOptions(DBOption.cGetEpisodesTimeStamp, nReturnedGetEpisodesTimeStamp);
         }

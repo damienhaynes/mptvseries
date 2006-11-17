@@ -64,8 +64,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
-            this.label11 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.checkBox_LocalDataOverride = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoChooseSeries = new System.Windows.Forms.CheckBox();
@@ -79,7 +77,9 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions = new System.Windows.Forms.DataGridView();
             this.button_MoveExpUp = new System.Windows.Forms.Button();
             this.button_MoveExpDown = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.button_Start = new System.Windows.Forms.Button();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
@@ -437,28 +437,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(519, 11);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(57, 13);
-            this.label11.TabIndex = 7;
-            this.label11.Text = "Log Level:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Normal",
-            "Debug (huge!)"});
-            this.comboBox1.Location = new System.Drawing.Point(582, 8);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(99, 21);
-            this.comboBox1.TabIndex = 6;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
             // checkBox_OnlineSearch
             // 
             this.checkBox_OnlineSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -668,6 +646,16 @@ namespace WindowPlugins.GUITVSeries
             this.button_MoveExpDown.UseVisualStyleBackColor = true;
             this.button_MoveExpDown.Click += new System.EventHandler(this.button_MoveExpDown_Click);
             // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(519, 11);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(57, 13);
+            this.label11.TabIndex = 7;
+            this.label11.Text = "Log Level:";
+            // 
             // listBox_Log
             // 
             this.listBox_Log.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -680,6 +668,20 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBox_Log.Size = new System.Drawing.Size(684, 134);
             this.listBox_Log.TabIndex = 5;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Normal",
+            "Debug (huge!)"});
+            this.comboBox1.Location = new System.Drawing.Point(582, 8);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(99, 21);
+            this.comboBox1.TabIndex = 6;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // progressBar_Parsing
             // 
@@ -1108,7 +1110,7 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v0.3";
+            this.Text = "MP-TV Series Configuration v0.3b";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
