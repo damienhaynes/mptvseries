@@ -49,7 +49,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 this.listbox_Series.Items.Add(item[DBSeries.cPrettyName]); 
             }
-            this.listbox_Series.SelectedIndex = 0;
+            if(this.listbox_Series.Items.Count > 0)
+                this.listbox_Series.SelectedIndex = 0;
         }
 
         private void listItems_SelectedIndexChanged(object sender, EventArgs e)
