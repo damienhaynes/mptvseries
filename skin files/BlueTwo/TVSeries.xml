@@ -1,6 +1,6 @@
 <window>
-	<id>0</id>
-	<defaultcontrol>2</defaultcontrol>
+	<id>9811</id>
+	<defaultcontrol>50</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<define>#header.hover:hover_my tv series.png</define>
 	<controls>
@@ -62,8 +62,8 @@
 			<font>font16</font>
 		</control>
 		<control>
-			<type>textbox</type>
-			<description>Genre</description>
+			<type>textboxscrollup</type>
+			<description>Subtitle</description>
 			<id>33</id>
 			<posX>60</posX>
 			<posY>184</posY>

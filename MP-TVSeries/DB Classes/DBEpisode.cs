@@ -20,6 +20,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeSummary = "Summary";
         public const String cFirstAired = "FirstAired";
         public const String cOnlineDataImported = "OnlineDataImported";
+        public const String cGuestStars = "GuestStars";
+        public const String cDirector = "Director";
+        public const String cWriter = "Writer";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
@@ -69,6 +72,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
             base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
             base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
+            base.AddColumn(cGuestStars, new DBField(DBField.cTypeString));
+            base.AddColumn(cDirector, new DBField(DBField.cTypeString));
+            base.AddColumn(cWriter, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -107,6 +113,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBEpisode : DBTable
     {
         public const String cTableName = "local_episodes";
+        public const String cOutName = "Episode";
 
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
@@ -159,6 +166,15 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
+        }
+
+        public DBEpisode(bool bCreateEmptyOnline)
+            : base(cTableName)
+        {
+            InitColumns();
+            InitValues();
+            if (bCreateEmptyOnline)
+                m_onlineEpisode = new DBOnlineEpisode();
         }
 
         public DBEpisode(String filename)

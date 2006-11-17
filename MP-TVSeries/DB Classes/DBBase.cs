@@ -486,6 +486,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public static void GlobalSet(DBTable obj, String sKey1, String sKey2, SQLCondition conditions)
+        {
+            if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2))
+            {
+                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2;
+                if (conditions != "")
+                    sqlQuery += " where " + conditions;
+                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            }
+        }
+
         public static void Clear(DBTable obj, SQLCondition conditions)
         {
             String sqlQuery = "delete from " + obj.m_tableName;
@@ -590,6 +601,8 @@ namespace WindowPlugins.GUITVSeries
     {
         #region private & init stuff
         private static SQLiteClient m_db = null;
+        private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
+        
 
         private static void InitDB()
         {
@@ -623,6 +636,10 @@ namespace WindowPlugins.GUITVSeries
             }
         }
         #endregion
+        public static void SetGlobalLogLevel(int nLevel)
+        {
+            m_nLogLevel = nLevel;
+        }
 
 
         public static SQLiteResultSet Execute(String sCommand)

@@ -10,6 +10,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBSeason : DBTable
     {
         public const String cTableName = "season";
+        public const String cOutName = "Season";
 
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesName = DBSeries.cParsedName;
@@ -17,6 +18,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
         public const String cHasLocalFiles = "HasLocalFiles";
+        public const String cHasLocalFilesTemp = "HasLocalFilesTemp";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -67,6 +69,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
             AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
+            AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
         }
 
         public String Banner
@@ -134,6 +137,16 @@ namespace WindowPlugins.GUITVSeries
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
             GlobalSet(new DBSeason(), sKey, Value, condition);
+        }
+
+        public static void GlobalSet(String sKey1, String sKey2)
+        {
+            GlobalSet(sKey1, sKey2, new SQLCondition(new DBSeason()));
+        }
+
+        public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
+        {
+            GlobalSet(new DBSeason(), sKey1, sKey2, condition);
         }
 
         public static List<DBSeason> Get(String sSeriesName, Boolean bExistingFilesOnly)

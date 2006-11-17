@@ -1,6 +1,6 @@
 <window>
-  <id>0</id>
-  <defaultcontrol>2</defaultcontrol>
+  <id>9811</id>
+  <defaultcontrol>50</defaultcontrol>
   <allowoverlay>yes</allowoverlay>
   <define>#header.label:My TV Series</define>
   <controls>
@@ -129,12 +129,13 @@
 
     <!-- Genre text below Banner -->
     <control>
-      <type>textbox</type>
-      <description>Genre</description>
+      <type>textboxscrollup</type>
+      <description>Subtitle</description>
       <id>33</id>
       <posX>345</posX>
       <posY>220</posY>
       <width>330</width>
+      <height>40</height>
       <textcolor>FFA9D0F7</textcolor>
       <font>font10</font>
     </control>
@@ -150,6 +151,7 @@
       <colordiffuse>ffffffff</colordiffuse>
       <textcolor>FFFFFFFF</textcolor>
       <font>font13</font>
+			<seperator>-----------------------------------------------------------------------------------------------------------------------</seperator>
     </control>
 	
 	</control>
