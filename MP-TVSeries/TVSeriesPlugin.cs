@@ -85,7 +85,7 @@ namespace MediaPortal.GUI.Video
             strButtonText = "MP-TVSeries";
             strButtonImage = String.Empty;
             strButtonImageFocus = String.Empty;
-            strPictureImage = String.Empty;
+            strPictureImage = "hover_my tv series.png";
             return true;
         }
 
