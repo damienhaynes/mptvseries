@@ -139,8 +139,8 @@ namespace WindowPlugins.GUITVSeries
             // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
             // also clear all season & series for local files
-            DBSeries.GlobalSet(DBSeries.cHasLocalFiles, false);
-            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, false);
+            DBSeries.GlobalSet(DBSeries.cHasLocalFilesTemp, false);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
             LocalParse localParser = new LocalParse();
             localParser.DoParse(false);
 
@@ -157,13 +157,13 @@ namespace WindowPlugins.GUITVSeries
                     // ok, we are sure it's valid now
                     // series first
                     DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
-                    series[DBSeries.cHasLocalFiles] = 1;
+                    series[DBSeries.cHasLocalFilesTemp] = 1;
                     // not much to do here except commiting the series
                     series.Commit();
 
                     // season now
                     DBSeason season = new DBSeason(progress.parser.Matches[DBSeries.cParsedName].ToLower(), nSeason);
-                    season[DBSeason.cHasLocalFiles] = 1;
+                    season[DBSeason.cHasLocalFilesTemp] = 1;
                     season.Commit();
 
                     // then episode
@@ -199,6 +199,9 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition condition = new SQLCondition(new DBEpisode());
             condition.Add(DBEpisode.cImportProcessed, 2, true);
             DBEpisode.Clear(condition);
+            // and copy the HasLocalFileTemp value into the real one
+            DBSeries.GlobalSet(DBSeries.cHasLocalFilesTemp, DBSeries.cHasLocalFiles);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, DBSeason.cHasLocalFiles);
         }
 
         void GetSeries()
@@ -757,7 +760,8 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 case DBOnlineEpisode.cCompositeID:
                                 case DBEpisode.cSeriesParsedName:
-                                    // do nothing here, it would break the DB links
+                                case DBEpisode.cWatched:
+                                    // do nothing here, those information are local only
                                     break;
 
                                 default:

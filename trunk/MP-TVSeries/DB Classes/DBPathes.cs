@@ -36,6 +36,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
             AddColumn(cPath, new DBField(DBField.cTypeString));
         }
+
         public static void ClearAll()
         {
             String sqlQuery = "delete from " + cTableName;

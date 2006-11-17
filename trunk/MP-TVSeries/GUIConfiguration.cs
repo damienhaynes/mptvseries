@@ -23,6 +23,10 @@ namespace WindowPlugins.GUITVSeries
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
 
+        private DBSeries m_SeriesReference = new DBSeries();
+        private DBSeason m_SeasonReference = new DBSeason();
+        private DBEpisode m_EpisodeReference = new DBEpisode(true);
+
         public ConfigurationForm()
         {
 #if DEBUG
@@ -81,6 +85,87 @@ namespace WindowPlugins.GUITVSeries
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
+
+            richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Col1);
+
+            richTextBox_seriesFormat_Col2.Tag = new FieldTag(DBOption.cView_Series_Col2, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Col2);
+
+            richTextBox_seriesFormat_Col3.Tag = new FieldTag(DBOption.cView_Series_Col3, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Col3);
+
+            richTextBox_seriesFormat_Title.Tag = new FieldTag(DBOption.cView_Series_Title, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Title);
+
+            richTextBox_seriesFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Series_Subtitle, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Subtitle);
+
+            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
+            FieldValidate(ref richTextBox_seriesFormat_Main);
+
+            richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cView_Episode_Col1, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Col1);
+
+            richTextBox_episodeFormat_Col2.Tag = new FieldTag(DBOption.cView_Episode_Col2, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Col2);
+
+            richTextBox_episodeFormat_Col3.Tag = new FieldTag(DBOption.cView_Episode_Col3, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Col3);
+
+            richTextBox_episodeFormat_Title.Tag = new FieldTag(DBOption.cView_Episode_Title, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Title);
+
+            richTextBox_episodeFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Episode_Subtitle, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Subtitle);
+
+            richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
+            FieldValidate(ref richTextBox_episodeFormat_Main);
+
+//            contextMenuStrip_SeriesFields.Items.Add("Insert a field value");
+//             // Create a new ToolStrip control.
+//             ToolStrip ts = new ToolStrip();
+// 
+//             // Create a ToolStripDropDownButton control and add it
+//             // to the ToolStrip control's Items collections.
+//             ToolStripDropDownButton fruitToolStripDropDownButton = new ToolStripDropDownButton("Fruit", null, null, "Fruit");
+//             ts.Items.Add(fruitToolStripDropDownButton);
+// 
+//             // Dock the ToolStrip control to the top of the form.
+//             ts.Dock = DockStyle.Top;
+// 
+//             // Assign the ContextMenuStrip control as the 
+//             // ToolStripDropDownButton control's DropDown menu.
+//             fruitToolStripDropDownButton.DropDown = contextMenuStrip_SeriesFields;
+// 
+//             // Create a new MenuStrip control and add a ToolStripMenuItem.
+//             MenuStrip ms = new MenuStrip();
+//             ToolStripMenuItem fruitToolStripMenuItem = new ToolStripMenuItem("Fruit", null, null, "Fruit");
+//             ms.Items.Add(fruitToolStripMenuItem);
+// 
+//             // Dock the MenuStrip control to the top of the form.
+//             ms.Dock = DockStyle.Top;
+// 
+//             // Assign the MenuStrip control as the 
+//             // ToolStripMenuItem's DropDown menu.
+//             fruitToolStripMenuItem.DropDown = contextMenuStrip_SeriesFields;
+// 
+//             // Assign the ContextMenuStrip to the form's 
+//             // ContextMenuStrip property.
+//             this.ContextMenuStrip = contextMenuStrip_SeriesFields;
+// 
+//             // Add the ToolStrip control to the Controls collection.
+//             this.Controls.Add(ts);
+// 
+//             //Add a button to the form and assign its ContextMenuStrip.
+//             Button b = new Button();
+//             b.Location = new System.Drawing.Point(60, 60);
+//             this.Controls.Add(b);
+//             b.ContextMenuStrip = contextMenuStrip_SeriesFields;
+// 
+//             // Add the MenuStrip control last.
+//             // This is important for correct placement in the z-order.
+//             this.Controls.Add(ms);
         }
 
         private void LoadImportPathes()
@@ -1144,6 +1229,227 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void FieldValidate(ref RichTextBox textBox)
+        {
+            FieldTag tag = textBox.Tag as FieldTag;
+            if (!tag.m_bInited)
+            {
+                textBox.Text = DBOption.GetOptions(tag.m_sOptionName);
+                tag.m_bInited = true;
+            }
+
+            int nCarret = textBox.SelectionStart;
+            String s = textBox.Text;
+            Color defColor = textBox.ForeColor;
+
+            int nStart = 0;
+            while (s.Length != 0)
+            {
+                int nTagStart = s.IndexOf('<');
+                if (nTagStart != -1)
+                {
+                    String sCurrent = s.Substring(0, nTagStart);
+                    s = s.Substring(nTagStart);
+
+                    textBox.SelectionStart = nStart;
+                    textBox.SelectionLength = sCurrent.Length;
+                    textBox.SelectionColor = defColor;
+                    nStart += sCurrent.Length;
+
+                    int nTagEnd = s.IndexOf('>');
+                    if (nTagEnd != -1)
+                    {
+                        sCurrent = s.Substring(0, nTagEnd + 1);
+                        s = s.Substring(nTagEnd + 1);
+
+                        bool bValid = false;
+                        textBox.SelectionStart = nStart;
+                        textBox.SelectionLength = sCurrent.Length;
+
+                        // find out of the tag exists in the table(s)
+                        String sTag = sCurrent.Substring(1, sCurrent.Length - 2);
+                        if (sTag.IndexOf('.') != -1)
+                        {
+                            String sTableName = sTag.Substring(0, sTag.IndexOf('.'));
+                            String sFieldName = sTag.Substring(sTag.IndexOf('.') + 1);
+
+                            switch (tag.m_Level)
+                            {
+                                case FieldTag.Level.Series:
+                                    if (sTableName == DBSeries.cOutName)
+                                        bValid |= m_SeriesReference.FieldNames.Contains(sFieldName);
+                                    break;
+
+                                case FieldTag.Level.Season:
+                                    if (sTableName == DBSeries.cOutName)
+                                        bValid |= m_SeriesReference.FieldNames.Contains(sFieldName);
+                                    if (sTableName == DBSeason.cOutName)
+                                        bValid |= m_SeasonReference.FieldNames.Contains(sFieldName);
+                                    break;
+
+                                case FieldTag.Level.Episode:
+                                    if (sTableName == DBSeries.cOutName)
+                                        bValid |= m_SeriesReference.FieldNames.Contains(sFieldName);
+                                    if (sTableName == DBSeason.cOutName)
+                                        bValid |= m_SeasonReference.FieldNames.Contains(sFieldName);
+                                    if (sTableName == DBEpisode.cOutName)
+                                        bValid |= m_EpisodeReference.FieldNames.Contains(sFieldName);
+                                    break;
+                            }
+                        }
+
+                        if (bValid)
+                            textBox.SelectionColor = Color.Green;
+                        else
+                            textBox.SelectionColor = Color.Red;
+                        nStart += sCurrent.Length;
+
+                    }
+                    else
+                    {
+                        // no more closing tag, no good, red
+                        textBox.SelectionStart = nStart;
+                        textBox.SelectionLength = textBox.Text.Length - nStart;
+                        textBox.SelectionColor = Color.Tomato;
+                        s = String.Empty;
+                    }
+                }
+                else
+                {
+                    // no more opening tag
+                    textBox.SelectionStart = nStart;
+                    textBox.SelectionLength = textBox.Text.Length - nStart;
+                    textBox.SelectionColor = defColor;
+                    s = String.Empty;
+                }
+            }
+
+            textBox.SelectionLength = 0;
+            textBox.SelectionStart = nCarret;
+
+            DBOption.SetOptions(tag.m_sOptionName, textBox.Text);
+        }
+
+        private void richTextBox_TextChanged(object sender, EventArgs e)
+        {
+            RichTextBox textBox = sender as RichTextBox;
+            FieldValidate(ref textBox);
+        }
+        
+        private void contextMenuStrip_SeriesFields_Opening(object sender, CancelEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            RichTextBox textBox = contextMenuStrip_InsertFields.SourceControl as RichTextBox;
+
+            // Clear the ContextMenuStrip control's Items collection.
+            contextMenuStrip_InsertFields.Items.Clear();
+            contextMenuStrip_InsertFields.CanOverflow = true;
+            
+            contextMenuStrip_InsertFields.Items.Add("Add a field Value:");
+            contextMenuStrip_InsertFields.Items[0].Enabled = false;
+            // Populate the ContextMenuStrip control with its default items.
+            contextMenuStrip_InsertFields.Items.Add("-");
+            contextMenuStrip_InsertFields.Items[1].Enabled = false;
+
+            FieldTag tag = textBox.Tag as FieldTag;
+
+            // series' always there
+            {
+                ToolStripMenuItem subMenuItem = new ToolStripMenuItem(DBSeries.cOutName + " values");
+                ContextMenuStrip subMenu = new ContextMenuStrip(this.components);
+                subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+                subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
+                subMenuItem.DropDown = subMenu;
+                List<String> fieldList = m_SeriesReference.FieldNames;
+                fieldList.Remove(DBSeries.cHasLocalFiles);
+                fieldList.Remove(DBSeries.cHasLocalFilesTemp);
+                fieldList.Remove(DBSeries.cBannerFileNames);
+                fieldList.Remove(DBSeries.cBannersDownloaded);
+                fieldList.Remove(DBSeries.cCurrentBannerFileName);
+                fieldList.Remove(DBSeries.cOnlineDataImported);
+
+                foreach (String sField in m_SeriesReference.FieldNames)
+                {
+                    ToolStripItem item = new ToolStripLabel();
+                    item.Name = "<" + DBSeries.cOutName + "." + sField + ">";
+                    item.Tag = textBox;
+                    String sPretty = DBSeries.PrettyFieldName(sField);
+                    if (sPretty == sField)
+                        item.Text = item.Name;
+                    else
+                        item.Text = item.Name + " - (" + sPretty + ")";
+                    subMenu.Items.Add(item);
+                }
+                contextMenuStrip_InsertFields.Items.Add(subMenuItem);
+            }
+
+            // season
+            if (tag.m_Level == FieldTag.Level.Season || tag.m_Level == FieldTag.Level.Episode)
+            {
+                ToolStripMenuItem subMenuItem = new ToolStripMenuItem(DBSeason.cOutName + " values");
+                ContextMenuStrip subMenu = new ContextMenuStrip(this.components);
+                subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
+                subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
+                subMenuItem.DropDown = subMenu;
+                List<String> fieldList = m_SeasonReference.FieldNames;
+                fieldList.Remove(DBSeason.cHasLocalFiles);
+                fieldList.Remove(DBSeason.cHasLocalFilesTemp);
+                fieldList.Remove(DBSeason.cBannerFileNames);
+                fieldList.Remove(DBSeason.cCurrentBannerFileName);
+                foreach (String sField in m_SeasonReference.FieldNames)
+                {
+                    ToolStripItem item = new ToolStripLabel();
+                    item.Name = "<" + DBSeason.cOutName + "." + sField + ">";
+                    item.Tag = textBox;
+                    String sPretty = DBSeason.PrettyFieldName(sField);
+                    if (sPretty == sField)
+                        item.Text = item.Name;
+                    else
+                        item.Text = item.Name + " - (" + sPretty + ")";
+                    subMenu.Items.Add(item);
+                }
+                contextMenuStrip_InsertFields.Items.Add(subMenuItem);
+            }
+
+            // episode
+            if (tag.m_Level == FieldTag.Level.Episode)
+            {
+                ToolStripMenuItem subMenuItem = new ToolStripMenuItem(DBEpisode.cOutName + " values");
+                ContextMenuStrip subMenu = new ContextMenuStrip(this.components);
+                subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
+                subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
+                subMenuItem.DropDown = subMenu;
+                List<String> fieldList = m_EpisodeReference.FieldNames;
+                fieldList.Remove(DBEpisode.cImportProcessed);
+                fieldList.Remove(DBOnlineEpisode.cOnlineDataImported);
+                foreach (String sField in m_EpisodeReference.FieldNames)
+                {
+                    ToolStripItem item = new ToolStripLabel();
+                    item.Name = "<" + DBEpisode.cOutName + "." + sField + ">";
+                    item.Tag = textBox;
+                    String sPretty = DBEpisode.PrettyFieldName(sField);
+                    if (sPretty == sField)
+                        item.Text = item.Name;
+                    else
+                        item.Text = item.Name + " - (" + sPretty + ")";
+                    subMenu.Items.Add(item);
+                }
+                contextMenuStrip_InsertFields.Items.Add(subMenuItem);
+            }
+
+            // Set Cancel to false. 
+            // It is optimized to true based on empty entry.
+            e.Cancel = false;
+        }
+
+        private void contextMenuStrip_SeriesFields_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            RichTextBox textBox = e.ClickedItem.Tag as RichTextBox;
+            if (textBox != null)
+                textBox.Text = textBox.Text.Insert(textBox.SelectionStart, e.ClickedItem.Name);
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.comboBox1.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
@@ -1170,6 +1476,25 @@ namespace WindowPlugins.GUITVSeries
 
     };
 
+    public class FieldTag
+    {
+        public String m_sOptionName;
+        public Level m_Level;
+        public bool m_bInited = false;
+
+        public enum Level
+        {
+            Series,
+            Season,
+            Episode
+        }
+
+        public FieldTag(String optionName, Level level)
+        {
+            m_sOptionName = optionName;
+            m_Level = level;
+        }
+    };
 
     public class DetailsProperty
     {

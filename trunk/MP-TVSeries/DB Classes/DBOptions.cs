@@ -10,7 +10,9 @@ namespace WindowPlugins.GUITVSeries
     {
         public static bool bTableUpdateDone = false;
 
-        public const String cDBVersion = "DBVersion";
+        public const String cDBSeriesVersion = "DBSeriesVersion";
+        public const String cDBSeasonVersion = "DBSeasonVersion";
+        public const String cDBEpisodesVersion = "DBEpisodesVersion";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
@@ -31,6 +33,20 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
 
+        public const String cView_Series_Col1 = "View_Series_Col1";
+        public const String cView_Series_Col2 = "View_Series_Col2";
+        public const String cView_Series_Col3 = "View_Series_Col3";
+        public const String cView_Series_Title = "View_Series_Title";
+        public const String cView_Series_Subtitle = "View_Series_Secondary";
+        public const String cView_Series_Main = "View_Series_Main";
+
+        public const String cView_Episode_Col1 = "View_Episode_Col1";
+        public const String cView_Episode_Col2 = "View_Episode_Col2";
+        public const String cView_Episode_Col3 = "View_Episode_Col3";
+        public const String cView_Episode_Title = "View_Episode_Title";
+        public const String cView_Episode_Subtitle = "View_Episode_Secondary";
+        public const String cView_Episode_Main = "View_Episode_Main";
+
         static DBOption()
         {
             try
@@ -48,57 +64,99 @@ namespace WindowPlugins.GUITVSeries
                     DBTVSeries.Execute(sQuery);
                 }
 
-                if (GetOptions(DBOption.cDBVersion) == "")
-                    SetOptions(DBOption.cDBVersion, 1);
+                if (GetOptions(cDBSeriesVersion) == null)
+                    SetOptions(cDBSeriesVersion, 1);
+
+                if (GetOptions(cDBSeasonVersion) == null)
+                    SetOptions(cDBSeasonVersion, 1);
+
+                if (GetOptions(cDBEpisodesVersion) == null)
+                    SetOptions(cDBEpisodesVersion, 1);
 
                 // update default values if not there already
-                if (GetOptions(DBOption.cOnlineParseEnabled) == "")
-                    SetOptions(DBOption.cOnlineParseEnabled, true);
+                if (GetOptions(cOnlineParseEnabled) == null)
+                    SetOptions(cOnlineParseEnabled, true);
 
-                if (GetOptions(DBOption.cFullSeriesRetrieval) == "")
-                    SetOptions(DBOption.cFullSeriesRetrieval, false);
+                if (GetOptions(cFullSeriesRetrieval) == null)
+                    SetOptions(cFullSeriesRetrieval, false);
 
-                if (GetOptions(DBOption.cAutoChooseSeries) == "")
-                    SetOptions(DBOption.cAutoChooseSeries, false);
+                if (GetOptions(cAutoChooseSeries) == null)
+                    SetOptions(cAutoChooseSeries, false);
 
-                if (GetOptions(DBOption.cLocalDataOverride) == "")
-                    SetOptions(DBOption.cLocalDataOverride, true);
+                if (GetOptions(cLocalDataOverride) == null)
+                    SetOptions(cLocalDataOverride, true);
 
-                if (GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) == "")
-                    SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, true);
+                if (GetOptions(cView_Episode_OnlyShowLocalFiles) == null)
+                    SetOptions(cView_Episode_OnlyShowLocalFiles, true);
 
-                if (GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) == "")
-                    SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, true);
+                if (GetOptions(cView_Episode_HideUnwatchedSummary) == null)
+                    SetOptions(cView_Episode_HideUnwatchedSummary, true);
 
-                if (GetOptions(DBOption.cGetEpisodesTimeStamp) == "")
-                    SetOptions(DBOption.cGetEpisodesTimeStamp, 0);
+                if (GetOptions(cGetEpisodesTimeStamp) == null)
+                    SetOptions(cGetEpisodesTimeStamp, 0);
 
-                if (GetOptions(DBOption.cUpdateSeriesTimeStamp) == "")
-                    SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
+                if (GetOptions(cUpdateSeriesTimeStamp) == null)
+                    SetOptions(cUpdateSeriesTimeStamp, 0);
 
-                if (GetOptions(DBOption.cUpdateBannersTimeStamp) == "")
-                    SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
+                if (GetOptions(cUpdateBannersTimeStamp) == null)
+                    SetOptions(cUpdateBannersTimeStamp, 0);
 
-                if (GetOptions(DBOption.cUpdateEpisodesTimeStamp) == "")
-                    SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+                if (GetOptions(cUpdateEpisodesTimeStamp) == null)
+                    SetOptions(cUpdateEpisodesTimeStamp, 0);
 
-                if (GetOptions(DBOption.cAutoScanLocalFiles) == "")
-                    SetOptions(DBOption.cAutoScanLocalFiles, true);
+                if (GetOptions(cAutoScanLocalFiles) == null)
+                    SetOptions(cAutoScanLocalFiles, true);
 
-                if (GetOptions(DBOption.cAutoScanLocalFilesLapse) == "")
-                    SetOptions(DBOption.cAutoScanLocalFilesLapse, 5);
+                if (GetOptions(cAutoScanLocalFilesLapse) == null)
+                    SetOptions(cAutoScanLocalFilesLapse, 5);
 
-                if (GetOptions(DBOption.cAutoUpdateOnlineData) == "")
-                    SetOptions(DBOption.cAutoUpdateOnlineData, true);
+                if (GetOptions(cAutoUpdateOnlineData) == null)
+                    SetOptions(cAutoUpdateOnlineData, true);
 
-                if (GetOptions(DBOption.cAutoUpdateOnlineDataLapse) == "")
-                    SetOptions(DBOption.cAutoUpdateOnlineDataLapse, 12);
+                if (GetOptions(cAutoUpdateOnlineDataLapse) == null)
+                    SetOptions(cAutoUpdateOnlineDataLapse, 12);
 
-                if (GetOptions(DBOption.cLocalScanLastTime) == "")
-                    SetOptions(DBOption.cLocalScanLastTime, 0);
+                if (GetOptions(cLocalScanLastTime) == null)
+                    SetOptions(cLocalScanLastTime, 0);
 
-                if (GetOptions(DBOption.cUpdateScanLastTime) == "")
-                    SetOptions(DBOption.cUpdateScanLastTime, 0);
+                if (GetOptions(cUpdateScanLastTime) == null)
+                    SetOptions(cUpdateScanLastTime, 0);
+
+                if (GetOptions(cView_Series_Col1) == null)
+                    SetOptions(cView_Series_Col1, "");
+
+                if (GetOptions(cView_Series_Col2) == null)
+                    SetOptions(cView_Series_Col2, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + ">");
+
+                if (GetOptions(cView_Series_Col3) == null)
+                    SetOptions(cView_Series_Col3, "<" + DBSeries.cOutName + "." + DBSeries.cAirsDay + ">");
+
+                if (GetOptions(cView_Series_Title) == null)
+                    SetOptions(cView_Series_Title, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + ">");
+
+                if (GetOptions(cView_Series_Subtitle) == null)
+                    SetOptions(cView_Series_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+
+                if (GetOptions(cView_Series_Main) == null)
+                    SetOptions(cView_Series_Main, "<" + DBSeries.cOutName + "." + DBSeries.cSummary + ">");
+
+                if (GetOptions(cView_Episode_Col1) == null)
+                    SetOptions(cView_Episode_Col1, "");
+
+                if (GetOptions(cView_Episode_Col2) == null)
+                    SetOptions(cView_Episode_Col2, "<" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeIndex + ">: <" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeName + ">");
+
+                if (GetOptions(cView_Episode_Col3) == null)
+                    SetOptions(cView_Episode_Col3, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cFirstAired + ">");
+
+                if (GetOptions(cView_Episode_Title) == null)
+                    SetOptions(cView_Episode_Title, "<" + DBEpisode.cOutName + "." + DBEpisode.cSeasonIndex + ">x<" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeIndex + ">: <" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeName + ">");
+
+                if (GetOptions(cView_Episode_Subtitle) == null)
+                    SetOptions(cView_Episode_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+
+                if (GetOptions(cView_Episode_Main) == null)
+                    SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
             }
             catch (Exception ex)
             {
@@ -140,10 +198,8 @@ namespace WindowPlugins.GUITVSeries
                 String convertedProperty = property;
                 String convertedvalue = value;
 
-                DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
-                DatabaseUtility.RemoveInvalidChars(ref convertedvalue);
                 String sqlQuery;
-                if (GetOptions(convertedProperty) == "")
+                if (GetOptions(convertedProperty) == null)
                     sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
                 else
                     sqlQuery = "update options set value = '" + value + "' where property = '" + convertedProperty + "'";
@@ -174,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
             }
-            return new DBValue("");
+            return null;
         }
     };
 }
