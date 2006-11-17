@@ -267,11 +267,12 @@ namespace MediaPortal.GUI.Video
                                             switch (sFieldName)
                                             {
                                                 case DBSeries.cActors:
-                                                    sOut += ((String)m_SelectedSeries[sFieldName]).Trim('|').Replace("|", ", ");
+                                                case DBSeries.cGenre:
+                                                    sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
                                                     break;
 
                                                 default:
-                                                    sOut += m_SelectedSeries[sFieldName];
+                                                    sOut += source[sFieldName];
                                                     break;
                                             }
                                         }
@@ -285,7 +286,7 @@ namespace MediaPortal.GUI.Video
                                             source = m_SelectedSeason;
                                         if (source != null)
                                         {
-                                            sOut += m_SelectedSeason[sFieldName];
+                                            sOut += source[sFieldName];
                                         }
                                     }
                                     break;
@@ -295,29 +296,29 @@ namespace MediaPortal.GUI.Video
                                         DBEpisode source = table as DBEpisode;
                                         if (source == null)
                                             source = m_SelectedEpisode;
-                                        if (m_SelectedEpisode != null)
+                                        if (source != null)
                                         {
                                             switch (sFieldName)
                                             {
                                                 case DBOnlineEpisode.cEpisodeSummary:
                                                     if (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) != true || table[DBOnlineEpisode.cWatched] != 0)
-                                                        sOut += m_SelectedEpisode[sFieldName];
+                                                        sOut += source[sFieldName];
                                                     else
                                                         sOut += " * Hidden to prevent spoilers *";
                                                     break;
 
                                                 case DBOnlineEpisode.cWatched:
-                                                    sOut += m_SelectedEpisode[sFieldName] == 0 ? "No" : "Yes";
+                                                    sOut += source[sFieldName] == 0 ? "No" : "Yes";
                                                     break;
 
                                                 case DBOnlineEpisode.cGuestStars:
                                                 case DBOnlineEpisode.cDirector:
                                                 case DBOnlineEpisode.cWriter:
-                                                    sOut += ((String)m_SelectedEpisode[sFieldName]).Trim('|').Replace("|", ", ");
+                                                    sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
                                                     break;
 
                                                 default:
-                                                    sOut += m_SelectedEpisode[sFieldName];
+                                                    sOut += source[sFieldName];
                                                     break;
                                             }
                                         }
