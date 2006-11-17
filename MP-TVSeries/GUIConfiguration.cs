@@ -509,8 +509,14 @@ namespace WindowPlugins.GUITVSeries
                     DBExpression expression = new DBExpression();
                     expression[DBExpression.cIndex] = row.Index.ToString();
                     foreach (DataGridViewCell cell in row.Cells)
-                        expression[cell.OwningColumn.Name] = (String)cell.Value;
-                    expression.Commit();
+                    {
+                        if (cell.Value == null)
+                            return;
+                        if (cell.ValueType.Name == "Boolean")
+                            expression[cell.OwningColumn.Name] = (Boolean)cell.Value;
+                        else
+                            expression[cell.OwningColumn.Name] = (String)cell.Value;
+                    }
                 }
             }
         }
@@ -825,7 +831,9 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBOnlineEpisode.cEpisodeName:
-                                    // this one is going to be shown via DBEpisode.cEpisodeName
+                                case DBEpisode.cImportProcessed:
+                                case DBOnlineEpisode.cOnlineDataImported:
+                                    // hide those, they are handled internally
                                     break;
 
                                 default:
@@ -874,7 +882,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeason.cBannerFileNames:
                                 case DBSeason.cCurrentBannerFileName:
                                 case DBSeason.cHasLocalFiles:
-                                    // hide those, they are handled via Banner & BannerList
+                                case DBSeason.cHasLocalFilesTemp:
+                                    // hide those, they are handled internally
                                     break;
 
                                 default:
@@ -919,9 +928,12 @@ namespace WindowPlugins.GUITVSeries
                             switch (key)
                             {
                                 case DBSeries.cBannerFileNames:
+                                case DBSeries.cBannersDownloaded:
                                 case DBSeries.cCurrentBannerFileName:
-                                case DBSeason.cHasLocalFiles:
-                                    // hide those, they are handled via Banner & BannerList
+                                case DBSeries.cHasLocalFiles:
+                                case DBSeries.cHasLocalFilesTemp:
+                                case DBSeries.cOnlineDataImported:
+                                    // hide those, they are handled internally
                                     break;
 
                                 case DBSeries.cParsedName:

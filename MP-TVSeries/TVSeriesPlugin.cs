@@ -926,6 +926,10 @@ namespace MediaPortal.GUI.Video
 
                 if (bLocalScanNeeded || bUpdateScanNeeded)
                 {
+                    // only load the wait cursor if we are in the plugin
+                    if (m_Facade != null)
+                        m_waitCursor = new WaitCursor();
+
                     // do scan
                     m_parserUpdater = new OnlineParsing();
                     m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
