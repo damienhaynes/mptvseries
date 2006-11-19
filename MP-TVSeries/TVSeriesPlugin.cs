@@ -107,6 +107,7 @@ namespace MediaPortal.GUI.Video
         private int m_nUpdateScanLapse = 0;
         private DateTime m_LastLocalScan = DateTime.MinValue;
         private DateTime m_LastUpdateScan = DateTime.MinValue;
+        private bool m_PluginShowing = false;
         private WaitCursor m_waitCursor = null;
 
         private String m_sFormatSeriesCol1 = String.Empty;
@@ -538,6 +539,7 @@ namespace MediaPortal.GUI.Video
 
         protected override void OnPageLoad()
         {
+            m_PluginShowing = true;
             if (m_parserUpdater != null)
                 m_waitCursor = new WaitCursor();
             this.LoadFacade();
@@ -552,6 +554,7 @@ namespace MediaPortal.GUI.Video
                 m_waitCursor.Dispose();
                 m_waitCursor = null;
             }
+            m_PluginShowing = false;
 
             base.OnPageDestroy(new_windowId);
         }
@@ -637,7 +640,7 @@ namespace MediaPortal.GUI.Video
                         if (m_parserUpdater == null) 
                         {
                             // only load the wait cursor if we are in the plugin
-                            if (m_Facade != null)
+                            if (m_PluginShowing)
                                 m_waitCursor = new WaitCursor();
 
                             // do scan
@@ -651,7 +654,7 @@ namespace MediaPortal.GUI.Video
                         if (m_parserUpdater == null)
                         {
                             // only load the wait cursor if we are in the plugin
-                            if (m_Facade != null)
+                            if (m_PluginShowing)
                                 m_waitCursor = new WaitCursor();
 
                             // do scan
@@ -979,7 +982,7 @@ namespace MediaPortal.GUI.Video
                 if (bLocalScanNeeded || bUpdateScanNeeded)
                 {
                     // only load the wait cursor if we are in the plugin
-                    if (m_Facade != null)
+                    if (m_PluginShowing)
                         m_waitCursor = new WaitCursor();
 
                     // do scan
