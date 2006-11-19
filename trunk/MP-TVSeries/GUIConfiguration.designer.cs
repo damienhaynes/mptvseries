@@ -1100,16 +1100,6 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoScanLocal.UseVisualStyleBackColor = true;
             this.checkBox_AutoScanLocal.CheckedChanged += new System.EventHandler(this.checkBox_AutoScanLocal_CheckedChanged);
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(684, 479);
-            this.tabPage1.TabIndex = 6;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1120,7 +1110,7 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v0.3b";
+            this.Text = "MP-TV Series Configuration v0.3c";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
