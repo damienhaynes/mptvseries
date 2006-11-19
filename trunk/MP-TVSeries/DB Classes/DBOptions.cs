@@ -30,6 +30,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cLocalScanLastTime = "LocalScanLastTime";
         public const String cUpdateScanLastTime = "UpdateScanLastTime";
 
+        public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
 
@@ -121,6 +122,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cUpdateScanLastTime) == null)
                     SetOptions(cUpdateScanLastTime, 0);
+
+                if (GetOptions(cView_PluginName) == null)
+                    SetOptions(cView_PluginName, "My TV Series");
 
                 if (GetOptions(cView_Series_Col1) == null)
                     SetOptions(cView_Series_Col1, "");

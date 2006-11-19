@@ -200,8 +200,8 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(DBEpisode.cImportProcessed, 2, true);
             DBEpisode.Clear(condition);
             // and copy the HasLocalFileTemp value into the real one
-            DBSeries.GlobalSet(DBSeries.cHasLocalFilesTemp, DBSeries.cHasLocalFiles);
-            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, DBSeason.cHasLocalFiles);
+            DBSeries.GlobalSet(DBSeries.cHasLocalFiles, DBSeries.cHasLocalFilesTemp);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
         }
 
         void GetSeries()
