@@ -351,6 +351,7 @@ namespace MediaPortal.GUI.Video
             if (this.m_Facade != null)
             {
                 this.m_Facade.Clear();
+                bool bEmpty = true;
                 switch (this.m_ListLevel)
                 {
                     case cListLevelSeries:
@@ -360,6 +361,7 @@ namespace MediaPortal.GUI.Video
                         {
                             try
                             {
+                                bEmpty = false;
                                 GUIListItem item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
                                 item.Label2 = FormatField(m_sFormatSeriesCol3, series);
                                 item.Label3 = FormatField(m_sFormatSeriesCol1, series);
@@ -415,6 +417,7 @@ namespace MediaPortal.GUI.Video
                         {
                             try
                             {
+                                bEmpty = false;
                                 GUIListItem item = new GUIListItem("Season " + season[DBSeason.cIndex]);
 //                                 String filename = season.Banner;
 //                                 if (filename == String.Empty) filename = this.m_SelectedSeries.Banner;
@@ -488,6 +491,7 @@ namespace MediaPortal.GUI.Video
                         {
                             try
                             {
+                                bEmpty = false;
                                 GUIListItem item = new GUIListItem(FormatField(m_sFormatEpisodeCol2, episode));
                                 item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
                                 item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
@@ -520,7 +524,14 @@ namespace MediaPortal.GUI.Video
                         if (selectedIndex != -1)
                             this.m_Facade.SelectedListItemIndex = selectedIndex;
                         this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
+
                         break;
+                }
+                if (bEmpty)
+                {
+                    GUIListItem item = new GUIListItem("No items!");
+                    item.IsRemote = true;
+                    this.m_Facade.Add(item);
                 }
             }
         }
@@ -566,20 +577,31 @@ namespace MediaPortal.GUI.Video
                             pItem = new GUIListItem("Toggle watched flag");
                             dlg.Add(pItem);
                             pItem.ItemId = 1;
+
+                            pItem = new GUIListItem("-------------------------------");
+                            dlg.Add(pItem);
                         }
                         break;
                 }
 
-                pItem = new GUIListItem("");
-                dlg.Add(pItem);
-
-                pItem = new GUIListItem("Only show episodes with a local file (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)?"on":"off") + ")");
+                pItem = new GUIListItem("Force Local Scan" + (m_parserUpdater != null ? " (In Progress)" : ""));
                 dlg.Add(pItem);
                 pItem.ItemId = 100 + 1;
 
+                pItem = new GUIListItem("Force Online Refresh" + (m_parserUpdater != null ? " (In Progress)" : ""));
+                dlg.Add(pItem);
+                pItem.ItemId = 100 + 1;
+
+                pItem = new GUIListItem("-------------------------------");
+                dlg.Add(pItem);
+
+                pItem = new GUIListItem("Only show episodes with a local file (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? "on" : "off") + ")");
+                dlg.Add(pItem);
+                pItem.ItemId = 100 + 3;
+
                 pItem = new GUIListItem("Hide the episode's summary on unwatched episodes (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)? "on" : "off") + ")");
                 dlg.Add(pItem);
-                pItem.ItemId = 100 + 2;
+                pItem.ItemId = 100 + 4;
 
 
                 dlg.DoModal(GetID);
@@ -612,11 +634,38 @@ namespace MediaPortal.GUI.Video
                 switch (dlg.SelectedId)
                 {
                     case 100 + 1:
+                        if (m_parserUpdater == null) 
+                        {
+                            // only load the wait cursor if we are in the plugin
+                            if (m_Facade != null)
+                                m_waitCursor = new WaitCursor();
+
+                            // do scan
+                            m_parserUpdater = new OnlineParsing();
+                            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+                            m_parserUpdater.Start(true, false);
+                        }
+                        break;
+
+                    case 100 + 2:
+                        if (m_parserUpdater == null)
+                        {
+                            // only load the wait cursor if we are in the plugin
+                            if (m_Facade != null)
+                                m_waitCursor = new WaitCursor();
+
+                            // do scan
+                            m_parserUpdater = new OnlineParsing();
+                            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+                            m_parserUpdater.Start(true, true);
+                        } break;
+
+                    case 100 + 3:
                         DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
                         LoadFacade();
                         break;
 
-                    case 100 + 2:
+                    case 100 + 4:
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
                         LoadFacade();
                         break;
@@ -839,6 +888,9 @@ namespace MediaPortal.GUI.Video
             }
             else if (control == this.m_Facade)
             {
+                if (this.m_Facade.SelectedListItem.TVTag == null)
+                    return;
+
                 switch (this.m_ListLevel)
                 {
                     case cListLevelSeries:
