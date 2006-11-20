@@ -53,9 +53,6 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Library = new System.Windows.Forms.TreeView();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.tabPage_Import = new System.Windows.Forms.TabPage();
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
@@ -83,9 +80,10 @@ namespace WindowPlugins.GUITVSeries
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.button_Start = new System.Windows.Forms.Button();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
+            this.richTextBox_seriesFormat_Col3 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip_InsertFields = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.richTextBox_episodeFormat_Col3 = new System.Windows.Forms.RichTextBox();
-            this.contextMenuStrip_InsertFields = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.richTextBox_episodeFormat_Col2 = new System.Windows.Forms.RichTextBox();
             this.checkBox_Episode_OnlyShowLocalFiles = new System.Windows.Forms.CheckBox();
@@ -97,32 +95,34 @@ namespace WindowPlugins.GUITVSeries
             this.label9 = new System.Windows.Forms.Label();
             this.richTextBox_episodeFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.richTextBox_seriesFormat_Col3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.richTextBox_seriesFormat_Main = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Subtitle = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
-            this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_AutoHeight = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown_AutoOnlineDataRefresh = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_AutoScanLocal = new System.Windows.Forms.NumericUpDown();
             this.checkBox_AutoOnlineDataRefresh = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoScanLocal = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl_Details.SuspendLayout();
             this.tabPage_Details.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
             this.tabPage_Import.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel1.SuspendLayout();
@@ -145,6 +145,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -281,26 +282,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.TabIndex = 148;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // detailsPropertyBindingSource
-            // 
-            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
             // 
             // pictureBox_Series
             // 
@@ -704,9 +685,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             // tabPage_MP_DisplayControl
             // 
+            this.tabPage_MP_DisplayControl.Controls.Add(this.richTextBox_seriesFormat_Col3);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox4);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.richTextBox_seriesFormat_Col2);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox2);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox1);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.label3);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.richTextBox_seriesFormat_Col1);
             this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MP_DisplayControl.Name = "tabPage_MP_DisplayControl";
             this.tabPage_MP_DisplayControl.Padding = new System.Windows.Forms.Padding(3);
@@ -714,6 +699,28 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.TabIndex = 5;
             this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
             this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox_seriesFormat_Col3
+            // 
+            this.richTextBox_seriesFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBox_seriesFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
+            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(503, 439);
+            this.richTextBox_seriesFormat_Col3.Multiline = false;
+            this.richTextBox_seriesFormat_Col3.Name = "richTextBox_seriesFormat_Col3";
+            this.richTextBox_seriesFormat_Col3.Size = new System.Drawing.Size(179, 20);
+            this.richTextBox_seriesFormat_Col3.TabIndex = 2;
+            this.richTextBox_seriesFormat_Col3.Text = "";
+            this.toolTip_Help.SetToolTip(this.richTextBox_seriesFormat_Col3, "Fields to be displayed in column 3; Right-click to insert a DB field");
+            this.richTextBox_seriesFormat_Col3.Visible = false;
+            this.richTextBox_seriesFormat_Col3.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
+            // 
+            // contextMenuStrip_InsertFields
+            // 
+            this.contextMenuStrip_InsertFields.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.contextMenuStrip_InsertFields.Name = "contextMenuStrip_SeriesFields";
+            this.contextMenuStrip_InsertFields.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_InsertFields.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_SeriesFields_Opening);
+            this.contextMenuStrip_InsertFields.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
             // 
             // groupBox4
             // 
@@ -732,7 +739,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col1);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Location = new System.Drawing.Point(4, 234);
+            this.groupBox4.Location = new System.Drawing.Point(4, 207);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(674, 167);
             this.groupBox4.TabIndex = 1;
@@ -750,14 +757,6 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col3.TabIndex = 2;
             this.richTextBox_episodeFormat_Col3.Text = "";
             this.richTextBox_episodeFormat_Col3.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
-            // 
-            // contextMenuStrip_InsertFields
-            // 
-            this.contextMenuStrip_InsertFields.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.contextMenuStrip_InsertFields.Name = "contextMenuStrip_SeriesFields";
-            this.contextMenuStrip_InsertFields.Size = new System.Drawing.Size(61, 4);
-            this.contextMenuStrip_InsertFields.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_SeriesFields_Opening);
-            this.contextMenuStrip_InsertFields.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
             // 
             // checkBox_Episode_HideUnwatchedSummary
             // 
@@ -884,58 +883,42 @@ namespace WindowPlugins.GUITVSeries
             this.label10.TabIndex = 1;
             this.label10.Text = "Episode Main InfoPane Format:";
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col3);
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col2);
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Main);
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Subtitle);
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Title);
-            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col1);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(4, 106);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(674, 122);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Series View Settings";
-            // 
-            // richTextBox_seriesFormat_Col3
-            // 
-            this.richTextBox_seriesFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBox_seriesFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(490, 18);
-            this.richTextBox_seriesFormat_Col3.Multiline = false;
-            this.richTextBox_seriesFormat_Col3.Name = "richTextBox_seriesFormat_Col3";
-            this.richTextBox_seriesFormat_Col3.Size = new System.Drawing.Size(179, 20);
-            this.richTextBox_seriesFormat_Col3.TabIndex = 2;
-            this.richTextBox_seriesFormat_Col3.Text = "";
-            this.toolTip_Help.SetToolTip(this.richTextBox_seriesFormat_Col3, "Fields to be displayed in column 3; Right-click to insert a DB field");
-            this.richTextBox_seriesFormat_Col3.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
-            // 
             // richTextBox_seriesFormat_Col2
             // 
             this.richTextBox_seriesFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(305, 18);
+            this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(318, 439);
             this.richTextBox_seriesFormat_Col2.Multiline = false;
             this.richTextBox_seriesFormat_Col2.Name = "richTextBox_seriesFormat_Col2";
             this.richTextBox_seriesFormat_Col2.Size = new System.Drawing.Size(179, 20);
             this.richTextBox_seriesFormat_Col2.TabIndex = 2;
             this.richTextBox_seriesFormat_Col2.Text = "";
             this.toolTip_Help.SetToolTip(this.richTextBox_seriesFormat_Col2, "Fields to be displayed in column 2; Right-click to insert a DB field");
+            this.richTextBox_seriesFormat_Col2.Visible = false;
             this.richTextBox_seriesFormat_Col2.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Main);
+            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Subtitle);
+            this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Title);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Location = new System.Drawing.Point(4, 106);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(674, 95);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Series && Season View Settings";
             // 
             // richTextBox_seriesFormat_Main
             // 
             this.richTextBox_seriesFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(305, 96);
+            this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(306, 66);
             this.richTextBox_seriesFormat_Main.Multiline = false;
             this.richTextBox_seriesFormat_Main.Name = "richTextBox_seriesFormat_Main";
             this.richTextBox_seriesFormat_Main.Size = new System.Drawing.Size(364, 20);
@@ -949,7 +932,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_seriesFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(305, 70);
+            this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(306, 40);
             this.richTextBox_seriesFormat_Subtitle.Multiline = false;
             this.richTextBox_seriesFormat_Subtitle.Name = "richTextBox_seriesFormat_Subtitle";
             this.richTextBox_seriesFormat_Subtitle.Size = new System.Drawing.Size(364, 20);
@@ -963,7 +946,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_seriesFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(305, 44);
+            this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(306, 14);
             this.richTextBox_seriesFormat_Title.Multiline = false;
             this.richTextBox_seriesFormat_Title.Name = "richTextBox_seriesFormat_Title";
             this.richTextBox_seriesFormat_Title.Size = new System.Drawing.Size(364, 20);
@@ -973,23 +956,10 @@ namespace WindowPlugins.GUITVSeries
                     " a line break");
             this.richTextBox_seriesFormat_Title.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             // 
-            // richTextBox_seriesFormat_Col1
-            // 
-            this.richTextBox_seriesFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBox_seriesFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col1.Location = new System.Drawing.Point(120, 18);
-            this.richTextBox_seriesFormat_Col1.Multiline = false;
-            this.richTextBox_seriesFormat_Col1.Name = "richTextBox_seriesFormat_Col1";
-            this.richTextBox_seriesFormat_Col1.Size = new System.Drawing.Size(179, 20);
-            this.richTextBox_seriesFormat_Col1.TabIndex = 2;
-            this.richTextBox_seriesFormat_Col1.Text = "";
-            this.toolTip_Help.SetToolTip(this.richTextBox_seriesFormat_Col1, "Fields to be displayed in column 1; Right-click to insert a DB field");
-            this.richTextBox_seriesFormat_Col1.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 98);
+            this.label6.Location = new System.Drawing.Point(4, 68);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(146, 13);
             this.label6.TabIndex = 1;
@@ -998,7 +968,7 @@ namespace WindowPlugins.GUITVSeries
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 72);
+            this.label5.Location = new System.Drawing.Point(4, 42);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(158, 13);
             this.label5.TabIndex = 1;
@@ -1007,25 +977,17 @@ namespace WindowPlugins.GUITVSeries
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 46);
+            this.label4.Location = new System.Drawing.Point(4, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(143, 13);
             this.label4.TabIndex = 1;
             this.label4.Text = "Series Title InfoPane Format:";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Series Listing Format:";
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBox_AutoHeight);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDown_AutoOnlineDataRefresh);
@@ -1038,6 +1000,18 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // checkBox_AutoHeight
+            // 
+            this.checkBox_AutoHeight.AutoSize = true;
+            this.checkBox_AutoHeight.Location = new System.Drawing.Point(7, 66);
+            this.checkBox_AutoHeight.Name = "checkBox_AutoHeight";
+            this.checkBox_AutoHeight.Size = new System.Drawing.Size(517, 17);
+            this.checkBox_AutoHeight.TabIndex = 3;
+            this.checkBox_AutoHeight.Text = "Automatically resize the height of the InfoPane text elements to accommodate the " +
+                "amount of data shown";
+            this.checkBox_AutoHeight.UseVisualStyleBackColor = true;
+            this.checkBox_AutoHeight.CheckedChanged += new System.EventHandler(this.checkBox_AutoHeight_CheckedChanged);
             // 
             // label2
             // 
@@ -1100,6 +1074,50 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoScanLocal.UseVisualStyleBackColor = true;
             this.checkBox_AutoScanLocal.CheckedChanged += new System.EventHandler(this.checkBox_AutoScanLocal_CheckedChanged);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 441);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(107, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Series Listing Format:";
+            this.label3.Visible = false;
+            // 
+            // richTextBox_seriesFormat_Col1
+            // 
+            this.richTextBox_seriesFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBox_seriesFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
+            this.richTextBox_seriesFormat_Col1.Location = new System.Drawing.Point(133, 439);
+            this.richTextBox_seriesFormat_Col1.Multiline = false;
+            this.richTextBox_seriesFormat_Col1.Name = "richTextBox_seriesFormat_Col1";
+            this.richTextBox_seriesFormat_Col1.Size = new System.Drawing.Size(179, 20);
+            this.richTextBox_seriesFormat_Col1.TabIndex = 2;
+            this.richTextBox_seriesFormat_Col1.Text = "";
+            this.toolTip_Help.SetToolTip(this.richTextBox_seriesFormat_Col1, "Fields to be displayed in column 1; Right-click to insert a DB field");
+            this.richTextBox_seriesFormat_Col1.Visible = false;
+            this.richTextBox_seriesFormat_Col1.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // detailsPropertyBindingSource
+            // 
+            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1117,7 +1135,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
@@ -1136,6 +1153,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_Expressions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).EndInit();
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
+            this.tabPage_MP_DisplayControl.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -1144,6 +1162,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1227,5 +1246,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.CheckBox checkBox_AutoHeight;
     }
 }

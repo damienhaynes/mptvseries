@@ -86,6 +86,8 @@ namespace WindowPlugins.GUITVSeries
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
 
+            checkBox_AutoHeight.Checked = DBOption.GetOptions(DBOption.cViewAutoHeight);
+
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
@@ -1467,6 +1469,11 @@ namespace WindowPlugins.GUITVSeries
             if (this.comboBox1.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
             else if (this.comboBox1.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
             else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
+        }
+
+        private void checkBox_AutoHeight_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cViewAutoHeight, checkBox_AutoHeight.Checked);
         }
     }
 

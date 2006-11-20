@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using System.Drawing;
 using MediaPortal.GUI.Library;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
@@ -109,6 +110,10 @@ namespace MediaPortal.GUI.Video
         private DateTime m_LastUpdateScan = DateTime.MinValue;
         private bool m_PluginShowing = false;
         private WaitCursor m_waitCursor = null;
+
+        private int m_nInitialListHeight = 0;
+        private String m_sInitialListFocusName = String.Empty;
+        private String m_sInitialListNoFocusName = String.Empty;
 
         private String m_sFormatSeriesCol1 = String.Empty;
         private String m_sFormatSeriesCol2 = String.Empty;
@@ -347,185 +352,258 @@ namespace MediaPortal.GUI.Video
             return sOut;
         }
 
+        String GetSeriesBanner(DBSeries series)
+        {
+            String filename = series.Banner;
+            if (filename != String.Empty)
+            {
+                return filename;
+            }
+            else
+            {
+                // no image, use text, create our own
+                if (GUITextureManager.LoadFromMemory(null, "[" + series[DBSeries.cParsedName] + "]", 0, 0, 0) == 0)
+                {
+                    Size sizeImage = new Size(758, 140);
+                    Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
+                    Graphics gph = Graphics.FromImage(image);
+                    gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
+                    GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
+                    Font font = new Font(fontList.FontName, 36);
+                    gph.DrawString(series[DBSeries.cPrettyName], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    gph.Dispose();
+                    GUITextureManager.LoadFromMemory(image, "[" + series[DBSeries.cParsedName] + "]", 0, sizeImage.Width, sizeImage.Height);
+                }
+                return "[" + series[DBSeries.cParsedName] + "]";
+            }
+        }
+
+        String GetSeasonBanner(DBSeason season)
+        {
+            String filename = season.Banner;
+            if (filename != String.Empty)
+            {
+                return filename;
+            }
+            else
+            {
+                if (GUITextureManager.LoadFromMemory(null, "[" + season[DBSeason.cID] + "]", 0, 0, 0) == 0)
+                {
+                    // no image, use text, create our own
+                    Size sizeImage = new Size(400, 578);
+                    Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
+                    Graphics gph = Graphics.FromImage(image);
+                    gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
+                    GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
+                    Font font = new Font(fontList.FontName, 48);
+                    gph.DrawString("Season " + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    gph.Dispose();
+                    GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
+                }
+                return "[" + season[DBSeason.cID] + "]";
+            }
+        }
+
         void LoadFacade()
         {
             if (this.m_Facade != null)
             {
-                this.m_Facade.Clear();
+                m_Button_View.Visible = false;
+                m_Button_Back.Visible = false;
+
+                if (m_nInitialListHeight == 0)
+                    m_nInitialListHeight = m_Facade.ListView.ItemHeight;
+
+                this.m_Facade.ListView.Clear();
+                this.m_Facade.AlbumListView.Clear();
                 bool bEmpty = true;
                 switch (this.m_ListLevel)
                 {
                     case cListLevelSeries:
-                        int selectedIndex = -1;
-                        int count = 0;
-                        foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                         {
-                            try
+                            int selectedIndex = -1;
+                            int count = 0;
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                            // assume 758 x 140 for all banners
+                            Size sizeImage = new Size();
+                            m_Facade.AlbumListView.IconOffsetX = 2;
+                            m_Facade.AlbumListView.IconOffsetY = 2;
+                            sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
+                            sizeImage.Height = sizeImage.Width * 140 / 758;
+                            m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                            m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                            m_Facade.AlbumListView.AllocResources();
+                            foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
-                                bEmpty = false;
-                                GUIListItem item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
-                                item.Label2 = FormatField(m_sFormatSeriesCol3, series);
-                                item.Label3 = FormatField(m_sFormatSeriesCol1, series);
-                                item.TVTag = series;
-//                                 String filename = series.Banner;
-//                                 if (filename != String.Empty)
-//                                     item.IconImage = item.IconImageBig = filename;
-                                item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
-                                item.IsDownloading = true;
-
-                                if (this.m_SelectedSeries != null)
+                                try
                                 {
-                                    if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
-                                        selectedIndex = count;
-                                }
-                                else
-                                {
-                                    // select the first that has a file
-                                    if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                        selectedIndex = count;
-                                }
+                                    bEmpty = false;
+                                    GUIListItem item = new GUIListItem();
+//                                    GUIListItem item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
+//                                     item.Label2 = FormatField(m_sFormatSeriesCol3, series);
+//                                     item.Label3 = FormatField(m_sFormatSeriesCol1, series);
+                                    item.TVTag = series;
+                                    item.IconImage = item.IconImageBig = GetSeriesBanner(series);
+                                    item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
+                                    item.IsDownloading = true;
 
-                                this.m_Facade.Add(item);
+                                    if (this.m_SelectedSeries != null)
+                                    {
+                                        if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
+                                            selectedIndex = count;
+                                    }
+                                    else
+                                    {
+                                        // select the first that has a file
+                                        if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                            selectedIndex = count;
+                                    }
+
+                                    this.m_Facade.Add(item);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                                }
+                                count++;
                             }
-                            catch (Exception ex)
-                            {
-                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
-                            }
-                            count++;
+                            if (selectedIndex != -1)
+                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                            Series_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
-                        if (selectedIndex != -1)
-                            this.m_Facade.SelectedListItemIndex = selectedIndex;
-                        Series_OnItemSelected(this.m_Facade.SelectedListItem);
                         break;
                     case cListLevelSeasons:
-                        selectedIndex = -1;
-                        count = 0;
-                        if (m_SelectedSeries != null)
                         {
-                            String filename = m_SelectedSeries.Banner;
-                            if (filename != null)
+                            int selectedIndex = -1;
+                            int count = 0;
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                            // assume 400 x 578 for all season images
+                            Size sizeImage = new Size();
+                            m_Facade.AlbumListView.IconOffsetX = 2;
+                            m_Facade.AlbumListView.IconOffsetY = 2;
+
+
+                            // reverse, 1 season picture by page
+                            sizeImage.Height = m_Facade.AlbumListView.Height - 50;
+                            sizeImage.Width = sizeImage.Height * 400 / 578;
+
+                            m_Facade.AlbumListView.SetTextOffsets(-sizeImage.Width, sizeImage.Height + 5, 0, 0, 0, 0);
+
+                            m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                            m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                            m_Facade.AlbumListView.AllocResources();
+
+                            if (m_SelectedSeries != null && this.m_Image != null)
                             {
                                 try
                                 {
-                                    this.m_Image.SetFileName(filename);
+                                    this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
                                     this.m_Image.KeepAspectRatio = true;
                                 }
                                 catch { }
                             }
-                        }
 
-                        foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
-                        {
-                            try
+                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
-                                bEmpty = false;
-                                GUIListItem item = new GUIListItem("Season " + season[DBSeason.cIndex]);
-//                                 String filename = season.Banner;
-//                                 if (filename == String.Empty) filename = this.m_SelectedSeries.Banner;
-//                                 if (filename != String.Empty)
-//                                 {
-//                                     item.IconImage = filename;
-//                                     item.IconImageBig = filename;
-//                                 }
-                                item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                item.IsDownloading = true;
-                                item.TVTag = season;
+                                try
+                                {
+                                    bEmpty = false;
+                                    GUIListItem item = new GUIListItem();
+                                    item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                    item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
+                                    item.IsDownloading = true;
+                                    item.TVTag = season;
 
-                                if (this.m_SelectedSeason != null)
-                                {
-                                    if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
-                                        selectedIndex = count;
+                                    if (this.m_SelectedSeason != null)
+                                    {
+                                        if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                            selectedIndex = count;
+                                    }
+                                    else
+                                    {
+                                        // select the first that has a file
+                                        if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                            selectedIndex = count;
+                                    }
+                                    this.m_Facade.Add(item);
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    // select the first that has a file
-                                    if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                        selectedIndex = count;
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
                                 }
-                                this.m_Facade.Add(item);
+                                count++;
                             }
-                            catch (Exception ex)
-                            {
-                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
-                            }
-                            count++;
+
+                            if (selectedIndex != -1)
+                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                            this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
-
-                        if (selectedIndex != -1)
-                            this.m_Facade.SelectedListItemIndex = selectedIndex;
-                        this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
-
                         break;
-                    case cListLevelEpisodes:
-                        selectedIndex = -1;
-                        count = 0;
 
-                        if (m_SelectedSeries != null && this.m_Season_Image != null)
+                    case cListLevelEpisodes:
                         {
-                            String filename = m_SelectedSeries.Banner;
-                            if (filename != null)
+                            int selectedIndex = -1;
+                            int count = 0;
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+
+                            if (m_SelectedSeries != null && this.m_Image != null)
                             {
                                 try
                                 {
-                                    this.m_Image.SetFileName(filename);
+                                    this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
                                     this.m_Image.KeepAspectRatio = true;
                                 }
                                 catch { }
                             }
-                        }
-                        if (m_SelectedSeason != null && this.m_Season_Image != null)
-                        {
-                            String filename = m_SelectedSeason.Banner;
-                            if (filename != null)
+                            if (m_SelectedSeason != null && this.m_Season_Image != null)
                             {
-                                // SetFileName needs to be tried/catched, as it can fail because we are on another thread. This sucks, but IMHO it's a design problem 
-                                // of Mediaportal: all events should be sent on the main thread.
                                 try
                                 {
-                                    this.m_Season_Image.SetFileName(filename);
+                                    this.m_Season_Image.SetFileName(GetSeasonBanner(m_SelectedSeason));
+                                    this.m_Season_Image.KeepAspectRatio = true;
                                 }
                                 catch { }
-                            }
-                        }
 
-                        foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
-                        {
-                            try
+                            }
+
+                            foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
-                                bEmpty = false;
-                                GUIListItem item = new GUIListItem(FormatField(m_sFormatEpisodeCol2, episode));
-                                item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
-                                item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
-                                item.IsRemote = episode[DBEpisode.cFilename] != "";
-                                item.IsDownloading = episode[DBEpisode.cWatched] == 0;
-                                item.TVTag = episode;
-
-                                if (this.m_SelectedEpisode != null)
+                                try
                                 {
-                                    if (episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
-                                        selectedIndex = count;
-                                }
-                                else
-                                {
-                                    // select the first that has a file and is not watched
-                                    if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
-                                        selectedIndex = count;
-                                }
+                                    bEmpty = false;
+                                    GUIListItem item = new GUIListItem(FormatField(m_sFormatEpisodeCol2, episode));
+                                    item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
+                                    item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
+                                    item.IsRemote = episode[DBEpisode.cFilename] != "";
+                                    item.IsDownloading = episode[DBEpisode.cWatched] == 0;
+                                    item.TVTag = episode;
 
-                                this.m_Facade.Add(item);
+                                    if (this.m_SelectedEpisode != null)
+                                    {
+                                        if (episode[DBEpisode.cEpisodeIndex] == this.m_SelectedEpisode[DBEpisode.cEpisodeIndex])
+                                            selectedIndex = count;
+                                    }
+                                    else
+                                    {
+                                        // select the first that has a file and is not watched
+                                        if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
+                                            selectedIndex = count;
+                                    }
+
+                                    this.m_Facade.Add(item);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
+                                }
+                                count++;
                             }
-                            catch (Exception ex)
-                            {
-                                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
-                            }
-                            count++;
+                            this.m_Button_Back.Focus = false;
+                            this.m_Facade.Focus = true;
+                            if (selectedIndex != -1)
+                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                            this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
-                        this.m_Button_Back.Focus = false;
-                        this.m_Facade.Focus = true;
-                        if (selectedIndex != -1)
-                            this.m_Facade.SelectedListItemIndex = selectedIndex;
-                        this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
-
                         break;
                 }
                 if (bEmpty)
@@ -673,158 +751,6 @@ namespace MediaPortal.GUI.Video
                         LoadFacade();
                         break;
                 }
-
-/*                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-                if (dlg == null) return;
-                dlg.Reset();
-                dlg.SetHeading(924); // menu
-                GUIListItem pItem = new GUIListItem("Download Coverart");
-                dlg.Add(pItem);
-                pItem = new GUIListItem("Refresh Information");
-                dlg.Add(pItem);
-                pItem = new GUIListItem("Play All");
-                dlg.Add(pItem);
-                pItem = new GUIListItem("Import new Videos");
-                dlg.Add(pItem);
-                dlg.DoModal(GetID);
-                if (dlg.SelectedId == -1) return;
-
-                GUIDialogOK pDlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                pDlgOK.SetHeading("Feature not Implemented");
-
-                switch (dlg.SelectedId)
-                {
-                    case 1:
-                        pDlgOK.SetLine(1, "This feature will allow you to download");
-                        pDlgOK.SetLine(2, "images from Amazon and Google.");
-                        pDlgOK.DoModal(GUIWindowManager.ActiveWindow);
-
-                        break;
-
-                    case 2:
-                        pDlgOK.SetLine(1, "This feature will allow you to update");
-                        pDlgOK.SetLine(2, "the information from tv.com.");
-                        pDlgOK.DoModal(GUIWindowManager.ActiveWindow);
-                        break;
-
-                    case 3:
-                        #region Play All
-                        PlayListPlayer playlistPlayer = new PlayListPlayer();
-                        playlistPlayer.Reset();
-                        playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_VIDEO_TEMP;
-                        PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_VIDEO_TEMP);
-                        playlist.Clear();
-                        if (this.m_ListLevel == cListLevelSeries)
-                        {
-                            DBSeries series = (DBSeries)currentitem.TVTag;
-                            foreach (DBEpisode episode in DBEpisode.Get(series[DBSeries.cParsedName], true))
-                            {
-                                PlayListItem itemNew = new PlayListItem();
-                                itemNew.FileName = episode[DBEpisode.cFilename];
-                                itemNew.Description = episode[DBOnlineEpisode.cEpisodeSummary];  // not working
-                                itemNew.Type = Playlists.PlayListItem.PlayListItemType.Video;
-                                itemNew.MusicTag = episode;
-                                playlist.Add(itemNew);
-                            }
-                        }
-                        else if (this.m_ListLevel == cListLevelSeasons)
-                        {
-                            DBSeason season = (DBSeason)currentitem.TVTag;
-                            foreach (DBEpisode episode in DBEpisode.Get(this.m_SelectedSeries[DBSeries.cParsedName], season[DBSeason.cIndex], true))
-                            {
-                                PlayListItem itemNew = new PlayListItem();
-                                itemNew.FileName = episode[DBEpisode.cFilename];
-                                itemNew.Description = episode[DBOnlineEpisode.cEpisodeSummary];  // not working
-                                itemNew.Type = Playlists.PlayListItem.PlayListItemType.Video;
-                                itemNew.MusicTag = episode;
-                                playlist.Add(itemNew);
-                            }
-                        }
-                        else if (this.m_ListLevel == cListLevelEpisodes)
-                        {
-                            DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                            PlayListItem itemNew = new PlayListItem();
-                            itemNew.FileName = episode[DBEpisode.cFilename];
-                            GUIPropertyManager.SetProperty("#plot", episode[DBOnlineEpisode.cEpisodeSummary]);
-                            itemNew.Description = episode[DBOnlineEpisode.cEpisodeSummary];  // not working
-                            itemNew.Type = Playlists.PlayListItem.PlayListItemType.Video;
-                            itemNew.MusicTag = episode;
-                            playlist.Add(itemNew);
-                        }
-
-                        playlistPlayer.PlayNext();
-
-                        DBEpisode currentPlayingEpisode = (DBEpisode)playlistPlayer.GetCurrentItem().MusicTag;
-                        DBSeries currentPlayingSeries = new DBSeries(currentPlayingEpisode[DBEpisode.cSeriesParsedName]);
-                        
-                        this.m_Logs.Write("Playing Movie: " + currentPlayingSeries[DBSeries.cPrettyName] + " - " + currentPlayingEpisode[DBEpisode.cSeasonIndex] + "x" + currentPlayingEpisode[DBEpisode.cEpisodeIndex] + " - " + currentPlayingEpisode[DBEpisode.cEpisodeName]);
-                        
-                        GUIPropertyManager.SetProperty("#title", currentPlayingSeries[DBSeries.cPrettyName] + " - " + currentPlayingEpisode[DBEpisode.cSeasonIndex] + "x" + currentPlayingEpisode[DBEpisode.cEpisodeIndex] + " - " + currentPlayingEpisode[DBEpisode.cEpisodeName]);
-                        GUIPropertyManager.SetProperty("#genre", currentPlayingSeries[DBSeries.cGenre]);
-                        GUIPropertyManager.SetProperty("#file", currentPlayingEpisode[DBEpisode.cFilename]);
-//                        GUIPropertyManager.SetProperty("#plot", currentPlayingEpisode.Description);
-
-                        //GUIPropertyManager.SetProperty("#year", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#director", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#cast", currentPlayingEpisode);	
-                        //GUIPropertyManager.SetProperty("#dvdlabel", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#imdbnumber", currentPlayingEpisode);
-                        GUIPropertyManager.SetProperty("#plotoutline", currentPlayingEpisode[DBOnlineEpisode.cEpisodeSummary]);
-                        //GUIPropertyManager.SetProperty("#rating", currentPlayingEpisode);	
-                        //GUIPropertyManager.SetProperty("#tagline", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#votes", currentPlayingEpisode);	
-                        //GUIPropertyManager.SetProperty("#credits", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#mpaarating", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#runtime", currentPlayingEpisode);   
-                        //GUIPropertyManager.SetProperty("#iswatched", currentPlayingEpisode); 
-
-//                         GUIPropertyManager.SetProperty("#Play.Current.Thumb", currentPlayingSeries.GetImage());
-                        GUIPropertyManager.SetProperty("#Play.Current.File", currentPlayingEpisode[DBEpisode.cFilename]);
-                        GUIPropertyManager.SetProperty("#Play.Current.Title", currentPlayingSeries[DBSeries.cPrettyName] + " - " + currentPlayingEpisode[DBEpisode.cSeasonIndex] + "x" + currentPlayingEpisode[DBEpisode.cEpisodeIndex] + " - " + currentPlayingEpisode[DBEpisode.cEpisodeName]);
-                        GUIPropertyManager.SetProperty("#Play.Current.Genre", currentPlayingSeries[DBSeries.cGenre]);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Comment", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Artist", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Director", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Album", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Track", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Year", currentPlayingEpisode);
-//                        GUIPropertyManager.SetProperty("#Play.Current.Duration", currentPlayingSeries.Duration);
-                        GUIPropertyManager.SetProperty("#Play.Current.Plot", currentPlayingEpisode[DBOnlineEpisode.cEpisodeSummary]);
-                        //GUIPropertyManager.SetProperty("#Play.Current.PlotOutline", currentPlayingEpisode.Description);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Channel", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Cast", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.DVDLabel", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.IMDBNumber", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Rating", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.TagLine", currentPlayingEpisode.Description);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Votes", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Credits", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.Runtime", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.MPAARating", currentPlayingEpisode);
-                        //GUIPropertyManager.SetProperty("#Play.Current.IsWatched", currentPlayingEpisode);
-
-                        #endregion
-                        break;
-                    case 4:
-                        GUIDialogProgress pDlgProgress = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
-                        pDlgProgress.SetHeading("Importing Videos");
-                        pDlgProgress.SetLine(1, "Scanning folder for video files...");
-                        pDlgProgress.StartModal(GUIWindowManager.ActiveWindow);
-                        pDlgProgress.ShowProgressBar(true);
-                        pDlgProgress.Progress();
-// 
-//                         ImportVideo import = new ImportVideo(this.m_Database);
-//                         pDlgProgress.SetLine(2, "Found " + import.GetFiles.Length.ToString() + " video files.");
-//                         import.SetGUIProperties(ref pDlgProgress);
-//                         pDlgProgress.SetLine(1, "Importing new videos...");
-//                         pDlgProgress.SetLine(2, "");
-//                         pDlgProgress.Progress();
-//                         System.Threading.Thread importThread = new System.Threading.Thread(new System.Threading.ThreadStart(import.Start));
-//                         importThread.Start();
-                        this.LoadFacade();
-                        break;
-                }
- */
             }
             catch (Exception ex)
             {
@@ -840,8 +766,22 @@ namespace MediaPortal.GUI.Video
                 case Action.ActionType.ACTION_PARENT_DIR:
                 case Action.ActionType.ACTION_HOME:
                 case Action.ActionType.ACTION_PREVIOUS_MENU:
-                    // simulate a back
-                    OnClicked(this.m_Button_Back.GetID, this.m_Button_Back, action.wID);
+                    // back one level
+                    switch (this.m_ListLevel)
+                    {
+                        case cListLevelSeries:
+                            GUIWindowManager.ShowPreviousWindow();
+                            break;
+                        case cListLevelSeasons:
+                            this.m_ListLevel = cListLevelSeries;
+                            this.m_SelectedSeason = null;
+                            break;
+                        case cListLevelEpisodes:
+                            this.m_ListLevel = cListLevelSeasons;
+                            this.m_SelectedEpisode = null;
+                            break;
+                    }
+                    this.LoadFacade();
                     break;
 
                 default:
@@ -852,44 +792,7 @@ namespace MediaPortal.GUI.Video
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
-            if (control == this.m_Button_Back)
-            {
-                switch (this.m_ListLevel)
-                {
-                    case cListLevelSeries:
-                        GUIWindowManager.ShowPreviousWindow();
-                        break;
-                    case cListLevelSeasons:
-                        this.m_ListLevel = cListLevelSeries;
-                        this.m_SelectedSeason = null;
-                        break;
-                    case cListLevelEpisodes:
-                        this.m_ListLevel = cListLevelSeasons;
-                        this.m_SelectedEpisode = null;
-                        break;
-                }
-                this.LoadFacade();
-            }
-            else if (control == this.m_Button_View)
-            {
-                switch (this.m_Facade.View)
-                {
-                    case GUIFacadeControl.ViewMode.SmallIcons:
-                        this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                        GUIControl.SetControlLabel(GetID, controlId, GUILocalizeStrings.Get(101));
-                        break;
-                    case GUIFacadeControl.ViewMode.List:
-                        this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
-                        GUIControl.SetControlLabel(GetID, controlId, GUILocalizeStrings.Get(417));
-                        break;
-                    case GUIFacadeControl.ViewMode.LargeIcons:
-                        this.m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
-                        GUIControl.SetControlLabel(GetID, controlId, GUILocalizeStrings.Get(100));
-                        break;
-                }
-                this.LoadFacade();
-            }
-            else if (control == this.m_Facade)
+            if (control == this.m_Facade)
             {
                 if (this.m_Facade.SelectedListItem.TVTag == null)
                     return;
@@ -1071,19 +974,14 @@ namespace MediaPortal.GUI.Video
             m_SelectedSeries = series;
             if (this.m_Image != null)
             {
-                String filename = series.Banner;
-                if (filename != null)
+                try
                 {
-                    // SetFileName needs to be tried/catched, as it can fail because we are on another thread. This sucks, but IMHO it's a design problem 
-                    // of Mediaportal: all events should be sent on the main thread.
-                    try
-                    {
-                        this.m_Image.SetFileName(filename);
-                        this.m_Image.KeepAspectRatio = true;
-                    }
-                    catch {}
+                    this.m_Image.SetFileName(GetSeriesBanner(series));
+                    this.m_Image.KeepAspectRatio = true;
                 }
+                catch { }
             }
+
             if (m_Season_Image != null)
             {
                 try
@@ -1093,31 +991,41 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
-            int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
-            int nBottomLimit = m_Description.YPosition + m_Description.Height;
-            if (m_Title != null)
+            if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
-                m_Title.YPosition = nStartOffset;
+                int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
+                int nBottomLimit = m_Description.YPosition + m_Description.Height;
+                if (m_Title != null)
+                {
+                    m_Title.YPosition = nStartOffset;
+                    m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
+                    nStartOffset += m_Title.Height + 5;
+                }
+
+                if (m_Genre != null)
+                {
+                    m_Genre.YPosition = nStartOffset;
+                    String sLabel = FormatField(m_sFormatSeriesSubtitle, series);
+                    m_Genre.Label = sLabel;
+                    int nLines = CountCRLF(sLabel) + 1;
+                    if (nLines > 4)
+                        nLines = 4;
+                    m_Genre.Height = (m_Genre.ItemHeight + m_Genre.Space) * (nLines);
+                    m_Genre.AllocResources();
+                    nStartOffset += m_Genre.Height + 5;
+                }
+
+                if (this.m_Description != null)
+                {
+                    m_Description.YPosition = nStartOffset;
+                    m_Description.Height = nBottomLimit - nStartOffset;
+                    m_Description.Label = FormatField(m_sFormatSeriesMain, series);
+                }
+            }
+            else
+            {
                 m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
-                nStartOffset += m_Title.Height + 5;
-            }
-
-            if (m_Genre != null)
-            {
-                m_Genre.YPosition = nStartOffset;
-                String sLabel = FormatField(m_sFormatSeriesSubtitle, series);
-                m_Genre.Label = sLabel;
-                int nLines = CountCRLF(sLabel) + 1;
-                if (nLines > 4)
-                    nLines = 4;
-                m_Genre.Height = m_Genre.ItemHeight * (nLines);
-                nStartOffset += m_Genre.Height + 5;
-            }
-
-            if (this.m_Description != null)
-            {
-                m_Description.YPosition = nStartOffset;
-                m_Description.Height = nBottomLimit - nStartOffset;
+                m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, series);
                 m_Description.Label = FormatField(m_sFormatSeriesMain, series);
             }
         }
@@ -1128,26 +1036,53 @@ namespace MediaPortal.GUI.Video
                 return;
 
             DBSeason season = (DBSeason)item.TVTag;
-            if (this.m_Season_Image != null)
+
+            if (m_Season_Image != null)
             {
-                String filename = season.Banner;
-                if (filename != null)
+                try
                 {
-                    // SetFileName needs to be tried/catched, as it can fail because we are on another thread. This sucks, but IMHO it's a design problem 
-                    // of Mediaportal: all events should be sent on the main thread.
-                    try
-                    {
-                        this.m_Season_Image.SetFileName(filename);
-                    }
-                    catch { }
+                    m_Season_Image.FreeResources();
+                }
+                catch { }
+            }
+
+            if (DBOption.GetOptions(DBOption.cViewAutoHeight))
+            {
+                int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
+                int nBottomLimit = m_Description.YPosition + m_Description.Height;
+                if (m_Title != null)
+                {
+                    m_Title.YPosition = nStartOffset;
+                    m_Title.Label = FormatField(m_sFormatSeriesTitle, m_SelectedSeries);
+                    nStartOffset += m_Title.Height + 5;
+                }
+
+                if (m_Genre != null)
+                {
+                    m_Genre.YPosition = nStartOffset;
+                    String sLabel = FormatField(m_sFormatSeriesSubtitle, m_SelectedSeries);
+                    m_Genre.Label = sLabel;
+                    int nLines = CountCRLF(sLabel) + 1;
+                    if (nLines > 4)
+                        nLines = 4;
+                    m_Genre.Height = (m_Genre.ItemHeight + m_Genre.Space) * (nLines);
+                    m_Genre.AllocResources();
+                    nStartOffset += m_Genre.Height + 5;
+                }
+
+                if (this.m_Description != null)
+                {
+                    m_Description.YPosition = nStartOffset;
+                    m_Description.Height = nBottomLimit - nStartOffset;
+                    m_Description.Label = FormatField(m_sFormatSeriesMain, m_SelectedSeries);
                 }
             }
-            if (this.m_Title != null)
-                GUIControl.SetControlLabel(GetID, m_Title.GetID, this.m_SelectedSeries[DBSeries.cPrettyName] + " Season " + season[DBSeason.cIndex]);
-            if (this.m_Genre != null)
-                GUIControl.SetControlLabel(GetID, m_Genre.GetID, m_SelectedSeries[DBSeries.cGenre]);
-            if (this.m_Description != null)
-                GUIControl.SetControlLabel(GetID, m_Description.GetID, (String)this.m_SelectedSeries[DBSeries.cSummary] + (char)10 + (char)13);
+            else
+            {
+                m_Title.Label = FormatField(m_sFormatSeriesTitle, m_SelectedSeries);
+                m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, m_SelectedSeries);
+                m_Description.Label = FormatField(m_sFormatSeriesMain, m_SelectedSeries);
+            }
         }
         private void Episode_OnItemSelected(GUIListItem item)
         {
@@ -1156,31 +1091,40 @@ namespace MediaPortal.GUI.Video
 
             DBEpisode episode = (DBEpisode)item.TVTag;
 
-            int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
-            int nBottomLimit = m_Description.YPosition + m_Description.Height;
-            if (m_Title != null)
+            if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
-                m_Title.YPosition = nStartOffset;
+                int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
+                int nBottomLimit = m_Description.YPosition + m_Description.Height;
+                if (m_Title != null)
+                {
+                    m_Title.YPosition = nStartOffset;
+                    m_Title.Label = FormatField(m_sFormatEpisodeTitle, episode);
+                    nStartOffset += m_Title.Height + 5;
+                }
+
+                if (m_Genre != null)
+                {
+                    m_Genre.YPosition = nStartOffset;
+                    String sLabel = FormatField(m_sFormatEpisodeSubtitle, episode);
+                    m_Genre.Label = sLabel;
+                    int nLines = CountCRLF(sLabel) + 1;
+                    if (nLines > 4)
+                        nLines = 4;
+                    m_Genre.Height = m_Genre.ItemHeight * (nLines);
+                    nStartOffset += m_Genre.Height + 5;
+                }
+
+                if (this.m_Description != null)
+                {
+                    m_Description.YPosition = nStartOffset;
+                    m_Description.Height = nBottomLimit - nStartOffset;
+                    m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
+                }
+            }
+            else
+            {
                 m_Title.Label = FormatField(m_sFormatEpisodeTitle, episode);
-                nStartOffset += m_Title.Height + 5;
-            }
-
-            if (m_Genre != null)
-            {
-                m_Genre.YPosition = nStartOffset;
-                String sLabel = FormatField(m_sFormatEpisodeSubtitle, episode);
-                m_Genre.Label = sLabel;
-                int nLines = CountCRLF(sLabel) + 1;
-                if (nLines > 4)
-                    nLines = 4;
-                m_Genre.Height = m_Genre.ItemHeight * (nLines);
-                nStartOffset += m_Genre.Height + 5;
-            }
-
-            if (this.m_Description != null)
-            {
-                m_Description.YPosition = nStartOffset;
-                m_Description.Height = nBottomLimit - nStartOffset;
+                m_Genre.Label = FormatField(m_sFormatEpisodeSubtitle, episode);
                 m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
             }
         }
