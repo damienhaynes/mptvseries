@@ -63,17 +63,13 @@
         <type>facadeview</type>
         <id>50</id>
         <control>
-          <description>listcontrol</description>
+          <description>text list</description>
           <type>listcontrol</type>
           <id>50</id>
           <posX>5</posX>
-          <posY>200</posY>
-          <height>350</height>
-		  <width>315</width>
-          <onleft>2</onleft>
-          <onright>2</onright>
-          <onup>2</onup>
-          <ondown>2</ondown>
+          <posY>125</posY>
+          <height>420</height>
+		  		<width>315</width>
           <spaceBetweenItems>2</spaceBetweenItems>
           <remoteColor>60A0A0A0</remoteColor>       <!-- watched color -->
           <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color -->
@@ -81,20 +77,23 @@
           <textcolor2>60505050</textcolor2>						<!-- local file not present color  column 2-->
           <textcolor3>60505050</textcolor3>						<!-- local file not present color column 3-->
         </control>
+
         <control>
-          <description>Thumbnail Panel</description>
-          <type>thumbnailpanel</type>
+          <description>graphical list (series and seasons if set)</description>
+          <type>listcontrol</type>
+          <subtype>album</subtype>
           <id>50</id>
           <posX>5</posX>
-          <posY>200</posY>
-          <height>350</height>
-		  <width>315</width>
-          <onleft>2</onleft>
-          <onright>2</onright>
-          <onup>2</onup>
-          <ondown>2</ondown>
+          <posY>125</posY>
+          <height>420</height>
+		  		<width>315</width>
+		  		<textureFocus>gradient.png</textureFocus>
+		  		<textureNoFocus>gradient.png</textureNoFocus>
           <remoteColor>60A0A0A0</remoteColor>       <!-- watched color -->
-          <downloadColor>60505050</downloadColor>   <!-- local file not present color -->
+          <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color -->
+          <textcolor>60505050</textcolor>						<!-- local file not present color -->
+          <textcolor2>60505050</textcolor2>						<!-- local file not present color  column 2-->
+          <textcolor3>60505050</textcolor3>						<!-- local file not present color column 3-->
         </control>
       </control>
 	  

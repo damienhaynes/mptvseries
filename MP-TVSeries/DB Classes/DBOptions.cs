@@ -33,6 +33,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
+        public const String cViewAutoHeight = "ViewAutoHeight";
 
         public const String cView_Series_Col1 = "View_Series_Col1";
         public const String cView_Series_Col2 = "View_Series_Col2";
@@ -126,7 +127,10 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
 
-                if (GetOptions(cView_Series_Col1) == null)
+                if (GetOptions(cViewAutoHeight) == null)
+                    SetOptions(cViewAutoHeight, true);
+
+               if (GetOptions(cView_Series_Col1) == null)
                     SetOptions(cView_Series_Col1, "");
 
                 if (GetOptions(cView_Series_Col2) == null)
