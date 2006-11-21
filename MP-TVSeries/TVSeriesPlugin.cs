@@ -108,12 +108,10 @@ namespace MediaPortal.GUI.Video
         private int m_nUpdateScanLapse = 0;
         private DateTime m_LastLocalScan = DateTime.MinValue;
         private DateTime m_LastUpdateScan = DateTime.MinValue;
-        private bool m_PluginShowing = false;
-        private WaitCursor m_waitCursor = null;
 
-        private int m_nInitialListHeight = 0;
-        private String m_sInitialListFocusName = String.Empty;
-        private String m_sInitialListNoFocusName = String.Empty;
+        private int m_nInitialIconXOffset = 0;
+        private int m_nInitialIconYOffset = 0;
+        private int m_nInitialItemHeight = 0;
 
         private String m_sFormatSeriesCol1 = String.Empty;
         private String m_sFormatSeriesCol2 = String.Empty;
@@ -121,6 +119,13 @@ namespace MediaPortal.GUI.Video
         private String m_sFormatSeriesTitle = String.Empty;
         private String m_sFormatSeriesSubtitle = String.Empty;
         private String m_sFormatSeriesMain = String.Empty;
+
+        private String m_sFormatSeasonCol1 = String.Empty;
+        private String m_sFormatSeasonCol2 = String.Empty;
+        private String m_sFormatSeasonCol3 = String.Empty;
+        private String m_sFormatSeasonTitle = String.Empty;
+        private String m_sFormatSeasonSubtitle = String.Empty;
+        private String m_sFormatSeasonMain = String.Empty;
 
         private String m_sFormatEpisodeCol1 = String.Empty;
         private String m_sFormatEpisodeCol2 = String.Empty;
@@ -138,6 +143,9 @@ namespace MediaPortal.GUI.Video
 
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
+
+        [SkinControlAttribute(51)]
+        protected GUIAnimation m_ImportAnimation = null;
 
         [SkinControlAttribute(30)]
         protected GUIImage m_Image = null;
@@ -164,7 +172,7 @@ namespace MediaPortal.GUI.Video
         protected GUITextControl m_Series_Premiered = null;
 
         [SkinControlAttribute(40)]
-        protected GUITextControl m_Title = null;
+        protected GUITextScrollUpControl m_Title = null;
 
         [SkinControlAttribute(41)]
         protected GUITextControl m_Airs = null;
@@ -208,6 +216,13 @@ namespace MediaPortal.GUI.Video
             m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
             m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
             m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
+
+            m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
+            m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
+            m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
+            m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
+            m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
+            m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
 
             m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
             m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
@@ -370,6 +385,7 @@ namespace MediaPortal.GUI.Video
                     gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 36);
+                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias; 
                     gph.DrawString(series[DBSeries.cPrettyName], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     gph.Dispose();
                     GUITextureManager.LoadFromMemory(image, "[" + series[DBSeries.cParsedName] + "]", 0, sizeImage.Width, sizeImage.Height);
@@ -396,6 +412,7 @@ namespace MediaPortal.GUI.Video
                     gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 48);
+                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
                     gph.DrawString("Season " + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     gph.Dispose();
                     GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
@@ -411,8 +428,12 @@ namespace MediaPortal.GUI.Video
                 m_Button_View.Visible = false;
                 m_Button_Back.Visible = false;
 
-                if (m_nInitialListHeight == 0)
-                    m_nInitialListHeight = m_Facade.ListView.ItemHeight;
+                if (m_nInitialIconXOffset == 0)
+                    m_nInitialIconXOffset = m_Facade.AlbumListView.IconOffsetX;
+                if (m_nInitialIconYOffset == 0)
+                    m_nInitialIconYOffset = m_Facade.AlbumListView.IconOffsetY;
+                if (m_nInitialItemHeight == 0)
+                    m_nInitialItemHeight = m_Facade.AlbumListView.ItemHeight;
 
                 this.m_Facade.ListView.Clear();
                 this.m_Facade.AlbumListView.Clear();
@@ -421,29 +442,49 @@ namespace MediaPortal.GUI.Video
                 {
                     case cListLevelSeries:
                         {
+                            int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
                             int selectedIndex = -1;
                             int count = 0;
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
-                            // assume 758 x 140 for all banners
-                            Size sizeImage = new Size();
-                            m_Facade.AlbumListView.IconOffsetX = 2;
-                            m_Facade.AlbumListView.IconOffsetY = 2;
-                            sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
-                            sizeImage.Height = sizeImage.Width * 140 / 758;
-                            m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
-                            m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
-                            m_Facade.AlbumListView.AllocResources();
+                            if (nSeriesDisplayMode == 1)
+                            {
+                                // graphical
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                                // assume 758 x 140 for all banners
+                                Size sizeImage = new Size();
+
+                                m_Facade.AlbumListView.IconOffsetX = m_nInitialIconXOffset;
+                                sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
+                                sizeImage.Height = sizeImage.Width * 140 / 758;
+                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * sizeImage.Height / m_nInitialItemHeight;
+                                m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                                m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                                m_Facade.AlbumListView.AllocResources();
+                                m_Image.Visible = false;
+                            }
+                            else
+                            {
+                                // text as usual
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                m_Image.Visible = true;
+                            }
                             foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
                                 try
                                 {
                                     bEmpty = false;
-                                    GUIListItem item = new GUIListItem();
-//                                    GUIListItem item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
-//                                     item.Label2 = FormatField(m_sFormatSeriesCol3, series);
-//                                     item.Label3 = FormatField(m_sFormatSeriesCol1, series);
+                                    GUIListItem item = null;
+                                    if (nSeriesDisplayMode == 1)
+                                    {
+                                        item = new GUIListItem();
+                                        item.IconImage = item.IconImageBig = GetSeriesBanner(series);
+                                    }
+                                    else
+                                    {
+                                        item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
+                                        item.Label2 = FormatField(m_sFormatSeriesCol3, series);
+                                        item.Label3 = FormatField(m_sFormatSeriesCol1, series);
+                                    }
                                     item.TVTag = series;
-                                    item.IconImage = item.IconImageBig = GetSeriesBanner(series);
                                     item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
                                     item.IsDownloading = true;
 
@@ -469,29 +510,36 @@ namespace MediaPortal.GUI.Video
                             }
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
-                            Series_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
                         break;
                     case cListLevelSeasons:
                         {
+                            m_Image.Visible = true;
                             int selectedIndex = -1;
                             int count = 0;
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
-                            // assume 400 x 578 for all season images
-                            Size sizeImage = new Size();
-                            m_Facade.AlbumListView.IconOffsetX = 2;
-                            m_Facade.AlbumListView.IconOffsetY = 2;
-
-
-                            // reverse, 1 season picture by page
-                            sizeImage.Height = m_Facade.AlbumListView.Height - 50;
-                            sizeImage.Width = sizeImage.Height * 400 / 578;
-
-                            m_Facade.AlbumListView.SetTextOffsets(-sizeImage.Width, sizeImage.Height + 5, 0, 0, 0, 0);
-
-                            m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
-                            m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
-                            m_Facade.AlbumListView.AllocResources();
+                            int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+                            if (nSeasonDisplayMode == 1)
+                            {
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                                // assume 400 x 578 for all season images
+                                Size sizeImage = new Size();
+                                // reverse, 1 season picture by page
+                                // integrate the size difference in the offset so the image stays centered & doesn't go "out" of the selection box
+                                sizeImage.Height = m_Facade.AlbumListView.Height - m_Facade.AlbumListView.Space - m_Facade.AlbumListView.SpinHeight - 6; // taken from how itemsperpage is calculated in GUIListControl
+                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * (sizeImage.Height - 2* m_Facade.AlbumListView.IconOffsetY) / m_nInitialItemHeight;
+                                sizeImage.Height -=  2* m_Facade.AlbumListView.IconOffsetY;
+                                sizeImage.Width = sizeImage.Height * 400 / 578;
+                                m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                                m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                                m_Facade.AlbumListView.IconOffsetX = (m_Facade.AlbumListView.Width - sizeImage.Width) / 2;
+                                m_Facade.AlbumListView.AllocResources();
+                                m_Season_Image.Visible = false;
+                            }
+                            else
+                            {
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                m_Season_Image.Visible = true;
+                            }
 
                             if (m_SelectedSeries != null && this.m_Image != null)
                             {
@@ -508,8 +556,18 @@ namespace MediaPortal.GUI.Video
                                 try
                                 {
                                     bEmpty = false;
-                                    GUIListItem item = new GUIListItem();
-                                    item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                    GUIListItem item = null;
+                                    if (nSeasonDisplayMode == 1)
+                                    {
+                                        item = new GUIListItem();
+                                        item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                    }
+                                    else
+                                    {
+                                        item = new GUIListItem(FormatField(m_sFormatSeasonCol2, season));
+                                        item.Label2 = FormatField(m_sFormatSeasonCol3, season);
+                                        item.Label3 = FormatField(m_sFormatSeasonCol1, season);
+                                    }
                                     item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                                     item.IsDownloading = true;
                                     item.TVTag = season;
@@ -536,12 +594,12 @@ namespace MediaPortal.GUI.Video
 
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
-                            this.Season_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
                         break;
 
                     case cListLevelEpisodes:
                         {
+                            m_Season_Image.Visible = true;
                             int selectedIndex = -1;
                             int count = 0;
                             this.m_Facade.View = GUIFacadeControl.ViewMode.List;
@@ -602,7 +660,6 @@ namespace MediaPortal.GUI.Video
                             this.m_Facade.Focus = true;
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
-                            this.Episode_OnItemSelected(this.m_Facade.SelectedListItem);
                         }
                         break;
                 }
@@ -617,23 +674,22 @@ namespace MediaPortal.GUI.Video
 
         protected override void OnPageLoad()
         {
-            m_PluginShowing = true;
-            if (m_parserUpdater != null)
-                m_waitCursor = new WaitCursor();
             this.LoadFacade();
-            this.m_Button_Back.Focus = false;
-            this.m_Facade.Focus = true;
+            if (m_parserUpdater != null)
+            {
+                if (m_ImportAnimation != null)
+                    m_ImportAnimation.AllocResources();
+            }
+            else
+            {
+                if (m_ImportAnimation != null)
+                    m_ImportAnimation.FreeResources();
+            }
+
         }
 
         protected override void OnPageDestroy(int new_windowId)
         {
-            if (m_waitCursor != null)
-            {
-                m_waitCursor.Dispose();
-                m_waitCursor = null;
-            }
-            m_PluginShowing = false;
-
             base.OnPageDestroy(new_windowId);
         }
 
@@ -718,8 +774,8 @@ namespace MediaPortal.GUI.Video
                         if (m_parserUpdater == null) 
                         {
                             // only load the wait cursor if we are in the plugin
-                            if (m_PluginShowing)
-                                m_waitCursor = new WaitCursor();
+                            if (m_ImportAnimation != null)
+                                m_ImportAnimation.AllocResources();
 
                             // do scan
                             m_parserUpdater = new OnlineParsing();
@@ -732,8 +788,8 @@ namespace MediaPortal.GUI.Video
                         if (m_parserUpdater == null)
                         {
                             // only load the wait cursor if we are in the plugin
-                            if (m_PluginShowing)
-                                m_waitCursor = new WaitCursor();
+                            if (m_ImportAnimation != null)
+                                m_ImportAnimation.AllocResources();
 
                             // do scan
                             m_parserUpdater = new OnlineParsing();
@@ -817,7 +873,7 @@ namespace MediaPortal.GUI.Video
                         this.m_SelectedEpisode.Commit();
                         this.LoadFacade();
                        
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode[DBEpisode.cFilename]);
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
                         
 //                         GUIDialogOK pDlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
 //                         pDlgOK.SetHeading("Could not launch video in player");
@@ -885,8 +941,8 @@ namespace MediaPortal.GUI.Video
                 if (bLocalScanNeeded || bUpdateScanNeeded)
                 {
                     // only load the wait cursor if we are in the plugin
-                    if (m_PluginShowing)
-                        m_waitCursor = new WaitCursor();
+                    if (m_ImportAnimation != null)
+                        m_ImportAnimation.AllocResources();
 
                     // do scan
                     m_parserUpdater = new OnlineParsing();
@@ -899,11 +955,8 @@ namespace MediaPortal.GUI.Video
 
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
         {
-            if (m_waitCursor != null)
-            {
-                m_waitCursor.Dispose();
-                m_waitCursor = null;
-            }
+            if (m_ImportAnimation != null)
+                m_ImportAnimation.FreeResources();
             if (m_parserUpdater != null)
             {
                 if (m_parserUpdater.LocalScan)
@@ -976,8 +1029,8 @@ namespace MediaPortal.GUI.Video
             {
                 try
                 {
-                    this.m_Image.SetFileName(GetSeriesBanner(series));
-                    this.m_Image.KeepAspectRatio = true;
+                    m_Image.SetFileName(GetSeriesBanner(series));
+                    m_Image.KeepAspectRatio = true;
                 }
                 catch { }
             }
@@ -986,7 +1039,7 @@ namespace MediaPortal.GUI.Video
             {
                 try
                 {
-                    m_Season_Image.FreeResources();
+                    m_Season_Image.SetFileName("");
                 }
                 catch { }
             }
@@ -998,7 +1051,13 @@ namespace MediaPortal.GUI.Video
                 if (m_Title != null)
                 {
                     m_Title.YPosition = nStartOffset;
-                    m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
+                    String sTitle = FormatField(m_sFormatSeriesTitle, series);
+                    GUIControl.SetControlLabel(GetID, m_Title.GetID, sTitle);
+                    int nLines = CountCRLF(sTitle) + 1;
+                    if (nLines > 4)
+                        nLines = 4;
+                    m_Title.Height = (m_Title.ItemHeight + m_Title.Space) * (nLines);
+                    m_Title.AllocResources();
                     nStartOffset += m_Title.Height + 5;
                 }
 
@@ -1041,7 +1100,8 @@ namespace MediaPortal.GUI.Video
             {
                 try
                 {
-                    m_Season_Image.FreeResources();
+                    m_Season_Image.SetFileName(GetSeasonBanner(season));
+                    m_Season_Image.KeepAspectRatio = true;
                 }
                 catch { }
             }
@@ -1053,14 +1113,14 @@ namespace MediaPortal.GUI.Video
                 if (m_Title != null)
                 {
                     m_Title.YPosition = nStartOffset;
-                    m_Title.Label = FormatField(m_sFormatSeriesTitle, m_SelectedSeries);
+                    m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
                     nStartOffset += m_Title.Height + 5;
                 }
 
                 if (m_Genre != null)
                 {
                     m_Genre.YPosition = nStartOffset;
-                    String sLabel = FormatField(m_sFormatSeriesSubtitle, m_SelectedSeries);
+                    String sLabel = FormatField(m_sFormatSeasonSubtitle, season);
                     m_Genre.Label = sLabel;
                     int nLines = CountCRLF(sLabel) + 1;
                     if (nLines > 4)
@@ -1074,14 +1134,14 @@ namespace MediaPortal.GUI.Video
                 {
                     m_Description.YPosition = nStartOffset;
                     m_Description.Height = nBottomLimit - nStartOffset;
-                    m_Description.Label = FormatField(m_sFormatSeriesMain, m_SelectedSeries);
+                    m_Description.Label = FormatField(m_sFormatSeasonMain, season);
                 }
             }
             else
             {
-                m_Title.Label = FormatField(m_sFormatSeriesTitle, m_SelectedSeries);
-                m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, m_SelectedSeries);
-                m_Description.Label = FormatField(m_sFormatSeriesMain, m_SelectedSeries);
+                m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
+                m_Genre.Label = FormatField(m_sFormatSeasonSubtitle, season);
+                m_Description.Label = FormatField(m_sFormatSeasonMain, season);
             }
         }
         private void Episode_OnItemSelected(GUIListItem item)

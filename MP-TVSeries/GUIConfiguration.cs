@@ -38,7 +38,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
             
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
-            this.comboBox1.SelectedIndex = 0;
             InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
@@ -49,6 +48,8 @@ namespace WindowPlugins.GUITVSeries
         #region Init
         private void InitSettingsTreeAndPanes()
         {
+            this.comboBox1.SelectedIndex = 0;
+
             m_paneList.Add(panel_ImportPathes);
             m_paneList.Add(panel_Expressions);
             m_paneList.Add(panel_StringReplacements);
@@ -87,7 +88,9 @@ namespace WindowPlugins.GUITVSeries
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
 
             checkBox_AutoHeight.Checked = DBOption.GetOptions(DBOption.cViewAutoHeight);
-
+            comboBox_seriesFormat.Items.Add("Text");
+            comboBox_seriesFormat.Items.Add("Graphical");
+            comboBox_seriesFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
@@ -103,8 +106,30 @@ namespace WindowPlugins.GUITVSeries
             richTextBox_seriesFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Series_Subtitle, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Subtitle);
 
-            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Season_Main, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Main);
+
+            comboBox_seasonFormat.Items.Add("Text");
+            comboBox_seasonFormat.Items.Add("Graphical");
+            comboBox_seasonFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+
+            richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Col1);
+
+            richTextBox_seasonFormat_Col2.Tag = new FieldTag(DBOption.cView_Season_Col2, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Col2);
+
+            richTextBox_seasonFormat_Col3.Tag = new FieldTag(DBOption.cView_Season_Col3, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Col3);
+
+            richTextBox_seasonFormat_Title.Tag = new FieldTag(DBOption.cView_Season_Title, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Title);
+
+            richTextBox_seasonFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Season_Subtitle, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Subtitle);
+
+            richTextBox_seasonFormat_Main.Tag = new FieldTag(DBOption.cView_Season_Main, FieldTag.Level.Season);
+            FieldValidate(ref richTextBox_seasonFormat_Main);
 
             richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cView_Episode_Col1, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Col1);
@@ -123,51 +148,6 @@ namespace WindowPlugins.GUITVSeries
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
-
-//            contextMenuStrip_SeriesFields.Items.Add("Insert a field value");
-//             // Create a new ToolStrip control.
-//             ToolStrip ts = new ToolStrip();
-// 
-//             // Create a ToolStripDropDownButton control and add it
-//             // to the ToolStrip control's Items collections.
-//             ToolStripDropDownButton fruitToolStripDropDownButton = new ToolStripDropDownButton("Fruit", null, null, "Fruit");
-//             ts.Items.Add(fruitToolStripDropDownButton);
-// 
-//             // Dock the ToolStrip control to the top of the form.
-//             ts.Dock = DockStyle.Top;
-// 
-//             // Assign the ContextMenuStrip control as the 
-//             // ToolStripDropDownButton control's DropDown menu.
-//             fruitToolStripDropDownButton.DropDown = contextMenuStrip_SeriesFields;
-// 
-//             // Create a new MenuStrip control and add a ToolStripMenuItem.
-//             MenuStrip ms = new MenuStrip();
-//             ToolStripMenuItem fruitToolStripMenuItem = new ToolStripMenuItem("Fruit", null, null, "Fruit");
-//             ms.Items.Add(fruitToolStripMenuItem);
-// 
-//             // Dock the MenuStrip control to the top of the form.
-//             ms.Dock = DockStyle.Top;
-// 
-//             // Assign the MenuStrip control as the 
-//             // ToolStripMenuItem's DropDown menu.
-//             fruitToolStripMenuItem.DropDown = contextMenuStrip_SeriesFields;
-// 
-//             // Assign the ContextMenuStrip to the form's 
-//             // ContextMenuStrip property.
-//             this.ContextMenuStrip = contextMenuStrip_SeriesFields;
-// 
-//             // Add the ToolStrip control to the Controls collection.
-//             this.Controls.Add(ts);
-// 
-//             //Add a button to the form and assign its ContextMenuStrip.
-//             Button b = new Button();
-//             b.Location = new System.Drawing.Point(60, 60);
-//             this.Controls.Add(b);
-//             b.ContextMenuStrip = contextMenuStrip_SeriesFields;
-// 
-//             // Add the MenuStrip control last.
-//             // This is important for correct placement in the z-order.
-//             this.Controls.Add(ms);
         }
 
         private void LoadImportPathes()
@@ -1474,6 +1454,24 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_AutoHeight_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cViewAutoHeight, checkBox_AutoHeight.Checked);
+        }
+
+        private void comboBox_seasonFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Season_ListFormat, comboBox_seasonFormat.SelectedIndex);
+
+            richTextBox_seasonFormat_Col1.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
+            richTextBox_seasonFormat_Col2.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
+            richTextBox_seasonFormat_Col3.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
+        }
+
+        private void comboBox_seriesFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Series_ListFormat, comboBox_seriesFormat.SelectedIndex);
+
+            richTextBox_seriesFormat_Col1.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
+            richTextBox_seriesFormat_Col2.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
+            richTextBox_seriesFormat_Col3.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
         }
     }
 

@@ -720,8 +720,8 @@ namespace WindowPlugins.GUITVSeries
 
                 Dictionary<int, DBEpisode> IDToEpisodesMap = new Dictionary<int, DBEpisode>();
                 int nCount = 0;
-                // call update with batches of 400 ids max - otherwise the server fails to generate a big enough xml chunk
-                while (nCount < 400 && episodeList.Count > 0)
+                // call update with batches of 100 ids max - otherwise the server fails to generate a big enough xml chunk
+                while (nCount < 100 && episodeList.Count > 0)
                 {
                     DBEpisode episode = episodeList[0];
                     episodeList.RemoveAt(0);
