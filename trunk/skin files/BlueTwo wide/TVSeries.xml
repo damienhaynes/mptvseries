@@ -16,70 +16,95 @@
 			<texture>background.png</texture>
 		</control>
 		<control>
-			<description>Number of Files Label</description>
-			<type>label</type>
-			<id>1</id>
-			<posX>493</posX>
-			<posY>706</posY>
-			<label>#itemcount</label>
-			<align>left</align>
-			<textcolor>White</textcolor>
+			<description>Import Animation</description>
+			<type>animation</type>
+    	<id>51</id>
+      <posX>60</posX>
+      <posY>700</posY>
+      <width>48</width>
+      <height>48</height>
+			<textures>common.waiting.1.png;common.waiting.2.png;common.waiting.3.png;common.waiting.4.png;common.waiting.5.png;common.waiting.6.png;common.waiting.7.png;common.waiting.8.png</textures>
+			<Duration>0:0:01</Duration>
+	  <keepaspectratio>yes</keepaspectratio>
 		</control>
-		<control>
-			<type>image</type>
-			<id>1</id>
-			<posX>142</posX>
-			<posY>493</posY>
-			<texture>#header.hover</texture>
-		</control>
+		
 		<control>
 			<type>image</type>
 			<description>Series Logo</description>
 			<id>30</id>
-			<posX>113</posX>
-			<posY>50</posY>
-			<width>1170</width>
-			<height>160</height>
+			<posX>540</posX>
+			<posY>25</posY>
+			<width>810</width>
+			<height>150</height>
 		  <centered>yes</centered>
 		  <keepaspectratio>yes</keepaspectratio>
 		</control>
+
+		<control>
+			<type>image</type>
+			<id>1</id>
+			<posX>70</posX>
+			<posY>20</posY>
+			<height>250</height>
+		  <keepaspectratio>yes</keepaspectratio>
+			<texture>#header.hover</texture>
+		</control>
+
 		<control>
 			<type>image</type>
 			<description>Logo</description>
 			<id>68</id>
-			<posX>113</posX>
+			<posX>50</posX>
 			<posY>21</posY>
 			<texture>tvseries_logo.png</texture>
 		</control>
+		
+		<!-- season image background -->
+	 	<control>
+      <type>image</type>
+      <description>Season image</description>
+      <id>46</id>
+      <posX>200</posX>
+      <posY>280</posY>
+      <width>250</width>
+      <height>460</height>
+	  	<centered>yes</centered>
+	  	<keepaspectratio>yes</keepaspectratio>
+	  	<colordiffuse>30FFFFFF</colordiffuse>
+      <texture></texture>
+    </control>
+    
 		<control>
-			<type>textbox</type>
+			<type>textboxscrollup</type>
 			<description>Title</description>
 			<id>40</id>
-			<posX>113</posX>
+			<posX>60</posX>
 			<posY>210</posY>
-			<width>826</width>
+			<width>400</width>
 			<textcolor>FFFFFFFF</textcolor>
 			<font>font16</font>
 		</control>
+		
 		<control>
 			<type>textboxscrollup</type>
 			<description>Subtitle</description>
 			<id>33</id>
-			<posX>113</posX>
+			<posX>60</posX>
 			<posY>245</posY>
-			<width>826</width>
+			<width>400</width>
 			<align>right</align>
 			<textcolor>FFA9D0F7</textcolor>
 			<font>font13</font>
 		</control>
+		
 		<control>
 			<type>textboxscrollup</type>
 			<description>Description</description>
 			<id>31</id>
-			<posX>113</posX>
+			<posX>60</posX>
 			<posY>280</posY>
-			<width>826</width>
-			<height>120</height>
+			<width>620</width>
+			<height>414</height>
 			<seperator>-----------------------------------------------------------------------------------------------------------------------</seperator>
 			<colordiffuse>ffffffff</colordiffuse>
 			<textcolor>FFFFFFFF</textcolor>
@@ -112,21 +137,6 @@
 			</control>
 		</control>
 		
-	<!-- season image background -->
-	 <control>
-      <type>image</type>
-      <description>Season image</description>
-      <id>46</id>
-      <posX>1040</posX>
-      <posY>415</posY>
-      <width>250</width>
-      <height>266</height>
-	  <centered>yes</centered>
-	  <keepaspectratio>yes</keepaspectratio>
-	  <colordiffuse>30FFFFFF</colordiffuse>
-      <texture></texture>
-    </control>
-
 		<control>
 			<type>group</type>
 			<description>group element</description>
@@ -136,17 +146,18 @@
 				<description>composite control consisting of a list control and a thumbnail panel</description>
 				<type>facadeview</type>
 				<id>50</id>
+				
 				<control>
-					<description>listcontrol</description>
-					<type>listcontrol</type>
+          <description>graphical list (series and seasons if set)</description>
+          <type>listcontrol</type>
+          <subtype>album</subtype>
 					<id>50</id>
-					<posX>493</posX>
-					<posY>416</posY>
-					<height>333</height>
-					<onleft>2</onleft>
-					<onright>2</onright>
-					<onup>2</onup>
-					<ondown>2</ondown>
+					<posX>750</posX>
+					<posY>185</posY>
+					<width>600</width>
+					<height>573</height>
+					<IconXOff>15</IconXOff>
+					<IconYOff>5</IconYOff>
 					<spaceBetweenItems>2</spaceBetweenItems>
           <remoteColor>FFa6c3e1</remoteColor>       <!-- watched color -->
           <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color (normal) -->
@@ -155,16 +166,15 @@
           <textcolor3>FF78ace0</textcolor3>						<!-- local file not present color column 3-->
 				</control>
 				<control>
-					<description>Thumbnail Panel</description>
-					<type>thumbnailpanel</type>
+          <description>text list</description>
+          <type>listcontrol</type>
 					<id>50</id>
-					<posX>493</posX>
-					<posY>416</posY>
-					<height>306</height>
-					<onleft>2</onleft>
-					<onright>2</onright>
-					<onup>2</onup>
-					<ondown>2</ondown>
+					<posX>750</posX>
+					<posY>185</posY>
+					<width>600</width>
+					<height>573</height>
+					<textXOff2>590</textXOff2>
+					<spaceBetweenItems>2</spaceBetweenItems>
           <remoteColor>FFa6c3e1</remoteColor>       <!-- watched color -->
           <downloadColor>FFFFFFFF</downloadColor>   <!-- not watched color (normal) -->
           <textcolor>FF78ace0</textcolor>						<!-- local file not present color -->

@@ -35,12 +35,21 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
         public const String cViewAutoHeight = "ViewAutoHeight";
 
+        public const String cView_Series_ListFormat = "View_Series_ListFormat";
         public const String cView_Series_Col1 = "View_Series_Col1";
         public const String cView_Series_Col2 = "View_Series_Col2";
         public const String cView_Series_Col3 = "View_Series_Col3";
         public const String cView_Series_Title = "View_Series_Title";
         public const String cView_Series_Subtitle = "View_Series_Secondary";
         public const String cView_Series_Main = "View_Series_Main";
+
+        public const String cView_Season_ListFormat = "View_Season_ListFormat";
+        public const String cView_Season_Col1 = "View_Season_Col1";
+        public const String cView_Season_Col2 = "View_Season_Col2";
+        public const String cView_Season_Col3 = "View_Season_Col3";
+        public const String cView_Season_Title = "View_Season_Title";
+        public const String cView_Season_Subtitle = "View_Season_Secondary";
+        public const String cView_Season_Main = "View_Season_Main";
 
         public const String cView_Episode_Col1 = "View_Episode_Col1";
         public const String cView_Episode_Col2 = "View_Episode_Col2";
@@ -130,6 +139,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
 
+                if (GetOptions(cView_Series_ListFormat) == null)
+                    SetOptions(cView_Series_ListFormat, 1); // graphical by default
+
                if (GetOptions(cView_Series_Col1) == null)
                     SetOptions(cView_Series_Col1, "");
 
@@ -148,6 +160,27 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Series_Main) == null)
                     SetOptions(cView_Series_Main, "<" + DBSeries.cOutName + "." + DBSeries.cSummary + ">");
 
+                if (GetOptions(cView_Season_ListFormat) == null)
+                    SetOptions(cView_Season_ListFormat, 0); // text by default
+
+                if (GetOptions(cView_Season_Col1) == null)
+                    SetOptions(cView_Season_Col1, "");
+
+                if (GetOptions(cView_Season_Col2) == null)
+                    SetOptions(cView_Season_Col2, "Season <" + DBSeason.cOutName + "." + DBSeason.cIndex + ">");
+
+                if (GetOptions(cView_Season_Col3) == null)
+                    SetOptions(cView_Season_Col3, "");
+
+                if (GetOptions(cView_Season_Title) == null)
+                    SetOptions(cView_Season_Title, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + "> Season <" + DBSeason.cOutName + "." + DBSeason.cIndex + ">");
+
+                if (GetOptions(cView_Season_Subtitle) == null)
+                    SetOptions(cView_Season_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+
+                if (GetOptions(cView_Season_Main) == null)
+                    SetOptions(cView_Season_Main, "<" + DBSeries.cOutName + "." + DBSeries.cSummary + ">"); 
+                
                 if (GetOptions(cView_Episode_Col1) == null)
                     SetOptions(cView_Episode_Col1, "");
 
