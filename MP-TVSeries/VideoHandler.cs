@@ -153,36 +153,39 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (type != g_Player.MediaType.Video) return;
 
-                // Handle all movie files from idMovie
-                System.Collections.ArrayList movies = new System.Collections.ArrayList();
-
-                int iidMovie = VideoDatabase.GetMovieId(filename);
-
-                VideoDatabase.GetFiles(iidMovie, ref movies);
-                // temporary data, I don't want any series to show in the movie list!
-                VideoDatabase.DeleteMovieInfoById(iidMovie);
-                // yes, it's stupid, I have to add the moviefile after deleting the movieInfo otherwise the resume time isn't saved 
-                iidMovie = VideoDatabase.AddMovieFile(m_currentEpisode[DBEpisode.cFilename]);
-
-                if (movies.Count <= 0) return;
-
-                for (int i = 0; i < movies.Count; i++)
+                if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
                 {
-                    string strFilePath = (string)movies[i];
-                    int idFile = VideoDatabase.GetFileId(strFilePath);
-                    if (idFile < 0) break;
+                    // Handle all movie files from idMovie
+                    System.Collections.ArrayList movies = new System.Collections.ArrayList();
 
-                    if ((filename == strFilePath) && (timeMovieStopped > 0))
+                    int iidMovie = VideoDatabase.GetMovieId(filename);
+
+                    VideoDatabase.GetFiles(iidMovie, ref movies);
+                    // temporary data, I don't want any series to show in the movie list!
+                    VideoDatabase.DeleteMovieInfoById(iidMovie);
+                    // yes, it's stupid, I have to add the moviefile after deleting the movieInfo otherwise the resume time isn't saved 
+                    iidMovie = VideoDatabase.AddMovieFile(m_currentEpisode[DBEpisode.cFilename]);
+
+                    if (movies.Count <= 0) return;
+
+                    for (int i = 0; i < movies.Count; i++)
                     {
-                        byte[] resumeData = null;
-                        g_Player.Player.GetResumeState(out resumeData);
-                        Log.Write("TVSeriesPlugin::OnPlayBackStopped idFile={0} timeMovieStopped={1} resumeData={2}", idFile, timeMovieStopped, resumeData);
-                        VideoDatabase.SetMovieStopTimeAndResumeData(idFile, timeMovieStopped, resumeData);
-                        Log.Write("TVSeriesPlugin::OnPlayBackStopped store resume time");
-                    }
-                    else
-                    {
-                        VideoDatabase.DeleteMovieStopTime(idFile);
+                        string strFilePath = (string)movies[i];
+                        int idFile = VideoDatabase.GetFileId(strFilePath);
+                        if (idFile < 0) break;
+
+                        if ((filename == strFilePath) && (timeMovieStopped > 0))
+                        {
+                            byte[] resumeData = null;
+                            g_Player.Player.GetResumeState(out resumeData);
+                            Log.Write("TVSeriesPlugin::OnPlayBackStopped idFile={0} timeMovieStopped={1} resumeData={2}", idFile, timeMovieStopped, resumeData);
+                            VideoDatabase.SetMovieStopTimeAndResumeData(idFile, timeMovieStopped, resumeData);
+                            Log.Write("TVSeriesPlugin::OnPlayBackStopped store resume time");
+                        }
+                        else
+                        {
+                            VideoDatabase.DeleteMovieStopTime(idFile);
+                        }
                     }
                 }
             }
@@ -198,27 +201,30 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (type != g_Player.MediaType.Video) return;
 
-                // Handle all movie files from idMovie
-                System.Collections.ArrayList movies = new System.Collections.ArrayList();
-                int iidMovie = VideoDatabase.GetMovieId(filename);
-                // temporary data, I don't want any series to show in the movie list!
-                VideoDatabase.DeleteMovieInfoById(iidMovie);
-                iidMovie = VideoDatabase.AddMovieFile(m_currentEpisode[DBEpisode.cFilename]);
-                if (iidMovie >= 0)
+                if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
                 {
-                    VideoDatabase.GetFiles(iidMovie, ref movies);
-                    for (int i = 0; i < movies.Count; i++)
+                    // Handle all movie files from idMovie
+                    System.Collections.ArrayList movies = new System.Collections.ArrayList();
+                    int iidMovie = VideoDatabase.GetMovieId(filename);
+                    // temporary data, I don't want any series to show in the movie list!
+                    VideoDatabase.DeleteMovieInfoById(iidMovie);
+                    iidMovie = VideoDatabase.AddMovieFile(m_currentEpisode[DBEpisode.cFilename]);
+                    if (iidMovie >= 0)
                     {
-                        string strFilePath = (string)movies[i];
-                        int idFile = VideoDatabase.GetFileId(strFilePath);
-                        if (idFile < 0) break;
-                        VideoDatabase.DeleteMovieStopTime(idFile);
-                    }
+                        VideoDatabase.GetFiles(iidMovie, ref movies);
+                        for (int i = 0; i < movies.Count; i++)
+                        {
+                            string strFilePath = (string)movies[i];
+                            int idFile = VideoDatabase.GetFileId(strFilePath);
+                            if (idFile < 0) break;
+                            VideoDatabase.DeleteMovieStopTime(idFile);
+                        }
 
-                    IMDBMovie details = new IMDBMovie();
-                    VideoDatabase.GetMovieInfoById(iidMovie, ref details);
-                    details.Watched++;
-                    VideoDatabase.SetWatched(details);
+                        IMDBMovie details = new IMDBMovie();
+                        VideoDatabase.GetMovieInfoById(iidMovie, ref details);
+                        details.Watched++;
+                        VideoDatabase.SetWatched(details);
+                    }
                 }
             }
             catch (Exception e)
@@ -232,7 +238,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 if (type != g_Player.MediaType.Video) return;
-                if (filename == m_currentEpisode[DBEpisode.cFilename])
+                if (m_currentEpisode != null && filename == m_currentEpisode[DBEpisode.cFilename])
                 {
                     AddFileToDatabase();
 
