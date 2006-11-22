@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
-
+            textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cView_PluginName);
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
@@ -1472,6 +1472,11 @@ namespace WindowPlugins.GUITVSeries
             richTextBox_seriesFormat_Col1.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
             richTextBox_seriesFormat_Col2.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
             richTextBox_seriesFormat_Col3.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
+        }
+
+        private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
         }
     }
 

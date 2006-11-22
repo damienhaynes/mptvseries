@@ -83,7 +83,7 @@ namespace MediaPortal.GUI.Video
         ///          false : plugin does not need its own button on home</returns>
         public bool GetHome(out string strButtonText, out string strButtonImage, out string strButtonImageFocus, out string strPictureImage)
         {
-            strButtonText = "MP-TVSeries";
+            strButtonText = DBOption.GetOptions(DBOption.cView_PluginName);
             strButtonImage = String.Empty;
             strButtonImageFocus = String.Empty;
             strPictureImage = "hover_my tv series.png";
