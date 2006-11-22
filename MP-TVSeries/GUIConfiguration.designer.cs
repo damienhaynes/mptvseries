@@ -53,6 +53,9 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Library = new System.Windows.Forms.TreeView();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.tabPage_Import = new System.Windows.Forms.TabPage();
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
@@ -127,15 +130,15 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoOnlineDataRefresh = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoScanLocal = new System.Windows.Forms.CheckBox();
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label16 = new System.Windows.Forms.Label();
+            this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.tabControl_Details.SuspendLayout();
             this.tabPage_Details.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
             this.tabPage_Import.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel1.SuspendLayout();
@@ -159,7 +162,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -296,6 +298,26 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.TabIndex = 148;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // detailsPropertyBindingSource
+            // 
+            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
             // 
             // pictureBox_Series
             // 
@@ -724,7 +746,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col2);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Title);
-            this.groupBox3.Location = new System.Drawing.Point(4, 217);
+            this.groupBox3.Location = new System.Drawing.Point(4, 232);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(674, 108);
             this.groupBox3.TabIndex = 2;
@@ -874,7 +896,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col1);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Location = new System.Drawing.Point(3, 331);
+            this.groupBox4.Location = new System.Drawing.Point(3, 346);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(675, 130);
             this.groupBox4.TabIndex = 1;
@@ -1034,7 +1056,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col1);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(3, 104);
+            this.groupBox2.Location = new System.Drawing.Point(3, 119);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(674, 107);
             this.groupBox2.TabIndex = 1;
@@ -1172,6 +1194,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
+            this.groupBox1.Controls.Add(this.label16);
             this.groupBox1.Controls.Add(this.checkBox_AutoHeight);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -1181,7 +1205,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.checkBox_AutoScanLocal);
             this.groupBox1.Location = new System.Drawing.Point(4, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(674, 91);
+            this.groupBox1.Size = new System.Drawing.Size(674, 106);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
@@ -1189,7 +1213,7 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_AutoHeight
             // 
             this.checkBox_AutoHeight.AutoSize = true;
-            this.checkBox_AutoHeight.Location = new System.Drawing.Point(7, 66);
+            this.checkBox_AutoHeight.Location = new System.Drawing.Point(7, 60);
             this.checkBox_AutoHeight.Name = "checkBox_AutoHeight";
             this.checkBox_AutoHeight.Size = new System.Drawing.Size(517, 17);
             this.checkBox_AutoHeight.TabIndex = 3;
@@ -1218,7 +1242,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // numericUpDown_AutoOnlineDataRefresh
             // 
-            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(286, 42);
+            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(286, 39);
             this.numericUpDown_AutoOnlineDataRefresh.Name = "numericUpDown_AutoOnlineDataRefresh";
             this.numericUpDown_AutoOnlineDataRefresh.Size = new System.Drawing.Size(38, 20);
             this.numericUpDown_AutoOnlineDataRefresh.TabIndex = 1;
@@ -1226,7 +1250,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // numericUpDown_AutoScanLocal
             // 
-            this.numericUpDown_AutoScanLocal.Location = new System.Drawing.Point(273, 20);
+            this.numericUpDown_AutoScanLocal.Location = new System.Drawing.Point(273, 18);
             this.numericUpDown_AutoScanLocal.Name = "numericUpDown_AutoScanLocal";
             this.numericUpDown_AutoScanLocal.Size = new System.Drawing.Size(38, 20);
             this.numericUpDown_AutoScanLocal.TabIndex = 1;
@@ -1235,7 +1259,7 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_AutoOnlineDataRefresh
             // 
             this.checkBox_AutoOnlineDataRefresh.AutoSize = true;
-            this.checkBox_AutoOnlineDataRefresh.Location = new System.Drawing.Point(7, 43);
+            this.checkBox_AutoOnlineDataRefresh.Location = new System.Drawing.Point(7, 40);
             this.checkBox_AutoOnlineDataRefresh.Name = "checkBox_AutoOnlineDataRefresh";
             this.checkBox_AutoOnlineDataRefresh.Size = new System.Drawing.Size(277, 17);
             this.checkBox_AutoOnlineDataRefresh.TabIndex = 0;
@@ -1249,7 +1273,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_AutoScanLocal.AccessibleDescription = "";
             this.checkBox_AutoScanLocal.AutoSize = true;
-            this.checkBox_AutoScanLocal.Location = new System.Drawing.Point(7, 20);
+            this.checkBox_AutoScanLocal.Location = new System.Drawing.Point(7, 18);
             this.checkBox_AutoScanLocal.Name = "checkBox_AutoScanLocal";
             this.checkBox_AutoScanLocal.Size = new System.Drawing.Size(260, 17);
             this.checkBox_AutoScanLocal.TabIndex = 0;
@@ -1259,25 +1283,22 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoScanLocal.UseVisualStyleBackColor = true;
             this.checkBox_AutoScanLocal.CheckedChanged += new System.EventHandler(this.checkBox_AutoScanLocal_CheckedChanged);
             // 
-            // dataGridViewTextBoxColumn1
+            // label16
             // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 150;
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(5, 83);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(141, 13);
+            this.label16.TabIndex = 4;
+            this.label16.Text = "Name of the plugin in Home:";
             // 
-            // dataGridViewTextBoxColumn2
+            // textBox_PluginHomeName
             // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // detailsPropertyBindingSource
-            // 
-            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
+            this.textBox_PluginHomeName.Location = new System.Drawing.Point(152, 80);
+            this.textBox_PluginHomeName.Name = "textBox_PluginHomeName";
+            this.textBox_PluginHomeName.Size = new System.Drawing.Size(217, 20);
+            this.textBox_PluginHomeName.TabIndex = 5;
+            this.textBox_PluginHomeName.TextChanged += new System.EventHandler(this.textBox_PluginHomeName_TextChanged);
             // 
             // ConfigurationForm
             // 
@@ -1296,6 +1317,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
@@ -1324,7 +1346,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoScanLocal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1421,5 +1442,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Col2;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Title;
+        private System.Windows.Forms.TextBox textBox_PluginHomeName;
+        private System.Windows.Forms.Label label16;
     }
 }
