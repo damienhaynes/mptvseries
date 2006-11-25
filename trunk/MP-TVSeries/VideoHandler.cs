@@ -120,7 +120,8 @@ namespace WindowPlugins.GUITVSeries
 
         void FillMovieDetails(ref IMDBMovie details)
         {
-            details.Title = m_currentEpisode[DBOnlineEpisode.cSeriesParsedName] + " " + m_currentEpisode[DBOnlineEpisode.cSeasonIndex] + "x" + m_currentEpisode[DBOnlineEpisode.cEpisodeIndex] + ": " + m_currentEpisode[DBOnlineEpisode.cEpisodeName];
+            DBOnlineSeries series = new DBOnlineSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            details.Title = series[DBOnlineSeries.cPrettyName] + " " + m_currentEpisode[DBOnlineEpisode.cSeasonIndex] + "x" + m_currentEpisode[DBOnlineEpisode.cEpisodeIndex] + ": " + m_currentEpisode[DBOnlineEpisode.cEpisodeName];
             details.Plot = m_currentEpisode[DBOnlineEpisode.cEpisodeSummary];
         }
 

@@ -359,8 +359,8 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 m_fields[PrimaryKey()].Value = Value;
-                SQLCondition condition = new SQLCondition(this);
-                condition.Add(PrimaryKey(), m_fields[PrimaryKey()].Value, true);
+                SQLCondition condition = new SQLCondition();
+                condition.Add(this, PrimaryKey(), m_fields[PrimaryKey()].Value, SQLConditionType.Equal);
                 String sqlQuery = "select * from " + m_tableName + " where " + condition;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                 return Read(ref records, 0);
@@ -553,39 +553,70 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
+    public enum SQLConditionType
+    {
+        Equal,
+        NotEqual,
+        LessThan,
+        GreaterThan
+    };
+
     public class SQLCondition
     {
-        private DBTable m_table = null;
         private String m_sConditions = String.Empty;
         
-        public SQLCondition(DBTable table)
+        public SQLCondition()
         {
-            m_table = table;
         }
 
-        public String TableName
+        public static SQLCondition operator +(SQLCondition input, String param)
         {
-            get { return m_table.m_tableName; }
+            SQLCondition returned = new SQLCondition();
+            if (input.m_sConditions != String.Empty)
+                returned.m_sConditions = input.m_sConditions + " and " + param;
+            else
+                returned.m_sConditions = param;
+
+            return returned;
         }
 
-        public void Add(String sField, DBValue value, bool bEqual)
+        public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
         {
-            // filter with available fields only
-            if (m_table.m_fields.ContainsKey(sField))
+            if (table.m_fields.ContainsKey(sField))
             {
                 if (m_sConditions != String.Empty)
                     m_sConditions += " and ";
 
-                switch (m_table.m_fields[sField].Type)
+                String sValue = String.Empty;
+                switch (table.m_fields[sField].Type)
                 {
                     case DBField.cTypeInt:
-                        m_sConditions += m_table.m_tableName+ "." + sField + (bEqual?" = ":" != ") + value;
+                        sValue = value;
                         break;
 
                     case DBField.cTypeString:
-                        m_sConditions += m_table.m_tableName + "." + sField + (bEqual ? " = '" : " != '") + ((String)value).Replace("'", "''") + "'";
+                        sValue = "'" + ((String)value).Replace("'", "''") + "'";
                         break;
                 }
+
+                String sType = String.Empty;
+                switch (type)
+                {
+                    case SQLConditionType.Equal:
+                        sType = " = ";
+                        break;
+
+                    case SQLConditionType.NotEqual:
+                        sType = " != ";
+                        break;
+                    case SQLConditionType.LessThan:
+                        sType = " < ";
+                        break;
+                    case SQLConditionType.GreaterThan:
+                        sType = " > ";
+                        break;
+                }
+                m_sConditions += table.m_tableName + "." + sField + sType + sValue;
             }
         }
 

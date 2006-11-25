@@ -10,7 +10,7 @@ namespace WindowPlugins.GUITVSeries
 {
     public partial class SelectSeries : Form
     {
-        List<DBSeries> _series;
+        List<DBOnlineSeries> _series;
         String m_sSeriesName = String.Empty;
 
         public SelectSeries(String sLocalSeriesName, bool bSelect)
@@ -28,7 +28,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public DBSeries userChoice
+        public DBOnlineSeries userChoice
         {
             get 
             {
@@ -41,13 +41,13 @@ namespace WindowPlugins.GUITVSeries
             get { return m_sSeriesName; }
         }
 
-        public void addSeriesToSelection(List<DBSeries> series)
+        public void addSeriesToSelection(List<DBOnlineSeries> series)
         {
             this.listbox_Series.Items.Clear();
             _series = series;
-            foreach (DBSeries item in _series)
+            foreach (DBOnlineSeries item in _series)
             {
-                this.listbox_Series.Items.Add(item[DBSeries.cPrettyName]); 
+                this.listbox_Series.Items.Add(item[DBOnlineSeries.cPrettyName]); 
             }
             if(this.listbox_Series.Items.Count > 0)
                 this.listbox_Series.SelectedIndex = 0;
@@ -57,7 +57,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (listbox_Series.SelectedIndex != -1)
             {
-                this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBSeries.cSummary];
+                this.textbox_Summary.Text = "First Aired: " + _series[this.listbox_Series.SelectedIndex]["FirstAired"] + "\r\nOverview:\r\n" + _series[this.listbox_Series.SelectedIndex][DBOnlineSeries.cSummary];
                 btnOK.Text = "OK";
             }
         }

@@ -89,6 +89,7 @@
     <Compile Include="Online Parsing Classes\SelectSeries.Designer.cs">
       <DependentUpon>SelectSeries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
   </ItemGroup>

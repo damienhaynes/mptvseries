@@ -8,9 +8,9 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetSeries
     {
-        private List<DBSeries> listSeries = new List<DBSeries>();
+        private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
 
-        public List<DBSeries> Results
+        public List<DBOnlineSeries> Results
         {
             get { return listSeries; }
         }
@@ -22,11 +22,11 @@ namespace WindowPlugins.GUITVSeries
             {
                 foreach (XmlNode itemNode in nodeList)
                 {
-                    DBSeries series = new DBSeries();
+                    DBOnlineSeries series = new DBOnlineSeries();
                     foreach (XmlNode propertyNode in itemNode.ChildNodes)
                     {
-                        if (DBSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                            series[DBSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                        if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                            series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                         else
                         {
                             // we don't know that field, add it to the series table

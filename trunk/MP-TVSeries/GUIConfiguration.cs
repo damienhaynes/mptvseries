@@ -23,20 +23,20 @@ namespace WindowPlugins.GUITVSeries
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
 
-        private DBSeries m_SeriesReference = new DBSeries();
+        private DBSeries m_SeriesReference = new DBSeries(true);
         private DBSeason m_SeasonReference = new DBSeason();
         private DBEpisode m_EpisodeReference = new DBEpisode(true);
 
         public ConfigurationForm()
         {
 #if DEBUG
-//    Debugger.Launch();
+            //    Debugger.Launch();
 #endif
 
 
             InitializeComponent();
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
-            
+
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             InitSettingsTreeAndPanes();
             LoadImportPathes();
@@ -49,6 +49,9 @@ namespace WindowPlugins.GUITVSeries
         private void InitSettingsTreeAndPanes()
         {
             this.comboBox1.SelectedIndex = 0;
+
+            // temp: remove the subtitle tab for now, not ready for prime time (if it ever is :) )
+            tabControl_Details.Controls.Remove(tabpage_Subtitles);
 
             m_paneList.Add(panel_ImportPathes);
             m_paneList.Add(panel_Expressions);
@@ -148,6 +151,9 @@ namespace WindowPlugins.GUITVSeries
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
+
+            textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
+            textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
         }
 
         private void LoadImportPathes()
@@ -214,7 +220,7 @@ namespace WindowPlugins.GUITVSeries
                 expression[DBExpression.cIndex] = "5";
                 expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
-                
+
 
                 // refresh
                 expressions = DBExpression.GetAll();
@@ -347,7 +353,9 @@ namespace WindowPlugins.GUITVSeries
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
 
-            List<DBSeries> seriesList = DBSeries.Get(false);
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            List<DBSeries> seriesList = DBSeries.Get(condition);
             if (seriesList.Count == 0)
             {
                 return;
@@ -355,13 +363,13 @@ namespace WindowPlugins.GUITVSeries
 
             foreach (DBSeries series in seriesList)
             {
-                TreeNode seriesNode = new TreeNode(series[DBSeries.cPrettyName]);
+                TreeNode seriesNode = new TreeNode(series[DBOnlineSeries.cPrettyName]);
                 seriesNode.Name = DBSeries.cTableName;
                 seriesNode.Tag = (DBSeries)series;
                 seriesNode.Expand();
                 root.Nodes.Add(seriesNode);
 
-                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cParsedName].ToString(), false);
+                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false);
                 foreach (DBSeason season in seasonsList)
                 {
                     TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
@@ -372,7 +380,7 @@ namespace WindowPlugins.GUITVSeries
                     seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
 
 
-                    List<DBEpisode> episodesList = DBEpisode.Get((String)series[DBSeries.cParsedName], (int)season[DBSeason.cIndex], false);
+                    List<DBEpisode> episodesList = DBEpisode.Get(series[DBSeries.cID], season[DBSeason.cIndex], false);
 
                     foreach (DBEpisode episode in episodesList)
                     {
@@ -384,7 +392,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
                         }
-                        else 
+                        else
                         {
                             seasonNode.ForeColor = treeView_Library.ForeColor;
                         }
@@ -411,7 +419,7 @@ namespace WindowPlugins.GUITVSeries
                 if (cell.Value == null)
                     return;
                 if (cell.ValueType == typeof(Boolean))
-                    importPath[cell.OwningColumn.Name] =(Boolean)cell.Value;
+                    importPath[cell.OwningColumn.Name] = (Boolean)cell.Value;
                 else
                     importPath[cell.OwningColumn.Name] = (String)cell.Value;
             }
@@ -511,7 +519,7 @@ namespace WindowPlugins.GUITVSeries
         private void button_MoveExpUp_Click(object sender, EventArgs e)
         {
             int nCurrentRow = dataGridView_Expressions.CurrentCellAddress.Y;
-            if (nCurrentRow > 0) 
+            if (nCurrentRow > 0)
             {
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow);
                 DBExpression expressionGoingDown = new DBExpression(nCurrentRow - 1);
@@ -534,7 +542,7 @@ namespace WindowPlugins.GUITVSeries
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow + 1);
                 expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow);
                 expressionGoingUp.Commit();
-                expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow+1);
+                expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow + 1);
                 expressionGoingDown.Commit();
                 LoadExpressions();
                 dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
@@ -754,7 +762,7 @@ namespace WindowPlugins.GUITVSeries
 
             LoadTree();
         }
-        
+
         #region Series treeview handling
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -801,7 +809,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 case DBEpisode.cSeasonIndex:
                                 case DBEpisode.cEpisodeIndex:
-                                case DBEpisode.cSeriesParsedName:
+                                case DBEpisode.cSeriesID:
                                 case DBEpisode.cCompositeID:
                                 case DBEpisode.cFilename:
                                 case DBOnlineEpisode.cID:
@@ -909,12 +917,12 @@ namespace WindowPlugins.GUITVSeries
                         {
                             switch (key)
                             {
-                                case DBSeries.cBannerFileNames:
-                                case DBSeries.cBannersDownloaded:
-                                case DBSeries.cCurrentBannerFileName:
-                                case DBSeries.cHasLocalFiles:
-                                case DBSeries.cHasLocalFilesTemp:
-                                case DBSeries.cOnlineDataImported:
+                                case DBOnlineSeries.cBannerFileNames:
+                                case DBOnlineSeries.cBannersDownloaded:
+                                case DBOnlineSeries.cCurrentBannerFileName:
+                                case DBOnlineSeries.cHasLocalFiles:
+                                case DBOnlineSeries.cHasLocalFilesTemp:
+                                case DBOnlineSeries.cOnlineDataImported:
                                     // hide those, they are handled internally
                                     break;
 
@@ -1000,8 +1008,8 @@ namespace WindowPlugins.GUITVSeries
                     DBSeries series = (DBSeries)nodeEdited.Tag;
                     series[(String)cell.Tag] = (String)cell.Value;
                     series.Commit();
-                    if (series[DBSeries.cPrettyName] != String.Empty)
-                        nodeEdited.Text = series[DBSeries.cPrettyName];
+                    if (series[DBOnlineSeries.cPrettyName] != String.Empty)
+                        nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
                     break;
 
                 case DBSeason.cTableName:
@@ -1101,7 +1109,7 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
                     }
                     break;
-            }   
+            }
         }
 
         private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
@@ -1151,20 +1159,24 @@ namespace WindowPlugins.GUITVSeries
                         if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition(new DBEpisode());
-                            condition.Add(DBEpisode.cSeriesParsedName, series[DBSeries.cParsedName], true);
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBEpisode.Clear(condition);
-                            condition = new SQLCondition(new DBOnlineEpisode());
-                            condition.Add(DBOnlineEpisode.cSeriesParsedName, series[DBSeries.cParsedName], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
 
-                            condition = new SQLCondition(new DBSeason());
-                            condition.Add(DBSeason.cSeriesName, series[DBSeries.cParsedName], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBSeason.Clear(condition);
 
-                            condition = new SQLCondition(new DBSeries());
-                            condition.Add(DBSeries.cParsedName, series[DBSeries.cParsedName], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBSeries.Clear(condition);
+                            
+                            condition = new SQLCondition();
+                            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+                            DBOnlineSeries.Clear(condition);
 
                             treeView_Library.Nodes.Remove(nodeDeleted);
                         }
@@ -1175,17 +1187,17 @@ namespace WindowPlugins.GUITVSeries
                         {
                             DBSeason season = (DBSeason)nodeDeleted.Tag;
 
-                            SQLCondition condition = new SQLCondition(new DBEpisode());
-                            condition.Add(DBEpisode.cSeriesParsedName, season[DBSeason.cSeriesName], true);
-                            condition.Add(DBEpisode.cSeasonIndex, season[DBSeason.cIndex], true);
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
                             DBEpisode.Clear(condition);
-                            condition = new SQLCondition(new DBOnlineEpisode());
-                            condition.Add(DBOnlineEpisode.cSeriesParsedName, season[DBSeason.cSeriesName], true);
-                            condition.Add(DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
 
-                            condition = new SQLCondition(new DBSeason());
-                            condition.Add(DBSeason.cID, season[DBSeason.cID], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
                             DBSeason.Clear(condition);
 
                             treeView_Library.Nodes.Remove(nodeDeleted);
@@ -1196,11 +1208,11 @@ namespace WindowPlugins.GUITVSeries
                         if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition(new DBEpisode());
-                            condition.Add(DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], true);
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], SQLConditionType.Equal);
                             DBEpisode.Clear(condition);
-                            condition = new SQLCondition(new DBOnlineEpisode());
-                            condition.Add(DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], true);
+                            condition = new SQLCondition();
+                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
                             treeView_Library.Nodes.Remove(nodeDeleted);
                         }
@@ -1329,7 +1341,7 @@ namespace WindowPlugins.GUITVSeries
             RichTextBox textBox = sender as RichTextBox;
             FieldValidate(ref textBox);
         }
-        
+
         private void contextMenuStrip_SeriesFields_Opening(object sender, CancelEventArgs e)
         {
             // Acquire references to the owning control and item.
@@ -1338,7 +1350,7 @@ namespace WindowPlugins.GUITVSeries
             // Clear the ContextMenuStrip control's Items collection.
             contextMenuStrip_InsertFields.Items.Clear();
             contextMenuStrip_InsertFields.CanOverflow = true;
-            
+
             contextMenuStrip_InsertFields.Items.Add("Add a field Value:");
             contextMenuStrip_InsertFields.Items[0].Enabled = false;
             // Populate the ContextMenuStrip control with its default items.
@@ -1355,12 +1367,12 @@ namespace WindowPlugins.GUITVSeries
                 subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
                 subMenuItem.DropDown = subMenu;
                 List<String> fieldList = m_SeriesReference.FieldNames;
-                fieldList.Remove(DBSeries.cHasLocalFiles);
-                fieldList.Remove(DBSeries.cHasLocalFilesTemp);
-                fieldList.Remove(DBSeries.cBannerFileNames);
-                fieldList.Remove(DBSeries.cBannersDownloaded);
-                fieldList.Remove(DBSeries.cCurrentBannerFileName);
-                fieldList.Remove(DBSeries.cOnlineDataImported);
+                fieldList.Remove(DBOnlineSeries.cHasLocalFiles);
+                fieldList.Remove(DBOnlineSeries.cHasLocalFilesTemp);
+                fieldList.Remove(DBOnlineSeries.cBannerFileNames);
+                fieldList.Remove(DBOnlineSeries.cBannersDownloaded);
+                fieldList.Remove(DBOnlineSeries.cCurrentBannerFileName);
+                fieldList.Remove(DBOnlineSeries.cOnlineDataImported);
 
                 foreach (String sField in m_SeriesReference.FieldNames)
                 {
@@ -1477,6 +1489,32 @@ namespace WindowPlugins.GUITVSeries
         private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
+        }
+
+        private void textBox_foromID_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Forom_ID, textBox_foromID.Text);
+        }
+
+        private void textBox_foromBaseURL_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Forom_BaseURL, textBox_foromBaseURL.Text);
+        }
+
+        private void button_SubsTest_Click(object sender, EventArgs e)
+        {
+            //             Forom forom = new Forom();
+            //             List<DBEpisode> episodes = DBEpisode.Get("the office", 1, true);
+            //             forom.GetSubs(episodes[0]);
+        }
+
+        private void splitContainer1_DoubleClick(object sender, EventArgs e)
+        {
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
         }
     }
 

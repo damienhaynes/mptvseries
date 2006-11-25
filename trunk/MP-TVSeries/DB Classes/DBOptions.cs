@@ -11,8 +11,10 @@ namespace WindowPlugins.GUITVSeries
         public static bool bTableUpdateDone = false;
 
         public const String cDBSeriesVersion = "DBSeriesVersion";
+        public const String cDBSeriesLastLocalID = "DBSeriesLasLocalID";
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
+
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
@@ -58,6 +60,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
 
+        public const String cSubs_Forom_BaseURL = "Subs_Forom_BaseURL";
+        public const String cSubs_Forom_ID = "Subs_Forom_ID";
+
         static DBOption()
         {
             try
@@ -77,6 +82,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cDBSeriesVersion) == null)
                     SetOptions(cDBSeriesVersion, 1);
+
+                if (GetOptions(cDBSeriesLastLocalID) == null)
+                    SetOptions(cDBSeriesLastLocalID, -1);
 
                 if (GetOptions(cDBSeasonVersion) == null)
                     SetOptions(cDBSeasonVersion, 1);
@@ -146,19 +154,19 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Series_Col1, "");
 
                 if (GetOptions(cView_Series_Col2) == null)
-                    SetOptions(cView_Series_Col2, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + ">");
+                    SetOptions(cView_Series_Col2, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cPrettyName + ">");
 
                 if (GetOptions(cView_Series_Col3) == null)
-                    SetOptions(cView_Series_Col3, "<" + DBSeries.cOutName + "." + DBSeries.cAirsDay + ">");
+                    SetOptions(cView_Series_Col3, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cAirsDay + ">");
 
                 if (GetOptions(cView_Series_Title) == null)
-                    SetOptions(cView_Series_Title, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + ">");
+                    SetOptions(cView_Series_Title, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cPrettyName + ">");
 
                 if (GetOptions(cView_Series_Subtitle) == null)
-                    SetOptions(cView_Series_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+                    SetOptions(cView_Series_Subtitle, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cGenre + ">");
 
                 if (GetOptions(cView_Series_Main) == null)
-                    SetOptions(cView_Series_Main, "<" + DBSeries.cOutName + "." + DBSeries.cSummary + ">");
+                    SetOptions(cView_Series_Main, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cSummary + ">");
 
                 if (GetOptions(cView_Season_ListFormat) == null)
                     SetOptions(cView_Season_ListFormat, 0); // text by default
@@ -173,13 +181,13 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Season_Col3, "");
 
                 if (GetOptions(cView_Season_Title) == null)
-                    SetOptions(cView_Season_Title, "<" + DBSeries.cOutName + "." + DBSeries.cPrettyName + "> Season <" + DBSeason.cOutName + "." + DBSeason.cIndex + ">");
+                    SetOptions(cView_Season_Title, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cPrettyName + "> Season <" + DBSeason.cOutName + "." + DBSeason.cIndex + ">");
 
                 if (GetOptions(cView_Season_Subtitle) == null)
-                    SetOptions(cView_Season_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+                    SetOptions(cView_Season_Subtitle, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cGenre + ">");
 
                 if (GetOptions(cView_Season_Main) == null)
-                    SetOptions(cView_Season_Main, "<" + DBSeries.cOutName + "." + DBSeries.cSummary + ">"); 
+                    SetOptions(cView_Season_Main, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cSummary + ">"); 
                 
                 if (GetOptions(cView_Episode_Col1) == null)
                     SetOptions(cView_Episode_Col1, "");
@@ -194,10 +202,13 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_Title, "<" + DBEpisode.cOutName + "." + DBEpisode.cSeasonIndex + ">x<" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeIndex + ">: <" + DBEpisode.cOutName + "." + DBEpisode.cEpisodeName + ">");
 
                 if (GetOptions(cView_Episode_Subtitle) == null)
-                    SetOptions(cView_Episode_Subtitle, "<" + DBSeries.cOutName + "." + DBSeries.cGenre + ">");
+                    SetOptions(cView_Episode_Subtitle, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cGenre + ">");
 
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
+
+                if (GetOptions(cSubs_Forom_BaseURL) == null)
+                    SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents/index.php");
             }
             catch (Exception ex)
             {
