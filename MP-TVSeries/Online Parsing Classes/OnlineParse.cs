@@ -191,9 +191,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // now, remove all episodes still processed = 0, the weren't find in the scan
-            SQLCondition condition = new SQLCondition();
-            condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-            DBEpisode.Clear(condition);
+            if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
+            {
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+                DBEpisode.Clear(condition);
+            }
             // and copy the HasLocalFileTemp value into the real one
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
             DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);

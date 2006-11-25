@@ -68,6 +68,7 @@ namespace WindowPlugins.GUITVSeries
                 treeView_Settings.Nodes.Add(node);
             }
 
+            splitContainer1.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
             textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cView_PluginName);
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
@@ -78,6 +79,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
 
             checkBox_AutoScanLocal.Checked = DBOption.GetOptions(DBOption.cAutoScanLocalFiles);
+            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
             numericUpDown_AutoScanLocal.Enabled = checkBox_AutoScanLocal.Checked;
             int nValue = DBOption.GetOptions(DBOption.cAutoScanLocalFilesLapse);
             numericUpDown_AutoScanLocal.Minimum = 1;
@@ -1515,6 +1517,17 @@ namespace WindowPlugins.GUITVSeries
         private void button1_Click(object sender, EventArgs e)
         {
             splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
+            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
+        }
+
+        private void splitContainerImportSettings_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cDontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
         }
     }
 
