@@ -10,6 +10,8 @@ namespace WindowPlugins.GUITVSeries
     {
         public static bool bTableUpdateDone = false;
 
+        public const String cConfig_LogCollapsed = "Config_LogShown";
+
         public const String cDBSeriesVersion = "DBSeriesVersion";
         public const String cDBSeriesLastLocalID = "DBSeriesLasLocalID";
         public const String cDBSeasonVersion = "DBSeasonVersion";
@@ -23,6 +25,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
         public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
         public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
+        public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";
 
         public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
@@ -63,6 +66,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubs_Forom_BaseURL = "Subs_Forom_BaseURL";
         public const String cSubs_Forom_ID = "Subs_Forom_ID";
 
+
         static DBOption()
         {
             try
@@ -79,6 +83,9 @@ namespace WindowPlugins.GUITVSeries
                     String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
                     DBTVSeries.Execute(sQuery);
                 }
+
+                if (GetOptions(cConfig_LogCollapsed) == null)
+                    SetOptions(cConfig_LogCollapsed, true);
 
                 if (GetOptions(cDBSeriesVersion) == null)
                     SetOptions(cDBSeriesVersion, 1);
@@ -140,6 +147,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cUpdateScanLastTime) == null)
                     SetOptions(cUpdateScanLastTime, 0);
+
+                if (GetOptions(cDontClearMissingLocalFiles) == null)
+                    SetOptions(cDontClearMissingLocalFiles, 0);
 
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
