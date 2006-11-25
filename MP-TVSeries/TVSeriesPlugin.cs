@@ -8,6 +8,7 @@ using MediaPortal.Util;
 using MediaPortal.Playlists;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace MediaPortal.GUI.Video
 {
@@ -72,7 +73,7 @@ namespace MediaPortal.GUI.Video
 
         /// <summary>
         /// If the plugin should have its own button on the main menu of Media Portal then it
-        /// should return true to this method, otherwise if it should not be on home
+        // should return true to this method, otherwise if it should not be on home
         /// it should return false
         /// </summary>
         /// <param name="strButtonText">text the button should have</param>
@@ -287,8 +288,8 @@ namespace MediaPortal.GUI.Video
                                         {
                                             switch (sFieldName)
                                             {
-                                                case DBSeries.cActors:
-                                                case DBSeries.cGenre:
+                                                case DBOnlineSeries.cActors:
+                                                case DBOnlineSeries.cGenre:
                                                     sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
                                                     break;
 
@@ -377,7 +378,7 @@ namespace MediaPortal.GUI.Video
             else
             {
                 // no image, use text, create our own
-                if (GUITextureManager.LoadFromMemory(null, "[" + series[DBSeries.cParsedName] + "]", 0, 0, 0) == 0)
+                if (GUITextureManager.LoadFromMemory(null, "[series_" + series[DBSeries.cID] + "]", 0, 0, 0) == 0)
                 {
                     Size sizeImage = new Size(758, 140);
                     Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
@@ -385,12 +386,12 @@ namespace MediaPortal.GUI.Video
                     gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 36);
-                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias; 
-                    gph.DrawString(series[DBSeries.cPrettyName], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                    gph.DrawString(series[DBOnlineSeries.cPrettyName], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     gph.Dispose();
-                    GUITextureManager.LoadFromMemory(image, "[" + series[DBSeries.cParsedName] + "]", 0, sizeImage.Width, sizeImage.Height);
+                    GUITextureManager.LoadFromMemory(image, "[series_" + series[DBSeries.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
-                return "[" + series[DBSeries.cParsedName] + "]";
+                return "[series_" + series[DBSeries.cID] + "]";
             }
         }
 
@@ -467,7 +468,15 @@ namespace MediaPortal.GUI.Video
                                 this.m_Facade.View = GUIFacadeControl.ViewMode.List;
                                 m_Image.Visible = true;
                             }
-                            foreach (DBSeries series in DBSeries.Get(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
+
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 0, SQLConditionType.NotEqual);
+
+                            List<DBSeries> seriesList = DBSeries.Get(condition);
+
+                            foreach (DBSeries series in seriesList)
                             {
                                 try
                                 {
@@ -485,18 +494,18 @@ namespace MediaPortal.GUI.Video
                                         item.Label3 = FormatField(m_sFormatSeriesCol1, series);
                                     }
                                     item.TVTag = series;
-                                    item.IsRemote = series[DBSeries.cHasLocalFiles] != 0;
+                                    item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
                                     item.IsDownloading = true;
 
                                     if (this.m_SelectedSeries != null)
                                     {
-                                        if (series[DBSeries.cParsedName] == this.m_SelectedSeries[DBSeries.cParsedName])
+                                        if (series[DBSeries.cID] == this.m_SelectedSeries[DBSeries.cID])
                                             selectedIndex = count;
                                     }
                                     else
                                     {
                                         // select the first that has a file
-                                        if (series[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                        if (series[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
                                             selectedIndex = count;
                                     }
 
@@ -551,7 +560,7 @@ namespace MediaPortal.GUI.Video
                                 catch { }
                             }
 
-                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cParsedName], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
+                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cID], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
                                 try
                                 {
@@ -580,7 +589,7 @@ namespace MediaPortal.GUI.Video
                                     else
                                     {
                                         // select the first that has a file
-                                        if (season[DBSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                        if (season[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
                                             selectedIndex = count;
                                     }
                                     this.m_Facade.Add(item);
@@ -624,7 +633,7 @@ namespace MediaPortal.GUI.Video
 
                             }
 
-                            foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cParsedName], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
+                            foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cID], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
                             {
                                 try
                                 {
@@ -1044,6 +1053,11 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
+            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
+            m_Title.Label = String.Empty;
+            m_Genre.Label = String.Empty;
+            m_Description.Label = String.Empty;
+
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
@@ -1052,7 +1066,7 @@ namespace MediaPortal.GUI.Video
                 {
                     m_Title.YPosition = nStartOffset;
                     String sTitle = FormatField(m_sFormatSeriesTitle, series);
-                    GUIControl.SetControlLabel(GetID, m_Title.GetID, sTitle);
+                    m_Title.Label = sTitle;
                     int nLines = CountCRLF(sTitle) + 1;
                     if (nLines > 4)
                         nLines = 4;
@@ -1106,6 +1120,11 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
+            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
+            m_Title.Label = String.Empty;
+            m_Genre.Label = String.Empty;
+            m_Description.Label = String.Empty;
+
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
@@ -1150,6 +1169,11 @@ namespace MediaPortal.GUI.Video
                 return;
 
             DBEpisode episode = (DBEpisode)item.TVTag;
+
+            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
+            m_Title.Label = String.Empty;
+            m_Genre.Label = String.Empty;
+            m_Description.Label = String.Empty;
 
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {

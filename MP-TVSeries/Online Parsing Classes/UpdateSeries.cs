@@ -9,7 +9,7 @@ namespace WindowPlugins.GUITVSeries
     class UpdateSeries
     {
         private long m_nServerTimeStamp = 0;
-        private List<DBSeries> listSeries = new List<DBSeries>();
+        private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
         private List<int> listIncorrectIDs = new List<int>();
 
         public long ServerTimeStamp
@@ -17,7 +17,7 @@ namespace WindowPlugins.GUITVSeries
             get { return m_nServerTimeStamp; }
         }
 
-        public List<DBSeries> Results
+        public List<DBOnlineSeries> Results
         {
             get { return listSeries; }
         }
@@ -46,20 +46,20 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else
                         {
-                            DBSeries series = new DBSeries();
+                            DBOnlineSeries series = new DBOnlineSeries();
                             foreach (XmlNode propertyNode in itemNode.ChildNodes)
                             {
                                 if (propertyNode.Name == "IncorrectID")
                                 {
                                     // alert! drop this series, the ID doesn't match anything anymore for some reason
-                                    listIncorrectIDs.Add(series[DBSeries.cID]);
+                                    listIncorrectIDs.Add(series[DBOnlineSeries.cID]);
                                     series = null;
                                     break;
                                 }
                                 else
                                 {
-                                    if (DBSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                        series[DBSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                    if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                                        series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                                     else
                                     {
                                         // we don't know that field, add it to the series table

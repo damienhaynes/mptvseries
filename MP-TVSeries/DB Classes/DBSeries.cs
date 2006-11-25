@@ -8,12 +8,10 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBSeries : DBTable
+    public class DBOnlineSeries : DBTable
     {
-        public const String cTableName = "series";
-        public const String cOutName = "Series";
+        public const String cTableName = "online_series";
 
-        public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
         public const String cPrettyName = "Pretty_Name";
         public const String cStatus = "Status";
@@ -21,13 +19,13 @@ namespace WindowPlugins.GUITVSeries
         public const String cSummary = "Summary";
         public const String cAirsDay = "AirsDay";
         public const String cAirsTime = "AirsTime";
+        public const String cActors = "Actors";
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
+        public const String cBannersDownloaded = "BannersDownloaded";
         public const String cHasLocalFiles = "HasLocalFiles";
         public const String cHasLocalFilesTemp = "HasLocalFiles_Temp";
         public const String cOnlineDataImported = "OnlineDataImported";
-        public const String cBannersDownloaded = "BannersDownloaded";
-        public const String cActors = "Actors";
         // Online data imported flag values while updating:
         // 0: the series just got an ID, the update series hasn't run on it yet
         // 1: online data is marked as "old", and needs a refresh
@@ -35,10 +33,11 @@ namespace WindowPlugins.GUITVSeries
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+        public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
 
-        static DBSeries()
+
+        static DBOnlineSeries()
         {
-            s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
             s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
             s_FieldToDisplayNameMap.Add(cPrettyName, "Pretty Name");
             s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
@@ -58,54 +57,120 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("Airs_Time", cAirsTime);
 
             // make sure the table is created on first run
-            DBSeries dummy = new DBSeries();
+            DBOnlineSeries dummy = new DBOnlineSeries();
+        }
 
-            int nCurrentDBSeriesVersion = 2;
+        public DBOnlineSeries()
+            : base(cTableName)
+        {
+            InitColumns();
+            InitValues();
+        }
+
+        public DBOnlineSeries(int nSeriesID)
+            : base(cTableName)
+        {
+            InitColumns();
+            if (!ReadPrimary(nSeriesID))
+                InitValues();
+        }
+
+        private void InitColumns()
+        {
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
+            base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
+            base.AddColumn(cStatus, new DBField(DBField.cTypeString));
+            base.AddColumn(cGenre, new DBField(DBField.cTypeString));
+            base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
+            base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
+            base.AddColumn(cSummary, new DBField(DBField.cTypeString));
+            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
+            base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
+            base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
+            base.AddColumn(cActors, new DBField(DBField.cTypeString));
+            base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
+            base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
+            base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
+
+            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            {
+                if (!s_fields.ContainsKey(pair.Key))
+                    s_fields.Add(pair.Key, pair.Value);
+            }
+        }
+
+        public override bool AddColumn(string sName, DBField field)
+        {
+            if (!s_fields.ContainsKey(sName))
+            {
+                s_fields.Add(sName, field);
+                return base.AddColumn(sName, field);
+            }
+            else
+            {
+                // we globally know about this key already, so don't call the base
+                if (!m_fields.ContainsKey(sName))
+                    m_fields.Add(sName, field);
+                return false;
+            }
+        }
+
+        public static new String Q(String sField)
+        {
+            return cTableName + "." + sField;
+        }
+
+        public static void Clear(SQLCondition conditions)
+        {
+            Clear(new DBOnlineSeries(), conditions);
+        }
+    };
+
+    public class DBSeries : DBTable
+    {
+        public const String cTableName = "local_series";
+        public const String cOutName = "Series";
+
+        public const String cParsedName = "Parsed_Name";
+        public const String cID = "ID";
+        public const String cScanIgnore = "ScanIgnore";
+        public const String cDuplicateLocalName = "DuplicateLocalName";
+
+        private DBOnlineSeries m_onlineSeries = null;
+
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+        static int s_nLastLocalID;
+
+        static DBSeries()
+        {
+            s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);
+
+            s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
+
+            int nCurrentDBSeriesVersion = 3;
             while (DBOption.GetOptions(DBOption.cDBSeriesVersion) != nCurrentDBSeriesVersion)
             // take care of the upgrade in the table
             switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
             {
                 case 1:
-                    // upgrade to version 2; do the necessary upgrades (copy Airs_DayOfWeek into cAirsDay and Airs_Time into cAirsTime)
-                    String sqlQuery = "update " + cTableName + " set " + cAirsDay + " = Airs_DayOfWeek, " + cAirsTime + " = Airs_Time";
-                    DBTVSeries.Execute(sqlQuery);
-                    // do you believe what a mess it is to DROP a column in sqlite ... ssshhh
-
-                    // we have the new column list, start the query
-                    String sCreateFieldList = String.Empty;
-                    String sFieldList = String.Empty;
-
-                    Dictionary<String, DBField> fields = dummy.m_fields;
-                    fields.Remove("Airs_DayOfWeek");
-                    fields.Remove("Airs_Time");
-                    foreach (KeyValuePair<String, DBField> pair in dummy.m_fields)
+                case 2:
+                    // upgrade to version 3; clear the series table (we use 2 other tables now)
+                    try
                     {
-                        if (sCreateFieldList != String.Empty)
-                            sCreateFieldList += ",";
-                        if (sFieldList != String.Empty)
-                            sFieldList += ",";
-                        sCreateFieldList += pair.Key + " " + pair.Value.Type + (pair.Value.Primary ? " primary key" : "");
-                        sFieldList += pair.Key;
+                        String sqlQuery = "DROP TABLE series";
+                        DBTVSeries.Execute(sqlQuery);
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                     }
-
-                    sqlQuery = "CREATE TEMPORARY TABLE t_backup(" + sCreateFieldList + ");";
-                    DBTVSeries.Execute(sqlQuery);
-                    sqlQuery = "INSERT INTO t_backup SELECT " + sFieldList + " FROM " + cTableName + ";";
-                    DBTVSeries.Execute(sqlQuery);
-                    sqlQuery = "DROP TABLE " + cTableName + ";";
-                    DBTVSeries.Execute(sqlQuery);
-                    sqlQuery = "CREATE TABLE " + cTableName + "(" + sCreateFieldList + ");";
-                    DBTVSeries.Execute(sqlQuery);
-                    sqlQuery = "INSERT INTO " + cTableName + " SELECT " + sFieldList + " FROM t_backup;";
-                    DBTVSeries.Execute(sqlQuery);
-                    sqlQuery = "DROP TABLE t_backup;";
-                    DBTVSeries.Execute(sqlQuery);
-                    DBOption.SetOptions(DBOption.cDBSeriesVersion, 2);
+                    catch {}
                     break;
 
                 default:
                     break;
             }
+
+            // make sure the table is created on first run
+            DBSeries dummy = new DBSeries();
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -123,36 +188,87 @@ namespace WindowPlugins.GUITVSeries
             InitValues();
         }
 
+        public DBSeries(bool bCreateEmptyOnline)
+            : base(cTableName)
+        {
+            InitColumns();
+            InitValues();
+            if (bCreateEmptyOnline)
+                m_onlineSeries = new DBOnlineSeries();
+        }
+
         public DBSeries(String SeriesName)
             : base(cTableName)
         {
             InitColumns();
             if (!ReadPrimary(SeriesName))
-            {
                 InitValues();
+            if (base[cID] == 0)
+            {
+                m_onlineSeries = new DBOnlineSeries(s_nLastLocalID);
+                s_nLastLocalID--;
+                DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
+                base[cID] = m_onlineSeries[DBOnlineSeries.cID];
             }
         }
 
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cParsedName, new DBField(DBField.cTypeString, true));
-            AddColumn(cID, new DBField(DBField.cTypeInt));
-            AddColumn(cPrettyName, new DBField(DBField.cTypeString));
-            AddColumn(cStatus, new DBField(DBField.cTypeString));
-            AddColumn(cGenre, new DBField(DBField.cTypeString));
-            AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
-            AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
-            AddColumn(cSummary, new DBField(DBField.cTypeString));
-            AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
-            AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
-            AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
-            AddColumn(cAirsDay, new DBField(DBField.cTypeString));
-            AddColumn(cAirsTime, new DBField(DBField.cTypeString));
-            AddColumn(cActors, new DBField(DBField.cTypeString));
+            base.AddColumn(cParsedName, new DBField(DBField.cTypeString, true));
+            base.AddColumn(cID, new DBField(DBField.cTypeInt));
+            base.AddColumn(cScanIgnore, new DBField(DBField.cTypeInt));
+            base.AddColumn(cDuplicateLocalName, new DBField(DBField.cTypeInt));
         }
 
+        public static new String Q(String sField)
+        {
+            return cTableName + "." + sField;
+        }
+
+        public override bool AddColumn(string sName, DBField field)
+        {
+            // can't add columns to 
+            if (m_onlineSeries != null)
+                return m_onlineSeries.AddColumn(sName, field);
+            else
+                return false;
+        }
+
+        public DBOnlineSeries onlineSeries
+        {
+            get { return m_onlineSeries; }
+        }
+
+        public void ChangeSeriesID(int nSeriesID)
+        {
+            m_onlineSeries = new DBOnlineSeries(nSeriesID);
+            base[cID] = nSeriesID;
+        }
+
+        public override List<String> FieldNames
+        {
+            get
+            {
+                List<String> outList = new List<String>();
+                // some ordering: I want some fields to come up first
+                foreach (KeyValuePair<string, DBField> pair in m_fields)
+                {
+                    if (outList.IndexOf(pair.Key) == -1)
+                        outList.Add(pair.Key);
+                }
+                if (m_onlineSeries != null)
+                {
+                    foreach (KeyValuePair<string, DBField> pair in m_onlineSeries.m_fields)
+                    {
+                        if (outList.IndexOf(pair.Key) == -1)
+                            outList.Add(pair.Key);
+                    }
+                }
+
+                return outList;
+            }
+        }
         // function override to search on both this & the onlineEpisode
         public override DBValue this[String fieldName]
         {
@@ -160,20 +276,49 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    case cPrettyName:
-                        DBValue retVal = base[cPrettyName];
+                    case DBOnlineSeries.cPrettyName:
+                        DBValue retVal = null;
+                        if (m_onlineSeries != null)
+                            retVal = m_onlineSeries[DBOnlineSeries.cPrettyName];
+
                         if (retVal == null || retVal == String.Empty)
                             retVal = base[cParsedName];
                         return retVal;
 
-                    default:
+                    case cParsedName:
+                    case cScanIgnore:
+                    case cDuplicateLocalName:
                         return base[fieldName];
+
+
+                    default:
+                        if (m_onlineSeries != null)
+                            return m_onlineSeries[fieldName];
+                        else
+                            return base[fieldName];
                 }
             }
 
             set
             {
-                base[fieldName] = value;
+                switch (fieldName)
+                {
+                    case cScanIgnore:
+                    case cDuplicateLocalName:
+                        base[fieldName] = value;
+                        break;
+
+                    case cID:
+                        base[fieldName] = value;
+                        if (m_onlineSeries != null)
+                            m_onlineSeries[fieldName] = value;
+                        break;
+
+                    default:
+                        if (m_onlineSeries != null)
+                            m_onlineSeries[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -181,17 +326,23 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (base[cCurrentBannerFileName] == String.Empty)
-                    return String.Empty;
+                if (m_onlineSeries != null)
+                {
+                    if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] == String.Empty)
+                        return String.Empty;
 
-                if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
-                    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
+                    if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
+                        return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
+                    else
+                        return m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
+                }
                 else
-                    return base[cCurrentBannerFileName];
+                    return String.Empty;
             }
             set
             {
-                base[cCurrentBannerFileName] = value;
+                if (m_onlineSeries != null)
+                    m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] = value;
             }
         }
 
@@ -200,33 +351,46 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 List<String> outList = new List<string>();
-                String sList = base[cBannerFileNames];
-                if (sList == String.Empty)
-                    return outList;
-
-                String[] split = sList.Split(new char[]{'|'});
-                foreach (String filename in split)
+                if (m_onlineSeries != null)
                 {
-                    if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
-                        outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
-                    else
-                        outList.Add(filename);
+                    String sList = m_onlineSeries[DBOnlineSeries.cBannerFileNames];
+                    if (sList == String.Empty)
+                        return outList;
+
+                    String[] split = sList.Split(new char[] { '|' });
+                    foreach (String filename in split)
+                    {
+                        if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
+                            outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
+                        else
+                            outList.Add(filename);
+                    }
                 }
                 return outList;
             }
             set
             {
-                String sIn = String.Empty;
-                foreach (String filename in value)
+                if (m_onlineSeries != null)
                 {
-                    if (sIn == String.Empty)
-                        sIn += filename;
-                    else
-                        sIn += "," + filename;
+                    String sIn = String.Empty;
+                    foreach (String filename in value)
+                    {
+                        if (sIn == String.Empty)
+                            sIn += filename;
+                        else
+                            sIn += "," + filename;
+                    }
+                    m_onlineSeries[DBOnlineSeries.cBannerFileNames] = sIn;
                 }
-                base[cBannerFileNames] = sIn;
-
             }
+        }
+
+        public override bool Commit()
+        {
+            if (m_onlineSeries != null)
+                m_onlineSeries.Commit();
+
+            return base.Commit();
         }
 
         public static void Clear(SQLCondition conditions)
@@ -236,41 +400,49 @@ namespace WindowPlugins.GUITVSeries
 
         public static void GlobalSet(String sKey, DBValue Value)
         {
-            GlobalSet(sKey, Value, new SQLCondition(new DBSeries()));
+            GlobalSet(sKey, Value, new SQLCondition());
         }
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
             GlobalSet(new DBSeries(), sKey, Value, condition);
+            GlobalSet(new DBOnlineSeries(), sKey, Value, condition);
         }
 
         public static void GlobalSet(String sKey1, String sKey2)
         {
-            GlobalSet(sKey1, sKey2, new SQLCondition(new DBSeries()));
+            GlobalSet(sKey1, sKey2, new SQLCondition());
         }
 
         public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
         {
             GlobalSet(new DBSeries(), sKey1, sKey2, condition);
+            GlobalSet(new DBOnlineSeries(), sKey1, sKey2, condition);
         }
 
         public static List<DBSeries> Get(bool bExistingFilesOnly)
         {
             if (bExistingFilesOnly)
             {
-                SQLCondition condition = new SQLCondition(new DBSeries());
-                condition.Add(cHasLocalFiles, 0, false);
-                return Get("select * from " + cTableName + " where " + condition + " order by " + cParsedName);
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 0, SQLConditionType.NotEqual);
+                return Get(condition);
             }
             else
             {
-                return Get("select * from " + cTableName + " order by " + cParsedName);
+                SQLWhat what = new SQLWhat(new DBOnlineSeries());
+                what.AddWhat(new DBSeries());
+                String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + " order by " + DBSeries.Q(cParsedName);
+                return Get(sqlQuery);
             }
         }
 
-        public static List<DBSeries> Get(SQLCondition condition)
+        public static List<DBSeries> Get(SQLCondition conditions)
         {
-            String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cParsedName;
+            SQLWhat what = new SQLWhat(new DBOnlineSeries());
+            what.AddWhat(new DBSeries());
+            String sqlQuery = String.Empty;
+            sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + " where " + conditions + " order by " + DBSeries.Q(cParsedName);
             return Get(sqlQuery);
         }
 
@@ -284,6 +456,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     DBSeries series = new DBSeries();
                     series.Read(ref results, index);
+                    series.m_onlineSeries = new DBOnlineSeries();
+                    series.m_onlineSeries.Read(ref results, index);
                     outList.Add(series);
                 }
             }
