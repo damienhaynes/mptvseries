@@ -925,17 +925,17 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
+                                case DBSeries.cDuplicateLocalName:
                                     // hide those, they are handled internally
                                     break;
 
                                 case DBSeries.cParsedName:
                                 case DBSeries.cID:
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key], false);
+                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;
 
-
                                 default:
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, series[key]);
+                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
                             }

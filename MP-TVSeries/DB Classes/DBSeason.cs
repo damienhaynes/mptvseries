@@ -205,7 +205,7 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition condition = new SQLCondition();
             condition.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
             if (bExistingFilesOnly)
-                condition.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.Equal);
+                condition.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
             String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cIndex;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();
