@@ -175,7 +175,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static String PrettyFieldName(String sFieldName)
         {
-            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+            if (DBOnlineSeries.s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+                return DBOnlineSeries.s_FieldToDisplayNameMap[sFieldName];
+            else if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
                 return s_FieldToDisplayNameMap[sFieldName];
             else
                 return sFieldName;
@@ -209,6 +211,10 @@ namespace WindowPlugins.GUITVSeries
                 s_nLastLocalID--;
                 DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
                 base[cID] = m_onlineSeries[DBOnlineSeries.cID];
+            }
+            else
+            {
+                m_onlineSeries = new DBOnlineSeries(base[cID]);
             }
         }
 
