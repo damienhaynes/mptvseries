@@ -371,7 +371,7 @@ namespace WindowPlugins.GUITVSeries
                 seriesNode.Expand();
                 root.Nodes.Add(seriesNode);
 
-                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false);
+                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false, true);
                 foreach (DBSeason season in seasonsList)
                 {
                     TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
@@ -460,7 +460,10 @@ namespace WindowPlugins.GUITVSeries
                     DBImportPath importPath = new DBImportPath();
                     importPath[DBImportPath.cIndex] = row.Index.ToString();
                     foreach (DataGridViewCell cell in row.Cells)
-                        importPath[cell.OwningColumn.Name] = (String)cell.Value;
+                        if (cell.ValueType.Name == "Boolean")
+                            importPath[cell.OwningColumn.Name] = (Boolean)cell.Value;
+                        else
+                            importPath[cell.OwningColumn.Name] = (String)cell.Value;
                     importPath.Commit();
                 }
             }
@@ -799,10 +802,12 @@ namespace WindowPlugins.GUITVSeries
                         DBEpisode episode = (DBEpisode)node.Tag;
                         // assume an episode is always in a season which is always in a series
                         DBSeries series = (DBSeries)node.Parent.Parent.Tag;
-
                         String filename = series.Banner;
                         if (filename != String.Empty)
                             this.pictureBox_Series.Image = Image.FromFile(filename);
+
+                        comboBox_BannerSelection.Items.Clear();
+                        comboBox_BannerSelection.Enabled = false;
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in episode.FieldNames)
@@ -854,6 +859,7 @@ namespace WindowPlugins.GUITVSeries
                             BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
+                        comboBox_BannerSelection.Enabled = true;
 
                         if (season.Banner != String.Empty)
                         {
@@ -902,6 +908,7 @@ namespace WindowPlugins.GUITVSeries
                             BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
+                        comboBox_BannerSelection.Enabled = true;
 
                         if (series.Banner != String.Empty)
                         {
@@ -1004,29 +1011,32 @@ namespace WindowPlugins.GUITVSeries
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
-            switch (nodeEdited.Name)
+            if (nodeEdited != null)
             {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)nodeEdited.Tag;
-                    series[(String)cell.Tag] = (String)cell.Value;
-                    series.Commit();
-                    if (series[DBOnlineSeries.cPrettyName] != String.Empty)
-                        nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
-                    break;
+                switch (nodeEdited.Name)
+                {
+                    case DBSeries.cTableName:
+                        DBSeries series = (DBSeries)nodeEdited.Tag;
+                        series[(String)cell.Tag] = (String)cell.Value;
+                        series.Commit();
+                        if (series[DBOnlineSeries.cPrettyName] != String.Empty)
+                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
+                        break;
 
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)nodeEdited.Tag;
-                    season[(String)cell.Tag] = (String)cell.Value;
-                    season.Commit();
-                    break;
+                    case DBSeason.cTableName:
+                        DBSeason season = (DBSeason)nodeEdited.Tag;
+                        season[(String)cell.Tag] = (String)cell.Value;
+                        season.Commit();
+                        break;
 
-                case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                    episode[(String)cell.Tag] = (String)cell.Value;
-                    episode.Commit();
-                    if (episode[DBEpisode.cEpisodeName] != String.Empty)
-                        nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
-                    break;
+                    case DBEpisode.cTableName:
+                        DBEpisode episode = (DBEpisode)nodeEdited.Tag;
+                        episode[(String)cell.Tag] = (String)cell.Value;
+                        episode.Commit();
+                        if (episode[DBEpisode.cEpisodeName] != String.Empty)
+                            nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
+                        break;
+                }
             }
         }
         #endregion
@@ -1155,84 +1165,87 @@ namespace WindowPlugins.GUITVSeries
             if (e.KeyCode == Keys.Delete)
             {
                 TreeNode nodeDeleted = treeView_Library.SelectedNode;
-                switch (nodeDeleted.Name)
+                if (nodeDeleted != null)
                 {
-                    case DBSeries.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            DBSeries series = (DBSeries)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBEpisode.Clear(condition);
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeries.Clear(condition);
-                            
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineSeries.Clear(condition);
-
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
-
-                    case DBSeason.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            DBSeason season = (DBSeason)nodeDeleted.Tag;
-
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            DBEpisode.Clear(condition);
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
-
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
-
-                    case DBEpisode.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], SQLConditionType.Equal);
-                            DBEpisode.Clear(condition);
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
-                }
-                if (treeView_Library.Nodes.Count == 0)
-                {
-                    // also clear the data pane
-                    this.detailsPropertyBindingSource.Clear();
-                    try
+                    switch (nodeDeleted.Name)
                     {
-                        if (this.pictureBox_Series.Image != null)
-                        {
-                            this.pictureBox_Series.Image.Dispose();
-                            this.pictureBox_Series.Image = null;
-                        }
+                        case DBSeries.cTableName:
+                            if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                DBSeries series = (DBSeries)nodeDeleted.Tag;
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBEpisode.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
+
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBSeason.Clear(condition);
+
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBSeries.Clear(condition);
+
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBOnlineSeries.Clear(condition);
+
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
+                            break;
+
+                        case DBSeason.cTableName:
+                            if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                DBSeason season = (DBSeason)nodeDeleted.Tag;
+
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                                condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                                DBEpisode.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
+
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
+                                DBSeason.Clear(condition);
+
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
+                            break;
+
+                        case DBEpisode.cTableName:
+                            if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBEpisode(), DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], SQLConditionType.Equal);
+                                DBEpisode.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
+                            break;
                     }
-                    catch { }
+                    if (treeView_Library.Nodes.Count == 0)
+                    {
+                        // also clear the data pane
+                        this.detailsPropertyBindingSource.Clear();
+                        try
+                        {
+                            if (this.pictureBox_Series.Image != null)
+                            {
+                                this.pictureBox_Series.Image.Dispose();
+                                this.pictureBox_Series.Image = null;
+                            }
+                        }
+                        catch { }
+                    }
                 }
             }
         }

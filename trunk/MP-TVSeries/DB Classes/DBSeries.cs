@@ -30,6 +30,8 @@ namespace WindowPlugins.GUITVSeries
         // 0: the series just got an ID, the update series hasn't run on it yet
         // 1: online data is marked as "old", and needs a refresh
         // 2: online data up to date.
+        public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
+        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -92,6 +94,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
+            base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
+            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -148,7 +152,7 @@ namespace WindowPlugins.GUITVSeries
 
             s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
 
-            int nCurrentDBSeriesVersion = 3;
+            int nCurrentDBSeriesVersion = 4;
             while (DBOption.GetOptions(DBOption.cDBSeriesVersion) != nCurrentDBSeriesVersion)
             // take care of the upgrade in the table
             switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
@@ -163,6 +167,13 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                     }
                     catch {}
+                    break;
+
+                case 3:
+                    // set all new perseries timestamps to 0
+                    DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+                    DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
+                    DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                     break;
 
                 default:
@@ -248,7 +259,10 @@ namespace WindowPlugins.GUITVSeries
 
         public void ChangeSeriesID(int nSeriesID)
         {
-            m_onlineSeries = new DBOnlineSeries(nSeriesID);
+            DBOnlineSeries newOnlineSeries = new DBOnlineSeries(nSeriesID);
+            if (m_onlineSeries[DBOnlineSeries.cHasLocalFiles])
+                newOnlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
+            m_onlineSeries = newOnlineSeries;
             base[cID] = nSeriesID;
         }
 

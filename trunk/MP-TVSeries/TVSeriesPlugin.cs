@@ -560,7 +560,7 @@ namespace MediaPortal.GUI.Video
                                 catch { }
                             }
 
-                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cID], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
+                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cID], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true))
                             {
                                 try
                                 {
