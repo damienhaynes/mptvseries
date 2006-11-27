@@ -205,7 +205,7 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (base[cSeriesID] != String.Empty && base[cSeasonIndex] != 0 && base[cEpisodeIndex] != 0)
+            if (base[cSeriesID] != String.Empty && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
                 base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
@@ -275,6 +275,13 @@ namespace WindowPlugins.GUITVSeries
                     m_fields.Add(sName, field);
                 return false;
             }
+        }
+
+        public override void InitValues()
+        {
+            base.InitValues();
+            base[cSeasonIndex] = -1;
+            base[cEpisodeIndex] = -1;
         }
 
         public DBOnlineEpisode onlineEpisode
@@ -360,7 +367,7 @@ namespace WindowPlugins.GUITVSeries
 
                 base[fieldName] = value;
 
-                if (m_onlineEpisode == null && base[cSeriesID] != String.Empty && base[cSeasonIndex] != 0 && base[cEpisodeIndex] != 0)
+                if (m_onlineEpisode == null && base[cSeriesID] != String.Empty && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
                 {
                     // we have enough data to create an online episode
                     m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);

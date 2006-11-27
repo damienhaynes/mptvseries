@@ -27,9 +27,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
         public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";
 
-        public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
-        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
 
         public const String cLocalScanLastTime = "LocalScanLastTime";
@@ -118,14 +116,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_HideUnwatchedSummary) == null)
                     SetOptions(cView_Episode_HideUnwatchedSummary, true);
 
-                if (GetOptions(cGetEpisodesTimeStamp) == null)
-                    SetOptions(cGetEpisodesTimeStamp, 0);
-
                 if (GetOptions(cUpdateSeriesTimeStamp) == null)
                     SetOptions(cUpdateSeriesTimeStamp, 0);
-
-                if (GetOptions(cUpdateBannersTimeStamp) == null)
-                    SetOptions(cUpdateBannersTimeStamp, 0);
 
                 if (GetOptions(cUpdateEpisodesTimeStamp) == null)
                     SetOptions(cUpdateEpisodesTimeStamp, 0);

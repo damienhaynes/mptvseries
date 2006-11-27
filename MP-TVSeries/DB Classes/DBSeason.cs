@@ -19,6 +19,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
         public const String cHasLocalFiles = "HasLocalFiles";
         public const String cHasLocalFilesTemp = "HasLocalFilesTemp";
+        public const String cHasEpisodes = "HasOnlineEpisodes";
+        public const String cHasEpisodesTemp = "HasOnlineEpisodesTemp";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -95,6 +97,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
             AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
             AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
+            AddColumn(cHasEpisodes, new DBField(DBField.cTypeInt));
+            AddColumn(cHasEpisodesTemp, new DBField(DBField.cTypeInt));
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -199,13 +203,15 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBSeason(), sKey1, sKey2, condition);
         }
 
-        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly)
+        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly)
         {
             // create table if it doesn't exist already
             SQLCondition condition = new SQLCondition();
             condition.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
             if (bExistingFilesOnly)
                 condition.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
+            if (bOnlineEpisodesOnly)
+                condition.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
             String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cIndex;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();

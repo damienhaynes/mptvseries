@@ -1457,7 +1457,7 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v0.5b";
+            this.Text = "MP-TV Series Configuration v0.5c";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);

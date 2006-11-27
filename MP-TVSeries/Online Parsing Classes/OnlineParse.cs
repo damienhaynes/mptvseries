@@ -140,6 +140,7 @@ namespace WindowPlugins.GUITVSeries
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
             // also clear all season & series for local files
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
+            DBSeason.GlobalSet(DBSeason.cHasEpisodesTemp, false);
             DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
             LocalParse localParser = new LocalParse();
             localParser.DoParse(false);
@@ -163,6 +164,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // season now
                     DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
+                    season[DBSeason.cHasEpisodesTemp] = 1;
                     season[DBSeason.cHasLocalFilesTemp] = 1;
                     season.Commit();
 
@@ -200,6 +202,7 @@ namespace WindowPlugins.GUITVSeries
             // and copy the HasLocalFileTemp value into the real one
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
             DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
+            DBSeason.GlobalSet(DBSeason.cHasEpisodes, DBSeason.cHasEpisodesTemp);
         }
 
         void GetSeries()
@@ -303,7 +306,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // set the ID on the current series with the one from the chosen one
                             // we need to update all depending items - seasons & episodes
-                            List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false);
+                            List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false);
                             foreach (DBSeason season in seasons)
                                 season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
@@ -321,12 +324,13 @@ namespace WindowPlugins.GUITVSeries
                             setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(setcondition);
 
-                            setcondition = new SQLCondition();
-                            setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineSeries.Clear(setcondition);
-
+                            int nSeriesID = series[DBSeries.cID];
                             series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
                             series.Commit();
+
+                            setcondition = new SQLCondition();
+                            setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
+                            DBOnlineSeries.Clear(setcondition);
 
                             // only keep one local dbseries marked as non dupe
                             setcondition = new SQLCondition();
@@ -380,7 +384,6 @@ namespace WindowPlugins.GUITVSeries
         void GetEpisodes()
         {
             long nGetEpisodesTimeStamp = 0;
-            long nReturnedGetEpisodesTimeStamp = 0;
 
             MPTVSeriesLog.Write("*********  Starting GetEpisodes  *********");
             SQLCondition condition = null;
@@ -420,7 +423,7 @@ namespace WindowPlugins.GUITVSeries
                     if (episodesList.Count > 0)
                         nGetEpisodesTimeStamp = 0;
                     else
-                        nGetEpisodesTimeStamp = DBOption.GetOptions(DBOption.cGetEpisodesTimeStamp);
+                        nGetEpisodesTimeStamp = series[DBOnlineSeries.cGetEpisodesTimeStamp];
 
                     GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
                     if (episodesParser.Results.Count > 0)
@@ -431,6 +434,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // season if not there yet
                             DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                            season[DBSeason.cHasEpisodesTemp] = true;
                             season.Commit();
 
                             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
@@ -441,8 +445,11 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
 
-                    if (nReturnedGetEpisodesTimeStamp == 0)
-                        nReturnedGetEpisodesTimeStamp = episodesParser.ServerTimeStamp;
+                    if (episodesList.Count == 0)
+                    {
+                        series[DBOnlineSeries.cGetEpisodesTimeStamp] = episodesParser.ServerTimeStamp;
+                        series.Commit();
+                    }
                 }
                 else
                 {
@@ -462,6 +469,11 @@ namespace WindowPlugins.GUITVSeries
 
                             if (episodesParser.Results.Count > 0)
                             {
+                                // season update for online data
+                                DBSeason season = new DBSeason(series[DBSeries.cID], episode[DBOnlineEpisode.cSeasonIndex]);
+                                season[DBSeason.cHasEpisodesTemp] = true;
+                                season.Commit();
+
                                 DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
                                 MPTVSeriesLog.Write("Found episodeID for " + episode[DBOnlineEpisode.cCompositeID]);
                                 episode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
@@ -486,6 +498,11 @@ namespace WindowPlugins.GUITVSeries
                                     if ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
                                         (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex])
                                     {
+                                        // season update for online data
+                                        DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                                        season[DBSeason.cHasEpisodesTemp] = true;
+                                        season.Commit();
+
                                         MPTVSeriesLog.Write(localEpisode[DBOnlineEpisode.cCompositeID] + " identified");
                                         // update data
                                         localEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
@@ -503,9 +520,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            if (m_bFullSeriesRetrieval && nReturnedGetEpisodesTimeStamp != 0)
-                // now that the retrieval is done, use the first timestamp we got back (in case episodes would have been edited while we were importing)
-                DBOption.SetOptions(DBOption.cGetEpisodesTimeStamp, nReturnedGetEpisodesTimeStamp);
+            DBSeason.GlobalSet(DBSeason.cHasEpisodes, DBSeason.cHasEpisodesTemp);
         }
 
         void UpdateSeries(bool bUpdateNewSeries)
@@ -638,12 +653,6 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             MPTVSeriesLog.Write("Looking for banners on " + seriesList.Count + " Series");
 
-            long nUpdateBannersTimeStamp = 0;
-            // in that case, don't use the lasttime of import
-            if (!bUpdateNewSeries)
-                nUpdateBannersTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateBannersTimeStamp);
-            long nReturnedBannersTimeStamp = 0;
-
             foreach (DBSeries series in seriesList)
             {
                 if (worker.CancellationPending)
@@ -657,7 +666,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                     MPTVSeriesLog.Write("Refreshing banners for " + series[DBSeries.cParsedName]);
 
-                GetBanner GetBannerParser = new GetBanner(series[DBSeries.cID], nUpdateBannersTimeStamp);
+                GetBanner GetBannerParser = new GetBanner(series[DBSeries.cID], bUpdateNewSeries?0:(long)series[DBOnlineSeries.cUpdateBannersTimeStamp]);
 
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
@@ -716,13 +725,12 @@ namespace WindowPlugins.GUITVSeries
                     season.Commit();
                 }
 
-                if (nReturnedBannersTimeStamp == 0)
-                    nReturnedBannersTimeStamp = GetBannerParser.ServerTimeStamp;
+                if (!bUpdateNewSeries)
+                {
+                    series[DBOnlineSeries.cUpdateBannersTimeStamp] = GetBannerParser.ServerTimeStamp;
+                    series.Commit();
+                }
             }
-
-            // now that the update is done, use the first timestamp we got back (in case banners would have been edited while we were importing)
-            if (!bUpdateNewSeries && nReturnedBannersTimeStamp != 0)
-                DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, nReturnedBannersTimeStamp);
         }
 
         void UpdateEpisodes(bool bUpdateNewEpisodes)
