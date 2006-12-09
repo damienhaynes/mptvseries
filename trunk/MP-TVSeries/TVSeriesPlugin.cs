@@ -471,6 +471,7 @@ namespace MediaPortal.GUI.Video
 
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                            condition.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
                             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 0, SQLConditionType.NotEqual);
 
@@ -560,7 +561,7 @@ namespace MediaPortal.GUI.Video
                                 catch { }
                             }
 
-                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cID], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true))
+                            foreach (DBSeason season in DBSeason.Get(m_SelectedSeries[DBSeries.cID], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false))
                             {
                                 try
                                 {
@@ -633,7 +634,7 @@ namespace MediaPortal.GUI.Video
 
                             }
 
-                            foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cID], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)))
+                            foreach (DBEpisode episode in DBEpisode.Get(m_SelectedSeries[DBSeries.cID], m_SelectedSeason[DBSeason.cIndex], DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), DBOption.GetOptions(DBOption.cShowHiddenItems)))
                             {
                                 try
                                 {
@@ -1053,17 +1054,13 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
-            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
-            m_Title.Label = String.Empty;
-            m_Genre.Label = String.Empty;
-            m_Description.Label = String.Empty;
-
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
                 int nBottomLimit = m_Description.YPosition + m_Description.Height;
                 if (m_Title != null)
                 {
+                    m_Title.Label = String.Empty;
                     m_Title.YPosition = nStartOffset;
                     String sTitle = FormatField(m_sFormatSeriesTitle, series);
                     m_Title.Label = sTitle;
@@ -1077,6 +1074,7 @@ namespace MediaPortal.GUI.Video
 
                 if (m_Genre != null)
                 {
+                    m_Genre.Label = String.Empty;
                     m_Genre.YPosition = nStartOffset;
                     String sLabel = FormatField(m_sFormatSeriesSubtitle, series);
                     m_Genre.Label = sLabel;
@@ -1090,6 +1088,7 @@ namespace MediaPortal.GUI.Video
 
                 if (this.m_Description != null)
                 {
+                    m_Description.Label = String.Empty;
                     m_Description.YPosition = nStartOffset;
                     m_Description.Height = nBottomLimit - nStartOffset;
                     m_Description.Label = FormatField(m_sFormatSeriesMain, series);
@@ -1097,9 +1096,12 @@ namespace MediaPortal.GUI.Video
             }
             else
             {
-                m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
-                m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, series);
-                m_Description.Label = FormatField(m_sFormatSeriesMain, series);
+                if (m_Title != null)
+                    m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
+                if (m_Genre != null)
+                    m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, series);
+                if (m_Description != null)
+                    m_Description.Label = FormatField(m_sFormatSeriesMain, series);
             }
         }
 
@@ -1120,13 +1122,9 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
-            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
-            m_Title.Label = String.Empty;
-            m_Genre.Label = String.Empty;
-            m_Description.Label = String.Empty;
-
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
+                m_Title.Label = String.Empty;
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
                 int nBottomLimit = m_Description.YPosition + m_Description.Height;
                 if (m_Title != null)
@@ -1138,6 +1136,7 @@ namespace MediaPortal.GUI.Video
 
                 if (m_Genre != null)
                 {
+                    m_Genre.Label = String.Empty;
                     m_Genre.YPosition = nStartOffset;
                     String sLabel = FormatField(m_sFormatSeasonSubtitle, season);
                     m_Genre.Label = sLabel;
@@ -1151,6 +1150,7 @@ namespace MediaPortal.GUI.Video
 
                 if (this.m_Description != null)
                 {
+                    m_Description.Label = String.Empty;
                     m_Description.YPosition = nStartOffset;
                     m_Description.Height = nBottomLimit - nStartOffset;
                     m_Description.Label = FormatField(m_sFormatSeasonMain, season);
@@ -1158,9 +1158,12 @@ namespace MediaPortal.GUI.Video
             }
             else
             {
-                m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
-                m_Genre.Label = FormatField(m_sFormatSeasonSubtitle, season);
-                m_Description.Label = FormatField(m_sFormatSeasonMain, season);
+                if (m_Title != null)
+                    m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
+                if (m_Genre != null)
+                    m_Genre.Label = FormatField(m_sFormatSeasonSubtitle, season);
+                if (m_Description != null)
+                    m_Description.Label = FormatField(m_sFormatSeasonMain, season);
             }
         }
         private void Episode_OnItemSelected(GUIListItem item)
@@ -1170,17 +1173,13 @@ namespace MediaPortal.GUI.Video
 
             DBEpisode episode = (DBEpisode)item.TVTag;
 
-            // clear all text fields so that MP calls SetText on them even when coming back from playback or when going in the plugin
-            m_Title.Label = String.Empty;
-            m_Genre.Label = String.Empty;
-            m_Description.Label = String.Empty;
-
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
                 int nBottomLimit = m_Description.YPosition + m_Description.Height;
                 if (m_Title != null)
                 {
+                    m_Title.Label = String.Empty;
                     m_Title.YPosition = nStartOffset;
                     m_Title.Label = FormatField(m_sFormatEpisodeTitle, episode);
                     nStartOffset += m_Title.Height + 5;
@@ -1188,6 +1187,7 @@ namespace MediaPortal.GUI.Video
 
                 if (m_Genre != null)
                 {
+                    m_Genre.Label = String.Empty;
                     m_Genre.YPosition = nStartOffset;
                     String sLabel = FormatField(m_sFormatEpisodeSubtitle, episode);
                     m_Genre.Label = sLabel;
@@ -1200,6 +1200,7 @@ namespace MediaPortal.GUI.Video
 
                 if (this.m_Description != null)
                 {
+                    m_Description.Label = String.Empty;
                     m_Description.YPosition = nStartOffset;
                     m_Description.Height = nBottomLimit - nStartOffset;
                     m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
@@ -1207,9 +1208,12 @@ namespace MediaPortal.GUI.Video
             }
             else
             {
-                m_Title.Label = FormatField(m_sFormatEpisodeTitle, episode);
-                m_Genre.Label = FormatField(m_sFormatEpisodeSubtitle, episode);
-                m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
+                if (m_Title != null)
+                    m_Title.Label = FormatField(m_sFormatEpisodeTitle, episode);
+                if (m_Genre != null)
+                    m_Genre.Label = FormatField(m_sFormatEpisodeSubtitle, episode);
+                if (m_Description != null)
+                    m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
             }
         }
     }

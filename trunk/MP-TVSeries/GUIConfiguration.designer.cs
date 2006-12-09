@@ -50,7 +50,11 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.checkBox_ShowHidden = new System.Windows.Forms.CheckBox();
             this.treeView_Library = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip_DetailsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -146,6 +150,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
@@ -240,6 +245,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.checkBox_ShowHidden);
             this.splitContainer2.Panel1.Controls.Add(this.treeView_Library);
             // 
             // splitContainer2.Panel2
@@ -251,19 +257,59 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.SplitterDistance = 203;
             this.splitContainer2.TabIndex = 0;
             // 
+            // checkBox_ShowHidden
+            // 
+            this.checkBox_ShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox_ShowHidden.AutoSize = true;
+            this.checkBox_ShowHidden.Location = new System.Drawing.Point(9, 459);
+            this.checkBox_ShowHidden.Name = "checkBox_ShowHidden";
+            this.checkBox_ShowHidden.Size = new System.Drawing.Size(117, 17);
+            this.checkBox_ShowHidden.TabIndex = 48;
+            this.checkBox_ShowHidden.Text = "Show Hidden items";
+            this.checkBox_ShowHidden.UseVisualStyleBackColor = true;
+            this.checkBox_ShowHidden.CheckedChanged += new System.EventHandler(this.checkBox_ShowHidden_CheckedChanged);
+            // 
             // treeView_Library
             // 
-            this.treeView_Library.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Library.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView_Library.ContextMenuStrip = this.contextMenuStrip_DetailsTree;
             this.treeView_Library.ForeColor = System.Drawing.SystemColors.WindowText;
             this.treeView_Library.FullRowSelect = true;
             this.treeView_Library.HideSelection = false;
             this.treeView_Library.Location = new System.Drawing.Point(0, 0);
             this.treeView_Library.MinimumSize = new System.Drawing.Size(100, 100);
             this.treeView_Library.Name = "treeView_Library";
-            this.treeView_Library.Size = new System.Drawing.Size(203, 481);
+            this.treeView_Library.Size = new System.Drawing.Size(203, 455);
             this.treeView_Library.TabIndex = 47;
             this.treeView_Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Library_AfterSelect);
+            this.treeView_Library.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_Library_NodeMouseClick);
             this.treeView_Library.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView_Library_KeyDown);
+            // 
+            // contextMenuStrip_DetailsTree
+            // 
+            this.contextMenuStrip_DetailsTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hideToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(117, 48);
+            this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
+            this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
+            // 
+            // hideToolStripMenuItem
+            // 
+            this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.hideToolStripMenuItem.Tag = "hide";
+            this.hideToolStripMenuItem.Text = "Hide";
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.deleteToolStripMenuItem.Tag = "delete";
+            this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // comboBox_BannerSelection
             // 
@@ -401,7 +447,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ParsingTest);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_Expressions);
-            this.splitContainerImportSettings.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerImportSettings_Panel2_Paint);
             this.splitContainerImportSettings.Size = new System.Drawing.Size(705, 439);
             this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
@@ -961,10 +1006,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_episodeFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(305, 14);
+            this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(320, 14);
             this.richTextBox_episodeFormat_Col2.Multiline = false;
             this.richTextBox_episodeFormat_Col2.Name = "richTextBox_episodeFormat_Col2";
-            this.richTextBox_episodeFormat_Col2.Size = new System.Drawing.Size(179, 20);
+            this.richTextBox_episodeFormat_Col2.Size = new System.Drawing.Size(169, 20);
             this.richTextBox_episodeFormat_Col2.TabIndex = 2;
             this.richTextBox_episodeFormat_Col2.Text = "";
             this.richTextBox_episodeFormat_Col2.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
@@ -1058,10 +1103,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_episodeFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col1.Location = new System.Drawing.Point(120, 14);
+            this.richTextBox_episodeFormat_Col1.Location = new System.Drawing.Point(150, 14);
             this.richTextBox_episodeFormat_Col1.Multiline = false;
             this.richTextBox_episodeFormat_Col1.Name = "richTextBox_episodeFormat_Col1";
-            this.richTextBox_episodeFormat_Col1.Size = new System.Drawing.Size(179, 20);
+            this.richTextBox_episodeFormat_Col1.Size = new System.Drawing.Size(169, 20);
             this.richTextBox_episodeFormat_Col1.TabIndex = 2;
             this.richTextBox_episodeFormat_Col1.Text = "";
             this.richTextBox_episodeFormat_Col1.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
@@ -1435,7 +1480,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer1.SplitterDistance = 382;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 65;
-            this.splitContainer1.DoubleClick += new System.EventHandler(this.splitContainer1_DoubleClick);
             // 
             // button1
             // 
@@ -1457,12 +1501,14 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v0.5c";
+            this.Text = "MP-TV Series Configuration v0.6";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.contextMenuStrip_DetailsTree.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
@@ -1606,5 +1652,9 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBox_DontClearMissingLocalFiles;
+        private System.Windows.Forms.CheckBox checkBox_ShowHidden;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_DetailsTree;
+        private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }

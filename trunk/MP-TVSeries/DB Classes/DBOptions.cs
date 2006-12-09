@@ -17,6 +17,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
 
+        public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
@@ -98,6 +99,9 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cDBEpisodesVersion, 1);
 
                 // update default values if not there already
+                if (GetOptions(cShowHiddenItems) == null)
+                    SetOptions(cShowHiddenItems, false);
+
                 if (GetOptions(cOnlineParseEnabled) == null)
                     SetOptions(cOnlineParseEnabled, true);
 

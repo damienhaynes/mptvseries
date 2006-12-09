@@ -361,7 +361,7 @@ namespace WindowPlugins.GUITVSeries
                 m_fields[PrimaryKey()].Value = Value;
                 SQLCondition condition = new SQLCondition();
                 condition.Add(this, PrimaryKey(), m_fields[PrimaryKey()].Value, SQLConditionType.Equal);
-                String sqlQuery = "select * from " + m_tableName + " where " + condition;
+                String sqlQuery = "select * from " + m_tableName + condition;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                 return Read(ref records, 0);
             }
@@ -480,8 +480,8 @@ namespace WindowPlugins.GUITVSeries
                         sqlQuery += "'" + Value + "'";
                         break;
                 }
-                if (conditions != "")
-                    sqlQuery += " where " + conditions;
+
+                sqlQuery += conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             }
         }
@@ -490,18 +490,14 @@ namespace WindowPlugins.GUITVSeries
         {
             if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2))
             {
-                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2;
-                if (conditions != "")
-                    sqlQuery += " where " + conditions;
+                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2 + conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             }
         }
 
         public static void Clear(DBTable obj, SQLCondition conditions)
         {
-            String sqlQuery = "delete from " + obj.m_tableName;
-            if (conditions != "")
-                sqlQuery += " where " + conditions;
+            String sqlQuery = "delete from " + obj.m_tableName + conditions;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
         }
     };
@@ -569,23 +565,14 @@ namespace WindowPlugins.GUITVSeries
         {
         }
 
-        public static SQLCondition operator +(SQLCondition input, String param)
-        {
-            SQLCondition returned = new SQLCondition();
-            if (input.m_sConditions != String.Empty)
-                returned.m_sConditions = input.m_sConditions + " and " + param;
-            else
-                returned.m_sConditions = param;
-
-            return returned;
-        }
-
         public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
         {
             if (table.m_fields.ContainsKey(sField))
             {
                 if (m_sConditions != String.Empty)
                     m_sConditions += " and ";
+                else
+                    m_sConditions += " where ";
 
                 String sValue = String.Empty;
                 switch (table.m_fields[sField].Type)

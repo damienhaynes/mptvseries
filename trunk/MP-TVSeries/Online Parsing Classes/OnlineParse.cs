@@ -140,7 +140,6 @@ namespace WindowPlugins.GUITVSeries
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
             // also clear all season & series for local files
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
-            DBSeason.GlobalSet(DBSeason.cHasEpisodesTemp, false);
             DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
             LocalParse localParser = new LocalParse();
             localParser.DoParse(false);
@@ -164,7 +163,6 @@ namespace WindowPlugins.GUITVSeries
 
                     // season now
                     DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
-                    season[DBSeason.cHasEpisodesTemp] = 1;
                     season[DBSeason.cHasLocalFilesTemp] = 1;
                     season.Commit();
 
@@ -202,7 +200,6 @@ namespace WindowPlugins.GUITVSeries
             // and copy the HasLocalFileTemp value into the real one
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
             DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
-            DBSeason.GlobalSet(DBSeason.cHasEpisodes, DBSeason.cHasEpisodesTemp);
         }
 
         void GetSeries()
@@ -226,6 +223,7 @@ namespace WindowPlugins.GUITVSeries
             // all series that don't have an onlineID ( < 0) and not marked as ignored
             condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.LessThan);
             condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition);
             MPTVSeriesLog.Write("Found " + seriesList.Count + " Series without an online ID, looking for them");
@@ -306,7 +304,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // set the ID on the current series with the one from the chosen one
                             // we need to update all depending items - seasons & episodes
-                            List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false);
+                            List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false, false);
                             foreach (DBSeason season in seasons)
                                 season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
@@ -434,7 +432,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // season if not there yet
                             DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
-                            season[DBSeason.cHasEpisodesTemp] = true;
+                            season[DBSeason.cHasEpisodes] = true;
                             season.Commit();
 
                             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
@@ -471,7 +469,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // season update for online data
                                 DBSeason season = new DBSeason(series[DBSeries.cID], episode[DBOnlineEpisode.cSeasonIndex]);
-                                season[DBSeason.cHasEpisodesTemp] = true;
+                                season[DBSeason.cHasEpisodes] = true;
                                 season.Commit();
 
                                 DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
@@ -500,7 +498,7 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         // season update for online data
                                         DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
-                                        season[DBSeason.cHasEpisodesTemp] = true;
+                                        season[DBSeason.cHasEpisodes] = true;
                                         season.Commit();
 
                                         MPTVSeriesLog.Write(localEpisode[DBOnlineEpisode.cCompositeID] + " identified");
@@ -519,8 +517,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-
-            DBSeason.GlobalSet(DBSeason.cHasEpisodes, DBSeason.cHasEpisodesTemp);
         }
 
         void UpdateSeries(bool bUpdateNewSeries)
