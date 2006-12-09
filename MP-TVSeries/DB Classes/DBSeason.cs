@@ -21,18 +21,23 @@ namespace WindowPlugins.GUITVSeries
         public const String cHasLocalFilesTemp = "HasLocalFilesTemp";
         public const String cHasEpisodes = "HasOnlineEpisodes";
         public const String cHasEpisodesTemp = "HasOnlineEpisodesTemp";
+        public const String cHidden = "Hidden";
+
+        public const String cForomSubtitleRoot = "ForomSubtitleRoot";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
         static DBSeason()
         {
+            DBSeason dummy = new DBSeason();
+
             s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
             s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
             s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
             s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
             s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
 
-            int nCurrentDBSeasonVersion = 2;
+            int nCurrentDBSeasonVersion = 3;
             while (DBOption.GetOptions(DBOption.cDBSeasonVersion) != nCurrentDBSeasonVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBSeasonVersion))
@@ -48,10 +53,15 @@ namespace WindowPlugins.GUITVSeries
                         catch {}
                         break;
 
+                    case 2:
+                        DBSeason.GlobalSet(DBSeason.cHidden, 0, new SQLCondition());
+                        DBSeries.GlobalSet(DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
+                        break;
+
                     default:
                         break;
                 }
-            DBSeason dummy = new DBSeason();
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -99,6 +109,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
             AddColumn(cHasEpisodes, new DBField(DBField.cTypeInt));
             AddColumn(cHasEpisodesTemp, new DBField(DBField.cTypeInt));
+            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -203,7 +214,7 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBSeason(), sKey1, sKey2, condition);
         }
 
-        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly)
+        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly, Boolean bIncludeHidden)
         {
             // create table if it doesn't exist already
             SQLCondition condition = new SQLCondition();
@@ -212,7 +223,10 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
             if (bOnlineEpisodesOnly)
                 condition.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
-            String sqlQuery = "select * from " + cTableName + " where " + condition + " order by " + cIndex;
+            if (!bIncludeHidden)
+                condition.Add(new DBSeason(), cHidden, 0, SQLConditionType.Equal);
+
+            String sqlQuery = "select * from " + cTableName + condition + " order by " + cIndex;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();
             if (results.Rows.Count > 0)

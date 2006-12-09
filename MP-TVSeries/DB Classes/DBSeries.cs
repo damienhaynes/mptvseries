@@ -140,6 +140,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cID = "ID";
         public const String cScanIgnore = "ScanIgnore";
         public const String cDuplicateLocalName = "DuplicateLocalName";
+        public const String cHidden = "Hidden";
 
         private DBOnlineSeries m_onlineSeries = null;
 
@@ -148,40 +149,44 @@ namespace WindowPlugins.GUITVSeries
 
         static DBSeries()
         {
+            // make sure the table is created on first run (and columns are added before we call SET)
+            DBSeries dummy = new DBSeries();
+
             s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);
 
             s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
 
-            int nCurrentDBSeriesVersion = 4;
+            int nCurrentDBSeriesVersion = 5;
             while (DBOption.GetOptions(DBOption.cDBSeriesVersion) != nCurrentDBSeriesVersion)
-            // take care of the upgrade in the table
-            switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
-            {
-                case 1:
-                case 2:
-                    // upgrade to version 3; clear the series table (we use 2 other tables now)
-                    try
-                    {
-                        String sqlQuery = "DROP TABLE series";
-                        DBTVSeries.Execute(sqlQuery);
+                // take care of the upgrade in the table
+                switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
+                {
+                    case 1:
+                    case 2:
+                        // upgrade to version 3; clear the series table (we use 2 other tables now)
+                        try
+                        {
+                            String sqlQuery = "DROP TABLE series";
+                            DBTVSeries.Execute(sqlQuery);
+                        }
+                        catch {}
+                        break;
+
+                    case 3:
+                        // set all new perseries timestamps to 0
+                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
-                    }
-                    catch {}
-                    break;
+                        break;
 
-                case 3:
-                    // set all new perseries timestamps to 0
-                    DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
-                    DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
-                    DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
-                    break;
+                    case 4:
+                        DBSeries.GlobalSet(new DBSeries(), DBSeries.cHidden, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        break;
 
-                default:
-                    break;
-            }
-
-            // make sure the table is created on first run
-            DBSeries dummy = new DBSeries();
+                    default:
+                        break;
+                }
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -236,6 +241,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cID, new DBField(DBField.cTypeInt));
             base.AddColumn(cScanIgnore, new DBField(DBField.cTypeInt));
             base.AddColumn(cDuplicateLocalName, new DBField(DBField.cTypeInt));
+            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
         }
 
         public static new String Q(String sField)
@@ -308,6 +314,7 @@ namespace WindowPlugins.GUITVSeries
                     case cParsedName:
                     case cScanIgnore:
                     case cDuplicateLocalName:
+                    case cHidden:
                         return base[fieldName];
 
 
@@ -325,6 +332,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case cScanIgnore:
                     case cDuplicateLocalName:
+                    case cHidden:
                         base[fieldName] = value;
                         break;
 
@@ -440,29 +448,11 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBOnlineSeries(), sKey1, sKey2, condition);
         }
 
-        public static List<DBSeries> Get(bool bExistingFilesOnly)
-        {
-            if (bExistingFilesOnly)
-            {
-                SQLCondition condition = new SQLCondition();
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 0, SQLConditionType.NotEqual);
-                return Get(condition);
-            }
-            else
-            {
-                SQLWhat what = new SQLWhat(new DBOnlineSeries());
-                what.AddWhat(new DBSeries());
-                String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + " order by " + DBSeries.Q(cParsedName);
-                return Get(sqlQuery);
-            }
-        }
-
         public static List<DBSeries> Get(SQLCondition conditions)
         {
             SQLWhat what = new SQLWhat(new DBOnlineSeries());
             what.AddWhat(new DBSeries());
-            String sqlQuery = String.Empty;
-            sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + " where " + conditions + " order by " + DBSeries.Q(cParsedName);
+            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + conditions + " order by " + DBSeries.Q(cParsedName);
             return Get(sqlQuery);
         }
 

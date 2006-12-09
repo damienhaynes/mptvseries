@@ -23,6 +23,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cGuestStars = "GuestStars";
         public const String cDirector = "Director";
         public const String cWriter = "Writer";
+        public const String cHidden = "Hidden";
+        public const String cLastUpdated = "lastupdated";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
@@ -75,6 +77,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cGuestStars, new DBField(DBField.cTypeString));
             base.AddColumn(cDirector, new DBField(DBField.cTypeString));
             base.AddColumn(cWriter, new DBField(DBField.cTypeString));
+            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
+            base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -133,6 +137,9 @@ namespace WindowPlugins.GUITVSeries
 
         static DBEpisode()
         {
+            // make sure the table is created on first run
+            DBEpisode dummy = new DBEpisode();
+
             s_FieldToDisplayNameMap.Add(cFilename, "Local FileName");
             s_FieldToDisplayNameMap.Add(cCompositeID, "Composite Episode ID");
             s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
@@ -149,7 +156,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("id", DBOnlineEpisode.cID);
             s_OnlineToFieldMap.Add("Overview", DBOnlineEpisode.cEpisodeSummary);
 
-            int nCurrentDBEpisodeVersion = 2;
+            int nCurrentDBEpisodeVersion = 3;
             while (DBOption.GetOptions(DBOption.cDBEpisodesVersion) != nCurrentDBEpisodeVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBEpisodesVersion))
@@ -167,12 +174,14 @@ namespace WindowPlugins.GUITVSeries
                         catch { }
                         break;
 
+                    case 2:
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        break;
+
                     default:
                         break;
                 }
-
-            // make sure the table is created on first run
-            DBSeries dummy = new DBSeries();
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -402,7 +411,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, Boolean bExistingFilesOnly)
+        public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
             SQLCondition conditions = null;
             if (bExistingFilesOnly)
@@ -410,6 +419,9 @@ namespace WindowPlugins.GUITVSeries
                 conditions = new SQLCondition();
                 conditions.Add(new DBEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
                 conditions.Add(new DBEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
+                if (!bIncludeHidden)
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+
                 return Get(conditions, false);
             }
             else
@@ -417,6 +429,8 @@ namespace WindowPlugins.GUITVSeries
                 conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
                 conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
+                if (!bIncludeHidden)
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
                 return Get(conditions, true);
             }
         }
@@ -431,13 +445,13 @@ namespace WindowPlugins.GUITVSeries
 //                what.Add(DBSeries.Q(DBSeries.cID));
                 // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
 
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " where " + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
             }
             else
             {
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + " where " + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " order by " + Q(cEpisodeIndex);
+                sqlQuery = "select " + what + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " order by " + Q(cEpisodeIndex);
 
             }
 
