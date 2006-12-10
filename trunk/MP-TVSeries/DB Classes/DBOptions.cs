@@ -87,16 +87,16 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cConfig_LogCollapsed, true);
 
                 if (GetOptions(cDBSeriesVersion) == null)
-                    SetOptions(cDBSeriesVersion, 1);
+                    SetOptions(cDBSeriesVersion, DBSeries.cDBVersion);
 
                 if (GetOptions(cDBSeriesLastLocalID) == null)
                     SetOptions(cDBSeriesLastLocalID, -1);
 
                 if (GetOptions(cDBSeasonVersion) == null)
-                    SetOptions(cDBSeasonVersion, 1);
+                    SetOptions(cDBSeasonVersion, DBSeason.cDBVersion);
 
                 if (GetOptions(cDBEpisodesVersion) == null)
-                    SetOptions(cDBEpisodesVersion, 1);
+                    SetOptions(cDBEpisodesVersion, DBEpisode.cDBVersion);
 
                 // update default values if not there already
                 if (GetOptions(cShowHiddenItems) == null)

@@ -141,7 +141,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    m_ListLog.Items.Add(entry);
+                    m_ListLog.Items.Add(DateTime.Now + " - " + entry);
                     int nTopIndex = m_ListLog.Items.Count - m_ListLog.Height / m_ListLog.ItemHeight;
                     if (nTopIndex < 0)
                         nTopIndex = 0;
