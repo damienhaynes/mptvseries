@@ -1022,7 +1022,10 @@ namespace MediaPortal.GUI.Video
             do
             {
                 nCount++;
-                nNext = sIn.IndexOf((char)10, nNext+1);
+                if (nNext < sIn.Length)
+                    nNext = sIn.IndexOf((char)10, nNext + 1);
+                else
+                    nNext = -1;
             }
             while (nNext != -1);
             return nCount;

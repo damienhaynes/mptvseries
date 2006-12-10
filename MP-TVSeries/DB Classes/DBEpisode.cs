@@ -118,6 +118,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
+        public const int cDBVersion = 3;
 
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
@@ -156,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("id", DBOnlineEpisode.cID);
             s_OnlineToFieldMap.Add("Overview", DBOnlineEpisode.cEpisodeSummary);
 
-            int nCurrentDBEpisodeVersion = 3;
+            int nCurrentDBEpisodeVersion = cDBVersion;
             while (DBOption.GetOptions(DBOption.cDBEpisodesVersion) != nCurrentDBEpisodeVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBEpisodesVersion))

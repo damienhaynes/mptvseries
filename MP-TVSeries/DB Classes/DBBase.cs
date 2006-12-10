@@ -11,7 +11,7 @@ namespace WindowPlugins.GUITVSeries
 {
     public class DBValue
     {
-        private String value;
+        private String value = String.Empty;
 
         public override String ToString()
         {
@@ -30,7 +30,10 @@ namespace WindowPlugins.GUITVSeries
 
         public DBValue(String value)
         {
-            this.value = value;
+            if (value != null)
+                this.value = value;
+            else
+                this.value = String.Empty;
         }
         public DBValue(Boolean value)
         {

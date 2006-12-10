@@ -11,6 +11,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "season";
         public const String cOutName = "Season";
+        public const int cDBVersion = 3;
 
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesID = "SeriesID";
@@ -37,7 +38,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
             s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
 
-            int nCurrentDBSeasonVersion = 3;
+            int nCurrentDBSeasonVersion = cDBVersion;
             while (DBOption.GetOptions(DBOption.cDBSeasonVersion) != nCurrentDBSeasonVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBSeasonVersion))

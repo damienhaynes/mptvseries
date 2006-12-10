@@ -135,6 +135,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
+        public const int cDBVersion = 5;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -156,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
 
             s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
 
-            int nCurrentDBSeriesVersion = 5;
+            int nCurrentDBSeriesVersion = cDBVersion;
             while (DBOption.GetOptions(DBOption.cDBSeriesVersion) != nCurrentDBSeriesVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
@@ -168,6 +169,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             String sqlQuery = "DROP TABLE series";
                             DBTVSeries.Execute(sqlQuery);
+                            DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                         }
                         catch {}
                         break;

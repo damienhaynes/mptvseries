@@ -278,7 +278,8 @@ namespace WindowPlugins.GUITVSeries
 
                                 case DialogResult.Ignore:
                                     UserChosenSeries = null;
-                                    series[DBSeries.cID] = 0; // ID 0 means it will be skipped in the future
+                                    series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
+                                    series[DBSeries.cHidden] = true;
                                     series.Commit();
                                     bDone = true;
                                     break;
@@ -366,6 +367,7 @@ namespace WindowPlugins.GUITVSeries
 
                             case DialogResult.Ignore:
                                 series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
+                                series[DBSeries.cHidden] = true;
                                 series.Commit();
                                 bDone = true;
                                 break;
