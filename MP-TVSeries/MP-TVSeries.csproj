@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\mediaportal\xbmc\bin\Debug\plugins\windows\Dialogs.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MediaPortal\xbmc\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -48,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB Classes\DBReplacements.cs" />
+    <Compile Include="DB Classes\DBTorrent.cs" />
+    <Compile Include="feedback.cs" />
     <Compile Include="GUIConfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,13 +89,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Online Parsing Classes\ZsoriParser.cs" />
-    <Compile Include="Online Parsing Classes\SelectSeries.cs">
+    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
+    <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
+    <Compile Include="ChooseFromSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Online Parsing Classes\SelectSeries.Designer.cs">
-      <DependentUpon>SelectSeries.cs</DependentUpon>
+    <Compile Include="ChooseFromSelection.Designer.cs">
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
+    <Compile Include="Torrent\Torrent.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
   </ItemGroup>
@@ -103,9 +111,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Online Parsing Classes\SelectSeries.resx">
+    <EmbeddedResource Include="ChooseFromSelection.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>SelectSeries.cs</DependentUpon>
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

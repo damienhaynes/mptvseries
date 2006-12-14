@@ -16,7 +16,7 @@ using System.Diagnostics;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public partial class ConfigurationForm : Form
+    public partial class ConfigurationForm : Form, Feedback.Interface
     {
         private List<Panel> m_paneList = new List<Panel>();
         private TreeNode nodeEdited = null;
@@ -27,13 +27,13 @@ namespace WindowPlugins.GUITVSeries
         private DBSeason m_SeasonReference = new DBSeason();
         private DBEpisode m_EpisodeReference = new DBEpisode(true);
 
+        private DBTorrentSearch m_currentTorrentSearch = null;
+
         public ConfigurationForm()
         {
 #if DEBUG
             //    Debugger.Launch();
 #endif
-
-
             InitializeComponent();
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox1.SelectedIndex = 0;
 
             // temp: remove the subtitle tab for now, not ready for prime time (if it ever is :) )
-            tabControl_Details.Controls.Remove(tabpage_Subtitles);
+//            tabControl_Details.Controls.Remove(tabpage_Subtitles);
 
             m_paneList.Add(panel_ImportPathes);
             m_paneList.Add(panel_Expressions);
@@ -157,6 +157,25 @@ namespace WindowPlugins.GUITVSeries
 
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
+
+            LoadTorrentSearches();
+        }
+
+        private void LoadTorrentSearches()
+        {
+            textBox_uTorrentPath.Text = DBOption.GetOptions(DBOption.cUTorrentPath);
+
+            List<DBTorrentSearch> torrentSearchList = DBTorrentSearch.Get();
+            foreach (DBTorrentSearch item in torrentSearchList)
+            {
+                comboBox_TorrentPreset.Items.Add(item);
+                if (item[DBTorrentSearch.cID] == DBOption.GetOptions(DBOption.cTorrentSearch))
+                    m_currentTorrentSearch = item;
+            }
+            if (m_currentTorrentSearch != null)
+                comboBox_TorrentPreset.SelectedItem = m_currentTorrentSearch;
+            else
+                comboBox_TorrentPreset.SelectedIndex = 0;
         }
 
         private void LoadImportPathes()
@@ -744,6 +763,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+
         private void Parsing_Start()
         {
             if (m_parser != null)
@@ -755,7 +775,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 button_Start.Text = "Abort";
                 m_timingStart = DateTime.Now;
-                m_parser = new OnlineParsing();
+                m_parser = new OnlineParsing(this);
                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
                 m_parser.Start(true, true);
@@ -1523,7 +1543,6 @@ namespace WindowPlugins.GUITVSeries
                 subMenuItem.DropDown = subMenu;
                 List<String> fieldList = m_EpisodeReference.FieldNames;
                 fieldList.Remove(DBEpisode.cImportProcessed);
-                fieldList.Remove(DBEpisode.cAvailableSubtitles);
                 fieldList.Remove(DBOnlineEpisode.cOnlineDataImported);
                 fieldList.Remove(DBOnlineEpisode.cHidden);
                 fieldList.Remove(DBOnlineEpisode.cLastUpdated);
@@ -1606,14 +1625,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSubs_Forom_BaseURL, textBox_foromBaseURL.Text);
         }
 
-        private void button_SubsTest_Click(object sender, EventArgs e)
-        {
-            Subtitles.Forom forom = new Subtitles.Forom();
-            DBSeries series = new DBSeries("the office");
-            DBEpisode episode = DBEpisode.Get(series[DBSeries.cID], 1, false, false)[0];
-            forom.GetSubs(episode);
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
@@ -1643,7 +1654,92 @@ namespace WindowPlugins.GUITVSeries
                 case "delete":
                     DeleteNode(clickedNode);
                     break;
+
+                case "subtitle":
+                    GetSubtitles(clickedNode);
+                    break;
+
+                case "torrent":
+                    TorrentFile(clickedNode);
+                    break;
             }
+        }
+
+        public void TorrentFile(TreeNode node)
+        {
+            switch (node.Name)
+            {
+                case DBSeries.cTableName:
+                    DBSeries series = (DBSeries)node.Tag;
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = (DBSeason)node.Tag;
+                    break;
+
+                case DBEpisode.cTableName:
+                    DBEpisode episode = (DBEpisode)node.Tag;
+                    Torrent.TorrentLoad torrentLoad = new Torrent.TorrentLoad(this);
+                    torrentLoad.TorrentLoadCompleted += new WindowPlugins.GUITVSeries.Torrent.TorrentLoad.TorrentLoadCompletedHandler(torrentLoad_TorrentLoadCompleted);
+                    torrentLoad.Search(episode);
+                    break;
+            }
+        }
+
+        void torrentLoad_TorrentLoadCompleted(bool bOK)
+        {
+            
+        }
+
+        public Feedback.ReturnCode ChooseFromSelection(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
+        {
+            ChooseFromSelectionDialog userSelection = new ChooseFromSelectionDialog(descriptor);
+            DialogResult result = userSelection.ShowDialog();
+            selected = userSelection.SelectedItem;
+            switch (result)
+            {
+                case DialogResult.OK:
+                    return Feedback.ReturnCode.OK;
+
+
+                case DialogResult.Ignore:
+                    return Feedback.ReturnCode.Ignore;
+
+                case DialogResult.Cancel:
+                default:
+                    return Feedback.ReturnCode.Cancel;
+            }
+        }
+
+        public bool NoneFound()
+        {
+            MessageBox.Show("No subtitles were found for this file", "error");
+            return true;
+        }
+        
+        private void GetSubtitles(TreeNode node)
+        {
+            switch (node.Name)
+            {
+                case DBSeries.cTableName:
+                    DBSeries series = (DBSeries)node.Tag;
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = (DBSeason)node.Tag;
+                    break;
+
+                case DBEpisode.cTableName:
+                    DBEpisode episode = (DBEpisode)node.Tag;
+                    Subtitles.Forom forom = new Subtitles.Forom(this);
+                    forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                    forom.GetSubs(episode);
+                    break;
+            }
+        }
+
+        void forom_SubtitleRetrievalCompleted(bool bFound)
+        {
         }
 
         private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
@@ -1655,16 +1751,19 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeries.cTableName:
                     DBSeries series = (DBSeries)node.Tag;
                     bHidden = series[DBSeries.cHidden];
+                    contextMenuStrip_DetailsTree.Items[2].Enabled = false;
                     break;
 
                 case DBSeason.cTableName:
                     DBSeason season = (DBSeason)node.Tag;
                     bHidden = season[DBSeason.cHidden];
+                    contextMenuStrip_DetailsTree.Items[2].Enabled = false;
                     break;
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
+                    contextMenuStrip_DetailsTree.Items[2].Enabled = true;
                     break;
             }
             if (bHidden)
@@ -1678,6 +1777,121 @@ namespace WindowPlugins.GUITVSeries
             if (e.Button == MouseButtons.Right)
                 contextMenuStrip_DetailsTree.Tag = e.Node;
         }
+
+        private void textBox_uTorrentPath_TextChanged(object sender, EventArgs e)
+        {
+            String sPath = textBox_uTorrentPath.Text;
+            if (System.IO.File.Exists(sPath))
+                textBox_uTorrentPath.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            else
+                textBox_uTorrentPath.BackColor = System.Drawing.Color.Tomato;
+            DBOption.SetOptions(DBOption.cUTorrentPath, sPath);
+        }
+
+        private void button_uTorrentBrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = DBOption.GetOptions(DBOption.cUTorrentPath);
+            openFileDialog.Filter = "Executable files (*.exe)|";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                DBOption.SetOptions(DBOption.cUTorrentPath, openFileDialog.FileName);
+                textBox_uTorrentPath.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void comboBox_TorrentPreset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_currentTorrentSearch = comboBox_TorrentPreset.SelectedItem as DBTorrentSearch;
+            if (m_currentTorrentSearch != null)
+            {
+                textBox_TorrentSearchUrl.Text = m_currentTorrentSearch[DBTorrentSearch.cSearchUrl];
+                textBox_TorrentSearchRegex.Text = m_currentTorrentSearch[DBTorrentSearch.cSearchRegex];
+                textBox_TorrentDetailsUrl.Text = m_currentTorrentSearch[DBTorrentSearch.cDetailsUrl];
+                textBox_TorrentDetailsRegex.Text = m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex];
+                DBOption.SetOptions(DBOption.cTorrentSearch, m_currentTorrentSearch[DBTorrentSearch.cID]);
+            }
+            else
+            {
+                textBox_TorrentSearchUrl.Text = String.Empty;
+                textBox_TorrentSearchRegex.Text = String.Empty;
+                textBox_TorrentDetailsUrl.Text = String.Empty;
+                textBox_TorrentDetailsRegex.Text = String.Empty;
+            }
+        }
+
+        private void comboBox_TorrentPreset_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    {
+                        // check if this string exists in the list
+                        object selObj = null;
+                        foreach (object obj in comboBox_TorrentPreset.Items)
+                            if (obj.ToString() == comboBox_TorrentPreset.Text)
+                            {
+                                selObj = obj;
+                                break;
+                            }
+
+                        if (selObj == null)
+                        {
+                            // create a new item
+                            DBTorrentSearch newSearch = new DBTorrentSearch(comboBox_TorrentPreset.Text);
+                            newSearch.Commit();
+                            comboBox_TorrentPreset.Items.Add(newSearch);
+                        }
+
+                        // select item
+                        comboBox_TorrentPreset.SelectedItem = selObj;
+                    }
+                    break;
+
+                case Keys.Delete:
+                    // delete the selection
+                    if (comboBox_TorrentPreset.DroppedDown)
+                    {
+                        // delete the selected item
+                        if (MessageBox.Show("Really delete " + comboBox_TorrentPreset.SelectedItem + " ?", "Confirm") == DialogResult.OK)
+                        {
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBTorrentSearch(), DBTorrentSearch.cID, comboBox_TorrentPreset.SelectedItem.ToString(), SQLConditionType.Equal);
+                            DBTorrentSearch.Clear(condition);
+                            comboBox_TorrentPreset.Items.Remove(comboBox_TorrentPreset.SelectedItem);
+
+                            if (comboBox_TorrentPreset.Items.Count > 0)
+                                comboBox_TorrentPreset.SelectedIndex = 0;
+                        }
+                    }
+                    break;
+            }
+
+        }
+
+        private void textBox_TorrentUrl_TextChanged(object sender, EventArgs e)
+        {
+            m_currentTorrentSearch[DBTorrentSearch.cSearchUrl] = textBox_TorrentSearchUrl.Text;
+            m_currentTorrentSearch.Commit();
+        }
+
+        private void textBox_TorrentRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentTorrentSearch[DBTorrentSearch.cSearchRegex] = textBox_TorrentSearchRegex.Text;
+            m_currentTorrentSearch.Commit();
+        }
+
+        private void textBox_TorrentDetailsUrl_TextChanged(object sender, EventArgs e)
+        {
+            m_currentTorrentSearch[DBTorrentSearch.cDetailsUrl] = textBox_TorrentDetailsUrl.Text;
+            m_currentTorrentSearch.Commit();
+        }
+
+        private void textBox_TorrentDetailsRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex] = textBox_TorrentDetailsRegex.Text;
+            m_currentTorrentSearch.Commit();
+        }
+
     }
 
     public class BannerComboItem

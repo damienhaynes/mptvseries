@@ -289,7 +289,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_fields.ContainsKey(fieldName))
                     return m_fields[fieldName].Value;
                 else
-                    return null;
+                    return String.Empty;
             }
             set
             {

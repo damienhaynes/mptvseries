@@ -16,6 +16,7 @@ namespace WindowPlugins.GUITVSeries
         bool m_bUpdateScan = true;
         bool m_bFullSeriesRetrieval = false;
         bool m_bReparseNeeded = false;
+        Feedback.Interface m_feedback = null;
 
         public delegate void OnlineParsingProgressHandler(int nProgress);
         public delegate void OnlineParsingCompletedHandler(bool bDataUpdated);
@@ -26,8 +27,9 @@ namespace WindowPlugins.GUITVSeries
         public event OnlineParsingProgressHandler OnlineParsingProgress;
         public event OnlineParsingCompletedHandler OnlineParsingCompleted;
 
-        public OnlineParsing()
+        public OnlineParsing(Feedback.Interface feedback)
         {
+            m_feedback = feedback;
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
@@ -74,7 +76,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************       Parsing Starting      ***************************");
             MPTVSeriesLog.Write("***************************************************************************");
@@ -174,9 +176,17 @@ namespace WindowPlugins.GUITVSeries
                         m_bDataUpdated = true;
                         bNewFile = true;
                     }
+
                     episode[DBEpisode.cImportProcessed] = 1;
                     episode[DBEpisode.cSeriesID] = series[DBSeries.cID];
-
+                    // check if a subtitle is present alongside the file
+                    String sDirectory = System.IO.Path.GetDirectoryName(progress.full_filename);
+                    String sFileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(progress.full_filename);
+                    if (System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".srt") || System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".sub"))
+                        episode[DBEpisode.cAvailableSubtitles] = true;
+                    else
+                        episode[DBEpisode.cAvailableSubtitles] = false;
+                    
                     foreach (KeyValuePair<string, string> match in progress.parser.Matches)
                     {
                         if (match.Key != DBSeries.cParsedName)
@@ -242,139 +252,128 @@ namespace WindowPlugins.GUITVSeries
                 {
                     GetSeries GetSeriesParser = new GetSeries(sSeriesNameToSearch);
 
-                    if (GetSeriesParser.Results.Count > 0)
+                    MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + sSeriesNameToSearch);
+                    // find out if our name is found in multiple results
+                    int SubStringCount = 0;
+                    int ExactMatchCount = 0;
+                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
                     {
-                        MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + sSeriesNameToSearch);
-                        // find out if our name is found in multiple results
-                        int SubStringCount = 0;
-                        int ExactMatchCount = 0;
-                        foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
-                        {
-                            if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().IndexOf(sSeriesNameToSearch.ToLower()) != -1)
-                                SubStringCount++;
-                            if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower() == sSeriesNameToSearch.ToLower())
-                                ExactMatchCount++;
-                        }
-
-                        DBOnlineSeries UserChosenSeries = GetSeriesParser.Results[0];
-
-                        SelectSeries userSelection = null;
-                        if (ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
-                        {
-                            // 
-                            // User has three choices:
-                            // 1) Pick a series from the list
-                            // 2) Simply skip
-                            // 3) Skip and never ask for this series again
-                            userSelection = new SelectSeries(sSeriesNameToSearch, true);
-                            userSelection.addSeriesToSelection(GetSeriesParser.Results);
-                            DialogResult result = userSelection.ShowDialog();
-                            switch (result)
-                            {
-                                case DialogResult.Cancel:
-                                    UserChosenSeries = null;
-                                    bDone = true;
-                                    break;
-
-                                case DialogResult.Ignore:
-                                    UserChosenSeries = null;
-                                    series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
-                                    series[DBSeries.cHidden] = true;
-                                    series.Commit();
-                                    bDone = true;
-                                    break;
-
-                                case DialogResult.OK:
-                                    if (sSeriesNameToSearch != userSelection.SeriesName)
-                                    {
-                                        sSeriesNameToSearch = userSelection.SeriesName;
-                                        UserChosenSeries = null;
-                                    }
-                                    else
-                                    {
-                                        UserChosenSeries = userSelection.userChoice;
-                                        bDone = true;
-                                    }
-                                    break;
-                            }
-                        }
-                        else
-                            bDone = true;
-
-                        if (UserChosenSeries != null) // make sure selection was not cancelled
-                        {
-                            // set the ID on the current series with the one from the chosen one
-                            // we need to update all depending items - seasons & episodes
-                            List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false, false);
-                            foreach (DBSeason season in seasons)
-                                season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
-
-                            SQLCondition setcondition = new SQLCondition();
-                            setcondition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(setcondition);
-
-                            setcondition = new SQLCondition();
-                            setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
-                            foreach (DBEpisode episode in episodes)
-                                episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
-
-                            setcondition = new SQLCondition();
-                            setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(setcondition);
-
-                            int nSeriesID = series[DBSeries.cID];
-                            series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
-                            series.Commit();
-
-                            setcondition = new SQLCondition();
-                            setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
-                            DBOnlineSeries.Clear(setcondition);
-
-                            // only keep one local dbseries marked as non dupe
-                            setcondition = new SQLCondition();
-                            setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
-                            List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
-                            bool bFirst = true;
-                            foreach (DBSeries seriesDupeSet in seriesDupeSetList)
-                            {
-                                if (bFirst)
-                                {
-                                    seriesDupeSet[DBSeries.cDuplicateLocalName] = 0;
-                                    seriesDupeSet.Commit();
-                                    bFirst = false;
-                                }
-                                else
-                                {
-                                    seriesDupeSet[DBSeries.cDuplicateLocalName] = 1;
-                                    seriesDupeSet.Commit();
-                                }
-                            }
-                        }
+                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().IndexOf(sSeriesNameToSearch.ToLower()) != -1)
+                            SubStringCount++;
+                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower() == sSeriesNameToSearch.ToLower())
+                            ExactMatchCount++;
                     }
-                    else
+
+                    DBOnlineSeries UserChosenSeries = null;
+                    if (GetSeriesParser.Results.Count > 0)
+                        UserChosenSeries = GetSeriesParser.Results[0];
+
+                    if (ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
                     {
-                        MPTVSeriesLog.Write("No matching names found for " + sSeriesNameToSearch);
-                        // ask for an alternative name
-                        SelectSeries userSelection = new SelectSeries(sSeriesNameToSearch, false);
-                        userSelection.addSeriesToSelection(GetSeriesParser.Results);
-                        DialogResult result = userSelection.ShowDialog();
+                        // User has three choices:
+                        // 1) Pick a series from the list
+                        // 2) Simply skip
+                        // 3) Skip and never ask for this series again
+
+                        List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                        foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
+                            Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "First Aired: " + onlineSeries["FirstAired"] + "\r\nOverview:\r\n" + onlineSeries[DBOnlineSeries.cSummary], onlineSeries));
+
+                        if (Choices.Count == 0)
+                            Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));
+
+                        Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                        descriptor.m_sTitle = "Unable to find matching series";
+                        descriptor.m_sItemToMatchLabel = "Local series name:";
+                        descriptor.m_sItemToMatch = sSeriesNameToSearch;
+                        descriptor.m_sListLabel = "Choose the correct series from this list:";
+                        descriptor.m_List = Choices;
+                        descriptor.m_sbtnCancelLabel = "Skip this time";
+                        descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
+
+                        Feedback.CItem Selected = null;
+                        Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
                         switch (result)
                         {
-                            case DialogResult.Cancel:
+                            case Feedback.ReturnCode.Cancel:
+                                UserChosenSeries = null;
                                 bDone = true;
                                 break;
 
-                            case DialogResult.Ignore:
+                            case Feedback.ReturnCode.Ignore:
+                                UserChosenSeries = null;
                                 series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
                                 series[DBSeries.cHidden] = true;
                                 series.Commit();
                                 bDone = true;
                                 break;
 
-                            case DialogResult.OK:
-                                sSeriesNameToSearch = userSelection.SeriesName;
+                            case Feedback.ReturnCode.OK:
+                                DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
+                                if (sSeriesNameToSearch != Selected.m_sName)
+                                {
+                                    sSeriesNameToSearch = Selected.m_sName;
+                                    UserChosenSeries = null;
+                                }
+                                else
+                                {
+                                    UserChosenSeries = selectedSeries;
+                                    bDone = true;
+                                }
                                 break;
+                        }
+                    }
+                    else
+                        bDone = true;
+
+                    if (UserChosenSeries != null) // make sure selection was not cancelled
+                    {
+                        // set the ID on the current series with the one from the chosen one
+                        // we need to update all depending items - seasons & episodes
+                        List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false, false);
+                        foreach (DBSeason season in seasons)
+                            season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+
+                        SQLCondition setcondition = new SQLCondition();
+                        setcondition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        DBSeason.Clear(setcondition);
+
+                        setcondition = new SQLCondition();
+                        setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
+                        foreach (DBEpisode episode in episodes)
+                            episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+
+                        setcondition = new SQLCondition();
+                        setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        DBOnlineEpisode.Clear(setcondition);
+
+                        int nSeriesID = series[DBSeries.cID];
+                        series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+                        series.Commit();
+
+                        setcondition = new SQLCondition();
+                        setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
+                        DBOnlineSeries.Clear(setcondition);
+
+                        // only keep one local dbseries marked as non dupe
+                        setcondition = new SQLCondition();
+                        setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
+                        List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
+                        bool bFirst = true;
+                        foreach (DBSeries seriesDupeSet in seriesDupeSetList)
+                        {
+                            if (bFirst)
+                            {
+                                seriesDupeSet[DBSeries.cDuplicateLocalName] = 0;
+                                seriesDupeSet.Commit();
+                                bFirst = false;
+                            }
+                            else
+                            {
+                                seriesDupeSet[DBSeries.cDuplicateLocalName] = 1;
+                                seriesDupeSet.Commit();
+                            }
                         }
                     }
                 }
@@ -769,8 +768,8 @@ namespace WindowPlugins.GUITVSeries
 
                 Dictionary<int, DBEpisode> IDToEpisodesMap = new Dictionary<int, DBEpisode>();
                 int nCount = 0;
-                // call update with batches of 100 ids max - otherwise the server fails to generate a big enough xml chunk
-                while (/*nCount < 100 && */episodeList.Count > 0)
+                // call update with batches of 500 ids max - otherwise the server fails to generate a big enough xml chunk
+                while (nCount < 500 && episodeList.Count > 0)
                 {
                     DBEpisode episode = episodeList[0];
                     episodeList.RemoveAt(0);

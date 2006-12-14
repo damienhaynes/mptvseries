@@ -32,7 +32,8 @@ namespace WindowPlugins.GUITVSeries
                         {
                             PathPair pair = new PathPair();
                             pair.sFull_FileName = localFile;
-                            pair.sMatch_FileName = localFile.Substring(importPath[DBImportPath.cPath].ToString().Length + 1);
+                            pair.sMatch_FileName = localFile.Substring(importPath[DBImportPath.cPath].ToString().Length);
+                            pair.sMatch_FileName = pair.sMatch_FileName.TrimStart('\\'); 
                             outList.Add(pair);
                         }
 
