@@ -110,7 +110,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
             AddColumn(cHasEpisodes, new DBField(DBField.cTypeInt));
             AddColumn(cHasEpisodesTemp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
+            AddColumn(cHidden, new DBField(DBField.cTypeInt));
+            AddColumn(cForomSubtitleRoot, new DBField(DBField.cTypeString));
         }
 
         public void ChangeSeriesID(int nSeriesID)

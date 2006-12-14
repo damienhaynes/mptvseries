@@ -365,6 +365,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case cImportProcessed:
                         case cEpisodeName:
+                        case cAvailableSubtitles:
                             // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
 

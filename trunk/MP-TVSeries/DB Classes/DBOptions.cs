@@ -65,6 +65,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubs_Forom_BaseURL = "Subs_Forom_BaseURL";
         public const String cSubs_Forom_ID = "Subs_Forom_ID";
 
+        public const String cUTorrentPath = "uTorrentPath";
+        public const String cTorrentSearch = "TorrentSearch_Current";
 
         static DBOption()
         {
@@ -214,7 +216,13 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
                 if (GetOptions(cSubs_Forom_BaseURL) == null)
-                    SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents/index.php");
+                    SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents");
+
+                if (GetOptions(cTorrentSearch) == null)
+                    SetOptions(cTorrentSearch, String.Empty);
+
+                if (GetOptions(cUTorrentPath) == null)
+                    SetOptions(cUTorrentPath, String.Empty);
             }
             catch (Exception ex)
             {
