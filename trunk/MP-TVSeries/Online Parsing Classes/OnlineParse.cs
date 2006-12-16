@@ -4,19 +4,214 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Threading;
 using System.Text;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
+    enum WatcherItemType
+    {
+        Added,
+        Deleted
+    }
+
+    class WatcherItem
+    {
+        public String m_sFullPathFileName;
+        public String m_sParsedFileName;
+        public WatcherItemType m_type;
+
+        public WatcherItem(FileSystemWatcher watcher, RenamedEventArgs e, bool bOldName)
+        {
+            if (bOldName)
+            {
+                m_sFullPathFileName = e.OldFullPath;
+                m_sParsedFileName = m_sFullPathFileName.Substring(watcher.Path.Length).TrimStart('\\');
+                m_type = WatcherItemType.Deleted;
+                MPTVSeriesLog.Write("File monitor: " + m_sParsedFileName + " " + m_type);
+            }
+            else
+            {
+                m_sFullPathFileName = e.FullPath;
+                m_sParsedFileName = m_sFullPathFileName.Substring(watcher.Path.Length).TrimStart('\\');
+                m_type = WatcherItemType.Added;
+                MPTVSeriesLog.Write("File monitor: " + m_sParsedFileName + " " + m_type);
+            }
+        }
+
+        public WatcherItem(FileSystemWatcher watcher, FileSystemEventArgs e)
+        {
+            m_sFullPathFileName = e.FullPath;
+            m_sParsedFileName = m_sFullPathFileName.Substring(watcher.Path.Length).TrimStart('\\');
+            switch (e.ChangeType)
+            {
+                case WatcherChangeTypes.Deleted:
+                    m_type = WatcherItemType.Deleted;
+                    break;
+
+                default:
+                    m_type = WatcherItemType.Added;
+                    break;
+            }
+            MPTVSeriesLog.Write("File monitor: " + m_sParsedFileName + " " + m_type);
+        }
+    };
+
+    class Watcher
+    {
+        public BackgroundWorker worker = new BackgroundWorker();
+        Feedback.Interface m_feedback = null;
+        List<System.IO.FileSystemWatcher> m_watchersList = new List<System.IO.FileSystemWatcher>();
+        List<WatcherItem> m_modifiedFilesList = new List<WatcherItem>();
+
+        public delegate void WatcherProgressHandler(int nProgress, List<WatcherItem> modifiedFilesList);
+
+        /// <summary>
+        /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
+        /// </summary>
+        public event WatcherProgressHandler WatcherProgress;
+
+        public Watcher(Feedback.Interface feedback)
+        {
+            m_feedback = feedback;
+            worker.WorkerReportsProgress = true;
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.DoWork += new DoWorkEventHandler(workerWatcher_DoWork);
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (WatcherProgress != null) // only if any subscribers exist
+                WatcherProgress.Invoke(e.ProgressPercentage, e.UserState as List<WatcherItem>);
+        }
+
+        public void StartFolderWatch()
+        {
+            // start the thread that is going to handle the addition in the db when files change
+            worker.RunWorkerAsync();
+        }
+
+        void watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            // rename: delete the old, add the new
+            lock (m_modifiedFilesList)
+            {
+                String sOldExtention = System.IO.Path.GetExtension(e.OldFullPath);
+                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sOldExtention) != -1)
+                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, true));
+                String sNewExtention = System.IO.Path.GetExtension(e.FullPath);
+                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sNewExtention) != -1)
+                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, false));
+            }
+        }
+
+        void watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            // a file has changed! created, not created, whatever. Just add it to our list. We only process this list once in a while
+            lock (m_modifiedFilesList)
+            {
+                foreach (WatcherItem item in m_modifiedFilesList)
+                {
+                    if (item.m_sFullPathFileName == e.FullPath)
+                        return;
+                }
+
+                m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+            }
+        }
+
+        void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // ok let's see ... go through all enable import folders, and add a watchfolder on it
+            foreach (DBImportPath importPath in DBImportPath.GetAll())
+            {
+                if (importPath[DBImportPath.cEnabled] != 0)
+                {
+                    // one watcher for each extension type
+                    foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
+                    {
+                        FileSystemWatcher watcher = new FileSystemWatcher();
+                        watcher.Filter = "*" + extention;
+                        watcher.Path = importPath[DBImportPath.cPath];
+                        watcher.IncludeSubdirectories = true;
+                        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
+                        watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Created += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                        watcher.EnableRaisingEvents = true;
+                        m_watchersList.Add(watcher);
+                    }
+
+                }
+            }
+
+            while (!worker.CancellationPending)
+            {
+                try
+                {
+                    List<WatcherItem> outList = new List<WatcherItem>();
+                    lock (m_modifiedFilesList)
+                    {
+                        // go over the modified files list once in a while & update
+                        while (m_modifiedFilesList.Count > 0)
+                        {
+                            outList.Add(m_modifiedFilesList[0]);
+                            m_modifiedFilesList.RemoveAt(0);
+                        }
+
+                        if (outList.Count > 0)
+                            worker.ReportProgress(0, outList);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
+                }
+
+                // wait
+                Thread.Sleep(5000);
+            }
+        }
+    };
+
+    enum ParsingAction
+    {
+        Full,
+        List_Add,
+        List_Remove
+    }
+
+    class CParsingParameters
+    {
+        public ParsingAction m_action = ParsingAction.Full;
+        public bool m_bLocalScan = true;
+        public bool m_bUpdateScan = true;
+        public List<PathPair> m_files = null;
+
+        public CParsingParameters(bool bScanNew, bool bUpdateExisting)
+        {
+            m_bLocalScan = bScanNew;
+            m_bUpdateScan = bUpdateExisting;
+        }
+
+        public CParsingParameters(ParsingAction action, List<PathPair> files)
+        {
+            m_action = action;
+            m_files = files;
+            m_bLocalScan = true;
+            m_bUpdateScan = false;
+        }
+    };
+
     class OnlineParsing
     {
         public BackgroundWorker worker = new BackgroundWorker();
+        Feedback.Interface m_feedback = null;
 
         bool m_bDataUpdated = false;
-        bool m_bLocalScan = true;
-        bool m_bUpdateScan = true;
         bool m_bFullSeriesRetrieval = false;
         bool m_bReparseNeeded = false;
-        Feedback.Interface m_feedback = null;
+        CParsingParameters m_params = null;
 
         public delegate void OnlineParsingProgressHandler(int nProgress);
         public delegate void OnlineParsingCompletedHandler(bool bDataUpdated);
@@ -51,21 +246,29 @@ namespace WindowPlugins.GUITVSeries
                 OnlineParsingProgress.Invoke(e.ProgressPercentage);
         }
 
-        public void Start(bool bScanNew, bool bUpdateExisting)
+        public bool IsWorking
         {
-            m_bLocalScan = bScanNew;
-            m_bUpdateScan = bUpdateExisting;
-            worker.RunWorkerAsync();
+            get { return worker.IsBusy; }
+        }
+
+        public bool Start(CParsingParameters param)
+        {
+            if (!worker.IsBusy)
+            {
+                worker.RunWorkerAsync(param);
+                return true;
+            }
+            return false;
         }
 
         public bool LocalScan
         {
-            get { return m_bLocalScan; }
+            get { if (m_params != null) return m_params.m_bLocalScan; else return false; }
         }
 
         public bool UpdateScan
         {
-            get { return m_bUpdateScan; }
+            get { if (m_params != null) return m_params.m_bUpdateScan; else return false; }
         }
 
         public void Cancel()
@@ -74,18 +277,121 @@ namespace WindowPlugins.GUITVSeries
             //            m_bAbort = true;
         }
 
+        public void worker_RemoveDoWork(object sender, DoWorkEventArgs e)
+        {
+        }
+
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            MPTVSeriesLog.Write("***************************************************************************");
-            MPTVSeriesLog.Write("*******************       Parsing Starting      ***************************");
-            MPTVSeriesLog.Write("***************************************************************************");
+
+            m_params = e.Argument as CParsingParameters;
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             worker.ReportProgress(0);
 
-            if (m_bLocalScan)
+            switch (m_params.m_action)
             {
-                LocalParse();
+                case ParsingAction.List_Remove:
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    MPTVSeriesLog.Write("*******************    List_Remove Starting     ***************************");
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    // should we remove deleted files?
+                    if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
+                    {
+                        List<DBOnlineSeries> relatedSeries = new List<DBOnlineSeries>();
+                        List<DBSeason> relatedSeasons = new List<DBSeason>();
+
+                        foreach (PathPair pair in m_params.m_files)
+                        {
+                            DBEpisode episode = new DBEpisode(pair.sFull_FileName);
+                            // already in?
+                            bool bSeasonFound = false;
+                            foreach (DBSeason season in relatedSeasons)
+                                if (season[DBSeason.cSeriesID] == episode[DBEpisode.cSeriesID] && season[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex])
+                                {
+                                    bSeasonFound = true;
+                                    break;
+                                }
+                            if (!bSeasonFound)
+                                relatedSeasons.Add(new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
+
+                            bool bSeriesFound = false;
+                            foreach (DBOnlineSeries series in relatedSeries)
+                                if (series[DBOnlineSeries.cID] == episode[DBEpisode.cSeriesID])
+                                {
+                                    bSeriesFound = true;
+                                    break;
+                                }
+                            if (!bSeriesFound)
+                                relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
+
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.sFull_FileName, SQLConditionType.Equal);
+                            DBEpisode.Clear(condition);
+                        }
+
+                        // now go over the touched seasons & series
+                        foreach (DBSeason season in relatedSeasons)
+                        {
+                            if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true, false).Count > 0)
+                                season[DBSeason.cHasLocalFilesTemp] = true;
+                            else
+                                season[DBSeason.cHasLocalFilesTemp] = false;
+                            season.Commit();
+                        }
+
+                        foreach (DBOnlineSeries series in relatedSeries)
+                        {
+                            if (DBEpisode.Get(series[DBOnlineSeries.cID], true, false).Count > 0)
+                                series[DBOnlineSeries.cHasLocalFiles] = true;
+                            else
+                                series[DBOnlineSeries.cHasLocalFiles] = false;
+                            series.Commit();
+                        }
+
+                        // and copy the HasLocalFileTemp value into the real one
+                        DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
+                        DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
+                        // and we are done, the backgroundworker is going to notify so
+                        MPTVSeriesLog.Write("***************************************************************************");
+                        MPTVSeriesLog.Write("*******************          Completed          ***************************");
+                        MPTVSeriesLog.Write("***************************************************************************");
+                    }
+                    return;
+
+                case ParsingAction.List_Add:
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    MPTVSeriesLog.Write("*******************       List_Add Starting     ***************************");
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    ParseLocal(m_params.m_files);
+                    break;
+                    
+                case ParsingAction.Full:
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    MPTVSeriesLog.Write(String.Format("******************* Full Starting {0} - {1}   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan));
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    if (m_params.m_bLocalScan)
+                    {
+                        // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
+                        DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
+                        // also clear all season & series for local files
+                        DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
+                        DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
+
+                        ParseLocal(Filelister.GetFiles());
+
+                        // now, remove all episodes still processed = 0, the weren't find in the scan
+                        if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
+                        {
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+                            DBEpisode.Clear(condition);
+                        }
+                        // and copy the HasLocalFileTemp value into the real one
+                        DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
+                        DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
+                    } 
+                    break;
             }
 
             // now on with online parsing
@@ -101,7 +407,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes();
 
                     UpdateSeries(true);
-                    if (m_bUpdateScan)
+                    if (m_params.m_bUpdateScan)
                     {
                         worker.ReportProgress(45);
                         // now do an regular update (refresh, with timestamp) on all the series
@@ -114,7 +420,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // update new series for banners
                     UpdateBanners(true);
-                    if (m_bUpdateScan)
+                    if (m_params.m_bUpdateScan)
                     {
                         // refresh existing banners
                         UpdateBanners(false);
@@ -123,30 +429,23 @@ namespace WindowPlugins.GUITVSeries
                     // now update the episodes
                     UpdateEpisodes(true);
 
-                    if (m_bUpdateScan)
+                    if (m_params.m_bUpdateScan)
                     {
                         // now refresh existing episodes
                         UpdateEpisodes(false);
                     }
                 }
             }
+
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
-            MPTVSeriesLog.Write("*******************       Parsing Completed     ***************************");
+            MPTVSeriesLog.Write("*******************          Completed          ***************************");
             MPTVSeriesLog.Write("***************************************************************************");
         }
 
-        void LocalParse()
+        void ParseLocal(List<PathPair> files)
         {
-            // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
-            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
-            // also clear all season & series for local files
-            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
-            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
-            LocalParse localParser = new LocalParse();
-            localParser.DoParse(false);
-
-            foreach (parseResult progress in localParser.Results)
+            foreach (parseResult progress in LocalParse.Parse(files))
             {
                 if (worker.CancellationPending)
                     return;
@@ -199,17 +498,6 @@ namespace WindowPlugins.GUITVSeries
                     episode.Commit();
                 }
             }
-
-            // now, remove all episodes still processed = 0, the weren't find in the scan
-            if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
-            {
-                SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                DBEpisode.Clear(condition);
-            }
-            // and copy the HasLocalFileTemp value into the real one
-            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
-            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
         }
 
         void GetSeries()
@@ -217,7 +505,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("*********  GetSeries - unknown series  *********");
 
             SQLCondition condition = null;
-            if (m_bUpdateScan)
+            if (m_params.m_bUpdateScan)
             {
                 // mark existing online data as "old", needs a refresh
                 condition = new SQLCondition();
@@ -386,7 +674,7 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write("*********  Starting GetEpisodes  *********");
             SQLCondition condition = null;
-            if (m_bUpdateScan)
+            if (m_params.m_bUpdateScan)
             {
                 // mark existing online data as "old", needs a refresh
                 condition = new SQLCondition();
@@ -411,7 +699,7 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(20 + (20 * nIndex / seriesList.Count));
                 nIndex++;
 
-                if (m_bFullSeriesRetrieval && m_bUpdateScan)
+                if (m_bFullSeriesRetrieval && m_params.m_bUpdateScan)
                 {
                     MPTVSeriesLog.Write("Looking for all the episodes of " + series[DBSeries.cParsedName]);
                     SQLCondition conditions = new SQLCondition();

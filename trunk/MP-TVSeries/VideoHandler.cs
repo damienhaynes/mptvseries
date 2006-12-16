@@ -27,10 +27,29 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
         }
 
-        public void ResumeOrPlay(DBEpisode episode)
+        public bool ResumeOrPlay(DBEpisode episode)
         {
             try
             {
+                // don't have this file !
+                if (episode[DBEpisode.cFilename] == String.Empty)
+                    return false;
+
+                // verify the file isn't still being written to
+                try { 
+                    using (System.IO.FileStream fs = System.IO.File.OpenWrite(episode[DBEpisode.cFilename])) 
+                    { } 
+                }
+                catch 
+                {
+                    // assume any exception means can't read the file
+                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                    dlgOK.SetHeading("Can't start playback");
+                    dlgOK.SetLine(1, "File must still be being written to");
+                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                    return false;
+                }
+
                 m_currentEpisode = episode;
                 IMDBMovie movieDetails = new IMDBMovie();
                 int timeMovieStopped = 0;
@@ -52,7 +71,8 @@ namespace WindowPlugins.GUITVSeries
                     if (timeMovieStopped > 0)
                     {
                         GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                        if (null == dlgYesNo) return;
+                        if (null == dlgYesNo) 
+                            return false;
                         dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
                         dlgYesNo.SetLine(1, movieDetails.Title);
                         dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
@@ -61,7 +81,7 @@ namespace WindowPlugins.GUITVSeries
                         if (dlgYesNo.IsConfirmed)
                         {
                             Play(timeMovieStopped, resumeData);
-                            return;
+                            return true;
                         }
                         else
                         {
@@ -71,10 +91,12 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 Play(-1, null);
+                return true;
             }
             catch (Exception e)
             {
                 Log.Write("TVSeriesPlugin.VideoHandler.ResumeOrPlay()\r\n" + e.ToString());
+                return false;
             }
         }
 

@@ -396,19 +396,23 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
-        public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly)
+        public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
             SQLCondition conditions = null;
             if (bExistingFilesOnly)
             {
                 conditions = new SQLCondition();
                 conditions.Add(new DBEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+                if (!bIncludeHidden)
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
                 return Get(conditions, false);
             }
             else
             {
                 conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+                if (!bIncludeHidden)
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
                 return Get(conditions, true);
             }
         }

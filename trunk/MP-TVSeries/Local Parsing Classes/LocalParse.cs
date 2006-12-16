@@ -9,27 +9,24 @@ namespace WindowPlugins.GUITVSeries
     public class LocalParse
     {
 
-        private bool m_bAsync = false;
         private BackgroundWorker worker = null;
-        private List<parseResult> m_results;
 
         public delegate void LocalParseProgressHandler(int nProgress, List<parseResult> results);
         public delegate void LocalParseCompletedHandler(List<parseResult> results);
         public event LocalParseProgressHandler LocalParseProgress;
         public event LocalParseCompletedHandler LocalParseCompleted;
 
-        public List<parseResult> Results
-        {
-            get { return m_results; }
-        }
-
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             List<PathPair> files = Filelister.GetFiles();
+            e.Result = Parse(files);
+        }
+
+        public static List<parseResult> Parse(List<PathPair> files)
+        {
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
             int nFailed = 0;
-            int nCount = 0;
             foreach (PathPair file in files)
             {
                 FilenameParser parser = new FilenameParser(file.sMatch_FileName);
@@ -74,39 +71,20 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.full_filename = file.sFull_FileName;
                 progressReporter.parser = parser;
                 results.Add(progressReporter);
-
-                if (m_bAsync && nCount++ % 50 == 0)
-                {
-                    worker.ReportProgress(Convert.ToInt32(100.0 / files.Count * nCount), results);
-                    results = new List<parseResult>();
-                }
-                
-                //nCount++;
             }
-            e.Result = results;
+            return results;
         }
 
-        public void DoParse(bool bAsync)
+        public void AsyncFullParse()
         {
-            m_bAsync = bAsync;
-            MPTVSeriesLog.Write("Starting Parsing operation - Async: ", bAsync.ToString(), MPTVSeriesLog.LogLevel.Debug);
-            if (bAsync)
-            {
-                worker = new BackgroundWorker();
-                worker.WorkerReportsProgress = true;
-                worker.WorkerSupportsCancellation = true;
-                worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-                worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-                worker.RunWorkerAsync();
-            }
-            else
-            {
-                DoWorkEventArgs e = new DoWorkEventArgs(null);
-                worker_DoWork(null, e);
-                m_results = (List<parseResult>)e.Result;
-                MPTVSeriesLog.Write("Finished Parsing operation - Async: False", MPTVSeriesLog.LogLevel.Debug);
-            }
+            MPTVSeriesLog.Write("Starting Local Parsing operation - Async: yes", MPTVSeriesLog.LogLevel.Debug);
+            worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.RunWorkerAsync();
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
