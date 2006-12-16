@@ -106,9 +106,12 @@ namespace MediaPortal.GUI.Video
         private VideoHandler m_VideoHandler;
 
         private TimerCallback timerDelegate = null;
-        private System.Threading.Timer scanTimer = null;
+        private System.Threading.Timer m_scanTimer = null;
         private OnlineParsing m_parserUpdater = null;
-        private int m_nLocalScanLapse = 0;
+        private bool m_parserUpdaterWorking = false;
+        private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
+
+        private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
         private DateTime m_LastLocalScan = DateTime.MinValue;
         private DateTime m_LastUpdateScan = DateTime.MinValue;
@@ -213,6 +216,16 @@ namespace MediaPortal.GUI.Video
 
             m_VideoHandler = new VideoHandler();
 
+            m_parserUpdater = new OnlineParsing(this);
+            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+
+            m_watcherUpdater = new Watcher(this);
+            m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
+            m_watcherUpdater.StartFolderWatch();
+
+            // always do a local scan when starting up the app - later on the watcher will monitor changes
+            m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
             m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
@@ -237,24 +250,57 @@ namespace MediaPortal.GUI.Video
 
             try
             {
-                m_LastLocalScan = DateTime.Parse(DBOption.GetOptions(DBOption.cLocalScanLastTime));
-            }
-            catch {}
-            try
-            {
                 m_LastUpdateScan = DateTime.Parse(DBOption.GetOptions(DBOption.cUpdateScanLastTime));
             }
             catch {}
 
-            if (DBOption.GetOptions(DBOption.cAutoScanLocalFiles))
-                m_nLocalScanLapse = DBOption.GetOptions(DBOption.cAutoScanLocalFilesLapse);
             if (DBOption.GetOptions(DBOption.cAutoUpdateOnlineData))
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
 
-            // timer check every 10 seconds
+            // timer check every seconds
             timerDelegate = new TimerCallback(Clock);
-            scanTimer = new System.Threading.Timer(timerDelegate, null, 10000, 10000);
+            m_scanTimer = new System.Threading.Timer(timerDelegate, null, 1000, 1000);
             return Load(xmlSkin);
+        }
+
+        void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
+        {
+            List<PathPair> filesAdded = new List<PathPair>();
+            List<PathPair> filesRemoved = new List<PathPair>();
+
+            // go over the modified files list once in a while & update
+            foreach (WatcherItem item in modifiedFilesList)
+            {
+                switch (item.m_type)
+                {
+                    case WatcherItemType.Added:
+                        filesAdded.Add(new PathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
+                        break;
+
+                    case WatcherItemType.Deleted:
+                        filesRemoved.Add(new PathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
+                        break;
+                }
+            }
+
+            // with out list of files, start the parsing process
+            if (filesAdded.Count > 0)
+            {
+                // queue it
+                lock (m_parserUpdaterQueue)
+                {
+                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Add, filesAdded));
+                }
+            }
+
+            if (filesRemoved.Count > 0)
+            {
+                // queue it
+                lock (m_parserUpdaterQueue)
+                {
+                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Remove, filesRemoved));
+                }
+            }
         }
 
         String FormatField(String sFormat, DBTable table)
@@ -688,7 +734,7 @@ namespace MediaPortal.GUI.Video
         protected override void OnPageLoad()
         {
             this.LoadFacade();
-            if (m_parserUpdater != null)
+            if (m_parserUpdaterWorking)
             {
                 if (m_ImportAnimation != null)
                     m_ImportAnimation.AllocResources();
@@ -753,11 +799,11 @@ namespace MediaPortal.GUI.Video
                 pItem = new GUIListItem("-------------------------------");
                 dlg.Add(pItem);
 
-                pItem = new GUIListItem("Force Local Scan" + (m_parserUpdater != null ? " (In Progress)" : ""));
+                pItem = new GUIListItem("Force Local Scan" + (m_parserUpdaterWorking ? " (In Progress)" : ""));
                 dlg.Add(pItem);
                 pItem.ItemId = 100 + 3;
 
-                pItem = new GUIListItem("Force Online Refresh" + (m_parserUpdater != null ? " (In Progress)" : ""));
+                pItem = new GUIListItem("Force Online Refresh" + (m_parserUpdaterWorking ? " (In Progress)" : ""));
                 dlg.Add(pItem);
                 pItem.ItemId = 100 + 4;
 
@@ -941,31 +987,20 @@ namespace MediaPortal.GUI.Video
                         break;
 
                     case 100 + 3:
-                        if (m_parserUpdater == null) 
+                        // queue scan
+                        lock (m_parserUpdaterQueue)
                         {
-                            // only load the wait cursor if we are in the plugin
-                            if (m_ImportAnimation != null)
-                                m_ImportAnimation.AllocResources();
-
-                            // do scan
-                            m_parserUpdater = new OnlineParsing(this);
-                            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
-                            m_parserUpdater.Start(true, false);
+                            m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
                         }
                         break;
 
                     case 100 + 4:
-                        if (m_parserUpdater == null)
+                        // queue scan
+                        lock (m_parserUpdaterQueue)
                         {
-                            // only load the wait cursor if we are in the plugin
-                            if (m_ImportAnimation != null)
-                                m_ImportAnimation.AllocResources();
-
-                            // do scan
-                            m_parserUpdater = new OnlineParsing(this);
-                            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
-                            m_parserUpdater.Start(true, true);
-                        } break;
+                            m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
+                        }
+                        break;
 
                     case 100 + 5:
                         DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
@@ -1062,48 +1097,13 @@ namespace MediaPortal.GUI.Video
                         break;
                     case cListLevelEpisodes:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
-                        this.m_SelectedEpisode[DBEpisode.cWatched] = 1;
-                        this.m_SelectedEpisode.Commit();
-                        this.LoadFacade();
                        
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
-                        
-//                         GUIDialogOK pDlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-//                         pDlgOK.SetHeading("Could not launch video in player");
-//                         if (g_Player.Play(m_SelectedEpisode[DBEpisode.cFilename]))
-//                         {
-//                             if (Utils.IsVideo(m_SelectedEpisode[DBEpisode.cFilename]) && g_Player.HasVideo)
-//                             {
-//                                 GUIGraphicsContext.IsFullScreenVideo = true;
-//                                 GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
-//                                 GUIPropertyManager.SetProperty("#title", m_SelectedSeries[DBSeries.cPrettyName] + " - " + m_SelectedEpisode[DBEpisode.cSeasonIndex] + "x" + m_SelectedEpisode[DBEpisode.cEpisodeIndex] + " - " + m_SelectedEpisode[DBEpisode.cEpisodeName]);
-//                                 GUIPropertyManager.SetProperty("#genre", m_SelectedSeries[DBSeries.cGenre]);
-//                                 GUIPropertyManager.SetProperty("#file", m_SelectedEpisode[DBEpisode.cFilename]);
-//                                 GUIPropertyManager.SetProperty("#plot", m_SelectedEpisode[DBOnlineEpisode.cEpisodeSummary]);
-//                             }
-//                             else
-//                             {
-//                                 pDlgOK.SetLine(1, "File format not recognized.  Ensure that the");
-//                                 pDlgOK.SetLine(2, "proper codecs are installed on this system.");
-//                                 pDlgOK.DoModal(GUIWindowManager.ActiveWindow);
-//                             }
-//                         }
-//                         else
-//                         {
-//                             if (!System.IO.File.Exists(m_SelectedEpisode[DBEpisode.cFilename]))
-//                             {
-//                                 pDlgOK.SetLine(1, "Could not locate the file in the location");
-//                                 pDlgOK.SetLine(2, "specified in the plugin's configuration.");
-//                             }
-//                             else
-//                             {
-//                                 pDlgOK.SetLine(1, "File format not recognized.  Ensure that the");
-//                                 pDlgOK.SetLine(2, "proper codecs are installed on this system.");
-//                             }
-//                             pDlgOK.DoModal(GUIWindowManager.ActiveWindow);
-//                         }
-                        
-
+                        if (m_VideoHandler.ResumeOrPlay(m_SelectedEpisode))
+                        {
+                            this.m_SelectedEpisode[DBEpisode.cWatched] = 1;
+                            this.m_SelectedEpisode.Commit();
+                            this.LoadFacade();
+                        }
                         break;
                 }
             }
@@ -1112,17 +1112,10 @@ namespace MediaPortal.GUI.Video
 
         public void Clock(Object stateInfo)
         {
-            if (m_parserUpdater == null)
+            if (!m_parserUpdaterWorking)
             {
                 // need to not be doing something yet (we don't want to accumulate parser objects !)
-                bool bLocalScanNeeded = false;
                 bool bUpdateScanNeeded = false;
-                if (m_nLocalScanLapse > 0)
-                {
-                    TimeSpan tsLocal = DateTime.Now - m_LastLocalScan;
-                    if ((int)tsLocal.TotalMinutes > m_nLocalScanLapse)
-                        bLocalScanNeeded = true;
-                }
 
                 if (m_nUpdateScanLapse > 0)
                 {
@@ -1131,16 +1124,27 @@ namespace MediaPortal.GUI.Video
                         bUpdateScanNeeded = true;
                 }
 
-                if (bLocalScanNeeded || bUpdateScanNeeded)
+                if (bUpdateScanNeeded)
                 {
-                    // only load the wait cursor if we are in the plugin
-                    if (m_ImportAnimation != null)
-                        m_ImportAnimation.AllocResources();
+                    // queue scan
+                    lock (m_parserUpdaterQueue)
+                    {
+                        m_parserUpdaterQueue.Add(new CParsingParameters(false, bUpdateScanNeeded));
+                    }
+                }
 
-                    // do scan
-                    m_parserUpdater = new OnlineParsing(this);
-                    m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
-                    m_parserUpdater.Start(bLocalScanNeeded, bUpdateScanNeeded);
+                lock (m_parserUpdaterQueue)
+                {
+                    if (m_parserUpdaterQueue.Count > 0)
+                    {
+                        // only load the wait cursor if we are in the plugin
+                        if (m_ImportAnimation != null)
+                            m_ImportAnimation.AllocResources();
+
+                        m_parserUpdaterWorking = true;
+                        m_parserUpdater.Start(m_parserUpdaterQueue[0]);
+                        m_parserUpdaterQueue.RemoveAt(0);
+                    }
                 }
             }
             base.Process();
@@ -1150,22 +1154,15 @@ namespace MediaPortal.GUI.Video
         {
             if (m_ImportAnimation != null)
                 m_ImportAnimation.FreeResources();
-            if (m_parserUpdater != null)
+
+            if (m_parserUpdater.UpdateScan)
             {
-                if (m_parserUpdater.LocalScan)
-                {
-                    m_LastLocalScan = DateTime.Now;
-                    DBOption.SetOptions(DBOption.cLocalScanLastTime, m_LastLocalScan.ToString());
-                }
-                if (m_parserUpdater.UpdateScan)
-                {
-                    m_LastUpdateScan = DateTime.Now;
-                    DBOption.SetOptions(DBOption.cUpdateScanLastTime, m_LastUpdateScan.ToString());
-                }
-                m_parserUpdater = null;
-                if (bDataUpdated)
-                    LoadFacade();
+                m_LastUpdateScan = DateTime.Now;
+                DBOption.SetOptions(DBOption.cUpdateScanLastTime, m_LastUpdateScan.ToString());
             }
+            m_parserUpdaterWorking = false;
+            if (bDataUpdated)
+                LoadFacade();
         }
 
         public override bool OnMessage(GUIMessage message)

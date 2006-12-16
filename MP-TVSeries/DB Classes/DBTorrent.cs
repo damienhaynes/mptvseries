@@ -25,6 +25,8 @@ namespace WindowPlugins.GUITVSeries
 
         static DBTorrentSearch()
         {
+            DBTorrentSearch dummy = new DBTorrentSearch();
+
             List<DBTorrentSearch> torrentSearchList = DBTorrentSearch.Get();
             if (torrentSearchList.Count == 0)
             {

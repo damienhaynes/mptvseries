@@ -759,7 +759,7 @@ namespace WindowPlugins.GUITVSeries
             LocalParse runner = new LocalParse();
             runner.LocalParseProgress += new LocalParse.LocalParseProgressHandler(TestParsing_LocalParseProgress);
             runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler(TestParsing_LocalParseCompleted);
-            runner.DoParse(true);
+            runner.AsyncFullParse();
         }
         #endregion
 
@@ -778,7 +778,7 @@ namespace WindowPlugins.GUITVSeries
                 m_parser = new OnlineParsing(this);
                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-                m_parser.Start(true, true);
+                m_parser.Start(new CParsingParameters(true, true));
             }
         }
 
@@ -795,12 +795,8 @@ namespace WindowPlugins.GUITVSeries
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
 
-            m_parser.OnlineParsingProgress -= new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
-            m_parser.OnlineParsingCompleted -= new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-            m_parser = null;
-
             // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
-            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
+//            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
             DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
@@ -1891,7 +1887,6 @@ namespace WindowPlugins.GUITVSeries
             m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex] = textBox_TorrentDetailsRegex.Text;
             m_currentTorrentSearch.Commit();
         }
-
     }
 
     public class BannerComboItem

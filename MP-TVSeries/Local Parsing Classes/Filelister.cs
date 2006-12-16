@@ -4,13 +4,19 @@ using System.Text;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class PathPair
+    public class PathPair
     {
         public String sMatch_FileName;
         public String sFull_FileName;
+
+        public PathPair(String match, String full)
+        {
+            sMatch_FileName = match;
+            sFull_FileName = full;
+        }
     };
 
-    class Filelister
+    public class Filelister
     {
 
         public static List<PathPair> GetFiles()
@@ -30,10 +36,7 @@ namespace WindowPlugins.GUITVSeries
                         // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
                         foreach (String localFile in localFiles)
                         {
-                            PathPair pair = new PathPair();
-                            pair.sFull_FileName = localFile;
-                            pair.sMatch_FileName = localFile.Substring(importPath[DBImportPath.cPath].ToString().Length);
-                            pair.sMatch_FileName = pair.sMatch_FileName.TrimStart('\\'); 
+                            PathPair pair = new PathPair(localFile.Substring(importPath[DBImportPath.cPath].ToString().Length).TrimStart('\\'), localFile);
                             outList.Add(pair);
                         }
 
