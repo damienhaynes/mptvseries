@@ -43,7 +43,7 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_ToMatch.Location = new System.Drawing.Point(15, 25);
             this.textbox_ToMatch.Name = "textbox_ToMatch";
             this.textbox_ToMatch.Size = new System.Drawing.Size(406, 20);
-            this.textbox_ToMatch.TabIndex = 12;
+            this.textbox_ToMatch.TabIndex = 0;
             this.textbox_ToMatch.TextChanged += new System.EventHandler(this.textbox_ToMatch_TextChanged);
             // 
             // label_ToMatch
@@ -72,7 +72,7 @@ namespace WindowPlugins.GUITVSeries
             this.listbox_Choices.Location = new System.Drawing.Point(15, 65);
             this.listbox_Choices.Name = "listbox_Choices";
             this.listbox_Choices.Size = new System.Drawing.Size(406, 95);
-            this.listbox_Choices.TabIndex = 9;
+            this.listbox_Choices.TabIndex = 1;
             this.listbox_Choices.SelectedIndexChanged += new System.EventHandler(this.listbox_Choices_SelectedIndexChanged);
             // 
             // button_OK
@@ -83,7 +83,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_OK.Location = new System.Drawing.Point(15, 259);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
-            this.button_OK.TabIndex = 13;
+            this.button_OK.TabIndex = 2;
             this.button_OK.Text = "OK";
             this.button_OK.UseVisualStyleBackColor = true;
             // 
@@ -95,7 +95,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Cancel.Location = new System.Drawing.Point(174, 259);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(75, 23);
-            this.button_Cancel.TabIndex = 14;
+            this.button_Cancel.TabIndex = 3;
             this.button_Cancel.Text = "Cancel";
             this.button_Cancel.UseVisualStyleBackColor = true;
             // 
@@ -107,7 +107,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Ignore.Location = new System.Drawing.Point(346, 259);
             this.button_Ignore.Name = "button_Ignore";
             this.button_Ignore.Size = new System.Drawing.Size(75, 23);
-            this.button_Ignore.TabIndex = 14;
+            this.button_Ignore.TabIndex = 4;
             this.button_Ignore.Text = "Ignore";
             this.button_Ignore.UseVisualStyleBackColor = true;
             // 
@@ -125,8 +125,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // ChooseFromSelectionDialog
             // 
+            this.AcceptButton = this.button_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.button_Cancel;
             this.ClientSize = new System.Drawing.Size(435, 293);
             this.Controls.Add(this.textbox_Description);
             this.Controls.Add(this.button_Ignore);

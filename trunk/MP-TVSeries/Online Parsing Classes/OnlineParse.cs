@@ -121,55 +121,58 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
-            // ok let's see ... go through all enable import folders, and add a watchfolder on it
-            foreach (DBImportPath importPath in DBImportPath.GetAll())
+            DBImportPath[] importPaths = DBImportPath.GetAll();
+            if (importPaths != null)
             {
-                if (importPath[DBImportPath.cEnabled] != 0)
+                // ok let's see ... go through all enable import folders, and add a watchfolder on it
+                foreach (DBImportPath importPath in DBImportPath.GetAll())
                 {
-                    // one watcher for each extension type
-                    foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
+                    if (importPath[DBImportPath.cEnabled] != 0)
                     {
-                        FileSystemWatcher watcher = new FileSystemWatcher();
-                        watcher.Filter = "*" + extention;
-                        watcher.Path = importPath[DBImportPath.cPath];
-                        watcher.IncludeSubdirectories = true;
-                        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
-                        watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-                        watcher.Created += new FileSystemEventHandler(watcher_Changed);
-                        watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
-                        watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
-                        watcher.EnableRaisingEvents = true;
-                        m_watchersList.Add(watcher);
-                    }
-
-                }
-            }
-
-            while (!worker.CancellationPending)
-            {
-                try
-                {
-                    List<WatcherItem> outList = new List<WatcherItem>();
-                    lock (m_modifiedFilesList)
-                    {
-                        // go over the modified files list once in a while & update
-                        while (m_modifiedFilesList.Count > 0)
+                        // one watcher for each extension type
+                        foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
                         {
-                            outList.Add(m_modifiedFilesList[0]);
-                            m_modifiedFilesList.RemoveAt(0);
+                            FileSystemWatcher watcher = new FileSystemWatcher();
+                            watcher.Filter = "*" + extention;
+                            watcher.Path = importPath[DBImportPath.cPath];
+                            watcher.IncludeSubdirectories = true;
+                            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
+                            watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+                            watcher.Created += new FileSystemEventHandler(watcher_Changed);
+                            watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
+                            watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                            watcher.EnableRaisingEvents = true;
+                            m_watchersList.Add(watcher);
                         }
-
-                        if (outList.Count > 0)
-                            worker.ReportProgress(0, outList);
                     }
                 }
-                catch (Exception exp)
-                {
-                    MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
-                }
 
-                // wait
-                Thread.Sleep(5000);
+                while (!worker.CancellationPending)
+                {
+                    try
+                    {
+                        List<WatcherItem> outList = new List<WatcherItem>();
+                        lock (m_modifiedFilesList)
+                        {
+                            // go over the modified files list once in a while & update
+                            while (m_modifiedFilesList.Count > 0)
+                            {
+                                outList.Add(m_modifiedFilesList[0]);
+                                m_modifiedFilesList.RemoveAt(0);
+                            }
+
+                            if (outList.Count > 0)
+                                worker.ReportProgress(0, outList);
+                        }
+                    }
+                    catch (Exception exp)
+                    {
+                        MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
+                    }
+
+                    // wait
+                    Thread.Sleep(5000);
+                }
             }
         }
     };
@@ -334,7 +337,10 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBSeason season in relatedSeasons)
                         {
                             if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true, false).Count > 0)
+                            {
                                 season[DBSeason.cHasLocalFilesTemp] = true;
+                                season[DBSeason.cHasEpisodes] = true;
+                            }
                             else
                                 season[DBSeason.cHasLocalFilesTemp] = false;
                             season.Commit();
@@ -343,9 +349,9 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBOnlineSeries series in relatedSeries)
                         {
                             if (DBEpisode.Get(series[DBOnlineSeries.cID], true, false).Count > 0)
-                                series[DBOnlineSeries.cHasLocalFiles] = true;
+                                series[DBOnlineSeries.cHasLocalFilesTemp] = true;
                             else
-                                series[DBOnlineSeries.cHasLocalFiles] = false;
+                                series[DBOnlineSeries.cHasLocalFilesTemp] = false;
                             series.Commit();
                         }
 
@@ -464,7 +470,8 @@ namespace WindowPlugins.GUITVSeries
 
                     // season now
                     DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
-                    season[DBSeason.cHasLocalFilesTemp] = 1;
+                    season[DBSeason.cHasLocalFilesTemp] = true;
+                    season[DBSeason.cHasEpisodes] = true;
                     season.Commit();
 
                     // then episode
@@ -478,6 +485,12 @@ namespace WindowPlugins.GUITVSeries
 
                     episode[DBEpisode.cImportProcessed] = 1;
                     episode[DBEpisode.cSeriesID] = series[DBSeries.cID];
+                    if (progress.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex2))
+                    {
+                        episode[DBEpisode.cEpisodeIndex2] = progress.parser.Matches[DBEpisode.cEpisodeIndex2];
+                        episode[DBEpisode.cCompositeID2] = episode[DBEpisode.cSeriesID] + "_" + nSeason + "x" + episode[DBEpisode.cEpisodeIndex2];
+                    }
+
                     // check if a subtitle is present alongside the file
                     String sDirectory = System.IO.Path.GetDirectoryName(progress.full_filename);
                     String sFileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(progress.full_filename);
@@ -1098,7 +1111,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 case DBOnlineEpisode.cCompositeID:
                                 case DBEpisode.cSeriesID:
-                                case DBEpisode.cWatched:
+                                case DBOnlineEpisode.cWatched:
                                     // do nothing here, those information are local only
                                     break;
 

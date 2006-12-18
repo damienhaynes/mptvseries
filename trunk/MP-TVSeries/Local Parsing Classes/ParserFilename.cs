@@ -52,6 +52,7 @@ namespace WindowPlugins.GUITVSeries
                         sExpression = sExpression.Replace("<series>", "<" + DBSeries.cParsedName + ">");
                         sExpression = sExpression.Replace("<season>", "<" + DBEpisode.cSeasonIndex + ">");
                         sExpression = sExpression.Replace("<episode>", "<" + DBEpisode.cEpisodeIndex + ">");
+                        sExpression = sExpression.Replace("<episode2>", "<" + DBEpisode.cEpisodeIndex2 + ">");
                         sExpression = sExpression.Replace("<title>", "<" + DBEpisode.cEpisodeName + ">");
 
                         sExpressions.Add(sExpression);
