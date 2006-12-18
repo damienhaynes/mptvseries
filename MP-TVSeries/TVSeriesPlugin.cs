@@ -1059,13 +1059,14 @@ namespace MediaPortal.GUI.Video
                         case cListLevelSeasons:
                             this.m_ListLevel = cListLevelSeries;
                             this.m_SelectedSeason = null;
+                            this.LoadFacade();
                             break;
                         case cListLevelEpisodes:
                             this.m_ListLevel = cListLevelSeasons;
                             this.m_SelectedEpisode = null;
+                            this.LoadFacade();
                             break;
                     }
-                    this.LoadFacade();
                     break;
 
                 default:
@@ -1076,6 +1077,7 @@ namespace MediaPortal.GUI.Video
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
+            if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
             {
                 if (this.m_Facade.SelectedListItem.TVTag == null)
