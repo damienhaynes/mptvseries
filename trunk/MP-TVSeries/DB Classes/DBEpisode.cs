@@ -396,6 +396,55 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
+        public static DBEpisode GetFirstUnwatched(int seriesID)
+        {
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
+            List<DBEpisode> results = GetFirstUnwatched(conditions);
+            if (results.Count > 0)
+                return results[0];
+            else
+                return null;
+        }
+
+        public static DBEpisode GetFirstUnwatched(int seriesID, int seasonIndex)
+        {
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
+            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, new DBValue(seasonIndex), SQLConditionType.Equal);
+            List<DBEpisode> results = GetFirstUnwatched(conditions);
+            if (results.Count > 0)
+                return results[0];
+            else
+                return null;
+        }
+
+        public static List<DBEpisode> GetFirstUnwatched()
+        {
+            return GetFirstUnwatched(new SQLCondition());
+        }
+
+        static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
+        {
+            SQLWhat what = new SQLWhat(new DBEpisode());
+
+            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions + " where online_episodes.watched = 0 group by local_episodes.seriesID );";
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            List<DBEpisode> outList = new List<DBEpisode>();
+            if (results.Rows.Count > 0)
+            {
+                for (int index = 0; index < results.Rows.Count; index++)
+                {
+                    DBEpisode episode = new DBEpisode();
+                    episode.Read(ref results, index);
+                    episode.m_onlineEpisode = new DBOnlineEpisode();
+                    episode.m_onlineEpisode.Read(ref results, index);
+                    outList.Add(episode);
+                }
+            }
+            return outList;
+        }
+
         public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
             SQLCondition conditions = null;
@@ -475,6 +524,11 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return outList;
+        }
+
+        public override string ToString()
+        {
+            return this[DBEpisode.cCompositeID];
         }
 
         public static void Clear(SQLCondition conditions)
