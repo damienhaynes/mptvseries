@@ -427,7 +427,7 @@ namespace WindowPlugins.GUITVSeries
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
         {
             SQLWhat what = new SQLWhat(new DBEpisode());
-            conditions.Add(new DBEpisode(), DBEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
+            conditions.Add(new DBOnlineEpisode(), DBEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
             string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
                 + @" and online_episodes.hidden = 0 "
