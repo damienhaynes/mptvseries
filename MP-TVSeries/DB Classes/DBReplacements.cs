@@ -24,6 +24,28 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cWith, "With this");
 
             DBReplacements dummy = new DBReplacements();
+
+            DBReplacements[] replacements = DBReplacements.GetAll();
+            if (replacements == null || replacements.Length == 0)
+            {
+                // no replacements in the db => put the default ones
+                DBReplacements replacement = new DBReplacements();
+                replacement[DBReplacements.cIndex] = "0";
+                replacement[DBReplacements.cEnabled] = "1";
+                replacement[DBReplacements.cToReplace] = ".";
+                replacement[DBReplacements.cWith] = @"<space>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "1";
+                replacement[DBReplacements.cToReplace] = "_";
+                replacement[DBReplacements.cWith] = @"<space>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "2";
+                replacement[DBReplacements.cToReplace] = "-<space>";
+                replacement[DBReplacements.cWith] = @"<empty>";
+                replacement.Commit();
+            }
         }
 
         public static String PrettyFieldName(String sFieldName)

@@ -79,16 +79,10 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
 
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_AutoScanLocal.Checked = DBOption.GetOptions(DBOption.cAutoScanLocalFiles);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
-            numericUpDown_AutoScanLocal.Enabled = checkBox_AutoScanLocal.Checked;
-            int nValue = DBOption.GetOptions(DBOption.cAutoScanLocalFilesLapse);
-            numericUpDown_AutoScanLocal.Minimum = 1;
-            numericUpDown_AutoScanLocal.Maximum = 180;
-            numericUpDown_AutoScanLocal.Value = nValue;
             checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
-            nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
+            int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
@@ -212,42 +206,6 @@ namespace WindowPlugins.GUITVSeries
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
-            if (expressions == null || expressions.Length == 0)
-            {
-                // no expressions in the db => put the default ones
-                DBExpression expression = new DBExpression();
-                expression[DBExpression.cIndex] = "0";
-                expression[DBExpression.cEnabled] = "1";
-                expression[DBExpression.cType] = DBExpression.cType_Simple;
-                expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>.<ext>";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "1";
-                expression[DBExpression.cExpression] = @"\<series>\Season <season>\Episode <episode> - <title>.<ext>";
-                expression.Commit();
-
-                expression[DBExpression.cType] = DBExpression.cType_Regexp;
-                expression[DBExpression.cIndex] = "2";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)\.(?<ext>[^.]*)";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "3";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)\.(?<ext>[^.]*)";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "4";
-                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?<ext>[^.]*)$";
-                expression.Commit();
-
-                expression[DBExpression.cIndex] = "5";
-                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?[0-9])e(?<episode>[0-9]{2})|(?<season>(?:[0-1][0-9]|(?<!\d)[0-9]))x?(?<episode>[0-9]{2}))(?!\d)[ \-\.]*(?<title>[^\\]*?)\.(?<ext>[^.]*)$";
-                expression.Commit();
-
-
-                // refresh
-                expressions = DBExpression.GetAll();
-            }
-
             // load them up in the datagrid
 
             //             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
@@ -301,29 +259,6 @@ namespace WindowPlugins.GUITVSeries
         private void LoadReplacements()
         {
             DBReplacements[] replacements = DBReplacements.GetAll();
-            if (replacements == null || replacements.Length == 0)
-            {
-                // no replacements in the db => put the default ones
-                DBReplacements replacement = new DBReplacements();
-                replacement[DBReplacements.cIndex] = "0";
-                replacement[DBReplacements.cEnabled] = "1";
-                replacement[DBReplacements.cToReplace] = ".";
-                replacement[DBReplacements.cWith] = @"<space>";
-                replacement.Commit();
-
-                replacement[DBReplacements.cIndex] = "1";
-                replacement[DBReplacements.cToReplace] = "_";
-                replacement[DBReplacements.cWith] = @"<space>";
-                replacement.Commit();
-
-                replacement[DBReplacements.cIndex] = "2";
-                replacement[DBReplacements.cToReplace] = "-<space>";
-                replacement[DBReplacements.cWith] = @"<empty>";
-                replacement.Commit();
-
-                // refresh
-                replacements = DBReplacements.GetAll();
-            }
 
             // load them up in the datagrid
 
@@ -794,7 +729,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Parsing Completed in " + span);
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
-
+            m_parser = null;
             // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
 //            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
             DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
@@ -1170,17 +1105,6 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_Episode_HideUnwatchedSummary_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, checkBox_Episode_HideUnwatchedSummary.Checked);
-        }
-
-        private void numericUpDown_AutoScanLocal_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cAutoScanLocalFilesLapse, (int)numericUpDown_AutoScanLocal.Value);
-        }
-
-        private void checkBox_AutoScanLocal_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cAutoScanLocalFiles, checkBox_AutoScanLocal.Checked);
-            numericUpDown_AutoScanLocal.Enabled = checkBox_AutoScanLocal.Checked;
         }
 
         private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)

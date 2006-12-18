@@ -692,7 +692,7 @@ namespace MediaPortal.GUI.Video
                                     item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
                                     item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
                                     item.IsRemote = episode[DBEpisode.cFilename] != "";
-                                    item.IsDownloading = episode[DBEpisode.cWatched] == 0;
+                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
                                     item.TVTag = episode;
 
                                     if (this.m_SelectedEpisode != null)
@@ -703,7 +703,7 @@ namespace MediaPortal.GUI.Video
                                     else
                                     {
                                         // select the first that has a file and is not watched
-                                        if (episode[DBEpisode.cFilename] != "" && episode[DBEpisode.cWatched] == 0 && selectedIndex == -1)
+                                        if (episode[DBEpisode.cFilename] != "" && episode[DBOnlineEpisode.cWatched] == 0 && selectedIndex == -1)
                                             selectedIndex = count;
                                     }
 
@@ -843,13 +843,23 @@ namespace MediaPortal.GUI.Video
                                 case 1:
                                     {
                                         // toggle watched
-                                        DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                        episode[DBEpisode.cWatched] = episode[DBEpisode.cWatched] == 0;
-                                        //                                     if (episode[DBEpisode.cWatched] == 0)
-                                        //                                         episode[DBEpisode.cWatched] = 1;
-                                        //                                     else
-                                        //                                         episode[DBEpisode.cWatched] = 0;
-                                        episode.Commit();
+                                        DBEpisode currentEpisode = (DBEpisode)currentitem.TVTag;
+                                        if (currentEpisode[DBEpisode.cFilename] != String.Empty)
+                                        {
+                                            SQLCondition condition = new SQLCondition();
+                                            condition.Add(new DBEpisode(), DBEpisode.cFilename, currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                                            foreach (DBEpisode episode in episodes)
+                                            {
+                                                episode[DBOnlineEpisode.cWatched] = currentEpisode[DBOnlineEpisode.cWatched] == 0;
+                                                episode.Commit();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            currentEpisode[DBOnlineEpisode.cWatched] = currentEpisode[DBOnlineEpisode.cWatched] == 0;
+                                            currentEpisode.Commit();
+                                        }
                                         LoadFacade();
                                     }
                                     break;
@@ -1119,8 +1129,14 @@ namespace MediaPortal.GUI.Video
                        
                         if (m_VideoHandler.ResumeOrPlay(m_SelectedEpisode))
                         {
-                            this.m_SelectedEpisode[DBEpisode.cWatched] = 1;
-                            this.m_SelectedEpisode.Commit();
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, this.m_SelectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                            foreach (DBEpisode episode in episodes)
+                            {
+                                episode[DBOnlineEpisode.cWatched] = 1;
+                                episode.Commit();
+                            }
                             this.LoadFacade();
                         }
                         break;
@@ -1481,7 +1497,7 @@ namespace MediaPortal.GUI.Video
             List<DBEpisode> validEps = new List<DBEpisode>();
             SQLCondition conditions = new SQLCondition();
             if (!firstUnwatchedOnly)
-                conditions.Add(new DBOnlineEpisode(), DBEpisode.cWatched, new DBValue(true), SQLConditionType.Equal);
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(true), SQLConditionType.Equal);
             switch (this.m_ListLevel)
             {
                 case cListLevelEpisodes:
@@ -1526,8 +1542,14 @@ namespace MediaPortal.GUI.Video
                 return;
             if (m_VideoHandler.ResumeOrPlay(pickedEp))
             {
-                pickedEp[DBEpisode.cWatched] = 1;
-                pickedEp.Commit();
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cFilename, pickedEp[DBEpisode.cFilename], SQLConditionType.Equal);
+                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                foreach (DBEpisode episode in episodes)
+                {
+                    episode[DBOnlineEpisode.cWatched] = 1;
+                    episode.Commit();
+                }
                 this.LoadFacade();
             }
         }

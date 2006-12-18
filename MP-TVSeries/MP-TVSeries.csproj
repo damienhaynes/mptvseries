@@ -42,7 +42,7 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\MediaPortal\xbmc\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\..\MediaPortal 0.2.1.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -143,6 +143,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetPath) D:\Dev\Own\MediaPortal\xbmc\bin\Debug\plugins\windows /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetPath) "D:\Dev\Own\MediaPortal 0.2.1.0\xbmc\bin\Debug\plugins\windows" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
