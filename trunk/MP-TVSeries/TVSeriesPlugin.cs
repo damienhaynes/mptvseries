@@ -1478,67 +1478,57 @@ namespace MediaPortal.GUI.Video
 
         private void playRandomEp(bool firstUnwatchedOnly)
         {
+            List<DBEpisode> validEps = new List<DBEpisode>();
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBTable(DBEpisode.cTableName), DBEpisode.cWatched, new DBValue(!firstUnwatchedOnly), SQLConditionType.Equal);
+            if (!firstUnwatchedOnly)
+                conditions.Add(new DBOnlineEpisode(), DBEpisode.cWatched, new DBValue(true), SQLConditionType.Equal);
             switch (this.m_ListLevel)
             {
-                case cListLevelSeries:
-                {
-                    // pick one globally
-                    break;
-                }
-                case cListLevelSeasons:
-                {   
-                    // pick one from the current series only
-                    conditions.Add(new DBTable(DBEpisode.cTableName), DBEpisode.cSeriesID, new DBValue((string)m_SelectedSeries[DBSeries.cID]), SQLConditionType.Equal);
-                    break;
-                }
                 case cListLevelEpisodes:
-                {
-                    // pick one from the current season only
-                    conditions.Add(new DBTable(DBEpisode.cTableName), DBEpisode.cSeriesID, new DBValue((string)m_SelectedSeries[DBSeries.cID]), SQLConditionType.Equal);
-                    conditions.Add(new DBTable(DBEpisode.cTableName), DBEpisode.cSeasonIndex, new DBValue((string)m_SelectedSeason[DBSeason.cIndex]), SQLConditionType.Equal);
+                    {
+                        // pick one from the current series/season only
+                        if (firstUnwatchedOnly)
+                        {
+                            validEps.Add(DBEpisode.GetFirstUnwatched(Convert.ToInt32((string)m_SelectedSeries[DBSeries.cID]), Convert.ToInt32((string)m_SelectedSeason[DBSeason.cIndex])));
+                            break;
+                        }
+                        else
+                            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, new DBValue((string)m_SelectedSeason[DBSeason.cIndex]), SQLConditionType.Equal);
+                        goto case cListLevelSeasons; // also add the series condition
+                    }
+                case cListLevelSeasons:
+                    {
+                        // pick one from the current series only
+                        if (firstUnwatchedOnly)
+                            validEps.Add(DBEpisode.GetFirstUnwatched(Convert.ToInt32((string)m_SelectedSeries[DBSeries.cID])));
+                        else
+                            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue((string)m_SelectedSeries[DBSeries.cID]), SQLConditionType.Equal);
+                        break;
+                    }
+                default:
+                    if(firstUnwatchedOnly)
+                        validEps = DBEpisode.GetFirstUnwatched();
                     break;
-                }
             }
-            List<DBEpisode> validEps = DBEpisode.Get(conditions, false);
+            if(!firstUnwatchedOnly)
+                validEps = DBEpisode.Get(conditions, false);
+
             DBEpisode pickedEp;
-            if (firstUnwatchedOnly) 
-            {
-                // eliminate all eps that are not the first of their series (lowest season/int)
-                // Step one: for each seriesID eliminate all but those with the lowest seasonindex
-                eliminateFromList(ref validEps, DBEpisode.cSeasonIndex);
-                // Step two: for each seriesID eliminate all but those with the lowest episodeindex
-                eliminateFromList(ref validEps, DBEpisode.cEpisodeIndex);
+
+            if (validEps != null && validEps.Count > 0)
+            {   
+                if(validEps.Count > 1)
+                    pickedEp = validEps[new Random().Next(0, validEps.Count)];
+                else
+                    pickedEp = validEps[0];
             }
-            pickedEp = validEps[new Random().Next(0, validEps.Count)];
+            else
+                return;
             if (m_VideoHandler.ResumeOrPlay(pickedEp))
             {
                 pickedEp[DBEpisode.cWatched] = 1;
                 pickedEp.Commit();
                 this.LoadFacade();
-            }
-        }
-
-        private void eliminateFromList(ref List<DBEpisode> validEps, string compareField)
-        {
-            Dictionary<int, int> seriesLowest = new Dictionary<int, int>();
-            foreach (DBEpisode candidate in validEps)
-            {
-                if (!seriesLowest.ContainsKey(candidate[DBEpisode.cSeriesID])) seriesLowest.Add(candidate[DBEpisode.cSeriesID], candidate[compareField]);
-                else if ((int)candidate[compareField] < seriesLowest[(int)candidate[DBEpisode.cSeriesID]])
-                {
-                    seriesLowest[(int)candidate[DBEpisode.cSeriesID]] = (int)candidate[compareField];
-                }
-            }
-            // we now know the lowest ...remove the rest for each series
-            for (int i = 0; i < validEps.Count; i++)
-            {
-                if ((int)validEps[i][compareField] > seriesLowest[(int)validEps[i][DBEpisode.cSeriesID]])
-                {
-                    validEps.Remove(validEps[i]);
-                    i--;
-                }
             }
         }
     }
