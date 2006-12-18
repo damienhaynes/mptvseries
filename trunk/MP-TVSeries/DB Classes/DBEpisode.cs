@@ -427,8 +427,13 @@ namespace WindowPlugins.GUITVSeries
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
         {
             SQLWhat what = new SQLWhat(new DBEpisode());
+            conditions.Add(new DBEpisode(), DBEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
-            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions + " where online_episodes.watched = 0 group by local_episodes.seriesID );";
+            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
+                + @" and online_episodes.hidden = 0 "
+                + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
+                + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "
+                + @"group by local_episodes.seriesID );";
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBEpisode> outList = new List<DBEpisode>();
             if (results.Rows.Count > 0)
@@ -468,6 +473,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
+
             SQLCondition conditions = null;
             if (bExistingFilesOnly)
             {
