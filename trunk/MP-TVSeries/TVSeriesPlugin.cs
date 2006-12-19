@@ -878,11 +878,11 @@ namespace MediaPortal.GUI.Video
                                 case 3:
                                     {
                                         DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                        if (m_ImportAnimation != null)
-                                            m_ImportAnimation.AllocResources();
                                         TorrentLoad torrentLoad = new TorrentLoad(this);
                                         torrentLoad.TorrentLoadCompleted += new WindowPlugins.GUITVSeries.Torrent.TorrentLoad.TorrentLoadCompletedHandler(torrentLoad_TorrentLoadCompleted);
-                                        torrentLoad.Search(episode);
+                                        if (torrentLoad.Search(episode))
+                                            if (m_ImportAnimation != null)
+                                                m_ImportAnimation.AllocResources();
                                     }
                                     break;
                             }
@@ -1444,7 +1444,11 @@ namespace MediaPortal.GUI.Video
                 return ReturnCode.Cancel;
 
             dlg.Reset();
-            dlg.SetHeading(descriptor.m_sTitle);
+            if (descriptor.m_sItemToMatchLabel == "")
+                dlg.SetHeading(descriptor.m_sTitle);
+            else
+                dlg.SetHeading(descriptor.m_sItemToMatchLabel + " " + descriptor.m_sItemToMatch);
+
             GUIListItem pItem = null;
 
             if (descriptor.m_sbtnIgnoreLabel != String.Empty)
