@@ -87,6 +87,8 @@ namespace WindowPlugins.GUITVSeries
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
 
+            checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
+
             checkBox_AutoHeight.Checked = DBOption.GetOptions(DBOption.cViewAutoHeight);
             comboBox_seriesFormat.Items.Add("Text");
             comboBox_seriesFormat.Items.Add("Graphical");
@@ -1810,6 +1812,11 @@ namespace WindowPlugins.GUITVSeries
         {
             m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex] = textBox_TorrentDetailsRegex.Text;
             m_currentTorrentSearch.Commit();
+        }
+
+        private void checkBox_RandBanner_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
         }
     }
 

@@ -127,7 +127,7 @@ namespace WindowPlugins.GUITVSeries
                 // ok let's see ... go through all enable import folders, and add a watchfolder on it
                 foreach (DBImportPath importPath in DBImportPath.GetAll())
                 {
-                    if (importPath[DBImportPath.cEnabled] != 0)
+                    if (importPath[DBImportPath.cEnabled] != 0 && Directory.Exists(importPath[DBImportPath.cPath]))
                     {
                         // one watcher for each extension type
                         foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)

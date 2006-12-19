@@ -143,6 +143,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
+                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList, true);
                 if (base[cCurrentBannerFileName] == String.Empty)
                     return String.Empty;
 

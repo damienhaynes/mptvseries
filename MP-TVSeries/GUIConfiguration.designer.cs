@@ -128,6 +128,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.checkBox_AutoHeight = new System.Windows.Forms.CheckBox();
@@ -844,7 +845,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col2);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Title);
-            this.groupBox3.Location = new System.Drawing.Point(4, 216);
+            this.groupBox3.Location = new System.Drawing.Point(4, 231);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(674, 108);
             this.groupBox3.TabIndex = 2;
@@ -1002,7 +1003,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col1);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Location = new System.Drawing.Point(3, 330);
+            this.groupBox4.Location = new System.Drawing.Point(3, 345);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(675, 128);
             this.groupBox4.TabIndex = 1;
@@ -1170,7 +1171,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col1);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(3, 103);
+            this.groupBox2.Location = new System.Drawing.Point(3, 118);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(675, 107);
             this.groupBox2.TabIndex = 1;
@@ -1316,6 +1317,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBox_RandBanner);
             this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
             this.groupBox1.Controls.Add(this.label16);
             this.groupBox1.Controls.Add(this.checkBox_AutoHeight);
@@ -1324,14 +1326,25 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.checkBox_AutoOnlineDataRefresh);
             this.groupBox1.Location = new System.Drawing.Point(4, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(674, 88);
+            this.groupBox1.Size = new System.Drawing.Size(674, 105);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
             // 
+            // checkBox_RandBanner
+            // 
+            this.checkBox_RandBanner.AutoSize = true;
+            this.checkBox_RandBanner.Location = new System.Drawing.Point(5, 59);
+            this.checkBox_RandBanner.Name = "checkBox_RandBanner";
+            this.checkBox_RandBanner.Size = new System.Drawing.Size(140, 17);
+            this.checkBox_RandBanner.TabIndex = 6;
+            this.checkBox_RandBanner.Text = "Display Random Banner";
+            this.checkBox_RandBanner.UseVisualStyleBackColor = true;
+            this.checkBox_RandBanner.CheckedChanged += new System.EventHandler(this.checkBox_RandBanner_CheckedChanged);
+            // 
             // textBox_PluginHomeName
             // 
-            this.textBox_PluginHomeName.Location = new System.Drawing.Point(150, 59);
+            this.textBox_PluginHomeName.Location = new System.Drawing.Point(149, 79);
             this.textBox_PluginHomeName.Name = "textBox_PluginHomeName";
             this.textBox_PluginHomeName.Size = new System.Drawing.Size(217, 20);
             this.textBox_PluginHomeName.TabIndex = 5;
@@ -1340,7 +1353,7 @@ namespace WindowPlugins.GUITVSeries
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(3, 62);
+            this.label16.Location = new System.Drawing.Point(2, 82);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(141, 13);
             this.label16.TabIndex = 4;
@@ -1864,5 +1877,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.CheckBox checkBox_RandBanner;
     }
 }
