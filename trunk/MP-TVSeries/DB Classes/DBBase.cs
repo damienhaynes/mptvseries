@@ -503,6 +503,42 @@ namespace WindowPlugins.GUITVSeries
             String sqlQuery = "delete from " + obj.m_tableName + conditions;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
         }
+
+        protected static string getRandomBanner(List<string> BannerList, bool checkForGraphical)
+        {
+            const string graphicalBannerRecognizerSubstring = "-g";
+
+            if (BannerList == null || BannerList.Count == 0) return string.Empty;
+            if (BannerList.Count == 1) return BannerList[0];
+
+            int randomPick = new Random().Next(0, BannerList.Count);
+            string randImage;
+            try
+            {
+                randImage = BannerList[randomPick];
+                if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
+                {
+                    // prefer graphical banners
+                    List<string> gBanners = new List<string>();
+                    foreach (string banner in BannerList)
+                    {
+                        if (banner.Contains(graphicalBannerRecognizerSubstring))
+                        {
+                            gBanners.Add(banner);
+                        }
+                    }
+                    if (gBanners.Count > 0)
+                        randImage = getRandomBanner(gBanners, false);
+                    // else no graphical banners avail. -> use text Banner we already picked
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                return string.Empty;
+            }
+            return randImage;
+        }
     };
 
     public class SQLWhat

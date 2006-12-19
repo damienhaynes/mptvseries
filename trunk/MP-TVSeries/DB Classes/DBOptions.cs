@@ -69,6 +69,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cUTorrentPath = "uTorrentPath";
         public const String cTorrentSearch = "TorrentSearch_Current";
 
+        public const String cRandomBanner = "randomBanner";
+
         static DBOption()
         {
             try
@@ -240,6 +242,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cUTorrentPath) == null)
                     SetOptions(cUTorrentPath, String.Empty);
+
+                if (GetOptions(cRandomBanner) == null)
+                    SetOptions(cRandomBanner, 0);
             }
             catch (Exception ex)
             {

@@ -358,6 +358,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
+                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList, true);
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] == String.Empty)
                         return String.Empty;
 
