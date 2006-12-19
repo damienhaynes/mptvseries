@@ -585,7 +585,7 @@ namespace WindowPlugins.GUITVSeries
 
                         Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                         descriptor.m_sTitle = "Unable to find matching series";
-                        descriptor.m_sItemToMatchLabel = "Local series name:";
+                        descriptor.m_sItemToMatchLabel = "Local series:";
                         descriptor.m_sItemToMatch = sSeriesNameToSearch;
                         descriptor.m_sListLabel = "Choose the correct series from this list:";
                         descriptor.m_List = Choices;

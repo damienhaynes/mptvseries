@@ -95,9 +95,9 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            MPTVSeriesLog.Log_Write("**********************************");
-            MPTVSeriesLog.Log_Write("Starting FOROM Subtitles retrieval");
-            MPTVSeriesLog.Log_Write("**********************************");
+            MPTVSeriesLog.Write("**********************************");
+            MPTVSeriesLog.Write("Starting FOROM Subtitles retrieval");
+            MPTVSeriesLog.Write("**********************************");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             try
@@ -131,6 +131,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                 if (sLal != String.Empty && m_sID != String.Empty)
                 {
                     String s1stLevelURL = String.Format(@"{0}/index.php?lal={1}&c={2}", m_sBaseUrl, sLal, m_sID);
+                    MPTVSeriesLog.Write("Step 1: looking into " + s1stLevelURL);
                     Stream data = client.OpenRead(s1stLevelURL);
                     StreamReader reader = new StreamReader(data);
                     String sPage = reader.ReadToEnd().Replace('\0', ' ');
@@ -154,6 +155,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     List<SeasonMatchResult> exactMatches = new List<SeasonMatchResult>();
                     if (sortedMatchList.Count > 0)
                     {
+                        MPTVSeriesLog.Write(String.Format("Found {0} series/season entries in the page", sortedMatchList.Count));
                         foreach (SeasonMatchResult result in sortedMatchList)
                         {
                             if (result.nDistance == 0)
@@ -164,6 +166,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     bool bOver = false;
                     while (!bOver)
                     {
+                        MPTVSeriesLog.Write(String.Format("Found {0} exact matches in the page", exactMatches.Count));
                         if (exactMatches.Count > 0)
                         {
                             foreach (SeasonMatchResult result in exactMatches)
@@ -171,7 +174,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 if (episode.m_nSeasonIndex >= result.nSeasonMin && episode.m_nSeasonIndex <= result.nSeasonMax)
                                 {
                                     // we found the right one without doubt. Let's go in !!!
-                                    MPTVSeriesLog.Log_Write(String.Format("{0}: Found {1} (season {2} to {3})", result.nDistance, result.sSubFullName, result.nSeasonMin, result.nSeasonMax));
+                                    MPTVSeriesLog.Write(String.Format("{0}: Found {1} (season {2} to {3})", result.nDistance, result.sSubFullName, result.nSeasonMin, result.nSeasonMax));
                                     finalSeasonResult = result;
                                     bOver = true;
                                 }
@@ -179,6 +182,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         }
                         else
                         {
+                            MPTVSeriesLog.Write("Choosing the series/season from a list");
                             // show the user the list and ask for the right one
                             List<Feedback.CItem> Choices = new List<Feedback.CItem>();
                             foreach (SeasonMatchResult match in sortedMatchList)
@@ -190,7 +194,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             }
                             Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                             descriptor.m_sTitle = "Choose correct series / season item";
-                            descriptor.m_sItemToMatchLabel = "Local series name to match:";
+                            descriptor.m_sItemToMatchLabel = "Local series:";
                             descriptor.m_sItemToMatch = episode.m_sSeriesName + " season " + episode.m_nSeasonIndex;
                             descriptor.m_sListLabel = "Available series / seasons list:";
                             descriptor.m_List = Choices;
@@ -204,6 +208,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             bOver = true;
                         }
                     }
+                }
+                else
+                {
+                    MPTVSeriesLog.Write(String.Format("Error, empty parameter (Lal={0} & ID={1})", sLal, m_sID));
                 }
 
                 // now, retrieve the subtitle for this episode (try VF first, then VO if no VF found)
@@ -219,6 +227,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         else
                             s2ndLevelURL = String.Format(@"{0}/indexb.php?lg={1}&type={2}&c={3}", m_sBaseUrl, sLang, finalSeasonResult.sSubLinkName, m_sID);
 
+                        MPTVSeriesLog.Write("Step 2: looking into " + s2ndLevelURL);
                         Stream data = client.OpenRead(s2ndLevelURL);
                         StreamReader reader = new StreamReader(data);
                         String sPage = reader.ReadToEnd().Replace('\0', ' ');
@@ -228,12 +237,17 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         String RegExp = "<tr align=\"left\"[^>]*?><[^>]*?>[^>]*?<a href=\"(?<link>[^\"]*?)\"[^>]*?>(?<name>[^<]*?)</a></td>";
                         Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                         MatchCollection matches = Engine.Matches(sPage);
+                        if (matches.Count == 0)
+                        {
+                            MPTVSeriesLog.Write("Error: no episodes found in the series/season page");
+                        }
                         foreach (Match match in matches)
                         {
                             EpisodeMatchResult result = new EpisodeMatchResult(match.Groups["name"].Value, match.Groups["link"].Value);
                             // match season index & episode index
                             if (result.m_nSeasonIndex == episode.m_nSeasonIndex && result.m_nEpisodeIndex == episode.m_nEpisodeIndex)
                             {
+                                MPTVSeriesLog.Write(String.Format("Found a matching episode ({0})", result.m_sName));
                                 result.ComputeDistance(episode);
                                 bool bFound = false;
                                 foreach (EpisodeMatchResult matchFind in matchList)
@@ -254,7 +268,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     }
                     while (true);
 
-                    MPTVSeriesLog.Log_Write(String.Format("{0} matching subtitles Found", matchList.Count));
+                    MPTVSeriesLog.Write(String.Format("{0} matching subtitles Found", matchList.Count));
 
                     List<EpisodeMatchResult> sortedMatchList = new List<EpisodeMatchResult>();
 
@@ -273,7 +287,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 Unrar unrar = new Unrar();
                                 unrar.ArchiveName = System.IO.Path.GetTempPath() + result.m_sName;
                                 List<String> fileList = unrar.FileNameList;
-                                MPTVSeriesLog.Log_Write(String.Format("Decompressing archive {0} : {1} files", result.m_sName, fileList.Count));
+                                MPTVSeriesLog.Write(String.Format("Decompressing archive {0} : {1} files", result.m_sName, fileList.Count));
                                 foreach (String file in fileList)
                                 {
                                     if (unrar.Extract(file, System.IO.Path.GetTempPath()))
@@ -367,7 +381,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 // has to be 
                                 Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                                 descriptor.m_sTitle = "Select matching subtitle file";
-                                descriptor.m_sItemToMatchLabel = "Local episode filename:";
+                                descriptor.m_sItemToMatchLabel = "filename:";
                                 descriptor.m_sItemToMatch = match.Groups[1].Value;
                                 descriptor.m_sListLabel = "Matching subtitles:";
                                 descriptor.m_List = Choices;
@@ -403,7 +417,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     else
                     {
                         // no match found
-                        MPTVSeriesLog.Log_Write(String.Format("No matching episode subtitles found!"));
+                        MPTVSeriesLog.Write(String.Format("No matching episode subtitles found!"));
                     }
 
                     // cleanup temp files 
@@ -460,9 +474,9 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         }
                     }
 
-                    MPTVSeriesLog.Log_Write("*******************************");
-                    MPTVSeriesLog.Log_Write("FOROM Subtitles retrieval ended");
-                    MPTVSeriesLog.Log_Write("*******************************");
+                    MPTVSeriesLog.Write("*******************************");
+                    MPTVSeriesLog.Write("FOROM Subtitles retrieval ended");
+                    MPTVSeriesLog.Write("*******************************");
                 }
             }
 

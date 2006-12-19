@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
             descriptor.m_sTitle = "Choose search site:";
             descriptor.m_sItemToMatchLabel = "";
             descriptor.m_sItemToMatch = "";
-            descriptor.m_sListLabel = "Lit of search sites:";
+            descriptor.m_sListLabel = "List of search sites:";
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 
@@ -72,9 +72,9 @@ namespace WindowPlugins.GUITVSeries.Torrent
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             // come up with a valid series name (remove some things basically)
-            MPTVSeriesLog.Log_Write("**********************************");
-            MPTVSeriesLog.Log_Write("Starting Torrentsearch process");
-            MPTVSeriesLog.Log_Write("**********************************");
+            MPTVSeriesLog.Write("**********************************");
+            MPTVSeriesLog.Write("Starting Torrentsearch process");
+            MPTVSeriesLog.Write("**********************************");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             try
@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                 }
                 Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                 descriptor.m_sTitle = "Found torrents:";
-                descriptor.m_sItemToMatchLabel = "Was looking for episode:";
+                descriptor.m_sItemToMatchLabel = "Looking for:";
                 descriptor.m_sItemToMatch = String.Format("{0} {1}x{2:D2}", sSeries, m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
                 descriptor.m_sListLabel = "Found torrents:";
                 descriptor.m_List = Choices;
