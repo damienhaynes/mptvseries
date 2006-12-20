@@ -35,21 +35,6 @@ namespace WindowPlugins.GUITVSeries
                 if (episode[DBEpisode.cFilename] == String.Empty)
                     return false;
 
-                // verify the file isn't still being written to
-                try { 
-                    using (System.IO.FileStream fs = System.IO.File.OpenWrite(episode[DBEpisode.cFilename])) 
-                    { } 
-                }
-                catch 
-                {
-                    // assume any exception means can't read the file
-                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                    dlgOK.SetHeading("Can't start playback");
-                    dlgOK.SetLine(1, "File must still be being written to");
-                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-                    return false;
-                }
-
                 m_currentEpisode = episode;
                 IMDBMovie movieDetails = new IMDBMovie();
                 int timeMovieStopped = 0;
