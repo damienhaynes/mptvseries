@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -269,6 +270,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cCompositeID2, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeIndex2, new DBField(DBField.cTypeInt));
 
+            base.AddColumn("videoWidth", new DBField(DBField.cTypeInt));
+            base.AddColumn("videoHeight", new DBField(DBField.cTypeInt));
+
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
                 if (!s_fields.ContainsKey(pair.Key))
@@ -461,6 +465,73 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return outList;
+        }
+
+        public bool localIsHD()
+        {
+            if (DBOption.GetOptions("minHDWidth") == 0 || DBOption.GetOptions("minHDHeight") == 0) return false; // check enabled
+            
+            int width;
+            if(this["videoWidth"] == null) width = 0;
+            else width = this["videoWidth"];
+
+            // check if videoWidth is set, if not read it out and store and get again (this way, the first time this method is called it will be slow)
+            if (width < 1)
+            {
+                if (width < -2) return false; // we already tried this file 3 or more times without sucess, dont attempt inside MP anymore (force update will still try again)
+                if (readVidResolution())
+                    width = this["videoWidth"];
+                else // we cant read it out (maybe file doesnt exist or cant be read or whatever)
+                    return false;
+            }
+
+            // we now assume we know about the videos resolution -> check if its higher than min res.
+            if (width >= DBOption.GetOptions("minHDWidth") && // width
+                this["videoHeight"] >= DBOption.GetOptions("minHDHeight")) // height
+                return true;
+            else
+                return false;
+        }
+
+        public bool readVidResolution()
+        {
+            Video _video;
+            string filename = this[DBEpisode.cFilename];
+
+            if (System.IO.File.Exists(filename))
+            {
+                try
+                {
+                    _video = new Video(filename);
+
+                    System.Drawing.Size vidSize = _video.Size;
+                    _video.Dispose(); // clean up
+                    this["videoWidth"] = vidSize.Width;
+                    this["videoHeight"] = vidSize.Height;
+                    this.Commit();
+                    MPTVSeriesLog.Write("Video Resolution for ", filename + " = " + vidSize.Width.ToString() + "x" + vidSize.Height.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    MPTVSeriesLog.Write("Error reading videoResolution for ", filename, MPTVSeriesLog.LogLevel.Normal);
+                    // here we have to assume the video cannot be played back (missing filter, damaged file, whatever)
+                    // we set the videoWidth to -=1 this way we can keep track of how often the file has been tried
+                    // inside MP we try 3 times, after that the user will have to do a manual force
+                    if (this["videoWidth"] <= 0)
+                    {
+                        this["videoWidth"]--;
+                        this.Commit();
+                    } // else the res was already set (maybe a filter was uninstalled) -> keep the old value(s)
+
+                    return false;
+                }
+            }
+            else
+            {
+                MPTVSeriesLog.Write("Video Resolution for ", filename + " not receivable...file not accessable", MPTVSeriesLog.LogLevel.Normal);
+                return false;
+            }
         }
 
         public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)

@@ -128,6 +128,11 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.minHDHeight = new System.Windows.Forms.TextBox();
+            this.minHDWidth = new System.Windows.Forms.TextBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -1317,6 +1322,11 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.linkLabel1);
+            this.groupBox1.Controls.Add(this.label25);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.minHDHeight);
+            this.groupBox1.Controls.Add(this.minHDWidth);
             this.groupBox1.Controls.Add(this.checkBox_RandBanner);
             this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
             this.groupBox1.Controls.Add(this.label16);
@@ -1330,6 +1340,53 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(621, 59);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(43, 13);
+            this.linkLabel1.TabIndex = 11;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Force...";
+            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plugin to read the resolutions now!\r\nPlease note, if you " +
+                    "use Upscaling Filters in FFDShow temporarily disable them before doing this!");
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(559, 59);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(12, 13);
+            this.label25.TabIndex = 10;
+            this.label25.Text = "x";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(214, 60);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(252, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "min. Video resolution to mark as HD (0x0 to disable):";
+            // 
+            // minHDHeight
+            // 
+            this.minHDHeight.Location = new System.Drawing.Point(572, 56);
+            this.minHDHeight.Name = "minHDHeight";
+            this.minHDHeight.Size = new System.Drawing.Size(40, 20);
+            this.minHDHeight.TabIndex = 8;
+            this.minHDHeight.TextChanged += new System.EventHandler(this.minHDHeight_TextChanged);
+            // 
+            // minHDWidth
+            // 
+            this.minHDWidth.Location = new System.Drawing.Point(518, 56);
+            this.minHDWidth.Name = "minHDWidth";
+            this.minHDWidth.Size = new System.Drawing.Size(38, 20);
+            this.minHDWidth.TabIndex = 7;
+            this.minHDWidth.TextChanged += new System.EventHandler(this.minHDWidth_TextChanged);
             // 
             // checkBox_RandBanner
             // 
@@ -1878,5 +1935,10 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox minHDHeight;
+        private System.Windows.Forms.TextBox minHDWidth;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

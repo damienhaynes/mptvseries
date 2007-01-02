@@ -198,6 +198,7 @@ namespace MediaPortal.GUI.Video
 
         [SkinControlAttribute(46)]
         protected GUIImage m_Season_Image = null;
+
         #endregion
 
         public override int GetID
@@ -473,6 +474,7 @@ namespace MediaPortal.GUI.Video
 
         void LoadFacade()
         {
+
             if (this.m_Facade != null)
             {
                 m_Button_View.Visible = false;
@@ -706,6 +708,9 @@ namespace MediaPortal.GUI.Video
                                         if (episode[DBEpisode.cFilename] != "" && episode[DBOnlineEpisode.cWatched] == 0 && selectedIndex == -1)
                                             selectedIndex = count;
                                     }
+
+                                    if (episode.localIsHD())
+                                        item.IconImage = item.IconImageBig = DBOption.hdIconFilename;
 
                                     this.m_Facade.Add(item);
                                 }
