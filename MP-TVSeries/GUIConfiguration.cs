@@ -154,6 +154,9 @@ namespace WindowPlugins.GUITVSeries
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
 
+            minHDHeight.Text = DBOption.GetOptions("minHDHeight");
+            minHDWidth.Text = DBOption.GetOptions("minHDWidth");
+
             LoadTorrentSearches();
         }
 
@@ -1817,6 +1820,59 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_RandBanner_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
+        }
+
+        private void minHDWidth_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions("minHDWidth", minHDWidth.Text);
+        }
+
+        private void minHDHeight_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions("minHDHeight", minHDHeight.Text);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Force update of previously read-out files?\n(No for new files only)", "Ignore already read-out files?", MessageBoxButtons.YesNoCancel);
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+            List<DBEpisode> episodes = new List<DBEpisode>();
+            if(result == DialogResult.Yes)
+            {
+                // get all the episodes
+                episodes = DBEpisode.Get(cond, false);
+            }
+            else if(result == DialogResult.No)
+            {
+                // only get the episodes that dont have their resolutions read out already
+                cond.Add(new DBEpisode(), "videoWidth", 1, SQLConditionType.LessThan); // lessthan here because it can be -1 etc. for no. of failed attempts
+                cond.Add(new DBEpisode(), "videoHeight", 0, SQLConditionType.Equal);
+                episodes = DBEpisode.Get(cond, false);
+            }
+            
+            if (episodes.Count > 0)
+            {
+                MPTVSeriesLog.Write("Force update of Video Resolutions....(Please be patient!)");
+                BackgroundWorker resReader = new BackgroundWorker();
+                resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
+                resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
+                resReader.RunWorkerAsync(episodes);
+            }
+
+        }
+
+        void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write("Force update of Video Resolutions complete (processed " + e.Result.ToString() + " files)");
+        }
+
+        void asyncReadResolutions(object sender, DoWorkEventArgs e)
+        {
+            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
+            foreach (DBEpisode ep in episodes)
+                    ep.readVidResolution();
+            e.Result = episodes.Count;
         }
     }
 

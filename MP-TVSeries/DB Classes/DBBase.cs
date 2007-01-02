@@ -521,12 +521,8 @@ namespace WindowPlugins.GUITVSeries
                     // prefer graphical banners
                     List<string> gBanners = new List<string>();
                     foreach (string banner in BannerList)
-                    {
                         if (banner.Contains(graphicalBannerRecognizerSubstring))
-                        {
                             gBanners.Add(banner);
-                        }
-                    }
                     if (gBanners.Count > 0)
                         randImage = getRandomBanner(gBanners, false);
                     // else no graphical banners avail. -> use text Banner we already picked
