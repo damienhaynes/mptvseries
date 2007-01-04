@@ -135,7 +135,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 5;
+        public const int cDBVersion = 6;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -186,6 +186,15 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                         break;
 
+                    case 5:
+                        // copy all local parsed name into the online series if seriesID = 0
+                        SQLCondition conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
+                        // just getting the series should be enough
+                        List<DBSeries> seriesList = DBSeries.Get(conditions);
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        break;
+
                     default:
                         break;
                 }
@@ -229,6 +238,11 @@ namespace WindowPlugins.GUITVSeries
                 s_nLastLocalID--;
                 DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
                 base[cID] = m_onlineSeries[DBOnlineSeries.cID];
+                if (m_onlineSeries[DBOnlineSeries.cPrettyName] == String.Empty)
+                {
+                    m_onlineSeries[DBOnlineSeries.cPrettyName] = base[cParsedName];
+                    m_onlineSeries.Commit();
+                }
             }
             else
             {
@@ -455,7 +469,7 @@ namespace WindowPlugins.GUITVSeries
         {
             SQLWhat what = new SQLWhat(new DBOnlineSeries());
             what.AddWhat(new DBSeries());
-            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + conditions + " order by " + DBSeries.Q(cParsedName);
+            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + conditions + " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
             return Get(sqlQuery);
         }
 
@@ -472,6 +486,11 @@ namespace WindowPlugins.GUITVSeries
                     series.m_onlineSeries = new DBOnlineSeries();
                     series.m_onlineSeries.Read(ref results, index);
                     outList.Add(series);
+                    if (series[cID] < 0 && series.m_onlineSeries[DBOnlineSeries.cPrettyName] == String.Empty)
+                    {
+                        series.m_onlineSeries[DBOnlineSeries.cPrettyName] = series[cParsedName];
+                        series.m_onlineSeries.Commit();
+                    }
                 }
             }
             return outList;
