@@ -57,6 +57,9 @@ namespace WindowPlugins.GUITVSeries
             logfile += @"\Log\MP-TVSeries.log";
 #endif
             m_filename = logfile;
+            m_LogStream = File.CreateText(m_filename);
+            m_LogStream.Close();
+            m_LogStream.Dispose();
         }
 
         /// <summary>
