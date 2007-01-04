@@ -44,6 +44,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\MediaPortal 0.2.1.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.DirectX.AudioVideoPlayback, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -117,16 +118,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Cisso">
-      <Guid>{4E469DD1-2B6F-11D0-BFBC-0020F8008024}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>1033</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="img\arrows.png" />
     <None Include="img\arrow_up.png" />
     <None Include="img\arrow_down.png" />
@@ -143,6 +134,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetPath) "D:\Dev\Own\MediaPortal 0.2.1.0\xbmc\bin\Debug\plugins\windows" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetPath) "D:\Dev\Own\MediaPortal SVN\xbmc\bin\Debug\plugins\windows" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -778,7 +778,13 @@ namespace WindowPlugins.GUITVSeries
                         DBSeries series = (DBSeries)node.Parent.Parent.Tag;
                         String filename = series.Banner;
                         if (filename != String.Empty)
-                            this.pictureBox_Series.Image = Image.FromFile(filename);
+                            try
+                            {
+                                this.pictureBox_Series.Image = Image.FromFile(filename);
+                            }
+                            catch (Exception)
+                            {
+                            }
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_BannerSelection.Enabled = false;
@@ -837,7 +843,13 @@ namespace WindowPlugins.GUITVSeries
 
                         if (season.Banner != String.Empty)
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                            try
+                            {
+                                this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                            }
+                            catch (Exception)
+                            {
+                            }
                             foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
                                 if (comboItem.sFullPath == season.Banner)
                                 {
@@ -886,7 +898,14 @@ namespace WindowPlugins.GUITVSeries
 
                         if (series.Banner != String.Empty)
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                            try
+                            {
+                                this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                            }
+                            catch (System.Exception)
+                            {
+                            	
+                            }
                             foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
                                 if (comboItem.sFullPath == series.Banner)
                                 {
@@ -1073,7 +1092,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBSeries series = (DBSeries)treeView_Library.SelectedNode.Tag;
                         series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
-                        this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        try
+                        {
+                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        }
+                        catch (Exception)
+                        {
+                        }
                         series.Commit();
                     }
                     break;
@@ -1082,7 +1107,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBSeason season = (DBSeason)treeView_Library.SelectedNode.Tag;
                         season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
-                        this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                        try
+                        {
+                            this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                        }
+                        catch (Exception)
+                        {
+                        }
                         season.Commit();
                     }
                     break;
@@ -1091,7 +1122,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBSeries series = (DBSeries)treeView_Library.SelectedNode.Parent.Parent.Tag;
                         series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
-                        this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        try
+                        {
+                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                        }
+                        catch (Exception)
+                        {
+                        } 
                         series.Commit();
                     }
                     break;
