@@ -737,7 +737,7 @@ namespace WindowPlugins.GUITVSeries
             if (commonAspectRatios.ContainsKey(ratiof)) return commonAspectRatios[ratiof]; // it is exactly one of the common ratios
             // else be less precise
             foreach (float commonAspect in commonAspectRatios.Keys)
-                if (commonAspect - ratiof < 0.03f && commonAspect - ratiof > -0.03f) return commonAspectRatios[commonAspect] + " " + ratiof.ToString();
+                if (commonAspect - ratiof < 0.03f && commonAspect - ratiof > -0.03f) return commonAspectRatios[commonAspect];
             // seems to be something odd
             return Math.Round(ratiof, 2).ToString() + ":1";
         }
