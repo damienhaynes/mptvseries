@@ -135,6 +135,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cImportProcessed = "LocalImportProcessed";
         public const String cAvailableSubtitles = "AvailableSubtitles";
 
+        public const String cVideoWidth = "videoWidth";
+        public const String cVideoHeight = "videoHeight";
+        public const String cAspectRatio = "AspectRatio"; // no db value though
+
         private DBOnlineEpisode m_onlineEpisode = null;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -270,8 +274,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cCompositeID2, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeIndex2, new DBField(DBField.cTypeInt));
 
-            base.AddColumn("videoWidth", new DBField(DBField.cTypeInt));
-            base.AddColumn("videoHeight", new DBField(DBField.cTypeInt));
+            base.AddColumn(cVideoWidth, new DBField(DBField.cTypeInt));
+            base.AddColumn(cVideoHeight, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -321,6 +325,9 @@ namespace WindowPlugins.GUITVSeries
                 outList.Add(cCompositeID);
                 outList.Add(cCompositeID2);
 
+                // also add AspectRatio for support in setting it up
+                outList.Add(cAspectRatio);
+
                 foreach (KeyValuePair<string, DBField> pair in m_fields)
                 {
                     if (outList.IndexOf(pair.Key) == -1)
@@ -335,7 +342,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-
                 return outList;
             }
         }
@@ -345,6 +351,10 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
+                // for aspectRatio we have a special case (no db value)
+                // by adding it here and to Fieldnames we can have native support for it to be configured for display like any other value
+                if (fieldName == cAspectRatio) return new DBValue(AspectRatio);
+
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {
@@ -370,6 +380,9 @@ namespace WindowPlugins.GUITVSeries
 
             set
             {
+                // for aspectRatio we have a special case (no db value so can't be set)
+                if (fieldName == cAspectRatio) return;
+
                 if (m_onlineEpisode != null)
                 {
                     switch (fieldName)
@@ -467,27 +480,33 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
+        bool vidResolutionIsSet(bool setIfNot)
+        {
+            int width;
+            if (this[cVideoWidth] == null) width = 0;
+            else width = this[cVideoWidth];
+
+            if (width < 1)
+            {
+                if (width < -2) return false; // we already tried this file 3 or more times without sucess, dont attempt inside MP anymore (force update will still try again)
+                if (setIfNot && readVidResolution())
+                    return true;
+                else // we cant read it out (maybe file doesnt exist or cant be read or whatever)
+                    return false;
+            }
+            return true;
+        }
+
         public bool localIsHD()
         {
             if (DBOption.GetOptions("minHDWidth") == 0 || DBOption.GetOptions("minHDHeight") == 0) return false; // check enabled
             
-            int width;
-            if(this["videoWidth"] == null) width = 0;
-            else width = this["videoWidth"];
-
-            // check if videoWidth is set, if not read it out and store and get again (this way, the first time this method is called it will be slow)
-            if (width < 1)
-            {
-                if (width < -2) return false; // we already tried this file 3 or more times without sucess, dont attempt inside MP anymore (force update will still try again)
-                if (readVidResolution())
-                    width = this["videoWidth"];
-                else // we cant read it out (maybe file doesnt exist or cant be read or whatever)
-                    return false;
-            }
+            // check if videoRes is set, if not read it out and store and get again (this way, the first time this method is called it will be slow)
+            if (!vidResolutionIsSet(true)) return false; // have to abort
 
             // we now assume we know about the videos resolution -> check if its higher than min res.
-            if (width >= DBOption.GetOptions("minHDWidth") && // width
-                this["videoHeight"] >= DBOption.GetOptions("minHDHeight")) // height
+            if (this[cVideoWidth] >= DBOption.GetOptions("minHDWidth") && // width
+                this[cVideoHeight] >= DBOption.GetOptions("minHDHeight")) // height
                 return true;
             else
                 return false;
@@ -531,6 +550,19 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Video Resolution for ", filename + " not receivable...file not accessable", MPTVSeriesLog.LogLevel.Normal);
                 return false;
+            }
+        }
+
+        public string AspectRatio
+        {
+            get
+            {
+                if (vidResolutionIsSet(true)) // make sure we have values
+                    return aspectRatio.getFriendlyAspectRatio(this[cVideoWidth], this[cVideoHeight]);
+                else if (this[cFilename].ToString().ToLower().Contains(".ws.") || this[cFilename].ToString().ToLower().Contains("hdtv"))
+                    return "16:9";
+                else
+                    return string.Empty; // Sorry...I did my best!
             }
         }
 
@@ -681,5 +713,33 @@ namespace WindowPlugins.GUITVSeries
             return cTableName + "." + sField;
         }
 
+    }
+
+    class aspectRatio
+    {
+        private aspectRatio()
+        { }
+
+        static Dictionary<float, string> commonAspectRatios = new Dictionary<float, string>();
+        static aspectRatio()
+        {
+            // yes, there is only 3 there...sue me
+            commonAspectRatios.Add(16f / 9f, "16:9");
+            commonAspectRatios.Add(4f / 3f, "4:3");
+            commonAspectRatios.Add(5f / 54, "5:4"); //everything else as ratio:1 eg: 1.85:1 or 2.40:1
+        }
+
+        public static string getFriendlyAspectRatio(int vidWidth, int vidHeight)
+        {
+            // this is very simple, but its fast, doesnt need a db entry, no point in calculating common denominators or anything really.......what tv show is not 16:9 or 4:3???
+            float ratiof = (float)vidWidth / (float)vidHeight;
+            // check direct hit
+            if (commonAspectRatios.ContainsKey(ratiof)) return commonAspectRatios[ratiof]; // it is exactly one of the common ratios
+            // else be less precise
+            foreach (float commonAspect in commonAspectRatios.Keys)
+                if (commonAspect - ratiof < 0.03f && commonAspect - ratiof > -0.03f) return commonAspectRatios[commonAspect] + " " + ratiof.ToString();
+            // seems to be something odd
+            return Math.Round(ratiof, 2).ToString() + ":1";
+        }
     }
 }
