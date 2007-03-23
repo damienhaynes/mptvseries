@@ -131,6 +131,21 @@
 	      <texture></texture>
 	    </control>
 		
+		<!-- generated, custom logos -->		
+		<control>
+			<type>image</type>
+			<description>Series Logo</description>
+			<id>66</id>
+			<posX>370</posX>
+			<posY>460</posY>
+			<width>300</width>
+			<height>50</height>
+			<texture></texture>
+		  <centered>yes</centered>
+		  <keepaspectratio>yes</keepaspectratio>
+	  <colordiffuse>80FFFFFF</colordiffuse>
+		</control>
+		
 		<!-- Image Overlay for Fade Effect -->
 		<control>
 	      <type>image</type>
@@ -181,6 +196,37 @@
 	      <textcolor>FFA9D0F7</textcolor>
 	      <font>font10</font>
 	    </control>
+		
+		<control>
+			<type>label</type>
+			<description>prev View</description>
+			<id>78</id>
+			<posX>470</posX>
+			<posY>540</posY>
+			<width>100</width>
+			<align>right</align>
+			<font>font13</font>
+		</control>
+		<control>
+			<type>label</type>
+			<description>cur_view</description>
+			<id>77</id>
+			<posX>474</posX>
+			<posY>545</posY>
+			<width>100</width>
+			<align>center</align>
+			<font>font16</font>
+		</control>
+			<control>
+			<type>label</type>
+			<description>next view</description>
+			<id>79</id>
+			<posX>574</posX>
+			<posY>540</posY>
+			<width>100</width>
+			<align>left</align>
+			<font>font13</font>
+		</control>
 	    
 			<!-- Description -->
 			<control>
