@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
-using Microsoft.DirectX.AudioVideoPlayback;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -137,12 +136,13 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
-        public const String cAspectRatio = "AspectRatio"; // no db value though
 
         private DBOnlineEpisode m_onlineEpisode = null;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
+
+        static MediaInfoLib.MediaInfo MI;
 
         static DBEpisode()
         {
@@ -189,6 +189,16 @@ namespace WindowPlugins.GUITVSeries
                     default:
                         break;
                 }
+            // create the dll interop for getting MediaInfo
+            try
+            {
+               MI = new MediaInfoLib.MediaInfo();
+            }
+            catch(Exception ex)
+            {
+                // if it fails, most likely the dll is not in the correct folder
+                MPTVSeriesLog.Write("Failed to create MediaInfo Object: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+            }
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -221,6 +231,7 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet) readMediaInfoOfLocal();
             if (base[cSeriesID] != String.Empty && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
@@ -307,6 +318,67 @@ namespace WindowPlugins.GUITVSeries
             base[cEpisodeIndex] = -1;
         }
 
+        public bool mediaInfoIsSet
+        {
+            get
+            {
+                if (this["localPlaytime"] == "" ||
+                    this["VideoCodec"] == "" ||
+                    this["VideoBitrate"] == "" ||
+                    this["VideoFrameRate"] == "" ||
+                    this["videoWidth"] == "" ||
+                    this["videoHeight"] == "" ||
+                    this["VideoAspectRatio"] == "" ||
+                    this["AudioCodec"] == "" ||
+                    this["AudioChannels"] == "" ||
+                    this["AudioBitrate"] == ""
+                    ) return false;
+                else return true;
+
+            }
+        }
+
+        public bool readMediaInfoOfLocal()
+        {
+            if (null == MI) return false; // MediaInfo Object could not be created
+
+            if(System.IO.File.Exists(this[DBEpisode.cFilename]))
+            {
+                
+                try
+                {
+                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                    perfana.start();
+                    MI.Open(this[DBEpisode.cFilename]);
+                    string result = string.Empty;
+                    this["localPlaytime"] = (result = MI.getPlaytime()) != string.Empty ? result : "-1";
+                    this["VideoCodec"] = (result = MI.getVidCodec()) != string.Empty ? result : "-1";
+                    this["VideoBitrate"] = (result = MI.getVidBitrate()) != string.Empty ? result : "-1";
+                    this["VideoFrameRate"] = (result = MI.getFPS()) != string.Empty ? result : "-1";
+                    this["videoWidth"] = (result = MI.getWidth()) != string.Empty ? result : "-1"; // lower case for compat. with older version
+                    this["videoHeight"] = (result = MI.getHeight()) != string.Empty ? result : "-1";
+                    this["VideoAspectRatio"] = (result = MI.getAR()) != string.Empty ? result : "-1";
+
+                    this["AudioCodec"] = (result = MI.getAudioCodec()) != string.Empty ? result : "-1";
+                    this["AudioBitrate"] = (result = MI.getAudioBitrate()) != string.Empty ? result : "-1";
+                    this["AudioChannels"] = (result = MI.getNoChannels()) != string.Empty ? result : "-1";
+                    MI.Close();
+
+                    MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString() + " Time in ms: " + perfana.measorFromStart(), MPTVSeriesLog.LogLevel.Normal);
+                    Commit();
+                    
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Error reading Mediainfo ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                }
+                
+            }
+            return false;
+
+        }
+
         public DBOnlineEpisode onlineEpisode
         {
             get { return m_onlineEpisode; }
@@ -324,9 +396,6 @@ namespace WindowPlugins.GUITVSeries
                 outList.Add(cEpisodeIndex2);
                 outList.Add(cCompositeID);
                 outList.Add(cCompositeID2);
-
-                // also add AspectRatio for support in setting it up
-                outList.Add(cAspectRatio);
 
                 foreach (KeyValuePair<string, DBField> pair in m_fields)
                 {
@@ -351,9 +420,6 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                // for aspectRatio we have a special case (no db value)
-                // by adding it here and to Fieldnames we can have native support for it to be configured for display like any other value
-                if (fieldName == cAspectRatio) return new DBValue(AspectRatio);
 
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
@@ -380,8 +446,6 @@ namespace WindowPlugins.GUITVSeries
 
             set
             {
-                // for aspectRatio we have a special case (no db value so can't be set)
-                if (fieldName == cAspectRatio) return;
 
                 if (m_onlineEpisode != null)
                 {
@@ -415,6 +479,7 @@ namespace WindowPlugins.GUITVSeries
                     base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
                     Commit();
                 }
+
             }
         }
 
@@ -480,91 +545,6 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
-        bool vidResolutionIsSet(bool setIfNot)
-        {
-            int width;
-            if (this[cVideoWidth] == null) width = 0;
-            else width = this[cVideoWidth];
-
-            if (width < 1)
-            {
-                if (width < -2) return false; // we already tried this file 3 or more times without sucess, dont attempt inside MP anymore (force update will still try again)
-                if (setIfNot && readVidResolution())
-                    return true;
-                else // we cant read it out (maybe file doesnt exist or cant be read or whatever)
-                    return false;
-            }
-            return true;
-        }
-
-        public bool localIsHD()
-        {
-            if (DBOption.GetOptions("minHDWidth") == 0 || DBOption.GetOptions("minHDHeight") == 0) return false; // check enabled
-            
-            // check if videoRes is set, if not read it out and store and get again (this way, the first time this method is called it will be slow)
-            if (!vidResolutionIsSet(true)) return false; // have to abort
-
-            // we now assume we know about the videos resolution -> check if its higher than min res.
-            if (this[cVideoWidth] >= DBOption.GetOptions("minHDWidth") && // width
-                this[cVideoHeight] >= DBOption.GetOptions("minHDHeight")) // height
-                return true;
-            else
-                return false;
-        }
-
-        public bool readVidResolution()
-        {
-            Video _video;
-            string filename = this[DBEpisode.cFilename];
-
-            if (System.IO.File.Exists(filename))
-            {
-                try
-                {
-                    _video = new Video(filename);
-
-                    System.Drawing.Size vidSize = _video.Size;
-                    _video.Dispose(); // clean up
-                    this["videoWidth"] = vidSize.Width;
-                    this["videoHeight"] = vidSize.Height;
-                    this.Commit();
-                    MPTVSeriesLog.Write("Video Resolution for ", filename + " = " + vidSize.Width.ToString() + "x" + vidSize.Height.ToString(), MPTVSeriesLog.LogLevel.Debug);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    MPTVSeriesLog.Write("Error reading videoResolution for ", filename, MPTVSeriesLog.LogLevel.Normal);
-                    // here we have to assume the video cannot be played back (missing filter, damaged file, whatever)
-                    // we set the videoWidth to -=1 this way we can keep track of how often the file has been tried
-                    // inside MP we try 3 times, after that the user will have to do a manual force
-                    if (this["videoWidth"] <= 0)
-                    {
-                        this["videoWidth"]--;
-                        this.Commit();
-                    } // else the res was already set (maybe a filter was uninstalled) -> keep the old value(s)
-
-                    return false;
-                }
-            }
-            else
-            {
-                MPTVSeriesLog.Write("Video Resolution for ", filename + " not receivable...file not accessable", MPTVSeriesLog.LogLevel.Normal);
-                return false;
-            }
-        }
-
-        public string AspectRatio
-        {
-            get
-            {
-                if (vidResolutionIsSet(true)) // make sure we have values
-                    return aspectRatio.getFriendlyAspectRatio(this[cVideoWidth], this[cVideoHeight]);
-                else if (this[cFilename].ToString().ToLower().Contains(".ws.") || this[cFilename].ToString().ToLower().Contains("hdtv"))
-                    return "16:9";
-                else
-                    return string.Empty; // Sorry...I did my best!
-            }
-        }
 
         public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
@@ -615,57 +595,56 @@ namespace WindowPlugins.GUITVSeries
         public static List<DBEpisode> Get(SQLCondition conditions, bool bOnline)
         {
             String sqlQuery = String.Empty;
+
+            string orderBy = !conditions.customOrderStringIsSet
+                  ? string.Empty
+                  : conditions.orderString;
+            string innerJoin = innerJoins((string)conditions + conditions.orderString);
             if (bOnline)
             {
+                if (orderBy == string.Empty)
+                    orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + conditions + " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + orderBy + conditions.limitString;
             }
             else
             {
+                if (orderBy == string.Empty)
+                    orderBy = " order by " + Q(cEpisodeIndex);
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " order by " + Q(cEpisodeIndex);
+                sqlQuery = "select " + what + innerJoin + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + orderBy + conditions.limitString;
             }
 
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
-            {
-                for (int index = 0; index < results.Rows.Count; index++)
-                {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(ref results, index);
-                    outList.Add(episode);
-                }
-            }
+            outList.AddRange(Get(sqlQuery));
 
             // do the second episodes if existing
             if (bOnline)
             {
+                if (orderBy == string.Empty)
+                    orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + conditions + " and " + DBEpisode.Q(cFilename) + "!='' order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
             }
             else
             {
+                if (orderBy == string.Empty)
+                    orderBy = " order by " + Q(cEpisodeIndex);
                 SQLWhat what = new SQLWhat(new DBEpisode());
                 what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + conditions + " and " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + " and " + DBEpisode.Q(cFilename) + "!='' order by " + Q(cEpisodeIndex);
+                sqlQuery = "select " + what + innerJoin + conditions + " and " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
             }
-            results = DBTVSeries.Execute(sqlQuery);
-            if (results.Rows.Count > 0)
+            List<DBEpisode> Secondresults = Get(sqlQuery);
+            if (Secondresults.Count > 0)
             {
-                for (int index = 0; index < results.Rows.Count; index++)
+                for (int index = 0; index < Secondresults.Count; index++)
                 {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(ref results, index);
+                    DBEpisode episode = Secondresults[index];
                     // replace the filename if the episode already exists
                     bool bFound = false;
                     foreach (DBEpisode existingEpisode in outList)
@@ -684,6 +663,50 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            return outList;
+        }
+
+        static string innerJoins(string conditions_order)
+        {
+            string joins = string.Empty;
+            if (conditions_order.Contains("online_series."))
+            {
+                joins = " inner join " + DBOnlineSeries.cTableName
+                          + " on " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
+                          + DBOnlineSeries.Q(DBOnlineSeries.cID);
+            }
+            if (conditions_order.Contains("local_series."))
+            {
+                joins += " inner join " + DBSeries.cTableName
+                          + " on " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
+                          + DBSeries.Q(DBSeries.cID);
+            }
+            if (conditions_order.Contains("season."))
+            {
+                joins += " inner join " + DBSeason.cTableName
+                          + " on " + DBEpisode.Q(DBEpisode.cSeasonIndex) + " = "
+                          + DBSeason.Q(DBSeason.cIndex)
+                          + " and " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
+                          + DBSeason.Q(DBSeason.cSeriesID);
+            }
+            return joins;
+        }
+
+        public static List<DBEpisode> Get(string sqlQuery)
+        {
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            List<DBEpisode> outList = new List<DBEpisode>();
+            if (results.Rows.Count > 0)
+            {
+                for (int index = 0; index < results.Rows.Count; index++)
+                {
+                    DBEpisode episode = new DBEpisode();
+                    episode.Read(ref results, index);
+                    episode.m_onlineEpisode = new DBOnlineEpisode();
+                    episode.m_onlineEpisode.Read(ref results, index);
+                    outList.Add(episode);
+                }
+            }
             return outList;
         }
 
@@ -715,6 +738,7 @@ namespace WindowPlugins.GUITVSeries
 
     }
 
+    /*
     class aspectRatio
     {
         private aspectRatio()
@@ -742,4 +766,5 @@ namespace WindowPlugins.GUITVSeries
             return Math.Round(ratiof, 2).ToString() + ":1";
         }
     }
+     */
 }

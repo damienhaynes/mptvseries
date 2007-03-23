@@ -70,6 +70,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.checkBox_DontClearMissingLocalFiles = new System.Windows.Forms.CheckBox();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.checkBox_LocalDataOverride = new System.Windows.Forms.CheckBox();
@@ -88,7 +90,68 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.button_Start = new System.Windows.Forms.Button();
+            this.tab_view = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.comboBox7 = new System.Windows.Forms.ComboBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.comboBox8 = new System.Windows.Forms.ComboBox();
+            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
+            this.comboBox9 = new System.Windows.Forms.ComboBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.comboBox10 = new System.Windows.Forms.ComboBox();
+            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
+            this._23_link = new System.Windows.Forms.ComboBox();
+            this.cond3_cond = new System.Windows.Forms.TextBox();
+            this.cond3_type = new System.Windows.Forms.ComboBox();
+            this.cond3_what = new System.Windows.Forms.RichTextBox();
+            this._12_link = new System.Windows.Forms.ComboBox();
+            this.cond2_cond = new System.Windows.Forms.TextBox();
+            this.cond2_type = new System.Windows.Forms.ComboBox();
+            this.cond2_what = new System.Windows.Forms.RichTextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.cond1_cond = new System.Windows.Forms.TextBox();
+            this.cond1_type = new System.Windows.Forms.ComboBox();
+            this.cond1_what = new System.Windows.Forms.RichTextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnViewUp = new System.Windows.Forms.Button();
+            this.btnViewDown = new System.Windows.Forms.Button();
+            this.btnRemoveView = new System.Windows.Forms.Button();
+            this.btnAddView = new System.Windows.Forms.Button();
+            this._availViews = new System.Windows.Forms.ListBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.button3 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnLogoEdit = new System.Windows.Forms.Button();
+            this.btnLogoDown = new System.Windows.Forms.Button();
+            this.btnlogoUp = new System.Windows.Forms.Button();
+            this.btnrmvLogo = new System.Windows.Forms.Button();
+            this.addLogo = new System.Windows.Forms.Button();
+            this.lstLogos = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.comboBox_seasonFormat = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -128,11 +191,8 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.minHDHeight = new System.Windows.Forms.TextBox();
-            this.minHDWidth = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -190,7 +250,14 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).BeginInit();
             this.panel_Expressions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).BeginInit();
+            this.tab_view.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPage_MP_DisplayControl.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -241,21 +308,22 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_Details.Controls.Add(this.tabPage_Details);
             this.tabControl_Details.Controls.Add(this.tabPage_Import);
+            this.tabControl_Details.Controls.Add(this.tab_view);
             this.tabControl_Details.Controls.Add(this.tabPage_MP_DisplayControl);
             this.tabControl_Details.Controls.Add(this.tabpage_Subtitles);
             this.tabControl_Details.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Details.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl_Details.Name = "tabControl_Details";
             this.tabControl_Details.SelectedIndex = 0;
-            this.tabControl_Details.Size = new System.Drawing.Size(692, 507);
+            this.tabControl_Details.Size = new System.Drawing.Size(692, 769);
             this.tabControl_Details.TabIndex = 64;
             // 
             // tabPage_Details
             // 
             this.tabPage_Details.Controls.Add(this.splitContainer2);
-            this.tabPage_Details.Location = new System.Drawing.Point(4, 27);
+            this.tabPage_Details.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Details.Name = "tabPage_Details";
-            this.tabPage_Details.Size = new System.Drawing.Size(684, 476);
+            this.tabPage_Details.Size = new System.Drawing.Size(684, 743);
             this.tabPage_Details.TabIndex = 2;
             this.tabPage_Details.Text = "Details";
             this.tabPage_Details.UseVisualStyleBackColor = true;
@@ -277,7 +345,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_Series);
-            this.splitContainer2.Size = new System.Drawing.Size(684, 476);
+            this.splitContainer2.Size = new System.Drawing.Size(684, 743);
             this.splitContainer2.SplitterDistance = 196;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -285,7 +353,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_ShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_ShowHidden.AutoSize = true;
-            this.checkBox_ShowHidden.Location = new System.Drawing.Point(9, 454);
+            this.checkBox_ShowHidden.Location = new System.Drawing.Point(9, 721);
             this.checkBox_ShowHidden.Name = "checkBox_ShowHidden";
             this.checkBox_ShowHidden.Size = new System.Drawing.Size(117, 17);
             this.checkBox_ShowHidden.TabIndex = 48;
@@ -305,7 +373,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Library.Location = new System.Drawing.Point(0, 0);
             this.treeView_Library.MinimumSize = new System.Drawing.Size(100, 100);
             this.treeView_Library.Name = "treeView_Library";
-            this.treeView_Library.Size = new System.Drawing.Size(196, 450);
+            this.treeView_Library.Size = new System.Drawing.Size(196, 717);
             this.treeView_Library.TabIndex = 47;
             this.treeView_Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Library_AfterSelect);
             this.treeView_Library.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_Library_NodeMouseClick);
@@ -319,35 +387,35 @@ namespace WindowPlugins.GUITVSeries
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(155, 92);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(141, 92);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
@@ -395,7 +463,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(484, 328);
+            this.dataGridView1.Size = new System.Drawing.Size(484, 595);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 148;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -441,9 +509,9 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_Import.AutoScroll = true;
             this.tabPage_Import.BackColor = System.Drawing.Color.Transparent;
             this.tabPage_Import.Controls.Add(this.splitContainer_SettingsOutput);
-            this.tabPage_Import.Location = new System.Drawing.Point(4, 27);
+            this.tabPage_Import.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Import.Name = "tabPage_Import";
-            this.tabPage_Import.Size = new System.Drawing.Size(684, 476);
+            this.tabPage_Import.Size = new System.Drawing.Size(684, 743);
             this.tabPage_Import.TabIndex = 4;
             this.tabPage_Import.Text = "Import Settings";
             this.tabPage_Import.UseVisualStyleBackColor = true;
@@ -465,8 +533,8 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.comboBox1);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.progressBar_Parsing);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.button_Start);
-            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 476);
-            this.splitContainer_SettingsOutput.SplitterDistance = 434;
+            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 743);
+            this.splitContainer_SettingsOutput.SplitterDistance = 676;
             this.splitContainer_SettingsOutput.TabIndex = 157;
             // 
             // splitContainerImportSettings
@@ -487,7 +555,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ParsingTest);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_Expressions);
-            this.splitContainerImportSettings.Size = new System.Drawing.Size(684, 434);
+            this.splitContainerImportSettings.Size = new System.Drawing.Size(684, 676);
             this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
             // 
@@ -496,7 +564,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Settings.Location = new System.Drawing.Point(0, 0);
             this.treeView_Settings.Name = "treeView_Settings";
-            this.treeView_Settings.Size = new System.Drawing.Size(151, 434);
+            this.treeView_Settings.Size = new System.Drawing.Size(151, 676);
             this.treeView_Settings.TabIndex = 153;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
             // 
@@ -545,6 +613,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.checkBox_doFolderWatch);
+            this.panel_OnlineData.Controls.Add(this.linkLabel1);
             this.panel_OnlineData.Controls.Add(this.checkBox_DontClearMissingLocalFiles);
             this.panel_OnlineData.Controls.Add(this.checkBox_OnlineSearch);
             this.panel_OnlineData.Controls.Add(this.checkBox_LocalDataOverride);
@@ -552,9 +622,33 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
             this.panel_OnlineData.Location = new System.Drawing.Point(177, 6);
             this.panel_OnlineData.Name = "panel_OnlineData";
-            this.panel_OnlineData.Size = new System.Drawing.Size(465, 155);
+            this.panel_OnlineData.Size = new System.Drawing.Size(465, 195);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
+            // 
+            // checkBox_doFolderWatch
+            // 
+            this.checkBox_doFolderWatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 123);
+            this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
+            this.checkBox_doFolderWatch.Size = new System.Drawing.Size(415, 17);
+            this.checkBox_doFolderWatch.TabIndex = 13;
+            this.checkBox_doFolderWatch.Text = "Watch my important folders for changes automatically";
+            this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
+            this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(3, 161);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(132, 13);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Force update of MediaInfo";
+            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plugin to read the mediainfos (such as resolution) now!");
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // checkBox_DontClearMissingLocalFiles
             // 
@@ -584,9 +678,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_LocalDataOverride.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(3, 125);
+            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(4, 100);
             this.checkBox_LocalDataOverride.Name = "checkBox_LocalDataOverride";
-            this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(458, 17);
+            this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(415, 17);
             this.checkBox_LocalDataOverride.TabIndex = 2;
             this.checkBox_LocalDataOverride.Text = "Online data should override data from file parsing (series name, episode name)";
             this.checkBox_LocalDataOverride.UseVisualStyleBackColor = true;
@@ -819,21 +913,734 @@ namespace WindowPlugins.GUITVSeries
             this.button_Start.UseVisualStyleBackColor = true;
             this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
             // 
+            // tab_view
+            // 
+            this.tab_view.Controls.Add(this.groupBox10);
+            this.tab_view.Controls.Add(this.groupBox9);
+            this.tab_view.Controls.Add(this.groupBox8);
+            this.tab_view.Controls.Add(this.listBox1);
+            this.tab_view.Controls.Add(this.numericUpDown1);
+            this.tab_view.Controls.Add(this.button3);
+            this.tab_view.Controls.Add(this.richTextBox1);
+            this.tab_view.Location = new System.Drawing.Point(4, 22);
+            this.tab_view.Name = "tab_view";
+            this.tab_view.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_view.Size = new System.Drawing.Size(684, 743);
+            this.tab_view.TabIndex = 7;
+            this.tab_view.Text = "Views";
+            this.tab_view.UseVisualStyleBackColor = true;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.groupBox11);
+            this.groupBox10.Controls.Add(this.label26);
+            this.groupBox10.Controls.Add(this.textBox2);
+            this.groupBox10.Controls.Add(this.comboBox2);
+            this.groupBox10.Location = new System.Drawing.Point(8, 344);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(484, 273);
+            this.groupBox10.TabIndex = 6;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "configure Hierarchy Step";
+            this.groupBox10.Visible = false;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.comboBox7);
+            this.groupBox11.Controls.Add(this.textBox5);
+            this.groupBox11.Controls.Add(this.comboBox8);
+            this.groupBox11.Controls.Add(this.richTextBox4);
+            this.groupBox11.Controls.Add(this.comboBox9);
+            this.groupBox11.Controls.Add(this.textBox6);
+            this.groupBox11.Controls.Add(this.comboBox10);
+            this.groupBox11.Controls.Add(this.richTextBox5);
+            this.groupBox11.Controls.Add(this.comboBox3);
+            this.groupBox11.Controls.Add(this.textBox3);
+            this.groupBox11.Controls.Add(this.comboBox4);
+            this.groupBox11.Controls.Add(this.richTextBox2);
+            this.groupBox11.Controls.Add(this.comboBox5);
+            this.groupBox11.Controls.Add(this.textBox4);
+            this.groupBox11.Controls.Add(this.comboBox6);
+            this.groupBox11.Controls.Add(this.richTextBox3);
+            this.groupBox11.Controls.Add(this._23_link);
+            this.groupBox11.Controls.Add(this.cond3_cond);
+            this.groupBox11.Controls.Add(this.cond3_type);
+            this.groupBox11.Controls.Add(this.cond3_what);
+            this.groupBox11.Controls.Add(this._12_link);
+            this.groupBox11.Controls.Add(this.cond2_cond);
+            this.groupBox11.Controls.Add(this.cond2_type);
+            this.groupBox11.Controls.Add(this.cond2_what);
+            this.groupBox11.Controls.Add(this.label27);
+            this.groupBox11.Controls.Add(this.cond1_cond);
+            this.groupBox11.Controls.Add(this.cond1_type);
+            this.groupBox11.Controls.Add(this.cond1_what);
+            this.groupBox11.Location = new System.Drawing.Point(6, 62);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(455, 205);
+            this.groupBox11.TabIndex = 3;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Step Conditions";
+            // 
+            // comboBox7
+            // 
+            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox7.Enabled = false;
+            this.comboBox7.FormattingEnabled = true;
+            this.comboBox7.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this.comboBox7.Location = new System.Drawing.Point(20, 177);
+            this.comboBox7.Name = "comboBox7";
+            this.comboBox7.Size = new System.Drawing.Size(57, 21);
+            this.comboBox7.TabIndex = 41;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Enabled = false;
+            this.textBox5.Location = new System.Drawing.Point(312, 175);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(130, 20);
+            this.textBox5.TabIndex = 40;
+            // 
+            // comboBox8
+            // 
+            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox8.Enabled = false;
+            this.comboBox8.FormattingEnabled = true;
+            this.comboBox8.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.comboBox8.Location = new System.Drawing.Point(231, 175);
+            this.comboBox8.Name = "comboBox8";
+            this.comboBox8.Size = new System.Drawing.Size(75, 21);
+            this.comboBox8.TabIndex = 39;
+            // 
+            // richTextBox4
+            // 
+            this.richTextBox4.Enabled = false;
+            this.richTextBox4.Location = new System.Drawing.Point(83, 177);
+            this.richTextBox4.Name = "richTextBox4";
+            this.richTextBox4.Size = new System.Drawing.Size(142, 20);
+            this.richTextBox4.TabIndex = 38;
+            this.richTextBox4.Text = "";
+            // 
+            // comboBox9
+            // 
+            this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox9.Enabled = false;
+            this.comboBox9.FormattingEnabled = true;
+            this.comboBox9.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this.comboBox9.Location = new System.Drawing.Point(20, 151);
+            this.comboBox9.Name = "comboBox9";
+            this.comboBox9.Size = new System.Drawing.Size(57, 21);
+            this.comboBox9.TabIndex = 37;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Enabled = false;
+            this.textBox6.Location = new System.Drawing.Point(312, 149);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(130, 20);
+            this.textBox6.TabIndex = 36;
+            // 
+            // comboBox10
+            // 
+            this.comboBox10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox10.Enabled = false;
+            this.comboBox10.FormattingEnabled = true;
+            this.comboBox10.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.comboBox10.Location = new System.Drawing.Point(231, 149);
+            this.comboBox10.Name = "comboBox10";
+            this.comboBox10.Size = new System.Drawing.Size(75, 21);
+            this.comboBox10.TabIndex = 35;
+            // 
+            // richTextBox5
+            // 
+            this.richTextBox5.Enabled = false;
+            this.richTextBox5.Location = new System.Drawing.Point(83, 151);
+            this.richTextBox5.Name = "richTextBox5";
+            this.richTextBox5.Size = new System.Drawing.Size(142, 20);
+            this.richTextBox5.TabIndex = 34;
+            this.richTextBox5.Text = "";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.Enabled = false;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this.comboBox3.Location = new System.Drawing.Point(20, 125);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(57, 21);
+            this.comboBox3.TabIndex = 33;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Enabled = false;
+            this.textBox3.Location = new System.Drawing.Point(312, 123);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(130, 20);
+            this.textBox3.TabIndex = 32;
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox4.Enabled = false;
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.comboBox4.Location = new System.Drawing.Point(231, 123);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(75, 21);
+            this.comboBox4.TabIndex = 31;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Enabled = false;
+            this.richTextBox2.Location = new System.Drawing.Point(83, 125);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(142, 20);
+            this.richTextBox2.TabIndex = 30;
+            this.richTextBox2.Text = "";
+            // 
+            // comboBox5
+            // 
+            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox5.Enabled = false;
+            this.comboBox5.FormattingEnabled = true;
+            this.comboBox5.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this.comboBox5.Location = new System.Drawing.Point(20, 99);
+            this.comboBox5.Name = "comboBox5";
+            this.comboBox5.Size = new System.Drawing.Size(57, 21);
+            this.comboBox5.TabIndex = 29;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Enabled = false;
+            this.textBox4.Location = new System.Drawing.Point(312, 97);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(130, 20);
+            this.textBox4.TabIndex = 28;
+            // 
+            // comboBox6
+            // 
+            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox6.Enabled = false;
+            this.comboBox6.FormattingEnabled = true;
+            this.comboBox6.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.comboBox6.Location = new System.Drawing.Point(231, 97);
+            this.comboBox6.Name = "comboBox6";
+            this.comboBox6.Size = new System.Drawing.Size(75, 21);
+            this.comboBox6.TabIndex = 27;
+            // 
+            // richTextBox3
+            // 
+            this.richTextBox3.Enabled = false;
+            this.richTextBox3.Location = new System.Drawing.Point(83, 99);
+            this.richTextBox3.Name = "richTextBox3";
+            this.richTextBox3.Size = new System.Drawing.Size(142, 20);
+            this.richTextBox3.TabIndex = 26;
+            this.richTextBox3.Text = "";
+            // 
+            // _23_link
+            // 
+            this._23_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._23_link.Enabled = false;
+            this._23_link.FormattingEnabled = true;
+            this._23_link.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this._23_link.Location = new System.Drawing.Point(20, 72);
+            this._23_link.Name = "_23_link";
+            this._23_link.Size = new System.Drawing.Size(57, 21);
+            this._23_link.TabIndex = 25;
+            // 
+            // cond3_cond
+            // 
+            this.cond3_cond.Enabled = false;
+            this.cond3_cond.Location = new System.Drawing.Point(312, 70);
+            this.cond3_cond.Name = "cond3_cond";
+            this.cond3_cond.Size = new System.Drawing.Size(130, 20);
+            this.cond3_cond.TabIndex = 24;
+            // 
+            // cond3_type
+            // 
+            this.cond3_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cond3_type.Enabled = false;
+            this.cond3_type.FormattingEnabled = true;
+            this.cond3_type.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.cond3_type.Location = new System.Drawing.Point(231, 70);
+            this.cond3_type.Name = "cond3_type";
+            this.cond3_type.Size = new System.Drawing.Size(75, 21);
+            this.cond3_type.TabIndex = 23;
+            // 
+            // cond3_what
+            // 
+            this.cond3_what.Enabled = false;
+            this.cond3_what.Location = new System.Drawing.Point(83, 72);
+            this.cond3_what.Name = "cond3_what";
+            this.cond3_what.Size = new System.Drawing.Size(142, 20);
+            this.cond3_what.TabIndex = 22;
+            this.cond3_what.Text = "";
+            // 
+            // _12_link
+            // 
+            this._12_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._12_link.Enabled = false;
+            this._12_link.FormattingEnabled = true;
+            this._12_link.Items.AddRange(new object[] {
+            "AND",
+            "OR"});
+            this._12_link.Location = new System.Drawing.Point(20, 46);
+            this._12_link.Name = "_12_link";
+            this._12_link.Size = new System.Drawing.Size(57, 21);
+            this._12_link.TabIndex = 21;
+            // 
+            // cond2_cond
+            // 
+            this.cond2_cond.Enabled = false;
+            this.cond2_cond.Location = new System.Drawing.Point(312, 44);
+            this.cond2_cond.Name = "cond2_cond";
+            this.cond2_cond.Size = new System.Drawing.Size(130, 20);
+            this.cond2_cond.TabIndex = 20;
+            // 
+            // cond2_type
+            // 
+            this.cond2_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cond2_type.Enabled = false;
+            this.cond2_type.FormattingEnabled = true;
+            this.cond2_type.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.cond2_type.Location = new System.Drawing.Point(231, 44);
+            this.cond2_type.Name = "cond2_type";
+            this.cond2_type.Size = new System.Drawing.Size(75, 21);
+            this.cond2_type.TabIndex = 19;
+            // 
+            // cond2_what
+            // 
+            this.cond2_what.Enabled = false;
+            this.cond2_what.Location = new System.Drawing.Point(83, 46);
+            this.cond2_what.Name = "cond2_what";
+            this.cond2_what.Size = new System.Drawing.Size(142, 20);
+            this.cond2_what.TabIndex = 18;
+            this.cond2_what.Text = "";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(20, 25);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(30, 13);
+            this.label27.TabIndex = 17;
+            this.label27.Text = "...if...";
+            // 
+            // cond1_cond
+            // 
+            this.cond1_cond.Location = new System.Drawing.Point(312, 17);
+            this.cond1_cond.Name = "cond1_cond";
+            this.cond1_cond.Size = new System.Drawing.Size(130, 20);
+            this.cond1_cond.TabIndex = 16;
+            // 
+            // cond1_type
+            // 
+            this.cond1_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cond1_type.FormattingEnabled = true;
+            this.cond1_type.Items.AddRange(new object[] {
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "contains",
+            "!contains"});
+            this.cond1_type.Location = new System.Drawing.Point(231, 17);
+            this.cond1_type.Name = "cond1_type";
+            this.cond1_type.Size = new System.Drawing.Size(75, 21);
+            this.cond1_type.TabIndex = 15;
+            // 
+            // cond1_what
+            // 
+            this.cond1_what.Location = new System.Drawing.Point(83, 19);
+            this.cond1_what.Name = "cond1_what";
+            this.cond1_what.Size = new System.Drawing.Size(142, 20);
+            this.cond1_what.TabIndex = 14;
+            this.cond1_what.Text = "";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(133, 35);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(49, 13);
+            this.label26.TabIndex = 2;
+            this.label26.Text = "group By";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(188, 32);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(108, 20);
+            this.textBox2.TabIndex = 1;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Group",
+            "Series",
+            "Season",
+            "Episode"});
+            this.comboBox2.Location = new System.Drawing.Point(6, 32);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(121, 21);
+            this.comboBox2.TabIndex = 0;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.button7);
+            this.groupBox9.Controls.Add(this.label25);
+            this.groupBox9.Controls.Add(this.button2);
+            this.groupBox9.Controls.Add(this.button4);
+            this.groupBox9.Controls.Add(this.button5);
+            this.groupBox9.Controls.Add(this.button6);
+            this.groupBox9.Controls.Add(this.listBox3);
+            this.groupBox9.Controls.Add(this.textBox1);
+            this.groupBox9.Controls.Add(this.label1);
+            this.groupBox9.Location = new System.Drawing.Point(252, 23);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(240, 315);
+            this.groupBox9.TabIndex = 5;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "define View";
+            this.groupBox9.Visible = false;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(90, 55);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(104, 23);
+            this.button7.TabIndex = 161;
+            this.button7.Text = "Paste all at once";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 68);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(52, 13);
+            this.label25.TabIndex = 160;
+            this.label25.Text = "Hierarchy";
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.Location = new System.Drawing.Point(200, 143);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(28, 29);
+            this.button2.TabIndex = 159;
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
+            this.button4.Location = new System.Drawing.Point(200, 178);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(28, 29);
+            this.button4.TabIndex = 158;
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(44, 276);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(69, 23);
+            this.button5.TabIndex = 157;
+            this.button5.Text = "Remove";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(119, 276);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 155;
+            this.button6.Text = "Add";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // listBox3
+            // 
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(6, 84);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(188, 186);
+            this.listBox3.TabIndex = 156;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(50, 28);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(115, 20);
+            this.textBox1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Name:";
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.btnViewUp);
+            this.groupBox8.Controls.Add(this.btnViewDown);
+            this.groupBox8.Controls.Add(this.btnRemoveView);
+            this.groupBox8.Controls.Add(this.btnAddView);
+            this.groupBox8.Controls.Add(this._availViews);
+            this.groupBox8.Location = new System.Drawing.Point(8, 23);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(238, 315);
+            this.groupBox8.TabIndex = 4;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "available Views";
+            // 
+            // btnViewUp
+            // 
+            this.btnViewUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnViewUp.Enabled = false;
+            this.btnViewUp.Image = ((System.Drawing.Image)(resources.GetObject("btnViewUp.Image")));
+            this.btnViewUp.Location = new System.Drawing.Point(203, 108);
+            this.btnViewUp.Name = "btnViewUp";
+            this.btnViewUp.Size = new System.Drawing.Size(28, 29);
+            this.btnViewUp.TabIndex = 154;
+            this.btnViewUp.UseVisualStyleBackColor = true;
+            // 
+            // btnViewDown
+            // 
+            this.btnViewDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnViewDown.Enabled = false;
+            this.btnViewDown.Image = ((System.Drawing.Image)(resources.GetObject("btnViewDown.Image")));
+            this.btnViewDown.Location = new System.Drawing.Point(203, 143);
+            this.btnViewDown.Name = "btnViewDown";
+            this.btnViewDown.Size = new System.Drawing.Size(28, 29);
+            this.btnViewDown.TabIndex = 153;
+            this.btnViewDown.UseVisualStyleBackColor = true;
+            // 
+            // btnRemoveView
+            // 
+            this.btnRemoveView.Enabled = false;
+            this.btnRemoveView.Location = new System.Drawing.Point(44, 276);
+            this.btnRemoveView.Name = "btnRemoveView";
+            this.btnRemoveView.Size = new System.Drawing.Size(69, 23);
+            this.btnRemoveView.TabIndex = 5;
+            this.btnRemoveView.Text = "Remove";
+            this.btnRemoveView.UseVisualStyleBackColor = true;
+            // 
+            // btnAddView
+            // 
+            this.btnAddView.Enabled = false;
+            this.btnAddView.Location = new System.Drawing.Point(119, 276);
+            this.btnAddView.Name = "btnAddView";
+            this.btnAddView.Size = new System.Drawing.Size(75, 23);
+            this.btnAddView.TabIndex = 5;
+            this.btnAddView.Text = "Add";
+            this.btnAddView.UseVisualStyleBackColor = true;
+            // 
+            // _availViews
+            // 
+            this._availViews.FormattingEnabled = true;
+            this._availViews.Location = new System.Drawing.Point(6, 19);
+            this._availViews.Name = "_availViews";
+            this._availViews.Size = new System.Drawing.Size(188, 251);
+            this._availViews.TabIndex = 5;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(8, 695);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(426, 30);
+            this.listBox1.TabIndex = 3;
+            this.listBox1.Visible = false;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(234, 667);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown1.TabIndex = 2;
+            this.numericUpDown1.Visible = false;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(360, 664);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 1;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Visible = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(8, 623);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(426, 35);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            this.richTextBox1.Visible = false;
+            // 
             // tabPage_MP_DisplayControl
             // 
             this.tabPage_MP_DisplayControl.AutoScroll = true;
             this.tabPage_MP_DisplayControl.AutoScrollMinSize = new System.Drawing.Size(0, 478);
+            this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox7);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox3);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox4);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox2);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox1);
-            this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 27);
+            this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MP_DisplayControl.Name = "tabPage_MP_DisplayControl";
             this.tabPage_MP_DisplayControl.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(684, 476);
+            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(684, 743);
             this.tabPage_MP_DisplayControl.TabIndex = 5;
             this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
             this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.btnLogoEdit);
+            this.groupBox7.Controls.Add(this.btnLogoDown);
+            this.groupBox7.Controls.Add(this.btnlogoUp);
+            this.groupBox7.Controls.Add(this.btnrmvLogo);
+            this.groupBox7.Controls.Add(this.addLogo);
+            this.groupBox7.Controls.Add(this.lstLogos);
+            this.groupBox7.Location = new System.Drawing.Point(4, 478);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(662, 148);
+            this.groupBox7.TabIndex = 3;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Logo Configuration";
+            // 
+            // btnLogoEdit
+            // 
+            this.btnLogoEdit.Location = new System.Drawing.Point(448, 119);
+            this.btnLogoEdit.Name = "btnLogoEdit";
+            this.btnLogoEdit.Size = new System.Drawing.Size(90, 23);
+            this.btnLogoEdit.TabIndex = 5;
+            this.btnLogoEdit.Text = "Edit";
+            this.btnLogoEdit.UseVisualStyleBackColor = true;
+            this.btnLogoEdit.Click += new System.EventHandler(this.btnLogoEdit_Click);
+            // 
+            // btnLogoDown
+            // 
+            this.btnLogoDown.Location = new System.Drawing.Point(7, 117);
+            this.btnLogoDown.Name = "btnLogoDown";
+            this.btnLogoDown.Size = new System.Drawing.Size(75, 23);
+            this.btnLogoDown.TabIndex = 4;
+            this.btnLogoDown.Text = "Down";
+            this.btnLogoDown.UseVisualStyleBackColor = true;
+            this.btnLogoDown.Click += new System.EventHandler(this.btnLogoDown_Click);
+            // 
+            // btnlogoUp
+            // 
+            this.btnlogoUp.Location = new System.Drawing.Point(88, 117);
+            this.btnlogoUp.Name = "btnlogoUp";
+            this.btnlogoUp.Size = new System.Drawing.Size(75, 23);
+            this.btnlogoUp.TabIndex = 3;
+            this.btnlogoUp.Text = "Up";
+            this.btnlogoUp.UseVisualStyleBackColor = true;
+            this.btnlogoUp.Click += new System.EventHandler(this.btnlogoUp_Click);
+            // 
+            // btnrmvLogo
+            // 
+            this.btnrmvLogo.Location = new System.Drawing.Point(350, 120);
+            this.btnrmvLogo.Name = "btnrmvLogo";
+            this.btnrmvLogo.Size = new System.Drawing.Size(92, 23);
+            this.btnrmvLogo.TabIndex = 2;
+            this.btnrmvLogo.Text = "Remove LogoRule";
+            this.btnrmvLogo.UseVisualStyleBackColor = true;
+            this.btnrmvLogo.Click += new System.EventHandler(this.btnrmvLogo_Click);
+            // 
+            // addLogo
+            // 
+            this.addLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addLogo.Location = new System.Drawing.Point(544, 118);
+            this.addLogo.Name = "addLogo";
+            this.addLogo.Size = new System.Drawing.Size(110, 23);
+            this.addLogo.TabIndex = 1;
+            this.addLogo.Text = "Add LogoRule";
+            this.addLogo.UseVisualStyleBackColor = true;
+            this.addLogo.Click += new System.EventHandler(this.addLogo_Click);
+            // 
+            // lstLogos
+            // 
+            this.lstLogos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstLogos.FormattingEnabled = true;
+            this.lstLogos.Location = new System.Drawing.Point(7, 19);
+            this.lstLogos.Name = "lstLogos";
+            this.lstLogos.Size = new System.Drawing.Size(646, 95);
+            this.lstLogos.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -993,8 +1800,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col3);
             this.groupBox4.Controls.Add(this.checkBox_Episode_HideUnwatchedSummary);
@@ -1010,7 +1816,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Location = new System.Drawing.Point(3, 345);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(662, 125);
+            this.groupBox4.Size = new System.Drawing.Size(662, 127);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Episode View Settings";
@@ -1322,11 +2128,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.linkLabel1);
-            this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.minHDHeight);
-            this.groupBox1.Controls.Add(this.minHDWidth);
+            this.groupBox1.Controls.Add(this.label28);
+            this.groupBox1.Controls.Add(this.comboLanguage);
             this.groupBox1.Controls.Add(this.checkBox_RandBanner);
             this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
             this.groupBox1.Controls.Add(this.label16);
@@ -1341,52 +2144,24 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
             // 
-            // linkLabel1
+            // label28
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(621, 59);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(43, 13);
-            this.linkLabel1.TabIndex = 11;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Force...";
-            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plugin to read the resolutions now!\r\nPlease note, if you " +
-                    "use Upscaling Filters in FFDShow temporarily disable them before doing this!");
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(382, 82);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(58, 13);
+            this.label28.TabIndex = 8;
+            this.label28.Text = "Language:";
             // 
-            // label25
+            // comboLanguage
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(559, 59);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(12, 13);
-            this.label25.TabIndex = 10;
-            this.label25.Text = "x";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(214, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(252, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "min. Video resolution to mark as HD (0x0 to disable):";
-            // 
-            // minHDHeight
-            // 
-            this.minHDHeight.Location = new System.Drawing.Point(572, 56);
-            this.minHDHeight.Name = "minHDHeight";
-            this.minHDHeight.Size = new System.Drawing.Size(40, 20);
-            this.minHDHeight.TabIndex = 8;
-            this.minHDHeight.TextChanged += new System.EventHandler(this.minHDHeight_TextChanged);
-            // 
-            // minHDWidth
-            // 
-            this.minHDWidth.Location = new System.Drawing.Point(518, 56);
-            this.minHDWidth.Name = "minHDWidth";
-            this.minHDWidth.Size = new System.Drawing.Size(38, 20);
-            this.minHDWidth.TabIndex = 7;
-            this.minHDWidth.TextChanged += new System.EventHandler(this.minHDWidth_TextChanged);
+            this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboLanguage.FormattingEnabled = true;
+            this.comboLanguage.Location = new System.Drawing.Point(448, 79);
+            this.comboLanguage.Name = "comboLanguage";
+            this.comboLanguage.Size = new System.Drawing.Size(119, 21);
+            this.comboLanguage.TabIndex = 7;
+            this.comboLanguage.SelectedIndexChanged += new System.EventHandler(this.comboLanguage_SelectedIndexChanged);
             // 
             // checkBox_RandBanner
             // 
@@ -1462,10 +2237,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.tabpage_Subtitles.Controls.Add(this.groupBox6);
             this.tabpage_Subtitles.Controls.Add(this.groupBox5);
-            this.tabpage_Subtitles.Location = new System.Drawing.Point(4, 27);
+            this.tabpage_Subtitles.Location = new System.Drawing.Point(4, 22);
             this.tabpage_Subtitles.Name = "tabpage_Subtitles";
             this.tabpage_Subtitles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpage_Subtitles.Size = new System.Drawing.Size(684, 476);
+            this.tabpage_Subtitles.Size = new System.Drawing.Size(684, 743);
             this.tabpage_Subtitles.TabIndex = 6;
             this.tabpage_Subtitles.Text = "Extras";
             this.tabpage_Subtitles.UseVisualStyleBackColor = true;
@@ -1735,7 +2510,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listBox_Log);
             this.splitContainer1.Panel2Collapsed = true;
-            this.splitContainer1.Size = new System.Drawing.Size(692, 517);
+            this.splitContainer1.Size = new System.Drawing.Size(692, 779);
             this.splitContainer1.SplitterDistance = 382;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 65;
@@ -1743,7 +2518,7 @@ namespace WindowPlugins.GUITVSeries
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button1.Location = new System.Drawing.Point(0, 507);
+            this.button1.Location = new System.Drawing.Point(0, 769);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(692, 10);
             this.button1.TabIndex = 65;
@@ -1754,13 +2529,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 517);
+            this.ClientSize = new System.Drawing.Size(692, 779);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v0.9";
+            this.Text = "MP-TV Series Configuration v0.9.5";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -1788,7 +2563,17 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).EndInit();
             this.panel_Expressions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).EndInit();
+            this.tab_view.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1935,10 +2720,70 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox minHDHeight;
-        private System.Windows.Forms.TextBox minHDWidth;
-        private System.Windows.Forms.Label label25;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.ListBox lstLogos;
+        private System.Windows.Forms.Button addLogo;
+        private System.Windows.Forms.Button btnrmvLogo;
+        private System.Windows.Forms.Button btnLogoEdit;
+        private System.Windows.Forms.Button btnLogoDown;
+        private System.Windows.Forms.Button btnlogoUp;
+        private System.Windows.Forms.CheckBox checkBox_doFolderWatch;
+        private System.Windows.Forms.TabPage tab_view;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btnAddView;
+        private System.Windows.Forms.ListBox _availViews;
+        private System.Windows.Forms.Button btnViewUp;
+        private System.Windows.Forms.Button btnViewDown;
+        private System.Windows.Forms.Button btnRemoveView;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox7;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.ComboBox comboBox8;
+        private System.Windows.Forms.RichTextBox richTextBox4;
+        private System.Windows.Forms.ComboBox comboBox9;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.ComboBox comboBox10;
+        private System.Windows.Forms.RichTextBox richTextBox5;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.ComboBox comboBox6;
+        private System.Windows.Forms.RichTextBox richTextBox3;
+        private System.Windows.Forms.ComboBox _23_link;
+        private System.Windows.Forms.TextBox cond3_cond;
+        private System.Windows.Forms.ComboBox cond3_type;
+        private System.Windows.Forms.RichTextBox cond3_what;
+        private System.Windows.Forms.ComboBox _12_link;
+        private System.Windows.Forms.TextBox cond2_cond;
+        private System.Windows.Forms.ComboBox cond2_type;
+        private System.Windows.Forms.RichTextBox cond2_what;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox cond1_cond;
+        private System.Windows.Forms.ComboBox cond1_type;
+        private System.Windows.Forms.RichTextBox cond1_what;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ComboBox comboLanguage;
     }
 }

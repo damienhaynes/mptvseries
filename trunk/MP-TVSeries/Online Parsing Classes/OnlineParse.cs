@@ -171,7 +171,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // wait
-                    Thread.Sleep(5000);
+                    Thread.Sleep(400);
                 }
             }
         }

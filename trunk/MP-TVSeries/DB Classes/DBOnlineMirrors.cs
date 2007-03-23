@@ -60,7 +60,8 @@ namespace WindowPlugins.GUITVSeries
             if (mirrorList.Count == 0)
             {
                 // no mirrors yet - refresh using "seed"
-                LoadMirrorList("http://tvdb.zsori.com/interfaces");
+                //LoadMirrorList("http://tvdb.zsori.com/interfaces");
+                LoadMirrorList("http://taylornooks.com/interfaces");
                 mirrorList = Get();
             }
 

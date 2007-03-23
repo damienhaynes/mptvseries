@@ -1,0 +1,202 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+namespace WindowPlugins.GUITVSeries
+{
+    public partial class logoConfigurator : Form
+    {
+        public delegate void validDelegate(ref RichTextBox txtBox);
+        validDelegate validateTxtBox;
+
+        public logoConfigurator(validDelegate validDel)
+        {
+            init(validDel);
+        }
+
+        public logoConfigurator(validDelegate validDel, string entryToEdit)
+        {
+            init(validDel);
+            parseForEdit(entryToEdit);
+        }
+
+        public void init(validDelegate validDel)
+        {
+            InitializeComponent();
+            validateTxtBox = validDel;
+            FieldTag forWhats = new FieldTag("lastField", FieldTag.Level.Episode);
+            forWhats.m_bInited = true; // avoid autofilling
+            this.cond1_what.Tag = forWhats;
+            this.cond2_what.Tag = forWhats;
+            this.cond3_what.Tag = forWhats;
+
+            this.textBox1.Tag = forWhats;
+
+            this.cond1_type.SelectedIndex = 0;
+            this.cond2_type.SelectedIndex = 0;
+            this.cond3_type.SelectedIndex = 0;
+
+            this._12_link.SelectedIndex = 0;
+            this._23_link.SelectedIndex = 0;
+        }
+
+
+        public string result = string.Empty;
+        private void logoConfigurator_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void parseForEdit(string entry)
+        {
+            string[] split = System.Text.RegularExpressions.Regex.Split(entry, localLogos.condSplit);
+            this.textBox1.Text = split[0];
+
+            this.cond1_what.Text = split[1];
+            this.cond1_type.SelectedItem = split[2];
+            this.cond1_cond.Text = split[3];
+            this._12_link.SelectedItem = split[4];
+
+            this.cond2_what.Text = split[5];
+            this.cond2_type.SelectedItem = split[6];
+            this.cond2_cond.Text = split[7];
+            this._23_link.SelectedItem = split[8];
+
+            this.cond3_what.Text = split[9];
+            this.cond3_type.SelectedItem = split[10];
+            this.cond3_cond.Text = split[11];
+
+            if (textBox1.Text.Contains(">") && textBox1.Text.Contains("<"))
+                textBox1.ReadOnly = false;
+            // dyn filename quick check
+        }
+
+        private void browse_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.Filter = "Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG";
+            openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            if (DialogResult.OK == openFileDialog1.ShowDialog())
+                this.textBox1.Text = openFileDialog1.FileName;
+            this.textBox1.ReadOnly = true;
+        }
+
+        private void save_Click(object sender, EventArgs e)
+        {
+            if (!this.cond2_what.Enabled || (cond2_what.Text.Trim() == string.Empty && cond2_cond.Text.Trim() == string.Empty))
+            {
+                _12_link.SelectedIndex = 0; // force back to AND
+                cond2_what.Text = "";
+                cond2_cond.Text = "";
+                cond2_type.SelectedIndex = 0;
+            }
+            if (!this.cond3_what.Enabled || (cond3_what.Text.Trim() == string.Empty && cond3_cond.Text.Trim() == string.Empty))
+            {
+                _23_link.SelectedIndex = 0; // force back to AND
+                cond3_what.Text = "";
+                cond3_cond.Text = "";
+                cond3_type.SelectedIndex = 0;
+            }
+
+            if (System.IO.File.Exists(this.textBox1.Text) || (textBox1.Text.Contains(">") && textBox1.Text.Contains("<")))
+            {
+                this.result = this.textBox1.Text + localLogos.condSplit
+                            + this.cond1_what.Text + localLogos.condSplit
+                            + this.cond1_type.SelectedItem.ToString() + localLogos.condSplit
+                            + this.cond1_cond.Text + localLogos.condSplit
+                            + this._12_link.SelectedItem.ToString() + localLogos.condSplit
+                            + this.cond2_what.Text + localLogos.condSplit
+                            + this.cond2_type.SelectedItem.ToString() + localLogos.condSplit
+                            + this.cond2_cond.Text + localLogos.condSplit
+                            + this._23_link.SelectedItem.ToString() + localLogos.condSplit
+                            + this.cond3_what.Text + localLogos.condSplit
+                            + this.cond3_type.SelectedItem.ToString() + localLogos.condSplit
+                            + this.cond3_cond.Text + localLogos.condSplit;
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void cond1_what_TextChanged(object sender, EventArgs e)
+        {
+            validateTxtBox(ref this.cond1_what);
+            enabled2();
+        }
+
+        private void cond2_what_TextChanged(object sender, EventArgs e)
+        {
+            validateTxtBox(ref this.cond2_what);
+            enabled3();
+        }
+
+        private void cond3_what_TextChanged(object sender, EventArgs e)
+        {
+            validateTxtBox(ref this.cond3_what);
+        }
+
+        private void enabled2()
+        {
+            bool enable = true;
+            if (this.cond1_what.Text != string.Empty && this.cond1_cond.Text != string.Empty)
+                enable = true;
+            else
+                enable = false;
+            this._12_link.Enabled = enable;
+            this.cond2_cond.Enabled = enable;
+            this.cond2_type.Enabled = enable;
+            this.cond2_what.Enabled = enable;
+        }
+
+        private void enabled3()
+        {
+            bool enable = true;
+            if (this.cond2_what.Text != string.Empty && this.cond2_cond.Text != string.Empty)
+                enable = true;
+            else
+                enable = false;
+            this._23_link.Enabled = enable;
+            this.cond3_cond.Enabled = enable;
+            this.cond3_type.Enabled = enable;
+            this.cond3_what.Enabled = enable;
+        }
+
+        private void cond1_cond_TextChanged(object sender, EventArgs e)
+        {
+            enabled2();
+        }
+
+        private void cond2_cond_TextChanged(object sender, EventArgs e)
+        {
+            enabled3();
+        }
+
+        private void btnDynFilename_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.SelectedPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            if (DialogResult.OK == folderBrowserDialog1.ShowDialog())
+            {
+                this.textBox1.Text = folderBrowserDialog1.SelectedPath + @"\";
+                this.textBox1.ReadOnly = false;
+
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (this.textBox1.Enabled)
+            {
+            }
+        }
+    }
+}

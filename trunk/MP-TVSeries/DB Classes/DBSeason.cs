@@ -25,6 +25,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
 
         public const String cForomSubtitleRoot = "ForomSubtitleRoot";
+        public const String cUnwatchedItems = "UnwatchedItems";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -157,7 +158,38 @@ namespace WindowPlugins.GUITVSeries
                 base[cCurrentBannerFileName] = value;
             }
         }
-
+        public override DBValue this[String fieldName]
+        {
+            get
+            {
+                switch (fieldName)
+                {
+                    case DBSeason.cUnwatchedItems:
+                        // this one is virtual
+                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0");
+                        if (results.Rows.Count > 0)
+                        {
+                            return results.Rows[0].fields[0];
+                        }
+                        else return 0;
+                        break;
+                    default:
+                        return base[fieldName];
+                        break;
+                }
+            }
+            set
+            {
+                switch (fieldName)
+                {
+                    case DBSeason.cUnwatchedItems:
+                        break;
+                    default:
+                        base[fieldName] = value;
+                        break;
+                }
+            }
+        }
         public List<String> BannerList
         {
             get
@@ -219,17 +251,16 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly, Boolean bIncludeHidden)
         {
-            // create table if it doesn't exist already
-            SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-            if (bExistingFilesOnly)
-                condition.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
-            if (bOnlineEpisodesOnly)
-                condition.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
-            if (!bIncludeHidden)
-                condition.Add(new DBSeason(), cHidden, 0, SQLConditionType.Equal);
+            return Get(nSeriesID, bExistingFilesOnly, bOnlineEpisodesOnly, bIncludeHidden, new SQLCondition());
+        }
+        public static List<DBSeason> Get(SQLCondition condition)
+        {
+            string orderBy = !condition.customOrderStringIsSet
+                  ? " order by " + Q(cIndex)
+                  : condition.orderString;
+            string innerJoin = innerJoins((string)condition + condition.orderString);
 
-            String sqlQuery = "select * from " + cTableName + condition + " order by " + cIndex;
+            String sqlQuery = "select "+ new SQLWhat(new DBSeason()) + innerJoin + condition + orderBy + condition.limitString;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();
             if (results.Rows.Count > 0)
@@ -242,6 +273,44 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return outList;
+        }
+        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly, Boolean bIncludeHidden, SQLCondition otherConditions)
+        {
+            // create table if it doesn't exist already
+            if(nSeriesID != default(int))
+                otherConditions.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+            if (bExistingFilesOnly)
+                otherConditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
+            if (bOnlineEpisodesOnly)
+                otherConditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
+            if (!bIncludeHidden)
+                otherConditions.Add(new DBSeason(), cHidden, 0, SQLConditionType.Equal);
+
+            return Get(otherConditions);
+        }
+
+        static string innerJoins(string conditions_order)
+        {
+            string joins = string.Empty;
+            if (conditions_order.Contains("online_series."))
+            {
+                joins = " inner join " + DBOnlineSeries.cTableName
+                          + " on " + DBSeason.Q(DBSeason.cSeriesID) + " = "
+                          + DBOnlineSeries.Q(DBOnlineSeries.cID);
+            }
+            if (conditions_order.Contains("local_series."))
+            {
+                joins += " inner join " + DBSeries.cTableName
+                          + " on " + DBSeason.Q(DBSeason.cSeriesID) + " = "
+                          + DBSeries.Q(DBSeries.cID);
+            }
+            // cannot join with episodes
+            return joins;
+        }
+
+        public static new String Q(String sField)
+        {
+            return cTableName + "." + sField;
         }
     }
 }

@@ -77,6 +77,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
+            checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
 
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
@@ -108,7 +109,7 @@ namespace WindowPlugins.GUITVSeries
             richTextBox_seriesFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Series_Subtitle, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Subtitle);
 
-            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Season_Main, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Main);
 
             comboBox_seasonFormat.Items.Add("Text");
@@ -154,10 +155,30 @@ namespace WindowPlugins.GUITVSeries
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
 
-            minHDHeight.Text = DBOption.GetOptions("minHDHeight");
-            minHDWidth.Text = DBOption.GetOptions("minHDWidth");
-
             LoadTorrentSearches();
+
+            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+
+            comboLanguage.Items.AddRange(Translation.getSupportedLangs().ToArray());
+            if (comboLanguage.Items.Count == 0) comboLanguage.Enabled = false;
+            else
+            {
+                string sel = DBOption.GetOptions(DBOption.cLanguage);
+                for (int i = 0; i < comboLanguage.Items.Count; i++)
+                {
+                    if((string)comboLanguage.Items[i] == sel)
+                    {
+                        comboLanguage.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            //List<logicalView> availViews = logicalView.getAllFromDB();
+            List<logicalView> availViews = logicalView.getStaticViews();
+            foreach (logicalView view in availViews)
+                _availViews.Items.Add(view.Name);
+
         }
 
         private void LoadTorrentSearches()
@@ -766,6 +787,7 @@ namespace WindowPlugins.GUITVSeries
             #region Select appropriate tab base on which node level was clicked
 
             TreeNode node = e.Node;
+
             switch (node.Name)
             {
                 //////////////////////////////////////////////////////////////////////////////
@@ -787,7 +809,17 @@ namespace WindowPlugins.GUITVSeries
                             }
 
                         comboBox_BannerSelection.Items.Clear();
-                        comboBox_BannerSelection.Enabled = false;
+
+                        // if we have logos add them to the list
+                        string logos = localLogos.getLogos(ref episode, 200, 500);
+                        if (logos != string.Empty)
+                        {
+                            BannerComboItem newItem = new BannerComboItem("Logos", logos);
+                            comboBox_BannerSelection.Items.Add(newItem);
+                            comboBox_BannerSelection.SelectedIndex = 0; // force the display
+                        }
+                        else
+                            comboBox_BannerSelection.Enabled = false;
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in episode.FieldNames)
@@ -839,6 +871,14 @@ namespace WindowPlugins.GUITVSeries
                             BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
+                        // if we have logos add them to the list
+                        string logos = localLogos.getLogos(ref season, 200, 500);
+                        if (logos != string.Empty)
+                        {
+                            BannerComboItem newItem = new BannerComboItem("Logos", logos);
+                            comboBox_BannerSelection.Items.Add(newItem);
+                        }
+
                         comboBox_BannerSelection.Enabled = true;
 
                         if (season.Banner != String.Empty)
@@ -912,6 +952,13 @@ namespace WindowPlugins.GUITVSeries
                                     comboBox_BannerSelection.SelectedItem = comboItem;
                                     break;
                                 }
+                        }
+                        // if we have logos add them to the list
+                        string logos = localLogos.getLogos(ref series, 200, 500);
+                        if (logos != string.Empty)
+                        {
+                            BannerComboItem newItem = new BannerComboItem("Logos", logos);
+                            comboBox_BannerSelection.Items.Add(newItem);
                         }
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
@@ -1091,10 +1138,11 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeries.cTableName:
                     {
                         DBSeries series = (DBSeries)treeView_Library.SelectedNode.Tag;
-                        series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        if (((BannerComboItem)comboBox_BannerSelection.SelectedItem).sName != "Logos")
+                            series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
                         }
                         catch (Exception)
                         {
@@ -1106,10 +1154,11 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeason.cTableName:
                     {
                         DBSeason season = (DBSeason)treeView_Library.SelectedNode.Tag;
-                        season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        if (((BannerComboItem)comboBox_BannerSelection.SelectedItem).sName != "Logos")
+                            season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
                         }
                         catch (Exception)
                         {
@@ -1121,10 +1170,11 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     {
                         DBSeries series = (DBSeries)treeView_Library.SelectedNode.Parent.Parent.Tag;
-                        series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        if (((BannerComboItem)comboBox_BannerSelection.SelectedItem).sName != "Logos")
+                            series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
                         }
                         catch (Exception)
                         {
@@ -1133,6 +1183,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     break;
             }
+            
         }
 
         private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
@@ -1348,6 +1399,9 @@ namespace WindowPlugins.GUITVSeries
                             String sTableName = sTag.Substring(0, sTag.IndexOf('.'));
                             String sFieldName = sTag.Substring(sTag.IndexOf('.') + 1);
 
+                            // unwatchedItems isnt in fieldnames since its purely virtual
+                            bValid |= ((sFieldName == DBOnlineSeries.cUnwatchedItems && tag.m_Level == FieldTag.Level.Series) ||
+                               (sFieldName == DBSeason.cUnwatchedItems && tag.m_Level == FieldTag.Level.Season));
                             switch (tag.m_Level)
                             {
                                 case FieldTag.Level.Series:
@@ -1859,57 +1913,207 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
         }
 
-        private void minHDWidth_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions("minHDWidth", minHDWidth.Text);
-        }
-
-        private void minHDHeight_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions("minHDHeight", minHDHeight.Text);
-        }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DialogResult result = MessageBox.Show("Force update of previously read-out files?\n(No for new files only)", "Ignore already read-out files?", MessageBoxButtons.YesNoCancel);
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             List<DBEpisode> episodes = new List<DBEpisode>();
-            if(result == DialogResult.Yes)
+            // get all the episodes
+            episodes = DBEpisode.Get(cond, false);
+
+            if(result == DialogResult.No)
             {
-                // get all the episodes
-                episodes = DBEpisode.Get(cond, false);
-            }
-            else if(result == DialogResult.No)
-            {
+                List<DBEpisode> todoeps = new List<DBEpisode>();
                 // only get the episodes that dont have their resolutions read out already
-                cond.Add(new DBEpisode(), "videoWidth", 1, SQLConditionType.LessThan); // lessthan here because it can be -1 etc. for no. of failed attempts
-                cond.Add(new DBEpisode(), "videoHeight", 0, SQLConditionType.Equal);
-                episodes = DBEpisode.Get(cond, false);
-            }
+                for (int i = 0; i < episodes.Count; i++)
+                    if (!episodes[i].mediaInfoIsSet)
+                        todoeps.Add(episodes[i]);
+                episodes = todoeps;
+            } 
             
             if (episodes.Count > 0)
             {
-                MPTVSeriesLog.Write("Force update of Video Resolutions....(Please be patient!)");
+                MPTVSeriesLog.Write("Force update of MediaInfo....(Please be patient!)");
                 BackgroundWorker resReader = new BackgroundWorker();
                 resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 resReader.RunWorkerAsync(episodes);
             }
+            else MPTVSeriesLog.Write("No Episodes found that need updating");
 
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MPTVSeriesLog.Write("Force update of Video Resolutions complete (processed " + e.Result.ToString() + " files)");
+            MPTVSeriesLog.Write("Force update of MediaInfo complete (processed " + e.Result.ToString() + " files)");
+            LoadTree();
         }
 
         void asyncReadResolutions(object sender, DoWorkEventArgs e)
         {
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
-                    ep.readVidResolution();
+                ep.readMediaInfoOfLocal();
             e.Result = episodes.Count;
+        }
+
+        //delegate void validDelegate(ref RichTextBox txtBox);
+        private void addLogo_Click(object sender, EventArgs e)
+        {
+            logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
+            logoConfigurator lc = new logoConfigurator(del);
+
+            if (DialogResult.OK == lc.ShowDialog())
+            {
+                List<string> entries = new List<string>();
+                foreach (string item in lstLogos.Items)
+                    entries.Add(item.ToString());
+                entries.Add(lc.result);
+                localLogos.saveToDB(entries);
+                lstLogos.Items.Clear();
+                lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            }
+        }
+
+        private void btnrmvLogo_Click(object sender, EventArgs e)
+        {
+            List<string> entries = new List<string>();
+            foreach (string item in lstLogos.Items)
+                entries.Add(item.ToString());
+            entries.Remove((string)lstLogos.SelectedItem);
+            localLogos.saveToDB(entries);
+            lstLogos.Items.Clear();
+            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+        }
+
+        private void btnLogoDown_Click(object sender, EventArgs e)
+        {
+            if (lstLogos.Items.Count < 2) return;
+            if (lstLogos.SelectedIndex == lstLogos.Items.Count - 1) return;
+            
+            string selected = (string)lstLogos.SelectedItem;
+            lstLogos.Items[lstLogos.SelectedIndex] = lstLogos.Items[lstLogos.SelectedIndex + 1];
+            lstLogos.Items[lstLogos.SelectedIndex + 1] = selected;
+            int index = lstLogos.SelectedIndex + 1;
+            List<string> entries = new List<string>();
+            foreach (string item in lstLogos.Items)
+                entries.Add(item.ToString());
+            localLogos.saveToDB(entries);
+            lstLogos.Items.Clear();
+            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+
+            lstLogos.SelectedIndex = index;
+
+        }
+
+        private void btnlogoUp_Click(object sender, EventArgs e)
+        {
+            if (lstLogos.Items.Count < 2) return;
+            if (lstLogos.SelectedIndex == 0) return;
+
+            string selected = (string)lstLogos.SelectedItem;
+            lstLogos.Items[lstLogos.SelectedIndex] = lstLogos.Items[lstLogos.SelectedIndex - 1];
+            lstLogos.Items[lstLogos.SelectedIndex - 1] = selected;
+            int index = lstLogos.SelectedIndex - 1;
+            List<string> entries = new List<string>();
+            foreach (string item in lstLogos.Items)
+                entries.Add(item.ToString());
+            localLogos.saveToDB(entries);
+            lstLogos.Items.Clear();
+            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+
+            lstLogos.SelectedIndex = index;
+        }
+
+        private void btnLogoEdit_Click(object sender, EventArgs e)
+        {
+            logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
+            logoConfigurator lc = new logoConfigurator(del,(string)lstLogos.SelectedItem);
+
+            if (DialogResult.OK == lc.ShowDialog())
+            {
+                //lstLogos.SelectedItem = lc.result;
+
+                List<string> entries = new List<string>();
+                foreach (string item in lstLogos.Items)
+                {
+                    if (item == (string)lstLogos.SelectedItem)
+                        entries.Add(lc.result);
+                    else
+                        entries.Add(item.ToString());
+                }
+                localLogos.saveToDB(entries);
+                lstLogos.Items.Clear();
+                lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            }
+        }
+
+        private void checkBox_doFolderWatch_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions("doFolderWatch", checkBox_doFolderWatch.Checked);
+        }
+
+        List<logicalView> testViews = new List<logicalView>();
+        string[] viewArgument = null;
+        logicalViewStep.type currType = logicalViewStep.type.group;
+        bool isinit = false;
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(!isinit)
+                this.listBox1.DoubleClick += new EventHandler(listBox1_DoubleClick);
+            isinit = true;
+            if (viewArgument == null) this.numericUpDown1.Value = 0;
+            testViews = logicalView.getAllFromDB(this.richTextBox1.Text.Trim());
+            logicalViewStep.type curType = testViews[0].gettypeOfStep((int)this.numericUpDown1.Value);
+            this.listBox1.Items.Clear();
+            currType = curType;
+            switch (curType)
+            {
+                case logicalViewStep.type.group:
+                    foreach (string group in testViews[0].getGroupItems((int)this.numericUpDown1.Value, viewArgument))
+                    {
+                        this.listBox1.Items.Add(group);
+                    }
+                    break;
+                case logicalViewStep.type.series:
+                    foreach (DBSeries series in testViews[0].getSeriesItems((int)this.numericUpDown1.Value, viewArgument))
+                    {
+                        this.listBox1.Items.Add(series[DBOnlineSeries.cPrettyName] + " <-> " + series[DBOnlineSeries.cID]);
+                    }
+                    break;
+                case logicalViewStep.type.season:                    
+                    foreach (DBSeason season in testViews[0].getSeasonItems((int)this.numericUpDown1.Value, viewArgument))
+                    {
+                        this.listBox1.Items.Add(season[DBSeason.cIndex]);
+                    }
+                    break;
+            }
+            
+            viewArgument = null;
+        }
+
+        void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            if(currType != logicalViewStep.type.episode)
+            {
+                this.numericUpDown1.Value++;
+                switch(currType)
+                {
+                    case logicalViewStep.type.group:
+                        viewArgument = new string[] { (string)listBox1.SelectedItem };
+                        break;
+                    case logicalViewStep.type.series:
+                        viewArgument = new string[] { ((string)listBox1.SelectedItem).Split(new string[] { " <-> " }, StringSplitOptions.None)[1].Trim() };
+                        break;
+                }
+                button3_Click(new object(), new EventArgs());
+            }
+        }
+
+        private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cLanguage, (string)comboLanguage.SelectedItem);
         }
     }
 

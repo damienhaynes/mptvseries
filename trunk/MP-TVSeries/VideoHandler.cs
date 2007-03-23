@@ -130,6 +130,8 @@ namespace WindowPlugins.GUITVSeries
             DBOnlineSeries series = new DBOnlineSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             details.Title = series[DBOnlineSeries.cPrettyName] + " " + m_currentEpisode[DBOnlineEpisode.cSeasonIndex] + "x" + m_currentEpisode[DBOnlineEpisode.cEpisodeIndex] + ": " + m_currentEpisode[DBOnlineEpisode.cEpisodeName];
             details.Plot = m_currentEpisode[DBOnlineEpisode.cEpisodeSummary];
+            //details.SingleGenre = series[DBOnlineSeries.cGenre].ToString().Replace("|", " ");
+            details.WritingCredits = "TVSeries"; // so it is identifyable what mp-tvseries stored
         }
 
         void AddFileToDatabase()
