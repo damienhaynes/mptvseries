@@ -33,6 +33,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
 
+        public const String cIsFavourite = "isFavourite";
+        public const String cUnwatchedItems = "UnwatchedItems";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -96,6 +99,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
             base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
+            base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -318,6 +322,15 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
+                    case DBOnlineSeries.cUnwatchedItems:
+                        // this one is virtual
+                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeries.cID] + " and watched = 0");
+                        if (results.Rows.Count > 0)
+                        {
+                            return results.Rows[0].fields[0];
+                        }
+                        else return 0;
+                        break;
                     case DBOnlineSeries.cPrettyName:
                         DBValue retVal = null;
                         if (m_onlineSeries != null)
@@ -346,6 +359,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
+                    case DBOnlineSeries.cUnwatchedItems:
+                        // this one is virtual
+                        break;
                     case cScanIgnore:
                     case cDuplicateLocalName:
                     case cHidden:
@@ -438,6 +454,14 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
+        public void toggleFavourite()
+        {
+            if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
+            this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
+
+            this.m_onlineSeries.Commit();
+        }
+
         public static void Clear(SQLCondition conditions)
         {
             Clear(new DBSeries(), conditions);
@@ -467,9 +491,37 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBSeries> Get(SQLCondition conditions)
         {
+            return Get(conditions, false);
+        }
+
+        public static List<DBSeries> Get(SQLCondition conditions, bool onlyWithUnwatchedEpisodes)
+        {
             SQLWhat what = new SQLWhat(new DBOnlineSeries());
             what.AddWhat(new DBSeries());
-            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID) + conditions + " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+            // local dups (parsed names)
+            conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            string conds = conditions;
+            if (onlyWithUnwatchedEpisodes)
+            {
+                if (conds == string.Empty)
+                    conds = " where ";
+                else
+                    conds += " and ";
+                conds += @"(
+	                        select count(*) from online_episodes
+                            where 
+	                        seriesID = local_series.ID
+                            and watched = '0'
+                            ) > 0";
+            }
+            string oderBy = conditions.customOrderStringIsSet
+                              ? conditions.orderString
+                              : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+
+            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
+                              + conds
+                              + oderBy
+                              + conditions.limitString;
             return Get(sqlQuery);
         }
 

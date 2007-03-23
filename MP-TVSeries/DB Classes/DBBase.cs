@@ -303,6 +303,11 @@ namespace WindowPlugins.GUITVSeries
                             m_fields[fieldName].Value = value;
                         m_CommitNeeded = true;
                     }
+                    else
+                    {
+                        AddColumn(fieldName, new DBField(DBField.cTypeString));
+                        this[fieldName] = value;
+                    }
                 }
                 catch (SystemException)
                 {
@@ -589,26 +594,43 @@ namespace WindowPlugins.GUITVSeries
         Equal,
         NotEqual,
         LessThan,
-        GreaterThan
+        LessEqualThan,
+        GreaterThan,
+        GreaterEqualThan,
+        Like
     };
 
     public class SQLCondition
     {
         private String m_sConditions = String.Empty;
+        private String m_sLimit = String.Empty;
+        private String m_sOrderstring = String.Empty;
+
+        public bool limitIsSet = false;
+        public bool customOrderStringIsSet = false;
+
+
+        public enum orderType { Ascending, Descending };
         
         public SQLCondition()
         {
+        }
+
+        public void AddSubQuery(string field, DBTable table, SQLCondition innerConditions, DBValue value, SQLConditionType type)
+        {
+            string sValue = value;
+            if (type == SQLConditionType.Like)
+              sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
+            else
+               sValue = ((String)value).Replace("'", "''");
+
+            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + " ) ", sValue, type);
         }
 
         public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
         {
             if (table.m_fields.ContainsKey(sField))
             {
-                if (m_sConditions != String.Empty)
-                    m_sConditions += " and ";
-                else
-                    m_sConditions += " where ";
-
                 String sValue = String.Empty;
                 switch (table.m_fields[sField].Type)
                 {
@@ -617,34 +639,98 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBField.cTypeString:
-                        sValue = "'" + ((String)value).Replace("'", "''") + "'";
+                        if (type == SQLConditionType.Like)
+                            sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
+                        else
+                            sValue = "'" + ((String)value).Replace("'", "''") + "'";
                         break;
                 }
-
-                String sType = String.Empty;
-                switch (type)
-                {
-                    case SQLConditionType.Equal:
-                        sType = " = ";
-                        break;
-
-                    case SQLConditionType.NotEqual:
-                        sType = " != ";
-                        break;
-                    case SQLConditionType.LessThan:
-                        sType = " < ";
-                        break;
-                    case SQLConditionType.GreaterThan:
-                        sType = " > ";
-                        break;
-                }
-                m_sConditions += table.m_tableName + "." + sField + sType + sValue;
+                AddCustom(table.m_tableName + "." + sField, sValue, type);
             }
+        }
+
+        public void SetLimit(int limit)
+        {
+            m_sLimit = " limit " + limit.ToString();
+            limitIsSet = true;
+        }
+
+        public string orderString
+        {
+            get { return m_sOrderstring; }
+        }
+
+        public string limitString
+        {
+            get { return m_sLimit; }
+        }
+
+        public void AddOrderItem(string qualifiedFieldname, orderType type)
+        {
+            if (m_sOrderstring.Length == 0)
+                m_sOrderstring = " order by ";
+            else m_sOrderstring += " , ";
+            m_sOrderstring += qualifiedFieldname;
+            m_sOrderstring += type == orderType.Ascending ? " asc " : " desc ";
+            customOrderStringIsSet = true;
+        }
+
+        public void AddCustom(string what, string value, SQLConditionType type)
+        {
+
+            String sType = String.Empty;
+            switch (type)
+            {
+                case SQLConditionType.Equal:
+                    sType = " = ";
+                    break;
+
+                case SQLConditionType.NotEqual:
+                    sType = " != ";
+                    break;
+                case SQLConditionType.LessThan:
+                    sType = " < ";
+                    break;
+                case SQLConditionType.LessEqualThan:
+                    sType = " <= ";
+                    break;
+                case SQLConditionType.GreaterThan:
+                    sType = " > ";
+                    break;
+                case SQLConditionType.GreaterEqualThan:
+                    sType = " >= ";
+                    break;
+                case SQLConditionType.Like:
+                    sType = " like ";
+                    break;
+            }
+            AddCustom(what + sType + value);
+        }
+
+        public void AddCustom(string SQLString)
+        {
+            if (m_sConditions != String.Empty)
+                m_sConditions += " and ";
+            else
+                m_sConditions += " where ";
+            m_sConditions += SQLString;
         }
 
         public static implicit operator String(SQLCondition conditions)
         {
             return conditions.m_sConditions;
+        }
+
+        public SQLCondition Copy()
+        {
+            SQLCondition copy = new SQLCondition();
+            copy.customOrderStringIsSet = customOrderStringIsSet;
+            copy.limitIsSet = limitIsSet;
+
+            copy.m_sConditions = m_sConditions;
+            copy.m_sLimit = m_sLimit;
+            copy.m_sOrderstring = m_sOrderstring;
+            return copy;
         }
     };
 

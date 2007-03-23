@@ -70,6 +70,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cTorrentSearch = "TorrentSearch_Current";
 
         public const String cRandomBanner = "randomBanner";
+        public const String cLanguage = "lang";
 
         public static string hdIconFilename = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\hdlogo.png";
 
@@ -247,12 +248,8 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
-
-                if (GetOptions("minHDWidth") == null)
-                    SetOptions("minHDWidth", 0);
-
-                if (GetOptions("minHDHeight") == null)
-                    SetOptions("minHDHeight", 0);
+                if (GetOptions("doFolderWatch") == null)
+                    SetOptions("doFolderWatch", true);
             }
             catch (Exception ex)
             {

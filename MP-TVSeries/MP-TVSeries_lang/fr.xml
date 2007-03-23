@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- MP-TV-Series translation file -->
+<!--French -->
+<!-- Note: English is the fallback for any strings not found in other languages -->
+
+<strings>
+	<string Field="Series" Original="Series">Série</string>
+	<string Field="Series_Plural" Original="Series (Plr)">Séries</string> <!-- plural -->
+	<string Field="Season" Original="Season">Saison</string>
+	<string Field="Seasons" Original="Seasons">Saisons</string>
+	<string Field="Episode" Original="Episode">Episode</string>
+	<string Field="Episodes" Original="Episodes">Episodes</string>
+	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Inverser le statut de l'épisode</string>
+	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Récupérer les sous-titres</string>
+	<string Field="Load_via_Torrent" Original="Load via Torrent">Télécharger via Torrent</string>
+	<string Field="Mark_all_as_watched" Original="Mark all as watched">Marquer statut déjà vu</string>
+	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Enlever statut déja vu</string>
+	<string Field="Hide" Original="Hide">Masquer</string>
+	<string Field="Delete" Original="Delete">Supprimer</string>
+	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Retirer la séries des favoris</string>
+	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Ajouter la séries aux favoris</string>
+	<string Field="Force_Local_Scan" Original="Force Local Scan ">Forcer le scan local </string>
+	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forcer la mise à jour en ligne </string>
+	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(..En Cours...)</string>
+	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">N'afficher que les épisodes présent sur le disque</string>
+	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Masquer le résumé des épisodes non vu</string>
+	<string Field="on" Original="on">on</string>
+	<string Field="off" Original="off">off</string>
+	<string Field="Play_Random_Episode" Original="Play Random Episode">Lecture aléatoire des épisodes</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Lecture aléatoire des épisodes non vu</string>
+	<string Field="Delete_that_series" Original="Delete that series?">Supprimer cette séries?</string>
+	<string Field="Delete_that_season" Original="Delete that season?">Supprimer cette saison?</string>
+	<string Field="Delete_that_episode" Original="Delete that episode?">Supprimer cet épisode?</string>
+	<string Field="Confirm" Original="Confirm">Valider</string>
+	<string Field="Completed" Original="Completed">Terminé</string>
+	<string Field="No_subtitles_found" Original="No subtitles found">Aucun sous-titres trouvé !</string>
+	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Passer / Ne plus demander</string>
+	<string Field="no_results_found" Original="no results found!">Aucun résultat trouvé</string>
+	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Masqué pour empècher les spoilers *</string>
+	<string Field="Yes" Original="Yes">Oui</string>
+	<string Field="No" Original="No">Non</string>
+	<string Field="Error" Original="#Error">#Erreur</string>
+	<string Field="No_items" Original="No items!">Aucun Elément!</string>	
+	<string Field="Unknown" Original="Unknown">Inconnu</string>
+</strings>
