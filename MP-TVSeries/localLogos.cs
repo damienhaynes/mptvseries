@@ -51,6 +51,8 @@ namespace WindowPlugins.GUITVSeries
             if(all != string.Empty)
                 entries = new List<string>(Regex.Split(all, entriesSplit));
             entriesInMemory = true;
+            if (entries.Count == 0)
+                MPTVSeriesLog.Write("No LogoRules found!");
             return entries;
         }
 
@@ -104,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
             if (!entriesInMemory) getFromDB();
             if (entries.Count == 0) return string.Empty; // no rules exist
             //MPTVSeriesLog.Write("----------------------LOGOS--------------------");
-            MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString());
+            MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             List<string> logosForBuilding = new List<string>();
             bool debugResult = false;
             bool debugResult1 = false;
@@ -121,7 +123,7 @@ namespace WindowPlugins.GUITVSeries
                     string filename = getDynamicFileName(conditions[0], level);
                     if (!System.IO.File.Exists(filename))
                     {
-                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename);
+                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Debug);
 
                     }
 
@@ -138,10 +140,10 @@ namespace WindowPlugins.GUITVSeries
                         logosForBuilding.Add(filename);
                     }
                 }
-                else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!");
+                else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!", MPTVSeriesLog.LogLevel.Debug);
 
                 //MPTVSeriesLog.Write("Endresult of LogoRule Test: " + debugResult.ToString());
-                MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString());
+                MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
             }
 
             //MPTVSeriesLog.Write("Total logos to be displayed for this item: " + logosForBuilding.Count.ToString());
@@ -267,7 +269,7 @@ namespace WindowPlugins.GUITVSeries
             bool[] results = new bool[]{false, false, false};
             for (int i = 0; i < 3; i++)
             {
-                MPTVSeriesLog.Write("Testing Loop:" + i.ToString());
+                MPTVSeriesLog.Write("Testing Loop:" + i.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 string what = conditions[i * 4];
                 if (!getFieldValues(what, out what, level)) return false;
 

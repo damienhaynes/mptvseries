@@ -20,12 +20,12 @@ namespace WindowPlugins.GUITVSeries
 
         public List<DBSeries> getSeriesItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetSeriesItems: Begin");
+            MPTVSeriesLog.Write("View: GetSeriesItems: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             conditions.Add(new DBSeries(), DBSeries.cHidden, false, SQLConditionType.Equal);
-            MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL");
+            MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
             
         }
@@ -42,30 +42,30 @@ namespace WindowPlugins.GUITVSeries
         
         public List<DBSeason> getSeasonItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetSeason: Begin");
+            MPTVSeriesLog.Write("View: GetSeason: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            MPTVSeriesLog.Write("View: GetSeason: BeginSQL");
+            MPTVSeriesLog.Write("View: GetSeason: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeason.Get(default(int), DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false, conditions);
         }
 
         public List<DBEpisode> getEpisodeItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetEps: Begin");
+            MPTVSeriesLog.Write("View: GetEps: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
-            MPTVSeriesLog.Write("View: GetEps: BeginSQL");
+            MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBEpisode.Get(conditions, true); 
         }
 
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
         {
             SQLCondition conditions = null;
-            MPTVSeriesLog.Write("View: GetGroupItems: Begin");
+            MPTVSeriesLog.Write("View: GetGroupItems: Begin", MPTVSeriesLog.LogLevel.Debug);
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             logicalViewStep step = steps[stepIndex];
@@ -75,7 +75,7 @@ namespace WindowPlugins.GUITVSeries
                                  step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
 
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
-            MPTVSeriesLog.Write("View: GetGroupItems: SQL complete");
+            MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
             //SQLite.NET.SQLiteResultSet results = SQLiteResultSet.Fake();
             if (results.Rows.Count > 0)
             {
@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
                         limitList(ref items, step.limitItems);
                 }
             }
-            MPTVSeriesLog.Write("View: GetGroupItems: Complete");
+            MPTVSeriesLog.Write("View: GetGroupItems: Complete", MPTVSeriesLog.LogLevel.Debug);
             return items;
         }
 
@@ -151,6 +151,18 @@ namespace WindowPlugins.GUITVSeries
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
                         break;
                 }
+            }
+            if (step.hasSubQuery && step.SubQueryDynInsert_localFilesOnly != string.Empty)
+            {
+                if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                {
+                    conditions.ConditionsSQLString = ((string)conditions).Replace("{local_files}", step.SubQueryDynInsert_localFilesOnly);
+                }
+                else
+                {
+                    conditions.ConditionsSQLString = ((string)conditions).Replace("{local_files}", " ");
+                }
+
             }
         }
 
@@ -251,7 +263,8 @@ namespace WindowPlugins.GUITVSeries
         public List<string> conditionsToInherit = new List<string>();
         public type Type;
         public int limitItems = 0;
-        
+        public bool hasSubQuery = false;
+        public string SubQueryDynInsert_localFilesOnly = string.Empty;
 
         public SQLCondition conds = new SQLCondition();
         public grouped groupedBy = null;
@@ -320,16 +333,26 @@ namespace WindowPlugins.GUITVSeries
             if ((lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode)) && Type != logicalViewStep.type.episode)
             {
                 cust = true;
-                if(this.Type == logicalViewStep.type.series)
+                // we also need to ensure that the user selected only_local_files is respected (subquery otherwise screws up)
+                // however this cannot be done here as the steps are only parsed at the start of the plugin and the user may
+                // very well change this setting later on
+                switch (this.Type)
                 {
-                    join =  DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID); 
+                    case logicalViewStep.type.season:
+                        join = DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and ";
+                        goto case logicalViewStep.type.series;
+                    case logicalViewStep.type.series:
+                        join += DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID);
+                        join += "{local_files}";
+                        goto default;
+                    case logicalViewStep.type.group:
+                        // ??
+                        break;
+                    default:
+                        SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
+                        break;
                 }
-                if (this.Type == logicalViewStep.type.season)
-                {
-                    join = DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) +
-                           " and " +
-                           DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex); 
-                }
+                
             }
             else if (lType.Equals(typeof(DBSeason)) && ( Type != logicalViewStep.type.season && Type != logicalViewStep.type.episode))
             {
@@ -348,9 +371,12 @@ namespace WindowPlugins.GUITVSeries
             else if (cust)
             {
                 SQLCondition iCond = new SQLCondition();
-                iCond.Add(table, tableField, condition.Trim(), condtype);
                 iCond.AddCustom(join);
+                iCond.Add(table, tableField, condition.Trim(), condtype);
+                
                 conds.AddSubQuery("count(" + tableField + ")", table, iCond, 0, SQLConditionType.GreaterThan);
+                hasSubQuery = true;
+                
             }
             else
             {

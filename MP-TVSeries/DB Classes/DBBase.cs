@@ -609,6 +609,14 @@ namespace WindowPlugins.GUITVSeries
         public bool limitIsSet = false;
         public bool customOrderStringIsSet = false;
 
+        // I need this for subqueries
+        public string ConditionsSQLString
+        {
+            set
+            {
+                m_sConditions = value;
+            }
+        }
 
         public enum orderType { Ascending, Descending };
         
