@@ -31,6 +31,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
+                MPTVSeriesLog.Write("Attempting to play: ", episode[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
                 // don't have this file !
                 if (episode[DBEpisode.cFilename] == String.Empty)
                     return false;
@@ -159,6 +160,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
         {
+            MPTVSeriesLog.Write("Playback stopped for: ", filename, MPTVSeriesLog.LogLevel.Normal);
             try
             {
                 if (type != g_Player.MediaType.Video) return;
@@ -207,6 +209,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void OnPlayBackEnded(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
+            MPTVSeriesLog.Write("Playback ended for: ", filename, MPTVSeriesLog.LogLevel.Normal);
             try
             {
                 if (type != g_Player.MediaType.Video) return;
@@ -245,6 +248,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void OnPlayBackStarted(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
+            MPTVSeriesLog.Write("Playback started for: ", filename, MPTVSeriesLog.LogLevel.Normal);
             try
             {
                 if (type != g_Player.MediaType.Video) return;
