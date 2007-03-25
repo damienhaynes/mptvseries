@@ -1466,6 +1466,7 @@ namespace MediaPortal.GUI.Video
 
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
         {
+            MPTVSeriesLog.Write("Online Parsing done");
             if (m_ImportAnimation != null)
                 m_ImportAnimation.FreeResources();
 

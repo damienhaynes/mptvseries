@@ -597,7 +597,8 @@ namespace WindowPlugins.GUITVSeries
         LessEqualThan,
         GreaterThan,
         GreaterEqualThan,
-        Like
+        Like,
+        In
     };
 
     public class SQLCondition
@@ -632,7 +633,7 @@ namespace WindowPlugins.GUITVSeries
             else
                sValue = ((String)value).Replace("'", "''");
 
-            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + " ) ", sValue, type);
+            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
         }
 
         public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
@@ -711,8 +712,13 @@ namespace WindowPlugins.GUITVSeries
                 case SQLConditionType.Like:
                     sType = " like ";
                     break;
+                case SQLConditionType.In:
+                    sType = " in ";
+                    break;
             }
-            AddCustom(what + sType + value);
+            if(SQLConditionType.In == type) // reverse
+                AddCustom(value + sType + what);
+            else AddCustom(what + sType + value);
         }
 
         public void AddCustom(string SQLString)

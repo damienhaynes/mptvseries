@@ -121,6 +121,7 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             DBImportPath[] importPaths = DBImportPath.GetAll();
             if (importPaths != null)
             {
