@@ -43,7 +43,7 @@ using System;
 using System.Runtime.InteropServices;
 using WindowPlugins.GUITVSeries;
 
-namespace MediaInfoLib
+namespace WindowPlugins.GUITVSeries.MediaInfoLib
 {
     public enum StreamKind
     {
@@ -112,7 +112,17 @@ namespace MediaInfoLib
                 MPTVSeriesLog.Write("Error creating the MediaInfo Object, most likely no or wront mediainfo.dll in directory: ", ex.Message , MPTVSeriesLog.LogLevel.Normal);
             }
         }
-        ~MediaInfo() { MediaInfo_Delete(Handle); }
+        ~MediaInfo() 
+        {
+            try
+            {
+                MediaInfo_Delete(Handle);
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error deleting the MediaInfo Object, most likely no or wront mediainfo.dll in directory: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+            } 
+        }
         public int Open(String FileName) { return MediaInfo_Open(Handle, FileName); }
         public void Close() { MediaInfo_Close(Handle); }
         public String Inform() { return Marshal.PtrToStringUni(MediaInfo_Inform(Handle, 0)); }

@@ -459,7 +459,25 @@ namespace WindowPlugins.GUITVSeries
                         string tableField = string.Empty;
                         thisView.getTableFieldname(orderFields[i], out table, out tableField);
                         tableField = thisView.getQTableNameFromUnknownType(table, tableField);
-                        thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
+                        if (thisView.Type == type.episode && ( table.GetType() == typeof(DBEpisode) || table.GetType() == typeof(DBOnlineEpisode)))
+                        {
+                            // for perf reason a subquery is build, otherwise custom orders and the nessesary join really slow down sqllite!
+                            SQLCondition subQueryConditions = thisView.conds.Copy(); // have to have all conds too
+                            subQueryConditions.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
+                            if (viewSteps[3].Length > 0) // set the limit too
+                            {
+                                try
+                                {
+                                    subQueryConditions.SetLimit(System.Convert.ToInt32(viewSteps[3]));
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                            thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
+                            
+                        }
+                        else thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
                     }
                 }
             }
