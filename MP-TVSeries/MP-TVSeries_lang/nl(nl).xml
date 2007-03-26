@@ -27,7 +27,7 @@
 	<string Field="on" Original="on">aan</string>
 	<string Field="off" Original="off">uit</string>
 	<string Field="Play_Random_Episode" Original="Play Random Episode">Speel een willekeurige serie</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Speel een willekeurig ongekeken serie eerst">Play Random First Unwatched Episode</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Speel een willekeurig ongekeken serie eerst</string>
 	<string Field="Delete_that_series" Original="Delete that series?">Deze serie verwijderen?</string>
 	<string Field="Delete_that_season" Original="Delete that season?">Dit seizoen verwijdern?</string>
 	<string Field="Delete_that_episode" Original="Delete that episode?">Deze aflevering verwijderen?</string>
