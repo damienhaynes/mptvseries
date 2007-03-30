@@ -1445,6 +1445,7 @@ namespace MediaPortal.GUI.Video
                 {
                     if (m_parserUpdaterQueue.Count > 0)
                     {
+                        setProcessAnimationStatus(true);
                         m_parserUpdaterWorking = true;
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
