@@ -404,8 +404,9 @@ namespace WindowPlugins.GUITVSeries
             // now on with online parsing
             if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
             {
+                int counter = 0;
                 m_bReparseNeeded = true;
-                while (m_bReparseNeeded)
+                while (m_bReparseNeeded && counter < 4) // limit the max number of loops
                 {
                     m_bReparseNeeded = false;
 
@@ -425,14 +426,6 @@ namespace WindowPlugins.GUITVSeries
                         worker.ReportProgress(50);
                     }
 
-                    // update new series for banners
-                    UpdateBanners(true);
-                    if (m_params.m_bUpdateScan)
-                    {
-                        // refresh existing banners
-                        UpdateBanners(false);
-                    }
-
                     // now update the episodes
                     UpdateEpisodes(true);
 
@@ -441,9 +434,17 @@ namespace WindowPlugins.GUITVSeries
                         // now refresh existing episodes
                         UpdateEpisodes(false);
                     }
+                    counter++;
+                }
+                // we really only need to do this once
+                // update new series for banners
+                UpdateBanners(true);
+                if (m_params.m_bUpdateScan)
+                {
+                    // refresh existing banners
+                    UpdateBanners(false);
                 }
             }
-
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************          Completed          ***************************");
@@ -538,7 +539,10 @@ namespace WindowPlugins.GUITVSeries
 
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition);
-            MPTVSeriesLog.Write("Found " + seriesList.Count + " Series without an online ID, looking for them");
+            if(seriesList.Count > 0)
+                MPTVSeriesLog.Write("Found " + seriesList.Count + " Series without an online ID, looking for them");
+            else
+                MPTVSeriesLog.Write("No Series without an online ID found");
 
             foreach (DBSeries series in seriesList)
             {

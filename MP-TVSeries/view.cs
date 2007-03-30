@@ -15,8 +15,7 @@ namespace WindowPlugins.GUITVSeries
         }
         public string Name { get { return this._name; } }
         
-        List<logicalViewStep> steps = new List<logicalViewStep>();
-        //List<string> stepSelections = new List<string>();
+        public List<logicalViewStep> steps = new List<logicalViewStep>();
 
         public List<DBSeries> getSeriesItems(int stepIndex, string[] currentStepSelection)
         {
@@ -25,6 +24,7 @@ namespace WindowPlugins.GUITVSeries
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             conditions.Add(new DBSeries(), DBSeries.cHidden, false, SQLConditionType.Equal);
+            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), SQLConditionType.Equal);
             MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
             
@@ -59,7 +59,22 @@ namespace WindowPlugins.GUITVSeries
             if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
             MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            return DBEpisode.Get(conditions, true); 
+            //return DBEpisode.Get(conditions, true);
+            List<DBEpisode> eps = DBEpisode.Get(conditions, true);
+            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            {
+                List<DBEpisode> goodEps = new List<DBEpisode>();
+                foreach (DBEpisode ep in eps)
+                    try
+                    {
+                        if (System.IO.File.Exists(ep[DBEpisode.cFilename]))
+                            goodEps.Add(ep);
+                    }
+                    catch (Exception){}
+                return goodEps;
+            }
+            else return eps;
+            
         }
 
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
@@ -70,6 +85,10 @@ namespace WindowPlugins.GUITVSeries
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             logicalViewStep step = steps[stepIndex];
             List<string> items = new List<string>();
+            // to ensure we respect on the fly filter settings
+            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
+                conditions.Add(step.groupedBy.table, DBOnlineSeries.cHasLocalFiles, true, SQLConditionType.Equal); 
+            
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
                                  " from " + step.groupedBy.table.m_tableName + conditions +
                                  step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
@@ -133,7 +152,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case logicalViewStep.type.group:
                         // we expect to get the selected group's label
-                        if (currentStepSelection[0] == "Unknown") // Unknown really is "" so get all with null values here
+                        if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
                             conditions.Add(steps[stepIndex - 1].groupedBy.table, steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
                         else 
                             if(steps[stepIndex - 1].groupedBy.attempSplit) // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
@@ -251,6 +270,13 @@ namespace WindowPlugins.GUITVSeries
             season,
             episode
         }
+        public string Name
+        {
+            get
+            {
+                return Type.ToString();
+            }
+        }
         public class grouped
         {
             public DBTable table;
@@ -346,10 +372,12 @@ namespace WindowPlugins.GUITVSeries
                         join += "{local_files}";
                         goto default;
                     case logicalViewStep.type.group:
-                        // ??
+                        join += "{local_files}";
+                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1";
                         break;
                     default:
-                        SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
+                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1";
+                        //SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
                         break;
                 }
                 
@@ -477,7 +505,7 @@ namespace WindowPlugins.GUITVSeries
                             thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
                             
                         }
-                        else thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
+                        thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
                     }
                 }
             }
@@ -498,6 +526,54 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Cannot interpret limit in logicalview, limit was: " + viewSteps[3]);
             }
             return thisView;
+        }
+    }
+
+    public class Helper
+    {
+        public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
+        {
+            // takes care of "looping"
+            int currIndex = 0;
+            int indexToGet = 0;
+            P value = default(P);
+            for (int i = 0; i < elements.Count; i++)
+            {
+                try
+                {
+                    value = (P)elements[i].GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetProperty, null, elements[i], null);
+                    if (value.Equals(currPropertyValue))
+                    {
+                        indexToGet = i + indexOffset;
+                        break;
+                    }
+                }
+                catch (Exception x)
+                {
+                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + elements[i].GetType().Name + " does not have a property " + PropertyName);
+                    return default(T);
+                }
+            }
+            if (indexToGet < 0) indexToGet = elements.Count + indexToGet;
+            if (indexToGet >= elements.Count) indexToGet = indexToGet - elements.Count;
+            return elements[indexToGet];
+        }
+
+        public static List<P> getPropertyListFromList<T, P>(string PropertyNameToGet, List<T> elements)
+        {
+            List<P> results = new List<P>();
+            foreach (T elem in elements)
+            {
+                try
+                {
+                    results.Add((P)elem.GetType().InvokeMember(PropertyNameToGet, System.Reflection.BindingFlags.GetProperty, null, elem, null));
+                }
+                catch (Exception)
+                {
+                    MPTVSeriesLog.Write("Wrong call of getPropertyListFromList<T,P>: Type " + elem.GetType().Name);
+                }
+            }
+            return results;
         }
     }
 
@@ -533,4 +609,5 @@ namespace WindowPlugins.GUITVSeries
                 ;
         }
     }
+
 }

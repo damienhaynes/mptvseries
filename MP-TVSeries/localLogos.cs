@@ -105,7 +105,6 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!entriesInMemory) getFromDB();
             if (entries.Count == 0) return string.Empty; // no rules exist
-            //MPTVSeriesLog.Write("----------------------LOGOS--------------------");
             MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             List<string> logosForBuilding = new List<string>();
             bool debugResult = false;
@@ -113,7 +112,6 @@ namespace WindowPlugins.GUITVSeries
 
             for (int i = 0; i < entries.Count; i++)
             {
-                //MPTVSeriesLog.Write("Testing Logo-Rule - " + entries[i]);
                 if (isRelevant(entries[i], level))
                 {
                     MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
@@ -123,7 +121,7 @@ namespace WindowPlugins.GUITVSeries
                     string filename = getDynamicFileName(conditions[0], level);
                     if (!System.IO.File.Exists(filename))
                     {
-                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Normal);
 
                     }
 
@@ -131,53 +129,36 @@ namespace WindowPlugins.GUITVSeries
                     // each image may only exist once
                     else if (!(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
                     {
-                        if (firstOnly)
-                        {
-                            //MPTVSeriesLog.Write("Endresult of LogoRule Test: " + debugResult.ToString());
-                            //MPTVSeriesLog.Write("Not testing other rules because firstonly = true");
-                            return filename; // if we only need the first then we just return the original here
-                        }
-                        logosForBuilding.Add(filename);
+                        if (firstOnly) return filename; // if we only need the first then we just return the original here
+                        else logosForBuilding.Add(filename);
                     }
                 }
                 else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!", MPTVSeriesLog.LogLevel.Debug);
 
-                //MPTVSeriesLog.Write("Endresult of LogoRule Test: " + debugResult.ToString());
                 MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
             }
 
-            //MPTVSeriesLog.Write("Total logos to be displayed for this item: " + logosForBuilding.Count.ToString());
-            if (logosForBuilding.Count == 1)
-            {
-                //MPTVSeriesLog.Write("Only one logo, no building dynamically: " + tmpFile);
-                //MPTVSeriesLog.Write("Finished testing Logos, time in ms: " + perfana.measorFromStart());
-                //MPTVSeriesLog.Write("----------------------END LOGOS----------------");
-                return logosForBuilding[0];
-            }
+            if (logosForBuilding.Count == 1) return logosForBuilding[0];
             else if (logosForBuilding.Count > 1)
             {
+                tmpFile = string.Empty;
+                foreach (string logo in logosForBuilding)
+                    tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
+                tmpFile = pathfortmpfile + "TVSeriesDynLogo" + tmpFile + ".png";
+                if (System.IO.File.Exists(tmpFile))
+                    return tmpFile;
+
                 Bitmap b = new Bitmap(imgWidth, imgHeight);
                 Image img = b;
                 Graphics g = Graphics.FromImage(img);
                 appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
                 try
                 {
-                    //if (System.IO.File.Exists(tmpFile)) System.IO.File.Delete(tmpFile);
-                    
-                    tmpFile = string.Empty;
-                    foreach (string logo in logosForBuilding)
-                        tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
-                    tmpFile = pathfortmpfile + tmpFile + ".png";
-                    //MPTVSeriesLog.Write("Image: " + tmpFile);
                     b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
-                    //MPTVSeriesLog.Write("Finished testing Logos, time in ms: " + perfana.measorFromStart());
-                    //MPTVSeriesLog.Write("----------------------END LOGOS----------------");
                     return tmpFile;
                 }
                 catch (Exception ex)
                 {
-                    //MPTVSeriesLog.Write("Error saving the tmp File for the logos");
-                    //MPTVSeriesLog.Write("----------------------END LOGOS----------------");
                     if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
                     return string.Empty;
                 }
@@ -258,11 +239,6 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        static float biggerNumber(float no1, float no2)
-        {
-            return no1 > no2 ? no1 : no2;
-        }
-
         static bool condIsTrue(List<string> conditions, string cond, Level level)
         {
             conditions.Remove(conditions[0]); // have to get rid of the filename
@@ -337,9 +313,7 @@ namespace WindowPlugins.GUITVSeries
         static bool getFieldValues(string what, out string value, Level level)
         {
             value = string.Empty;
-            //if (!isRelevant(what, level)) return false; // should already be checked
             if (what == string.Empty) return true; // just skip it
-            //MPTVSeriesLog.Write("field to to get value from: " + what);
             try
             {
                 if (what.Contains("Episode"))
@@ -357,7 +331,6 @@ namespace WindowPlugins.GUITVSeries
                             tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
                         {
                             tmpSeason = getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
-                            //MPTVSeriesLog.Write("had to get SeasonObject");
                         }
                         //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                     }
@@ -369,15 +342,11 @@ namespace WindowPlugins.GUITVSeries
                     {
                         int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
                         if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                        {
                             tmpSeries = getCorrespondingSeries(seriesID);
-                            //MPTVSeriesLog.Write("had to get SeriesObject");
-                        }
                         //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
                     }
                     value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                 }
-                //MPTVSeriesLog.Write("value of this field: " + value);
                 return true;
             }
             catch (Exception)
@@ -391,21 +360,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (level == Level.Series && field.Contains("<Season.")) return false;
             if ((level == Level.Series || level == Level.Season) && field.Contains("<Episode.")) return false;
-            if (level == Level.Group)
-            {
-                // groups only allow rules which have as the only condition what they are grouped by
-                if(!field.Contains(groupedByInfo)) return false;
-                if(groupedByInfo.Contains("Series") && ( field.Contains("<Season.") || field.Contains("<Episode."))) return false;
-                if(groupedByInfo.Contains("Season") && ( field.Contains("<Series.") || field.Contains("<Episode."))) return false;
-                if(groupedByInfo.Contains("Episode") && ( field.Contains("<Season.") || field.Contains("<Series."))) return false;
-
-            }
             return true;
         }
 
         static bool singleCondIsTrue(string what, string type, string value)
         {
-            //MPTVSeriesLog.Write("Testing: " + what + type + value);
             double testf = 0, test1f = 0;
             if (type.Contains("<") || type.Contains(">"))
             {
@@ -451,7 +410,22 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-
+        ~localLogos()
+        {
+            // clean up all dynLogoFiles
+            MPTVSeriesLog.Write("Cleaning up cached, generated Logos");
+            foreach (string file in System.IO.Directory.GetFiles(pathfortmpfile, "TVSeriesDynLogo*.png"))
+            {
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, e.Message, MPTVSeriesLog.LogLevel.Normal);
+                }
+            }
+        }
     }
     class perfana
     {
