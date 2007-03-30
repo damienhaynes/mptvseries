@@ -250,8 +250,7 @@ namespace MediaPortal.GUI.Video
             else
             {
                 // else the user has selected to always manually do local scans
-                if (m_ImportAnimation != null)
-                    m_ImportAnimation.FreeResources();
+                setProcessAnimationStatus(false);
             }
 
             // init display format strings
@@ -491,7 +490,7 @@ namespace MediaPortal.GUI.Video
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 48);
                     gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    gph.DrawString("Season " + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    gph.DrawString(Translation.Season + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     gph.Dispose();
                     GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
@@ -502,344 +501,367 @@ namespace MediaPortal.GUI.Video
         void LoadFacade()
         {
             MPTVSeriesLog.Write("Begin LoadFacade");
-            if (this.m_Facade != null)
+            try
             {
-                m_Button_View.Visible = false;
-                m_Button_Back.Visible = false;
-
-                if (m_nInitialIconXOffset == 0)
-                    m_nInitialIconXOffset = m_Facade.AlbumListView.IconOffsetX;
-                if (m_nInitialIconYOffset == 0)
-                    m_nInitialIconYOffset = m_Facade.AlbumListView.IconOffsetY;
-                if (m_nInitialItemHeight == 0)
-                    m_nInitialItemHeight = m_Facade.AlbumListView.ItemHeight;
-
-                this.m_Facade.ListView.Clear();
-                this.m_Facade.AlbumListView.Clear();
-                bool bEmpty = true;
-                MPTVSeriesLog.Write("LoadFacade: ListLevel: ", m_ListLevel, MPTVSeriesLog.LogLevel.Normal);
-                this.m_Logos_Image.Visible = false;
-                switch (this.m_ListLevel)
+                if (this.m_Facade != null)
                 {
-                    case cListLevelGroup:
-                        {
-                            // these are groups of certain categories, eg. Genres
+                    m_Button_View.Visible = false;
+                    m_Button_Back.Visible = false;
 
-                            // always list mode
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                            int selectedIndex = -1;
-                            this.m_Logos_Image.Visible = false; // logos not yet supported
-                            // view handling
-                            List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
+                    if (m_nInitialIconXOffset == 0)
+                        m_nInitialIconXOffset = m_Facade.AlbumListView.IconOffsetX;
+                    if (m_nInitialIconYOffset == 0)
+                        m_nInitialIconYOffset = m_Facade.AlbumListView.IconOffsetY;
+                    if (m_nInitialItemHeight == 0)
+                        m_nInitialItemHeight = m_Facade.AlbumListView.ItemHeight;
 
-                            for (int index = 0; index < items.Count; index++)
+                    this.m_Facade.ListView.Clear();
+                    this.m_Facade.AlbumListView.Clear();
+                    bool bEmpty = true;
+                    MPTVSeriesLog.Write("LoadFacade: ListLevel: ", m_ListLevel, MPTVSeriesLog.LogLevel.Normal);
+                    switch (this.m_ListLevel)
+                    {
+                        case cListLevelGroup:
                             {
+                                // these are groups of certain categories, eg. Genres
+
+                                // always list mode
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                int selectedIndex = -1;
+                                // view handling
+                                List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
+
+                                for (int index = 0; index < items.Count; index++)
+                                {
                                     bEmpty = false;
                                     GUIListItem item = new GUIListItem(items[index]);
-                                    if(item.Label == string.Empty) item.Label = Translation.Unknown;
+                                    if (item.Label == string.Empty) item.Label = Translation.Unknown;
                                     item.TVTag = items[index];
                                     item.IsRemote = true;
                                     item.IsDownloading = true;
-                                    
+
                                     this.m_Facade.Add(item);
 
                                     if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
                                         selectedIndex = index;
-                             }
-                            if(selectedIndex > -1)
-                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                                }
+                                if (selectedIndex > -1)
+                                    this.m_Facade.SelectedListItemIndex = selectedIndex;
                             }
                             break;
 
-                    case cListLevelSeries:
-                        {
-                            int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
-                            int selectedIndex = -1;
-                            int count = 0;
-
-                            if (nSeriesDisplayMode == 1)
+                        case cListLevelSeries:
                             {
-                                // graphical
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
-                                // assume 758 x 140 for all banners
-                                Size sizeImage = new Size();
+                                int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                                int selectedIndex = -1;
+                                int count = 0;
 
-                                m_Facade.AlbumListView.IconOffsetX = m_nInitialIconXOffset;
-                                sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
-                                sizeImage.Height = sizeImage.Width * 140 / 758;
-                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * sizeImage.Height / m_nInitialItemHeight;
-                                m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
-                                m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
-                                m_Facade.AlbumListView.AllocResources();
-                                m_Image.Visible = false;
+                                if (nSeriesDisplayMode == 1)
+                                {
+                                    // graphical
+                                    this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                                    // assume 758 x 140 for all banners
+                                    Size sizeImage = new Size();
+
+                                    m_Facade.AlbumListView.IconOffsetX = m_nInitialIconXOffset;
+                                    sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
+                                    sizeImage.Height = sizeImage.Width * 140 / 758;
+                                    m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * sizeImage.Height / m_nInitialItemHeight;
+                                    m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                                    m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                                    m_Facade.AlbumListView.AllocResources();
+                                    m_Image.Visible = false;
+                                }
+                                else
+                                {
+                                    // text as usual
+                                    this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                    m_Image.Visible = true;
+                                }
+
+                                // view handling
+                                List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                                foreach (DBSeries series in seriesList)
+                                {
+                                    try
+                                    {
+                                        bEmpty = false;
+                                        GUIListItem item = null;
+                                        if (nSeriesDisplayMode == 1)
+                                        {
+                                            item = new GUIListItem();
+                                            item.IconImage = item.IconImageBig = GetSeriesBanner(series);
+                                        }
+                                        else
+                                        {
+                                            item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
+                                            item.Label2 = FormatField(m_sFormatSeriesCol3, series);
+                                            item.Label3 = FormatField(m_sFormatSeriesCol1, series);
+                                        }
+                                        item.TVTag = series;
+                                        item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
+                                        item.IsDownloading = true;
+
+                                        if (this.m_SelectedSeries != null)
+                                        {
+                                            if (series[DBSeries.cID] == this.m_SelectedSeries[DBSeries.cID])
+                                                selectedIndex = count;
+                                        }
+                                        else
+                                        {
+                                            // select the first that has a file
+                                            if (series[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                                selectedIndex = count;
+                                        }
+                                        if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
+                                            selectedIndex = count;
+
+                                        this.m_Facade.Add(item);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                                    }
+                                    count++;
+                                }
+                                if (selectedIndex != -1)
+                                    this.m_Facade.SelectedListItemIndex = selectedIndex;
                             }
-                            else
+                            break;
+                        case cListLevelSeasons:
                             {
-                                // text as usual
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
                                 m_Image.Visible = true;
-                            }
-
-                            // view handling
-                            List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-                            foreach (DBSeries series in seriesList)
-                            {
-                                try
+                                int selectedIndex = -1;
+                                int count = 0;
+                                int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+                                if (nSeasonDisplayMode == 1)
                                 {
-                                    bEmpty = false;
-                                    GUIListItem item = null;
-                                    if (nSeriesDisplayMode == 1)
-                                    {
-                                        item = new GUIListItem();
-                                        item.IconImage = item.IconImageBig = GetSeriesBanner(series);
-                                    }
-                                    else
-                                    {
-                                        item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
-                                        item.Label2 = FormatField(m_sFormatSeriesCol3, series);
-                                        item.Label3 = FormatField(m_sFormatSeriesCol1, series);
-                                    }
-                                    item.TVTag = series;
-                                    item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
-                                    item.IsDownloading = true;
-
-                                    if (this.m_SelectedSeries != null)
-                                    {
-                                        if (series[DBSeries.cID] == this.m_SelectedSeries[DBSeries.cID])
-                                            selectedIndex = count;
-                                    }
-                                    else
-                                    {
-                                        // select the first that has a file
-                                        if (series[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                            selectedIndex = count;
-                                    }
-                                    if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
-                                        selectedIndex = count;
-
-                                    this.m_Facade.Add(item);
+                                    this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
+                                    // assume 400 x 578 for all season images
+                                    Size sizeImage = new Size();
+                                    // reverse, 1 season picture by page
+                                    // integrate the size difference in the offset so the image stays centered & doesn't go "out" of the selection box
+                                    sizeImage.Height = m_Facade.AlbumListView.Height - m_Facade.AlbumListView.Space - m_Facade.AlbumListView.SpinHeight - 6; // taken from how itemsperpage is calculated in GUIListControl
+                                    m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * (sizeImage.Height - 2 * m_Facade.AlbumListView.IconOffsetY) / m_nInitialItemHeight;
+                                    sizeImage.Height -= 2 * m_Facade.AlbumListView.IconOffsetY;
+                                    sizeImage.Width = sizeImage.Height * 400 / 578;
+                                    m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                                    m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                                    m_Facade.AlbumListView.IconOffsetX = (m_Facade.AlbumListView.Width - sizeImage.Width) / 2;
+                                    m_Facade.AlbumListView.AllocResources();
+                                    m_Season_Image.Visible = false;
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                                    this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                    m_Season_Image.Visible = true;
                                 }
-                                count++;
+
+                                if (m_SelectedSeries != null && this.m_Image != null)
+                                {
+                                    try
+                                    {
+                                        this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
+                                        this.m_Image.KeepAspectRatio = true;
+                                    }
+                                    catch { }
+                                }
+
+                                // view handling
+                                List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeason: ", seasons.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                                foreach (DBSeason season in seasons)
+                                {
+                                    try
+                                    {
+                                        bEmpty = false;
+                                        GUIListItem item = null;
+                                        if (nSeasonDisplayMode == 1)
+                                        {
+                                            item = new GUIListItem();
+                                            item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                        }
+                                        else
+                                        {
+                                            item = new GUIListItem(FormatField(m_sFormatSeasonCol2, season));
+                                            if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                                // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
+                                                item.Label2 = FormatField(m_sFormatSeasonCol3, season);
+                                            item.Label3 = FormatField(m_sFormatSeasonCol1, season);
+                                        }
+                                        item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
+                                        item.IsDownloading = true;
+                                        item.TVTag = season;
+
+                                        if (this.m_SelectedSeason != null)
+                                        {
+                                            if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                                selectedIndex = count;
+                                        }
+                                        else
+                                        {
+                                            // select the first that has a file
+                                            if (season[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                                selectedIndex = count;
+                                        }
+                                        if (m_back_up_select_this != null && season != null && selectedIndex == -1 && season[DBSeason.cSeriesID] == m_back_up_select_this[0] && season[DBSeason.cIndex] == m_back_up_select_this[1])
+                                            selectedIndex = count;
+                                        this.m_Facade.Add(item);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
+                                    }
+                                    count++;
+                                }
+
+                                if (selectedIndex != -1)
+                                    this.m_Facade.SelectedListItemIndex = selectedIndex;
+                                // if there is only one season to display, skip directly to the episodes list
+                                if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
+                                {
+                                    MPTVSeriesLog.Write("Skipping season display");
+                                    OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
+                                }
+                                else if (seasons.Count == 1)
+                                {
+                                    // we're back from the ep list, go up one hierarchy more (depending on view, most likly series)
+                                    MPTVSeriesLog.Write("Skipping season display");
+                                    OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
+                                }
                             }
-                            if (selectedIndex != -1)
-                                this.m_Facade.SelectedListItemIndex = selectedIndex;
-                        }
-                        break;
-                    case cListLevelSeasons:
-                        {
-                            m_Image.Visible = true;
-                            int selectedIndex = -1;
-                            int count = 0;
-                            int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
-                            if (nSeasonDisplayMode == 1)
+                            break;
+
+                        case cListLevelEpisodes:
                             {
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.AlbumView;
-                                // assume 400 x 578 for all season images
-                                Size sizeImage = new Size();
-                                // reverse, 1 season picture by page
-                                // integrate the size difference in the offset so the image stays centered & doesn't go "out" of the selection box
-                                sizeImage.Height = m_Facade.AlbumListView.Height - m_Facade.AlbumListView.Space - m_Facade.AlbumListView.SpinHeight - 6; // taken from how itemsperpage is calculated in GUIListControl
-                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * (sizeImage.Height - 2* m_Facade.AlbumListView.IconOffsetY) / m_nInitialItemHeight;
-                                sizeImage.Height -=  2* m_Facade.AlbumListView.IconOffsetY;
-                                sizeImage.Width = sizeImage.Height * 400 / 578;
-                                m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
-                                m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
-                                m_Facade.AlbumListView.IconOffsetX = (m_Facade.AlbumListView.Width - sizeImage.Width) / 2;
-                                m_Facade.AlbumListView.AllocResources();
-                                m_Season_Image.Visible = false;
-                            }
-                            else
-                            {
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
                                 m_Season_Image.Visible = true;
-                            }
+                                int selectedIndex = -1;
+                                m_SelectedEpisode = null;
+                                int count = 0;
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
 
-                            if (m_SelectedSeries != null && this.m_Image != null)
-                            {
-                                try
+                                if (m_SelectedSeries != null && this.m_Image != null)
                                 {
-                                    this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
-                                    this.m_Image.KeepAspectRatio = true;
+                                    try
+                                    {
+                                        this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
+                                        this.m_Image.KeepAspectRatio = true;
+                                    }
+                                    catch { }
                                 }
-                                catch { }
-                            }
-
-                            // view handling
-                            List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeason: ", seasons.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-                            foreach (DBSeason season in seasons)
-                            {
-                                try
+                                if (m_SelectedSeason != null && this.m_Season_Image != null)
                                 {
-                                    bEmpty = false;
-                                    GUIListItem item = null;
-                                    if (nSeasonDisplayMode == 1)
+                                    try
                                     {
-                                        item = new GUIListItem();
-                                        item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                        this.m_Season_Image.SetFileName(GetSeasonBanner(m_SelectedSeason));
+                                        this.m_Season_Image.KeepAspectRatio = true;
                                     }
-                                    else
-                                    {
-                                        item = new GUIListItem(FormatField(m_sFormatSeasonCol2, season));
-                                        if(!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
-                                            // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
-                                        item.Label2 = FormatField(m_sFormatSeasonCol3, season);
-                                        item.Label3 = FormatField(m_sFormatSeasonCol1, season);
-                                    }
-                                    item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                    item.IsDownloading = true;
-                                    item.TVTag = season;
+                                    catch { }
 
-                                    if (this.m_SelectedSeason != null)
-                                    {
-                                        if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
-                                            selectedIndex = count;
-                                    }
-                                    else
-                                    {
-                                        // select the first that has a file
-                                        if (season[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
-                                            selectedIndex = count;
-                                    }
-                                    if (m_back_up_select_this != null && season != null && selectedIndex == -1 && season[DBSeason.cSeriesID] == m_back_up_select_this[0] && season[DBSeason.cIndex] == m_back_up_select_this[1])
-                                        selectedIndex = count;
-                                    this.m_Facade.Add(item);
                                 }
-                                catch (Exception ex)
+
+                                // view handling
+                                List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
+                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                                foreach (DBEpisode episode in episodesToDisplay)
                                 {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
+                                    try
+                                    {
+                                        bEmpty = false;
+                                        GUIListItem item = new GUIListItem();
+
+                                        // its possible the user never selected a series/season (flat view)
+                                        // thus its desirable to display series and season index also)
+                                        if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                        {
+                                            // it is the case
+                                            SQLCondition cond = new SQLCondition();
+                                            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                                            DBSeries tmpseries = DBSeries.Get(cond)[0];
+                                            if (tmpseries != null)
+                                                item.Label = tmpseries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
+                                            else item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                        }
+                                        else
+                                        {
+                                            // we came from series on top, only display index/title
+                                            item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                        }
+
+                                        item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
+                                        item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
+                                        item.IsRemote = episode[DBEpisode.cFilename] != "";
+                                        item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
+                                        item.TVTag = episode;
+
+                                        if (this.m_SelectedEpisode != null)
+                                        {
+                                            if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
+                                                selectedIndex = count;
+                                        }
+                                        else
+                                        {
+                                            // select the first that has a file and is not watched
+                                            if (episode[DBEpisode.cFilename] != "" && episode[DBOnlineEpisode.cWatched] == 0 && selectedIndex == -1)
+                                                selectedIndex = count;
+                                        }
+
+                                        // first returned logo should also show up here in list view directly
+                                        item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
+
+                                        this.m_Facade.Add(item);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
+                                    }
+                                    count++;
                                 }
-                                count++;
+                                this.m_Button_Back.Focus = false;
+                                this.m_Facade.Focus = true;
+                                if (selectedIndex != -1)
+                                    this.m_Facade.SelectedListItemIndex = selectedIndex;
                             }
-
-                            if (selectedIndex != -1)
-                                this.m_Facade.SelectedListItemIndex = selectedIndex;
-                            
-                            // if there is only one season to display, skip directly to the episodes list
-                            if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
-                            {
-                                MPTVSeriesLog.Write("Skipping season display");
-                                OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
-                            }
-                            else if (seasons.Count == 1)
-                            {
-                                // we're back from the ep list, go up one hierarchy more (depending on view, most likly series)
-                                MPTVSeriesLog.Write("Skipping season display");
-                                OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
-                            }
-                        }
-                        break;
-
-                    case cListLevelEpisodes:
+                            MPTVSeriesLog.Write("LoadFacade: Finish");
+                            break;
+                    }
+                    if (bEmpty)
+                    {
+                        if (m_CurrViewStep == 0)
                         {
-                            m_Season_Image.Visible = true;
-                            int selectedIndex = -1;
-                            m_SelectedEpisode = null;
-                            int count = 0;
                             this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-
-                            if (m_SelectedSeries != null && this.m_Image != null)
-                            {
-                                try
-                                {
-                                    this.m_Image.SetFileName(GetSeriesBanner(m_SelectedSeries));
-                                    this.m_Image.KeepAspectRatio = true;
-                                }
-                                catch { }
-                            }
-                            if (m_SelectedSeason != null && this.m_Season_Image != null)
-                            {
-                                try
-                                {
-                                    this.m_Season_Image.SetFileName(GetSeasonBanner(m_SelectedSeason));
-                                    this.m_Season_Image.KeepAspectRatio = true;
-                                }
-                                catch { }
-
-                            }
-
-                            // view handling
-                            List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-                            foreach (DBEpisode episode in episodesToDisplay)
-                            {
-                                try
-                                {
-                                    bEmpty = false;
-                                    GUIListItem item = new GUIListItem();
-
-                                    // its possible the user never selected a series/season (flat view)
-                                    // thus its desirable to display series and season index also)
-                                    if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
-                                    {
-                                        // it is the case
-                                        SQLCondition cond = new SQLCondition();
-                                        cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBEpisode.cSeriesID], SQLConditionType.Equal);
-                                        DBSeries tmpseries = DBSeries.Get(cond)[0];
-                                        if(tmpseries != null)
-                                            item.Label = tmpseries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
-                                        else item.Label = FormatField(m_sFormatEpisodeCol2, episode);
-                                    }
-                                    else
-                                    {
-                                        // we came from series on top, only display index/title
-                                        item.Label = FormatField(m_sFormatEpisodeCol2, episode);
-                                    }
-
-                                    item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
-                                    item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
-                                    item.IsRemote = episode[DBEpisode.cFilename] != "";
-                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
-                                    item.TVTag = episode;
-
-                                    if (this.m_SelectedEpisode != null)
-                                    {
-                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
-                                            selectedIndex = count;
-                                    }
-                                    else
-                                    {
-                                        // select the first that has a file and is not watched
-                                        if (episode[DBEpisode.cFilename] != "" && episode[DBOnlineEpisode.cWatched] == 0 && selectedIndex == -1)
-                                            selectedIndex = count;
-                                    }
-
-                                    // first returned logo should also show up here in list view directly
-                                    item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
-
-                                    this.m_Facade.Add(item);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
-                                }
-                                count++;
-                            }
-                            this.m_Button_Back.Focus = false;
-                            this.m_Facade.Focus = true;
-                            if (selectedIndex != -1)
-                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                            GUIListItem item = new GUIListItem(Translation.No_items);
+                            item.IsRemote = true;
+                            this.m_Facade.Add(item);
                         }
-                        MPTVSeriesLog.Write("LoadFacade: Finish");
-                        break;
-                }
-                if (bEmpty)
-                {
-                    this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                    GUIListItem item = new GUIListItem(Translation.No_items);
-                    item.IsRemote = true;
-                    this.m_Facade.Add(item);
+                        else
+                        {
+                            // probably something was removed
+                            MPTVSeriesLog.Write("Nothing to display, going out");
+                            OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
+                        }
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
+            }
+
         }
 
         protected override void OnPageLoad()
         {
+            if (m_Facade == null) // wrong skin file
+            {
+                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                dlg.Reset();
+                dlg.SetHeading(Translation.wrongSkin);
+                dlg.DoModal(GetID);
+                GUIWindowManager.ShowPreviousWindow();
+                return;
+            }
             if (m_CurrLView != null)
             {
                 LoadFacade();
@@ -851,24 +873,22 @@ namespace MediaPortal.GUI.Video
             m_allViews = logicalView.getStaticViews(); // hardcoded until configuration is set up!
             if (m_allViews.Count > 0)
             {
-                switchView((string)DBOption.GetOptions("lastView"));
-                this.LoadFacade();
+                try
+                {
+                    switchView((string)DBOption.GetOptions("lastView"));
+                    this.LoadFacade();
+                }
+                catch (Exception)
+                {
+                  
+                }
             }
             else
             {
                 MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
             this.m_Facade.Focus = true;
-            if (m_parserUpdaterWorking)
-            {
-                if (m_ImportAnimation != null)
-                    m_ImportAnimation.AllocResources();
-            }
-            else
-            {
-                if (m_ImportAnimation != null)
-                    m_ImportAnimation.FreeResources();
-            }
+            setProcessAnimationStatus(m_parserUpdaterWorking);
 
         }
 
@@ -1013,8 +1033,7 @@ namespace MediaPortal.GUI.Video
                                 case 2:
                                     {
                                         DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                        if (m_ImportAnimation != null)
-                                            m_ImportAnimation.AllocResources();
+                                        setProcessAnimationStatus(true);
                                         Forom forom = new Forom(this);
                                         forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
                                         forom.GetSubs(episode);
@@ -1027,8 +1046,7 @@ namespace MediaPortal.GUI.Video
                                         TorrentLoad torrentLoad = new TorrentLoad(this);
                                         torrentLoad.TorrentLoadCompleted += new WindowPlugins.GUITVSeries.Torrent.TorrentLoad.TorrentLoadCompletedHandler(torrentLoad_TorrentLoadCompleted);
                                         if (torrentLoad.Search(episode))
-                                            if (m_ImportAnimation != null)
-                                                m_ImportAnimation.AllocResources();
+                                            setProcessAnimationStatus(true);
                                     }
                                     break;
                             }
@@ -1227,8 +1245,7 @@ namespace MediaPortal.GUI.Video
 
         void forom_SubtitleRetrievalCompleted(bool bFound)
         {
-            if (m_ImportAnimation != null)
-                m_ImportAnimation.FreeResources();
+            setProcessAnimationStatus(false);
             if (bFound)
             {
                 LoadFacade();
@@ -1244,20 +1261,19 @@ namespace MediaPortal.GUI.Video
 
         void torrentLoad_TorrentLoadCompleted(bool bOK)
         {
-            if (m_ImportAnimation != null)
-                m_ImportAnimation.FreeResources();
+            setProcessAnimationStatus(false);
         }
 
         List<string> sviews = new List<string>();
 
         void switchView(int offset) //else previous
         {
-           switchView(getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
+           switchView(Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
         }
 
         void switchView(string viewName)
         {
-            switchView(getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
+            switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
         }
         void switchView(logicalView view)
         {
@@ -1266,9 +1282,16 @@ namespace MediaPortal.GUI.Video
             m_CurrLView = view;
 
             // set the skin labels
-            view_curr.Label = view.Name;
-            view_next.Label = getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).Name;
-            view_prev.Label = getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).Name;
+            try
+            {
+                view_curr.Label = view.Name;
+                view_next.Label = Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).Name;
+                view_prev.Label = Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).Name;
+            }
+            catch (Exception)
+            {
+                MPTVSeriesLog.Write("Error displaying view names....check your skin file");
+            }
 
             m_CurrViewStep = 0; // we always start out at step 0
             m_stepSelection = null;
@@ -1297,34 +1320,6 @@ namespace MediaPortal.GUI.Video
                     break;
             }
             MPTVSeriesLog.Write("new listlevel: " + m_ListLevel);
-        }
-
-        T getElementFromList<T,P>(P currPropertyValue, string PropertyName,int indexOffset, List<T> elements)
-        {
-            // takes care of "looping"
-            int currIndex = 0;
-            int indexToGet = 0;
-            P value = default(P);
-            for(int i = 0; i< elements.Count; i++)
-            {
-                try
-                {
-                    value = (P)elements[i].GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetProperty, null, elements[i], null);
-                    if (value.Equals(currPropertyValue))
-                    {
-                        indexToGet = i + indexOffset;
-                        break;
-                    }
-                }
-                catch (Exception x)
-                {
-                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + elements[i].GetType().Name + " does not have a property " + PropertyName);
-                    return default(T);
-                }
-            }
-            if (indexToGet < 0) indexToGet = elements.Count + indexToGet;
-            if (indexToGet >= elements.Count) indexToGet = indexToGet - elements.Count;
-            return elements[indexToGet];
         }
 
         public override void OnAction(Action action)
@@ -1437,7 +1432,6 @@ namespace MediaPortal.GUI.Video
                     if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
                         bUpdateScanNeeded = true;
                 }
-
                 if (bUpdateScanNeeded)
                 {
                     // queue scan
@@ -1451,10 +1445,6 @@ namespace MediaPortal.GUI.Video
                 {
                     if (m_parserUpdaterQueue.Count > 0)
                     {
-                        // only load the wait cursor if we are in the plugin
-                        if (m_ImportAnimation != null)
-                            m_ImportAnimation.AllocResources();
-
                         m_parserUpdaterWorking = true;
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
@@ -1467,8 +1457,7 @@ namespace MediaPortal.GUI.Video
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
         {
             MPTVSeriesLog.Write("Online Parsing done");
-            if (m_ImportAnimation != null)
-                m_ImportAnimation.FreeResources();
+            setProcessAnimationStatus(false);
 
             if (m_parserUpdater.UpdateScan)
             {
@@ -1513,7 +1502,6 @@ namespace MediaPortal.GUI.Video
             return base.OnMessage(message);
         }
 
-
         private int CountCRLF(String sIn)
         {
             int nCount = -1;
@@ -1541,9 +1529,8 @@ namespace MediaPortal.GUI.Video
             //if(m_CurrLView.isGroupType)
             //    this.m_Logos_Image = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep, this.m_Facade.SelectedListItem.Label);
 
-            this.m_Image.Visible = false;
-            this.m_Season_Image.Visible = false;
-            this.m_Logos_Image.Visible = false;
+            m_Image.SetFileName("");
+            m_Season_Image.SetFileName("");
         }
 
         private void Series_OnItemSelected(GUIListItem item)
@@ -1926,6 +1913,19 @@ namespace MediaPortal.GUI.Video
                     episode.Commit();
                 }
                 this.LoadFacade();
+            }
+        }
+
+        private void setProcessAnimationStatus(bool enable)
+        {
+            MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
+            if (m_ImportAnimation != null)
+            {
+                if(enable)
+                    m_ImportAnimation.AllocResources();
+                else
+                    m_ImportAnimation.FreeResources();
+                m_ImportAnimation.Visible = enable;
             }
         }
     }

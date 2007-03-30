@@ -60,7 +60,7 @@ namespace WindowPlugins.GUITVSeries
             }
             if (data != null)
             {
-                StreamReader reader = new StreamReader(data);
+                StreamReader reader = new StreamReader(data, Encoding.Default, true);
                 String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
                 data.Close();
                 reader.Close();

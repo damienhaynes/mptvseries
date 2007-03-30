@@ -8,23 +8,8 @@ namespace WindowPlugins.GUITVSeries
 {
     class Translation
     {
-        static string path = string.Empty;
-        static Translation()
-        {
-            string lang = DBOption.GetOptions(DBOption.cLanguage);
-            if (lang == string.Empty)
-            {
-                MPTVSeriesLog.Write("No Translation selected, using fall back English");
-                lang = "en(us)";
-                DBOption.SetOptions(DBOption.cLanguage, lang);
-            }
-            path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Plugins\Windows\MP-TVSeries_lang\";
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
-            loadTranslations(lang);
-        }
 
-        #region Constants Originals
+        #region Translatable Fields
         public static string Series = "Series";
         public static string Series_Plural = "Series (Plr)";
         public static string Season = "Season";
@@ -63,10 +48,25 @@ namespace WindowPlugins.GUITVSeries
         public static string Error = "#Error";
         public static string No_items = "No items!";
         public static string Unknown = "Unknown";
+        public static string wrongSkin = "Wrong Skin file";
 
         #endregion
 
-
+        static string path = string.Empty;
+        static Translation()
+        {
+            string lang = DBOption.GetOptions(DBOption.cLanguage);
+            if (lang == string.Empty)
+            {
+                MPTVSeriesLog.Write("No Translation selected, using fall back English");
+                lang = "en(us)";
+                DBOption.SetOptions(DBOption.cLanguage, lang);
+            }
+            path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Plugins\Windows\MP-TVSeries_lang\";
+            if (!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+            loadTranslations(lang);
+        }
         static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
         
         static void loadTranslations(string lang)

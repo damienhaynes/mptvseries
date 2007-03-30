@@ -42,4 +42,5 @@
 	<string Field="Error" Original="#Error">#Error</string>
 	<string Field="No_items" Original="No items!">No items!</string>
 	<string Field="Unknown" Original="Unknown">Unknown</string>
+	<string Field="wrongSkin" Original="Wrong Skin file">Wrong Skin file</string>
 </strings>
