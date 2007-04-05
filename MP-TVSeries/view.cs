@@ -1,3 +1,26 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +47,8 @@ namespace WindowPlugins.GUITVSeries
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             conditions.Add(new DBSeries(), DBSeries.cHidden, false, SQLConditionType.Equal);
-            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), SQLConditionType.Equal);
+            if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal);
             MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
             
@@ -59,7 +83,6 @@ namespace WindowPlugins.GUITVSeries
             if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
             MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            //return DBEpisode.Get(conditions, true);
             List<DBEpisode> eps = DBEpisode.Get(conditions, true);
             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
             {
@@ -92,7 +115,6 @@ namespace WindowPlugins.GUITVSeries
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
                                  " from " + step.groupedBy.table.m_tableName + conditions +
                                  step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
-
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
             MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
             //SQLite.NET.SQLiteResultSet results = SQLiteResultSet.Fake();
@@ -531,6 +553,17 @@ namespace WindowPlugins.GUITVSeries
 
     public class Helper
     {
+        public static List<T> getFilteredList<T, P>(List<T> inputList, string PropertyName, P ValueOfProperty)
+        {
+            List<T> resultList = new List<T>();
+            foreach (T item in inputList)
+            {
+                if( ValueOfProperty.Equals(((P)item.GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.GetProperty, null, item, null))))
+                    resultList.Add(item);
+            }
+            return resultList;
+        }
+
         public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
         {
             // takes care of "looping"
@@ -566,7 +599,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
-                    results.Add((P)elem.GetType().InvokeMember(PropertyNameToGet, System.Reflection.BindingFlags.GetProperty, null, elem, null));
+                    results.Add((P)elem.GetType().InvokeMember(PropertyNameToGet, System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.GetField, null, elem, null));
                 }
                 catch (Exception)
                 {
@@ -575,6 +608,44 @@ namespace WindowPlugins.GUITVSeries
             }
             return results;
         }
+
+        # region compareAndAdaptList
+        // needed for compareAndAdaptList because we cant pass parameters into predicates??
+        class classify<t>
+        {
+            List<t> compareCollection = null;
+            addOperationOnRemovedItemsDelegate<t> AdditionOperation = null;
+            addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare = null;
+            bool inverse = false;
+
+            public classify(List<t> compareCollection, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> AdditionOperation, bool inverse)
+            {
+                this.compareCollection = compareCollection;
+                this.AdditionOperation = AdditionOperation;
+                this.addOperationOnItemBeforeCompare = addOperationOnItemBeforeCompare;
+                this.inverse = inverse;
+            }
+
+            public bool isNotInCompareList(t item)
+            {
+                if (!inverse ? !compareCollection.Contains(addOperationOnItemBeforeCompare(item))
+                    : compareCollection.Contains(addOperationOnItemBeforeCompare(item)))
+                    return AdditionOperation(item);
+                else return false;
+            }
+        }
+        public delegate bool addOperationOnRemovedItemsDelegate<t>(t item);
+        public delegate t addOperationOnItemBeforeCompare<t>(t item);
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> addOperationOnRemovedItems, bool inverse)
+        {
+            classify<t> classif = new classify<t>(compareList, addOperationOnItemBeforeCompare, addOperationOnRemovedItems, inverse);
+            return ANDAdaptList.RemoveAll(classif.isNotInCompareList);
+        }
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> addOperationOnRemovedItems)
+        {
+            return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOperationOnItemBeforeCompare, addOperationOnRemovedItems, false);
+        }
+        #endregion
     }
 
     public class DBOptionFake

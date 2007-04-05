@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -28,22 +52,29 @@ namespace WindowPlugins.GUITVSeries
         private DBEpisode m_EpisodeReference = new DBEpisode(true);
 
         private DBTorrentSearch m_currentTorrentSearch = null;
+        List<logicalView> availViews = new List<logicalView>();
+        logicalView selectedView = null;
+        logicalViewStep selectedViewStep = null;
+        loadingDisplay load = new loadingDisplay();
 
         public ConfigurationForm()
         {
 #if DEBUG
             //    Debugger.Launch();
 #endif
+            load.ShowWaiting();
             InitializeComponent();
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
+            load.ShowWaiting();
             InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
             LoadReplacements();
             LoadTree();
         }
+
 
         #region Init
         private void InitSettingsTreeAndPanes()
@@ -175,7 +206,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             //List<logicalView> availViews = logicalView.getAllFromDB();
-            List<logicalView> availViews = logicalView.getStaticViews();
+            availViews = logicalView.getStaticViews();
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
 
@@ -333,6 +364,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadTree()
         {
+            load = new loadingDisplay();
+            load.ShowWaiting();
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
 
@@ -344,6 +377,7 @@ namespace WindowPlugins.GUITVSeries
             List<DBSeries> seriesList = DBSeries.Get(condition);
             if (seriesList.Count == 0)
             {
+                load.Close();
                 return;
             }
 
@@ -352,7 +386,7 @@ namespace WindowPlugins.GUITVSeries
                 TreeNode seriesNode = new TreeNode(series[DBOnlineSeries.cPrettyName]);
                 seriesNode.Name = DBSeries.cTableName;
                 seriesNode.Tag = (DBSeries)series;
-                seriesNode.Expand();
+                //seriesNode.Expand();
                 root.Nodes.Add(seriesNode);
                 if (series[DBSeries.cHidden])
                 {
@@ -406,7 +440,9 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+            load.Close();
         }
+
         #endregion
 
         #region Import Handling
@@ -2115,6 +2151,197 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cLanguage, (string)comboLanguage.SelectedItem);
         }
+
+        private void _availViews_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            view_selectedName.Text = string.Empty;
+            view_selStepsList.Items.Clear();
+
+            selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
+            view_selectedName.Text = selectedView.Name;
+            foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.steps))
+                view_selStepsList.Items.Add(step);
+        }
+
+        private void view_selStepsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectedViewStep = selectedView.steps[view_selStepsList.SelectedIndex];
+            this.viewStepType.SelectedItem = selectedViewStep.Type.ToString();
+            
+        }
+
+        private void viewStepType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((string)viewStepType.SelectedItem == "group")
+            {
+                viewStepGroupLbl.Visible = true;
+                viewStepGroupByTextBox.Visible = true;
+            }
+            else
+            {
+                viewStepGroupLbl.Visible = false;
+                viewStepGroupByTextBox.Visible = false;
+                viewStepGroupByTextBox.Text = "";
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        ~ConfigurationForm()
+        {
+            // so that locallogos can clean up its stuff
+            //this.pictureBox_Series.Image.Dispose();
+            //this.pictureBox_Series = null;
+            localLogos.cleanUP();
+        }
+
+        BackgroundWorker bannercleaner;
+        private void cleanBanners_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            bannercleaner = new BackgroundWorker();
+            bannercleaner.WorkerReportsProgress = true;
+            bannercleaner.DoWork += new DoWorkEventHandler(bannercleaner_DoWork);
+            bannercleaner.ProgressChanged += new ProgressChangedEventHandler(bannercleaner_ProgressChanged);
+            bannercleaner.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bannercleaner_RunWorkerCompleted);
+            this.button_Start.Enabled = false;
+            bannercleaner.RunWorkerAsync();
+        }
+
+        void bannercleaner_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.button_Start.Enabled = true;
+        }
+
+        void bannercleaner_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage > 100)
+                this.progressBar_Parsing.Value = 100;
+            else
+                this.progressBar_Parsing.Value = e.ProgressPercentage;
+        }
+
+        void  bannercleaner_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // this will cycle through all series/seasons and compare with what's available online
+            // if a banner was removed from the odb the local copy will be removed
+            // if a file was deleted manually it will be redownloaded
+            // if a series/season is no longer in the db but the image files are still there those will be deleted too
+            if (m_parser != null)
+            {
+                MPTVSeriesLog.Write("Cannot check Banners - please let the import finish first!");
+                return;
+            }
+            
+            MPTVSeriesLog.Write("*****************************************");
+            int totalcount = 0;
+            List<string> associatedBanners = new List<string>(); // for step 2 below
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
+            
+            List<DBSeries> seriesWithBanners = DBSeries.Get(cond);
+            MPTVSeriesLog.Write("Checking if Banners are still in the onlineDB for " + seriesWithBanners.Count.ToString() + " series and their seasons");
+            Helper.addOperationOnRemovedItemsDelegate<string> additonalOperation = delegate(string item)
+            {
+                try
+                {
+                    System.IO.File.Delete(item);
+                    MPTVSeriesLog.Write("Deleting from hdd: " + item);
+                    return true;
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    MPTVSeriesLog.Write("Could not delete Bannerfile " + item + ", it does not exist anymore on the hdd?");
+                    return true;
+                }
+                catch (Exception) { return false; }
+            };
+            Helper.addOperationOnItemBeforeCompare<string> manipulateB4Compare = delegate(string item)
+            {
+                try
+                {
+                    return item.Split(new string[] { @"banners\" }, StringSplitOptions.None)[1];
+                }
+                catch (Exception)
+                {
+                    return item;
+                }
+            };
+            int index = 0;
+            int removedItems = 0;
+            foreach (DBSeries series in seriesWithBanners)
+            {
+                bannercleaner.ReportProgress((int)((float)100 / (float)seriesWithBanners.Count * (float)++index));
+                MPTVSeriesLog.Write("Checking Banners for " + series[DBOnlineSeries.cPrettyName]);
+                SQLCondition seasonconds = new SQLCondition();
+                seasonconds.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                seasonconds.Add(new DBSeason(), DBSeason.cBannerFileNames, "", SQLConditionType.NotEqual);
+                List<DBSeason> seasons = DBSeason.Get(seasonconds);
+
+                GetBanner odbBanners = new GetBanner(series[DBSeries.cID], (long)0);
+
+                // compare all seriesbanners
+
+                List<string> seriesBannersCopy = series.BannerList;
+                if (series.BannerList.Count > 1)
+                {
+                    if ((removedItems = Helper.compareAndAdaptList<string>(ref seriesBannersCopy, Helper.getPropertyListFromList<BannerSeries, string>("sBannerFileName", odbBanners.bannerSeriesList), manipulateB4Compare, additonalOperation)) > 0)
+                    {
+                        series.BannerList = seriesBannersCopy;
+                        series.Commit();
+                        MPTVSeriesLog.Write("removed " + removedItems.ToString() + " Banners for " + series[DBOnlineSeries.cPrettyName] +
+                                            " - " + ((int)series.BannerList.Count - (int)removedItems).ToString() + " remaining");
+                        totalcount += removedItems;
+                    }
+                    else
+                    {
+                        MPTVSeriesLog.Write("No banners found that need to be removed for series", MPTVSeriesLog.LogLevel.Debug);
+                    }
+                }
+                associatedBanners.AddRange(seriesBannersCopy); // save for step 2
+                // now compare all seasons
+                foreach (DBSeason season in seasons)
+                {
+                    List<string> seasonBannersCopy = season.BannerList;
+                    if (season.BannerList.Count > 1)
+                    {
+                        List<string> onlineSeasonBanners = Helper.getPropertyListFromList<BannerSeason, string>("sBannerFileName", Helper.getFilteredList<BannerSeason, int>(odbBanners.bannerSeasonList, "nIndex", season[DBSeason.cIndex]));
+                        if ((removedItems = Helper.compareAndAdaptList<string>(ref seasonBannersCopy, onlineSeasonBanners, manipulateB4Compare, additonalOperation)) > 0)
+                        {
+                            season.BannerList = seasonBannersCopy;
+                            season.Commit();
+                            MPTVSeriesLog.Write("removed " + removedItems.ToString() + " Banners for " + series[DBOnlineSeries.cPrettyName] + " Season " + season[DBSeason.cIndex] +
+                                               " - " + ((int)season.BannerList.Count - (int)removedItems).ToString() + " remaining");
+                            totalcount += removedItems;
+                        }
+                        else
+                        {
+                            MPTVSeriesLog.Write("No banners found that need to be removed for season " + season[DBSeason.cIndex], MPTVSeriesLog.LogLevel.Debug);
+                        }
+                    }
+                    associatedBanners.AddRange(seasonBannersCopy); // save for step 2
+                }
+            }
+
+            // STEP 2:
+            // now go over all jpgs in the banners subdirectory and see which ones exist that are not associated with any db item anymore
+            // this could happen for instance if a series was deleted (we rather keep them at that time in case the series/season is readded later to save downloading them again)
+
+            // we already have all banners associated with something
+            manipulateB4Compare = delegate(string item) { return item; }; // nothing here and fily delete from anynom method declared above
+            MPTVSeriesLog.Write("Synced deleted banners with online database");
+            MPTVSeriesLog.Write("Checking now for banners no longer associated with anything in your DB...");
+            List<string> bannerfiles = new List<string>(System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\", "*_*.jpg", SearchOption.AllDirectories));
+
+            removedItems = Helper.compareAndAdaptList<string>(ref bannerfiles, associatedBanners, manipulateB4Compare, additonalOperation);
+            totalcount += removedItems;
+
+            bannercleaner.ReportProgress(0);
+            MPTVSeriesLog.Write("All done cleaning up Banners, " + totalcount.ToString() + " Banners removed in total");
+            MPTVSeriesLog.Write("*****************************************");
+        }
     }
 
     public class BannerComboItem
@@ -2190,4 +2417,3 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
-

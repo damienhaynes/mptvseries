@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Windows.Forms;
 using System.Drawing;
@@ -110,6 +134,8 @@ namespace MediaPortal.GUI.Video
         private string[] m_stepSelection = null;
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
+        private bool foromWorking = false;
+        private bool torrentWorking = false;
 
         private TimerCallback timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
@@ -286,7 +312,7 @@ namespace MediaPortal.GUI.Video
 
             // timer check every seconds
             timerDelegate = new TimerCallback(Clock);
-            m_scanTimer = new System.Threading.Timer(timerDelegate, null, 1000, 1000);
+            m_scanTimer = new System.Threading.Timer(timerDelegate, null, 1500, 1500);
             return Load(xmlSkin);
         }
 
@@ -1034,6 +1060,7 @@ namespace MediaPortal.GUI.Video
                                     {
                                         DBEpisode episode = (DBEpisode)currentitem.TVTag;
                                         setProcessAnimationStatus(true);
+                                        foromWorking = true;
                                         Forom forom = new Forom(this);
                                         forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
                                         forom.GetSubs(episode);
@@ -1044,6 +1071,7 @@ namespace MediaPortal.GUI.Video
                                     {
                                         DBEpisode episode = (DBEpisode)currentitem.TVTag;
                                         TorrentLoad torrentLoad = new TorrentLoad(this);
+                                        torrentWorking = true;
                                         torrentLoad.TorrentLoadCompleted += new WindowPlugins.GUITVSeries.Torrent.TorrentLoad.TorrentLoadCompletedHandler(torrentLoad_TorrentLoadCompleted);
                                         if (torrentLoad.Search(episode))
                                             setProcessAnimationStatus(true);
@@ -1246,6 +1274,7 @@ namespace MediaPortal.GUI.Video
         void forom_SubtitleRetrievalCompleted(bool bFound)
         {
             setProcessAnimationStatus(false);
+            foromWorking = false;
             if (bFound)
             {
                 LoadFacade();
@@ -1262,6 +1291,7 @@ namespace MediaPortal.GUI.Video
         void torrentLoad_TorrentLoadCompleted(bool bOK)
         {
             setProcessAnimationStatus(false);
+            torrentWorking = false;
         }
 
         List<string> sviews = new List<string>();
@@ -1450,6 +1480,8 @@ namespace MediaPortal.GUI.Video
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
+                    else if (!foromWorking && !torrentWorking)
+                        setProcessAnimationStatus(false);
                 }
             }
             base.Process();
@@ -1919,7 +1951,7 @@ namespace MediaPortal.GUI.Video
 
         private void setProcessAnimationStatus(bool enable)
         {
-            MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
+            //MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
             if (m_ImportAnimation != null)
             {
                 if(enable)
@@ -1927,7 +1959,20 @@ namespace MediaPortal.GUI.Video
                 else
                     m_ImportAnimation.FreeResources();
                 m_ImportAnimation.Visible = enable;
+                //MPTVSeriesLog.Write("Set Animation: ", "Done", MPTVSeriesLog.LogLevel.Normal);
             }
+        }
+
+        ~TVSeriesPlugin()
+        {
+            // so that locallogos can clean up its stuff
+            if (null != this.m_Logos_Image)
+            {
+                this.m_Logos_Image.FreeResources();
+                this.m_Logos_Image = null;
+            }
+            // only when inside MP
+            if (null != this.m_Facade) localLogos.cleanUP();
         }
     }
 }

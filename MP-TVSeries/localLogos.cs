@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Drawing;
 using System.Collections.Generic;
@@ -30,7 +54,7 @@ namespace WindowPlugins.GUITVSeries
 
         static localLogos()
         {
-           pathfortmpfile += @"\thumbs\";
+            pathfortmpfile += @"\thumbs\";
         }
 
         public static void saveToDB(List<string> entries)
@@ -166,12 +190,11 @@ namespace WindowPlugins.GUITVSeries
             else return string.Empty;
         }
 
-        static DBSeries getCorrespondingSeries(int id)
+        public static DBSeries getCorrespondingSeries(int id)
         {
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
             List<DBSeries> tmpSeries = DBSeries.Get(cond);
-
             foreach (DBSeries series in tmpSeries) // should only be one!
                 if (series[DBSeries.cID] == id)
                 {
@@ -180,7 +203,7 @@ namespace WindowPlugins.GUITVSeries
             return null;
         }
 
-        static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
+        public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
         {
             List<DBSeason> tmpSeasons = DBSeason.Get(seriesID, false, false, false);
             foreach (DBSeason season in tmpSeasons)
@@ -410,7 +433,7 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        ~localLogos()
+        public static void cleanUP() // there is no static destructor in .NET, so this has to be called explicitally
         {
             // clean up all dynLogoFiles
             MPTVSeriesLog.Write("Cleaning up cached, generated Logos");
@@ -420,9 +443,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     System.IO.File.Delete(file);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, e.Message, MPTVSeriesLog.LogLevel.Normal);
+                    MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, ex.Message, MPTVSeriesLog.LogLevel.Normal);
                 }
             }
         }

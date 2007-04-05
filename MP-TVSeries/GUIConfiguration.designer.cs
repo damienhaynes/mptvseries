@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 namespace WindowPlugins.GUITVSeries
 {
     partial class ConfigurationForm
@@ -70,6 +94,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.cleanBanners = new System.Windows.Forms.LinkLabel();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.checkBox_DontClearMissingLocalFiles = new System.Windows.Forms.CheckBox();
@@ -121,9 +146,9 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_cond = new System.Windows.Forms.TextBox();
             this.cond1_type = new System.Windows.Forms.ComboBox();
             this.cond1_what = new System.Windows.Forms.RichTextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.viewStepGroupLbl = new System.Windows.Forms.Label();
+            this.viewStepGroupByTextBox = new System.Windows.Forms.TextBox();
+            this.viewStepType = new System.Windows.Forms.ComboBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.button7 = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
@@ -131,8 +156,8 @@ namespace WindowPlugins.GUITVSeries
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.listBox3 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.view_selStepsList = new System.Windows.Forms.ListBox();
+            this.view_selectedName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.btnViewUp = new System.Windows.Forms.Button();
@@ -613,6 +638,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.cleanBanners);
             this.panel_OnlineData.Controls.Add(this.checkBox_doFolderWatch);
             this.panel_OnlineData.Controls.Add(this.linkLabel1);
             this.panel_OnlineData.Controls.Add(this.checkBox_DontClearMissingLocalFiles);
@@ -625,6 +651,17 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Size = new System.Drawing.Size(465, 195);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
+            // 
+            // cleanBanners
+            // 
+            this.cleanBanners.AutoSize = true;
+            this.cleanBanners.Location = new System.Drawing.Point(3, 161);
+            this.cleanBanners.Name = "cleanBanners";
+            this.cleanBanners.Size = new System.Drawing.Size(88, 13);
+            this.cleanBanners.TabIndex = 14;
+            this.cleanBanners.TabStop = true;
+            this.cleanBanners.Text = "Cleanup Banners";
+            this.cleanBanners.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cleanBanners_LinkClicked);
             // 
             // checkBox_doFolderWatch
             // 
@@ -641,7 +678,7 @@ namespace WindowPlugins.GUITVSeries
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 161);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 143);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(132, 13);
             this.linkLabel1.TabIndex = 12;
@@ -933,9 +970,9 @@ namespace WindowPlugins.GUITVSeries
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.groupBox11);
-            this.groupBox10.Controls.Add(this.label26);
-            this.groupBox10.Controls.Add(this.textBox2);
-            this.groupBox10.Controls.Add(this.comboBox2);
+            this.groupBox10.Controls.Add(this.viewStepGroupLbl);
+            this.groupBox10.Controls.Add(this.viewStepGroupByTextBox);
+            this.groupBox10.Controls.Add(this.viewStepType);
             this.groupBox10.Location = new System.Drawing.Point(8, 344);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(484, 273);
@@ -1317,35 +1354,36 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_what.TabIndex = 14;
             this.cond1_what.Text = "";
             // 
-            // label26
+            // viewStepGroupLbl
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(133, 35);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(49, 13);
-            this.label26.TabIndex = 2;
-            this.label26.Text = "group By";
+            this.viewStepGroupLbl.AutoSize = true;
+            this.viewStepGroupLbl.Location = new System.Drawing.Point(133, 35);
+            this.viewStepGroupLbl.Name = "viewStepGroupLbl";
+            this.viewStepGroupLbl.Size = new System.Drawing.Size(49, 13);
+            this.viewStepGroupLbl.TabIndex = 2;
+            this.viewStepGroupLbl.Text = "group By";
             // 
-            // textBox2
+            // viewStepGroupByTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(188, 32);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(108, 20);
-            this.textBox2.TabIndex = 1;
+            this.viewStepGroupByTextBox.Location = new System.Drawing.Point(188, 32);
+            this.viewStepGroupByTextBox.Name = "viewStepGroupByTextBox";
+            this.viewStepGroupByTextBox.Size = new System.Drawing.Size(108, 20);
+            this.viewStepGroupByTextBox.TabIndex = 1;
             // 
-            // comboBox2
+            // viewStepType
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "Group",
-            "Series",
-            "Season",
-            "Episode"});
-            this.comboBox2.Location = new System.Drawing.Point(6, 32);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 21);
-            this.comboBox2.TabIndex = 0;
+            this.viewStepType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.viewStepType.FormattingEnabled = true;
+            this.viewStepType.Items.AddRange(new object[] {
+            "group",
+            "series",
+            "season",
+            "episode"});
+            this.viewStepType.Location = new System.Drawing.Point(6, 32);
+            this.viewStepType.Name = "viewStepType";
+            this.viewStepType.Size = new System.Drawing.Size(121, 21);
+            this.viewStepType.TabIndex = 0;
+            this.viewStepType.SelectedIndexChanged += new System.EventHandler(this.viewStepType_SelectedIndexChanged);
             // 
             // groupBox9
             // 
@@ -1355,8 +1393,8 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox9.Controls.Add(this.button4);
             this.groupBox9.Controls.Add(this.button5);
             this.groupBox9.Controls.Add(this.button6);
-            this.groupBox9.Controls.Add(this.listBox3);
-            this.groupBox9.Controls.Add(this.textBox1);
+            this.groupBox9.Controls.Add(this.view_selStepsList);
+            this.groupBox9.Controls.Add(this.view_selectedName);
             this.groupBox9.Controls.Add(this.label1);
             this.groupBox9.Location = new System.Drawing.Point(252, 23);
             this.groupBox9.Name = "groupBox9";
@@ -1374,6 +1412,7 @@ namespace WindowPlugins.GUITVSeries
             this.button7.TabIndex = 161;
             this.button7.Text = "Paste all at once";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // label25
             // 
@@ -1422,20 +1461,21 @@ namespace WindowPlugins.GUITVSeries
             this.button6.Text = "Add";
             this.button6.UseVisualStyleBackColor = true;
             // 
-            // listBox3
+            // view_selStepsList
             // 
-            this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(6, 84);
-            this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(188, 186);
-            this.listBox3.TabIndex = 156;
+            this.view_selStepsList.FormattingEnabled = true;
+            this.view_selStepsList.Location = new System.Drawing.Point(6, 84);
+            this.view_selStepsList.Name = "view_selStepsList";
+            this.view_selStepsList.Size = new System.Drawing.Size(188, 186);
+            this.view_selStepsList.TabIndex = 156;
+            this.view_selStepsList.SelectedIndexChanged += new System.EventHandler(this.view_selStepsList_SelectedIndexChanged);
             // 
-            // textBox1
+            // view_selectedName
             // 
-            this.textBox1.Location = new System.Drawing.Point(50, 28);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(115, 20);
-            this.textBox1.TabIndex = 1;
+            this.view_selectedName.Location = new System.Drawing.Point(50, 28);
+            this.view_selectedName.Name = "view_selectedName";
+            this.view_selectedName.Size = new System.Drawing.Size(115, 20);
+            this.view_selectedName.TabIndex = 1;
             // 
             // label1
             // 
@@ -1509,6 +1549,7 @@ namespace WindowPlugins.GUITVSeries
             this._availViews.Name = "_availViews";
             this._availViews.Size = new System.Drawing.Size(188, 251);
             this._availViews.TabIndex = 5;
+            this._availViews.SelectedIndexChanged += new System.EventHandler(this._availViews_SelectedIndexChanged);
             // 
             // listBox1
             // 
@@ -2741,7 +2782,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button btnViewDown;
         private System.Windows.Forms.Button btnRemoveView;
         private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox view_selectedName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Button button7;
@@ -2750,11 +2791,11 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.ListBox view_selStepsList;
         private System.Windows.Forms.GroupBox groupBox11;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label viewStepGroupLbl;
+        private System.Windows.Forms.TextBox viewStepGroupByTextBox;
+        private System.Windows.Forms.ComboBox viewStepType;
         private System.Windows.Forms.ComboBox comboBox7;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.ComboBox comboBox8;
@@ -2785,5 +2826,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.RichTextBox cond1_what;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox comboLanguage;
+        private System.Windows.Forms.LinkLabel cleanBanners;
     }
 }

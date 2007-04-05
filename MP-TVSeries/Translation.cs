@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,7 +32,11 @@ namespace WindowPlugins.GUITVSeries
 {
     class Translation
     {
-
+        /// <summary>
+        /// These will be loaded with the language files content
+        /// if the selected lang file is not found, it will first try to load en(us).xml as a backup
+        /// if that also fails it will use the hardcoded strings as a last resort.
+        /// </summary>
         #region Translatable Fields
         public static string Series = "Series";
         public static string Series_Plural = "Series (Plr)";

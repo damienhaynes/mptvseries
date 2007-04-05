@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +43,7 @@ namespace WindowPlugins.GUITVSeries
     class BannerSeason
     {
         public int nIndex = 0;
-        public bool bGraphical = false;
+        public bool bIsNeeded = false;
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
@@ -47,7 +71,26 @@ namespace WindowPlugins.GUITVSeries
             get { return m_bannerSeasonList; }
         }
 
+
+        public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)
+        {
+            work(nSeriesID, nUpdateBannersTimeStamp, SeasonsToDownload, allSeasons);
+        }
+
+        /// <summary>
+        /// This constructor automatically get's relevant seasons
+        /// </summary>
+        /// <param name="nSeriesID"></param>
+        /// <param name="nUpdateBannersTimeStamp"></param>
         public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp)
+        {
+            List<int> relevantSeasons = new List<int>();
+            foreach(DBSeason season in DBSeason.Get(nSeriesID, false, true, true))
+                relevantSeasons.Add(season[DBSeason.cIndex]);
+            work(nSeriesID, nUpdateBannersTimeStamp, relevantSeasons, false);
+        }
+
+        private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)
         {
             XmlNodeList nodeList = ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp);
             if (nodeList != null)
@@ -105,6 +148,7 @@ namespace WindowPlugins.GUITVSeries
                                 break;
 
                             case "season":
+                                if (!allSeasons && SeasonsToDownload.Count == 0) break;
                                 BannerSeason bannerSeason = new BannerSeason();
                                 foreach (XmlNode propertyNode in itemNode.ChildNodes)
                                 {
@@ -121,12 +165,14 @@ namespace WindowPlugins.GUITVSeries
                                         case "BannerType":
                                             switch (propertyNode.InnerText)
                                             {
-                                                case "text":
-                                                    bannerSeason.bGraphical = false;
+                                                case "season":
+                                                    // only season type we support
+                                                    bannerSeason.bIsNeeded = true;
                                                     break;
 
                                                 default:
-                                                    bannerSeason.bGraphical = true;
+                                                    bannerSeason.bIsNeeded = false;
+                                                    // ignore unknown types
                                                     break;
                                             }
                                             break;
@@ -138,7 +184,8 @@ namespace WindowPlugins.GUITVSeries
                                             break;
                                     }
                                 }
-                                m_bannerSeasonList.Add(bannerSeason);
+                                if (bannerSeason.bIsNeeded && SeasonsToDownload.Contains(bannerSeason.nIndex))
+                                    m_bannerSeasonList.Add(bannerSeason);
                                 break;
                         }
                     }
