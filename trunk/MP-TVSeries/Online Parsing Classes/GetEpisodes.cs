@@ -47,19 +47,26 @@ namespace WindowPlugins.GUITVSeries
 
         public GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp)
         {
-            Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp);
+            Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp, default(DateTime));
         }
 
         public GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)
         {
-            Work(nSeriesID, nSeasonIndex, nEpisodeIndex, 0);
+            Work(nSeriesID, nSeasonIndex, nEpisodeIndex, 0, default(DateTime));
         }
 
-        private void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp)
+        public GetEpisodes(int nSeriesID, DateTime firstAired)
+        {
+            Work(nSeriesID, -1, -1, 0, firstAired);
+        }
+
+        private void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
             if (nEpisodeIndex != -1 && nSeasonIndex != -1)
                 nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex);
+            else if (!firstAired.Equals(default(DateTime)))
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, firstAired);
             else
                 nodeList = ZsoriParser.GetEpisodes(nSeriesID, nGetEpisodesTimeStamp);
 

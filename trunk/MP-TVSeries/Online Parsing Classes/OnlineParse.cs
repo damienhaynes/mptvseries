@@ -484,21 +484,37 @@ namespace WindowPlugins.GUITVSeries
 
                 if (progress.success)
                 {
-                    int nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
-                    int nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
+                    DBSeries series = null;
+                    int nEpisode = default(int);
+                    int nSeason = default(int);
+                    if (progress.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
+                    {
+                        // series first
+                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
+                        series[DBOnlineSeries.cHasLocalFilesTemp] = 1;
+                        // not much to do here except commiting the series
+                        series.Commit();
+                    }
+                    else
+                    {
+                        nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
+                        nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
 
-                    // ok, we are sure it's valid now
-                    // series first
-                    DBSeries series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
-                    series[DBOnlineSeries.cHasLocalFilesTemp] = 1;
-                    // not much to do here except commiting the series
-                    series.Commit();
+                        // ok, we are sure it's valid now
+                        // series first
+                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
+                        series[DBOnlineSeries.cHasLocalFilesTemp] = 1;
+                        // not much to do here except commiting the series
+                        series.Commit();
 
-                    // season now
-                    DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
-                    season[DBSeason.cHasLocalFilesTemp] = true;
-                    season[DBSeason.cHasEpisodes] = true;
-                    season.Commit();
+                        // season now
+                        DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
+                        season[DBSeason.cHasLocalFilesTemp] = true;
+                        season[DBSeason.cHasEpisodes] = true;
+                        season.Commit();
+                    }
+
+
 
                     // then episode
                     DBEpisode episode = new DBEpisode(progress.full_filename);
@@ -794,21 +810,43 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBEpisode episode in episodesList)
                         {
                             MPTVSeriesLog.Write("Looking for the single episode " + episode[DBOnlineEpisode.cCompositeID]);
-                            GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex]);
+                            GetEpisodes episodesParser = null;
+                            if(episode[DBEpisode.cSeasonIndex] >= 0 && episode[DBEpisode.cEpisodeIndex] >= 0)
+                                episodesParser = new GetEpisodes(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex]);
+                            else
+                                episodesParser = new GetEpisodes(series[DBSeries.cID], DateTime.Parse(episode[DBOnlineEpisode.cFirstAired]));
 
                             if (episodesParser.Results.Count > 0)
                             {
+                                DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
+
                                 // season update for online data
-                                DBSeason season = new DBSeason(series[DBSeries.cID], episode[DBOnlineEpisode.cSeasonIndex]);
+                                DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
                                 season[DBSeason.cHasEpisodes] = true;
                                 season.Commit();
 
-                                DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
+                                // ugly cleanup of onlineepisodes in case it was matched by firstaired
+                                // this should really be handled differently
+                                if (episode[DBEpisode.cSeasonIndex] < 0 && episode[DBEpisode.cEpisodeIndex] < 0)
+                                {
+                                    SQLCondition cleanup = new SQLCondition();
+
+                                    cleanup.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, episode[DBOnlineEpisode.cFirstAired], SQLConditionType.Like);
+                                }
+
+                                // end cleanup
+
                                 MPTVSeriesLog.Write("Found episodeID for " + episode[DBOnlineEpisode.cCompositeID]);
+                                episode[DBEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
+                                episode[DBEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
+                                episode.onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
+                                episode.onlineEpisode[DBOnlineEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
                                 episode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
                                 if (episode[DBOnlineEpisode.cEpisodeName] == "")
                                     episode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
                                 episode.Commit();
+
+                                
                             }
                         }
                     }
