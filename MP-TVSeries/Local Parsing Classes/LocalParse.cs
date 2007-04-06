@@ -61,13 +61,27 @@ namespace WindowPlugins.GUITVSeries
                 
                 // make sure we have all the necessary data for a full match
                 if (!parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) ||
-                    !parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) ||
-                    !parser.Matches.ContainsKey(DBSeries.cParsedName))
+                    !parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex))
                 {
-                    progressReporter.success = false;
-                    progressReporter.exception = "Parsing failed for " + file;
-                    
-                    nFailed++;
+                    if (parser.Matches.ContainsKey(DBSeries.cParsedName) &&
+                        parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
+                    {
+                        try{ System.DateTime.Parse(parser.Matches[DBOnlineEpisode.cFirstAired]);}
+                        catch (System.FormatException)
+                        {
+                            nFailed++;
+                            progressReporter.failedAirDate = true;
+                            progressReporter.success = false;
+                            progressReporter.exception = "Airdate not valid";
+                        }
+                    }
+                    else
+                    {
+                        progressReporter.success = false;
+                        progressReporter.exception = "Parsing failed for " + file;
+
+                        nFailed++;
+                    }
 
                 }
                 else
@@ -79,7 +93,7 @@ namespace WindowPlugins.GUITVSeries
                         nFailed++;
                         progressReporter.failedSeason = true;
                         progressReporter.success = false;
-                        progressReporter.exception = "Season not numerical ";
+                        progressReporter.exception += "Season not numerical ";
                     }
                     try { Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]); }
                     catch (System.FormatException)
@@ -132,6 +146,7 @@ namespace WindowPlugins.GUITVSeries
         public bool success = true;
         public bool failedSeason = false;
         public bool failedEpisode = false;
+        public bool failedAirDate = false;
         public string exception;
         public FilenameParser parser;
         public string match_filename;

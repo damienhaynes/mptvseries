@@ -78,6 +78,7 @@ namespace WindowPlugins.GUITVSeries
                         sExpression = sExpression.Replace("<episode>", "<" + DBEpisode.cEpisodeIndex + ">");
                         sExpression = sExpression.Replace("<episode2>", "<" + DBEpisode.cEpisodeIndex2 + ">");
                         sExpression = sExpression.Replace("<title>", "<" + DBEpisode.cEpisodeName + ">");
+                        sExpression = sExpression.Replace("<firstaired>", "<" + DBOnlineEpisode.cFirstAired + ">");
 
                         sExpressions.Add(sExpression);
                     }

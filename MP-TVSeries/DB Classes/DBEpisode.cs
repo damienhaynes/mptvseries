@@ -136,6 +136,11 @@ namespace WindowPlugins.GUITVSeries
         {
             Clear(new DBOnlineEpisode(), conditions);
         }
+
+        public override string ToString()
+        {
+            return this[DBOnlineEpisode.cCompositeID];
+        }
     };
 
     public class DBEpisode : DBTable
@@ -266,7 +271,10 @@ namespace WindowPlugins.GUITVSeries
         public void ChangeSeriesID(int nSeriesID)
         {
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
-            if (!newOnlineEpisode.ReadPrimary(nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex]))
+            string composite = nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
+            if (!base[DBEpisode.cCompositeID].ToString().Contains("x"))
+                composite = nSeriesID + "_" + base[DBOnlineEpisode.cFirstAired];
+            if (!newOnlineEpisode.ReadPrimary(composite))
             {
                 newOnlineEpisode[cSeriesID] = nSeriesID;
                 newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
@@ -478,6 +486,7 @@ namespace WindowPlugins.GUITVSeries
                         case cEpisodeName:
                         case cCompositeID:
                         case cEpisodeIndex:
+                        case cSeasonIndex:
                         case cEpisodeIndex2:
                         case cCompositeID2:
                             // the only flags we are not rerouting to the onlineEpisode if it exists
@@ -502,6 +511,29 @@ namespace WindowPlugins.GUITVSeries
                     m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
                     base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
                     Commit();
+                }
+                else if (m_onlineEpisode == null && base[cSeriesID] != String.Empty && base[DBOnlineEpisode.cFirstAired] != string.Empty)
+                {
+                    // in case of firstaired matching, we temporarily create an composite id based on it, this will later be changed to season/ep again
+                    m_onlineEpisode = new DBOnlineEpisode();
+                    m_onlineEpisode[DBOnlineEpisode.cCompositeID] = base[cSeriesID] + "_" + base[DBOnlineEpisode.cFirstAired];
+                    base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
+                    m_onlineEpisode[DBOnlineEpisode.cSeasonIndex] = base[cSeasonIndex];
+                    m_onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = base[cEpisodeIndex];
+                    m_onlineEpisode[DBOnlineEpisode.cSeriesID] = base[cSeriesID];
+                    Commit();
+                }
+                else if (m_onlineEpisode != null && base[cCompositeID] == base[cSeriesID] + "_" + base[DBOnlineEpisode.cFirstAired] && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
+                {
+                    // in case of firstaired matching, this is the place we change the composite id back
+                    m_onlineEpisode[DBOnlineEpisode.cCompositeID] = base[cSeriesID] + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
+                    base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
+                    m_onlineEpisode.Commit();
+
+                    SQLCondition cleanup = new SQLCondition();
+                    cleanup.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, base[cSeriesID], SQLConditionType.Equal);
+                    cleanup.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, base[cSeriesID] + "_" + base[DBOnlineEpisode.cFirstAired], SQLConditionType.Equal);
+                    DBOnlineEpisode.Clear(cleanup);
                 }
 
             }
