@@ -460,10 +460,14 @@ namespace WindowPlugins.GUITVSeries
 
         public static string measorFromStart()
         {
-            if (starttime.Equals(default(DateTime))) return " - cannot calculate, perfana.start() was not called!";
+            return getTimeFromStart().ToString();
+        }
+
+        public static int getTimeFromStart()
+        {
+            if (starttime.Equals(default(DateTime))) return 0;
             TimeSpan t = DateTime.Now - starttime;
-            starttime = new DateTime();
-            return t.TotalMilliseconds.ToString();
+            return (int)t.TotalMilliseconds;
         }
     }
 }

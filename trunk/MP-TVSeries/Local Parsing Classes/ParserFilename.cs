@@ -33,6 +33,10 @@ namespace WindowPlugins.GUITVSeries
         private string m_Filename = string.Empty;
         private Dictionary<string, string> m_Matches = new Dictionary<string, string>();
         private String m_RegexpMatched = string.Empty;
+        static List<String> sExpressions = new List<String>();
+        static List<Regex> regularExpressions = new List<Regex>();
+        //static List<DBReplacements> replacements = new List<DBReplacements>();
+        static Dictionary<string, string> replacements = new Dictionary<string, string>();
 
         public Dictionary<string, string> Matches
         {
@@ -44,17 +48,20 @@ namespace WindowPlugins.GUITVSeries
             get { return m_RegexpMatched; }
         }
 
-        public FilenameParser(string filename)
+        /// <summary>
+        /// Loads and compile Parsing Expressions and also String Replacements
+        /// </summary>
+        /// <returns></returns>
+        public static bool reLoadExpressions()
         {
+            // build a list of all the regular expressions to apply
+            bool error = false;
             try
             {
-                ////////////////////////////////////////////////////////////////////////////////////////////
-                // Parsing filename for all recognized naming formats to extract episode information
-                ////////////////////////////////////////////////////////////////////////////////////////////
-                m_Filename = filename;
-
-                // build a list of all the regular expressions to apply
-                List<String> sExpressions = new List<String>();
+                MPTVSeriesLog.Write("Compiling Regex...");
+                sExpressions.Clear();
+                regularExpressions.Clear();
+                replacements.Clear();
                 DBExpression[] expressions = DBExpression.GetAll();
                 foreach (DBExpression expression in expressions)
                 {
@@ -81,22 +88,62 @@ namespace WindowPlugins.GUITVSeries
                         sExpression = sExpression.Replace("<firstaired>", "<" + DBOnlineEpisode.cFirstAired + ">");
 
                         sExpressions.Add(sExpression);
+                        // we precompile the expressions here which is faster in the end
+                        regularExpressions.Add(new Regex(sExpression, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Compiled));
                     }
                 }
+                MPTVSeriesLog.Write("Compiled Regex sucessfuly, " + sExpressions.Count.ToString() + " Expressions found");
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error loading Parsing Expressions: " + ex.Message);
+                error = true;
+            }
+                // now go for the replacements
+            try
+            {
+                foreach (DBReplacements replacement in DBReplacements.GetAll())
+                {
+                    String searchString = replacement[DBReplacements.cToReplace];
+                    searchString = searchString
+                        .ToLower()
+                        .Replace("<space>", " ");
 
-                foreach (String pattern in sExpressions)
+                    String replaceString = replacement[DBReplacements.cWith];
+                    replaceString = replaceString
+                        .ToLower()
+                        .Replace("<space>", " ")
+                        .Replace("<empty>", "");
+
+                    replacements.Add(searchString, replaceString);
+                }
+                return error;
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error loading String Replacements: " + ex.Message);
+                return false;
+            }
+        }
+
+        public FilenameParser(string filename)
+        {
+            try
+            {
+                ////////////////////////////////////////////////////////////////////////////////////////////
+                // Parsing filename for all recognized naming formats to extract episode information
+                ////////////////////////////////////////////////////////////////////////////////////////////
+                m_Filename = filename;
+                if (sExpressions.Count == 0) reLoadExpressions();
+
+                int index = 0;
+                foreach(Regex regularExpression in regularExpressions)
                 {
                     string _Pattern;
                     string _Source;
-
-                    Dictionary<string, string> episodeMetaData = new Dictionary<string, string>();
-
-                    _Pattern = pattern;
                     _Source = m_Filename;
 
                     Match matchResults;
-                    Regex regularExpression = new Regex(_Pattern, RegexOptions.IgnoreCase  | RegexOptions.ExplicitCapture);
-
                     matchResults = regularExpression.Match(_Source);
 
                     if (matchResults.Success)
@@ -108,30 +155,18 @@ namespace WindowPlugins.GUITVSeries
 
                             if (GroupValue != "" && GroupName != "unknown")
                             {
-                                foreach (DBReplacements replacement in DBReplacements.GetAll())
-                                {
-                                    String searchString = replacement[DBReplacements.cToReplace];
-                                    searchString = searchString
-                                        .ToLower()
-                                        .Replace("<space>", " ");
-
-                                    String replaceString = replacement[DBReplacements.cWith];
-                                    replaceString = replaceString
-                                        .ToLower()
-                                        .Replace("<space>", " ")
-                                        .Replace("<empty>", "");
-
-                                    GroupValue = GroupValue.Replace(searchString, replaceString);
-                                }
+                                foreach (KeyValuePair<string, string> replacement in replacements)
+                                    GroupValue = GroupValue.Replace(replacement.Key, replacement.Value);
 
                                 GroupValue = GroupValue.Trim();
                                 m_Matches.Add(GroupName, GroupValue);
                             }
                         }
                         // stop on the first successful match
-                        m_RegexpMatched = _Pattern;
-                        break;
+                        m_RegexpMatched = sExpressions[index];
+                        return;
                     }
+                  index++;
                 }
             }
             catch (Exception ex)

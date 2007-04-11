@@ -365,7 +365,13 @@ namespace WindowPlugins.GUITVSeries
                     this["AudioChannels"] == "" ||
                     this["AudioBitrate"] == ""
                     ) return false;
-                else return true;
+                else
+                {
+                    int noAttempts = 0;
+                    if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
+                    if (noAttempts > -6) return false; // we attempt to readout 5 times
+                    return true;
+                }
 
             }
         }
@@ -383,7 +389,10 @@ namespace WindowPlugins.GUITVSeries
                     perfana.start();
                     MI.Open(this[DBEpisode.cFilename]);
                     string result = string.Empty;
-                    this["localPlaytime"] = (result = MI.getPlaytime()) != string.Empty ? result : "-1";
+                    int noAttempts = 0;
+                    int.TryParse(this["localPlaytime"], out noAttempts);
+                    noAttempts--;
+                    this["localPlaytime"] = (result = MI.getPlaytime()) != string.Empty ? result : noAttempts.ToString();
                     this["VideoCodec"] = (result = MI.getVidCodec()) != string.Empty ? result : "-1";
                     this["VideoBitrate"] = (result = MI.getVidBitrate()) != string.Empty ? result : "-1";
                     this["VideoFrameRate"] = (result = MI.getFPS()) != string.Empty ? result : "-1";
@@ -651,7 +660,8 @@ namespace WindowPlugins.GUITVSeries
         public static List<DBEpisode> Get(SQLCondition conditions, bool bOnline)
         {
             String sqlQuery = String.Empty;
-
+            if (conditions == string.Empty)
+                conditions.AddCustom("1 = 1");
             string orderBy = !conditions.customOrderStringIsSet
                   ? string.Empty
                   : conditions.orderString;

@@ -96,8 +96,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
-        public static string hdIconFilename = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\hdlogo.png";
-
         static DBOption()
         {
             try

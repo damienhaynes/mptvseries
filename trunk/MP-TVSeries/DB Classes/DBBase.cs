@@ -634,12 +634,21 @@ namespace WindowPlugins.GUITVSeries
         public bool limitIsSet = false;
         public bool customOrderStringIsSet = false;
 
+        public bool nextIsOr = false;
+
         // I need this for subqueries
+        /// <summary>
+        /// Warning: do not set "where", also returns without "where"
+        /// </summary>
         public string ConditionsSQLString
         {
             set
             {
                 m_sConditions = value;
+            }
+            get
+            {
+                return m_sConditions;
             }
         }
 
@@ -748,15 +757,16 @@ namespace WindowPlugins.GUITVSeries
         public void AddCustom(string SQLString)
         {
             if (m_sConditions != String.Empty)
-                m_sConditions += " and ";
-            else
-                m_sConditions += " where ";
+                if(nextIsOr)
+                    m_sConditions += " or ";
+                else
+                    m_sConditions += " and ";
             m_sConditions += SQLString;
         }
 
         public static implicit operator String(SQLCondition conditions)
         {
-            return conditions.m_sConditions;
+            return  conditions.m_sConditions.Length > 0 ? " where " + conditions.m_sConditions : conditions.m_sConditions;
         }
 
         public SQLCondition Copy()

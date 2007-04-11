@@ -210,6 +210,10 @@ namespace WindowPlugins.GUITVSeries
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
 
+            MPTVSeriesLog.pauseAutoWriteDB = false;
+            MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
+            this.comboBox1.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
+
         }
 
         private void LoadTorrentSearches()
@@ -723,6 +727,9 @@ namespace WindowPlugins.GUITVSeries
             if (!bForceRefresh && listView_ParsingResults.Items.Count > 0)
                 return;
 
+            // refresh regex and replacements
+            FilenameParser.reLoadExpressions();
+
             listView_ParsingResults.Items.Clear();
             listView_ParsingResults.Columns.Clear();
             // add mandatory columns
@@ -770,6 +777,9 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
+                // refresh regex and replacements
+                FilenameParser.reLoadExpressions();
+
                 button_Start.Text = "Abort";
                 m_timingStart = DateTime.Now;
                 m_parser = new OnlineParsing(this);
@@ -1994,7 +2004,6 @@ namespace WindowPlugins.GUITVSeries
             e.Result = episodes.Count;
         }
 
-        //delegate void validDelegate(ref RichTextBox txtBox);
         private void addLogo_Click(object sender, EventArgs e)
         {
             logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
@@ -2193,8 +2202,6 @@ namespace WindowPlugins.GUITVSeries
         ~ConfigurationForm()
         {
             // so that locallogos can clean up its stuff
-            //this.pictureBox_Series.Image.Dispose();
-            //this.pictureBox_Series = null;
             localLogos.cleanUP();
         }
 

@@ -41,6 +41,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         static private LogLevel _selectedLogLevel = LogLevel.Normal;
+        public static bool pauseAutoWriteDB = false;
 	    public static LogLevel selectedLogLevel
 	    {
 		    get { return _selectedLogLevel;}
@@ -49,6 +50,8 @@ namespace WindowPlugins.GUITVSeries
                     {
                         Write("Switched LogLevel to: " + value.ToString());
                         _selectedLogLevel = value;
+                        if (!pauseAutoWriteDB)
+                            DBOption.SetOptions("logLevel", (int)value);
                     }
                 }
 	    }
@@ -84,6 +87,11 @@ namespace WindowPlugins.GUITVSeries
             m_LogStream = File.CreateText(m_filename);
             m_LogStream.Close();
             m_LogStream.Dispose();
+
+            int level = 0;
+            int.TryParse(DBOption.GetOptions("logLevel"), out level);
+            selectedLogLevel = (LogLevel)level;
+            pauseAutoWriteDB = true;
         }
 
         /// <summary>
@@ -140,7 +148,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if ((int)level <= (int)selectedLogLevel)
             {
-                lock (typeof(MPTVSeriesLog))
+                lock (m_LogStream)
                 {
                     if (File.Exists(m_filename))
                         m_LogStream = File.AppendText(m_filename);
@@ -152,8 +160,8 @@ namespace WindowPlugins.GUITVSeries
 
                     m_LogStream.Close();
                     m_LogStream.Dispose();
+                    if (level != LogLevel.Debug) Log_Write(entry);
                 }
-                if (level != LogLevel.Debug) Log_Write(entry);
             }
         }
 
@@ -163,7 +171,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_ListLog.InvokeRequired)
                 {
-                    Log_WriteCallback d = new Log_WriteCallback(Write);
+                    Log_WriteCallback d = new Log_WriteCallback(Log_Write);
                     m_ListLog.Invoke(d, new object[] { entry });
                 }
                 else
@@ -175,31 +183,6 @@ namespace WindowPlugins.GUITVSeries
                     m_ListLog.TopIndex = nTopIndex;
                 }
             }
-
-            //if (this.m_DlgProgress != null)
-            //{
-            //    int lineSize = 50;
-            //    if (entry.Length >= lineSize)
-            //    {
-            //        int split = lineSize;
-            //        for (int index = lineSize - 1; index >= 0; index--)
-            //        {
-            //            if (entry[index] == ' ')
-            //            {
-            //                split = index;
-            //                break;
-            //            }
-            //        }
-            //        this.m_DlgProgress.SetLine(1, entry.Substring(0, split - 1));
-            //        this.m_DlgProgress.SetLine(2, entry.Substring(split + 1));
-            //    }
-            //    else
-            //    {
-            //        this.m_DlgProgress.SetLine(1, entry);
-            //        this.m_DlgProgress.SetLine(2, "");
-            //    }
-            //    this.m_DlgProgress.Progress();
-            //}
         }
     }
 }

@@ -63,12 +63,13 @@ namespace WindowPlugins.GUITVSeries
         private void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
+            string choosenOrdering = DBSeries.Get(nSeriesID)[DBOnlineSeries.cChoseEpisodeOrder];
             if (nEpisodeIndex != -1 && nSeasonIndex != -1)
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex);
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex, choosenOrdering);
             else if (!firstAired.Equals(default(DateTime)))
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, firstAired);
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, firstAired, choosenOrdering);
             else
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nGetEpisodesTimeStamp);
+                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nGetEpisodesTimeStamp, choosenOrdering);
 
             if (nodeList != null)
             {

@@ -60,6 +60,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cIsFavourite = "isFavourite";
         public const String cUnwatchedItems = "UnwatchedItems";
 
+        public const String cEpisodeOrders = "EpisodeOrders";
+        public const String cChoseEpisodeOrder = "choosenOrder";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -312,6 +315,8 @@ namespace WindowPlugins.GUITVSeries
             DBOnlineSeries newOnlineSeries = new DBOnlineSeries(nSeriesID);
             if (m_onlineSeries[DBOnlineSeries.cHasLocalFiles])
                 newOnlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
+            newOnlineSeries[DBOnlineSeries.cEpisodeOrders] = m_onlineSeries[DBOnlineSeries.cEpisodeOrders];
+            newOnlineSeries[DBOnlineSeries.cChoseEpisodeOrder] = m_onlineSeries[DBOnlineSeries.cChoseEpisodeOrder];
             m_onlineSeries = newOnlineSeries;
             base[cID] = nSeriesID;
         }
@@ -570,6 +575,15 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return outList;
+        }
+
+        public static DBSeries Get(int seriesID)
+        {
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, seriesID, SQLConditionType.Equal);
+            foreach (DBSeries series in Get(cond, false))
+                return series;
+            return null;
         }
     }
 }
