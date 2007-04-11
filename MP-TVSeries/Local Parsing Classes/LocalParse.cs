@@ -48,13 +48,16 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<parseResult> Parse(List<PathPair> files)
         {
+            MPTVSeriesLog.Write("ParseLocal starting, processing " + files.Count.ToString() + " files..." );
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
             int nFailed = 0;
+            FilenameParser parser = null;
+            ListViewItem item = null;
             foreach (PathPair file in files)
             {
-                FilenameParser parser = new FilenameParser(file.sMatch_FileName);
-                ListViewItem item = new ListViewItem(file.sMatch_FileName);
+                parser = new FilenameParser(file.sMatch_FileName);
+                item = new ListViewItem(file.sMatch_FileName);
                 item.UseItemStyleForSubItems = true;
                 
                 progressReporter = new parseResult();
@@ -110,6 +113,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.parser = parser;
                 results.Add(progressReporter);
             }
+            MPTVSeriesLog.Write("ParseLocal finished..");
             return results;
         }
 

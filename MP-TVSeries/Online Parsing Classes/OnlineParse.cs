@@ -171,7 +171,6 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
-
                 while (!worker.CancellationPending)
                 {
                     try
@@ -180,10 +179,10 @@ namespace WindowPlugins.GUITVSeries
                         lock (m_modifiedFilesList)
                         {
                             // go over the modified files list once in a while & update
-                            while (m_modifiedFilesList.Count > 0)
+                            if(m_modifiedFilesList.Count > 0)
                             {
-                                outList.Add(m_modifiedFilesList[0]);
-                                m_modifiedFilesList.RemoveAt(0);
+                                outList.AddRange(m_modifiedFilesList);
+                                m_modifiedFilesList.Clear();
                             }
 
                             if (outList.Count > 0)
@@ -196,7 +195,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // wait
-                    Thread.Sleep(400);
+                    Thread.Sleep(1500);
                 }
             }
         }
@@ -410,7 +409,7 @@ namespace WindowPlugins.GUITVSeries
                         DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
 
                         ParseLocal(Filelister.GetFiles());
-
+                        
                         // now, remove all episodes still processed = 0, the weren't find in the scan
                         if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
                         {
@@ -475,13 +474,64 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("***************************************************************************");
         }
 
+        /// <summary>
+        /// sets:
+        ///  - DBEpisode.cImportProcessed to 1
+        ///  - DBSeason.cHasLocalFilesTemp to true
+        ///  - DBSeries.cHasLocalFilesTemp to true
+        /// </summary>
+        /// <param name="filenames"></param>
+        void UpdateStatus(List<string> filenames)
+        {
+            if (filenames.Count == 0) return;
+            SQLCondition cond = new SQLCondition();
+            cond.nextIsOr = true;
+            DBEpisode ep = new DBEpisode();
+            foreach (string file in filenames)
+            {
+                cond.Add(ep, DBEpisode.cFilename, file, SQLConditionType.Equal);
+            }
+            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, cond);
+
+            SQLCondition condSeason = new SQLCondition();
+            condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
+                            + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and " 
+                            + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + cond.ConditionsSQLString + ")");
+            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason);
+
+            SQLCondition condSeries = new SQLCondition();
+            condSeries.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
+                            + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) + 
+                            " and " + cond.ConditionsSQLString + ")");
+            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries);
+        }
+
         void ParseLocal(List<PathPair> files)
         {
-            foreach (parseResult progress in LocalParse.Parse(files))
+            List<parseResult> parsedFiles = LocalParse.Parse(files);
+            // don't process those already in DB
+            List<string> dbEps = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, DBEpisode.Get(new SQLCondition(), false));
+            List<string> updateStatusEps = new List<string>();
+            foreach (string dbEp in dbEps)
+                for(int i = 0; i<parsedFiles.Count; i++)
+                {
+                    if (!parsedFiles[i].success || dbEp.ToLower().Trim() == parsedFiles[i].full_filename.ToLower().Trim())
+                    {
+                        if (parsedFiles[i].success)
+                            updateStatusEps.Add(parsedFiles[i].full_filename);
+                        parsedFiles.RemoveAt(i);
+                        break;
+                    }
+                }
+            // now process those found quickly without going through the hoops of creating new series/seasons/eps for them
+
+            UpdateStatus(updateStatusEps);
+            MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
+
+            foreach (parseResult progress in parsedFiles)
             {
                 if (worker.CancellationPending)
                     return;
-
                 if (progress.success)
                 {
                     DBSeries series = null;
@@ -695,6 +745,43 @@ namespace WindowPlugins.GUITVSeries
                         DBOnlineEpisode.Clear(setcondition);
 
                         int nSeriesID = series[DBSeries.cID];
+
+                        // Support different Episode orders (dvd/aired/absolute, etc)
+                        try
+                        {
+                            series[DBOnlineSeries.cEpisodeOrders] = UserChosenSeries[DBOnlineSeries.cEpisodeOrders];
+                            List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+                            if (episodeOrders.Count > 1)
+                            {
+                                // let the user choose
+                                List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                                foreach (string orderOption in episodeOrders)
+                                    Choices.Add(new Feedback.CItem(orderOption, orderOption, orderOption));
+
+                                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                                descriptor.m_sTitle = "Multiple ordering Options detected";
+                                descriptor.m_sItemToMatchLabel = "Order Option";
+                                descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
+                                descriptor.m_sListLabel = "Choose the desired Order Option from the list:";
+                                descriptor.m_List = Choices;
+                                //descriptor.m_sbtnCancelLabel = "Skip this time";
+                                //descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
+
+                                Feedback.CItem selectedOrdering = null;
+                                Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
+                                if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK)
+                                {
+                                    series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        // End support for ordering
+
                         series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
                         series.Commit();
 
@@ -950,6 +1037,8 @@ namespace WindowPlugins.GUITVSeries
                                     case DBSeries.cParsedName:
                                     case DBOnlineSeries.cHasLocalFiles:
                                     case DBOnlineSeries.cIsFavourite:
+                                    case DBOnlineSeries.cEpisodeOrders:
+                                    case DBOnlineSeries.cChoseEpisodeOrder:
                                         break;
 
                                     default:
@@ -1004,13 +1093,13 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries)
             {
-                MPTVSeriesLog.Write("*********  UpdateBanners - retrieve banners for new series  *********");
+                MPTVSeriesLog.Write("*********  UpdateBanners - retrieve banners series without any banners  *********");
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 0, SQLConditionType.Equal);
             }
             else
             {
-                MPTVSeriesLog.Write("*********  UpdateBanners - refresh banners for new series  *********");
+                MPTVSeriesLog.Write("*********  UpdateBanners - refresh banners for series with existing banners *********");
                 // and that already had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 1, SQLConditionType.Equal);
             }
@@ -1181,6 +1270,9 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cWatched:
                                     // do nothing here, those information are local only
                                     break;
+                                case DBOnlineEpisode.cSeasonIndex:
+                                case DBOnlineEpisode.cEpisodeIndex:
+                                    break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                 default:
                                     localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));

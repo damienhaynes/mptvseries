@@ -84,6 +84,7 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
             MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             List<DBEpisode> eps = DBEpisode.Get(conditions, true);
+            /*
             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
             {
                 List<DBEpisode> goodEps = new List<DBEpisode>();
@@ -96,8 +97,8 @@ namespace WindowPlugins.GUITVSeries
                     catch (Exception){}
                 return goodEps;
             }
-            else return eps;
-            
+            else 
+             */ return eps;
         }
 
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
@@ -110,7 +111,12 @@ namespace WindowPlugins.GUITVSeries
             List<string> items = new List<string>();
             // to ensure we respect on the fly filter settings
             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
-                conditions.Add(step.groupedBy.table, DBOnlineSeries.cHasLocalFiles, true, SQLConditionType.Equal); 
+                conditions.Add(step.groupedBy.table, DBOnlineSeries.cHasLocalFiles, true, SQLConditionType.Equal);
+            else if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            {
+                // has to be grouped by something episode
+                conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+            }
             
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
                                  " from " + step.groupedBy.table.m_tableName + conditions +
@@ -395,10 +401,10 @@ namespace WindowPlugins.GUITVSeries
                         goto default;
                     case logicalViewStep.type.group:
                         join += "{local_files}";
-                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1";
+                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1 "; // and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
                         break;
                     default:
-                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1";
+                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1 "; // and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
                         //SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
                         break;
                 }
@@ -590,6 +596,23 @@ namespace WindowPlugins.GUITVSeries
             if (indexToGet < 0) indexToGet = elements.Count + indexToGet;
             if (indexToGet >= elements.Count) indexToGet = indexToGet - elements.Count;
             return elements[indexToGet];
+        }
+
+        public static List<string> getFieldNameListFromList<T>(string FieldNameToGet, List<T> elements) where T:DBTable
+        {
+            List<string> results = new List<string>();
+            foreach (T elem in elements)
+            {
+                try
+                {
+                    results.Add((string)elem[FieldNameToGet]);
+                }
+                catch (Exception)
+                {
+                    MPTVSeriesLog.Write("Wrong call of getPropertyListFromList<T,P>: Type " + elem.GetType().Name);
+                }
+            }
+            return results;
         }
 
         public static List<P> getPropertyListFromList<T, P>(string PropertyNameToGet, List<T> elements)
