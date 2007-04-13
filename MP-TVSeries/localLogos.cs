@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using MediaPortal.GUI.Library;
+using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -36,7 +37,8 @@ namespace WindowPlugins.GUITVSeries
         const string optionName = "logoConfig";
         const string entriesSplit = "<next>";
         public const string condSplit = ";-;";
-        static string pathfortmpfile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        static string pathfortmpfile = appPath;
         static string tmpFile = @"tmpLogos.png";
         static List<string> entries = new List<string>();
         static DBEpisode tmpEp;
@@ -44,6 +46,10 @@ namespace WindowPlugins.GUITVSeries
         static DBSeries tmpSeries;
         static string groupedByInfo = string.Empty;
         static bool entriesInMemory = false;
+        static NumberFormatInfo provider = new NumberFormatInfo();
+
+        
+
         enum Level
         {
             Series,
@@ -55,6 +61,7 @@ namespace WindowPlugins.GUITVSeries
         static localLogos()
         {
             pathfortmpfile += @"\thumbs\";
+            provider.NumberDecimalSeparator = "."; // because mediainfo
         }
 
         public static void saveToDB(List<string> entries)
@@ -136,58 +143,73 @@ namespace WindowPlugins.GUITVSeries
 
             for (int i = 0; i < entries.Count; i++)
             {
-                if (isRelevant(entries[i], level))
-                {
-                    MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
-                    List<string> conditions = new List<string>(Regex.Split(entries[i], localLogos.condSplit));
-
-                    // resolve dnyamic image and check if logo img exists
-                    string filename = getDynamicFileName(conditions[0], level);
-                    if (!System.IO.File.Exists(filename))
-                    {
-                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Normal);
-
-                    }
-
-                    // check if the condition is met
-                    // each image may only exist once
-                    else if (!(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
-                    {
-                        if (firstOnly) return filename; // if we only need the first then we just return the original here
-                        else logosForBuilding.Add(filename);
-                    }
-                }
-                else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!", MPTVSeriesLog.LogLevel.Debug);
-
-                MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
-            }
-
-            if (logosForBuilding.Count == 1) return logosForBuilding[0];
-            else if (logosForBuilding.Count > 1)
-            {
-                tmpFile = string.Empty;
-                foreach (string logo in logosForBuilding)
-                    tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
-                tmpFile = pathfortmpfile + "TVSeriesDynLogo" + tmpFile + ".png";
-                if (System.IO.File.Exists(tmpFile))
-                    return tmpFile;
-
-                Bitmap b = new Bitmap(imgWidth, imgHeight);
-                Image img = b;
-                Graphics g = Graphics.FromImage(img);
-                appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
                 try
                 {
-                    b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
-                    return tmpFile;
+                    if (isRelevant(entries[i], level))
+                    {
+                        MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
+                        List<string> conditions = new List<string>(Regex.Split(entries[i], localLogos.condSplit));
+
+                        // resolve dnyamic image and check if logo img exists
+                        string filename = getDynamicFileName(conditions[0], level);
+                        if (!System.IO.File.Exists(filename))
+                        {
+                            MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Normal);
+
+                        }
+
+                        // check if the condition is met
+                        // each image may only exist once
+                        else if (!(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
+                        {
+                            if (firstOnly) return filename; // if we only need the first then we just return the original here
+                            else logosForBuilding.Add(filename);
+                        }
+                    }
+                    else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!", MPTVSeriesLog.LogLevel.Debug);
+
+                    MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
                 }
                 catch (Exception ex)
                 {
-                    if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
-                    return string.Empty;
+                    MPTVSeriesLog.Write("Logo Rule crashed: " + entries[i] + " - " + ex.Message);
                 }
             }
-            else return string.Empty;
+
+            try
+            {
+                if (logosForBuilding.Count == 1) return logosForBuilding[0];
+                else if (logosForBuilding.Count > 1)
+                {
+                    tmpFile = string.Empty;
+                    foreach (string logo in logosForBuilding)
+                        tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
+                    tmpFile = pathfortmpfile + "TVSeriesDynLogo" + tmpFile + ".png";
+                    if (System.IO.File.Exists(tmpFile))
+                        return tmpFile;
+
+                    Bitmap b = new Bitmap(imgWidth, imgHeight);
+                    Image img = b;
+                    Graphics g = Graphics.FromImage(img);
+                    appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
+                    try
+                    {
+                        b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
+                        return tmpFile;
+                    }
+                    catch (Exception)
+                    {
+                        if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
+                        return string.Empty;
+                    }
+                }
+                else return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("The Logo Building Engine generated an error: " + ex.Message);
+                return string.Empty;
+            }
         }
 
         public static DBSeries getCorrespondingSeries(int id)
@@ -321,16 +343,29 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 // not dynamic
-                return dynfilename;
+                return getCleanAbsolutePath(dynfilename);
             }
             //MPTVSeriesLog.Write("dynamic Filename detected..trying to resolve");
             string fieldToGet = string.Empty;
             string value = string.Empty;
             fieldToGet = dynfilename.Substring(dnyStart, dynfilename.IndexOf('>', dnyStart) - dnyStart + 1);
             if (getFieldValues(fieldToGet, out value, level))
-                return getDynamicFileName(dynfilename.Replace(fieldToGet, value),level); // recursive so we support multiple dyn fields in filename
+            {
+                foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                    value = value.Replace(c, '_');
+                return getDynamicFileName(dynfilename.Replace(fieldToGet, value), level); // recursive so we support multiple dyn fields in filename
+            }
             else
-                return dynfilename; // something went wrong
+                return getCleanAbsolutePath(dynfilename); // something went wrong
+        }
+
+        static string getCleanAbsolutePath(string file)
+        {
+            if (!System.IO.Path.IsPathRooted(file))
+               file = appPath + "\\" + file;
+           foreach (char c in System.IO.Path.GetInvalidPathChars())
+               file = file.Replace(c, '_');
+           return file;
         }
 
         static bool getFieldValues(string what, out string value, Level level)
@@ -389,12 +424,13 @@ namespace WindowPlugins.GUITVSeries
         static bool singleCondIsTrue(string what, string type, string value)
         {
             double testf = 0, test1f = 0;
+            
             if (type.Contains("<") || type.Contains(">"))
             {
                 try
                 {
-                    testf = System.Convert.ToDouble(what);
-                    test1f = System.Convert.ToDouble(value);
+                    testf = System.Convert.ToDouble(what, provider);
+                    test1f = System.Convert.ToDouble(value, provider);
                 }
                 catch (Exception)
                 {
@@ -407,28 +443,20 @@ namespace WindowPlugins.GUITVSeries
             {
                 case "=":
                     return (what == value);
-                    break;
                 case "!=":
                     return (what != value);
-                    break;
                 case ">":
                     return (testf > test1f);
-                    break;
                 case ">=":
                     return (testf >= test1f);
-                    break;
                 case "<":
                     return (testf < test1f);
-                    break;
                 case "<=":
                     return (testf <= test1f);
-                    break;
                 case "contains":
                     return what.ToLower().Contains(value.ToLower());
-                    break;
                 case "!contains":
                     return !what.ToLower().Contains(value.ToLower());
-                    break;
             }
             return false;
         }

@@ -195,11 +195,8 @@ namespace WindowPlugins.GUITVSeries
                         {
                             return results.Rows[0].fields[0];
                         }
-                        else return 0;
-                        break;
-                    default:
-                        return base[fieldName];
-                        break;
+                        else return 0;   
+                    default: return base[fieldName];
                 }
             }
             set

@@ -74,6 +74,48 @@ namespace WindowPlugins.GUITVSeries
 
         private static List<string> filesInFolder(string folder)
         {
+            // this is much faster than calling Directory.Getfiles for every extension (and even about twice as fast as the old recursive way, especially over network paths!
+            List<string> files = new List<string>();
+            List<string> validExts = new List<string>();
+            foreach (string ext in MediaPortal.Util.Utils.VideoExtensions) validExts.Add(ext);
+            try
+            {
+                if (System.IO.Directory.Exists(folder))
+                    files.AddRange(System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories));
+                bool valid = false;
+                string ext = string.Empty;
+                for (int i = 0; i < validExts.Count; i++)
+                    validExts[i] = validExts[i].ToLower();
+                for (int i = 0; i < files.Count; i++)
+                {
+                    valid = false;
+                    ext = System.IO.Path.GetExtension(files[i]).ToLower();
+                    foreach (string validExt in validExts)
+                    {
+                        if (ext == validExt)
+                        {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    if (!valid)
+                    {
+                        files.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
+            }
+            return files;
+        }
+
+        /*
+        private static List<string> filesInFolder(string folder)
+        {
+            MPTVSeriesLog.Write("get files: " + DateTime.Now.Second + ":" + DateTime.Now.Millisecond);
             List<string> files = new List<string>();
             try
             {
@@ -85,7 +127,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
             }
+            MPTVSeriesLog.Write("get files done: " + DateTime.Now.Second + ":" + DateTime.Now.Millisecond);
             return files;
         }
+         */
     }
 }

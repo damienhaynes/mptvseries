@@ -126,7 +126,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     catch (Exception ex)
                     {
-
+                        MPTVSeriesLog.Write("Error in Translation Engine: " + ex.Message);
                     }
             MPTVSeriesLog.Write(TranslatedStrings.Count.ToString() + " translated Strings found for " + lang);
             foreach (FieldInfo fi in fieldInfos)

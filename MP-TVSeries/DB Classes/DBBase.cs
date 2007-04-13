@@ -559,7 +559,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
                 return string.Empty;
             }
             return randImage;

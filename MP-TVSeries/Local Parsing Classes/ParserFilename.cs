@@ -139,7 +139,6 @@ namespace WindowPlugins.GUITVSeries
                 int index = 0;
                 foreach(Regex regularExpression in regularExpressions)
                 {
-                    string _Pattern;
                     string _Source;
                     _Source = m_Filename;
 

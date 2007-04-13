@@ -48,6 +48,10 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<parseResult> Parse(List<PathPair> files)
         {
+            return Parse(files, true);
+        }
+        public static List<parseResult> Parse(List<PathPair> files, bool includeFailed)
+        {
             MPTVSeriesLog.Write("ParseLocal starting, processing " + files.Count.ToString() + " files..." );
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
@@ -111,7 +115,8 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.match_filename = file.sMatch_FileName;
                 progressReporter.full_filename = file.sFull_FileName;
                 progressReporter.parser = parser;
-                results.Add(progressReporter);
+                if(includeFailed ||progressReporter.success)
+                    results.Add(progressReporter);
             }
             MPTVSeriesLog.Write("ParseLocal finished..");
             return results;
@@ -145,7 +150,7 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 
-    public class parseResult
+    public class parseResult : IComparable<parseResult>
     {
         public bool success = true;
         public bool failedSeason = false;
@@ -155,5 +160,14 @@ namespace WindowPlugins.GUITVSeries
         public FilenameParser parser;
         public string match_filename;
         public string full_filename;
+
+        #region IComparable<parseResult> Members
+
+        public int CompareTo(parseResult other)
+        {
+            return this.full_filename.CompareTo(other.full_filename);
+        }
+
+        #endregion
     }
 }

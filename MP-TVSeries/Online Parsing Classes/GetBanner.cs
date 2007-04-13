@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
-        private const String cInvalidFileChars = " \":<>?*|/\\";
+        //private const String cInvalidFileChars = " \":<>?*|/\\";
         private long m_nServerTimeStamp = 0;
         private List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
         private List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
@@ -198,7 +198,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     String sBannerSeriesName = bannerSeries.sSeriesName;
                     String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
-                    foreach (char c in cInvalidFileChars)
+                    foreach (char c in System.IO.Path.GetInvalidFileNameChars())
                     {
                         sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
                         sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
@@ -224,7 +224,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     String sBannerSeriesName = bannerSeason.sSeriesName;
                     String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
-                    foreach (char c in cInvalidFileChars)
+                    foreach (char c in System.IO.Path.GetInvalidFileNameChars())
                     {
                         sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
                         sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');

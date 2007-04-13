@@ -72,6 +72,8 @@ namespace WindowPlugins.GUITVSeries
             this.label2 = new System.Windows.Forms.Label();
             this.btnDynFilename = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnPaste = new System.Windows.Forms.Button();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -281,11 +283,33 @@ namespace WindowPlugins.GUITVSeries
             this.btnDynFilename.UseVisualStyleBackColor = true;
             this.btnDynFilename.Click += new System.EventHandler(this.btnDynFilename_Click);
             // 
+            // btnPaste
+            // 
+            this.btnPaste.Location = new System.Drawing.Point(195, 132);
+            this.btnPaste.Name = "btnPaste";
+            this.btnPaste.Size = new System.Drawing.Size(75, 23);
+            this.btnPaste.TabIndex = 18;
+            this.btnPaste.Text = "Paste";
+            this.btnPaste.UseVisualStyleBackColor = true;
+            this.btnPaste.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Location = new System.Drawing.Point(114, 132);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(75, 23);
+            this.btnCopy.TabIndex = 19;
+            this.btnCopy.Text = "Copy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
             // logoConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(442, 161);
+            this.Controls.Add(this.btnCopy);
+            this.Controls.Add(this.btnPaste);
             this.Controls.Add(this.btnDynFilename);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
@@ -334,5 +358,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnDynFilename;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button btnPaste;
+        private System.Windows.Forms.Button btnCopy;
     }
 }

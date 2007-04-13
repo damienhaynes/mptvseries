@@ -51,7 +51,6 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal);
             MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
-            
         }
 
         public logicalViewStep.type gettypeOfStep(int step)
@@ -203,11 +202,11 @@ namespace WindowPlugins.GUITVSeries
             {
                 if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 {
-                    conditions.ConditionsSQLString = ((string)conditions).Replace("{local_files}", step.SubQueryDynInsert_localFilesOnly);
+                    conditions.ConditionsSQLString = conditions.ConditionsSQLString.Replace("{local_files}", step.SubQueryDynInsert_localFilesOnly);
                 }
                 else
                 {
-                    conditions.ConditionsSQLString = ((string)conditions).Replace("{local_files}", " ");
+                    conditions.ConditionsSQLString = conditions.ConditionsSQLString.Replace("{local_files}", " ");
                 }
 
             }
@@ -573,7 +572,6 @@ namespace WindowPlugins.GUITVSeries
         public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
         {
             // takes care of "looping"
-            int currIndex = 0;
             int indexToGet = 0;
             P value = default(P);
             for (int i = 0; i < elements.Count; i++)
@@ -589,7 +587,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception x)
                 {
-                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + elements[i].GetType().Name + " does not have a property " + PropertyName);
+                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + elements[i].GetType().Name + " - " + x.Message);
                     return default(T);
                 }
             }
@@ -600,6 +598,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<string> getFieldNameListFromList<T>(string FieldNameToGet, List<T> elements) where T:DBTable
         {
+            MPTVSeriesLog.Write(elements.Count.ToString());
             List<string> results = new List<string>();
             foreach (T elem in elements)
             {
@@ -668,7 +667,14 @@ namespace WindowPlugins.GUITVSeries
         {
             return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOperationOnItemBeforeCompare, addOperationOnRemovedItems, false);
         }
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, bool inverse)
+        {
+            addOperationOnItemBeforeCompare<t> addOp = delegate(t item){return item;};
+            addOperationOnRemovedItemsDelegate<t> onRemove = delegate(t item) { return true; };
+            return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOp, onRemove, inverse);
+        }
         #endregion
+
     }
 
     public class DBOptionFake
