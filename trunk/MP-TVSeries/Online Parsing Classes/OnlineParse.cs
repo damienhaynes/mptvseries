@@ -485,46 +485,65 @@ namespace WindowPlugins.GUITVSeries
         {
             if (filenames.Count == 0) return;
             SQLCondition cond = new SQLCondition();
-            cond.nextIsOr = true;
-            DBEpisode ep = new DBEpisode();
-            foreach (string file in filenames)
+            
+            // for huge libraries a stringBuilder is much better than adding every filename seperatly to the condition (and for small ones it hardly matters)
+            try
             {
-                cond.Add(ep, DBEpisode.cFilename, file, SQLConditionType.Equal);
+                StringBuilder condBuilder = new StringBuilder();
+                string field = DBEpisode.Q(DBEpisode.cFilename);
+                foreach (string file in filenames)
+                {
+                    if (condBuilder.Length > 0)
+                        condBuilder.Append(" or ");
+                    condBuilder.Append(field).Append(" = '").Append(file.Replace("'", "''")).Append('\'');
+                }
+                cond.AddCustom(condBuilder.ToString());
             }
+            catch ( Exception ex)
+            {
+                MPTVSeriesLog.Write(ex.Message);
+                return;
+            }
+
             DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, cond);
 
             SQLCondition condSeason = new SQLCondition();
             condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
-                            + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and " 
-                            + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + cond.ConditionsSQLString + ")");
+                            + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and "
+                            + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 "   + ")");
             DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason);
 
             SQLCondition condSeries = new SQLCondition();
             condSeries.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
-                            + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) + 
-                            " and " + cond.ConditionsSQLString + ")");
+                            + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) +
+                            " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 " + ")");
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries);
         }
 
         void ParseLocal(List<PathPair> files)
         {
-            List<parseResult> parsedFiles = LocalParse.Parse(files);
+            List<parseResult> parsedFiles = LocalParse.Parse(files, false);
+            
             // don't process those already in DB
-            List<string> dbEps = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, DBEpisode.Get(new SQLCondition(), false));
-            List<string> updateStatusEps = new List<string>();
-            foreach (string dbEp in dbEps)
-                for(int i = 0; i<parsedFiles.Count; i++)
+            List<string> dbEps = new List<string>();
+            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute("select episodefilename from local_episodes");
+            if (results.Rows.Count > 0)
+            {
+                for (int index = 0; index < results.Rows.Count; index++)
                 {
-                    if (!parsedFiles[i].success || dbEp.ToLower().Trim() == parsedFiles[i].full_filename.ToLower().Trim())
-                    {
-                        if (parsedFiles[i].success)
-                            updateStatusEps.Add(parsedFiles[i].full_filename);
-                        parsedFiles.RemoveAt(i);
-                        break;
-                    }
+                    dbEps.Add(results.Rows[index].fields[0]);
                 }
-            // now process those found quickly without going through the hoops of creating new series/seasons/eps for them
-
+            }
+            List<string> updateStatusEps = new List<string>();
+            for (int i = 0; i < parsedFiles.Count; i++)
+            {
+                if (dbEps.Contains(parsedFiles[i].full_filename))
+                {
+                    updateStatusEps.Add(parsedFiles[i].full_filename);
+                    parsedFiles.RemoveAt(i);
+                    i--;
+                }
+            }          
             UpdateStatus(updateStatusEps);
             MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
 

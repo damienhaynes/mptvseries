@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public delegate void validDelegate(ref RichTextBox txtBox);
         validDelegate validateTxtBox;
-
+        string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         public logoConfigurator(validDelegate validDel)
         {
             init(validDel);
@@ -77,39 +77,62 @@ namespace WindowPlugins.GUITVSeries
 
         private void parseForEdit(string entry)
         {
-            string[] split = System.Text.RegularExpressions.Regex.Split(entry, localLogos.condSplit);
-            this.textBox1.Text = split[0];
+            try
+            {
+                string[] split = System.Text.RegularExpressions.Regex.Split(entry, localLogos.condSplit);
+                if (split[0].Contains("<") || System.IO.Path.IsPathRooted(split[0]))
+                    this.textBox1.Text = split[0];
+                else this.textBox1.Text = appPath + "\\" + split[0];
 
-            this.cond1_what.Text = split[1];
-            this.cond1_type.SelectedItem = split[2];
-            this.cond1_cond.Text = split[3];
-            this._12_link.SelectedItem = split[4];
+                this.cond1_what.Text = split[1];
+                this.cond1_type.SelectedItem = split[2];
+                this.cond1_cond.Text = split[3];
+                this._12_link.SelectedItem = split[4];
 
-            this.cond2_what.Text = split[5];
-            this.cond2_type.SelectedItem = split[6];
-            this.cond2_cond.Text = split[7];
-            this._23_link.SelectedItem = split[8];
+                this.cond2_what.Text = split[5];
+                this.cond2_type.SelectedItem = split[6];
+                this.cond2_cond.Text = split[7];
+                this._23_link.SelectedItem = split[8];
 
-            this.cond3_what.Text = split[9];
-            this.cond3_type.SelectedItem = split[10];
-            this.cond3_cond.Text = split[11];
+                this.cond3_what.Text = split[9];
+                this.cond3_type.SelectedItem = split[10];
+                this.cond3_cond.Text = split[11];
 
-            if (textBox1.Text.Contains(">") && textBox1.Text.Contains("<"))
-                textBox1.ReadOnly = false;
-            // dyn filename quick check
+                if (textBox1.Text.Contains(">") && textBox1.Text.Contains("<"))
+                    textBox1.ReadOnly = false;
+                // dyn filename quick check
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was a problem parsing the Rule: " + ex.Message);
+            }
         }
 
         private void browse_Click(object sender, EventArgs e)
         {
             openFileDialog1.CheckFileExists = true;
             openFileDialog1.Filter = "Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG";
-            openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            openFileDialog1.InitialDirectory = appPath;
             if (DialogResult.OK == openFileDialog1.ShowDialog())
                 this.textBox1.Text = openFileDialog1.FileName;
             this.textBox1.ReadOnly = true;
         }
 
         private void save_Click(object sender, EventArgs e)
+        {
+            this.result = getResult(true);
+            if (result == null)
+            {
+                MessageBox.Show("There was a problem saving the LogoRule.\nDoes the file exist?");
+            }
+            else
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+
+        string getResult(bool checkFileExists)
         {
             if (!this.cond2_what.Enabled || (cond2_what.Text.Trim() == string.Empty && cond2_cond.Text.Trim() == string.Empty))
             {
@@ -125,10 +148,13 @@ namespace WindowPlugins.GUITVSeries
                 cond3_cond.Text = "";
                 cond3_type.SelectedIndex = 0;
             }
+            string file = this.textBox1.Text;
 
-            if (System.IO.File.Exists(this.textBox1.Text) || (textBox1.Text.Contains(">") && textBox1.Text.Contains("<")))
+            if (file.Contains(appPath)) file = file.Replace(appPath, "").Remove(0,1); // first \ also away
+
+            if (!checkFileExists || (System.IO.File.Exists(this.textBox1.Text) || (textBox1.Text.Contains(">") && textBox1.Text.Contains("<"))))
             {
-                this.result = this.textBox1.Text + localLogos.condSplit
+                return file + localLogos.condSplit
                             + this.cond1_what.Text + localLogos.condSplit
                             + this.cond1_type.SelectedItem.ToString() + localLogos.condSplit
                             + this.cond1_cond.Text + localLogos.condSplit
@@ -140,10 +166,8 @@ namespace WindowPlugins.GUITVSeries
                             + this.cond3_what.Text + localLogos.condSplit
                             + this.cond3_type.SelectedItem.ToString() + localLogos.condSplit
                             + this.cond3_cond.Text + localLogos.condSplit;
-                this.DialogResult = DialogResult.OK;
-                this.Close();
             }
-            
+            else return null;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -220,6 +244,34 @@ namespace WindowPlugins.GUITVSeries
         {
             if (this.textBox1.Enabled)
             {
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string pasted = Clipboard.GetText();
+            try
+            {
+                parseForEdit(pasted);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("There was a problem pasting the logo rule!");
+            }
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+
+            string copied = getResult(false);
+            if (copied == null)
+            {
+                MessageBox.Show("There was a problem copying the logo rule!"); 
+            }
+            else
+            {
+                Clipboard.SetText(copied);
+                MessageBox.Show("Logo Rule Configuration copied to Clipboard!"); 
             }
         }
     }

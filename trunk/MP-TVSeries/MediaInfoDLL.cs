@@ -141,15 +141,15 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public int Count_Get(StreamKind StreamKind) { return Count_Get(StreamKind, -1); }
 
         public string getVidCodec() { return this.Get(StreamKind.Video, 0, "Codec"); }
-        public string getVidBitrate(){ return this.Get(StreamKind.Video, 0, "BitRate/String"); }
+        public string getVidBitrate(){ return this.Get(StreamKind.Video, 0, "BitRate"); }
         public string getWidth() { return this.Get(StreamKind.Video, 0, "Width"); }
         public string getHeight() { return this.Get(StreamKind.Video, 0, "Height"); }
         public string getAR() { return this.Get(StreamKind.Video, 0, "AspectRatio"); }
-        public string getPlaytime() { return this.Get(StreamKind.Video, 0, "PlayTime/String"); }
+        public string getPlaytime() { return this.Get(StreamKind.Video, 0, "PlayTime"); }
         public string getFPS() { return this.Get(StreamKind.Video, 0, "FrameRate"); }
         public string getAudioCount() { return this.Get(StreamKind.Audio, 0, "StreamCount");}
         public string getAudioCodec() { return this.Get(StreamKind.Audio, 0, "Codec");  }
-        public string getAudioBitrate() { return this.Get(StreamKind.Audio, 0, "BitRate/String"); }
+        public string getAudioBitrate() { return this.Get(StreamKind.Audio, 0, "BitRate"); }
         public string getNoChannels() { return getNoChannels(0); }
         public string getNoChannels(int stream) { return this.Get(StreamKind.Audio, (uint)stream, "Channel(s)"); }
 

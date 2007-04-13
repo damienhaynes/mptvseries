@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
             public uint CmtSize;
             public uint CmtState;
         }
-
+        
         public struct RAROpenArchiveData
         {
             public string ArcName;
@@ -96,6 +96,7 @@ namespace WindowPlugins.GUITVSeries
             public uint CmtState;
         }
 
+#pragma warning disable 0649 // disable never assigned to warning
         public struct RAROpenArchiveDataEx
         {
             public string ArcName;
@@ -132,6 +133,7 @@ namespace WindowPlugins.GUITVSeries
             public uint CmtState;
             public uint Reserved;
         };
+#pragma warning restore 0649
 
         [DllImportAttribute("unrar.dll")]
         private static extern IntPtr RAROpenArchive(ref RAROpenArchiveData ArchiveData);

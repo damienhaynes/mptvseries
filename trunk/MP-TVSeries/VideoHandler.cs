@@ -104,7 +104,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.ResumeOrPlay()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.ResumeOrPlay()\r\n" + e.ToString());
                 return false;
             }
         }
@@ -145,7 +145,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.Play()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.Play()\r\n" + e.ToString());
             }
         }
 
@@ -177,7 +177,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.AddFileToDatabase()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.AddFileToDatabase()\r\n" + e.ToString());
             }
         }
 
@@ -213,9 +213,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             byte[] resumeData = null;
                             g_Player.Player.GetResumeState(out resumeData);
-                            Log.Write("TVSeriesPlugin::OnPlayBackStopped idFile={0} timeMovieStopped={1} resumeData={2}", idFile, timeMovieStopped, resumeData);
+                            MPTVSeriesLog.Write("TVSeriesPlugin::OnPlayBackStopped idFile=" + idFile + " timeMovieStopped=" +timeMovieStopped +"resumeData=" + resumeData);
                             VideoDatabase.SetMovieStopTimeAndResumeData(idFile, timeMovieStopped, resumeData);
-                            Log.Write("TVSeriesPlugin::OnPlayBackStopped store resume time");
+                            MPTVSeriesLog.Write("TVSeriesPlugin::OnPlayBackStopped store resume time");
                         }
                         else
                         {
@@ -226,7 +226,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStopped()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStopped()\r\n" + e.ToString());
             }
         }
 
@@ -265,7 +265,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
             }
         }
 
@@ -289,7 +289,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                Log.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStarted()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStarted()\r\n" + e.ToString());
             }
         }
     }

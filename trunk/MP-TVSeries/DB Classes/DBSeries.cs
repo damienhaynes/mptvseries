@@ -359,7 +359,7 @@ namespace WindowPlugins.GUITVSeries
                             return results.Rows[0].fields[0];
                         }
                         else return 0;
-                        break;
+                        
                     case DBOnlineSeries.cPrettyName:
                         DBValue retVal = null;
                         if (m_onlineSeries != null)
