@@ -73,6 +73,11 @@ namespace WindowPlugins.GUITVSeries
             return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp);
         }
 
+        static public XmlNodeList GetAllBanners(string idList, long nUpdateBannersTimeStamp)
+        {
+            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?idlist=" + idList + "&lasttime=" + nUpdateBannersTimeStamp);
+        }
+
         static private XmlNodeList Generic(String sUrl)
         {
             MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug);
@@ -115,6 +120,5 @@ namespace WindowPlugins.GUITVSeries
             }
             return null;
         }
-
     }
 }

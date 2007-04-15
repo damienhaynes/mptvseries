@@ -95,6 +95,7 @@ namespace WindowPlugins.GUITVSeries
         
         static public implicit operator int(DBValue value)
         {
+            if (null == value) return 0;
             try { return Convert.ToInt32(value.value); }
             catch (System.FormatException) { return 0; }
         }
