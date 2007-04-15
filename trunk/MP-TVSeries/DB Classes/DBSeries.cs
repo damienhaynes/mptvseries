@@ -585,5 +585,10 @@ namespace WindowPlugins.GUITVSeries
                 return series;
             return null;
         }
+
+        public override string ToString()
+        {
+            return this[DBSeries.cID];
+        }
     }
 }

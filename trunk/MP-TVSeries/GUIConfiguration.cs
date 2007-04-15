@@ -67,6 +67,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
+            this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
             load.ShowWaiting();
             InitSettingsTreeAndPanes();
             LoadImportPathes();
@@ -2232,6 +2233,7 @@ namespace WindowPlugins.GUITVSeries
 
         void  bannercleaner_DoWork(object sender, DoWorkEventArgs e)
         {
+            /*
             // this will cycle through all series/seasons and compare with what's available online
             // if a banner was removed from the odb the local copy will be removed
             // if a file was deleted manually it will be redownloaded
@@ -2290,7 +2292,7 @@ namespace WindowPlugins.GUITVSeries
                 GetBanner odbBanners = new GetBanner(series[DBSeries.cID], (long)0);
 
                 // compare all seriesbanners
-
+                
                 List<string> seriesBannersCopy = series.BannerList;
                 if (series.BannerList.Count > 1)
                 {
@@ -2307,6 +2309,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("No banners found that need to be removed for series", MPTVSeriesLog.LogLevel.Debug);
                     }
                 }
+                 
                 associatedBanners.AddRange(seriesBannersCopy); // save for step 2
                 // now compare all seasons
                 foreach (DBSeason season in seasons)
@@ -2348,6 +2351,7 @@ namespace WindowPlugins.GUITVSeries
             bannercleaner.ReportProgress(0);
             MPTVSeriesLog.Write("All done cleaning up Banners, " + totalcount.ToString() + " Banners removed in total");
             MPTVSeriesLog.Write("*****************************************");
+             * */
         }
     }
 

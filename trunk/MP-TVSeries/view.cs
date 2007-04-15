@@ -572,13 +572,14 @@ namespace WindowPlugins.GUITVSeries
         public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
         {
             // takes care of "looping"
+            if (elements.Count == 0) return default(T);
             int indexToGet = 0;
             P value = default(P);
             for (int i = 0; i < elements.Count; i++)
             {
                 try
                 {
-                    value = (P)elements[i].GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetProperty, null, elements[i], null);
+                    value = (P)elements[i].GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.GetField, null, elements[i], null);
                     if (value.Equals(currPropertyValue))
                     {
                         indexToGet = i + indexOffset;

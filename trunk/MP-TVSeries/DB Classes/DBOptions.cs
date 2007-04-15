@@ -96,6 +96,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
+        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
+
         static DBOption()
         {
             try

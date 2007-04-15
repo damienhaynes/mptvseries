@@ -1022,7 +1022,8 @@ namespace WindowPlugins.GUITVSeries
             if (SeriesList.Count > 0)
             {
                 // generate a comma separated list of all the series ID
-                String sSeriesIDs = String.Empty;
+                String sSeriesIDs = generateIDList(SeriesList, DBSeries.cID);
+                /*
                 foreach (DBSeries series in SeriesList)
                 {
                     if (sSeriesIDs == String.Empty)
@@ -1030,7 +1031,7 @@ namespace WindowPlugins.GUITVSeries
                     else
                         sSeriesIDs += "," + series[DBSeries.cID];
                 }
-
+                */
                 // use the last known timestamp from when we updated the series
                 MPTVSeriesLog.Write("Updating " + SeriesList.Count + " Series");
                 UpdateSeries UpdateSeriesParser = new UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
@@ -1127,6 +1128,11 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             MPTVSeriesLog.Write("Looking for banners on " + seriesList.Count + " Series");
 
+            // TODO: new way to make only one webrequest
+            //String sSeriesIDs = generateIDList(seriesList, DBSeries.cID);
+            //GetBanner bannerParser = new GetBanner(sSeriesIDs, bUpdateNewSeries ? 0 : (long)DBOption.GetOptions(DBOption.cUpdateBannersTimeStamp));
+            // end new way:
+
             foreach (DBSeries series in seriesList)
             {
                 if (worker.CancellationPending)
@@ -1135,73 +1141,81 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(50 + (bUpdateNewSeries ? 0 : 10) + (10 * nIndex / seriesList.Count));
                 nIndex++;
 
+                // disable for new way
                 if (bUpdateNewSeries)
                     MPTVSeriesLog.Write("Downloading banners for " + series[DBSeries.cParsedName]);
                 else
                     MPTVSeriesLog.Write("Refreshing banners for " + series[DBSeries.cParsedName]);
 
-                GetBanner GetBannerParser = new GetBanner(series[DBSeries.cID], bUpdateNewSeries?0:(long)series[DBOnlineSeries.cUpdateBannersTimeStamp]);
+                GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], bUpdateNewSeries ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp]);
+                // end disable for new way
 
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
 
-                foreach (BannerSeries bannerSeries in GetBannerParser.bannerSeriesList)
+                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
+                if (seriesBanners != null)  // oops!
                 {
-                    if (series[DBOnlineSeries.cBannerFileNames].ToString().IndexOf(bannerSeries.sBannerFileName) == -1)
+                    foreach (BannerSeries bannerSeries in seriesBanners.seriesBanners)
                     {
-                        m_bDataUpdated = true;
-                        MPTVSeriesLog.Write("New banner found for " + series[DBSeries.cParsedName] + " : " + bannerSeries.sOnlineBannerPath);
-                        if (series[DBOnlineSeries.cBannerFileNames] == String.Empty)
-                            series[DBOnlineSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
-                        else
+                        if (series[DBOnlineSeries.cBannerFileNames].ToString().IndexOf(bannerSeries.sBannerFileName) == -1)
                         {
-                            series[DBOnlineSeries.cBannerFileNames] += "|" + bannerSeries.sBannerFileName;
+                            m_bDataUpdated = true;
+                            MPTVSeriesLog.Write("New banner found for " + series[DBSeries.cParsedName] + " : " + bannerSeries.sOnlineBannerPath);
+                            if (series[DBOnlineSeries.cBannerFileNames] == String.Empty)
+                                series[DBOnlineSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
+                            else
+                            {
+                                series[DBOnlineSeries.cBannerFileNames] += "|" + bannerSeries.sBannerFileName;
+                            }
                         }
+                        // prefer graphical
+                        if (bannerSeries.bGraphical)
+                            sLastGraphicalBanner = bannerSeries.sBannerFileName;
+                        else
+                            sLastTextBanner = bannerSeries.sBannerFileName;
                     }
-                    // prefer graphical
-                    if (bannerSeries.bGraphical)
-                        sLastGraphicalBanner = bannerSeries.sBannerFileName;
-                    else
-                        sLastTextBanner = bannerSeries.sBannerFileName;
-                }
 
-                if (series[DBOnlineSeries.cCurrentBannerFileName] == "")
-                {
-                    // use the last banner as the current one (if any graphical found)
-                    // otherwise use the first available
-                    if (sLastGraphicalBanner != String.Empty)
-                        series[DBOnlineSeries.cCurrentBannerFileName] = sLastGraphicalBanner;
-                    else
-                        series[DBOnlineSeries.cCurrentBannerFileName] = sLastTextBanner;
-                }
-
-                series[DBOnlineSeries.cBannersDownloaded] = 2;
-                series.Commit();
-
-                foreach (BannerSeason bannerSeason in GetBannerParser.bannerSeasonList)
-                {
-                    DBSeason season = new DBSeason(series[DBSeries.cID], bannerSeason.nIndex);
-                    if (season[DBSeason.cBannerFileNames].ToString().IndexOf(bannerSeason.sBannerFileName) == -1)
+                    if (series[DBOnlineSeries.cCurrentBannerFileName] == "")
                     {
-                        m_bDataUpdated = true;
-                        if (season[DBSeason.cBannerFileNames] == String.Empty)
-                        {
-                            season[DBSeason.cBannerFileNames] += bannerSeason.sBannerFileName;
-                        }
+                        // use the last banner as the current one (if any graphical found)
+                        // otherwise use the first available
+                        if (sLastGraphicalBanner != String.Empty)
+                            series[DBOnlineSeries.cCurrentBannerFileName] = sLastGraphicalBanner;
                         else
-                        {
-                            season[DBSeason.cBannerFileNames] += "|" + bannerSeason.sBannerFileName;
-                            MPTVSeriesLog.Write("New banner found for " + season[DBSeason.cID] + " : " + bannerSeason.sOnlineBannerPath);
-                        }
+                            series[DBOnlineSeries.cCurrentBannerFileName] = sLastTextBanner;
                     }
-                    // use the last banner as the current one
-                    season[DBSeason.cCurrentBannerFileName] = bannerSeason.sBannerFileName;
-                    season.Commit();
-                }
-                if (!bUpdateNewSeries)
-                {
-                    series[DBOnlineSeries.cUpdateBannersTimeStamp] = GetBannerParser.ServerTimeStamp;
+
+                    series[DBOnlineSeries.cBannersDownloaded] = 2;
                     series.Commit();
+
+                    foreach (BannerSeason bannerSeason in seriesBanners.seasonBanners)
+                    {
+                        DBSeason season = new DBSeason(series[DBSeries.cID], bannerSeason.nIndex);
+                        if (season[DBSeason.cBannerFileNames].ToString().IndexOf(bannerSeason.sBannerFileName) == -1)
+                        {
+                            m_bDataUpdated = true;
+                            if (season[DBSeason.cBannerFileNames] == String.Empty)
+                            {
+                                season[DBSeason.cBannerFileNames] += bannerSeason.sBannerFileName;
+                            }
+                            else
+                            {
+                                season[DBSeason.cBannerFileNames] += "|" + bannerSeason.sBannerFileName;
+                                MPTVSeriesLog.Write("New banner found for " + season[DBSeason.cID] + " : " + bannerSeason.sOnlineBannerPath);
+                            }
+                        }
+                        // use the last banner as the current one
+                        season[DBSeason.cCurrentBannerFileName] = bannerSeason.sBannerFileName;
+                        season.Commit();
+                    }
+                    if (!bUpdateNewSeries)
+                    {
+                        // disable for new way
+                        series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
+                        series.Commit();
+                    }
+                    if (!bUpdateNewSeries) DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, bannerParser.ServerTimeStamp);
                 }
             }
         }
@@ -1325,6 +1339,22 @@ namespace WindowPlugins.GUITVSeries
             // save last episodes timestamp
             if (!bUpdateNewEpisodes && nReturnedUpdateEpisodesTimeStamp != 0)
                 DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, nReturnedUpdateEpisodesTimeStamp);
+        }
+
+        string generateIDList<T>(List<T> entities, string fieldname) where T:DBTable
+        {
+            // generate a comma separated list of all the ids
+            String sSeriesIDs = String.Empty;
+            if (entities.Count > 0)
+            {
+                foreach (DBTable entity in entities)
+                {
+                    if (sSeriesIDs.Length > 0)
+                        sSeriesIDs += ",";
+                    sSeriesIDs += entity[fieldname];
+                }
+            }
+            return sSeriesIDs;
         }
     }
 }
