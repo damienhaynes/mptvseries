@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Xml;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -99,5 +100,44 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+        private DBSeries tmpSeries = null;
+        public string getEpisodeImage(DBOnlineEpisode ep, string url)
+		{
+		
+		   // we need the pretty name to figure out the folder to store to
+            try
+            {
+                if (null == tmpSeries || tmpSeries[DBSeries.cID] != ep[DBEpisode.cSeriesID])
+                {
+                    tmpSeries = Helper.getCorrespondingSeries(ep[DBOnlineEpisode.cSeriesID]);
+                }
+                string basePath = Settings.GetPath(Settings.Path.banners);
+                string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
+                foreach (char c in System.IO.Path.GetInvalidFileNameChars()) seriesFolder = seriesFolder.Replace(c, '_');
+                string filename = Helper.PathCombine(seriesFolder, @"Episodes\" + ep[DBOnlineEpisode.cSeasonIndex] + "x" + ep[DBOnlineEpisode.cEpisodeIndex] + ".jpg");
+                string completePath = Helper.PathCombine(basePath, filename);
+
+                if (!File.Exists(completePath))
+                {
+                    MPTVSeriesLog.Write("New EpisodeImage found: " + url);
+                    System.Net.WebClient webClient = new System.Net.WebClient();
+                    try
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(completePath));
+                        webClient.DownloadFile(DBOnlineMirror.Banners + "/" + url, completePath);
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        MPTVSeriesLog.Write("Banner download failed (" + url + ")");
+                    }
+                }
+                return filename;
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Could not build Path for episode image: " + ex.Message);
+                return string.Empty;
+            }
+		}
     }
 }

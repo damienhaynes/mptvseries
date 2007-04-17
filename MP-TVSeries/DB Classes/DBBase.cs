@@ -537,33 +537,36 @@ namespace WindowPlugins.GUITVSeries
         protected static string getRandomBanner(List<string> BannerList, bool checkForGraphical)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
-
+            string randImage = null;
             if (BannerList == null || BannerList.Count == 0) return string.Empty;
-            if (BannerList.Count == 1) return BannerList[0];
+            if (BannerList.Count == 1) randImage = BannerList[0];
 
-            int randomPick = new Random().Next(0, BannerList.Count);
-            string randImage;
-            try
+            if (randImage == null)
             {
-                randImage = BannerList[randomPick];
-                if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
+                int randomPick = new Random().Next(0, BannerList.Count);
+
+                try
                 {
-                    // prefer graphical banners
-                    List<string> gBanners = new List<string>();
-                    foreach (string banner in BannerList)
-                        if (banner.Contains(graphicalBannerRecognizerSubstring))
-                            gBanners.Add(banner);
-                    if (gBanners.Count > 0)
-                        randImage = getRandomBanner(gBanners, false);
-                    // else no graphical banners avail. -> use text Banner we already picked
+                    randImage = BannerList[randomPick];
+                    if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
+                    {
+                        // prefer graphical banners
+                        List<string> gBanners = new List<string>();
+                        foreach (string banner in BannerList)
+                            if (banner.Contains(graphicalBannerRecognizerSubstring))
+                                gBanners.Add(banner);
+                        if (gBanners.Count > 0)
+                            randImage = getRandomBanner(gBanners, false);
+                        // else no graphical banners avail. -> use text Banner we already picked
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                    return string.Empty;
                 }
             }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
-                return string.Empty;
-            }
-            return randImage;
+            return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
         }
     };
 
@@ -794,16 +797,18 @@ namespace WindowPlugins.GUITVSeries
 
         private static void InitDB()
         {
-            String databaseFile;
+            String databaseFile = string.Empty;
 
-            databaseFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            
 #if TEST
+            databaseFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             databaseFile += @"\TVSeriesDatabase4.db3";
 #else
-            databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of Windows folder
-            databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of plugin folder
-            Directory.CreateDirectory(databaseFile + @"\Database");
-            databaseFile += @"\Database\TVSeriesDatabase4.db3";
+            //databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of Windows folder
+            //databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of plugin folder
+            //Directory.CreateDirectory(databaseFile + @"\Database");
+            //databaseFile += @"\Database\TVSeriesDatabase4.db3";
+            databaseFile = Settings.GetPath(Settings.Path.database);
 #endif
 
             try

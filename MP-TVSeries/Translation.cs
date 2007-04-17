@@ -90,7 +90,8 @@ namespace WindowPlugins.GUITVSeries
                 lang = "en(us)";
                 DBOption.SetOptions(DBOption.cLanguage, lang);
             }
-            path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Plugins\Windows\MP-TVSeries_lang\";
+            //path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Plugins\Windows\MP-TVSeries_lang\";
+            path = Settings.GetPath(Settings.Path.lang);
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
             loadTranslations(lang);

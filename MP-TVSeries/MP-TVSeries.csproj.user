@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartAction>Program</StartAction>
-    <StartProgram>H:\MP2\xbmc\bin\Release\MediaPortal.exe</StartProgram>
+    <StartProgram>H:\MP2\xbmc\bin\Release\Configuration.exe</StartProgram>
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <RemoteDebugMachine>Salty@SaltyExtreme</RemoteDebugMachine>
     <StartWorkingDirectory>
@@ -9,6 +9,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartAction>Program</StartAction>
-    <StartProgram>h:\MP2\xbmc\bin\Release\MediaPortal.exe</StartProgram>
+    <StartProgram>h:\MP2\xbmc\bin\Release\Configuration.exe</StartProgram>
   </PropertyGroup>
 </Project>

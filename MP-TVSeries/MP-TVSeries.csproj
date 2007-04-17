@@ -44,13 +44,17 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\..\MP2\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utils, Version=2.1.2.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MP2\xbmc\bin\Release\Utils.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB Classes\DBReplacements.cs" />
@@ -61,6 +65,12 @@
     </Compile>
     <Compile Include="GUIConfiguration.designer.cs">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="loadingDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="loadingDisplay.Designer.cs">
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Local Parsing Classes\LocalParse.cs" />
     <Compile Include="localLogos.cs" />
@@ -92,6 +102,7 @@
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
     <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
     <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
+    <Compile Include="PathMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -99,6 +110,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Online Parsing Classes\ZsoriParser.cs" />
+    <Compile Include="settings.cs" />
     <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
     <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
     <Compile Include="ChooseFromSelection.cs">
@@ -117,6 +129,10 @@
     <EmbeddedResource Include="GUIConfiguration.resx">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="loadingDisplay.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="logoConfigurator.resx">
       <DependentUpon>logoConfigurator.cs</DependentUpon>

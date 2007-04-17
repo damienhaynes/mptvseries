@@ -1306,7 +1306,10 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonIndex:
                                 case DBOnlineEpisode.cEpisodeIndex:
                                     break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
-
+                                case "filename":
+                                    // this is the episode image
+                                    if (onlineEpisode["filename"].ToString().Length > 0) onlineEpisode["filename"] = updateEpisodesParser.getEpisodeImage(localEpisode.onlineEpisode, onlineEpisode["filename"]);
+                                    goto default;
                                 default:
                                     localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
                                     localEpisode[key] = onlineEpisode[key];
