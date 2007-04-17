@@ -172,13 +172,16 @@ namespace WindowPlugins.GUITVSeries
                 if (base[cCurrentBannerFileName] == String.Empty)
                     return String.Empty;
 
+                //if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
+                //    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
                 if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
-                    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
+                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), base[cCurrentBannerFileName]);
                 else
                     return base[cCurrentBannerFileName];
             }
             set
             {
+                value = value.Replace(Settings.GetPath(Settings.Path.banners), "");
                 base[cCurrentBannerFileName] = value;
             }
         }
@@ -221,26 +224,28 @@ namespace WindowPlugins.GUITVSeries
                     return outList;
 
                 String[] split = sList.Split(new char[] { '|' });
-                string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
+                //string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
                 foreach (String filename in split)
                 {
-                    if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
-                        outList.Add(path + filename);
-                    else
-                        outList.Add(filename);
+                    //if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
+                    //    outList.Add(path + filename);
+                    //else
+                    //    outList.Add(filename);
+                    outList.Add(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), filename));
                 }
                 return outList;
             }
             set
             {
                 String sIn = String.Empty;
-                string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
-                foreach (String filename in value)
+                //string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
+                for(int i=0; i<value.Count; i++)
                 {
+                    value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
                     if (sIn == String.Empty)
-                        sIn += filename.Replace(path,"");
+                        sIn += value[i];
                     else
-                        sIn += "," + filename.Replace(path,"");
+                        sIn += "," + value[i];
                 }
                 base[cBannerFileNames] = sIn;
 

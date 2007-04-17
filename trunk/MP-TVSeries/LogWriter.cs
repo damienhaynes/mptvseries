@@ -73,16 +73,22 @@ namespace WindowPlugins.GUITVSeries
 
         static MPTVSeriesLog()
         {
-            String logfile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            String logfile = string.Empty;
 
 #if TEST
+            logfile =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             logfile += @"\MP-TVSeries.log";
 #else
+            /*
             logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of Windows folder
             logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of plugin folder
             Directory.CreateDirectory(logfile + @"\Log");
             logfile += @"\Log\MP-TVSeries.log";
+             */
+            logfile = Settings.GetPath(Settings.Path.log);
 #endif
+            
             m_filename = logfile;
             m_LogStream = File.CreateText(m_filename);
             m_LogStream.Close();

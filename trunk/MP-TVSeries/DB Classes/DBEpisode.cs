@@ -137,6 +137,17 @@ namespace WindowPlugins.GUITVSeries
             Clear(new DBOnlineEpisode(), conditions);
         }
 
+        public string Image
+		{
+			get
+			{
+				if(this["filename"].ToString().Length>0)
+				{
+					return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this["filename"]);
+				} else return string.Empty;
+			}
+		}
+
         public override string ToString()
         {
             return this[DBOnlineEpisode.cCompositeID];
@@ -801,6 +812,15 @@ namespace WindowPlugins.GUITVSeries
         {
             return cTableName + "." + sField;
         }
+
+        public string Image
+		{
+			get
+			{
+                if (m_onlineEpisode == null) return string.Empty;
+                return m_onlineEpisode.Image;
+			}
+		}
 
     }
 

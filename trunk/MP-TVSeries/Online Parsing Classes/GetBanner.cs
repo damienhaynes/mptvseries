@@ -75,6 +75,8 @@ namespace WindowPlugins.GUITVSeries
         //private List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
         public List<seriesBannersMap> seriesBanners = new List<seriesBannersMap>();
 
+        static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
+
         public long ServerTimeStamp
         {
             get { return m_nServerTimeStamp; }
@@ -241,8 +243,6 @@ namespace WindowPlugins.GUITVSeries
                         else seriesBanners.Add(map);
                     }
                 }
-
-                String sBannersBasePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
 
                 // now that we have all the paths, download all the files
                 foreach (seriesBannersMap map in seriesBanners)

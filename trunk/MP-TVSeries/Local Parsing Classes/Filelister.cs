@@ -72,42 +72,41 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
+        static System.Text.RegularExpressions.Regex reg = null;
+        static void buildExtRegex()
+        {
+            string extPattern = string.Empty;
+            foreach (string ext in MediaPortal.Util.Utils.VideoExtensions)
+            {
+                if (extPattern.Length > 0)
+                    extPattern += '|';
+                extPattern += ext.Replace(".", "\\.");
+            }
+            reg = new System.Text.RegularExpressions.Regex(extPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
+        }
+
         private static List<string> filesInFolder(string folder)
         {
             // this is much faster than calling Directory.Getfiles for every extension (and even about twice as fast as the old recursive way, especially over network paths!
             List<string> files = new List<string>();
-            List<string> validExts = new List<string>();
-            foreach (string ext in MediaPortal.Util.Utils.VideoExtensions) validExts.Add(ext);
+            if (null == reg) buildExtRegex();
             try
             {
                 if (System.IO.Directory.Exists(folder))
-                    files.AddRange(System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories));
-                bool valid = false;
-                string ext = string.Empty;
-                for (int i = 0; i < validExts.Count; i++)
-                    validExts[i] = validExts[i].ToLower();
-                for (int i = 0; i < files.Count; i++)
                 {
-                    valid = false;
-                    ext = System.IO.Path.GetExtension(files[i]).ToLower();
-                    foreach (string validExt in validExts)
+                    string[] sfiles = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
+                    for (int i = 0; i < sfiles.Length; i++)
                     {
-                        if (ext == validExt)
+                        if (reg.IsMatch(System.IO.Path.GetExtension(sfiles[i])))
                         {
-                            valid = true;
-                            break;
+                            files.Add(sfiles[i]);
                         }
-                    }
-                    if (!valid)
-                    {
-                        files.RemoveAt(i);
-                        i--;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
+                Console.WriteLine("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
             }
             return files;
         }

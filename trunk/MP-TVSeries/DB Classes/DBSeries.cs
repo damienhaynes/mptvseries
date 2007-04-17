@@ -421,8 +421,10 @@ namespace WindowPlugins.GUITVSeries
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] == String.Empty)
                         return String.Empty;
 
+                    //if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
+                    //    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
-                        return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
+                        return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]);
                     else
                         return m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
                 }
@@ -432,7 +434,10 @@ namespace WindowPlugins.GUITVSeries
             set
             {
                 if (m_onlineSeries != null)
+                {
+                    value = value.Replace(Settings.GetPath(Settings.Path.banners), "");
                     m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] = value;
+                }
             }
         }
 
@@ -450,10 +455,11 @@ namespace WindowPlugins.GUITVSeries
                     String[] split = sList.Split(new char[] { '|' });
                     foreach (String filename in split)
                     {
-                        if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
-                            outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
-                        else
-                            outList.Add(filename);
+                        //if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
+                        //    outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
+                        //else
+                        //    outList.Add(filename);
+                        outList.Add(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), filename));
                     }
                 }
                 return outList;
@@ -463,12 +469,13 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sIn = String.Empty;
-                    foreach (String filename in value)
+                    for (int i = 0; i < value.Count; i++)
                     {
+                        value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
                         if (sIn == String.Empty)
-                            sIn += filename;
+                            sIn += value[i];
                         else
-                            sIn += "," + filename;
+                            sIn += "," + value[i];
                     }
                     m_onlineSeries[DBOnlineSeries.cBannerFileNames] = sIn;
                 }

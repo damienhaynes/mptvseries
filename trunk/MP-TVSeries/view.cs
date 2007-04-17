@@ -676,6 +676,38 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        public static DBSeries getCorrespondingSeries(int id)
+        {
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
+            List<DBSeries> tmpSeries = DBSeries.Get(cond);
+            foreach (DBSeries series in tmpSeries) // should only be one!
+                if (series[DBSeries.cID] == id)
+                {
+                    return series;
+                }
+            return null;
+        }
+
+        public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
+        {
+            List<DBSeason> tmpSeasons = DBSeason.Get(seriesID, false, false, false);
+            foreach (DBSeason season in tmpSeasons)
+                if (season[DBSeason.cIndex] == seasonIndex)
+                {
+                    return season;
+                }
+            return null;
+        }
+
+        public static string PathCombine(string path1, string path2)
+        {
+            if (path1 == null && path2 == null) return string.Empty;
+            if (path1 == null) return path2;
+            if (path2 == null) return path1;
+            if(path2.Length > 0 && ( path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
+            return System.IO.Path.Combine(path1, path2);
+        }
     }
 
     public class DBOptionFake

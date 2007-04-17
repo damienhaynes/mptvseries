@@ -44,6 +44,19 @@ namespace MediaPortal.GUI.Video
         public TVSeriesPlugin()
         {
             m_stepSelections.Add(new string[] { null });
+            try
+            {
+                if(!DBOption.GetOptions("usesNewPathFormat"))
+                {
+                    PathMigration.migrateDB(); // needs to be first
+                    PathMigration.migrateBanners();
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("A general error occured migrating to the new locations: " + ex.Message);
+            }
         }
         #region ISetupForm Members
 

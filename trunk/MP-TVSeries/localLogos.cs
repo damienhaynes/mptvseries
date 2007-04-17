@@ -37,8 +37,7 @@ namespace WindowPlugins.GUITVSeries
         const string optionName = "logoConfig";
         const string entriesSplit = "<next>";
         public const string condSplit = ";-;";
-        static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-        static string pathfortmpfile = appPath;
+        static string pathfortmpfile = Settings.GetPath(Settings.Path.banners);
         static string tmpFile = @"tmpLogos.png";
         static List<string> entries = new List<string>();
         static DBEpisode tmpEp;
@@ -60,7 +59,6 @@ namespace WindowPlugins.GUITVSeries
 
         static localLogos()
         {
-            pathfortmpfile += @"\thumbs\";
             provider.NumberDecimalSeparator = "."; // because mediainfo
         }
 
@@ -135,9 +133,15 @@ namespace WindowPlugins.GUITVSeries
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly)
         {
             if (!entriesInMemory) getFromDB();
-            if (entries.Count == 0) return string.Empty; // no rules exist
-            MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             List<string> logosForBuilding = new List<string>();
+            // downloaded episodeimage into logos (after getFromDB)
+            if (level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
+            {
+                if (firstOnly) return tmpEp.Image; // takes precedence (should it?)
+                logosForBuilding.Add(tmpEp.Image);
+            }
+            if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
+            MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             bool debugResult = false;
             bool debugResult1 = false;
 
@@ -184,7 +188,7 @@ namespace WindowPlugins.GUITVSeries
                     tmpFile = string.Empty;
                     foreach (string logo in logosForBuilding)
                         tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
-                    tmpFile = pathfortmpfile + "TVSeriesDynLogo" + tmpFile + ".png";
+                    tmpFile = Helper.PathCombine(pathfortmpfile,"TVSeriesDynLogo" + tmpFile + ".png");
                     if (System.IO.File.Exists(tmpFile))
                         return tmpFile;
 
@@ -210,30 +214,6 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("The Logo Building Engine generated an error: " + ex.Message);
                 return string.Empty;
             }
-        }
-
-        public static DBSeries getCorrespondingSeries(int id)
-        {
-            SQLCondition cond = new SQLCondition();
-            cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
-            List<DBSeries> tmpSeries = DBSeries.Get(cond);
-            foreach (DBSeries series in tmpSeries) // should only be one!
-                if (series[DBSeries.cID] == id)
-                {
-                    return series;
-                }
-            return null;
-        }
-
-        public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
-        {
-            List<DBSeason> tmpSeasons = DBSeason.Get(seriesID, false, false, false);
-            foreach (DBSeason season in tmpSeasons)
-                if (season[DBSeason.cIndex] == seasonIndex)
-                {
-                    return season;
-                }
-            return null;
         }
 
         static void appendLogos(List<string> logosForBuilding, ref Graphics g, int totalHeight, int totalWidth)
@@ -362,7 +342,7 @@ namespace WindowPlugins.GUITVSeries
         static string getCleanAbsolutePath(string file)
         {
             if (!System.IO.Path.IsPathRooted(file))
-               file = appPath + "\\" + file;
+                file = Helper.PathCombine(Settings.GetPath(Settings.Path.thumbs), file);
            foreach (char c in System.IO.Path.GetInvalidPathChars())
                file = file.Replace(c, '_');
            return file;
@@ -388,7 +368,7 @@ namespace WindowPlugins.GUITVSeries
                             tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
                             tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
                         {
-                            tmpSeason = getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                            tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
                         }
                         //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                     }
@@ -400,7 +380,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
                         if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                            tmpSeries = getCorrespondingSeries(seriesID);
+                            tmpSeries = Helper.getCorrespondingSeries(seriesID);
                         //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
                     }
                     value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
