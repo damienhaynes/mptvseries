@@ -367,7 +367,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadTree()
         {
-            load.ShowWaiting();
+            //load.ShowWaiting();
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
 
@@ -442,7 +442,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            load.Close();
+            //load.Close();
         }
 
         #endregion
