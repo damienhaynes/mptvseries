@@ -44,9 +44,11 @@ namespace MediaPortal.GUI.Video
         public TVSeriesPlugin()
         {
             m_stepSelections.Add(new string[] { null });
+            // disable that dynamic skin adjustment....skinners should have the power to position the elements whereever with the plugin inerveining
+            if (DBOption.GetOptions(DBOption.cViewAutoHeight)) DBOption.SetOptions(DBOption.cViewAutoHeight, false);
             try
             {
-                if(!DBOption.GetOptions("usesNewPathFormat"))
+                if(!DBOption.GetOptions(DBOption.cUsesNewPathFormat))
                 {
                     PathMigration.migrateDB(); // needs to be first
                     PathMigration.migrateBanners();
@@ -579,6 +581,9 @@ namespace MediaPortal.GUI.Video
                                     item.IsRemote = true;
                                     item.IsDownloading = true;
 
+                                    // also display fist logo in list directly
+                                    item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
+
                                     this.m_Facade.Add(item);
 
                                     if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
@@ -873,6 +878,16 @@ namespace MediaPortal.GUI.Video
                             GUIListItem item = new GUIListItem(Translation.No_items);
                             item.IsRemote = true;
                             this.m_Facade.Add(item);
+
+                            m_Description.Label = string.Empty;
+                            m_Title.Label = string.Empty;
+                            m_Title.Visible = true;
+                            m_Genre.Label = string.Empty;
+
+                            m_Image.SetFileName("");
+                            m_Season_Image.SetFileName("");
+                            this.m_Logos_Image.SetFileName("");
+
                         }
                         else
                         {
@@ -927,6 +942,8 @@ namespace MediaPortal.GUI.Video
                 MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
             this.m_Facade.Focus = true;
+            m_Title.Height = m_Title.ItemHeight;
+            m_Genre.Height = m_Genre.ItemHeight;
             setProcessAnimationStatus(m_parserUpdaterWorking);
 
         }
@@ -1566,14 +1583,38 @@ namespace MediaPortal.GUI.Video
         
         private void Group_OnItemSelected(GUIListItem item)
         {
+            if (item == null) return;
             
-            m_Description.Label = string.Empty;
-            m_Title.Label = (string)item.Label;
-            m_Title.Visible = true;
             m_Genre.Label = string.Empty;
 
-            //if(m_CurrLView.isGroupType)
-            //    this.m_Logos_Image = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep, this.m_Facade.SelectedListItem.Label);
+            this.m_Logos_Image.FileName = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), this.m_Facade.SelectedListItem.Label, m_Logos_Image.Height, m_Logos_Image.Width);
+
+            // let's try to give the user a bit more information
+            string groupedBy = m_CurrLView.groupedInfo(m_CurrViewStep);
+            if (groupedBy.Contains("<Ser"))
+            {
+                string sql = "select distinct pretty_name from online_series where "
+                    + DBOnlineSeries.Q(groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""));
+                if (m_CurrLView.steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
+                {
+                    sql += " like '%" + this.m_Facade.SelectedListItem.Label.Replace("'", "''") + "%'";
+                }
+                else sql += " = '" + (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label.Replace("'", "''")) + "'";
+                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)) sql += " and haslocalfiles = 1";
+                sql += " and not exists( select id from local_series where id = online_series.id and hidden = 1) order by pretty_name";
+                string seriesNames = string.Empty;
+                int count = 0;
+                foreach (SQLite.NET.SQLiteResultSet.Row series in DBTVSeries.Execute(sql).Rows)
+                {
+                    seriesNames += series.fields[0] + Environment.NewLine;
+                    count++;
+                }
+                m_Genre.Label = count.ToString() + " " + (count == 1 ? Translation.Series : Translation.Series_Plural);
+                m_Description.Label = seriesNames;
+            }
+            else m_Description.Label = string.Empty;
+
+            m_Title.Label = item.Label.ToString();
 
             m_Image.SetFileName("");
             m_Season_Image.SetFileName("");

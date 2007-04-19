@@ -39,7 +39,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         #region Translatable Fields
         public static string Series = "Series";
-        public static string Series_Plural = "Series (Plr)";
+        public static string Series_Plural = "Series";
         public static string Season = "Season";
         public static string Seasons = "Seasons";
         public static string Episode = "Episode";

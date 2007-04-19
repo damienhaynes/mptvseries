@@ -62,13 +62,11 @@ namespace WindowPlugins.GUITVSeries
 #if DEBUG
             //    Debugger.Launch();
 #endif
-            load.ShowWaiting();
             InitializeComponent();
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
-            load.ShowWaiting();
             InitSettingsTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
@@ -369,7 +367,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadTree()
         {
-            load = new loadingDisplay();
             load.ShowWaiting();
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();

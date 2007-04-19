@@ -173,9 +173,12 @@ namespace WindowPlugins.GUITVSeries
                                                 case "text":
                                                     bannerSeries.bGraphical = false;
                                                     break;
-
-                                                default:
+                                                case "graphical":
                                                     bannerSeries.bGraphical = true;
+                                                    break;
+                                                default:
+                                                    // everything else we don't really like
+                                                    bannerSeries.bGraphical = false;
                                                     break;
                                             }
                                             break;

@@ -103,7 +103,6 @@ namespace WindowPlugins.GUITVSeries
         private DBSeries tmpSeries = null;
         public string getEpisodeImage(DBOnlineEpisode ep, string url)
 		{
-		
 		   // we need the pretty name to figure out the folder to store to
             try
             {
@@ -135,7 +134,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Could not build Path for episode image: " + ex.Message);
+                MPTVSeriesLog.Write("There was a problem getting the episode image: " + ex.Message);
                 return string.Empty;
             }
 		}

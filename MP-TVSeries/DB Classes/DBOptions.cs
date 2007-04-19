@@ -98,6 +98,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
 
+        public const String cUsesNewPathFormat = "usesNewPathFormat";
+
         static DBOption()
         {
             try

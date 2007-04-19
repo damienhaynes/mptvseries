@@ -112,6 +112,7 @@ namespace WindowPlugins.GUITVSeries
         {
             openFileDialog1.CheckFileExists = true;
             openFileDialog1.Filter = "Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG";
+            openFileDialog1.FileName = string.Empty;
             openFileDialog1.InitialDirectory = appPath;
             if (DialogResult.OK == openFileDialog1.ShowDialog())
                 this.textBox1.Text = openFileDialog1.FileName;
@@ -236,6 +237,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 this.textBox1.Text = folderBrowserDialog1.SelectedPath + @"\";
                 this.textBox1.ReadOnly = false;
+                this.textBox1.Focus();
 
             }
         }
