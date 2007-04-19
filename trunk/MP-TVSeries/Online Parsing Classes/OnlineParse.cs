@@ -86,7 +86,7 @@ namespace WindowPlugins.GUITVSeries
         Feedback.Interface m_feedback = null;
         List<System.IO.FileSystemWatcher> m_watchersList = new List<System.IO.FileSystemWatcher>();
         List<WatcherItem> m_modifiedFilesList = new List<WatcherItem>();
-
+        bool progressUpdateRequired = false;
         public delegate void WatcherProgressHandler(int nProgress, List<WatcherItem> modifiedFilesList);
 
         /// <summary>
@@ -140,6 +140,55 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+                progressUpdateRequired = true; // signal the worker thread (not using events because we don't want to react immediatly but only every couple of seconds at the most
+            }
+        }
+
+        void setUpWatches(DBImportPath[] importPaths)
+        {
+            if (m_watchersList.Count > 0) return; // this can only run once
+            // ok let's see ... go through all enable import folders, and add a watchfolder on it
+            foreach (DBImportPath importPath in importPaths)
+            {
+                if (importPath[DBImportPath.cEnabled] != 0 && Directory.Exists(importPath[DBImportPath.cPath]))
+                {
+                    // one watcher for each extension type
+                    foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
+                    {
+                        FileSystemWatcher watcher = new FileSystemWatcher();
+                        watcher.Filter = "*" + extention;
+                        watcher.Path = importPath[DBImportPath.cPath];
+                        watcher.IncludeSubdirectories = true;
+                        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
+                        watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Created += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
+                        watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                        watcher.EnableRaisingEvents = true;
+                        m_watchersList.Add(watcher);
+                    }
+                }
+            }
+        }
+
+        void signalActionRequired()
+        {
+            try
+            {
+                List<WatcherItem> outList = new List<WatcherItem>();
+                lock (m_modifiedFilesList)
+                {
+                    // go over the modified files list once in a while & update
+                    outList.AddRange(m_modifiedFilesList);
+                    m_modifiedFilesList.Clear();
+                    if (outList.Count > 0)
+                        worker.ReportProgress(0, outList);
+                }
+                outList = null;
+            }
+            catch (Exception exp)
+            {
+                MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
             }
         }
 
@@ -149,53 +198,16 @@ namespace WindowPlugins.GUITVSeries
             DBImportPath[] importPaths = DBImportPath.GetAll();
             if (importPaths != null)
             {
-                // ok let's see ... go through all enable import folders, and add a watchfolder on it
-                foreach (DBImportPath importPath in DBImportPath.GetAll())
-                {
-                    if (importPath[DBImportPath.cEnabled] != 0 && Directory.Exists(importPath[DBImportPath.cPath]))
-                    {
-                        // one watcher for each extension type
-                        foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
-                        {
-                            FileSystemWatcher watcher = new FileSystemWatcher();
-                            watcher.Filter = "*" + extention;
-                            watcher.Path = importPath[DBImportPath.cPath];
-                            watcher.IncludeSubdirectories = true;
-                            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
-                            watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-                            watcher.Created += new FileSystemEventHandler(watcher_Changed);
-                            watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
-                            watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
-                            watcher.EnableRaisingEvents = true;
-                            m_watchersList.Add(watcher);
-                        }
-                    }
-                }
+                setUpWatches(importPaths);
+                importPaths = null;
                 while (!worker.CancellationPending)
                 {
-                    try
+                    if (progressUpdateRequired)
                     {
-                        List<WatcherItem> outList = new List<WatcherItem>();
-                        lock (m_modifiedFilesList)
-                        {
-                            // go over the modified files list once in a while & update
-                            if(m_modifiedFilesList.Count > 0)
-                            {
-                                outList.AddRange(m_modifiedFilesList);
-                                m_modifiedFilesList.Clear();
-                            }
-
-                            if (outList.Count > 0)
-                                worker.ReportProgress(0, outList);
-                        }
+                        signalActionRequired();
                     }
-                    catch (Exception exp)
-                    {
-                        MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
-                    }
-
                     // wait
-                    Thread.Sleep(1500);
+                    Thread.Sleep(3000); // every 3 seconds do a quick check if we need to do something
                 }
             }
         }

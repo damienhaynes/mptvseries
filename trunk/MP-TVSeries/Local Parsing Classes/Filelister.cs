@@ -47,7 +47,7 @@ namespace WindowPlugins.GUITVSeries
         {
             List<PathPair> outList = new List<PathPair>();
             DBImportPath[] importPathes = DBImportPath.GetAll();
-
+            int prev = 0;
             if (importPathes != null)
             {
                 foreach (DBImportPath importPath in importPathes)
@@ -55,17 +55,9 @@ namespace WindowPlugins.GUITVSeries
                     if (importPath[DBImportPath.cEnabled] != 0)
                     {
                         MPTVSeriesLog.Write("Searching for all supported videos files within " + importPath[DBImportPath.cPath] + " and it's subfolders.");
-                        //String[] localFiles = FilesinFolder(importPath[DBImportPath.cPath].ToString());
-                        List<string> localFiles = filesInFolder(importPath[DBImportPath.cPath].ToString());
-
-                        // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
-                        foreach (String localFile in localFiles)
-                        {
-                            PathPair pair = new PathPair(localFile.Substring(importPath[DBImportPath.cPath].ToString().Length).TrimStart('\\'), localFile);
-                            outList.Add(pair);
-                        }
-
-                        MPTVSeriesLog.Write("Found " + localFiles.Count + " supported video files.");
+                        filesInFolder(importPath[DBImportPath.cPath].ToString(), ref outList, importPath[DBImportPath.cPath].ToString().Length);
+                        MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files.");
+                        prev = outList.Count;
                     }
                 }
             }
@@ -85,10 +77,9 @@ namespace WindowPlugins.GUITVSeries
             reg = new System.Text.RegularExpressions.Regex(extPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
         }
 
-        private static List<string> filesInFolder(string folder)
+        private static bool filesInFolder(string folder, ref List<PathPair> outList, int importPathLength)
         {
             // this is much faster than calling Directory.Getfiles for every extension (and even about twice as fast as the old recursive way, especially over network paths!
-            List<string> files = new List<string>();
             if (null == reg) buildExtRegex();
             try
             {
@@ -99,7 +90,8 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (reg.IsMatch(System.IO.Path.GetExtension(sfiles[i])))
                         {
-                            files.Add(sfiles[i]);
+                            // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
+                            outList.Add(new PathPair(sfiles[i].Substring(importPathLength).TrimStart('\\'), sfiles[i]));
                         }
                     }
                 }
@@ -107,8 +99,9 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception ex)
             {
                 Console.WriteLine("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
+                return false;
             }
-            return files;
+            return true;
         }
 
         /*

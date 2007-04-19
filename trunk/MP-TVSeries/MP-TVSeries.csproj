@@ -9,6 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowPlugins.GUITVSeries</RootNamespace>
     <AssemblyName>MP-TVSeries</AssemblyName>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,6 +67,7 @@
     <Compile Include="GUIConfiguration.designer.cs">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper.cs" />
     <Compile Include="loadingDisplay.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -44,10 +44,12 @@ namespace WindowPlugins.GUITVSeries
         static DBSeason tmpSeason;
         static DBSeries tmpSeries;
         static string groupedByInfo = string.Empty;
+        static string groupedItemType = string.Empty;
+        static string groupedField = string.Empty;
+        static string groupedSelection = string.Empty;
         static bool entriesInMemory = false;
+        static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         static NumberFormatInfo provider = new NumberFormatInfo();
-
-        
 
         enum Level
         {
@@ -99,7 +101,11 @@ namespace WindowPlugins.GUITVSeries
         {
             // TODO: make possible for groups to request logos
             groupedByInfo = groupedBy;
-            return string.Empty;
+            groupedItemType = groupedBy.Substring(1, groupedBy.IndexOf(".") - 1);
+            groupedField = groupedBy.Substring(groupedItemType.Length + 2);
+            groupedField = groupedField.Substring(0, groupedField.Length - 1);
+            groupedSelection = selection;
+            return getLogos(Level.Group, imgHeight, imgWidth, true); // they can logically only have one logo (we don't support hierarchical logos, eg network - genre...genre level will not have network logos)
         }
 
         public static string getLogos(ref DBEpisode ep, int imgHeight, int imgWidth, bool firstOnly)
@@ -342,7 +348,7 @@ namespace WindowPlugins.GUITVSeries
         static string getCleanAbsolutePath(string file)
         {
             if (!System.IO.Path.IsPathRooted(file))
-                file = Helper.PathCombine(Settings.GetPath(Settings.Path.thumbs), file);
+                file = Helper.PathCombine(appPath, file);
            foreach (char c in System.IO.Path.GetInvalidPathChars())
                file = file.Replace(c, '_');
            return file;
@@ -354,36 +360,43 @@ namespace WindowPlugins.GUITVSeries
             if (what == string.Empty) return true; // just skip it
             try
             {
-                if (what.Contains("Episode"))
+                if (level == Level.Group)
                 {
-                    // tmpEP always has to exists or the isrelevant check would have already failed
-                    value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
+                    value = groupedSelection.ToString(); // the only thing we can do
                 }
-                else if (what.Contains("Season"))
+                else
                 {
-                    if (level == Level.Episode) // means we might have to get the season object for this episode
+                    if (what.Contains("Episode"))
                     {
-                        // get the season object if needed (either null, or not the one we need), otherwise dont get it again
-                        if (tmpSeason == null ||
-                            tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
-                            tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
+                        // tmpEP always has to exists or the isrelevant check would have already failed
+                        value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
+                    }
+                    else if (what.Contains("Season"))
+                    {
+                        if (level == Level.Episode) // means we might have to get the season object for this episode
                         {
-                            tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                            // get the season object if needed (either null, or not the one we need), otherwise dont get it again
+                            if (tmpSeason == null ||
+                                tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
+                                tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
+                            {
+                                tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                            }
+                            //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                         }
-                        //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
+                        value = tmpSeason[what.Replace("<Season.", "").Replace(">", "").Trim()];
                     }
-                    value = tmpSeason[what.Replace("<Season.", "").Replace(">", "").Trim()];
-                }
-                else if (what.Contains("Series"))
-                {
-                    if (level != Level.Series) // means we might have to get the series object for this episode/season
+                    else if (what.Contains("Series"))
                     {
-                        int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                        if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                            tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                        //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                        if (level != Level.Series) // means we might have to get the series object for this episode/season
+                        {
+                            int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
+                            if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
+                                tmpSeries = Helper.getCorrespondingSeries(seriesID);
+                            //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                        }
+                        value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                     }
-                    value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                 }
                 return true;
             }
@@ -398,6 +411,23 @@ namespace WindowPlugins.GUITVSeries
         {
             if (level == Level.Series && field.Contains("<Season.")) return false;
             if ((level == Level.Series || level == Level.Season) && field.Contains("<Episode.")) return false;
+            if (level == Level.Group)
+            {
+                switch(groupedItemType)
+                {
+                    case "Series":
+                        if (field.Contains("<E") || field.Contains("<Sea")) return false;
+                        break;
+                    case "Episode":
+                        if (field.Contains("<S")) return false;
+                        break;
+                    case "Season":
+                        if (field.Contains("<E") || field.Contains("<Ser")) return false;
+                        break;
+                }
+                // there can be multiple same item entries (eg. <Series.Network> = abc or <Series.Network> = nbc
+                return !Regex.IsMatch(field, "\\.^(" + groupedField + ")>");
+            }
             return true;
         }
 
