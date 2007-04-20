@@ -655,7 +655,7 @@ namespace MediaPortal.GUI.Video
                                         else
                                         {
                                             // select the first that has a file
-                                            if (series[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                            if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
                                                 selectedIndex = count;
                                         }
                                         if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
@@ -808,6 +808,15 @@ namespace MediaPortal.GUI.Video
                                 // view handling
                                 List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                                 MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+
+                                Dictionary<int, string> cachedSeriesNames = null;
+                                if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                {
+                                    // we cache seriesnames so we don't have to query for every item
+                                    // only nessesary for views that don't have series before them
+                                    cachedSeriesNames = new Dictionary<int, string>();
+                                }
+
                                 foreach (DBEpisode episode in episodesToDisplay)
                                 {
                                     try
@@ -820,12 +829,27 @@ namespace MediaPortal.GUI.Video
                                         if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                         {
                                             // it is the case
-                                            SQLCondition cond = new SQLCondition();
-                                            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBEpisode.cSeriesID], SQLConditionType.Equal);
-                                            DBSeries tmpseries = DBSeries.Get(cond)[0];
-                                            if (tmpseries != null)
-                                                item.Label = tmpseries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
-                                            else item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                            if (cachedSeriesNames.ContainsKey(episode[DBEpisode.cSeriesID]))
+                                            {
+                                                item.Label = cachedSeriesNames[episode[DBEpisode.cSeriesID]] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
+                                            }
+                                            else
+                                            {
+                                                DBOnlineSeries emptySeries = new DBOnlineSeries();
+                                                List<DBValue> epsSeries = DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName,
+                                                                                                        new SQLCondition(emptySeries, DBOnlineSeries.cID, episode[DBEpisode.cSeriesID], SQLConditionType.Equal),
+                                                                                                        emptySeries);
+                                                if (epsSeries.Count > 0)
+                                                {
+                                                    item.Label = epsSeries[0] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
+                                                    cachedSeriesNames.Add(episode[DBEpisode.cSeriesID], epsSeries[0]);
+                                                }
+                                                else
+                                                {
+                                                    item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                                    cachedSeriesNames.Add(episode[DBEpisode.cSeriesID], string.Empty);
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -1593,22 +1617,25 @@ namespace MediaPortal.GUI.Video
             string groupedBy = m_CurrLView.groupedInfo(m_CurrViewStep);
             if (groupedBy.Contains("<Ser"))
             {
-                string sql = "select distinct pretty_name from online_series where "
-                    + DBOnlineSeries.Q(groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""));
+                int count = 0;
+                string seriesNames = string.Empty;
+                SQLCondition cond = new SQLCondition();
                 if (m_CurrLView.steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
                 {
-                    sql += " like '%" + this.m_Facade.SelectedListItem.Label.Replace("'", "''") + "%'";
+                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), this.m_Facade.SelectedListItem.Label, SQLConditionType.Like);
                 }
-                else sql += " = '" + (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label.Replace("'", "''")) + "'";
-                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles)) sql += " and haslocalfiles = 1";
-                sql += " and not exists( select id from local_series where id = online_series.id and hidden = 1) order by pretty_name";
-                string seriesNames = string.Empty;
-                int count = 0;
-                foreach (SQLite.NET.SQLiteResultSet.Row series in DBTVSeries.Execute(sql).Rows)
+                else
                 {
-                    seriesNames += series.fields[0] + Environment.NewLine;
+                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
+                             (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label),
+                              SQLConditionType.Equal);
+                }
+                foreach (string series in DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName, cond, new DBOnlineSeries()))
+                {
+                    seriesNames += series + Environment.NewLine;
                     count++;
                 }
+                
                 m_Genre.Label = count.ToString() + " " + (count == 1 ? Translation.Series : Translation.Series_Plural);
                 m_Description.Label = seriesNames;
             }
@@ -1782,10 +1809,8 @@ namespace MediaPortal.GUI.Video
         {
             if (item == null)
                 return;
-
             DBEpisode episode = (DBEpisode)item.TVTag;
             this.m_SelectedEpisode = episode;
-
             if (this.m_Logos_Image != null)
             {
                 try
@@ -1795,7 +1820,6 @@ namespace MediaPortal.GUI.Video
                 }
                 catch { }
             }
-
             if (DBOption.GetOptions(DBOption.cViewAutoHeight))
             {
                 int nStartOffset = m_Image.YPosition + m_Image.Height + 5;
@@ -1848,15 +1872,11 @@ namespace MediaPortal.GUI.Video
                 cond.Add(new DBSeries(), DBSeries.cID, episode[DBEpisode.cSeriesID], SQLConditionType.Equal);
                 DBSeries tmpseries = DBSeries.Get(cond)[0];
                 DBSeason tmpseason = null;
-                foreach (DBSeason s in DBSeason.Get(episode[DBEpisode.cSeriesID], false, false, false))
+                foreach (DBSeason s in DBSeason.Get(episode[DBEpisode.cSeriesID], false, false, true, new SQLCondition(new DBSeason(), DBSeason.cIndex, episode[DBEpisode.cSeasonIndex], SQLConditionType.Equal)))
                 {
-                    if (s[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex])
-                    {
-                        tmpseason = s;
-                        break;
-                    }
+                   tmpseason = s;
+                   break;
                 }
-
                 if (this.m_Image != null && tmpseries != null)
                 {
                     try
@@ -1867,7 +1887,6 @@ namespace MediaPortal.GUI.Video
                     }
                     catch { }
                 }
-
                 if (m_Season_Image != null && tmpseason != null)
                 {
                     try

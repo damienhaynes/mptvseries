@@ -568,6 +568,25 @@ namespace WindowPlugins.GUITVSeries
             }
             return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
         }
+
+        public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)
+        {
+
+            string sql = "select " + field + " from " + obj.m_tableName + conds;
+            List<DBValue> results = new List<DBValue>();
+            try
+            {
+                foreach (SQLiteResultSet.Row result in DBTVSeries.Execute(sql).Rows)
+                {
+                    results.Add(result.fields[0]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("GetSingleField SQL method generated an error: " + ex.Message);
+            }
+            return results;
+        }
     };
 
     public class SQLWhat
@@ -660,6 +679,11 @@ namespace WindowPlugins.GUITVSeries
         
         public SQLCondition()
         {
+        }
+
+        public SQLCondition(DBTable table, String sField, DBValue value, SQLConditionType type)
+        {
+            Add(table, sField, value, type);
         }
 
         public void AddSubQuery(string field, DBTable table, SQLCondition innerConditions, DBValue value, SQLConditionType type)

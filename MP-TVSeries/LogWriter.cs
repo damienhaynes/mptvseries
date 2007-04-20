@@ -157,17 +157,24 @@ namespace WindowPlugins.GUITVSeries
             {
                 lock (m_LogStream)
                 {
-                    if (File.Exists(m_filename))
-                        m_LogStream = File.AppendText(m_filename);
-                    else
-                        m_LogStream = File.CreateText(m_filename);
-                    if(singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
-                    else m_LogStream.Write(DateTime.Now + " - \n" + entry);
-                    m_LogStream.Flush();
+                    try
+                    {
+                        if (File.Exists(m_filename))
+                            m_LogStream = File.AppendText(m_filename);
+                        else
+                            m_LogStream = File.CreateText(m_filename);
+                        if (singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
+                        else m_LogStream.Write(DateTime.Now + " - \n" + entry);
+                        m_LogStream.Flush();
 
-                    m_LogStream.Close();
-                    m_LogStream.Dispose();
-                    if (level != LogLevel.Debug) Log_Write(entry);
+                        m_LogStream.Close();
+                        m_LogStream.Dispose();
+                        if (level != LogLevel.Debug) Log_Write(entry);
+                    }
+                    catch (Exception)
+                    {
+                        // well we can't write...maybe no file acces or something....and we can't even log the error
+                    }
                 }
             }
         }
