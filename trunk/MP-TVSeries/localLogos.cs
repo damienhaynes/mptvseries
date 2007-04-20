@@ -40,6 +40,9 @@ namespace WindowPlugins.GUITVSeries
         static string pathfortmpfile = Settings.GetPath(Settings.Path.banners);
         static string tmpFile = @"tmpLogos.png";
         static List<string> entries = new List<string>();
+        static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
+        static Dictionary<int, List<string>> splitConditions = new Dictionary<int, List<string>>();
+        static Dictionary<string, string> cachedFieldValues = new Dictionary<string, string>();
         static DBEpisode tmpEp;
         static DBSeason tmpSeason;
         static DBSeries tmpSeries;
@@ -79,11 +82,27 @@ namespace WindowPlugins.GUITVSeries
         {
             string all = DBOption.GetOptions(optionName);
             entries.Clear();
+            entriesValidForInfo.Clear();
             if(all != string.Empty)
                 entries = new List<string>(Regex.Split(all, entriesSplit));
             entriesInMemory = true;
             if (entries.Count == 0)
                 MPTVSeriesLog.Write("No LogoRules found!");
+            else
+            {
+                // we calculate relevances once here so we can avoid doing it everytime
+                // we also split them here so we can avoid doing this later
+                for(int i=0; i<entries.Count; i++)
+                {
+                    List<Level> levels = new List<Level>();
+                    if (isRelevant(entries[i], Level.Series)) levels.Add(Level.Series);
+                    if (isRelevant(entries[i], Level.Season)) levels.Add(Level.Season);
+                    levels.Add(Level.Episode); // Episodes always relevant I think
+                    entriesValidForInfo.Add(i, levels);
+
+                    splitConditions.Add(i, new List<string>(Regex.Split(entries[i], localLogos.condSplit)));
+                }
+            }
             return entries;
         }
 
@@ -110,7 +129,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static string getLogos(ref DBEpisode ep, int imgHeight, int imgWidth, bool firstOnly)
         {
-            perfana.start();
             tmpEp = ep;
             if (tmpEp == null) return null;
             return getLogos(Level.Episode, imgHeight, imgWidth, firstOnly);
@@ -123,7 +141,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static string getLogos(ref DBSeason season, int imgHeight, int imgWidth)
         {
-            perfana.start();
             tmpSeason = season;
             if (tmpSeason == null) return null;
             return getLogos(Level.Season, imgHeight, imgWidth);
@@ -150,16 +167,17 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             bool debugResult = false;
             bool debugResult1 = false;
-
+            // reset all cached Fieldvalues
+            cachedFieldValues.Clear();
             for (int i = 0; i < entries.Count; i++)
             {
                 try
                 {
-                    if (isRelevant(entries[i], level))
+                    if (entriesValidForInfo[i].Contains(level) || (level == Level.Group && isRelevant(entries[i], level))) // precalculated relevances (can't do for groups though)
+                    //if (isRelevant(entries[i], level))
                     {
                         MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
-                        List<string> conditions = new List<string>(Regex.Split(entries[i], localLogos.condSplit));
-
+                        List<string> conditions = splitConditions[i];
                         // resolve dnyamic image and check if logo img exists
                         string filename = getDynamicFileName(conditions[0], level);
                         if (!System.IO.File.Exists(filename))
@@ -167,7 +185,6 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Normal);
 
                         }
-
                         // check if the condition is met
                         // each image may only exist once
                         else if (!(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
@@ -176,16 +193,15 @@ namespace WindowPlugins.GUITVSeries
                             else logosForBuilding.Add(filename);
                         }
                     }
-                    else MPTVSeriesLog.Write("Logo-Rule is not relevant, aborting (you cannot go \"down\" in hierarchy (Series - Season - Episode)!", MPTVSeriesLog.LogLevel.Debug);
+                    else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
 
-                    MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    //MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
                 }
                 catch (Exception ex)
                 {
                     MPTVSeriesLog.Write("Logo Rule crashed: " + entries[i] + " - " + ex.Message);
                 }
             }
-
             try
             {
                 if (logosForBuilding.Count == 1) return logosForBuilding[0];
@@ -197,7 +213,6 @@ namespace WindowPlugins.GUITVSeries
                     tmpFile = Helper.PathCombine(pathfortmpfile,"TVSeriesDynLogo" + tmpFile + ".png");
                     if (System.IO.File.Exists(tmpFile))
                         return tmpFile;
-
                     Bitmap b = new Bitmap(imgWidth, imgHeight);
                     Image img = b;
                     Graphics g = Graphics.FromImage(img);
@@ -229,11 +244,13 @@ namespace WindowPlugins.GUITVSeries
             List<Size> imgSizes = new List<Size>();
             int spacer = 5;
             int checkWidth = 0;
-
             // step one: get all sizes (not all logos are obviously square) and scale them to fit vertically
+            Image single = null;
+            float scale = 0, totalHeightf = (float)totalHeight;
+            Size tmp = default(Size);
+            int x_pos = 0;
             for (int i = 0; i < logosForBuilding.Count; i++)
             {
-                Image single = null;
                 try
                 {
                      single = Image.FromFile(logosForBuilding[i]);
@@ -243,58 +260,55 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Could not load Image file... " + logosForBuilding[i]);
                     return;
                 }
-                float scale = (float)totalHeight / (float)single.Size.Height;
-                Size tmp = new Size((int)(single.Width * scale), (int)(single.Height * scale));
+                scale = totalHeightf / (float)single.Size.Height;
+                tmp = new Size((int)(single.Width * scale), (int)(single.Height * scale));
                 checkWidth += tmp.Width;
                 imgSizes.Add(tmp);
                 imgs.Add(single);
             }
-
             // step two: check if we are too big horizontally and if so scale again
             checkWidth += imgSizes.Count * spacer;
             if (checkWidth > totalWidth)
             {
-                float scale = (float)checkWidth / (float)totalWidth;
+                scale = (float)checkWidth / (float)totalWidth;
                 for (int i = 0; i < imgSizes.Count; i++)
                 {
                     imgSizes[i] = new Size((int)(imgSizes[i].Width / scale), (int)(imgSizes[i].Height / scale));
                 }
             }
-            int x_pos = 0;
             // step three: finally draw them
             for (int i = 0; i < imgs.Count; i++)
             {
                 g.DrawImage(imgs[i], x_pos, totalHeight - imgSizes[i].Height, imgSizes[i].Width, imgSizes[i].Height);
                 x_pos += imgSizes[i].Width + spacer;
             }
-
         }
 
         static bool condIsTrue(List<string> conditions, string cond, Level level)
         {
-            conditions.Remove(conditions[0]); // have to get rid of the filename
             bool[] results = new bool[]{false, false, false};
+            bool cancel = false;
             for (int i = 0; i < 3; i++)
             {
                 MPTVSeriesLog.Write("Testing Loop:" + i.ToString(), MPTVSeriesLog.LogLevel.Debug);
-                string what = conditions[i * 4];
+                string what = conditions[i * 4 + 1];
                 if (!getFieldValues(what, out what, level)) return false;
 
-                if (what == string.Empty && conditions[i * 4 + 2].Trim() != string.Empty) return false;
                 results[i] = singleCondIsTrue(what,
-                                 conditions[i * 4 + 1],
-                                 conditions[i * 4 + 2].Trim());
+                                 conditions[i * 4 + 2],
+                                 conditions[i * 4 + 3].Trim(), out cancel);
 
                 MPTVSeriesLog.Write("Test Result: " + results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
+                if (cancel) return true; // the first empty condition (what + value = empty) means no other conds can follow, we exit
 
                 if (i < 2)
                 {
-                    if (!results[i] && conditions[i * 4 + 3] == "AND") // result is false and next link is and -> everything is wrong
+                    if (!results[i] && conditions[i * 4 + 4] == "AND") // result is false and next link is and -> everything is wrong
                     {
                         MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = AND and current result was FALSE", MPTVSeriesLog.LogLevel.Debug);
                         return false;
                     }
-                    if (results[i] && conditions[i * 4 + 3] == "OR") // everything has to be true
+                    if (results[i] && conditions[i * 4 + 4] == "OR") // everything has to be true
                     {
                         MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = OR and current result was TRUE", MPTVSeriesLog.LogLevel.Debug);
                         return true;
@@ -314,7 +328,12 @@ namespace WindowPlugins.GUITVSeries
         static string getDynamicFileName(string dynfilename, Level level)
         {
             int dnyStart = 0;
-            if (dynfilename.Contains("<Series."))
+            if (!dynfilename.Contains("<"))
+            {
+                // not dynamic
+                return getCleanAbsolutePath(dynfilename);
+            }
+            else if (dynfilename.Contains("<Series."))
             {
                 dnyStart = dynfilename.IndexOf("<Series.");
             }
@@ -328,8 +347,8 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                // not dynamic
-                return getCleanAbsolutePath(dynfilename);
+                // no '<' but none of the recognized? that is a wrong entry as < is not a valid char in filenames
+                return string.Empty;
             }
             //MPTVSeriesLog.Write("dynamic Filename detected..trying to resolve");
             string fieldToGet = string.Empty;
@@ -356,55 +375,63 @@ namespace WindowPlugins.GUITVSeries
 
         static bool getFieldValues(string what, out string value, Level level)
         {
-            value = string.Empty;
-            if (what == string.Empty) return true; // just skip it
-            try
+            if (cachedFieldValues.ContainsKey(what))
             {
-                if (level == Level.Group)
+                value = cachedFieldValues[what];
+            }
+            else
+            {
+                value = string.Empty;
+                if (what == string.Empty) return true; // just skip it
+                try
                 {
-                    value = groupedSelection.ToString(); // the only thing we can do
-                }
-                else
-                {
-                    if (what.Contains("Episode"))
+                    if (level == Level.Group)
                     {
-                        // tmpEP always has to exists or the isrelevant check would have already failed
-                        value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
+                        value = groupedSelection.ToString(); // the only thing we can do
                     }
-                    else if (what.Contains("Season"))
+                    else
                     {
-                        if (level == Level.Episode) // means we might have to get the season object for this episode
+                        if (what.Contains("Episode"))
                         {
-                            // get the season object if needed (either null, or not the one we need), otherwise dont get it again
-                            if (tmpSeason == null ||
-                                tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
-                                tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
+                            // tmpEP always has to exists or the isrelevant check would have already failed
+                            value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
+                        }
+                        else if (what.Contains("Season"))
+                        {
+                            if (level == Level.Episode) // means we might have to get the season object for this episode
                             {
-                                tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                                // get the season object if needed (either null, or not the one we need), otherwise dont get it again
+                                if (tmpSeason == null ||
+                                    tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
+                                    tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
+                                {
+                                    tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                                }
+                                //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                             }
-                            //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
+                            value = tmpSeason[what.Replace("<Season.", "").Replace(">", "").Trim()];
                         }
-                        value = tmpSeason[what.Replace("<Season.", "").Replace(">", "").Trim()];
-                    }
-                    else if (what.Contains("Series"))
-                    {
-                        if (level != Level.Series) // means we might have to get the series object for this episode/season
+                        else if (what.Contains("Series"))
                         {
-                            int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                            if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                                tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                            //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                            if (level != Level.Series) // means we might have to get the series object for this episode/season
+                            {
+                                int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
+                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
+                                    tmpSeries = Helper.getCorrespondingSeries(seriesID);
+                                //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                            }
+                            value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                         }
-                        value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                     }
+                    // we try to cache them
+                    cachedFieldValues.Add(what, value);
                 }
-                return true;
+                catch (Exception)
+                {
+                    return false;
+                }
             }
-            catch (Exception)
-            {
-                return false;
-            }
-
+            return true;
         }
 
         static bool isRelevant(string field, Level level)
@@ -426,15 +453,20 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
                 // there can be multiple same item entries (eg. <Series.Network> = abc or <Series.Network> = nbc
-                return !Regex.IsMatch(field, "\\.^(" + groupedField + ")>");
+                return !field.Replace(groupedByInfo, string.Empty).Contains("<" + groupedItemType + ".");
             }
             return true;
         }
 
-        static bool singleCondIsTrue(string what, string type, string value)
+        static bool singleCondIsTrue(string what, string type, string value, out bool cancel)
         {
             double testf = 0, test1f = 0;
-            
+            cancel = false;
+            if (what.Length == 0 && value.Length == 0)
+            {
+                cancel = true; // on the first empty condition break
+                return true;
+            }
             if (type.Contains("<") || type.Contains(">"))
             {
                 try
@@ -445,6 +477,7 @@ namespace WindowPlugins.GUITVSeries
                 catch (Exception)
                 {
                     MPTVSeriesLog.Write("Error in LogoDefinition: only numerical values can be compared with modes </<=/>/>=");
+                    MPTVSeriesLog.Write("Values were: " + what + " and " + value);
                     return false;
                 }
             }
@@ -506,6 +539,17 @@ namespace WindowPlugins.GUITVSeries
             if (starttime.Equals(default(DateTime))) return 0;
             TimeSpan t = DateTime.Now - starttime;
             return (int)t.TotalMilliseconds;
+        }
+
+        public static void writeSimple(string entry)
+        {
+
+            //System.Diagnostics.StackFrame fr = new System.Diagnostics.StackFrame(1, true);
+            //System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(fr);
+            //string caller = String.Format("{0} {1}", fr.GetMethod().Name,
+            //                                       st.ToString());
+            DateTime now = DateTime.Now;
+            MPTVSeriesLog.Write(" - " + now.Second.ToString() + ":" + now.Millisecond.ToString() + " .... " + entry);
         }
     }
 }
