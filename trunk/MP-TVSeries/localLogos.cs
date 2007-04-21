@@ -160,7 +160,7 @@ namespace WindowPlugins.GUITVSeries
             List<string> logosForBuilding = new List<string>();
             // downloaded episodeimage into logos (after getFromDB)
             // also for listview want to get them regardless, so if firstonly is set this is good too
-            if (firstOnly || ( appendEpImage && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image)))
+            if (( appendEpImage || firstOnly) && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
             {
                 if (firstOnly) return tmpEp.Image; // takes precedence (should it?)
                 logosForBuilding.Add(tmpEp.Image);
