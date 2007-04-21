@@ -1656,6 +1656,16 @@ namespace MediaPortal.GUI.Video
 
             m_Image.SetFileName("");
             m_Season_Image.SetFileName("");
+
+            if (!localLogos.appendEpImage && m_Episode_Image != null)
+            {
+                try
+                {
+                    this.m_Episode_Image.FileName = string.Empty;
+                    this.m_Episode_Image.Visible = true;
+                }
+                catch { }
+            }
         }
 
         private void Series_OnItemSelected(GUIListItem item)
@@ -1690,6 +1700,16 @@ namespace MediaPortal.GUI.Video
                 {
                     this.m_Logos_Image.FileName = localLogos.getLogos(ref series, m_Logos_Image.Height, m_Logos_Image.Width);
                     this.m_Logos_Image.Visible = true;
+                }
+                catch { }
+            }
+
+            if (!localLogos.appendEpImage && m_Episode_Image != null)
+            {
+                try
+                {
+                    this.m_Episode_Image.FileName = string.Empty;
+                    this.m_Episode_Image.Visible = true;
                 }
                 catch { }
             }
@@ -1768,6 +1788,16 @@ namespace MediaPortal.GUI.Video
                 {
                     this.m_Logos_Image.FileName = localLogos.getLogos(ref season, m_Logos_Image.Height, m_Logos_Image.Width);
                     this.m_Logos_Image.Visible = true;
+                }
+                catch { }
+            }
+
+            if (!localLogos.appendEpImage && m_Episode_Image != null)
+            {
+                try
+                {
+                    this.m_Episode_Image.FileName = string.Empty;
+                    this.m_Episode_Image.Visible = true;
                 }
                 catch { }
             }
