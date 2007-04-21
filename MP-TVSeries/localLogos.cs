@@ -53,6 +53,7 @@ namespace WindowPlugins.GUITVSeries
         static bool entriesInMemory = false;
         static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         static NumberFormatInfo provider = new NumberFormatInfo();
+        static public bool appendEpImage = true;
 
         enum Level
         {
@@ -158,7 +159,8 @@ namespace WindowPlugins.GUITVSeries
             if (!entriesInMemory) getFromDB();
             List<string> logosForBuilding = new List<string>();
             // downloaded episodeimage into logos (after getFromDB)
-            if (level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
+            // also for listview want to get them regardless, so if firstonly is set this is good too
+            if (firstOnly || ( appendEpImage && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image)))
             {
                 if (firstOnly) return tmpEp.Image; // takes precedence (should it?)
                 logosForBuilding.Add(tmpEp.Image);
@@ -471,6 +473,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
+                    if (what.Length == 0) what = "0";
+                    if (value.Length == 0) value = "0";
                     testf = System.Convert.ToDouble(what, provider);
                     test1f = System.Convert.ToDouble(value, provider);
                 }
@@ -543,7 +547,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static void writeSimple(string entry)
         {
-
+            // get the caller method
             //System.Diagnostics.StackFrame fr = new System.Diagnostics.StackFrame(1, true);
             //System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(fr);
             //string caller = String.Format("{0} {1}", fr.GetMethod().Name,

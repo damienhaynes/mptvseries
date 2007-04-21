@@ -810,6 +810,9 @@ namespace WindowPlugins.GUITVSeries
         #region Series treeview handling
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            this.dataGridView1.SuspendLayout();
+            foreach (Control c in dataGridView1.Controls)
+                c.SuspendLayout();
             //////////////////////////////////////////////////////////////////////////////
             #region Clears all fields so new data can be entered
 
@@ -1040,6 +1043,9 @@ namespace WindowPlugins.GUITVSeries
             }
             #endregion
             //////////////////////////////////////////////////////////////////////////////
+            this.dataGridView1.ResumeLayout();
+            foreach (Control c in dataGridView1.Controls)
+                c.ResumeLayout();
         }
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue)

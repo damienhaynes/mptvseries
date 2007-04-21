@@ -249,6 +249,9 @@ namespace MediaPortal.GUI.Video
         [SkinControlAttribute(66)]
         protected GUIImage m_Logos_Image = null;
 
+        [SkinControlAttribute(67)]
+        protected GUIImage m_Episode_Image = null;
+
         [SkinControlAttribute(77)]
         protected GUILabelControl view_curr = null;
 
@@ -944,8 +947,10 @@ namespace MediaPortal.GUI.Video
             {
                 LoadFacade();
                 this.m_Facade.Focus = true;
+                setProcessAnimationStatus(m_parserUpdaterWorking);
                 return; //otherwise after fullscreen we loose the current view positions
             }
+            localLogos.appendEpImage = m_Episode_Image == null ? true : false;
             // get views
             //m_allViews = logicalView.getAllFromDB();
             m_allViews = logicalView.getStaticViews(); // hardcoded until configuration is set up!
@@ -1630,6 +1635,12 @@ namespace MediaPortal.GUI.Video
                              (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label),
                               SQLConditionType.Equal);
                 }
+                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                {
+                    cond.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, true, SQLConditionType.Equal);
+                }
+                cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");
+
                 foreach (string series in DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName, cond, new DBOnlineSeries()))
                 {
                     seriesNames += series + Environment.NewLine;
@@ -1817,6 +1828,15 @@ namespace MediaPortal.GUI.Video
                 {
                     this.m_Logos_Image.FileName = localLogos.getLogos(ref episode, m_Logos_Image.Height, m_Logos_Image.Width);
                     this.m_Logos_Image.Visible = true;
+                }
+                catch { }
+            }
+            if (!localLogos.appendEpImage && m_Episode_Image != null)
+            {
+                try
+                {
+                    this.m_Episode_Image.FileName = episode.Image;
+                    this.m_Episode_Image.Visible = true;
                 }
                 catch { }
             }
