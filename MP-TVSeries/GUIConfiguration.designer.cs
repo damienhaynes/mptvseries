@@ -94,6 +94,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
+            this.comboOnlineLang = new System.Windows.Forms.ComboBox();
             this.cleanBanners = new System.Windows.Forms.LinkLabel();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -638,6 +640,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.label26);
+            this.panel_OnlineData.Controls.Add(this.comboOnlineLang);
             this.panel_OnlineData.Controls.Add(this.cleanBanners);
             this.panel_OnlineData.Controls.Add(this.checkBox_doFolderWatch);
             this.panel_OnlineData.Controls.Add(this.linkLabel1);
@@ -648,14 +652,33 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
             this.panel_OnlineData.Location = new System.Drawing.Point(177, 6);
             this.panel_OnlineData.Name = "panel_OnlineData";
-            this.panel_OnlineData.Size = new System.Drawing.Size(465, 195);
+            this.panel_OnlineData.Size = new System.Drawing.Size(465, 220);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 146);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(85, 13);
+            this.label26.TabIndex = 16;
+            this.label26.Text = "Retrieve data in:";
+            // 
+            // comboOnlineLang
+            // 
+            this.comboOnlineLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboOnlineLang.FormattingEnabled = true;
+            this.comboOnlineLang.Location = new System.Drawing.Point(94, 143);
+            this.comboOnlineLang.Name = "comboOnlineLang";
+            this.comboOnlineLang.Size = new System.Drawing.Size(121, 21);
+            this.comboOnlineLang.TabIndex = 15;
+            this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
             // 
             // cleanBanners
             // 
             this.cleanBanners.AutoSize = true;
-            this.cleanBanners.Location = new System.Drawing.Point(3, 161);
+            this.cleanBanners.Location = new System.Drawing.Point(3, 194);
             this.cleanBanners.Name = "cleanBanners";
             this.cleanBanners.Size = new System.Drawing.Size(88, 13);
             this.cleanBanners.TabIndex = 14;
@@ -678,7 +701,7 @@ namespace WindowPlugins.GUITVSeries
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 143);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 176);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(132, 13);
             this.linkLabel1.TabIndex = 12;
@@ -2828,5 +2851,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox comboLanguage;
         private System.Windows.Forms.LinkLabel cleanBanners;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox comboOnlineLang;
     }
 }

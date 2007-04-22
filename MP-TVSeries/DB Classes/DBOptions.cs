@@ -100,6 +100,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cUsesNewPathFormat = "usesNewPathFormat";
 
+        public const String cOnlineLanguage = "onlineLanguage";
+
         static DBOption()
         {
             try

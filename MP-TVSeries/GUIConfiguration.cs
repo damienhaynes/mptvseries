@@ -56,6 +56,7 @@ namespace WindowPlugins.GUITVSeries
         logicalView selectedView = null;
         logicalViewStep selectedViewStep = null;
         loadingDisplay load = new loadingDisplay();
+        List<Language> onlineLanguages = new List<Language>();
 
         public ConfigurationForm()
         {
@@ -202,6 +203,14 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     }
                 }
+            }
+            // get the online languages from the interface
+            onlineLanguages.AddRange(new GetLanguages().languages);
+            int selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
+            foreach (Language lang in onlineLanguages)
+            {
+                comboOnlineLang.Items.Add(lang.language);
+                if (lang.id == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
             }
 
             //List<logicalView> availViews = logicalView.getAllFromDB();
@@ -399,7 +408,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false, true, DBOption.GetOptions(DBOption.cShowHiddenItems));
                 foreach (DBSeason season in seasonsList)
                 {
-                    TreeNode seasonNode = new TreeNode("Season " + season[DBSeason.cIndex]);
+                    TreeNode seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
                     seasonNode.Name = DBSeason.cTableName;
                     seasonNode.Tag = (DBSeason)season;
                     seriesNode.Nodes.Add(seasonNode);
@@ -2356,6 +2365,25 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("*****************************************");
              * */
         }
+
+        private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int sel = 0;
+            foreach(Language lang in onlineLanguages)
+                if(lang.language == (string)comboOnlineLang.SelectedItem)
+                {
+                    sel = lang.id;
+                    break;
+                }
+            if (sel != 0 && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
+            {
+                DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
+                DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+                DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
+                System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\new Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
+            }
+        }
+
     }
 
     public class BannerComboItem

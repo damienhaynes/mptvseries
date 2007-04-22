@@ -113,7 +113,7 @@ namespace WindowPlugins.GUITVSeries
 
         public GetBanner(string idList, long nUpdateBannersTimeStamp)
         {
-            work(ZsoriParser.GetAllBanners(idList, nUpdateBannersTimeStamp), null, true);
+            //work(ZsoriParser.GetAllBanners(idList, nUpdateBannersTimeStamp), null, true);
         }
 
         private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)

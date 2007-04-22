@@ -84,6 +84,7 @@ namespace WindowPlugins.GUITVSeries
             string all = DBOption.GetOptions(optionName);
             entries.Clear();
             entriesValidForInfo.Clear();
+            splitConditions.Clear();
             if(all != string.Empty)
                 entries = new List<string>(Regex.Split(all, entriesSplit));
             entriesInMemory = true;

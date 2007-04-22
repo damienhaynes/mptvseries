@@ -33,50 +33,71 @@ namespace WindowPlugins.GUITVSeries
 {
     class ZsoriParser
     {
+        const string langID = "&language=";
+        static string selLang = string.Empty;
+
+        static string SelLanguageAsString
+        {
+            get
+            {
+                if (selLang == string.Empty)
+                {
+                    int lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
+                    if (lang != 0) selLang = lang.ToString();
+                }
+                return selLang;
+            }
+        }
+
         static public XmlNodeList GetMirrors(String sServer)
         {
             return Generic(sServer + "/GetMirrors.php");
         }
 
+        static public XmlNodeList GetLanguages()
+        {
+            return Generic(DBOnlineMirror.Interface + "/GetLanguages.php");
+        }
+
         static public XmlNodeList GetSeries(String sSeriesName)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetSeries.php?seriesname=" + sSeriesName.Replace(' ', '+'));
+            return Generic(DBOnlineMirror.Interface + "/GetSeries.php?seriesname=" + sSeriesName.Replace(' ', '+') + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&lasttime=" + nGetEpisodesTimeStamp + "&order=" + order);
+            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&lasttime=" + nGetEpisodesTimeStamp + "&order=" + order + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, DateTime firstAired, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&firstaired=" + firstAired.Date.ToString("yyyy-MM-dd") + "&order=" + order);
+            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&firstaired=" + firstAired.Date.ToString("yyyy-MM-dd") + "&order=" + order + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&season=" + nSeasonIndex + "&episode=" + nEpisodeIndex + "&order=" + order);
+            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&season=" + nSeasonIndex + "&episode=" + nEpisodeIndex + "&order=" + order + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs);
+            return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateEpisodesTimeStamp + "&idlist=" + sEpisodesIDs);
+            return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateEpisodesTimeStamp + "&idlist=" + sEpisodesIDs + langID + SelLanguageAsString);
         }
 
         static public XmlNodeList GetBanners(int nSeriesID, long nUpdateBannersTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp);
+            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp + langID + SelLanguageAsString);
         }
 
-        static public XmlNodeList GetAllBanners(string idList, long nUpdateBannersTimeStamp)
-        {
-            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?idlist=" + idList + "&lasttime=" + nUpdateBannersTimeStamp);
-        }
+        //static public XmlNodeList GetAllBanners(string idList, long nUpdateBannersTimeStamp)
+        //{
+        //    return Generic(DBOnlineMirror.Interface + "/GetBanners.php?idlist=" + idList + "&lasttime=" + nUpdateBannersTimeStamp);
+        //}
 
         static private XmlNodeList Generic(String sUrl)
         {
