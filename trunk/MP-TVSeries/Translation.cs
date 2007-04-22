@@ -107,7 +107,7 @@ namespace WindowPlugins.GUITVSeries
 
             try
             {
-                doc.Load(path + lang + ".xml");
+                doc.Load(path + "\\" + lang + ".xml");
             }
             catch (Exception)
             {

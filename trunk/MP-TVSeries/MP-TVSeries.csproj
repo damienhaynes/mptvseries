@@ -100,6 +100,7 @@
     <Compile Include="MediaInfoDLL.cs" />
     <Compile Include="Online Parsing Classes\GetBanner.cs" />
     <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\GetLanguages.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
     <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
