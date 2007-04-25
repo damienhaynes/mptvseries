@@ -199,6 +199,8 @@ namespace WindowPlugins.GUITVSeries
         public string m_tableName;
         public Dictionary<string, DBField> m_fields;
         public bool m_CommitNeeded = false;
+        public static List<string> FieldsRequiringSplit = new List<string>();
+        public List<string> fieldsRequiringSplit = FieldsRequiringSplit;
 
         public DBTable(string tableName)
         {
@@ -572,7 +574,7 @@ namespace WindowPlugins.GUITVSeries
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)
         {
 
-            string sql = "select " + field + " from " + obj.m_tableName + conds;
+            string sql = "select " + field + " from " + obj.m_tableName + conds + conds.orderString + conds.limitString;
             List<DBValue> results = new List<DBValue>();
             try
             {
@@ -587,6 +589,20 @@ namespace WindowPlugins.GUITVSeries
             }
             return results;
         }
+
+        static char[] splits = new char[] { '|', '\\', '/', ',' };
+
+        /// <summary>
+        /// For Genre etc. this method will split by each character in "splits"
+        /// Should be used only for fields descriped in FieldsRequiringSplit
+        /// </summary>
+        /// <param name="fieldvalue"></param>
+        /// <returns></returns>
+        public static string[] splitField(string fieldvalue)
+        {
+            return fieldvalue.Split(splits, StringSplitOptions.RemoveEmptyEntries);
+        }
+
     };
 
     public class SQLWhat
