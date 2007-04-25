@@ -133,10 +133,7 @@ namespace WindowPlugins.GUITVSeries
                     if (step.groupedBy.attempSplit)
                     {
                         // we want to try to split by "|" eg. for actors/genres
-                        if (tmpItem.Length > 0 && tmpItem[0] == '|') tmpItem = tmpItem.Remove(0, 1);
-                        if (tmpItem.Length > 0 && tmpItem[tmpItem.Length - 1] == '|') tmpItem = tmpItem.Remove(tmpItem.Length - 1, 1);
-                        tmpItem = tmpItem.Replace(";", "|").Replace(",", "|").Replace("/", "|");
-                        string[] split = tmpItem.Split('|');
+                        string[] split = DBOnlineEpisode.splitField(tmpItem);
                         foreach (string item in split)
                             if (item.Trim() == string.Empty)
                                 items.Add(Translation.Unknown);
@@ -336,7 +333,7 @@ namespace WindowPlugins.GUITVSeries
                 groupedBy.PrettyName = typeString.Split(':')[1];
                 getTableFieldname(typeString.Split(':')[1], out groupedBy.table, out groupedBy.rawFieldname);
                 groupedBy.tableField = getQTableNameFromUnknownType(groupedBy.table, groupedBy.rawFieldname);
-                groupedBy.attempSplit = groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
+                groupedBy.attempSplit = groupedBy.table.fieldsRequiringSplit.Contains(groupedBy.rawFieldname);// RequiringSplit; //groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
             }
             else if (typeString == type.series.ToString())
                 this.Type = type.series;

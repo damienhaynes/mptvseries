@@ -182,18 +182,22 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
                         List<string> conditions = splitConditions[i];
                         // resolve dnyamic image and check if logo img exists
-                        string filename = getDynamicFileName(conditions[0], level);
-                        if (!System.IO.File.Exists(filename))
+                        List<string> filenames = getDynamicFileName(conditions[0], level);
+                        for (int f = 0; f < filenames.Count; f++)
                         {
-                            MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filename, MPTVSeriesLog.LogLevel.Normal);
-
+                            if (!System.IO.File.Exists(filenames[f]))
+                            {
+                                MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                                filenames.RemoveAt(f);
+                                f--;
+                            }
                         }
                         // check if the condition is met
                         // each image may only exist once
-                        else if (!(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
+                        if (filenames.Count > 0 && !(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
                         {
-                            if (firstOnly) return filename; // if we only need the first then we just return the original here
-                            else logosForBuilding.Add(filename);
+                            if (firstOnly) return filenames[0]; // if we only need the first then we just return the original here
+                            else logosForBuilding.AddRange(filenames);
                         }
                     }
                     else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
@@ -328,13 +332,14 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        static string getDynamicFileName(string dynfilename, Level level)
+        static List<string> getDynamicFileName(string dynfilename, Level level)
         {
             int dnyStart = 0;
+            List<string> result = new List<string>();
             if (!dynfilename.Contains("<"))
             {
                 // not dynamic
-                return getCleanAbsolutePath(dynfilename);
+                result.Add(getCleanAbsolutePath(dynfilename));
             }
             else if (dynfilename.Contains("<Series."))
             {
@@ -351,7 +356,7 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 // no '<' but none of the recognized? that is a wrong entry as < is not a valid char in filenames
-                return string.Empty;
+                return result;
             }
             //MPTVSeriesLog.Write("dynamic Filename detected..trying to resolve");
             string fieldToGet = string.Empty;
@@ -359,12 +364,18 @@ namespace WindowPlugins.GUITVSeries
             fieldToGet = dynfilename.Substring(dnyStart, dynfilename.IndexOf('>', dnyStart) - dnyStart + 1);
             if (getFieldValues(fieldToGet, out value, level))
             {
-                foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-                    value = value.Replace(c, '_');
-                return getDynamicFileName(dynfilename.Replace(fieldToGet, value), level); // recursive so we support multiple dyn fields in filename
+                // for genres/actors we need to split dynamic filenames again
+                string[] vals = DBOnlineSeries.splitField(value);
+                for (int i = 0; i < vals.Length; i++)
+                {
+                    foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                        vals[i] = vals[i].Replace(c, '_');
+                    result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i]), level)); // recursive so we support multiple dyn fields in filename
+                }
+                return result;
             }
             else
-                return getCleanAbsolutePath(dynfilename); // something went wrong
+                return new List<string>(new string[] { getCleanAbsolutePath(dynfilename) }); // something went wrong
         }
 
         static string getCleanAbsolutePath(string file)
@@ -399,6 +410,17 @@ namespace WindowPlugins.GUITVSeries
                             // tmpEP always has to exists or the isrelevant check would have already failed
                             value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
                         }
+                        else if (what.Contains("Series"))
+                        {
+                            if (level != Level.Series) // means we might have to get the series object for this episode/season
+                            {
+                                int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
+                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
+                                    tmpSeries = Helper.getCorrespondingSeries(seriesID);
+                                //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                            }
+                            value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
+                        }
                         else if (what.Contains("Season"))
                         {
                             if (level == Level.Episode) // means we might have to get the season object for this episode
@@ -413,17 +435,6 @@ namespace WindowPlugins.GUITVSeries
                                 //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                             }
                             value = tmpSeason[what.Replace("<Season.", "").Replace(">", "").Trim()];
-                        }
-                        else if (what.Contains("Series"))
-                        {
-                            if (level != Level.Series) // means we might have to get the series object for this episode/season
-                            {
-                                int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                                    tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                                //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
-                            }
-                            value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                         }
                     }
                     // we try to cache them

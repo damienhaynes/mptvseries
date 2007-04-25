@@ -50,6 +50,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         public const String cLastUpdated = "lastupdated";
 
+        new public static List<string> FieldsRequiringSplit = new List<string>(new string[]{ "Genre", "Actors" });
+
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
@@ -148,6 +150,13 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
+        public string CompleteTitle
+        {
+            get
+            {
+                return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID])[DBOnlineSeries.cPrettyName] + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
+            }
+        }
         public override string ToString()
         {
             return this[DBOnlineEpisode.cCompositeID];
@@ -176,6 +185,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
+        public const String cStopTime = "StopTime";
 
         private DBOnlineEpisode m_onlineEpisode = null;
 
