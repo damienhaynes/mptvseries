@@ -333,7 +333,7 @@ namespace WindowPlugins.GUITVSeries
                 groupedBy.PrettyName = typeString.Split(':')[1];
                 getTableFieldname(typeString.Split(':')[1], out groupedBy.table, out groupedBy.rawFieldname);
                 groupedBy.tableField = getQTableNameFromUnknownType(groupedBy.table, groupedBy.rawFieldname);
-                groupedBy.attempSplit = groupedBy.table.fieldsRequiringSplit.Contains(groupedBy.rawFieldname);// RequiringSplit; //groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
+                groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);// RequiringSplit; //groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
             }
             else if (typeString == type.series.ToString())
                 this.Type = type.series;
