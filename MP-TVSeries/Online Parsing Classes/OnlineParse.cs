@@ -1066,11 +1066,14 @@ namespace WindowPlugins.GUITVSeries
                                 switch (key)
                                 {
                                     // do not overwrite current series local settings with the one from the online series (baaaad design??)
-                                    case DBSeries.cParsedName:
+                                    case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
                                     case DBOnlineSeries.cHasLocalFiles:
                                     case DBOnlineSeries.cIsFavourite:
                                     case DBOnlineSeries.cEpisodeOrders:
                                     case DBOnlineSeries.cChoseEpisodeOrder:
+
+                                    case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
+                                    case DBOnlineSeries.cCurrentBannerFileName:
                                         break;
 
                                     default:
@@ -1174,8 +1177,10 @@ namespace WindowPlugins.GUITVSeries
                         {
                             m_bDataUpdated = true;
                             MPTVSeriesLog.Write("New banner found for " + series[DBSeries.cParsedName] + " : " + bannerSeries.sOnlineBannerPath);
-                            if (series[DBOnlineSeries.cBannerFileNames] == String.Empty)
+                            if (series[DBOnlineSeries.cBannerFileNames].ToString().Trim() == String.Empty)
+                            {
                                 series[DBOnlineSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
+                            }
                             else
                             {
                                 series[DBOnlineSeries.cBannerFileNames] += "|" + bannerSeries.sBannerFileName;
@@ -1188,7 +1193,7 @@ namespace WindowPlugins.GUITVSeries
                             sLastTextBanner = bannerSeries.sBannerFileName;
                     }
 
-                    if (series[DBOnlineSeries.cCurrentBannerFileName] == "")
+                    if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Trim() == string.Empty)
                     {
                         // use the last banner as the current one (if any graphical found)
                         // otherwise use the first available
@@ -1218,7 +1223,8 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // use the last banner as the current one
-                        season[DBSeason.cCurrentBannerFileName] = bannerSeason.sBannerFileName;
+                        if (season[DBSeason.cCurrentBannerFileName].ToString().Trim() == string.Empty)
+                            season[DBSeason.cCurrentBannerFileName] = bannerSeason.sBannerFileName;
                         season.Commit();
                     }
                     if (!bUpdateNewSeries)
@@ -1291,8 +1297,8 @@ namespace WindowPlugins.GUITVSeries
                     else
                         sEpisodeIDs += "," + pair.Value[DBOnlineEpisode.cID];
                 }
-
-                // use the last known timestamp from when we updated the series
+                
+                // use the last known timestamp from when we updated the episode
                 MPTVSeriesLog.Write("Updating " + IDToEpisodesMap.Count + " Episodes, " + episodeList.Count + " left");
                 UpdateEpisodes updateEpisodesParser = new UpdateEpisodes(sEpisodeIDs, nUpdateEpisodesTimeStamp);
                 nReturnedUpdateEpisodesTimeStamp = updateEpisodesParser.ServerTimeStamp;

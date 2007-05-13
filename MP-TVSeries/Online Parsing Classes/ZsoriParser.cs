@@ -79,9 +79,10 @@ namespace WindowPlugins.GUITVSeries
             return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&season=" + nSeasonIndex + "&episode=" + nEpisodeIndex + "&order=" + order + langID + SelLanguageAsString);
         }
 
-        static public XmlNodeList UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp)
+        static public XmlNodeList UpdateSeries(String sSeriesIDs, string forcedLang, long nUpdateSeriesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs + langID + SelLanguageAsString);
+            forcedLang = forcedLang == null ? SelLanguageAsString : forcedLang;
+            return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs + langID + forcedLang);
         }
 
         static public XmlNodeList UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
@@ -102,6 +103,11 @@ namespace WindowPlugins.GUITVSeries
         static private XmlNodeList Generic(String sUrl)
         {
             MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug);
+            if (sUrl == null || sUrl.Length < 1 || sUrl[0] == '/')
+            {
+                // this happens if no active mirror is set
+                return null;
+            }
             WebClient client = new WebClient();
             Stream data = null;
             try

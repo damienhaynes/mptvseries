@@ -130,7 +130,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
                 DBOnlineSeries series = new DBOnlineSeries(m_dbEpisode[DBEpisode.cSeriesID]);
                 DBSeason season = new DBSeason(m_dbEpisode[DBEpisode.cSeriesID], m_dbEpisode[DBEpisode.cSeasonIndex]);
-                ForomEpisode episode = new ForomEpisode(series[DBOnlineSeries.cPrettyName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
+                ForomEpisode episode = new ForomEpisode(series[DBOnlineSeries.cOriginalName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
                 SeasonMatchResult finalSeasonResult = null;
 
                 String sLal = String.Empty;

@@ -63,6 +63,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeOrders = "EpisodeOrders";
         public const String cChoseEpisodeOrder = "choosenOrder";
 
+        public const String cOriginalName = "origName";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -159,6 +161,48 @@ namespace WindowPlugins.GUITVSeries
         public static void Clear(SQLCondition conditions)
         {
             Clear(new DBOnlineSeries(), conditions);
+        }
+
+        public override DBValue this[String fieldName]
+        {
+            get
+            {
+                switch (fieldName)
+                {
+                        // forom subtitle retrieval always needs original (english) series title
+                        // if the user choose a different language for the import, we don't have this as the prettyname
+                    case DBOnlineSeries.cOriginalName:
+                        string origLanguage = "7"; // 7 = english (original)
+                        if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
+                            return base[DBOnlineSeries.cPrettyName];
+                        else
+                        {
+                            if (base[DBOnlineSeries.cOriginalName] != string.Empty)
+                                return base[DBOnlineSeries.cOriginalName];
+                            else
+                            {
+                                // we need to get it
+                                MPTVSeriesLog.Write("Retrieving original Series Name...");
+                                UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage);
+                                if (origParser.Results.Count == 1)
+                                {
+                                    base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
+                                    Commit(); // save for next time
+                                    MPTVSeriesLog.Write("Original Series Name retrieved");
+                                    return origParser.Results[0][DBOnlineSeries.cPrettyName];
+                                }
+                                else
+                                {
+                                    MPTVSeriesLog.Write("Original Series Name could not be retrieved");
+                                    // something wrong
+                                    return base[DBOnlineSeries.cPrettyName];
+                                }
+                            }
+                        }
+                    default:
+                        return base[fieldName];
+                }
+            }
         }
     };
 
@@ -452,7 +496,7 @@ namespace WindowPlugins.GUITVSeries
                     if (sList == String.Empty)
                         return outList;
 
-                    String[] split = sList.Split(new char[] { '|' });
+                    String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (String filename in split)
                     {
                         //if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)

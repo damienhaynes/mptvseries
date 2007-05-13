@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
 using SQLite.NET;
 using MediaPortal.Database;
 
@@ -61,6 +62,9 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
             s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
+
+            // lately it also returns seriesID (which we already had before - but unfortunatly not in all lower case, prevents an error msg, thats all
+            s_OnlineToFieldMap.Add("seriesid", cSeriesID);
 
             // make sure the table is created on first run
             DBOnlineEpisode dummy = new DBOnlineEpisode();
@@ -184,6 +188,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
         public const String cStopTime = "StopTime";
+
+        public const String cFileSizeBytes = "FileSizeB";
+        public const String cFileSize = "FileSize";
 
         private DBOnlineEpisode m_onlineEpisode = null;
 
@@ -482,6 +489,13 @@ namespace WindowPlugins.GUITVSeries
             {
 
                 // online data always takes precedence over the local file data
+                switch (fieldName)
+                {
+                    case cFileSizeBytes:
+                        return new System.IO.FileInfo(base[DBEpisode.cFilename]).Length;
+                    case cFileSize:
+                        return StrFormatByteSize(new System.IO.FileInfo(base[DBEpisode.cFilename]).Length);
+                }
                 if (m_onlineEpisode != null)
                 {
                     DBValue retVal = null;
@@ -828,8 +842,20 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineEpisode == null) return string.Empty;
                 return m_onlineEpisode.Image;
 			}
-		}
+        }
 
+        #region PrettyFilesize
+        [DllImport("Shlwapi.dll", CharSet = CharSet.Auto)]
+        static extern long StrFormatByteSize(long fileSize,
+        [MarshalAs(UnmanagedType.LPTStr)] StringBuilder buffer, int bufferSize);
+
+        static string StrFormatByteSize(long fileSize)
+        {
+            StringBuilder sbBuffer = new StringBuilder(20);
+            StrFormatByteSize(fileSize, sbBuffer, 20);
+            return sbBuffer.ToString();
+        }
+        #endregion
     }
 
     /*

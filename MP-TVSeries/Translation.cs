@@ -77,6 +77,7 @@ namespace WindowPlugins.GUITVSeries
         public static string No_items = "No items!";
         public static string Unknown = "Unknown";
         public static string wrongSkin = "Wrong Skin file";
+        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
 
         #endregion
 
