@@ -51,13 +51,22 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
-
         public UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp)
+        {
+            Work(sSeriesIDs, nUpdateSeriesTimeStamp, null);
+        }
+
+        public UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp, string lang)
+        {
+            Work(sSeriesIDs, nUpdateSeriesTimeStamp, lang);
+        }
+        
+        void Work(String sSeriesIDs, long nUpdateSeriesTimeStamp, string lang)
         {
             if (sSeriesIDs != String.Empty)
             {
                 XmlNodeList nodeList = null;
-                nodeList = ZsoriParser.UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
+                nodeList = ZsoriParser.UpdateSeries(sSeriesIDs, lang, nUpdateSeriesTimeStamp);
 
                 if (nodeList != null)
                 {

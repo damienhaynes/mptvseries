@@ -214,9 +214,11 @@ namespace WindowPlugins.GUITVSeries
             }
 
             //List<logicalView> availViews = logicalView.getAllFromDB();
-            availViews = logicalView.getStaticViews();
+            availViews = logicalView.getStaticViews(true); //include disabled
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
+
+            txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
 
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
@@ -350,6 +352,12 @@ namespace WindowPlugins.GUITVSeries
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnEnabled);
 
+                DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
+                columnBefore.Name = DBReplacements.cBefore;
+                columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
+                columnBefore.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Replace.Columns.Add(columnBefore);
+
                 DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
                 columnToReplace.Name = DBReplacements.cToReplace;
                 columnToReplace.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cToReplace);
@@ -369,6 +377,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DataGridViewRow row = dataGridView_Replace.Rows[replacement[DBReplacements.cIndex]];
                 row.Cells[DBReplacements.cEnabled].Value = (Boolean)replacement[DBReplacements.cEnabled];
+                row.Cells[DBReplacements.cBefore].Value = (Boolean)replacement[DBReplacements.cBefore];
                 row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
                 row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
             }
@@ -1324,6 +1333,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (nodeDeleted != null)
             {
+                List<DBEpisode> epsDeletion = new List<DBEpisode>();
                 switch (nodeDeleted.Name)
                 {
                     case DBSeries.cTableName:
@@ -1332,7 +1342,9 @@ namespace WindowPlugins.GUITVSeries
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
+
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
@@ -1361,6 +1373,9 @@ namespace WindowPlugins.GUITVSeries
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                            
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+
                             DBEpisode.Clear(condition);
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
@@ -1380,7 +1395,11 @@ namespace WindowPlugins.GUITVSeries
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cEpisodeName, episode[DBEpisode.cEpisodeName], SQLConditionType.Equal);
+                            
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+
                             DBEpisode.Clear(condition);
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeName, episode[DBOnlineEpisode.cEpisodeName], SQLConditionType.Equal);
@@ -1389,6 +1408,20 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                 }
+                if (epsDeletion.Count > 0 && DBOption.GetOptions(DBOption.cDeleteFile))
+                {
+                    // delete the actual files!!
+                    List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
+
+                    if (MessageBox.Show("You are about to delete " + files.Count.ToString() + " physical file(s), would you like to proceed?", "Confirm File Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        foreach(string file in files)
+                        {
+                            System.IO.File.Delete(file);
+                        }
+                    }
+                }
+
                 if (treeView_Library.Nodes.Count == 0)
                 {
                     // also clear the data pane
@@ -1461,6 +1494,9 @@ namespace WindowPlugins.GUITVSeries
                             // unwatchedItems isnt in fieldnames since its purely virtual
                             bValid |= ((sFieldName == DBOnlineSeries.cUnwatchedItems && tag.m_Level == FieldTag.Level.Series) ||
                                (sFieldName == DBSeason.cUnwatchedItems && tag.m_Level == FieldTag.Level.Season));
+                            // same for filesizes
+                            bValid |= ((sFieldName == DBEpisode.cFileSize && tag.m_Level == FieldTag.Level.Episode) ||
+                               (sFieldName == DBEpisode.cFileSizeBytes && tag.m_Level == FieldTag.Level.Episode));
                             switch (tag.m_Level)
                             {
                                 case FieldTag.Level.Series:
@@ -2036,6 +2072,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void btnrmvLogo_Click(object sender, EventArgs e)
         {
+            if (lstLogos.SelectedIndex == -1) return;
             List<string> entries = new List<string>();
             foreach (string item in lstLogos.Items)
                 entries.Add(item.ToString());
@@ -2048,7 +2085,7 @@ namespace WindowPlugins.GUITVSeries
         private void btnLogoDown_Click(object sender, EventArgs e)
         {
             if (lstLogos.Items.Count < 2) return;
-            if (lstLogos.SelectedIndex == lstLogos.Items.Count - 1) return;
+            if (lstLogos.SelectedIndex == lstLogos.Items.Count - 1 || lstLogos.SelectedIndex == -1) return;
             
             string selected = (string)lstLogos.SelectedItem;
             lstLogos.Items[lstLogos.SelectedIndex] = lstLogos.Items[lstLogos.SelectedIndex + 1];
@@ -2068,7 +2105,7 @@ namespace WindowPlugins.GUITVSeries
         private void btnlogoUp_Click(object sender, EventArgs e)
         {
             if (lstLogos.Items.Count < 2) return;
-            if (lstLogos.SelectedIndex == 0) return;
+            if (lstLogos.SelectedIndex == 0 || lstLogos.SelectedIndex == -1) return;
 
             string selected = (string)lstLogos.SelectedItem;
             lstLogos.Items[lstLogos.SelectedIndex] = lstLogos.Items[lstLogos.SelectedIndex - 1];
@@ -2086,6 +2123,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void btnLogoEdit_Click(object sender, EventArgs e)
         {
+            if (lstLogos.SelectedIndex == -1) return;
             logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
             logoConfigurator lc = new logoConfigurator(del,(string)lstLogos.SelectedItem);
 
@@ -2122,7 +2160,7 @@ namespace WindowPlugins.GUITVSeries
                 this.listBox1.DoubleClick += new EventHandler(listBox1_DoubleClick);
             isinit = true;
             if (viewArgument == null) this.numericUpDown1.Value = 0;
-            testViews = logicalView.getAllFromDB(this.richTextBox1.Text.Trim());
+            testViews = logicalView.getAllFromString(this.richTextBox1.Text.Trim(), true);
             logicalViewStep.type curType = testViews[0].gettypeOfStep((int)this.numericUpDown1.Value);
             this.listBox1.Items.Clear();
             currType = curType;
@@ -2176,13 +2214,18 @@ namespace WindowPlugins.GUITVSeries
 
         private void _availViews_SelectedIndexChanged(object sender, EventArgs e)
         {
+            logicalView.cachePrettyName = false;
+            pauseViewConfigSave = true;
             view_selectedName.Text = string.Empty;
             view_selStepsList.Items.Clear();
 
             selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
-            view_selectedName.Text = selectedView.Name;
+            view_selectedName.Text = selectedView.prettyName;
+            checkCurViewEnabled.Checked = selectedView.Enabled;
             foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.steps))
                 view_selStepsList.Items.Add(step);
+
+            pauseViewConfigSave = false;
         }
 
         private void view_selStepsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -2382,6 +2425,85 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\new Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
+        }
+
+        private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
+        }
+
+        private void checkFileDeletion_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cDeleteFile, this.checkFileDeletion.Checked);
+        }
+
+        bool pauseViewConfigSave = false;
+        private void saveQuickViewConfig(string origName, string newName, bool enabled)
+        {
+            // bit of a hack while views are not fully configurable to make the renamable and enabable
+            if (pauseViewConfigSave || origName == string.Empty) return;
+            String optionsSaveString = DBOption.GetOptions("viewsQuickConfig");
+            string split = "<;>";
+            List<string> viewsConfigs = new List<string>();
+            viewsConfigs.AddRange(optionsSaveString.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries));
+            
+            // get the correct one, if it exists
+            bool found = false;
+            for (int i = 0; i < viewsConfigs.Count; i++)
+            {
+                try
+                {
+                    string[] Current = viewsConfigs[i].Split(new char[] { ';' }, StringSplitOptions.None);
+                    if (Current[0] == origName)
+                    {
+                        Current[1] = newName;
+
+                        if (enabled) Current[2] = "1";
+                        else Current[2] = "0";
+
+                        viewsConfigs[i] = Current[0] + ";" + Current[1] + ";" + Current[2];
+
+                        found = true;
+                        break;
+                    }
+                }
+                catch (Exception) { }
+            }
+            if (!found)
+            {
+                if (newName.Length == 0) newName = origName;
+                viewsConfigs.Add(origName + ";" + newName + ";" + "1"); // by deault enabled
+            }
+
+            string result = string.Empty;
+            foreach (string viewConfig in viewsConfigs)
+            {
+                if (result.Length > 0) result += split;
+                result += viewConfig;
+            }
+            DBOption.SetOptions("viewsQuickConfig", result);
+
+        }
+        private void view_selectedName_TextChanged(object sender, EventArgs e)
+        {
+            saveQuickViewConfig(selectedView.Name, view_selectedName.Text, checkCurViewEnabled.Checked);
+        }
+
+        private void checkCurViewEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            saveQuickViewConfig(selectedView.Name, view_selectedName.Text, checkCurViewEnabled.Checked);
+        }
+
+        private void splitContainerImportSettings_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void txtMainMirror_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cMainMirror, txtMainMirror.Text);
         }
 
     }

@@ -102,6 +102,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cOnlineLanguage = "onlineLanguage";
 
+        public const String cDeleteFile = "deleteFile";
+
+        public const String cMainMirror = "mainMirror";
+
         static DBOption()
         {
             try

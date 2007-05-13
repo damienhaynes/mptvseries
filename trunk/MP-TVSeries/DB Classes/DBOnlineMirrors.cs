@@ -80,13 +80,15 @@ namespace WindowPlugins.GUITVSeries
 
         public static void Init()
         {
+            // TODO: improve mirrorhandling
             List<DBOnlineMirror> mirrorList = Get();
+            bool startEmpty = false;
             if (mirrorList.Count == 0)
             {
                 // no mirrors yet - refresh using "seed"
-                //LoadMirrorList("http://tvdb.zsori.com/interfaces");
-                LoadMirrorList("http://taylornooks.com/interfaces");
+                LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror));
                 mirrorList = Get();
+                startEmpty = true;
             }
 
             // choose first interface as what's returned by the server is already randomized
@@ -98,7 +100,37 @@ namespace WindowPlugins.GUITVSeries
                     // valid data, let's use that one
                     s_sCurrentInterface = mirrorList[index][cInterface];
                     s_sCurrentBanner = mirrorList[index][cBanners];
-                    break;
+                    return;
+                }
+                else
+                {
+                    // its no good, delete it from our cache
+                    SQLCondition cond = new SQLCondition();
+                    cond.Add(new DBOnlineMirror(), DBOnlineMirror.cInterface, mirrorList[index][cInterface], SQLConditionType.Equal);
+                    DBOnlineMirror.Clear(new DBOnlineMirror(), cond);
+                }
+            }
+            if (startEmpty)
+            {
+                // ok, we requeried the manual main mirror, and none of its reported mirrors were any good
+                // last option is to use it directly (the main mirror itself must be good or this code would not be reached, and it must not have reported itself as a mirror)
+
+                s_sCurrentInterface = DBOption.GetOptions(DBOption.cMainMirror);
+                s_sCurrentBanner = "none"; // no banner mirror though! not string.empty to prevent re-init everytime
+                MPTVSeriesLog.Write("Could not connect to any mirrors, using Main Mirror direclty as backup! (no banners will be downloaded!)");
+            }
+            else
+            {
+                // oops, if we are here no mirror in our list was good, try main mirror (perhaps it was changed and thus isnt in this list yet)
+                // note: this only queries the manually entered main servers and asks it for a list of mirrors, this list may or may not contain this main mirror
+                if (LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror)))
+                {
+                    // and test again (we delete all from the db so recursion should be save)
+                    Init();
+                }
+                else
+                {
+                    MPTVSeriesLog.Write("Could not connect to any mirrors, please check your internet connection!");
                 }
             }
         }
@@ -108,7 +140,7 @@ namespace WindowPlugins.GUITVSeries
             XmlNodeList nodeList = ZsoriParser.GetMirrors(sServer);
             if (nodeList == null)
                 return false;
-
+            int count = 0;
             foreach (XmlNode itemNode in nodeList)
             {
                 // create a new OnlineMirror object
@@ -125,9 +157,10 @@ namespace WindowPlugins.GUITVSeries
                         mirror[propertyNode.Name] = propertyNode.InnerText;
                     }
                 }
-
+                count++;
                 mirror.Commit();
             }
+            MPTVSeriesLog.Write("Received " + count.ToString() + " mirrors from " + sServer);
             return true;
         }
 

@@ -37,6 +37,7 @@ namespace WindowPlugins.GUITVSeries
         static List<Regex> regularExpressions = new List<Regex>();
         //static List<DBReplacements> replacements = new List<DBReplacements>();
         static Dictionary<string, string> replacements = new Dictionary<string, string>();
+        static Dictionary<string, string> replacementsBefore = new Dictionary<string, string>();
 
         public Dictionary<string, string> Matches
         {
@@ -62,6 +63,7 @@ namespace WindowPlugins.GUITVSeries
                 sExpressions.Clear();
                 regularExpressions.Clear();
                 replacements.Clear();
+                replacementsBefore.Clear();
                 DBExpression[] expressions = DBExpression.GetAll();
                 foreach (DBExpression expression in expressions)
                 {
@@ -114,8 +116,10 @@ namespace WindowPlugins.GUITVSeries
                         .ToLower()
                         .Replace("<space>", " ")
                         .Replace("<empty>", "");
-
-                    replacements.Add(searchString, replaceString);
+                    if(replacement[DBReplacements.cBefore])
+                        replacementsBefore.Add(searchString, replaceString);
+                    else
+                        replacements.Add(searchString, replaceString);
                 }
                 return error;
             }
@@ -137,11 +141,15 @@ namespace WindowPlugins.GUITVSeries
                 if (sExpressions.Count == 0) reLoadExpressions();
 
                 int index = 0;
+
+                string _Source;
+                _Source = m_Filename;
+                // run Before replacements
+                foreach (KeyValuePair<string, string> replacement in replacementsBefore)
+                    _Source = _Source.Replace(replacement.Key, replacement.Value);
+                    
                 foreach(Regex regularExpression in regularExpressions)
                 {
-                    string _Source;
-                    _Source = m_Filename;
-
                     Match matchResults;
                     matchResults = regularExpression.Match(_Source);
 
@@ -154,6 +162,7 @@ namespace WindowPlugins.GUITVSeries
 
                             if (GroupValue != "" && GroupName != "unknown")
                             {
+                                // ´run after replacements on captures
                                 foreach (KeyValuePair<string, string> replacement in replacements)
                                     GroupValue = GroupValue.Replace(replacement.Key, replacement.Value);
 

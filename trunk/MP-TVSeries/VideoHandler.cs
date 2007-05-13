@@ -54,8 +54,8 @@ namespace WindowPlugins.GUITVSeries
 
         void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(1000);
-            SetGUIProperties(false);
+            System.Threading.Thread.Sleep(2000);
+            SetGUIProperties((bool)e.Argument);
         }
 
 
@@ -88,12 +88,16 @@ namespace WindowPlugins.GUITVSeries
             //#Play.Current.IsWatched
             #endregion
 
-            DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            MPTVSeriesLog.Write("SetGUIProperties: " + clear.ToString());
+            MPTVSeriesLog.Write(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#Play.Current.Title"));
+            DBSeries series = null;
+            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
 
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
+            MPTVSeriesLog.Write(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#Play.Current.Title"));
         }
 
         public bool ResumeOrPlay(DBEpisode episode)
@@ -185,58 +189,66 @@ namespace WindowPlugins.GUITVSeries
 
         private void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
         {
-            MPTVSeriesLog.Write("Playback stopped for: ", filename, MPTVSeriesLog.LogLevel.Normal);
-            try
+            if (m_currentEpisode != null)
             {
-                if (type != g_Player.MediaType.Video) return;
-
-                if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
+                MPTVSeriesLog.Write("Playback stopped for: ", filename, MPTVSeriesLog.LogLevel.Normal);
+                try
                 {
-                    byte[] resumeData = null;
-                    g_Player.Player.GetResumeState(out resumeData);
-                    MPTVSeriesLog.Write(timeMovieStopped.ToString());
-                    SetGUIProperties(true);
-                    m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-                    m_currentEpisode.Commit();
+                    if (type != g_Player.MediaType.Video) return;
+
+                    if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
+                    {
+                        w.RunWorkerAsync(true);
+                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                        m_currentEpisode.Commit();
+                        m_currentEpisode = null;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStopped()\r\n" + e.ToString());
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStopped()\r\n" + e.ToString());
+                }
             }
         }
 
         private void OnPlayBackEnded(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
-            MPTVSeriesLog.Write("Playback ended for: ", filename, MPTVSeriesLog.LogLevel.Normal);
-            try
+            if (m_currentEpisode != null)
             {
-                if (type != g_Player.MediaType.Video) return;
-
-                if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
+                MPTVSeriesLog.Write("Playback ended for: ", filename, MPTVSeriesLog.LogLevel.Normal);
+                try
                 {
-                    SetGUIProperties(true);
-                    m_currentEpisode[DBEpisode.cStopTime] = 0;
-                    m_currentEpisode.Commit();
+                    if (type != g_Player.MediaType.Video) return;
+
+                    if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
+                    {
+                        w.RunWorkerAsync(true);
+                        m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode.Commit();
+                        m_currentEpisode = null;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
+                }
             }
         }
 
         private void OnPlayBackStarted(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
-            MPTVSeriesLog.Write("Playback started for: ", filename, MPTVSeriesLog.LogLevel.Normal);
-            try
+            if (m_currentEpisode != null)
             {
-                if (type != g_Player.MediaType.Video) return;
-                w.RunWorkerAsync(); // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
-            }
-            catch (Exception e)
-            {
-                MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStarted()\r\n" + e.ToString());
+                MPTVSeriesLog.Write("Playback started for: ", filename, MPTVSeriesLog.LogLevel.Normal);
+                try
+                {
+                    if (type != g_Player.MediaType.Video) return;
+                    w.RunWorkerAsync(false); // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStarted()\r\n" + e.ToString());
+                }
             }
         }
     }

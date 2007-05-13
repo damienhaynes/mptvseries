@@ -223,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
                 if (sList == String.Empty)
                     return outList;
 
-                String[] split = sList.Split(new char[] { '|' });
+                String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 //string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
                 foreach (String filename in split)
                 {

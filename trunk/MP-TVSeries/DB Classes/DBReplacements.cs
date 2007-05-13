@@ -38,12 +38,14 @@ namespace WindowPlugins.GUITVSeries
         public const String cEnabled = "enabled";
         public const String cToReplace = "toreplace";
         public const String cWith = "with";
+        public const String cBefore = "before";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
         static DBReplacements()
         {
             s_FieldToDisplayNameMap.Add(cEnabled, "Enabled");
+            s_FieldToDisplayNameMap.Add(cBefore, "Run before matching");
             s_FieldToDisplayNameMap.Add(cToReplace, "Replace this..");
             s_FieldToDisplayNameMap.Add(cWith, "With this");
 
@@ -56,16 +58,19 @@ namespace WindowPlugins.GUITVSeries
                 DBReplacements replacement = new DBReplacements();
                 replacement[DBReplacements.cIndex] = "0";
                 replacement[DBReplacements.cEnabled] = "1";
+                replacement[DBReplacements.cBefore] = "0";
                 replacement[DBReplacements.cToReplace] = ".";
                 replacement[DBReplacements.cWith] = @"<space>";
                 replacement.Commit();
 
                 replacement[DBReplacements.cIndex] = "1";
+                replacement[DBReplacements.cBefore] = "0";
                 replacement[DBReplacements.cToReplace] = "_";
                 replacement[DBReplacements.cWith] = @"<space>";
                 replacement.Commit();
 
                 replacement[DBReplacements.cIndex] = "2";
+                replacement[DBReplacements.cBefore] = "0";
                 replacement[DBReplacements.cToReplace] = "-<space>";
                 replacement[DBReplacements.cWith] = @"<empty>";
                 replacement.Commit();
@@ -100,6 +105,7 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
+            AddColumn(cBefore, new DBField(DBField.cTypeInt));
             AddColumn(cToReplace, new DBField(DBField.cTypeString));
             AddColumn(cWith, new DBField(DBField.cTypeString));
         }

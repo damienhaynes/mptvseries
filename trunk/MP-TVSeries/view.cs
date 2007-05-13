@@ -31,13 +31,70 @@ namespace WindowPlugins.GUITVSeries
     {
         const string viewSeperator = "<nextView>";
         string _name = string.Empty;
+        string _prettyName = null;
+        public static bool cachePrettyName = true;
         //public bool isGroupType = false;
         public string groupedInfo(int step)
         {
             return steps[step].groupedBy.PrettyName;
         }
-        public string Name { get { return this._name; } }
-        
+        public string Name  { get { return this._name; } }
+        public string[] loadQuickSettings()
+        {
+            String optionsSaveString = DBOption.GetOptions("viewsQuickConfig");
+            string split = "<;>";
+            List<string> viewsConfigs = new List<string>();
+            viewsConfigs.AddRange(optionsSaveString.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries));
+            for (int i = 0; i < viewsConfigs.Count; i++)
+            {
+                try
+                {
+                    string[] Current = viewsConfigs[i].Split(new char[] { ';' }, StringSplitOptions.None);
+                    if (Current[0] == Name)
+                    {
+                        return Current;
+                    }
+                }
+                catch (Exception) { }
+            }
+            return null;
+        }
+        public string prettyName
+        {
+            get 
+            {
+                if (_prettyName != null && cachePrettyName) return _prettyName;
+                else
+                {
+                    try
+                    {
+                        string[] quickSettings = loadQuickSettings();
+                        if (quickSettings != null)
+                        {
+                            _prettyName = quickSettings[1];
+                            return quickSettings[1];
+                        }
+                    }
+                    catch (Exception){}
+                    return Name;
+                }
+            }
+        }
+
+        public bool Enabled
+        {
+            get
+            {
+                try 
+	            {	        
+		            string[] quickSettings = loadQuickSettings();
+                    if (quickSettings != null) return quickSettings[2] == "1";
+	            }
+	            catch (Exception){}
+                return true; // by default enabled
+            }
+        }
+
         public List<logicalViewStep> steps = new List<logicalViewStep>();
 
         public List<DBSeries> getSeriesItems(int stepIndex, string[] currentStepSelection)
@@ -257,16 +314,16 @@ namespace WindowPlugins.GUITVSeries
         /// Fakes user defined views with hardcoded ones, to be removed once user configuration has been set upt!!!
         /// </summary>
         /// <returns></returns>
-        public static List<logicalView> getStaticViews()
+        public static List<logicalView> getStaticViews(bool includeDisabled)
         {
-            return getAllFromDB(DBOptionFake.Get(string.Empty));
+            return getAllFromString(DBOptionFake.Get(string.Empty), includeDisabled);
         }
 
-        public static List<logicalView> getAllFromDB()
+        public static List<logicalView> getAllFromDB(bool includeDisabled)
         {
-            return getAllFromDB(null);
+            return getAllFromString(null, includeDisabled);
         }
-        public static List<logicalView> getAllFromDB(string fake)
+        public static List<logicalView> getAllFromString(string fake, bool includeDisabled)
         {
             string[] viewStrings = null;
             if(fake == null)
@@ -275,7 +332,10 @@ namespace WindowPlugins.GUITVSeries
                 viewStrings = System.Text.RegularExpressions.Regex.Split(fake, viewSeperator);
             List<logicalView> views = new List<logicalView>();
             foreach (string viewString in viewStrings)
-                views.Add(new logicalView(viewString));
+            {
+                logicalView view = new logicalView(viewString);
+                if (includeDisabled || view.Enabled) views.Add(view);
+            }
             return views;
         }
     }
