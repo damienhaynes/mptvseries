@@ -201,6 +201,8 @@ namespace WindowPlugins.GUITVSeries
         public bool m_CommitNeeded = false;
         public static List<string> FieldsRequiringSplit = new List<string>();
         public List<string> fieldsRequiringSplit = FieldsRequiringSplit;
+        public delegate void dbUpdateOccuredDelegate(string tableName);
+        public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
         public DBTable(string tableName)
         {
@@ -490,7 +492,8 @@ namespace WindowPlugins.GUITVSeries
                     sqlQuery = "insert into " + m_tableName + " (" + sParamNames + ") values(" + sParamValues + ")";
                     DBTVSeries.Execute(sqlQuery);
                 }
-
+                if (dbUpdateOccured != null)
+                    dbUpdateOccured(m_tableName);
                 return true;
             }
             catch (Exception ex)
@@ -518,6 +521,8 @@ namespace WindowPlugins.GUITVSeries
 
                 sqlQuery += conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+                if (dbUpdateOccured != null)
+                    dbUpdateOccured(obj.m_tableName);
             }
         }
 
@@ -527,6 +532,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2 + conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+                if (dbUpdateOccured != null)
+                    dbUpdateOccured(obj.m_tableName);
             }
         }
 
@@ -534,6 +541,8 @@ namespace WindowPlugins.GUITVSeries
         {
             String sqlQuery = "delete from " + obj.m_tableName + conditions;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            if (dbUpdateOccured != null)
+                dbUpdateOccured(obj.m_tableName);
         }
 
         protected static string getRandomBanner(List<string> BannerList, bool checkForGraphical)

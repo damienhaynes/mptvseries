@@ -417,7 +417,11 @@ namespace WindowPlugins.GUITVSeries
                 List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false, true, DBOption.GetOptions(DBOption.cShowHiddenItems));
                 foreach (DBSeason season in seasonsList)
                 {
-                    TreeNode seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
+                    TreeNode seasonNode = null;
+                    if(season[DBSeason.cIndex] == 0)
+                        seasonNode = new TreeNode(Translation.specials);
+                    else
+                        seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
                     seasonNode.Name = DBSeason.cTableName;
                     seasonNode.Tag = (DBSeason)season;
                     seriesNode.Nodes.Add(seasonNode);
@@ -2423,7 +2427,8 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
                 DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
-                System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\new Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
+                ZsoriParser.SelLanguageAsString = string.Empty; // to overcome caching
+                System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
         }
 
