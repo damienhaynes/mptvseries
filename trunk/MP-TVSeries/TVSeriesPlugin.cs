@@ -431,7 +431,16 @@ namespace MediaPortal.GUI.Video
                                             source = m_SelectedSeason;
                                         if (source != null)
                                         {
-                                            sOut += source[sFieldName];
+                                            if (sFieldName == DBSeason.cIndex && source[sFieldName] == 0)
+                                            {
+                                                sOut += Translation.specials;
+                                                if(sOut.Contains(Translation.Season + " " + Translation.specials))
+                                                    sOut.Replace(Translation.Season + " " + Translation.specials, Translation.specials);
+                                                else if(sOut.Contains("Season " + Translation.specials))
+                                                    sOut.Replace("Season " + Translation.specials, Translation.specials);
+                                            }
+                                            else
+                                                sOut += source[sFieldName];
                                         }
                                     }
                                     break;
@@ -537,7 +546,10 @@ namespace MediaPortal.GUI.Video
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 48);
                     gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    gph.DrawString(Translation.Season + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    if(season[DBSeason.cIndex] == 0)
+                        gph.DrawString(Translation.specials, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                    else
+                        gph.DrawString(Translation.Season + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     gph.Dispose();
                     GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
@@ -815,8 +827,6 @@ namespace MediaPortal.GUI.Video
                                     catch { }
 
                                 }
-
-                                // view handling
                                 List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                                 MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
 
@@ -827,16 +837,17 @@ namespace MediaPortal.GUI.Video
                                     // only nessesary for views that don't have series before them
                                     cachedSeriesNames = new Dictionary<int, string>();
                                 }
-
+                                GUIListItem item = null;
                                 foreach (DBEpisode episode in episodesToDisplay)
                                 {
                                     try
                                     {
                                         bEmpty = false;
-                                        GUIListItem item = new GUIListItem();
+                                        item = new GUIListItem();
 
                                         // its possible the user never selected a series/season (flat view)
                                         // thus its desirable to display series and season index also)
+                                        
                                         if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                         {
                                             // it is the case
@@ -882,13 +893,12 @@ namespace MediaPortal.GUI.Video
                                         else
                                         {
                                             // select the first that has a file and is not watched
-                                            if (episode[DBEpisode.cFilename] != "" && episode[DBOnlineEpisode.cWatched] == 0 && selectedIndex == -1)
+                                            if (selectedIndex == -1 && episode[DBOnlineEpisode.cWatched] == 0 && episode[DBEpisode.cFilename] != "")
                                                 selectedIndex = count;
                                         }
 
                                         // first returned logo should also show up here in list view directly
                                         item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
-
                                         this.m_Facade.Add(item);
                                     }
                                     catch (Exception ex)

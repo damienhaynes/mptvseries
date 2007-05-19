@@ -43,6 +43,8 @@ namespace WindowPlugins.GUITVSeries
         static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
         static Dictionary<int, List<string>> splitConditions = new Dictionary<int, List<string>>();
         static Dictionary<string, string> cachedFieldValues = new Dictionary<string, string>();
+        public static Dictionary<int, DBSeries> cachedSeries = new Dictionary<int, DBSeries>(); // needs to be cleared on every update
+        static List<string> nonExistingFiles = new List<string>();
         static DBEpisode tmpEp;
         static DBSeason tmpSeason;
         static DBSeries tmpSeries;
@@ -66,6 +68,21 @@ namespace WindowPlugins.GUITVSeries
         static localLogos()
         {
             provider.NumberDecimalSeparator = "."; // because mediainfo
+
+            DBSeries.dbUpdateOccured += new DBTable.dbUpdateOccuredDelegate(DBSeries_dbUpdateOccured);
+        }
+
+        static void DBSeries_dbUpdateOccured(string tableName)
+        {
+            if (tableName == DBSeries.cTableName) clearCachedItems();
+        }
+
+        static void clearCachedItems()
+        {
+            lock (cachedSeries)
+            {
+                cachedSeries.Clear();
+            }
         }
 
         public static void saveToDB(List<string> entries)
@@ -167,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
                 logosForBuilding.Add(tmpEp.Image);
             }
             if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
-            MPTVSeriesLog.Write("Testing logos for item of type " + level.ToString(), MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
             bool debugResult = false;
             bool debugResult1 = false;
             // reset all cached Fieldvalues
@@ -185,9 +202,14 @@ namespace WindowPlugins.GUITVSeries
                         List<string> filenames = getDynamicFileName(conditions[0], level);
                         for (int f = 0; f < filenames.Count; f++)
                         {
-                            if (!System.IO.File.Exists(filenames[f]))
+                            bool wasCached = false;
+                            if (( wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
                             {
-                                MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                                if (!wasCached)
+                                {
+                                    MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                                    nonExistingFiles.Add(filenames[f]);
+                                }
                                 filenames.RemoveAt(f);
                                 f--;
                             }
@@ -217,7 +239,7 @@ namespace WindowPlugins.GUITVSeries
                     tmpFile = string.Empty;
                     foreach (string logo in logosForBuilding)
                         tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
-                    tmpFile = Helper.PathCombine(pathfortmpfile,"TVSeriesDynLogo" + tmpFile + ".png");
+                    tmpFile = Helper.PathCombine(pathfortmpfile, "TVSeriesDynLogo" + tmpFile + ".png");
                     if (System.IO.File.Exists(tmpFile))
                         return tmpFile;
                     Bitmap b = new Bitmap(imgWidth, imgHeight);
@@ -340,22 +362,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 // not dynamic
                 result.Add(getCleanAbsolutePath(dynfilename));
+                return result;
             }
-            else if (dynfilename.Contains("<Series."))
-            {
-                dnyStart = dynfilename.IndexOf("<Series.");
-            }
-            else if (dynfilename.Contains("<Season."))
-            {
-                dnyStart = dynfilename.IndexOf("<Season.");
-            }
-            else if (dynfilename.Contains("<Episode."))
-            {
-                dnyStart = dynfilename.IndexOf("<Episode.");
-            }
+            else if ((dnyStart = dynfilename.IndexOf("<Episode.")) > -1) ;
+            else if ((dnyStart = dynfilename.IndexOf("<Series.")) > -1) ;
+            else if ((dnyStart = dynfilename.IndexOf("<Season.")) > -1) ;
             else
             {
-                // no '<' but none of the recognized? that is a wrong entry as < is not a valid char in filenames
+                // no '<' but none of the recognized? that is a wrong entry
                 return result;
             }
             //MPTVSeriesLog.Write("dynamic Filename detected..trying to resolve");
@@ -367,15 +381,13 @@ namespace WindowPlugins.GUITVSeries
                 // for genres/actors we need to split dynamic filenames again
                 string[] vals = DBOnlineSeries.splitField(value);
                 for (int i = 0; i < vals.Length; i++)
-                {
-                    foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-                        vals[i] = vals[i].Replace(c, '_');
                     result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i]), level)); // recursive so we support multiple dyn fields in filename
-                }
                 return result;
             }
             else
+            {
                 return new List<string>(new string[] { getCleanAbsolutePath(dynfilename) }); // something went wrong
+            }
         }
 
         static string getCleanAbsolutePath(string file)
@@ -410,14 +422,18 @@ namespace WindowPlugins.GUITVSeries
                             // tmpEP always has to exists or the isrelevant check would have already failed
                             value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
                         }
-                        else if (what.Contains("Series"))
+                        else if (what.Contains("Series")) // more optimized than season because it is more likely to be used
                         {
                             if (level != Level.Series) // means we might have to get the series object for this episode/season
                             {
                                 int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
+                                if ((tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID) && !cachedSeries.ContainsKey(seriesID))
+                                {
                                     tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                                //else MPTVSeriesLog.Write("SeriesObject was cached - optimisation was good!");
+                                    cachedSeries.Add(tmpSeries[DBSeries.cID], tmpSeries);
+                                }
+                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
+                                    tmpSeries = cachedSeries[seriesID];
                             }
                             value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                         }
@@ -535,37 +551,6 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, ex.Message, MPTVSeriesLog.LogLevel.Normal);
                 }
             }
-        }
-    }
-    class perfana
-    {
-        static DateTime starttime = new DateTime();
-        public static void start()
-        {
-            starttime = DateTime.Now;
-        }
-
-        public static string measorFromStart()
-        {
-            return getTimeFromStart().ToString();
-        }
-
-        public static int getTimeFromStart()
-        {
-            if (starttime.Equals(default(DateTime))) return 0;
-            TimeSpan t = DateTime.Now - starttime;
-            return (int)t.TotalMilliseconds;
-        }
-
-        public static void writeSimple(string entry)
-        {
-            // get the caller method
-            //System.Diagnostics.StackFrame fr = new System.Diagnostics.StackFrame(1, true);
-            //System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(fr);
-            //string caller = String.Format("{0} {1}", fr.GetMethod().Name,
-            //                                       st.ToString());
-            DateTime now = DateTime.Now;
-            MPTVSeriesLog.Write(" - " + now.Second.ToString() + ":" + now.Millisecond.ToString() + " .... " + entry);
         }
     }
 }

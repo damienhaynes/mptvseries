@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
         const string langID = "&language=";
         static string selLang = string.Empty;
 
-        static string SelLanguageAsString
+        public static string SelLanguageAsString
         {
             get
             {
@@ -46,6 +46,10 @@ namespace WindowPlugins.GUITVSeries
                     if (lang != 0) selLang = lang.ToString();
                 }
                 return selLang;
+            }
+            set
+            {
+                selLang = value;
             }
         }
 
