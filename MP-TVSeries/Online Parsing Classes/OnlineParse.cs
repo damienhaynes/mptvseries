@@ -927,17 +927,25 @@ namespace WindowPlugins.GUITVSeries
                     {
                         foreach (DBEpisode episode in episodesList)
                         {
+
                             MPTVSeriesLog.Write("Looking for the single episode " + episode[DBOnlineEpisode.cCompositeID]);
                             GetEpisodes episodesParser = null;
-                            if(episode[DBEpisode.cSeasonIndex] >= 0 && episode[DBEpisode.cEpisodeIndex] >= 0)
+                            if (episode[DBEpisode.cSeasonIndex] >= 0 && episode[DBEpisode.cEpisodeIndex] >= 0)
+                            {
                                 episodesParser = new GetEpisodes(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex]);
+                                if (episode[DBEpisode.cEpisodeIndex2] >= 0)
+                                {
+                                    MPTVSeriesLog.Write("Found double episode, looking for the single episode " + episode[DBEpisode.cCompositeID2]);
+                                    episodesParser.Work(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2], 0, default(DateTime));
+                                }
+                            }
                             else
                                 episodesParser = new GetEpisodes(series[DBSeries.cID], DateTime.Parse(episode[DBOnlineEpisode.cFirstAired]));
 
                             if (episodesParser.Results.Count > 0)
                             {
-                                DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
 
+                                DBOnlineEpisode onlineEpisode = episodesParser.Results[0];
                                 // season update for online data
                                 DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
                                 season[DBSeason.cHasEpisodes] = true;
@@ -964,6 +972,16 @@ namespace WindowPlugins.GUITVSeries
                                     episode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
                                 episode.Commit();
 
+                                if (episodesParser.Results.Count > 1)
+                                {
+                                    // we matched a double episode, add it too
+                                    MPTVSeriesLog.Write("Found episodeID for " + episode[DBEpisode.cCompositeID2]);
+                                    DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], episodesParser.Results[1][DBOnlineEpisode.cSeasonIndex], episodesParser.Results[1][DBOnlineEpisode.cEpisodeIndex]);
+                                    newOnlineEpisode[DBOnlineEpisode.cID] = episodesParser.Results[1][DBOnlineEpisode.cID];
+                                    if (newOnlineEpisode[DBOnlineEpisode.cEpisodeName] == "")
+                                        newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                    newOnlineEpisode.Commit();
+                                }
                                 
                             }
                         }
@@ -980,8 +998,10 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 foreach (DBEpisode localEpisode in episodesList)
                                 {
-                                    if ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
-                                        (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex])
+                                    if (((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
+                                        (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]) ||
+                                        ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
+                                        (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]))
                                     {
                                         // season update for online data
                                         DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);

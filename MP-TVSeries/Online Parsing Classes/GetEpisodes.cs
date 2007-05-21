@@ -60,7 +60,7 @@ namespace WindowPlugins.GUITVSeries
             Work(nSeriesID, -1, -1, 0, firstAired);
         }
 
-        private void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
+        public void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
             string choosenOrdering = DBSeries.Get(nSeriesID)[DBOnlineSeries.cChoseEpisodeOrder];
