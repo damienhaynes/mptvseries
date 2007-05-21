@@ -706,7 +706,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + orderBy + conditions.limitString;
+                sqlQuery = "select " + what + " inner join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + orderBy + conditions.limitString;
             }
             else
             {
@@ -728,7 +728,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " left join " + cTableName + " on " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
+                sqlQuery = "select " + what + " inner join " + cTableName + " on " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
             }
             else
             {
