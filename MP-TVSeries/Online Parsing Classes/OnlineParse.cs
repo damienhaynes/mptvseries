@@ -933,7 +933,7 @@ namespace WindowPlugins.GUITVSeries
                             if (episode[DBEpisode.cSeasonIndex] >= 0 && episode[DBEpisode.cEpisodeIndex] >= 0)
                             {
                                 episodesParser = new GetEpisodes(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex]);
-                                if (episode[DBEpisode.cEpisodeIndex2] >= 0)
+                                if (episode[DBEpisode.cEpisodeIndex2] > 0)
                                 {
                                     MPTVSeriesLog.Write("Found double episode, looking for the single episode " + episode[DBEpisode.cCompositeID2]);
                                     episodesParser.Work(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2], 0, default(DateTime));
