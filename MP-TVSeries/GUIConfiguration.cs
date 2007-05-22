@@ -2265,154 +2265,6 @@ namespace WindowPlugins.GUITVSeries
             localLogos.cleanUP();
         }
 
-        BackgroundWorker bannercleaner;
-        private void cleanBanners_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            bannercleaner = new BackgroundWorker();
-            bannercleaner.WorkerReportsProgress = true;
-            bannercleaner.DoWork += new DoWorkEventHandler(bannercleaner_DoWork);
-            bannercleaner.ProgressChanged += new ProgressChangedEventHandler(bannercleaner_ProgressChanged);
-            bannercleaner.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bannercleaner_RunWorkerCompleted);
-            this.button_Start.Enabled = false;
-            bannercleaner.RunWorkerAsync();
-        }
-
-        void bannercleaner_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            this.button_Start.Enabled = true;
-        }
-
-        void bannercleaner_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.ProgressPercentage > 100)
-                this.progressBar_Parsing.Value = 100;
-            else
-                this.progressBar_Parsing.Value = e.ProgressPercentage;
-        }
-
-        void  bannercleaner_DoWork(object sender, DoWorkEventArgs e)
-        {
-            /*
-            // this will cycle through all series/seasons and compare with what's available online
-            // if a banner was removed from the odb the local copy will be removed
-            // if a file was deleted manually it will be redownloaded
-            // if a series/season is no longer in the db but the image files are still there those will be deleted too
-            if (m_parser != null)
-            {
-                MPTVSeriesLog.Write("Cannot check Banners - please let the import finish first!");
-                return;
-            }
-            
-            MPTVSeriesLog.Write("*****************************************");
-            int totalcount = 0;
-            List<string> associatedBanners = new List<string>(); // for step 2 below
-            SQLCondition cond = new SQLCondition();
-            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
-            
-            List<DBSeries> seriesWithBanners = DBSeries.Get(cond);
-            MPTVSeriesLog.Write("Checking if Banners are still in the onlineDB for " + seriesWithBanners.Count.ToString() + " series and their seasons");
-            Helper.addOperationOnRemovedItemsDelegate<string> additonalOperation = delegate(string item)
-            {
-                try
-                {
-                    System.IO.File.Delete(item);
-                    MPTVSeriesLog.Write("Deleting from hdd: " + item);
-                    return true;
-                }
-                catch (System.IO.FileNotFoundException)
-                {
-                    MPTVSeriesLog.Write("Could not delete Bannerfile " + item + ", it does not exist anymore on the hdd?");
-                    return true;
-                }
-                catch (Exception) { return false; }
-            };
-            Helper.addOperationOnItemBeforeCompare<string> manipulateB4Compare = delegate(string item)
-            {
-                try
-                {
-                    return item.Split(new string[] { @"banners\" }, StringSplitOptions.None)[1];
-                }
-                catch (Exception)
-                {
-                    return item;
-                }
-            };
-            int index = 0;
-            int removedItems = 0;
-            foreach (DBSeries series in seriesWithBanners)
-            {
-                bannercleaner.ReportProgress((int)((float)100 / (float)seriesWithBanners.Count * (float)++index));
-                MPTVSeriesLog.Write("Checking Banners for " + series[DBOnlineSeries.cPrettyName]);
-                SQLCondition seasonconds = new SQLCondition();
-                seasonconds.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                seasonconds.Add(new DBSeason(), DBSeason.cBannerFileNames, "", SQLConditionType.NotEqual);
-                List<DBSeason> seasons = DBSeason.Get(seasonconds);
-
-                GetBanner odbBanners = new GetBanner(series[DBSeries.cID], (long)0);
-
-                // compare all seriesbanners
-                
-                List<string> seriesBannersCopy = series.BannerList;
-                if (series.BannerList.Count > 1)
-                {
-                    if ((removedItems = Helper.compareAndAdaptList<string>(ref seriesBannersCopy, Helper.getPropertyListFromList<BannerSeries, string>("sBannerFileName", odbBanners.bannerSeriesList), manipulateB4Compare, additonalOperation)) > 0)
-                    {
-                        series.BannerList = seriesBannersCopy;
-                        series.Commit();
-                        MPTVSeriesLog.Write("removed " + removedItems.ToString() + " Banners for " + series[DBOnlineSeries.cPrettyName] +
-                                            " - " + ((int)series.BannerList.Count - (int)removedItems).ToString() + " remaining");
-                        totalcount += removedItems;
-                    }
-                    else
-                    {
-                        MPTVSeriesLog.Write("No banners found that need to be removed for series", MPTVSeriesLog.LogLevel.Debug);
-                    }
-                }
-                 
-                associatedBanners.AddRange(seriesBannersCopy); // save for step 2
-                // now compare all seasons
-                foreach (DBSeason season in seasons)
-                {
-                    List<string> seasonBannersCopy = season.BannerList;
-                    if (season.BannerList.Count > 1)
-                    {
-                        List<string> onlineSeasonBanners = Helper.getPropertyListFromList<BannerSeason, string>("sBannerFileName", Helper.getFilteredList<BannerSeason, int>(odbBanners.bannerSeasonList, "nIndex", season[DBSeason.cIndex]));
-                        if ((removedItems = Helper.compareAndAdaptList<string>(ref seasonBannersCopy, onlineSeasonBanners, manipulateB4Compare, additonalOperation)) > 0)
-                        {
-                            season.BannerList = seasonBannersCopy;
-                            season.Commit();
-                            MPTVSeriesLog.Write("removed " + removedItems.ToString() + " Banners for " + series[DBOnlineSeries.cPrettyName] + " Season " + season[DBSeason.cIndex] +
-                                               " - " + ((int)season.BannerList.Count - (int)removedItems).ToString() + " remaining");
-                            totalcount += removedItems;
-                        }
-                        else
-                        {
-                            MPTVSeriesLog.Write("No banners found that need to be removed for season " + season[DBSeason.cIndex], MPTVSeriesLog.LogLevel.Debug);
-                        }
-                    }
-                    associatedBanners.AddRange(seasonBannersCopy); // save for step 2
-                }
-            }
-
-            // STEP 2:
-            // now go over all jpgs in the banners subdirectory and see which ones exist that are not associated with any db item anymore
-            // this could happen for instance if a series was deleted (we rather keep them at that time in case the series/season is readded later to save downloading them again)
-
-            // we already have all banners associated with something
-            manipulateB4Compare = delegate(string item) { return item; }; // nothing here and fily delete from anynom method declared above
-            MPTVSeriesLog.Write("Synced deleted banners with online database");
-            MPTVSeriesLog.Write("Checking now for banners no longer associated with anything in your DB...");
-            List<string> bannerfiles = new List<string>(System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\", "*_*.jpg", SearchOption.AllDirectories));
-
-            removedItems = Helper.compareAndAdaptList<string>(ref bannerfiles, associatedBanners, manipulateB4Compare, additonalOperation);
-            totalcount += removedItems;
-
-            bannercleaner.ReportProgress(0);
-            MPTVSeriesLog.Write("All done cleaning up Banners, " + totalcount.ToString() + " Banners removed in total");
-            MPTVSeriesLog.Write("*****************************************");
-             * */
-        }
-
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
         {
             int sel = 0;
@@ -2509,6 +2361,49 @@ namespace WindowPlugins.GUITVSeries
         private void txtMainMirror_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cMainMirror, txtMainMirror.Text);
+        }
+
+        private void linkExWatched_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SaveFileDialog fd = new SaveFileDialog();
+            fd.DefaultExt = ".txt";
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter w = new StreamWriter(fd.FileName);
+                SQLCondition cond = new SQLCondition();
+                cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, SQLConditionType.Equal);
+                foreach (DBValue val in DBOnlineEpisode.GetSingleField(DBOnlineEpisode.cCompositeID, cond, new DBOnlineEpisode()))
+                {
+                    w.WriteLine((string)val);
+                }
+                w.Close();
+                MessageBox.Show("Watched info succesfully exported!");
+            }
+        }
+
+        private void linkImpWatched_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.DefaultExt = ".txt";
+            if (fd.ShowDialog() == DialogResult.OK && System.IO.File.Exists(fd.FileName))
+            {
+                StreamReader r = new StreamReader(fd.FileName);
+                SQLCondition cond = new SQLCondition();
+                
+                string line = string.Empty;
+                // set unwatched for all
+                DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, new SQLCondition());
+                // now set watched for all in file
+                while ((line = r.ReadLine()) != null)
+                {
+                    cond = new SQLCondition();
+                    cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, line, SQLConditionType.Equal);
+                    DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, cond);
+                }
+                r.Close();
+                MessageBox.Show("Watched info succesfully imported!");
+                LoadTree(); // reload tree so the changes are visible
+            }
         }
 
     }

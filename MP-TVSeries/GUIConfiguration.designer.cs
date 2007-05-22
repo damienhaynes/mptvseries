@@ -94,13 +94,14 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.linkExWatched = new System.Windows.Forms.LinkLabel();
             this.label29 = new System.Windows.Forms.Label();
             this.txtMainMirror = new System.Windows.Forms.TextBox();
             this.checkFileDeletion = new System.Windows.Forms.CheckBox();
             this.linkDelUpdateTime = new System.Windows.Forms.LinkLabel();
             this.label26 = new System.Windows.Forms.Label();
             this.comboOnlineLang = new System.Windows.Forms.ComboBox();
-            this.cleanBanners = new System.Windows.Forms.LinkLabel();
+            this.linkImpWatched = new System.Windows.Forms.LinkLabel();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.checkBox_DontClearMissingLocalFiles = new System.Windows.Forms.CheckBox();
@@ -603,6 +604,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_StringReplacements
             // 
+            this.panel_StringReplacements.Controls.Add(this.linkExWatched);
             this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
             this.panel_StringReplacements.Location = new System.Drawing.Point(236, 216);
             this.panel_StringReplacements.Name = "panel_StringReplacements";
@@ -652,7 +654,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.linkDelUpdateTime);
             this.panel_OnlineData.Controls.Add(this.label26);
             this.panel_OnlineData.Controls.Add(this.comboOnlineLang);
-            this.panel_OnlineData.Controls.Add(this.cleanBanners);
+            this.panel_OnlineData.Controls.Add(this.linkImpWatched);
             this.panel_OnlineData.Controls.Add(this.checkBox_doFolderWatch);
             this.panel_OnlineData.Controls.Add(this.linkLabel1);
             this.panel_OnlineData.Controls.Add(this.checkBox_DontClearMissingLocalFiles);
@@ -665,6 +667,17 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Size = new System.Drawing.Size(465, 285);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
+            // 
+            // linkExWatched
+            // 
+            this.linkExWatched.AutoSize = true;
+            this.linkExWatched.Location = new System.Drawing.Point(101, 33);
+            this.linkExWatched.Name = "linkExWatched";
+            this.linkExWatched.Size = new System.Drawing.Size(112, 13);
+            this.linkExWatched.TabIndex = 21;
+            this.linkExWatched.TabStop = true;
+            this.linkExWatched.Text = "Export Watched Flags";
+            this.linkExWatched.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExWatched_LinkClicked);
             // 
             // label29
             // 
@@ -725,16 +738,16 @@ namespace WindowPlugins.GUITVSeries
             this.comboOnlineLang.TabIndex = 15;
             this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
             // 
-            // cleanBanners
+            // linkImpWatched
             // 
-            this.cleanBanners.AutoSize = true;
-            this.cleanBanners.Location = new System.Drawing.Point(3, 243);
-            this.cleanBanners.Name = "cleanBanners";
-            this.cleanBanners.Size = new System.Drawing.Size(88, 13);
-            this.cleanBanners.TabIndex = 14;
-            this.cleanBanners.TabStop = true;
-            this.cleanBanners.Text = "Cleanup Banners";
-            this.cleanBanners.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cleanBanners_LinkClicked);
+            this.linkImpWatched.AutoSize = true;
+            this.linkImpWatched.Location = new System.Drawing.Point(3, 243);
+            this.linkImpWatched.Name = "linkImpWatched";
+            this.linkImpWatched.Size = new System.Drawing.Size(111, 13);
+            this.linkImpWatched.TabIndex = 14;
+            this.linkImpWatched.TabStop = true;
+            this.linkImpWatched.Text = "Import Watched Flags";
+            this.linkImpWatched.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkImpWatched_LinkClicked);
             // 
             // checkBox_doFolderWatch
             // 
@@ -2687,6 +2700,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.ResumeLayout(false);
             this.splitContainerImportSettings.ResumeLayout(false);
             this.panel_StringReplacements.ResumeLayout(false);
+            this.panel_StringReplacements.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
             this.panel_OnlineData.ResumeLayout(false);
             this.panel_OnlineData.PerformLayout();
@@ -2917,7 +2931,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.RichTextBox cond1_what;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox comboLanguage;
-        private System.Windows.Forms.LinkLabel cleanBanners;
+        private System.Windows.Forms.LinkLabel linkImpWatched;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.ComboBox comboOnlineLang;
         private System.Windows.Forms.LinkLabel linkDelUpdateTime;
@@ -2925,5 +2939,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkCurViewEnabled;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox txtMainMirror;
+        private System.Windows.Forms.LinkLabel linkExWatched;
     }
 }
