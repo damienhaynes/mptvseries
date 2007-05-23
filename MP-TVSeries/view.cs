@@ -449,18 +449,23 @@ namespace WindowPlugins.GUITVSeries
                 switch (this.Type)
                 {
                     case logicalViewStep.type.season:
-                        join = DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and ";
-                        goto case logicalViewStep.type.series;
+                        join = DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex);
+                        join += "{local_files}";
+                        SubQueryDynInsert_localFilesOnly = " and exists(select filename from local_episodes where seriesid = online_series.id and seasonindex = season.index and episodefilename != '') ";
+                        //goto case logicalViewStep.type.series;
+                        break;
                     case logicalViewStep.type.series:
                         join += DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID);
                         join += "{local_files}";
-                        goto default;
+                        SubQueryDynInsert_localFilesOnly = " and exists(select filename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
+                        break;
+                        //goto default;
                     case logicalViewStep.type.group:
                         join += "{local_files}";
-                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1 "; // and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
+                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1  and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
                         break;
                     default:
-                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1 "; // and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
+                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1  and exists(select episodefilename from local_episodes where seriesid = online_series.id and compositeid = online_episode.compositeid and episodefilename != '') ";
                         //SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
                         break;
                 }
