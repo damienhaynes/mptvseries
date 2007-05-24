@@ -1328,7 +1328,7 @@ namespace WindowPlugins.GUITVSeries
                     // find the corresponding series in our list
                     DBEpisode localEpisode = IDToEpisodesMap[onlineEpisode[DBOnlineEpisode.cID]];
                     MPTVSeriesLog.Write("Updating data for " + localEpisode[DBEpisode.cCompositeID]);
-
+                    bool isSecondOfDoubleEpisode = (string)localEpisode.m_fields[DBEpisode.cSeriesID].Value == string.Empty;
                     if (localEpisode != null)
                     {
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
@@ -1354,9 +1354,14 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                             }
                         }
-                        // update to date info
-                        localEpisode[DBOnlineEpisode.cOnlineDataImported] = 2;
-                        localEpisode.Commit();
+                        
+                        if (isSecondOfDoubleEpisode) // dont commit the local ep if so
+                            localEpisode.onlineEpisode.Commit();
+                        else
+                        {
+                            localEpisode[DBOnlineEpisode.cOnlineDataImported] = 2;
+                            localEpisode.Commit();
+                        }
                     }
                     else
                     {
