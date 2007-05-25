@@ -52,6 +52,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
         public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
         public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";
+        public const String cPreferedBannerType = "PreferedBannerType";
 
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
@@ -91,7 +92,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubs_Forom_ID = "Subs_Forom_ID";
 
         public const String cUTorrentPath = "uTorrentPath";
+        public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
         public const String cTorrentSearch = "TorrentSearch_Current";
+
+        public const String cNewsLeecherPath = "NewsLeecherPath";
+        public const String cNewsLeecherDownloadPath = "NewsLeecherDownloadPath";
 
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
@@ -278,10 +283,16 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cUTorrentPath) == null)
                     SetOptions(cUTorrentPath, String.Empty);
 
+                if (GetOptions(cNewsLeecherPath) == null)
+                    SetOptions(cNewsLeecherPath, String.Empty);
+
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
                 if (GetOptions("doFolderWatch") == null)
                     SetOptions("doFolderWatch", true);
+
+                if (GetOptions(cPreferedBannerType) == null)
+                    SetOptions(cPreferedBannerType, 2);  // graphical by default
             }
             catch (Exception ex)
             {

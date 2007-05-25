@@ -126,11 +126,11 @@
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>791, 14</value>
   </metadata>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>291, 14</value>
-  </metadata>
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>686, 14</value>
+  </metadata>
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>291, 14</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -217,6 +217,9 @@
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>487, 14</value>
   </metadata>
+  <data name="textBox_foromID.ToolTip" xml:space="preserve">
+    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
+  </data>
   <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
     <value>Regular expression that is going to extract data from the detail page of a specific torrent.
 The plugin is only looking for one group:
@@ -230,9 +233,6 @@ Various group names are mandatory:
 &lt;id&gt; is the id of the torrent file, that is used to then go in the details &amp; find out how many files there are in this release (the plugin filters out all multiple parts torrents; extracting files from a RAR is unpractical)
 &lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
 &lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
-  </data>
-  <data name="textBox_foromID.ToolTip" xml:space="preserve">
-    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>38</value>

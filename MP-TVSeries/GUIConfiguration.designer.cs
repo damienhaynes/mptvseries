@@ -81,6 +81,10 @@ namespace WindowPlugins.GUITVSeries
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button_dbbrowse = new System.Windows.Forms.Button();
+            this.textBox_dblocation = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,6 +99,8 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
             this.linkExWatched = new System.Windows.Forms.LinkLabel();
+            this.label37 = new System.Windows.Forms.Label();
+            this.comboBox_preferedBannerType = new System.Windows.Forms.ComboBox();
             this.label29 = new System.Windows.Forms.Label();
             this.txtMainMirror = new System.Windows.Forms.TextBox();
             this.checkFileDeletion = new System.Windows.Forms.CheckBox();
@@ -119,7 +125,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_MoveExpUp = new System.Windows.Forms.Button();
             this.button_MoveExpDown = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox_debuglevel = new System.Windows.Forms.ComboBox();
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.button_Start = new System.Windows.Forms.Button();
             this.tab_view = new System.Windows.Forms.TabPage();
@@ -224,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label28 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
@@ -233,28 +239,46 @@ namespace WindowPlugins.GUITVSeries
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDown_AutoOnlineDataRefresh = new System.Windows.Forms.NumericUpDown();
             this.checkBox_AutoOnlineDataRefresh = new System.Windows.Forms.CheckBox();
-            this.tabpage_Subtitles = new System.Windows.Forms.TabPage();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.textBox_TorrentDetailsRegex = new System.Windows.Forms.TextBox();
-            this.textBox_TorrentSearchRegex = new System.Windows.Forms.TextBox();
-            this.textBox_TorrentDetailsUrl = new System.Windows.Forms.TextBox();
-            this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
-            this.comboBox_TorrentPreset = new System.Windows.Forms.ComboBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.tabpage_Extra = new System.Windows.Forms.TabPage();
+            this.splitContainer_treeextra = new System.Windows.Forms.SplitContainer();
+            this.treeView_Extra = new System.Windows.Forms.TreeView();
+            this.panel_newssearch = new System.Windows.Forms.Panel();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchRegex = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.textbox_NewzbinPassword = new System.Windows.Forms.TextBox();
+            this.textBox_NewzbinLogin = new System.Windows.Forms.TextBox();
+            this.textBox_NewsSearchUrl = new System.Windows.Forms.TextBox();
+            this.panel_newsroot = new System.Windows.Forms.Panel();
+            this.button_NewsDownloadPathBrowse = new System.Windows.Forms.Button();
+            this.button_newsleecherbrowse = new System.Windows.Forms.Button();
+            this.label35 = new System.Windows.Forms.Label();
+            this.textBox_NewsDownloadPath = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.textBox_newsleecher = new System.Windows.Forms.TextBox();
+            this.panel_torrentroot = new System.Windows.Forms.Panel();
             this.button_uTorrentBrowse = new System.Windows.Forms.Button();
-            this.textBox_uTorrentPath = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage_Forom = new System.Windows.Forms.TabPage();
+            this.textBox_uTorrentPath = new System.Windows.Forms.TextBox();
+            this.panel_subtitleroot = new System.Windows.Forms.Panel();
+            this.panel_forom = new System.Windows.Forms.Panel();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.textBox_foromBaseURL = new System.Windows.Forms.TextBox();
             this.textBox_foromID = new System.Windows.Forms.TextBox();
+            this.textBox_foromBaseURL = new System.Windows.Forms.TextBox();
+            this.panel_torrentsearch = new System.Windows.Forms.Panel();
+            this.textBox_TorrentDetailsRegex = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.textBox_TorrentSearchRegex = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.textBox_TorrentDetailsUrl = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.comboBox_TorrentPreset = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
             this.listBox_Log = new System.Windows.Forms.ListBox();
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -296,11 +320,15 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
-            this.tabpage_Subtitles.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage_Forom.SuspendLayout();
+            this.tabpage_Extra.SuspendLayout();
+            this.splitContainer_treeextra.Panel1.SuspendLayout();
+            this.splitContainer_treeextra.Panel2.SuspendLayout();
+            this.splitContainer_treeextra.SuspendLayout();
+            this.panel_newssearch.SuspendLayout();
+            this.panel_newsroot.SuspendLayout();
+            this.panel_torrentroot.SuspendLayout();
+            this.panel_forom.SuspendLayout();
+            this.panel_torrentsearch.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -343,7 +371,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.Controls.Add(this.tabPage_Import);
             this.tabControl_Details.Controls.Add(this.tab_view);
             this.tabControl_Details.Controls.Add(this.tabPage_MP_DisplayControl);
-            this.tabControl_Details.Controls.Add(this.tabpage_Subtitles);
+            this.tabControl_Details.Controls.Add(this.tabpage_Extra);
             this.tabControl_Details.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Details.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl_Details.Name = "tabControl_Details";
@@ -375,6 +403,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.button_dbbrowse);
+            this.splitContainer2.Panel2.Controls.Add(this.textBox_dblocation);
+            this.splitContainer2.Panel2.Controls.Add(this.label28);
             this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_Series);
@@ -418,39 +449,78 @@ namespace WindowPlugins.GUITVSeries
             this.hideToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.getSubtitlesToolStripMenuItem,
-            this.torrentThToolStripMenuItem});
+            this.torrentThToolStripMenuItem,
+            this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(141, 92);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(145, 114);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
+            // 
+            // newzbinThisToolStripMenuItem
+            // 
+            this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.newzbinThisToolStripMenuItem.Tag = "newzbin";
+            this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
+            // 
+            // button_dbbrowse
+            // 
+            this.button_dbbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_dbbrowse.Location = new System.Drawing.Point(455, -1);
+            this.button_dbbrowse.Name = "button_dbbrowse";
+            this.button_dbbrowse.Size = new System.Drawing.Size(26, 23);
+            this.button_dbbrowse.TabIndex = 152;
+            this.button_dbbrowse.Text = "...";
+            this.button_dbbrowse.UseVisualStyleBackColor = true;
+            this.button_dbbrowse.Click += new System.EventHandler(this.button_dbbrowse_Click);
+            // 
+            // textBox_dblocation
+            // 
+            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_dblocation.Location = new System.Drawing.Point(172, 1);
+            this.textBox_dblocation.Name = "textBox_dblocation";
+            this.textBox_dblocation.ReadOnly = true;
+            this.textBox_dblocation.Size = new System.Drawing.Size(280, 20);
+            this.textBox_dblocation.TabIndex = 151;
+            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Enter path to your uTorrent exe");
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(2, 4);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(173, 13);
+            this.label28.TabIndex = 150;
+            this.label28.Text = "Database location (restart needed):";
             // 
             // comboBox_BannerSelection
             // 
@@ -458,7 +528,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox_BannerSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_BannerSelection.FormattingEnabled = true;
-            this.comboBox_BannerSelection.Location = new System.Drawing.Point(0, 0);
+            this.comboBox_BannerSelection.Location = new System.Drawing.Point(0, 24);
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
             this.comboBox_BannerSelection.Size = new System.Drawing.Size(484, 21);
             this.comboBox_BannerSelection.TabIndex = 149;
@@ -489,7 +559,7 @@ namespace WindowPlugins.GUITVSeries
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 148);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 173);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
@@ -530,7 +600,7 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox_Series.ErrorImage = null;
             this.pictureBox_Series.InitialImage = null;
-            this.pictureBox_Series.Location = new System.Drawing.Point(0, 21);
+            this.pictureBox_Series.Location = new System.Drawing.Point(0, 45);
             this.pictureBox_Series.Name = "pictureBox_Series";
             this.pictureBox_Series.Size = new System.Drawing.Size(484, 128);
             this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -563,7 +633,7 @@ namespace WindowPlugins.GUITVSeries
             // splitContainer_SettingsOutput.Panel2
             // 
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.label11);
-            this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.comboBox1);
+            this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.comboBox_debuglevel);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.progressBar_Parsing);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.button_Start);
             this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 743);
@@ -604,11 +674,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_StringReplacements
             // 
-            this.panel_StringReplacements.Controls.Add(this.linkExWatched);
             this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
-            this.panel_StringReplacements.Location = new System.Drawing.Point(236, 216);
+            this.panel_StringReplacements.Location = new System.Drawing.Point(3, 286);
             this.panel_StringReplacements.Name = "panel_StringReplacements";
-            this.panel_StringReplacements.Size = new System.Drawing.Size(157, 75);
+            this.panel_StringReplacements.Size = new System.Drawing.Size(156, 139);
             this.panel_StringReplacements.TabIndex = 155;
             this.panel_StringReplacements.Tag = "String Replacements";
             // 
@@ -640,7 +709,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Replace.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Replace.RowTemplate.Height = 18;
             this.dataGridView_Replace.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Replace.Size = new System.Drawing.Size(157, 75);
+            this.dataGridView_Replace.Size = new System.Drawing.Size(156, 139);
             this.dataGridView_Replace.StandardTab = true;
             this.dataGridView_Replace.TabIndex = 150;
             this.dataGridView_Replace.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_UserDeletedRow);
@@ -648,6 +717,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.linkExWatched);
+            this.panel_OnlineData.Controls.Add(this.label37);
+            this.panel_OnlineData.Controls.Add(this.comboBox_preferedBannerType);
             this.panel_OnlineData.Controls.Add(this.label29);
             this.panel_OnlineData.Controls.Add(this.txtMainMirror);
             this.panel_OnlineData.Controls.Add(this.checkFileDeletion);
@@ -664,20 +736,38 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
             this.panel_OnlineData.Location = new System.Drawing.Point(177, 6);
             this.panel_OnlineData.Name = "panel_OnlineData";
-            this.panel_OnlineData.Size = new System.Drawing.Size(465, 285);
+            this.panel_OnlineData.Size = new System.Drawing.Size(465, 392);
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
             // 
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(101, 33);
+            this.linkExWatched.Location = new System.Drawing.Point(160, 243);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(112, 13);
             this.linkExWatched.TabIndex = 21;
             this.linkExWatched.TabStop = true;
             this.linkExWatched.Text = "Export Watched Flags";
             this.linkExWatched.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExWatched_LinkClicked);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(3, 121);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(109, 13);
+            this.label37.TabIndex = 8;
+            this.label37.Text = "Prefered banner type:";
+            // 
+            // comboBox_preferedBannerType
+            // 
+            this.comboBox_preferedBannerType.FormattingEnabled = true;
+            this.comboBox_preferedBannerType.Location = new System.Drawing.Point(151, 118);
+            this.comboBox_preferedBannerType.Name = "comboBox_preferedBannerType";
+            this.comboBox_preferedBannerType.Size = new System.Drawing.Size(121, 21);
+            this.comboBox_preferedBannerType.TabIndex = 7;
+            this.comboBox_preferedBannerType.SelectedIndexChanged += new System.EventHandler(this.comboBox_preferedBannerType_SelectedIndexChanged);
             // 
             // label29
             // 
@@ -801,7 +891,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_LocalDataOverride.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(4, 124);
+            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(6, 358);
             this.checkBox_LocalDataOverride.Name = "checkBox_LocalDataOverride";
             this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(415, 17);
             this.checkBox_LocalDataOverride.TabIndex = 2;
@@ -1003,19 +1093,19 @@ namespace WindowPlugins.GUITVSeries
             this.label11.TabIndex = 7;
             this.label11.Text = "Log Level:";
             // 
-            // comboBox1
+            // comboBox_debuglevel
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.comboBox_debuglevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_debuglevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_debuglevel.FormattingEnabled = true;
+            this.comboBox_debuglevel.Items.AddRange(new object[] {
             "Normal",
             "Debug (huge!)"});
-            this.comboBox1.Location = new System.Drawing.Point(577, 8);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(99, 21);
-            this.comboBox1.TabIndex = 6;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox_debuglevel.Location = new System.Drawing.Point(577, 8);
+            this.comboBox_debuglevel.Name = "comboBox_debuglevel";
+            this.comboBox_debuglevel.Size = new System.Drawing.Size(99, 21);
+            this.comboBox_debuglevel.TabIndex = 6;
+            this.comboBox_debuglevel.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // progressBar_Parsing
             // 
@@ -2272,7 +2362,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.label28);
+            this.groupBox1.Controls.Add(this.label32);
             this.groupBox1.Controls.Add(this.comboLanguage);
             this.groupBox1.Controls.Add(this.checkBox_RandBanner);
             this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
@@ -2288,14 +2378,14 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
             // 
-            // label28
+            // label32
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(382, 82);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(58, 13);
-            this.label28.TabIndex = 8;
-            this.label28.Text = "Language:";
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(382, 82);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(58, 13);
+            this.label32.TabIndex = 8;
+            this.label32.Text = "Language:";
             // 
             // comboLanguage
             // 
@@ -2378,148 +2468,230 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoOnlineDataRefresh.UseVisualStyleBackColor = true;
             this.checkBox_AutoOnlineDataRefresh.CheckedChanged += new System.EventHandler(this.checkBox_AutoOnlineDataRefresh_CheckedChanged);
             // 
-            // tabpage_Subtitles
+            // tabpage_Extra
             // 
-            this.tabpage_Subtitles.Controls.Add(this.groupBox6);
-            this.tabpage_Subtitles.Controls.Add(this.groupBox5);
-            this.tabpage_Subtitles.Location = new System.Drawing.Point(4, 22);
-            this.tabpage_Subtitles.Name = "tabpage_Subtitles";
-            this.tabpage_Subtitles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpage_Subtitles.Size = new System.Drawing.Size(684, 743);
-            this.tabpage_Subtitles.TabIndex = 6;
-            this.tabpage_Subtitles.Text = "Extras";
-            this.tabpage_Subtitles.UseVisualStyleBackColor = true;
+            this.tabpage_Extra.Controls.Add(this.splitContainer_treeextra);
+            this.tabpage_Extra.Location = new System.Drawing.Point(4, 22);
+            this.tabpage_Extra.Name = "tabpage_Extra";
+            this.tabpage_Extra.Padding = new System.Windows.Forms.Padding(3);
+            this.tabpage_Extra.Size = new System.Drawing.Size(684, 743);
+            this.tabpage_Extra.TabIndex = 6;
+            this.tabpage_Extra.Text = "Extras";
+            this.tabpage_Extra.UseVisualStyleBackColor = true;
             // 
-            // groupBox6
+            // splitContainer_treeextra
             // 
-            this.groupBox6.Controls.Add(this.textBox_TorrentDetailsRegex);
-            this.groupBox6.Controls.Add(this.textBox_TorrentSearchRegex);
-            this.groupBox6.Controls.Add(this.textBox_TorrentDetailsUrl);
-            this.groupBox6.Controls.Add(this.textBox_TorrentSearchUrl);
-            this.groupBox6.Controls.Add(this.comboBox_TorrentPreset);
-            this.groupBox6.Controls.Add(this.label24);
-            this.groupBox6.Controls.Add(this.label22);
-            this.groupBox6.Controls.Add(this.label23);
-            this.groupBox6.Controls.Add(this.label21);
-            this.groupBox6.Controls.Add(this.label20);
-            this.groupBox6.Controls.Add(this.button_uTorrentBrowse);
-            this.groupBox6.Controls.Add(this.textBox_uTorrentPath);
-            this.groupBox6.Controls.Add(this.label19);
-            this.groupBox6.Location = new System.Drawing.Point(7, 162);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(671, 284);
-            this.groupBox6.TabIndex = 4;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Torrent Search";
+            this.splitContainer_treeextra.Location = new System.Drawing.Point(4, 4);
+            this.splitContainer_treeextra.Name = "splitContainer_treeextra";
             // 
-            // textBox_TorrentDetailsRegex
+            // splitContainer_treeextra.Panel1
             // 
-            this.textBox_TorrentDetailsRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.splitContainer_treeextra.Panel1.Controls.Add(this.treeView_Extra);
+            // 
+            // splitContainer_treeextra.Panel2
+            // 
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_newssearch);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_newsroot);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentroot);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
+            this.splitContainer_treeextra.Size = new System.Drawing.Size(674, 431);
+            this.splitContainer_treeextra.SplitterDistance = 171;
+            this.splitContainer_treeextra.TabIndex = 5;
+            // 
+            // treeView_Extra
+            // 
+            this.treeView_Extra.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Extra.Location = new System.Drawing.Point(0, 0);
+            this.treeView_Extra.Name = "treeView_Extra";
+            this.treeView_Extra.Size = new System.Drawing.Size(171, 431);
+            this.treeView_Extra.TabIndex = 154;
+            this.treeView_Extra.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Extra_AfterSelect);
+            // 
+            // panel_newssearch
+            // 
+            this.panel_newssearch.Controls.Add(this.label33);
+            this.panel_newssearch.Controls.Add(this.label31);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchRegex);
+            this.panel_newssearch.Controls.Add(this.label36);
+            this.panel_newssearch.Controls.Add(this.label34);
+            this.panel_newssearch.Controls.Add(this.textbox_NewzbinPassword);
+            this.panel_newssearch.Controls.Add(this.textBox_NewzbinLogin);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchUrl);
+            this.panel_newssearch.Location = new System.Drawing.Point(14, 92);
+            this.panel_newssearch.Name = "panel_newssearch";
+            this.panel_newssearch.Size = new System.Drawing.Size(218, 131);
+            this.panel_newssearch.TabIndex = 4;
+            this.panel_newssearch.Tag = "News Search";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(16, 37);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(99, 13);
+            this.label33.TabIndex = 7;
+            this.label33.Text = "Newzbin password:";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(39, 11);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(76, 13);
+            this.label31.TabIndex = 7;
+            this.label31.Text = "Newzbin login:";
+            // 
+            // textBox_NewsSearchRegex
+            // 
+            this.textBox_NewsSearchRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_TorrentDetailsRegex.Location = new System.Drawing.Point(111, 188);
-            this.textBox_TorrentDetailsRegex.Multiline = true;
-            this.textBox_TorrentDetailsRegex.Name = "textBox_TorrentDetailsRegex";
-            this.textBox_TorrentDetailsRegex.Size = new System.Drawing.Size(554, 51);
-            this.textBox_TorrentDetailsRegex.TabIndex = 6;
-            this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsRegex, resources.GetString("textBox_TorrentDetailsRegex.ToolTip"));
-            this.textBox_TorrentDetailsRegex.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsRegex_TextChanged);
+            this.textBox_NewsSearchRegex.Location = new System.Drawing.Point(121, 86);
+            this.textBox_NewsSearchRegex.Multiline = true;
+            this.textBox_NewsSearchRegex.Name = "textBox_NewsSearchRegex";
+            this.textBox_NewsSearchRegex.Size = new System.Drawing.Size(97, 51);
+            this.textBox_NewsSearchRegex.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_NewsSearchRegex, "The only important tag used to download: ID");
+            this.textBox_NewsSearchRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchRegex_TextChanged);
             // 
-            // textBox_TorrentSearchRegex
+            // label36
             // 
-            this.textBox_TorrentSearchRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.label36.Location = new System.Drawing.Point(4, 63);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(111, 21);
+            this.label36.TabIndex = 4;
+            this.label36.Text = "Newzbin Search Url:";
+            this.label36.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label34
+            // 
+            this.label34.Location = new System.Drawing.Point(15, 89);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(100, 24);
+            this.label34.TabIndex = 4;
+            this.label34.Text = "Search Regex:";
+            this.label34.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textbox_NewzbinPassword
+            // 
+            this.textbox_NewzbinPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_TorrentSearchRegex.Location = new System.Drawing.Point(111, 103);
-            this.textBox_TorrentSearchRegex.Multiline = true;
-            this.textBox_TorrentSearchRegex.Name = "textBox_TorrentSearchRegex";
-            this.textBox_TorrentSearchRegex.Size = new System.Drawing.Size(554, 51);
-            this.textBox_TorrentSearchRegex.TabIndex = 6;
-            this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchRegex, resources.GetString("textBox_TorrentSearchRegex.ToolTip"));
-            this.textBox_TorrentSearchRegex.TextChanged += new System.EventHandler(this.textBox_TorrentRegex_TextChanged);
+            this.textbox_NewzbinPassword.Location = new System.Drawing.Point(121, 34);
+            this.textbox_NewzbinPassword.Name = "textbox_NewzbinPassword";
+            this.textbox_NewzbinPassword.Size = new System.Drawing.Size(97, 20);
+            this.textbox_NewzbinPassword.TabIndex = 6;
+            this.textbox_NewzbinPassword.TextChanged += new System.EventHandler(this.textbox_NewzbinPassword_TextChanged);
             // 
-            // textBox_TorrentDetailsUrl
+            // textBox_NewzbinLogin
             // 
-            this.textBox_TorrentDetailsUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox_NewzbinLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_TorrentDetailsUrl.Location = new System.Drawing.Point(111, 162);
-            this.textBox_TorrentDetailsUrl.Name = "textBox_TorrentDetailsUrl";
-            this.textBox_TorrentDetailsUrl.Size = new System.Drawing.Size(554, 20);
-            this.textBox_TorrentDetailsUrl.TabIndex = 6;
-            this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsUrl, "Url of the website showing details on a specific torrent.\r\nThis url will replace " +
-                    "the $id$ string with the <id> extracted from the search results");
-            this.textBox_TorrentDetailsUrl.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsUrl_TextChanged);
+            this.textBox_NewzbinLogin.Location = new System.Drawing.Point(121, 8);
+            this.textBox_NewzbinLogin.Name = "textBox_NewzbinLogin";
+            this.textBox_NewzbinLogin.Size = new System.Drawing.Size(97, 20);
+            this.textBox_NewzbinLogin.TabIndex = 6;
+            this.textBox_NewzbinLogin.TextChanged += new System.EventHandler(this.textBox_NewzbinLogin_TextChanged);
             // 
-            // textBox_TorrentSearchUrl
+            // textBox_NewsSearchUrl
             // 
-            this.textBox_TorrentSearchUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox_NewsSearchUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_TorrentSearchUrl.Location = new System.Drawing.Point(111, 77);
-            this.textBox_TorrentSearchUrl.Name = "textBox_TorrentSearchUrl";
-            this.textBox_TorrentSearchUrl.Size = new System.Drawing.Size(554, 20);
-            this.textBox_TorrentSearchUrl.TabIndex = 6;
-            this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchUrl, "Url of the website listing the search results.\r\nThe search string will replace th" +
-                    "e $search$ string in the specified url.");
-            this.textBox_TorrentSearchUrl.TextChanged += new System.EventHandler(this.textBox_TorrentUrl_TextChanged);
+            this.textBox_NewsSearchUrl.Location = new System.Drawing.Point(121, 60);
+            this.textBox_NewsSearchUrl.Name = "textBox_NewsSearchUrl";
+            this.textBox_NewsSearchUrl.Size = new System.Drawing.Size(97, 20);
+            this.textBox_NewsSearchUrl.TabIndex = 6;
+            this.textBox_NewsSearchUrl.TextChanged += new System.EventHandler(this.textBox_NewsSearchUrl_TextChanged);
             // 
-            // comboBox_TorrentPreset
+            // panel_newsroot
             // 
-            this.comboBox_TorrentPreset.FormattingEnabled = true;
-            this.comboBox_TorrentPreset.Location = new System.Drawing.Point(111, 49);
-            this.comboBox_TorrentPreset.Name = "comboBox_TorrentPreset";
-            this.comboBox_TorrentPreset.Size = new System.Drawing.Size(337, 21);
-            this.comboBox_TorrentPreset.Sorted = true;
-            this.comboBox_TorrentPreset.TabIndex = 5;
-            this.comboBox_TorrentPreset.SelectedIndexChanged += new System.EventHandler(this.comboBox_TorrentPreset_SelectedIndexChanged);
-            this.comboBox_TorrentPreset.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox_TorrentPreset_KeyDown);
+            this.panel_newsroot.Controls.Add(this.button_NewsDownloadPathBrowse);
+            this.panel_newsroot.Controls.Add(this.button_newsleecherbrowse);
+            this.panel_newsroot.Controls.Add(this.label35);
+            this.panel_newsroot.Controls.Add(this.textBox_NewsDownloadPath);
+            this.panel_newsroot.Controls.Add(this.label30);
+            this.panel_newsroot.Controls.Add(this.textBox_newsleecher);
+            this.panel_newsroot.Location = new System.Drawing.Point(2, 300);
+            this.panel_newsroot.Name = "panel_newsroot";
+            this.panel_newsroot.Size = new System.Drawing.Size(448, 59);
+            this.panel_newsroot.TabIndex = 3;
+            this.panel_newsroot.Tag = "News";
             // 
-            // label24
+            // button_NewsDownloadPathBrowse
             // 
-            this.label24.Location = new System.Drawing.Point(9, 191);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(100, 24);
-            this.label24.TabIndex = 4;
-            this.label24.Text = "Details Regex:";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.button_NewsDownloadPathBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_NewsDownloadPathBrowse.Location = new System.Drawing.Point(419, 30);
+            this.button_NewsDownloadPathBrowse.Name = "button_NewsDownloadPathBrowse";
+            this.button_NewsDownloadPathBrowse.Size = new System.Drawing.Size(26, 23);
+            this.button_NewsDownloadPathBrowse.TabIndex = 3;
+            this.button_NewsDownloadPathBrowse.Text = "...";
+            this.button_NewsDownloadPathBrowse.UseVisualStyleBackColor = true;
+            this.button_NewsDownloadPathBrowse.Click += new System.EventHandler(this.button_NewsDownloadPathBrowse_Click);
             // 
-            // label22
+            // button_newsleecherbrowse
             // 
-            this.label22.Location = new System.Drawing.Point(9, 106);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(100, 24);
-            this.label22.TabIndex = 4;
-            this.label22.Text = "Search Regex:";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.button_newsleecherbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_newsleecherbrowse.Location = new System.Drawing.Point(419, 4);
+            this.button_newsleecherbrowse.Name = "button_newsleecherbrowse";
+            this.button_newsleecherbrowse.Size = new System.Drawing.Size(26, 23);
+            this.button_newsleecherbrowse.TabIndex = 3;
+            this.button_newsleecherbrowse.Text = "...";
+            this.button_newsleecherbrowse.UseVisualStyleBackColor = true;
+            this.button_newsleecherbrowse.Click += new System.EventHandler(this.button_newsleecherbrowse_Click);
             // 
-            // label23
+            // label35
             // 
-            this.label23.Location = new System.Drawing.Point(6, 165);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(100, 21);
-            this.label23.TabIndex = 4;
-            this.label23.Text = "Details Url:";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label35.Location = new System.Drawing.Point(3, 35);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(138, 18);
+            this.label35.TabIndex = 0;
+            this.label35.Text = "Download Path to Monitor:";
+            this.label35.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label21
+            // textBox_NewsDownloadPath
             // 
-            this.label21.Location = new System.Drawing.Point(9, 80);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(100, 21);
-            this.label21.TabIndex = 4;
-            this.label21.Text = "Search Url:";
-            this.label21.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.textBox_NewsDownloadPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsDownloadPath.Location = new System.Drawing.Point(147, 32);
+            this.textBox_NewsDownloadPath.Name = "textBox_NewsDownloadPath";
+            this.textBox_NewsDownloadPath.Size = new System.Drawing.Size(266, 20);
+            this.textBox_NewsDownloadPath.TabIndex = 1;
+            this.textBox_NewsDownloadPath.TextChanged += new System.EventHandler(this.textBox_NewsDownloadPath_TextChanged);
             // 
-            // label20
+            // label30
             // 
-            this.label20.Location = new System.Drawing.Point(11, 52);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(100, 21);
-            this.label20.TabIndex = 4;
-            this.label20.Text = "Websearch preset:";
-            this.label20.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label30.Location = new System.Drawing.Point(3, 9);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(98, 18);
+            this.label30.TabIndex = 0;
+            this.label30.Text = "newsleecher Path:";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_newsleecher
+            // 
+            this.textBox_newsleecher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_newsleecher.Location = new System.Drawing.Point(147, 6);
+            this.textBox_newsleecher.Name = "textBox_newsleecher";
+            this.textBox_newsleecher.Size = new System.Drawing.Size(266, 20);
+            this.textBox_newsleecher.TabIndex = 1;
+            this.textBox_newsleecher.TextChanged += new System.EventHandler(this.textBox_uTorrentPath_TextChanged);
+            // 
+            // panel_torrentroot
+            // 
+            this.panel_torrentroot.Controls.Add(this.button_uTorrentBrowse);
+            this.panel_torrentroot.Controls.Add(this.label19);
+            this.panel_torrentroot.Controls.Add(this.textBox_uTorrentPath);
+            this.panel_torrentroot.Location = new System.Drawing.Point(5, 235);
+            this.panel_torrentroot.Name = "panel_torrentroot";
+            this.panel_torrentroot.Size = new System.Drawing.Size(448, 59);
+            this.panel_torrentroot.TabIndex = 2;
+            this.panel_torrentroot.Tag = "Torrents";
             // 
             // button_uTorrentBrowse
             // 
             this.button_uTorrentBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_uTorrentBrowse.Location = new System.Drawing.Point(639, 15);
+            this.button_uTorrentBrowse.Location = new System.Drawing.Point(419, 9);
             this.button_uTorrentBrowse.Name = "button_uTorrentBrowse";
             this.button_uTorrentBrowse.Size = new System.Drawing.Size(26, 23);
             this.button_uTorrentBrowse.TabIndex = 3;
@@ -2527,68 +2699,50 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse.UseVisualStyleBackColor = true;
             this.button_uTorrentBrowse.Click += new System.EventHandler(this.button_uTorrentBrowse_Click);
             // 
-            // textBox_uTorrentPath
-            // 
-            this.textBox_uTorrentPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_uTorrentPath.Location = new System.Drawing.Point(111, 17);
-            this.textBox_uTorrentPath.Name = "textBox_uTorrentPath";
-            this.textBox_uTorrentPath.Size = new System.Drawing.Size(522, 20);
-            this.textBox_uTorrentPath.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.textBox_uTorrentPath, "Enter path to your uTorrent exe");
-            this.textBox_uTorrentPath.TextChanged += new System.EventHandler(this.textBox_uTorrentPath_TextChanged);
-            // 
             // label19
             // 
-            this.label19.Location = new System.Drawing.Point(11, 20);
+            this.label19.Location = new System.Drawing.Point(3, 14);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(98, 18);
             this.label19.TabIndex = 0;
             this.label19.Text = "uTorrent Path:";
             this.label19.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // groupBox5
+            // textBox_uTorrentPath
             // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox_uTorrentPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox5.Controls.Add(this.tabControl1);
-            this.groupBox5.Location = new System.Drawing.Point(6, 6);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(672, 149);
-            this.groupBox5.TabIndex = 3;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Subtitles";
+            this.textBox_uTorrentPath.Location = new System.Drawing.Point(103, 11);
+            this.textBox_uTorrentPath.Name = "textBox_uTorrentPath";
+            this.textBox_uTorrentPath.Size = new System.Drawing.Size(310, 20);
+            this.textBox_uTorrentPath.TabIndex = 1;
+            this.toolTip_Help.SetToolTip(this.textBox_uTorrentPath, "Enter path to your uTorrent exe");
+            this.textBox_uTorrentPath.TextChanged += new System.EventHandler(this.textBox_uTorrentPath_TextChanged);
             // 
-            // tabControl1
+            // panel_subtitleroot
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage_Forom);
-            this.tabControl1.Location = new System.Drawing.Point(6, 19);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(660, 124);
-            this.tabControl1.TabIndex = 2;
+            this.panel_subtitleroot.Location = new System.Drawing.Point(8, 12);
+            this.panel_subtitleroot.Name = "panel_subtitleroot";
+            this.panel_subtitleroot.Size = new System.Drawing.Size(78, 50);
+            this.panel_subtitleroot.TabIndex = 2;
+            this.panel_subtitleroot.Tag = "Subtitles";
             // 
-            // tabPage_Forom
+            // panel_forom
             // 
-            this.tabPage_Forom.Controls.Add(this.label17);
-            this.tabPage_Forom.Controls.Add(this.label18);
-            this.tabPage_Forom.Controls.Add(this.textBox_foromBaseURL);
-            this.tabPage_Forom.Controls.Add(this.textBox_foromID);
-            this.tabPage_Forom.Location = new System.Drawing.Point(4, 22);
-            this.tabPage_Forom.Name = "tabPage_Forom";
-            this.tabPage_Forom.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Forom.Size = new System.Drawing.Size(652, 98);
-            this.tabPage_Forom.TabIndex = 0;
-            this.tabPage_Forom.Text = "Forom";
-            this.tabPage_Forom.UseVisualStyleBackColor = true;
+            this.panel_forom.Controls.Add(this.label17);
+            this.panel_forom.Controls.Add(this.label18);
+            this.panel_forom.Controls.Add(this.textBox_foromID);
+            this.panel_forom.Controls.Add(this.textBox_foromBaseURL);
+            this.panel_forom.Location = new System.Drawing.Point(92, 12);
+            this.panel_forom.Name = "panel_forom";
+            this.panel_forom.Size = new System.Drawing.Size(224, 71);
+            this.panel_forom.TabIndex = 0;
+            this.panel_forom.Tag = "Forom Subtitles";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 9);
+            this.label17.Location = new System.Drawing.Point(7, 10);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(90, 13);
             this.label17.TabIndex = 1;
@@ -2597,34 +2751,158 @@ namespace WindowPlugins.GUITVSeries
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 36);
+            this.label18.Location = new System.Drawing.Point(7, 37);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(50, 13);
             this.label18.TabIndex = 1;
             this.label18.Text = "Forom id:";
             // 
+            // textBox_foromID
+            // 
+            this.textBox_foromID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_foromID.Location = new System.Drawing.Point(103, 34);
+            this.textBox_foromID.Name = "textBox_foromID";
+            this.textBox_foromID.Size = new System.Drawing.Size(111, 20);
+            this.textBox_foromID.TabIndex = 0;
+            this.toolTip_Help.SetToolTip(this.textBox_foromID, resources.GetString("textBox_foromID.ToolTip"));
+            this.textBox_foromID.TextChanged += new System.EventHandler(this.textBox_foromID_TextChanged);
+            // 
             // textBox_foromBaseURL
             // 
             this.textBox_foromBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_foromBaseURL.Location = new System.Drawing.Point(102, 6);
+            this.textBox_foromBaseURL.Location = new System.Drawing.Point(103, 7);
             this.textBox_foromBaseURL.Name = "textBox_foromBaseURL";
-            this.textBox_foromBaseURL.Size = new System.Drawing.Size(544, 20);
+            this.textBox_foromBaseURL.Size = new System.Drawing.Size(111, 20);
             this.textBox_foromBaseURL.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.textBox_foromBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
                     ", you\'re on your own :)");
             this.textBox_foromBaseURL.TextChanged += new System.EventHandler(this.textBox_foromBaseURL_TextChanged);
             // 
-            // textBox_foromID
+            // panel_torrentsearch
             // 
-            this.textBox_foromID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.panel_torrentsearch.Controls.Add(this.textBox_TorrentDetailsRegex);
+            this.panel_torrentsearch.Controls.Add(this.label20);
+            this.panel_torrentsearch.Controls.Add(this.textBox_TorrentSearchRegex);
+            this.panel_torrentsearch.Controls.Add(this.label21);
+            this.panel_torrentsearch.Controls.Add(this.textBox_TorrentDetailsUrl);
+            this.panel_torrentsearch.Controls.Add(this.label23);
+            this.panel_torrentsearch.Controls.Add(this.textBox_TorrentSearchUrl);
+            this.panel_torrentsearch.Controls.Add(this.label22);
+            this.panel_torrentsearch.Controls.Add(this.comboBox_TorrentPreset);
+            this.panel_torrentsearch.Controls.Add(this.label24);
+            this.panel_torrentsearch.Location = new System.Drawing.Point(252, 92);
+            this.panel_torrentsearch.Name = "panel_torrentsearch";
+            this.panel_torrentsearch.Size = new System.Drawing.Size(233, 129);
+            this.panel_torrentsearch.TabIndex = 1;
+            this.panel_torrentsearch.Tag = "Torrent Searches";
+            // 
+            // textBox_TorrentDetailsRegex
+            // 
+            this.textBox_TorrentDetailsRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_foromID.Location = new System.Drawing.Point(102, 33);
-            this.textBox_foromID.Name = "textBox_foromID";
-            this.textBox_foromID.Size = new System.Drawing.Size(544, 20);
-            this.textBox_foromID.TabIndex = 0;
-            this.toolTip_Help.SetToolTip(this.textBox_foromID, resources.GetString("textBox_foromID.ToolTip"));
-            this.textBox_foromID.TextChanged += new System.EventHandler(this.textBox_foromID_TextChanged);
+            this.textBox_TorrentDetailsRegex.Location = new System.Drawing.Point(104, 146);
+            this.textBox_TorrentDetailsRegex.Multiline = true;
+            this.textBox_TorrentDetailsRegex.Name = "textBox_TorrentDetailsRegex";
+            this.textBox_TorrentDetailsRegex.Size = new System.Drawing.Size(126, 51);
+            this.textBox_TorrentDetailsRegex.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsRegex, resources.GetString("textBox_TorrentDetailsRegex.ToolTip"));
+            this.textBox_TorrentDetailsRegex.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsRegex_TextChanged);
+            // 
+            // label20
+            // 
+            this.label20.Location = new System.Drawing.Point(4, 10);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(100, 21);
+            this.label20.TabIndex = 4;
+            this.label20.Text = "Websearch preset:";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_TorrentSearchRegex
+            // 
+            this.textBox_TorrentSearchRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_TorrentSearchRegex.Location = new System.Drawing.Point(104, 61);
+            this.textBox_TorrentSearchRegex.Multiline = true;
+            this.textBox_TorrentSearchRegex.Name = "textBox_TorrentSearchRegex";
+            this.textBox_TorrentSearchRegex.Size = new System.Drawing.Size(126, 51);
+            this.textBox_TorrentSearchRegex.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchRegex, resources.GetString("textBox_TorrentSearchRegex.ToolTip"));
+            this.textBox_TorrentSearchRegex.TextChanged += new System.EventHandler(this.textBox_TorrentRegex_TextChanged);
+            // 
+            // label21
+            // 
+            this.label21.Location = new System.Drawing.Point(2, 38);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(100, 21);
+            this.label21.TabIndex = 4;
+            this.label21.Text = "Search Url:";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_TorrentDetailsUrl
+            // 
+            this.textBox_TorrentDetailsUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_TorrentDetailsUrl.Location = new System.Drawing.Point(104, 120);
+            this.textBox_TorrentDetailsUrl.Name = "textBox_TorrentDetailsUrl";
+            this.textBox_TorrentDetailsUrl.Size = new System.Drawing.Size(126, 20);
+            this.textBox_TorrentDetailsUrl.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsUrl, "Url of the website showing details on a specific torrent.\r\nThis url will replace " +
+                    "the $id$ string with the <id> extracted from the search results");
+            this.textBox_TorrentDetailsUrl.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsUrl_TextChanged);
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(7, 123);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(92, 21);
+            this.label23.TabIndex = 4;
+            this.label23.Text = "Details Url:";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_TorrentSearchUrl
+            // 
+            this.textBox_TorrentSearchUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_TorrentSearchUrl.Location = new System.Drawing.Point(104, 35);
+            this.textBox_TorrentSearchUrl.Name = "textBox_TorrentSearchUrl";
+            this.textBox_TorrentSearchUrl.Size = new System.Drawing.Size(126, 20);
+            this.textBox_TorrentSearchUrl.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchUrl, "Url of the website listing the search results.\r\nThe search string will replace th" +
+                    "e $search$ string in the specified url.");
+            this.textBox_TorrentSearchUrl.TextChanged += new System.EventHandler(this.textBox_TorrentUrl_TextChanged);
+            // 
+            // label22
+            // 
+            this.label22.Location = new System.Drawing.Point(2, 64);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(100, 24);
+            this.label22.TabIndex = 4;
+            this.label22.Text = "Search Regex:";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // comboBox_TorrentPreset
+            // 
+            this.comboBox_TorrentPreset.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_TorrentPreset.FormattingEnabled = true;
+            this.comboBox_TorrentPreset.Location = new System.Drawing.Point(104, 7);
+            this.comboBox_TorrentPreset.Name = "comboBox_TorrentPreset";
+            this.comboBox_TorrentPreset.Size = new System.Drawing.Size(126, 21);
+            this.comboBox_TorrentPreset.Sorted = true;
+            this.comboBox_TorrentPreset.TabIndex = 5;
+            this.comboBox_TorrentPreset.SelectedIndexChanged += new System.EventHandler(this.comboBox_TorrentPreset_SelectedIndexChanged);
+            this.comboBox_TorrentPreset.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox_TorrentPreset_KeyDown);
+            // 
+            // label24
+            // 
+            this.label24.Location = new System.Drawing.Point(2, 149);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(100, 24);
+            this.label24.TabIndex = 4;
+            this.label24.Text = "Details Regex:";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // listBox_Log
             // 
@@ -2686,6 +2964,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             this.splitContainer2.ResumeLayout(false);
             this.contextMenuStrip_DetailsTree.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -2700,7 +2979,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.ResumeLayout(false);
             this.splitContainerImportSettings.ResumeLayout(false);
             this.panel_StringReplacements.ResumeLayout(false);
-            this.panel_StringReplacements.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
             this.panel_OnlineData.ResumeLayout(false);
             this.panel_OnlineData.PerformLayout();
@@ -2729,13 +3007,20 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
-            this.tabpage_Subtitles.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage_Forom.ResumeLayout(false);
-            this.tabPage_Forom.PerformLayout();
+            this.tabpage_Extra.ResumeLayout(false);
+            this.splitContainer_treeextra.Panel1.ResumeLayout(false);
+            this.splitContainer_treeextra.Panel2.ResumeLayout(false);
+            this.splitContainer_treeextra.ResumeLayout(false);
+            this.panel_newssearch.ResumeLayout(false);
+            this.panel_newssearch.PerformLayout();
+            this.panel_newsroot.ResumeLayout(false);
+            this.panel_newsroot.PerformLayout();
+            this.panel_torrentroot.ResumeLayout(false);
+            this.panel_torrentroot.PerformLayout();
+            this.panel_forom.ResumeLayout(false);
+            this.panel_forom.PerformLayout();
+            this.panel_torrentsearch.ResumeLayout(false);
+            this.panel_torrentsearch.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -2816,7 +3101,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.RichTextBox richTextBox_episodeFormat_Col1;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox_debuglevel;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox checkBox_AutoHeight;
         private System.Windows.Forms.ComboBox comboBox_seriesFormat;
@@ -2834,7 +3119,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Title;
         private System.Windows.Forms.TextBox textBox_PluginHomeName;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TabPage tabpage_Subtitles;
+        private System.Windows.Forms.TabPage tabpage_Extra;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBox_DontClearMissingLocalFiles;
@@ -2843,14 +3128,10 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getSubtitlesToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage_Forom;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox textBox_foromBaseURL;
         private System.Windows.Forms.TextBox textBox_foromID;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button_uTorrentBrowse;
         private System.Windows.Forms.TextBox textBox_uTorrentPath;
@@ -2940,5 +3221,33 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox txtMainMirror;
         private System.Windows.Forms.LinkLabel linkExWatched;
+        private System.Windows.Forms.SplitContainer splitContainer_treeextra;
+        private System.Windows.Forms.Panel panel_torrentsearch;
+        private System.Windows.Forms.Panel panel_forom;
+        private System.Windows.Forms.Panel panel_newsroot;
+        private System.Windows.Forms.Panel panel_torrentroot;
+        private System.Windows.Forms.Panel panel_subtitleroot;
+        private System.Windows.Forms.Panel panel_newssearch;
+        private System.Windows.Forms.Button button_newsleecherbrowse;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox textBox_newsleecher;
+        private System.Windows.Forms.TreeView treeView_Extra;
+        private System.Windows.Forms.Button button_dbbrowse;
+        private System.Windows.Forms.TextBox textBox_dblocation;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox textBox_NewsSearchRegex;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox textBox_NewsSearchUrl;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox textbox_NewzbinPassword;
+        private System.Windows.Forms.TextBox textBox_NewzbinLogin;
+        private System.Windows.Forms.ToolStripMenuItem newzbinThisToolStripMenuItem;
+        private System.Windows.Forms.Button button_NewsDownloadPathBrowse;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox textBox_NewsDownloadPath;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ComboBox comboBox_preferedBannerType;
     }
 }

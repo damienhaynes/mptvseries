@@ -30,7 +30,7 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class Translation
+    static class Translation
     {
         /// <summary>
         /// These will be loaded with the language files content
@@ -80,11 +80,24 @@ namespace WindowPlugins.GUITVSeries
         public static string special = "Special";
         public static string specials = "Specials";
         public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
+        public static string Cycle_Banner = "Cycle Banner";
+        public static string Force_Online_Match = "Force Online Match";
+        public static string Load_via_NewsLeecher = "Load via NewsLeecher";
+        public static string Download = "Download";
+        public static string Actions = "Actions";
+        public static string Options = "Options";
+        public static string Genres = "Genres";
+        public static string All = "All";
+        public static string Latest = "Latest";
+        public static string Channels = "Channels";
+        public static string Unwatched = "Unwatched";
+        public static string Favourites = "Favourites";
+
 
         #endregion
 
         static string path = string.Empty;
-        static Translation()
+        static public void Init()
         {
             string lang = DBOption.GetOptions(DBOption.cLanguage);
             if (lang == string.Empty)
@@ -154,6 +167,7 @@ namespace WindowPlugins.GUITVSeries
         public static List<string> getSupportedLangs()
         {
             List<string> langs = new List<string>();
+            path = Settings.GetPath(Settings.Path.lang);
             foreach (string file in System.IO.Directory.GetFiles(path, "*.xml"))
             {
                 langs.Add(System.IO.Path.GetFileNameWithoutExtension(file));

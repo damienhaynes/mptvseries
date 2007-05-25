@@ -14,7 +14,7 @@
 	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Récupérer les sous-titres</string>
 	<string Field="Load_via_Torrent" Original="Load via Torrent">Télécharger via Torrent</string>
 	<string Field="Mark_all_as_watched" Original="Mark all as watched">Marquer statut déjà vu</string>
-	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Enlever statut déja vu</string>
+	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Enlever statut déjà vu</string>
 	<string Field="Hide" Original="Hide">Masquer</string>
 	<string Field="Delete" Original="Delete">Supprimer</string>
 	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Retirer la série des favoris</string>
@@ -35,11 +35,25 @@
 	<string Field="Completed" Original="Completed">Terminé</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Aucun sous-titres trouvés !</string>
 	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Passer / Ne plus demander</string>
-	<string Field="no_results_found" Original="no results found!">Aucun résultat trouvé</string>
-	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Masqué pour empècher les spoilers *</string>
+	<string Field="no_results_found" Original="no results found!">Aucun résultats trouvés</string>
+	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Masqué pour empêcher les spoilers *</string>
 	<string Field="Yes" Original="Yes">Oui</string>
 	<string Field="No" Original="No">Non</string>
 	<string Field="Error" Original="#Error">#Erreur</string>
 	<string Field="No_items" Original="No items!">Aucun Eléments!</string>	
 	<string Field="Unknown" Original="Unknown">Inconnu</string>
+	<string Field="Cycle Banner" Original="Cycle Banner">Changer la bannière</string>
+	<string Field="Force Online Match" Original="Force Online Match">Forcer la recherche de la série</string>
+	<string Field="Load via NewsLeecher" Original="Load via NewsLeecher">Télécharger via Newsleecher</string>
+	<string Field="Download" Original="Download">Télécharger</string>
+	<string Field="Actions" Original="Actions">Actions</string>
+	<string Field="Options" Original="Options">Options</string>
+
+	<string Field="Genres" Original="Genres">Genres</string>
+	<string Field="All" Original="All">Tous</string>
+	<string Field="Latest" Original="Latest">Plus récents</string>
+	<string Field="Channels" Original="Channels">Chaînes</string>
+	<string Field="Unwatched" Original="Unwatched">Non vus</string>
+	<string Field="Favourites" Original="Favourites">Favoris</string>
+	
 </strings>

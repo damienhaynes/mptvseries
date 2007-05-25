@@ -738,29 +738,29 @@ namespace WindowPlugins.GUITVSeries
     {
         public static string Get(string jkld)
         {
-            return "Genres<name>group:<Series.Genre><;><;><;>15" +
+            return Translation.Genres+"<name>group:<Series.Genre><;><;><;>15" +
                 "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                "All<name>series<;><;><Series.Pretty_Name>;asc<;>" +
+                Translation.All+"<name>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                "Latest<name>episode<;><;><Episode.FirstAired>;desc<;>25"
+                Translation.Latest+"<name>episode<;><;><Episode.FirstAired>;desc<;>25"
                 + "<nextView>" +
-                "Channels<name>group:<Series.Network><;><;><;>15" +
+                Translation.Channels+"<name>group:<Series.Network><;><;><;>15" +
                 "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                "Unwatched<name>series<;><Episode.Watched>;=;0<;><Series.Pretty_Name>;asc<;>" +
+                Translation.Unwatched+"<name>series<;><Episode.Watched>;=;0<;><Series.Pretty_Name>;asc<;>" +
                 //"Unwatched<name>series<;>custom:(select count(watched) from online_episodes where seriesID = online_series.ID and watched = 0);>;0<;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;>;;<;><Season.seasonIndex>;asc<;>" +
                 //"<nextStep>season<;>custom:(select count(watched) from online_episodes where seriesID = season.seriesID and seasonindex =  season.seasonindex and watched = 0);>;0<;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                "Favourites<name>series<;><Series.isFavourite>;=;1<;><Series.Pretty_Name>;asc<;>" +
+                Translation.Favourites+"<name>series<;><Series.isFavourite>;=;1<;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 ;

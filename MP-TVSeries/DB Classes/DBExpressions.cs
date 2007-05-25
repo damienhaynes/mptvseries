@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBExpression : DBTable
     {
         public const String cTableName = "expressions";
-        public const int cDBVersion = 2;
+        public const int cDBVersion = 3;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -116,6 +116,25 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cDBExpressionsVersion, nCurrentVersion);
                         break;
 
+                    case 2:
+                        // upgrade to version 3; try to replace the previous regular expressions
+                        // this time just look for the title parsing string and add code to prevent matching anything with "sample" in it
+                        if (expressions != null && expressions.Length > 0)
+                        {
+                            for (int index = 0; index < expressions.Length; index++)
+                            {
+                                DBExpression expression = expressions[index];
+                                String sTitleMatch = expression[DBExpression.cExpression];
+                                if ((String)expression[DBExpression.cType] != DBExpression.cType_Simple && sTitleMatch.IndexOf("sample", sTitleMatch.IndexOf("title>")) == -1)
+                                {
+                                    expression[DBExpression.cExpression] = sTitleMatch.Replace("title>", "title>(?![^\\]*?sample)");
+                                    expression.Commit();
+                                }
+                            }
+                        }
+                        DBOption.SetOptions(DBOption.cDBExpressionsVersion, nCurrentVersion);
+                        break;
+
                     default:
                         break;
                 }
@@ -137,19 +156,19 @@ namespace WindowPlugins.GUITVSeries
 
                 expression[DBExpression.cType] = DBExpression.cType_Regexp;
                 expression[DBExpression.cIndex] = "2";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>[^$]*?)\.(?<ext>[^.]*)";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>(?![^\\]*?sample)[^$]*?)\.(?<ext>[^.]*)";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "3";
-                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>[^$]*?)\.(?<ext>[^.]*)";
+                expression[DBExpression.cExpression] = @"(?<series>[^\\$]*) - season (?<season>[0-9]{1,2}) - (?<title>(?![^\\]*?sample)[^$]*?)\.(?<ext>[^.]*)";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "4";
-                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "5";
-                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
             }
         }

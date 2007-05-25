@@ -31,11 +31,11 @@
   <ItemGroup>
     <Reference Include="Core, Version=1.0.2476.19636, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\mediaportal\xbmc\bin\Debug\Core.dll</HintPath>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Core.dll</HintPath>
     </Reference>
     <Reference Include="Databases, Version=1.0.2308.21888, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\mediaportal\xbmc\bin\Debug\Databases.dll</HintPath>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Databases.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
