@@ -42,7 +42,8 @@ namespace WindowPlugins.GUITVSeries
 {
     public partial class ConfigurationForm : Form, Feedback.Interface
     {
-        private List<Panel> m_paneList = new List<Panel>();
+        private List<Panel> m_paneListSettings = new List<Panel>();
+        private List<Panel> m_paneListExtra = new List<Panel>();
         private TreeNode nodeEdited = null;
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
@@ -52,6 +53,7 @@ namespace WindowPlugins.GUITVSeries
         private DBEpisode m_EpisodeReference = new DBEpisode(true);
 
         private DBTorrentSearch m_currentTorrentSearch = null;
+        private DBNewzbin m_currentNewsSearch = null;
         List<logicalView> availViews = new List<logicalView>();
         logicalView selectedView = null;
         logicalViewStep selectedViewStep = null;
@@ -69,6 +71,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
             InitSettingsTreeAndPanes();
+            InitExtraTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
             LoadReplacements();
@@ -79,18 +82,17 @@ namespace WindowPlugins.GUITVSeries
         #region Init
         private void InitSettingsTreeAndPanes()
         {
-            this.comboBox1.SelectedIndex = 0;
+            textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
-            // temp: remove the subtitle tab for now, not ready for prime time (if it ever is :) )
-//            tabControl_Details.Controls.Remove(tabpage_Subtitles);
+            this.comboBox_debuglevel.SelectedIndex = 0;
 
-            m_paneList.Add(panel_ImportPathes);
-            m_paneList.Add(panel_Expressions);
-            m_paneList.Add(panel_StringReplacements);
-            m_paneList.Add(panel_ParsingTest);
-            m_paneList.Add(panel_OnlineData);
+            m_paneListSettings.Add(panel_ImportPathes);
+            m_paneListSettings.Add(panel_Expressions);
+            m_paneListSettings.Add(panel_StringReplacements);
+            m_paneListSettings.Add(panel_ParsingTest);
+            m_paneListSettings.Add(panel_OnlineData);
 
-            foreach (Panel pane in m_paneList)
+            foreach (Panel pane in m_paneListSettings)
             {
                 pane.Dock = DockStyle.Fill;
                 pane.Visible = false;
@@ -109,6 +111,11 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
+
+            comboBox_preferedBannerType.Items.Add("Text");
+            comboBox_preferedBannerType.Items.Add("Graphical");
+            comboBox_preferedBannerType.Items.Add("Blank");
+            comboBox_preferedBannerType.SelectedIndex = DBOption.GetOptions(DBOption.cPreferedBannerType);
 
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
@@ -183,6 +190,51 @@ namespace WindowPlugins.GUITVSeries
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
 
+            textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+        }
+
+        private void InitExtraTreeAndPanes()
+        {
+            TreeNode nodeRoot = null;
+            TreeNode nodeChild = null;
+            m_paneListExtra.Add(panel_subtitleroot);
+            m_paneListExtra.Add(panel_forom);
+
+            nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
+            nodeRoot.Name = panel_subtitleroot.Name;
+            treeView_Extra.Nodes.Add(nodeRoot);
+            nodeChild = new TreeNode(panel_forom.Tag.ToString());
+            nodeChild.Name = panel_forom.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+
+            m_paneListExtra.Add(panel_torrentroot);
+            m_paneListExtra.Add(panel_torrentsearch);
+
+            nodeRoot = new TreeNode(panel_torrentroot.Tag.ToString());
+            nodeRoot.Name = panel_torrentroot.Name;
+            treeView_Extra.Nodes.Add(nodeRoot);
+            nodeChild = new TreeNode(panel_torrentsearch.Tag.ToString());
+            nodeChild.Name = panel_torrentsearch.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+
+            m_paneListExtra.Add(panel_newsroot);
+            m_paneListExtra.Add(panel_newssearch);
+
+            nodeRoot = new TreeNode(panel_newsroot.Tag.ToString());
+            nodeRoot.Name = panel_newsroot.Name;
+            treeView_Extra.Nodes.Add(nodeRoot);
+            nodeChild = new TreeNode(panel_newssearch.Tag.ToString());
+            nodeChild.Name = panel_newssearch.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+
+            foreach (Panel pane in m_paneListExtra)
+            {
+                pane.Dock = DockStyle.Fill;
+                pane.Visible = false;
+            }
+
+            treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
+
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
 
@@ -222,8 +274,9 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
-            this.comboBox1.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
+            this.comboBox_debuglevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
 
+            LoadNewsSearches();
         }
 
         private void LoadTorrentSearches()
@@ -241,6 +294,17 @@ namespace WindowPlugins.GUITVSeries
                 comboBox_TorrentPreset.SelectedItem = m_currentTorrentSearch;
             else
                 comboBox_TorrentPreset.SelectedIndex = 0;
+        }
+
+        private void LoadNewsSearches()
+        {
+            textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
+            m_currentNewsSearch = DBNewzbin.Get()[0];
+
+            textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
+            textBox_NewsSearchRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegex];
+            textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
+            textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
         }
 
         private void LoadImportPathes()
@@ -1157,7 +1221,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            foreach (Panel pane in m_paneList)
+            foreach (Panel pane in m_paneListSettings)
             {
                 if (pane.Name == e.Node.Name)
                 {
@@ -1697,8 +1761,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.comboBox1.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-            else if (this.comboBox1.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
+            if (this.comboBox_debuglevel.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
+            else if (this.comboBox_debuglevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
             else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
         }
 
@@ -1777,6 +1841,10 @@ namespace WindowPlugins.GUITVSeries
                 case "torrent":
                     TorrentFile(clickedNode);
                     break;
+
+                case "newzbin":
+                    NewzFile(clickedNode);
+                    break;
             }
         }
 
@@ -1794,16 +1862,42 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
-                    Torrent.TorrentLoad torrentLoad = new Torrent.TorrentLoad(this);
-                    torrentLoad.TorrentLoadCompleted += new WindowPlugins.GUITVSeries.Torrent.TorrentLoad.TorrentLoadCompletedHandler(torrentLoad_TorrentLoadCompleted);
-                    torrentLoad.Search(episode);
+                    Torrent.Load Load = new Torrent.Load(this);
+                    Load.LoadCompleted += new WindowPlugins.GUITVSeries.Torrent.Load.LoadCompletedHandler(TorrentLoad_LoadCompleted);
+                    Load.Search(episode);
                     break;
             }
         }
 
-        void torrentLoad_TorrentLoadCompleted(bool bOK)
+        public void NewzFile(TreeNode node)
+        {
+            switch (node.Name)
+            {
+                case DBSeries.cTableName:
+                    DBSeries series = (DBSeries)node.Tag;
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = (DBSeason)node.Tag;
+                    break;
+
+                case DBEpisode.cTableName:
+                    DBEpisode episode = (DBEpisode)node.Tag;
+                    Newzbin.Load Load = new Newzbin.Load(this);
+                    Load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(NewzbinLoad_LoadCompleted);
+                    Load.Search(episode);
+                    break;
+            }
+        }
+
+        void TorrentLoad_LoadCompleted(bool bOK)
         {
             
+        }
+
+        void NewzbinLoad_LoadCompleted(bool bOK, String msgOut)
+        {
+
         }
 
         public Feedback.ReturnCode ChooseFromSelection(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
@@ -2051,10 +2145,98 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncReadResolutions(object sender, DoWorkEventArgs e)
         {
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
                 ep.readMediaInfoOfLocal();
             e.Result = episodes.Count;
+        }
+
+        private void treeView_Extra_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            foreach (Panel pane in m_paneListExtra)
+            {
+                if (pane.Name == e.Node.Name)
+                {
+                    pane.Visible = true;
+                }
+                else
+                    pane.Visible = false;
+            }
+
+        }
+
+        private void button_dbbrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
+            openFileDialog.Filter = "Executable files (*.db3)|";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Settings.SetPath(Settings.Path.database, openFileDialog.FileName);
+                textBox_dblocation.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegex] = textBox_NewsSearchRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewzbinLogin_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cLogin] = textBox_NewzbinLogin.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textbox_NewzbinPassword_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cPassword] = textbox_NewzbinPassword.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void newzbinThisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_newsleecherbrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = DBOption.GetOptions(DBOption.cNewsLeecherPath);
+            openFileDialog.Filter = "Executable files (*.exe)|";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                DBOption.SetOptions(DBOption.cNewsLeecherPath, openFileDialog.FileName);
+                textBox_newsleecher.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void textBox_NewsDownloadPath_TextChanged(object sender, EventArgs e)
+        {
+            String sPath = textBox_NewsDownloadPath.Text;
+            DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, sPath);
+
+        }
+
+        private void button_NewsDownloadPathBrowse_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog1.SelectedPath);
+                textBox_NewsDownloadPath.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void comboBox_preferedBannerType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cPreferedBannerType, comboBox_preferedBannerType.SelectedIndex);
         }
 
         private void addLogo_Click(object sender, EventArgs e)

@@ -83,7 +83,7 @@ namespace WindowPlugins.GUITVSeries
     class Watcher
     {
         public BackgroundWorker worker = new BackgroundWorker();
-        Feedback.Interface m_feedback = null;
+        List<String> m_WatchedFolders;
         List<System.IO.FileSystemWatcher> m_watchersList = new List<System.IO.FileSystemWatcher>();
         List<WatcherItem> m_modifiedFilesList = new List<WatcherItem>();
         bool progressUpdateRequired = false;
@@ -94,9 +94,9 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         public event WatcherProgressHandler WatcherProgress;
 
-        public Watcher(Feedback.Interface feedback)
+        public Watcher(List<String> WatchedFolders)
         {
-            m_feedback = feedback;
+            m_WatchedFolders = WatchedFolders;
             worker.WorkerReportsProgress = true;
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
             worker.DoWork += new DoWorkEventHandler(workerWatcher_DoWork);
@@ -144,20 +144,20 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void setUpWatches(DBImportPath[] importPaths)
+        void setUpWatches()
         {
             if (m_watchersList.Count > 0) return; // this can only run once
             // ok let's see ... go through all enable import folders, and add a watchfolder on it
-            foreach (DBImportPath importPath in importPaths)
+            foreach (String sWatchedFolder in m_WatchedFolders)
             {
-                if (importPath[DBImportPath.cEnabled] != 0 && Directory.Exists(importPath[DBImportPath.cPath]))
+                if (Directory.Exists(sWatchedFolder))
                 {
                     // one watcher for each extension type
                     foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
                     {
                         FileSystemWatcher watcher = new FileSystemWatcher();
                         watcher.Filter = "*" + extention;
-                        watcher.Path = importPath[DBImportPath.cPath];
+                        watcher.Path = sWatchedFolder;
                         watcher.IncludeSubdirectories = true;
                         watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
                         watcher.Changed += new FileSystemEventHandler(watcher_Changed);
@@ -194,21 +194,16 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
-            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            DBImportPath[] importPaths = DBImportPath.GetAll();
-            if (importPaths != null)
+            System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+            setUpWatches();
+            while (!worker.CancellationPending)
             {
-                setUpWatches(importPaths);
-                importPaths = null;
-                while (!worker.CancellationPending)
+                if (progressUpdateRequired)
                 {
-                    if (progressUpdateRequired)
-                    {
-                        signalActionRequired();
-                    }
-                    // wait
-                    Thread.Sleep(3000); // every 3 seconds do a quick check if we need to do something
+                    signalActionRequired();
                 }
+                // wait
+                Thread.Sleep(3000); // every 3 seconds do a quick check if we need to do something
             }
         }
     };
@@ -217,7 +212,8 @@ namespace WindowPlugins.GUITVSeries
     {
         Full,
         List_Add,
-        List_Remove
+        List_Remove,
+        LocalScanNoExactMatch,
     }
 
     class CParsingParameters
@@ -250,6 +246,7 @@ namespace WindowPlugins.GUITVSeries
         bool m_bDataUpdated = false;
         bool m_bFullSeriesRetrieval = false;
         bool m_bReparseNeeded = false;
+        bool m_bNoExactMatch = false;
         CParsingParameters m_params = null;
 
         public delegate void OnlineParsingProgressHandler(int nProgress);
@@ -316,16 +313,13 @@ namespace WindowPlugins.GUITVSeries
             //            m_bAbort = true;
         }
 
-        public void worker_RemoveDoWork(object sender, DoWorkEventArgs e)
-        {
-        }
-
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
             m_params = e.Argument as CParsingParameters;
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
+            m_bNoExactMatch = false;
             worker.ReportProgress(0);
 
             switch (m_params.m_action)
@@ -407,7 +401,14 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("***************************************************************************");
                     ParseLocal(m_params.m_files);
                     break;
-                    
+
+                case ParsingAction.LocalScanNoExactMatch:
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    MPTVSeriesLog.Write(String.Format("******************* LocalScanNoExactMatch Starting {0} - {1}   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan));
+                    MPTVSeriesLog.Write("***************************************************************************");
+                    m_bNoExactMatch = true;
+                    goto case ParsingAction.Full;
+
                 case ParsingAction.Full:
                     MPTVSeriesLog.Write("***************************************************************************");
                     MPTVSeriesLog.Write(String.Format("******************* Full Starting {0} - {1}   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan));
@@ -420,7 +421,20 @@ namespace WindowPlugins.GUITVSeries
                         DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
                         DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
 
-                        ParseLocal(Filelister.GetFiles());
+                        List<String> listFolders = new List<string>();
+                        DBImportPath[] importPathes = DBImportPath.GetAll();
+                        if (importPathes != null)
+                        {
+                            foreach (DBImportPath importPath in importPathes)
+                            {
+                                if (importPath[DBImportPath.cEnabled] != 0)
+                                {
+                                    listFolders.Add(importPath[DBImportPath.cPath]);
+                                }
+                            }
+                        }
+
+                        ParseLocal(Filelister.GetFiles(listFolders));
                         
                         // now, remove all episodes still processed = 0, the weren't find in the scan
                         if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
@@ -685,9 +699,10 @@ namespace WindowPlugins.GUITVSeries
                     int ExactMatchCount = 0;
                     foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
                     {
+                        // make sure it has a status for an exact match
                         if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().IndexOf(sSeriesNameToSearch.ToLower()) != -1)
                             SubStringCount++;
-                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower() == sSeriesNameToSearch.ToLower())
+                        if (onlineSeries[DBOnlineSeries.cStatus] != String.Empty && onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower() == sSeriesNameToSearch.ToLower())
                             ExactMatchCount++;
                     }
 
@@ -695,7 +710,7 @@ namespace WindowPlugins.GUITVSeries
                     if (GetSeriesParser.Results.Count > 0)
                         UserChosenSeries = GetSeriesParser.Results[0];
 
-                    if (ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
+                    if (m_bNoExactMatch || ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
                     {
                         // User has three choices:
                         // 1) Pick a series from the list

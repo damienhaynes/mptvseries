@@ -50,6 +50,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cWriter = "Writer";
         public const String cHidden = "Hidden";
         public const String cLastUpdated = "lastupdated";
+        public const String cDownloadPending = "DownloadPending";
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
@@ -107,6 +108,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cWriter, new DBField(DBField.cTypeString));
             base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
             base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
+            base.AddColumn(cDownloadPending, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -169,7 +171,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
-        public const int cDBVersion = 4;
+        public const int cDBVersion = 5;
 
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
@@ -238,6 +240,11 @@ namespace WindowPlugins.GUITVSeries
 
                     case 3:
                         DBEpisode.GlobalSet(new DBEpisode(), DBEpisode.cEpisodeIndex2, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        break;
+
+                    case 4:
+                        DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
                         DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
                         break;
 

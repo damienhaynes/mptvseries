@@ -554,29 +554,29 @@ namespace WindowPlugins.GUITVSeries
 
             if (randImage == null)
             {
-                int randomPick = new Random().Next(0, BannerList.Count);
+            int randomPick = new Random().Next(0, BannerList.Count);
 
-                try
+            try
+            {
+                randImage = BannerList[randomPick];
+                if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
                 {
-                    randImage = BannerList[randomPick];
-                    if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
-                    {
-                        // prefer graphical banners
-                        List<string> gBanners = new List<string>();
-                        foreach (string banner in BannerList)
-                            if (banner.Contains(graphicalBannerRecognizerSubstring))
-                                gBanners.Add(banner);
-                        if (gBanners.Count > 0)
-                            randImage = getRandomBanner(gBanners, false);
-                        // else no graphical banners avail. -> use text Banner we already picked
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
-                    return string.Empty;
+                    // prefer graphical banners
+                    List<string> gBanners = new List<string>();
+                    foreach (string banner in BannerList)
+                        if (banner.Contains(graphicalBannerRecognizerSubstring))
+                            gBanners.Add(banner);
+                    if (gBanners.Count > 0)
+                        randImage = getRandomBanner(gBanners, false);
+                    // else no graphical banners avail. -> use text Banner we already picked
                 }
             }
+            catch (Exception ex)
+            {
+                    MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                return string.Empty;
+            }
+        }
             return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
         }
 
@@ -737,7 +737,7 @@ namespace WindowPlugins.GUITVSeries
                         if (type == SQLConditionType.Like)
                             sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
                         else
-                            sValue = "'" + ((String)value).Replace("'", "''") + "'";
+                        sValue = "'" + ((String)value).Replace("'", "''") + "'";
                         break;
                 }
                 AddCustom(table.m_tableName + "." + sField, sValue, type);
@@ -773,25 +773,25 @@ namespace WindowPlugins.GUITVSeries
         public void AddCustom(string what, string value, SQLConditionType type)
         {
 
-            String sType = String.Empty;
-            switch (type)
-            {
-                case SQLConditionType.Equal:
-                    sType = " = ";
-                    break;
+                String sType = String.Empty;
+                switch (type)
+                {
+                    case SQLConditionType.Equal:
+                        sType = " = ";
+                        break;
 
-                case SQLConditionType.NotEqual:
-                    sType = " != ";
-                    break;
-                case SQLConditionType.LessThan:
-                    sType = " < ";
-                    break;
+                    case SQLConditionType.NotEqual:
+                        sType = " != ";
+                        break;
+                    case SQLConditionType.LessThan:
+                        sType = " < ";
+                        break;
                 case SQLConditionType.LessEqualThan:
                     sType = " <= ";
                     break;
-                case SQLConditionType.GreaterThan:
-                    sType = " > ";
-                    break;
+                    case SQLConditionType.GreaterThan:
+                        sType = " > ";
+                        break;
                 case SQLConditionType.GreaterEqualThan:
                     sType = " >= ";
                     break;
@@ -801,11 +801,11 @@ namespace WindowPlugins.GUITVSeries
                 case SQLConditionType.In:
                     sType = " in ";
                     break;
-            }
+                }
             if(SQLConditionType.In == type) // reverse
                 AddCustom(value + sType + what);
             else AddCustom(what + sType + value);
-        }
+            }
 
         public void AddCustom(string SQLString)
         {
@@ -843,34 +843,24 @@ namespace WindowPlugins.GUITVSeries
         private static SQLiteClient m_db = null;
         private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
         
-
         private static void InitDB()
         {
             String databaseFile = string.Empty;
 
-            
-#if TEST
-            databaseFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            databaseFile += @"\TVSeriesDatabase4.db3";
-#else
-            //databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of Windows folder
-            //databaseFile = databaseFile.Remove(databaseFile.LastIndexOf('\\')); // Get out of plugin folder
-            //Directory.CreateDirectory(databaseFile + @"\Database");
-            //databaseFile += @"\Database\TVSeriesDatabase4.db3";
             databaseFile = Settings.GetPath(Settings.Path.database);
-#endif
 
             try
             {
                 m_db = new SQLiteClient(databaseFile);
 
-                m_db.Execute("PRAGMA cache_size=2000;\n");
+                m_db.Execute("PRAGMA cache_size=5000;\n");
                 m_db.Execute("PRAGMA synchronous='OFF';\n");
                 m_db.Execute("PRAGMA count_changes=1;\n");
                 m_db.Execute("PRAGMA full_column_names=0;\n");
                 m_db.Execute("PRAGMA short_column_names=0;\n");
+                m_db.Execute("PRAGMA temp_store = MEMORY;\n");
 
-                MPTVSeriesLog.Write("Sucessfully opened database '" + databaseFile + "'.");
+                MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'.");
             }
             catch (Exception ex)
             {
@@ -895,7 +885,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.Debug);
                 result = m_db.Execute(sCommand);
-                MPTVSeriesLog.Write("Sucess, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.Debug);
                 return result;
             }
             catch (Exception ex)

@@ -43,23 +43,16 @@ namespace WindowPlugins.GUITVSeries
     public class Filelister
     {
 
-        public static List<PathPair> GetFiles()
+        public static List<PathPair> GetFiles(List<String> listFolders)
         {
             List<PathPair> outList = new List<PathPair>();
-            DBImportPath[] importPathes = DBImportPath.GetAll();
             int prev = 0;
-            if (importPathes != null)
+            foreach (String path in listFolders)
             {
-                foreach (DBImportPath importPath in importPathes)
-                {
-                    if (importPath[DBImportPath.cEnabled] != 0)
-                    {
-                        MPTVSeriesLog.Write("Searching for all supported videos files within " + importPath[DBImportPath.cPath] + " and it's subfolders.");
-                        filesInFolder(importPath[DBImportPath.cPath].ToString(), ref outList, importPath[DBImportPath.cPath].ToString().Length);
-                        MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files.");
-                        prev = outList.Count;
-                    }
-                }
+                MPTVSeriesLog.Write("Searching for all supported videos files within " + path + " and it's subfolders.");
+                filesInFolder(path, ref outList, path.Length);
+                MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files.");
+                prev = outList.Count;
             }
             return outList;
         }

@@ -42,7 +42,20 @@ namespace WindowPlugins.GUITVSeries
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<PathPair> files = Filelister.GetFiles();
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+            List<String> listFolders = new List<string>();
+            DBImportPath[] importPathes = DBImportPath.GetAll();
+            if (importPathes != null)
+            {
+                foreach (DBImportPath importPath in importPathes)
+                {
+                    if (importPath[DBImportPath.cEnabled] != 0)
+                    {
+                        listFolders.Add(importPath[DBImportPath.cPath]);
+                    }
+                }
+            }
+            List<PathPair> files = Filelister.GetFiles(listFolders);
             e.Result = Parse(files);
         }
 

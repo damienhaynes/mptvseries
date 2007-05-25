@@ -32,7 +32,7 @@ using System.Threading;
 using System.ComponentModel;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace WindowPlugins.GUITVSeries.Subtitles
+namespace WindowPlugins.GUITVSeries
 {
     public class Levenshtein
     {
@@ -73,7 +73,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             return d[n, m];
         }
     }
+}
 
+namespace WindowPlugins.GUITVSeries.Subtitles
+{
     class Forom
     {
         public BackgroundWorker worker = null;
@@ -123,7 +126,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             MPTVSeriesLog.Write("Starting FOROM Subtitles retrieval");
             MPTVSeriesLog.Write("**********************************");
 
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             try
             {
                 WebClient client = new WebClient();

@@ -38,6 +38,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cID = "ID";
         public const String cPrettyName = "Pretty_Name";
+        public const String cSortName = "SortName";
         public const String cStatus = "Status";
         public const String cGenre = "Genre";
         public const String cSummary = "Summary";
@@ -56,6 +57,7 @@ namespace WindowPlugins.GUITVSeries
         // 2: online data up to date.
         public const String cGetEpisodesTimeStamp = "GetEpisodesTimeStamp";
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
+        public const String cWatchedFileTimeStamp = "WatchedFileTimeStamp";
 
         public const String cIsFavourite = "isFavourite";
         public const String cUnwatchedItems = "UnwatchedItems";
@@ -81,6 +83,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
             s_FieldToDisplayNameMap.Add(cAirsDay, "Week Day Aired");
             s_FieldToDisplayNameMap.Add(cAirsTime, "Hour Aired");
+            s_FieldToDisplayNameMap.Add(cSortName, "Sort (Original) Name");
 
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
@@ -89,6 +92,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("Overview", cSummary);
             s_OnlineToFieldMap.Add("Airs_DayOfWeek", cAirsDay);
             s_OnlineToFieldMap.Add("Airs_Time", cAirsTime);
+            s_OnlineToFieldMap.Add("SortName", cSortName);
 
             // make sure the table is created on first run
             DBOnlineSeries dummy = new DBOnlineSeries();
@@ -114,6 +118,7 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
             base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
+            base.AddColumn(cSortName, new DBField(DBField.cTypeString));
             base.AddColumn(cStatus, new DBField(DBField.cTypeString));
             base.AddColumn(cGenre, new DBField(DBField.cTypeString));
             base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
@@ -129,6 +134,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
+            base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -210,7 +216,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 6;
+        public const int cDBVersion = 7;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -270,6 +276,12 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                         break;
 
+                    case 6:
+                        // set all watched flag timestamp to 0 (will be created)
+                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        break;
+
                     default:
                         break;
                 }
@@ -316,6 +328,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries[DBOnlineSeries.cPrettyName] == String.Empty)
                 {
                     m_onlineSeries[DBOnlineSeries.cPrettyName] = base[cParsedName];
+                    m_onlineSeries[DBOnlineSeries.cSortName] = base[cParsedName];
                     m_onlineSeries.Commit();
                 }
             }
@@ -405,9 +418,10 @@ namespace WindowPlugins.GUITVSeries
                         else return 0;
                         
                     case DBOnlineSeries.cPrettyName:
+                    case DBOnlineSeries.cSortName:
                         DBValue retVal = null;
                         if (m_onlineSeries != null)
-                            retVal = m_onlineSeries[DBOnlineSeries.cPrettyName];
+                            retVal = m_onlineSeries[fieldName];
 
                         if (retVal == null || retVal == String.Empty)
                             retVal = base[cParsedName];

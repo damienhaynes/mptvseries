@@ -31,12 +31,13 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
+
     public class DBTorrentSearch : DBTable
     {
         public const String cTableName = "torrent";
         public const int cDBVersion = 1;
 
-        public const String cID = "ID"; 
+        public const String cID = "ID";
         public const String cSearchUrl = "searchUrl";
         public const String cSearchRegex = "searchRegex";
         public const String cDetailsUrl = "detailsUrl";
@@ -69,22 +70,22 @@ namespace WindowPlugins.GUITVSeries
                 item[DBTorrentSearch.cDetailsRegex] = "Number of files.*?<td>[^\\d]*(?<filecount>\\d*)";
                 item.Commit();
             }
-//             int nCurrentDBTorrentVersion = cDBVersion;
-//             while (DBOption.GetOptions(DBOption.cDBTorrentVersion) != nCurrentDBTorrentVersion)
-//                 // take care of the upgrade in the table
-//                 switch ((int)DBOption.GetOptions(DBOption.cDBTorrentVersion))
-//                 {
-//                     case 1:
-//                         try
-//                         {
-//                             DBOption.SetOptions(DBOption.cDBTorrentVersion, nCurrentDBTorrentVersion);
-//                         }
-//                         catch { }
-//                         break;
-// 
-//                     default:
-//                         break;
-//                 }
+            //             int nCurrentDBTorrentVersion = cDBVersion;
+            //             while (DBOption.GetOptions(DBOption.cDBTorrentVersion) != nCurrentDBTorrentVersion)
+            //                 // take care of the upgrade in the table
+            //                 switch ((int)DBOption.GetOptions(DBOption.cDBTorrentVersion))
+            //                 {
+            //                     case 1:
+            //                         try
+            //                         {
+            //                             DBOption.SetOptions(DBOption.cDBTorrentVersion, nCurrentDBTorrentVersion);
+            //                         }
+            //                         catch { }
+            //                         break;
+            // 
+            //                     default:
+            //                         break;
+            //                 }
         }
 
         public DBTorrentSearch()
