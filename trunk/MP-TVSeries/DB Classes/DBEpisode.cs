@@ -649,125 +649,50 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
-
         public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
-            SQLCondition conditions = null;
-            if (bExistingFilesOnly)
-            {
-                conditions = new SQLCondition();
-                conditions.Add(new DBEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-                if (!bIncludeHidden)
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                return Get(conditions, false);
-            }
-            else
-            {
-                conditions = new SQLCondition();
-                conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-                if (!bIncludeHidden)
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                return Get(conditions, true);
-            }
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+            if (!bIncludeHidden)
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+            
+            return Get(conditions, !bExistingFilesOnly);
         }
 
         public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
         {
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+            conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
+            if (!bIncludeHidden)
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
 
-            SQLCondition conditions = null;
-            if (bExistingFilesOnly)
-            {
-                conditions = new SQLCondition();
-                conditions.Add(new DBEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-                conditions.Add(new DBEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
-                if (!bIncludeHidden)
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-
-                return Get(conditions, false);
-            }
-            else
-            {
-                conditions = new SQLCondition();
-                conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
-                if (!bIncludeHidden)
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                return Get(conditions, true);
-            }
+            return Get(conditions, !bExistingFilesOnly);
         }
 
         public static List<DBEpisode> Get(SQLCondition conditions, bool bOnline)
         {
             String sqlQuery = String.Empty;
             if (conditions == string.Empty)
-                conditions.AddCustom("1 = 1");
+                conditions.AddCustom("1 = 1");  
             string orderBy = !conditions.customOrderStringIsSet
                   ? string.Empty
                   : conditions.orderString;
+
+            if (!bOnline)
+                conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+
             string innerJoin = innerJoins((string)conditions + conditions.orderString);
-            if (bOnline)
-            {
-                if (orderBy == string.Empty)
-                    orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
-                // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " outer join " + cTableName + " on " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + orderBy + conditions.limitString;
-            }
-            else
-            {
-                if (orderBy == string.Empty)
-                    orderBy = " order by " + Q(cEpisodeIndex);
-                SQLWhat what = new SQLWhat(new DBEpisode());
-                what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + innerJoin + conditions + " and " + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + orderBy + conditions.limitString;
-            }
+
+            if (orderBy == string.Empty)
+                orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+            SQLWhat what = new SQLWhat(new DBOnlineEpisode());
+            what.AddWhat(new DBEpisode());
+            // one query gets both first & second episode
+            sqlQuery = "select " + what + " left join " + cTableName + " on (" + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " or " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + ") " + innerJoin + conditions + orderBy + conditions.limitString;
 
             List<DBEpisode> outList = new List<DBEpisode>();
             outList.AddRange(Get(sqlQuery));
-
-            // do the second episodes if existing
-            if (bOnline)
-            {
-                if (orderBy == string.Empty)
-                    orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
-                // provide only qualitied fields, stupid trick for how MP'SQL handles multiple columns with the same name (it uses the last one, it should use the first one IMO)
-                sqlQuery = "select " + what + " outer join " + cTableName + " on " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + innerJoin + conditions + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
-            }
-            else
-            {
-                if (orderBy == string.Empty)
-                    orderBy = " order by " + Q(cEpisodeIndex);
-                SQLWhat what = new SQLWhat(new DBEpisode());
-                what.Add(new DBOnlineEpisode());
-                sqlQuery = "select " + what + innerJoin + conditions + " and " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + " and " + DBEpisode.Q(cFilename) + "!='' " + orderBy + conditions.limitString;
-            }
-            List<DBEpisode> Secondresults = Get(sqlQuery);
-            if (Secondresults.Count > 0)
-            {
-                for (int index = 0; index < Secondresults.Count; index++)
-                {
-                    DBEpisode episode = Secondresults[index];
-                    // replace the filename if the episode already exists
-                    bool bFound = false;
-                    foreach (DBEpisode existingEpisode in outList)
-                    {
-                        if (existingEpisode[cCompositeID] == episode[cCompositeID])
-                        {
-                            // replace the filename
-                            existingEpisode[cFilename] = episode[cFilename];
-                            bFound = true;
-                            break;
-                        }
-                    }
-
-                    if (!bFound)
-                        outList.Add(episode);
-                }
-            }
-
             return outList;
         }
 
