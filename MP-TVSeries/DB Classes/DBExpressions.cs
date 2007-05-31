@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBExpression : DBTable
     {
         public const String cTableName = "expressions";
-        public const int cDBVersion = 3;
+        public const int cDBVersion = 4;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -135,6 +135,56 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cDBExpressionsVersion, nCurrentVersion);
                         break;
 
+                    case 3:
+                        {
+                            // upgrade to version 4: fix a parsing issue with second episode name, that was matched to 720p or any other resolution tag 
+                            // upgrade to version 2; try to replace the previous regular expressions
+                            if (expressions != null && expressions.Length > 0)
+                            {
+                                bool bExp1Replaced = false;
+                                bool bExp2Replaced = false;
+                                for (int index = 0; index < expressions.Length; index++)
+                                {
+                                    DBExpression expression = expressions[index];
+                                    if (expression[DBExpression.cExpression] == @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?!.*sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$")
+                                    {
+                                        bExp1Replaced = true;
+                                        expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?!.*sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                                        expression.Commit();
+                                    }
+                                    else if (expression[DBExpression.cExpression] == @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?!.*sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$")
+                                    {
+                                        bExp2Replaced = true;
+                                        expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                                        expression.Commit();
+                                    }
+                                }
+
+                                if (!bExp1Replaced)
+                                {
+                                    // well, not found, so the user might have modified it or deleted it. Add the new one at the end
+                                    DBExpression expression = new DBExpression();
+                                    expression[DBExpression.cIndex] = expressions.Length;
+                                    expression[DBExpression.cEnabled] = "1";
+                                    expression[DBExpression.cType] = DBExpression.cType_Regexp;
+                                    expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?!.*sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                                    expression.Commit();
+                                }
+
+                                if (!bExp2Replaced)
+                                {
+                                    DBExpression expression = new DBExpression();
+                                    expression[DBExpression.cIndex] = expressions.Length + 1;
+                                    expression[DBExpression.cEnabled] = "1";
+                                    expression[DBExpression.cType] = DBExpression.cType_Regexp;
+                                    expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                                    expression.Commit();
+                                }
+                            }
+                            DBOption.SetOptions(DBOption.cDBExpressionsVersion, nCurrentVersion);
+                        }
+                        break;
+
                     default:
                         break;
                 }
@@ -164,11 +214,11 @@ namespace WindowPlugins.GUITVSeries
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "4";
-                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                expression[DBExpression.cExpression] = @"^(?<series>[^\\$]+)\\[^\\$]*?(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?!.*sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
 
                 expression[DBExpression.cIndex] = "5";
-                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d)|(?:\d\d|(?<!\d)\d)x?(?<episode2>\d{2}(?!\d)))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
+                expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)(?:s(?<season>[0-1]?\d)e(?<episode>\d\d)|(?<season>(?:[0-1]\d|(?<!\d)\d))x?(?<episode>\d\d))(?!\d)(?:[ .-]?(?:s\k<season>e?(?<episode2>\d{2}(?!\d))|\k<season>x?(?<episode2>\d{2}(?!\d))|(?<episode2>\d\d(?!\d))|E(?<episode2>\d\d))|)[ -.]*(?<title>(?![^\\]*?sample)[^\\]*?(?<HR>HR\.)?[^\\]*?)\.(?<ext>[^.]*)$";
                 expression.Commit();
             }
         }
