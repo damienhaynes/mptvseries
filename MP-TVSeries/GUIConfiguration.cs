@@ -634,6 +634,7 @@ namespace WindowPlugins.GUITVSeries
                         else
                             expression[cell.OwningColumn.Name] = (String)cell.Value;
                     }
+                    expression.Commit();
                 }
             }
         }
