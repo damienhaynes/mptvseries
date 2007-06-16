@@ -33,21 +33,21 @@ using System.Text.RegularExpressions;
 
 namespace WindowPlugins.GUITVSeries.Torrent
 {
-    class TorrentLoad
+    class Load
     {
-        DBTorrentSearch m_torrentSearch = null;
+        DBTorrentSearch m_Search = null;
         DBEpisode m_dbEpisode = null;
         public BackgroundWorker worker = null;
         Feedback.Interface m_feedback = null;
         bool m_bSuccess = false;
 
-        public delegate void TorrentLoadCompletedHandler(bool bOK);
+        public delegate void LoadCompletedHandler(bool bOK);
         /// <summary>
         /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
         /// </summary>
-        public event TorrentLoadCompletedHandler TorrentLoadCompleted;
+        public event LoadCompletedHandler LoadCompleted;
 
-        public TorrentLoad(Feedback.Interface feedback)
+        public Load(Feedback.Interface feedback)
         {
             m_feedback = feedback;
             worker = new BackgroundWorker();
@@ -59,9 +59,9 @@ namespace WindowPlugins.GUITVSeries.Torrent
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (TorrentLoadCompleted != null) // only if any subscribers exist
+            if (LoadCompleted != null) // only if any subscribers exist
             {
-                this.TorrentLoadCompleted.Invoke(m_bSuccess);
+                this.LoadCompleted.Invoke(m_bSuccess);
             }
         }
 
@@ -82,8 +82,8 @@ namespace WindowPlugins.GUITVSeries.Torrent
             Feedback.CItem Selected = null;
             if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
             {
-                m_torrentSearch = Selected.m_Tag as DBTorrentSearch;
-                if (m_torrentSearch[DBTorrentSearch.cSearchUrl] != String.Empty && System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath)))
+                m_Search = Selected.m_Tag as DBTorrentSearch;
+                if (m_Search[DBTorrentSearch.cSearchUrl] != String.Empty && System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath)))
                 {
                     m_dbEpisode = dbEpisode;
                     worker.RunWorkerAsync();
@@ -95,6 +95,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             // come up with a valid series name (remove some things basically)
             MPTVSeriesLog.Write("**********************************");
             MPTVSeriesLog.Write("Starting Torrentsearch process");
@@ -133,7 +134,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                     sSearch = sSearch.Replace(' ', '+');
                     RegExp = "\\$search\\$";
                     Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                    String sUrl = Engine.Replace(m_torrentSearch[DBTorrentSearch.cSearchUrl], sSearch);
+                    String sUrl = Engine.Replace(m_Search[DBTorrentSearch.cSearchUrl], sSearch);
 
                     WebClient client = new WebClient();
                     Stream data = client.OpenRead(sUrl);
@@ -142,14 +143,14 @@ namespace WindowPlugins.GUITVSeries.Torrent
                     data.Close();
                     reader.Close();
 
-                    RegExp = m_torrentSearch[DBTorrentSearch.cSearchRegex];
+                    RegExp = m_Search[DBTorrentSearch.cSearchRegex];
                     Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                     MatchCollection matches = Engine.Matches(sPage);
                     foreach (Match match in matches)
                     {
                         RegExp = "\\$id\\$";
                         Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                        sUrl = Engine.Replace(m_torrentSearch[DBTorrentSearch.cDetailsUrl], match.Groups["id"].Value);
+                        sUrl = Engine.Replace(m_Search[DBTorrentSearch.cDetailsUrl], match.Groups["id"].Value);
 
                         // go to detail page, and look for the number of files
                         client = new WebClient();
@@ -160,7 +161,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                         reader.Close();
 
                         // and extract the number of files
-                        RegExp = m_torrentSearch[DBTorrentSearch.cDetailsRegex];
+                        RegExp = m_Search[DBTorrentSearch.cDetailsRegex];
                         Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                         Match matchDetails = Engine.Match(sPage);
                         if (matchDetails.Success)
@@ -192,7 +193,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                 {
                     TorrentResult result = Selected.m_Tag as TorrentResult;
                     // download the torrent somewhere
-                    String sRootServer = m_torrentSearch[DBTorrentSearch.cSearchUrl];
+                    String sRootServer = m_Search[DBTorrentSearch.cSearchUrl];
                     RegExp = "http://[^/]*";
                     Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                     sRootServer = Engine.Match(sRootServer).Value;
