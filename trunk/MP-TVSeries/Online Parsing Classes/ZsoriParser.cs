@@ -112,19 +112,26 @@ namespace WindowPlugins.GUITVSeries
                 // this happens if no active mirror is set
                 return null;
             }
-            WebClient client = new WebClient();
+
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
             Stream data = null;
             try
             {
-                data = client.OpenRead(sUrl);
+                request = (HttpWebRequest)WebRequest.Create(sUrl);
+                request.Timeout = 2000;
+                response = (HttpWebResponse)request.GetResponse();
             }
             catch (Exception e)
             {
                 // can't connect, timeout, etc
                 MPTVSeriesLog.Write("Can't connect to " + sUrl + " : " + e.Message);
             }
-            if (data != null)
+
+            if (response != null)
             {
+                // Get the stream associated with the response.
+                data = response.GetResponseStream();
                 StreamReader reader = new StreamReader(data, Encoding.Default, true);
                 String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
                 data.Close();
@@ -148,7 +155,10 @@ namespace WindowPlugins.GUITVSeries
                     // bummer
                     MPTVSeriesLog.Write("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
                 }
+                response.Close();
             }
+
+
             return null;
         }
     }
