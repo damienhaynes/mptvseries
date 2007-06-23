@@ -210,10 +210,14 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+
     };
 
     public class DBSeries : DBTable
     {
+        public delegate void dbSeriesUpdateOccuredDelegate(DBSeries updated);
+        public static event dbSeriesUpdateOccuredDelegate dbSeriesUpdateOccured;
+
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
         public const int cDBVersion = 7;
@@ -228,6 +232,8 @@ namespace WindowPlugins.GUITVSeries
         new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
+
+        public List<string> cachedLogoResults = null;
 
         static DBSeries()
         {
@@ -475,7 +481,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
-                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList, true);
+                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] == String.Empty)
                         return String.Empty;
 
@@ -545,6 +551,8 @@ namespace WindowPlugins.GUITVSeries
             if (m_onlineSeries != null)
                 m_onlineSeries.Commit();
 
+            if (dbSeriesUpdateOccured != null)
+                dbSeriesUpdateOccured(this);
             return base.Commit();
         }
 
@@ -554,6 +562,9 @@ namespace WindowPlugins.GUITVSeries
             this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
 
             this.m_onlineSeries.Commit();
+
+            if (dbSeriesUpdateOccured != null)
+                dbSeriesUpdateOccured(this);
         }
 
         public static void Clear(SQLCondition conditions)
@@ -583,6 +594,24 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBOnlineSeries(), sKey1, sKey2, condition);
         }
 
+        public static SQLCondition stdConditions
+        {
+            get
+            {
+                SQLCondition conditions = new SQLCondition();
+                // local dups (parsed names)
+                conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+
+                // include hidden?
+                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                    conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
+
+                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                    conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal);
+                return conditions;
+            }
+        }
+
         public static List<DBSeries> Get(SQLCondition conditions)
         {
             return Get(conditions, false);
@@ -590,37 +619,47 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBSeries> Get(SQLCondition conditions, bool onlyWithUnwatchedEpisodes)
         {
-            SQLWhat what = new SQLWhat(new DBOnlineSeries());
-            what.AddWhat(new DBSeries());
-            // local dups (parsed names)
-            conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
-            string conds = conditions;
             if (onlyWithUnwatchedEpisodes)
             {
-                if (conds == string.Empty)
-                    conds = " where ";
-                else
-                    conds += " and ";
-                conds += @"(
+                conditions.AddCustom(@"(
 	                        select count(*) from online_episodes
                             where 
 	                        seriesID = local_series.ID
                             and watched = '0'
-                            ) > 0";
+                            ) > 0");
             }
-            string oderBy = conditions.customOrderStringIsSet
-                              ? conditions.orderString
-                              : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
 
-            String sqlQuery = "select " + what + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
-                              + conds
-                              + oderBy
-                              + conditions.limitString;
+            String sqlQuery = stdGetSQL(conditions, true);
             return Get(sqlQuery);
+        }
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull)
+        {
+            string field;
+            if (selectFull)
+            {
+                SQLWhat what = new SQLWhat(new DBOnlineSeries());
+                what.AddWhat(new DBSeries());
+                field = what;
+            }
+            else field = DBOnlineSeries.Q(DBOnlineSeries.cID) + " from " + DBOnlineSeries.cTableName;
+
+            conditions.AddCustom(stdConditions.ConditionsSQLString);
+            string conds = conditions;
+
+            string oderBy = conditions.customOrderStringIsSet
+                  ? conditions.orderString
+                  : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+
+            return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
+                             + conds
+                             + oderBy
+                             + conditions.limitString;
+
         }
 
         private static List<DBSeries> Get(String sqlQuery)
         {
+            //MPTVSeriesLog.Write(sqlQuery);
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeries> outList = new List<DBSeries>();
             if (results.Rows.Count > 0)

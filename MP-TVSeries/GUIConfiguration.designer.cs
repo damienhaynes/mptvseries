@@ -185,6 +185,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnLogoTemplate = new System.Windows.Forms.Button();
             this.btnLogoEdit = new System.Windows.Forms.Button();
             this.btnLogoDown = new System.Windows.Forms.Button();
             this.btnlogoUp = new System.Windows.Forms.Button();
@@ -452,42 +453,42 @@ namespace WindowPlugins.GUITVSeries
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(145, 114);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
             // 
@@ -759,6 +760,7 @@ namespace WindowPlugins.GUITVSeries
             this.label37.Size = new System.Drawing.Size(109, 13);
             this.label37.TabIndex = 8;
             this.label37.Text = "Prefered banner type:";
+            this.label37.Visible = false;
             // 
             // comboBox_preferedBannerType
             // 
@@ -767,6 +769,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_preferedBannerType.Name = "comboBox_preferedBannerType";
             this.comboBox_preferedBannerType.Size = new System.Drawing.Size(121, 21);
             this.comboBox_preferedBannerType.TabIndex = 7;
+            this.comboBox_preferedBannerType.Visible = false;
             this.comboBox_preferedBannerType.SelectedIndexChanged += new System.EventHandler(this.comboBox_preferedBannerType_SelectedIndexChanged);
             // 
             // label29
@@ -1797,11 +1800,13 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.TabIndex = 5;
             this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
             this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
+            this.tabPage_MP_DisplayControl.Click += new System.EventHandler(this.tabPage_MP_DisplayControl_Click);
             // 
             // groupBox7
             // 
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.btnLogoTemplate);
             this.groupBox7.Controls.Add(this.btnLogoEdit);
             this.groupBox7.Controls.Add(this.btnLogoDown);
             this.groupBox7.Controls.Add(this.btnlogoUp);
@@ -1814,6 +1819,16 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.TabIndex = 3;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Logo Configuration";
+            // 
+            // btnLogoTemplate
+            // 
+            this.btnLogoTemplate.Location = new System.Drawing.Point(269, 119);
+            this.btnLogoTemplate.Name = "btnLogoTemplate";
+            this.btnLogoTemplate.Size = new System.Drawing.Size(75, 23);
+            this.btnLogoTemplate.TabIndex = 6;
+            this.btnLogoTemplate.Text = "Templates";
+            this.btnLogoTemplate.UseVisualStyleBackColor = true;
+            this.btnLogoTemplate.Click += new System.EventHandler(this.btnLogoTemplate_Click);
             // 
             // btnLogoEdit
             // 
@@ -1858,7 +1873,7 @@ namespace WindowPlugins.GUITVSeries
             // addLogo
             // 
             this.addLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addLogo.Location = new System.Drawing.Point(544, 118);
+            this.addLogo.Location = new System.Drawing.Point(544, 119);
             this.addLogo.Name = "addLogo";
             this.addLogo.Size = new System.Drawing.Size(110, 23);
             this.addLogo.TabIndex = 1;
@@ -3249,5 +3264,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_NewsDownloadPath;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.ComboBox comboBox_preferedBannerType;
+        private System.Windows.Forms.Button btnLogoTemplate;
     }
 }

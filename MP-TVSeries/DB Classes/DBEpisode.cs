@@ -52,6 +52,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cLastUpdated = "lastupdated";
         public const String cDownloadPending = "DownloadPending";
 
+        public const String cAirsBeforeSeason = "airsbefore_season";
+        public const String cAirsBeforeEpisode = "airsbefore_episode";
+
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
@@ -167,8 +170,19 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
-    public class DBEpisode : DBTable
+    public class DBEpisode : DBTable, cache.ICacheable<DBEpisode>
     {
+        public static void overRide(DBEpisode old, DBEpisode newObject)
+        {
+            old = newObject;
+        }
+
+        public DBEpisode fullItem
+        {
+            get { return this; }
+            set { overRide(this, value); }
+        }
+
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
         public const int cDBVersion = 5;
@@ -199,7 +213,15 @@ namespace WindowPlugins.GUITVSeries
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
 
+        public delegate void dbEpisodeUpdateOccuredDelegate(DBEpisode updated);
+        public static event dbEpisodeUpdateOccuredDelegate dbEpisodeUpdateOccured;
+
+        public static List<string> subTitleExtensions = new List<string>();
+
+        public List<string> cachedLogoResults = null;
+
         static MediaInfoLib.MediaInfo MI;
+        const int maxMIAttempts = 6;
 
         static DBEpisode()
         {
@@ -387,22 +409,22 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (this["localPlaytime"] == "" ||
-                    this["VideoCodec"] == "" ||
-                    this["VideoBitrate"] == "" ||
-                    this["VideoFrameRate"] == "" ||
-                    this["videoWidth"] == "" ||
-                    this["videoHeight"] == "" ||
-                    this["VideoAspectRatio"] == "" ||
-                    this["AudioCodec"] == "" ||
-                    this["AudioChannels"] == "" ||
-                    this["AudioBitrate"] == ""
+                if (this["localPlaytime"] == "" // ||
+                //    this["VideoCodec"] == "" ||
+                //    this["VideoBitrate"] == "" ||
+                //    this["VideoFrameRate"] == "" ||
+                //    this["videoWidth"] == "" ||
+                //    this["videoHeight"] == "" ||
+                //    this["VideoAspectRatio"] == "" ||
+                //    this["AudioCodec"] == "" ||
+                //    this["AudioChannels"] == "" ||
+                //    this["AudioBitrate"] == ""
                     ) return false;
                 else
                 {
                     int noAttempts = 0;
                     if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
-                    if (noAttempts > -6) return false; // we attempt to readout 5 times
+                    if (noAttempts >= 0 - maxMIAttempts && noAttempts < 0) return false; // we attempt to readout maxMIAttempts times
                     return true;
                 }
 
@@ -419,26 +441,41 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                    perfana.start();
                     MI.Open(this[DBEpisode.cFilename]);
                     string result = string.Empty;
                     int noAttempts = 0;
                     int.TryParse(this["localPlaytime"], out noAttempts);
                     noAttempts--;
+                    bool failed = false;
                     this["localPlaytime"] = (result = MI.getPlaytime()) != string.Empty ? result : noAttempts.ToString();
-                    this["VideoCodec"] = (result = MI.getVidCodec()) != string.Empty ? result : "-1";
-                    this["VideoBitrate"] = (result = MI.getVidBitrate()) != string.Empty ? result : "-1";
-                    this["VideoFrameRate"] = (result = MI.getFPS()) != string.Empty ? result : "-1";
-                    this["videoWidth"] = (result = MI.getWidth()) != string.Empty ? result : "-1"; // lower case for compat. with older version
-                    this["videoHeight"] = (result = MI.getHeight()) != string.Empty ? result : "-1";
-                    this["VideoAspectRatio"] = (result = MI.getAR()) != string.Empty ? result : "-1";
+                    if (result != string.Empty)
+                    {
+                        this["VideoCodec"] = (result = MI.getVidCodec()) != string.Empty ? result : "-1";
+                        this["VideoBitrate"] = (result = MI.getVidBitrate()) != string.Empty ? result : "-1";
+                        this["VideoFrameRate"] = (result = MI.getFPS()) != string.Empty ? result : "-1";
+                        this["videoWidth"] = (result = MI.getWidth()) != string.Empty ? result : "-1"; // lower case for compat. with older version
+                        this["videoHeight"] = (result = MI.getHeight()) != string.Empty ? result : "-1";
+                        this["VideoAspectRatio"] = (result = MI.getAR()) != string.Empty ? result : "-1";
 
-                    this["AudioCodec"] = (result = MI.getAudioCodec()) != string.Empty ? result : "-1";
-                    this["AudioBitrate"] = (result = MI.getAudioBitrate()) != string.Empty ? result : "-1";
-                    this["AudioChannels"] = (result = MI.getNoChannels()) != string.Empty ? result : "-1";
+                        this["AudioCodec"] = (result = MI.getAudioCodec()) != string.Empty ? result : "-1";
+                        this["AudioBitrate"] = (result = MI.getAudioBitrate()) != string.Empty ? result : "-1";
+                        this["AudioChannels"] = (result = MI.getNoChannels()) != string.Empty ? result : "-1";
+                    }
+                    else failed = true;
                     MI.Close();
 
-                    MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString() + " Time in ms: " + perfana.measorFromStart(), MPTVSeriesLog.LogLevel.Normal);
+                    if (failed)
+                    {
+                        MPTVSeriesLog.Write("Problem parsing ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                        int retry = maxMIAttempts - (noAttempts * -1);
+                        if(retry > 0)
+                            MPTVSeriesLog.Write("This file will be retried: ", retry.ToString() + " times", MPTVSeriesLog.LogLevel.Normal);
+                        else
+                            MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
+
+                    }
+                    else MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString() + " Time in ms: " + perfana.measorFromStart(), MPTVSeriesLog.LogLevel.Normal);
+
                     Commit();
                     
                     return true;
@@ -451,6 +488,57 @@ namespace WindowPlugins.GUITVSeries
             }
             return false;
 
+        }
+
+        public bool checkHasSubtitles()
+        {
+            if (subTitleExtensions.Count == 0)
+            {
+                // load them in first time
+                subTitleExtensions.Add(".aqt");
+                subTitleExtensions.Add(".asc");
+                subTitleExtensions.Add(".ass");
+                subTitleExtensions.Add(".dat");
+                subTitleExtensions.Add(".dks");
+                subTitleExtensions.Add(".js");
+                subTitleExtensions.Add(".jss");
+                subTitleExtensions.Add(".lrc");
+                subTitleExtensions.Add(".mpl");
+                subTitleExtensions.Add(".ovr");
+                subTitleExtensions.Add(".pan");
+                subTitleExtensions.Add(".pjs");
+                subTitleExtensions.Add(".psb");
+                subTitleExtensions.Add(".rt");
+                subTitleExtensions.Add(".rtf");
+                subTitleExtensions.Add(".s2k");
+                subTitleExtensions.Add(".sbt");
+                subTitleExtensions.Add(".scr");
+                subTitleExtensions.Add(".smi");
+                subTitleExtensions.Add(".son");
+                subTitleExtensions.Add(".srt");
+                subTitleExtensions.Add(".ssa");
+                subTitleExtensions.Add(".sst");
+                subTitleExtensions.Add(".ssts");
+                subTitleExtensions.Add(".stl");
+                subTitleExtensions.Add(".sub");
+                subTitleExtensions.Add(".txt");
+                subTitleExtensions.Add(".vkt");
+                subTitleExtensions.Add(".vsf");
+                subTitleExtensions.Add(".zeg");
+                
+            }
+            bool exists = false;
+            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            filenameNoExt = System.IO.Path.GetDirectoryName(this[cFilename]) + "\\" + filenameNoExt;
+            for (int i = 0; i < subTitleExtensions.Count; i++)
+            {
+                if (System.IO.File.Exists(filenameNoExt + subTitleExtensions[i]))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+            return exists;
         }
 
         public DBOnlineEpisode onlineEpisode
@@ -502,6 +590,8 @@ namespace WindowPlugins.GUITVSeries
                         return new System.IO.FileInfo(base[DBEpisode.cFilename]).Length;
                     case cFileSize:
                         return StrFormatByteSize(new System.IO.FileInfo(base[DBEpisode.cFilename]).Length);
+                    case cAvailableSubtitles:
+                        return (this[cAvailableSubtitles] = checkHasSubtitles());
                 }
                 if (m_onlineEpisode != null)
                 {
@@ -592,6 +682,8 @@ namespace WindowPlugins.GUITVSeries
         {
             if (m_onlineEpisode != null)
                 m_onlineEpisode.Commit();
+            if (dbEpisodeUpdateOccured != null)
+                dbEpisodeUpdateOccured(this);
             return base.Commit();
         }
 
@@ -649,81 +741,75 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
-        public static List<DBEpisode> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
+        public static SQLCondition stdConditions
         {
-            SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-            if (!bIncludeHidden)
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-            
-            return Get(conditions, !bExistingFilesOnly);
+            get
+            {
+                SQLCondition conditions = new SQLCondition();
+                if (Settings.isConfig || DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                    conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+
+                // include hidden?
+                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+
+                return conditions;
+            }
         }
 
-        public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, Boolean bExistingFilesOnly, Boolean bIncludeHidden)
-        {
-            SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-            conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
-            if (!bIncludeHidden)
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-
-            return Get(conditions, !bExistingFilesOnly);
-        }
-
-        public static List<DBEpisode> Get(SQLCondition conditions, bool bOnline)
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull)
         {
             String sqlQuery = String.Empty;
-            if (conditions == string.Empty)
-                conditions.AddCustom("1 = 1");  
+            conditions.AddCustom(stdConditions.ConditionsSQLString);
+
             string orderBy = !conditions.customOrderStringIsSet
                   ? string.Empty
                   : conditions.orderString;
 
-            if (!bOnline)
-                conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
-
-            string innerJoin = innerJoins((string)conditions + conditions.orderString);
-
             if (orderBy == string.Empty)
                 orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
-            SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-            what.AddWhat(new DBEpisode());
-            // one query gets both first & second episode
-            sqlQuery = "select " + what + " left join " + cTableName + " on (" + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " or " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + ") " + innerJoin + conditions + orderBy + conditions.limitString;
-
-            List<DBEpisode> outList = new List<DBEpisode>();
-            outList.AddRange(Get(sqlQuery));
-            return outList;
+            if (selectFull)
+            {
+                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
+                what.AddWhat(new DBEpisode());
+                // one query gets both first & second episode
+                sqlQuery = "select " + what;
+            }
+            else
+            {
+                sqlQuery = "select " + DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex + " from " + DBOnlineEpisode.cTableName;
+            }
+            return sqlQuery + " left join " + cTableName + " on (" + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " or " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + ") " + conditions + orderBy + conditions.limitString;
         }
 
-        static string innerJoins(string conditions_order)
+
+        public static List<DBEpisode> Get(int nSeriesID)
         {
-            string joins = string.Empty;
-            if (conditions_order.Contains("online_series."))
-            {
-                joins = " inner join " + DBOnlineSeries.cTableName
-                          + " on " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
-                          + DBOnlineSeries.Q(DBOnlineSeries.cID);
-            }
-            if (conditions_order.Contains("local_series."))
-            {
-                joins += " inner join " + DBSeries.cTableName
-                          + " on " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
-                          + DBSeries.Q(DBSeries.cID);
-            }
-            if (conditions_order.Contains("season."))
-            {
-                joins += " inner join " + DBSeason.cTableName
-                          + " on " + DBEpisode.Q(DBEpisode.cSeasonIndex) + " = "
-                          + DBSeason.Q(DBSeason.cIndex)
-                          + " and " + DBEpisode.Q(DBEpisode.cSeriesID) + " = "
-                          + DBSeason.Q(DBSeason.cSeriesID);
-            }
-            return joins;
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+
+            return Get(conditions);
+        }
+
+        public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex)
+        {
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+            conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
+
+            return Get(conditions);
+        }
+
+        public static List<DBEpisode> Get(SQLCondition conditions)
+        {
+            List<DBEpisode> outList = new List<DBEpisode>();
+            outList.AddRange(Get(stdGetSQL(conditions, true)));
+            return outList;
         }
 
         public static List<DBEpisode> Get(string sqlQuery)
         {
+            //MPTVSeriesLog.Write(sqlQuery);
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBEpisode> outList = new List<DBEpisode>();
             if (results.Rows.Count > 0)
@@ -788,34 +874,4 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
     }
-
-    /*
-    class aspectRatio
-    {
-        private aspectRatio()
-        { }
-
-        static Dictionary<float, string> commonAspectRatios = new Dictionary<float, string>();
-        static aspectRatio()
-        {
-            // yes, there is only 3 there...sue me
-            commonAspectRatios.Add(16f / 9f, "16:9");
-            commonAspectRatios.Add(4f / 3f, "4:3");
-            commonAspectRatios.Add(5f / 54, "5:4"); //everything else as ratio:1 eg: 1.85:1 or 2.40:1
-        }
-
-        public static string getFriendlyAspectRatio(int vidWidth, int vidHeight)
-        {
-            // this is very simple, but its fast, doesnt need a db entry, no point in calculating common denominators or anything really.......what tv show is not 16:9 or 4:3???
-            float ratiof = (float)vidWidth / (float)vidHeight;
-            // check direct hit
-            if (commonAspectRatios.ContainsKey(ratiof)) return commonAspectRatios[ratiof]; // it is exactly one of the common ratios
-            // else be less precise
-            foreach (float commonAspect in commonAspectRatios.Keys)
-                if (commonAspect - ratiof < 0.03f && commonAspect - ratiof > -0.03f) return commonAspectRatios[commonAspect];
-            // seems to be something odd
-            return Math.Round(ratiof, 2).ToString() + ":1";
-        }
-    }
-     */
 }

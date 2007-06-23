@@ -103,9 +103,6 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition conditions = null;
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            conditions.Add(new DBSeries(), DBSeries.cHidden, false, SQLConditionType.Equal);
-            if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal);
             MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
         }
@@ -127,7 +124,8 @@ namespace WindowPlugins.GUITVSeries
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             MPTVSeriesLog.Write("View: GetSeason: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            return DBSeason.Get(default(int), DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false, conditions);
+            //return DBSeason.Get(default(int), DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false, conditions);
+            return DBSeason.Get(conditions);
         }
 
         public List<DBEpisode> getEpisodeItems(int stepIndex, string[] currentStepSelection)
@@ -136,25 +134,24 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition conditions = null;
             if (stepIndex >= steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+            
             MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            List<DBEpisode> eps = DBEpisode.Get(conditions, true);
-            /*
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            List<DBEpisode> eps = DBEpisode.Get(conditions);
+
+            // WARNING: this naturally only works if the ordering is by season/episodeOrder
+            // inline the special episodes to there relevant positions (Season == 0 by airsbefore_episode)
+            if (steps[stepIndex].inLineSpecials)
             {
-                List<DBEpisode> goodEps = new List<DBEpisode>();
-                foreach (DBEpisode ep in eps)
-                    try
+                if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
+                Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
                     {
-                        if (System.IO.File.Exists(ep[DBEpisode.cFilename]))
-                            goodEps.Add(ep);
-                    }
-                    catch (Exception){}
-                return goodEps;
+                        double index1 = e1[DBEpisode.cSeasonIndex] == 0 ? e1[DBOnlineEpisode.cAirsBeforeEpisode] - 0.5 : e1[DBEpisode.cEpisodeIndex];
+                        return index1.CompareTo(e2[DBEpisode.cSeasonIndex] == 0 ? e2[DBOnlineEpisode.cAirsBeforeEpisode] - 0.5 : e2[DBEpisode.cEpisodeIndex]);
+                    };
+                eps.Sort(inlineSorting);
+                if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
             }
-            else 
-             */ return eps;
+            return eps;
         }
 
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
@@ -249,20 +246,11 @@ namespace WindowPlugins.GUITVSeries
                         // we expect to get the seriesID/seasonIndex as stepSel
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
+                        conditions.nextIsOr = true;
+                        conditions.Add(new DBOnlineEpisode(), "airsbefore_season", currentStepSelection[1], SQLConditionType.Equal);
+                        conditions.nextIsOr = false;
                         break;
                 }
-            }
-            if (step.hasSubQuery && step.SubQueryDynInsert_localFilesOnly != string.Empty)
-            {
-                if(DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                {
-                    conditions.ConditionsSQLString = conditions.ConditionsSQLString.Replace("{local_files}", step.SubQueryDynInsert_localFilesOnly);
-                }
-                else
-                {
-                    conditions.ConditionsSQLString = conditions.ConditionsSQLString.Replace("{local_files}", " ");
-                }
-
             }
         }
 
@@ -374,6 +362,8 @@ namespace WindowPlugins.GUITVSeries
         public type Type;
         public int limitItems = 0;
         public bool hasSubQuery = false;
+        public bool inLineSpecials = false;
+        public bool inLineSpecialsAsc = false;
         public string SubQueryDynInsert_localFilesOnly = string.Empty;
 
         public SQLCondition conds = new SQLCondition();
@@ -434,183 +424,72 @@ namespace WindowPlugins.GUITVSeries
                     condtype = SQLConditionType.Equal;
                     break;
             }
+
             DBTable table = null;
             string tableField = string.Empty;
             getTableFieldname(what, out table, out tableField);
             Type lType = table.GetType();
-            bool cust = false;
-            string join = string.Empty;
-			
-			if(logicalViewStep.type.series == Type && (lType != typeof(DBSeries) && lType != typeof(DBOnlineSeries)))
-			{
-				if(lType == typeof(DBSeason))
-				{
-					SubQueryDynInsert_localFilesOnly = " and exists(select * from local_episodes where seriesID = season.seriesID and seasonIndex = season.Index and episodefilename != '') ";
-					// condition is seriesID in (select seriesID from season where <cond> {local_files})
-					conds.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID) + " in(select " + DBSeason.cSeriesID + " from " + table.m_tableName + " where  " + 
-									tableField + type +  condition + " {local_files})");
-				}
-				else if(lType == typeof(DBOnlineEpisode))
-				{
-					SubQueryDynInsert_localFilesOnly = " and exists(select * from local_episodes where compositeid = online_episodes.compositeID and episodefilename != '') ";
-					// condition is seriesID in (select seriesID from online_episodes where <cond> {local_files})
-                    conds.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID) + " in(select " + DBOnlineEpisode.cSeriesID + " from " + table.m_tableName + " where  " + 
-									tableField + type + condition + " {local_files})");
-				}
-				else if(lType == typeof(DBEpisode))
-				{
-					SubQueryDynInsert_localFilesOnly = " and episodefilename != '') ";
-					// condition is seriesID in (select seriesID from local_episode swhere <cond> {local_files})
-					conds.AddCustom(DBOnlineSeries.cID + " in(select " + DBEpisode.cSeriesID + " from " + table.m_tableName + " where  " + 
-									tableField + type + condition + " {local_files})");
-				}
-				hasSubQuery = true;
-				return;
-			}
-			
-			if(logicalViewStep.type.season == Type && (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode)))
-			{
-				if(lType == typeof(DBOnlineEpisode))
-				{
-					SubQueryDynInsert_localFilesOnly = " and exists(select * from local_episodes where compositeid = online_episodes.compositeID and episodefilename != '') ";
-					// condition is exists(select seriesID from online_episodes where seriesID = season.seriesID and seasonIndex = season.Index and <cond> {local_files})
-					conds.AddCustom(@" exists(select " + DBOnlineEpisode.cSeriesID + " from " + table.m_tableName + " where  " + 
-									DBOnlineEpisode.cSeriesID + "  =  " + DBSeason.Q(DBSeason.cSeriesID) + "  and " + 
-									DBOnlineEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) +
-                                    " and " + tableField + type + condition + " {local_files})");
-				}
-				else if(lType == typeof(DBEpisode))
-				{
-					SubQueryDynInsert_localFilesOnly = " and episodefilename != '') ";
-					// condition is exists(select seriesID from local_episodes where seriesID = season.seriesID and seasonIndex = season.Index and <cond> {local_files})
-					conds.AddCustom(@" exists(select " + DBEpisode.cSeriesID + " from " + table.m_tableName + " where  " + DBEpisode.cSeriesID + "  =  " + DBSeason.Q(DBSeason.cSeriesID) + "  and " + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) +
-                                    " and " + tableField + type + condition + " {local_files})");
-				}
-				hasSubQuery = true;
-				return;
-			}
 
-            if (lType.Equals(typeof(DBSeason)) && ( Type != logicalViewStep.type.season && Type != logicalViewStep.type.episode))
+            SQLCondition fullSubCond = new SQLCondition();
+            if (logicalViewStep.type.series == Type && (lType != typeof(DBSeries) && lType != typeof(DBOnlineSeries)))
             {
-                cust = true;
-                if (this.Type == logicalViewStep.type.series)
+
+                if (lType == typeof(DBSeason))
                 {
-                    join =  DBSeason.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID); 
+                    fullSubCond.AddCustom(DBSeason.Q(DBSeason.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype);
+
+                    conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
+                }
+                else
+                {
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                 }
             }
-
-            
-            if (what.Contains("custom:"))
+            else if (logicalViewStep.type.season == Type && lType != typeof(DBSeason))
             {
-                conds.AddCustom(what.Split(new string[] { "custom:" }, StringSplitOptions.None)[1], condition.Trim(), condtype);
+
+                if (lType == typeof(DBOnlineSeries) || lType == typeof(DBSeries))
+                {
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
+                }
+                else if (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode))
+                {
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                }
+            }
+            else if (logicalViewStep.type.episode == Type && (lType != typeof(DBEpisode) && lType != typeof(DBOnlineEpisode)))
+            {
+
+                if (lType == typeof(DBOnlineSeries) || lType == typeof(DBSeries))
+                {
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID), DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
+                }
+                if (lType == typeof(DBSeason))
+                {
+                    fullSubCond.AddCustom(DBSeason.Q(DBSeason.cSeriesID), DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBSeason.Q(DBSeason.cIndex), DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
+                }
             }
             else
             {
+                // condition is on current table itself
                 conds.Add(table, tableField, condition.Trim(), condtype);
             }
+
         }
 
-
-        /*
-        public void addSQLCondition(string what, string type, string condition)
-        {
-            if ((!what.Contains("<") || !what.Contains(".")) && !what.Contains("custom:")) return;
-
-
-            SQLConditionType condtype;
-            switch (type)
-            {
-                case "=":
-                    condtype = SQLConditionType.Equal;
-                    break;
-                case ">":
-                    condtype = SQLConditionType.GreaterThan;
-                    break;
-                case ">=":
-                    condtype = SQLConditionType.GreaterThan;
-                    break;
-                case "<":
-                    condtype = SQLConditionType.LessThan;
-                    break;
-                case "<=":
-                    condtype = SQLConditionType.LessThan;
-                    break;
-                case "!=":
-                    condtype = SQLConditionType.NotEqual;
-                    break;
-                default:
-                    condtype = SQLConditionType.Equal;
-                    break;
-            }
-            DBTable table = null;
-            string tableField = string.Empty;
-            getTableFieldname(what, out table, out tableField);
-            Type lType = table.GetType();
-            bool cust = false;
-            string join = string.Empty;
-            if ((lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode)) && Type != logicalViewStep.type.episode)
-            {
-                cust = true;
-                // we also need to ensure that the user selected only_local_files is respected (subquery otherwise screws up)
-                // however this cannot be done here as the steps are only parsed at the start of the plugin and the user may
-                // very well change this setting later on
-                switch (this.Type)
-                {
-                    case logicalViewStep.type.season:
-                        join = DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex);
-                        join += "{local_files}";
-                        SubQueryDynInsert_localFilesOnly = " and exists(select filename from local_episodes where seriesid = online_series.id and seasonindex = season.index and episodefilename != '') ";
-                        //goto case logicalViewStep.type.series;
-                        break;
-                    case logicalViewStep.type.series:
-                        join += DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID);
-                        join += "{local_files}";
-                        SubQueryDynInsert_localFilesOnly = " and exists(select filename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
-                        break;
-                        //goto default;
-                    case logicalViewStep.type.group:
-                        join += "{local_files}";
-                        SubQueryDynInsert_localFilesOnly = " online_series.haslocalfiles = 1  and exists(select episodefilename from local_episodes where seriesid = online_series.id and episodefilename != '') ";
-                        break;
-                    default:
-                        SubQueryDynInsert_localFilesOnly = " and online_series.haslocalfiles = 1  and exists(select episodefilename from local_episodes where seriesid = online_series.id and compositeid = online_episode.compositeid and episodefilename != '') ";
-                        //SubQueryDynInsert_localFilesOnly = " and exists ( select * from local_episodes where compositeid = online_episodes.compositeid and episodefilename != '')";
-                        break;
-                }
-                
-            }
-            else if (lType.Equals(typeof(DBSeason)) && ( Type != logicalViewStep.type.season && Type != logicalViewStep.type.episode))
-            {
-                cust = true;
-                if (this.Type == logicalViewStep.type.series)
-                {
-                    join =  DBSeason.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID); 
-                }
-            }
-
-            
-            if (what.Contains("custom:"))
-            {
-                conds.AddCustom(what.Split(new string[] { "custom:" }, StringSplitOptions.None)[1], condition.Trim(), condtype);
-            }
-            else if (cust)
-            {
-                SQLCondition iCond = new SQLCondition();
-                iCond.AddCustom(join);
-
-
-                iCond.Add(table, tableField, condition.Trim(), condtype);
-                
-                conds.AddSubQuery("count(" + tableField + ")", table, iCond, 0, SQLConditionType.GreaterThan);
-                hasSubQuery = true;
-                
-            }
-            else
-            {
-                conds.Add(table, tableField, condition.Trim(), condtype);
-            }
-        }
-        */
         void getTableFieldname(string what, out DBTable table, out string fieldname)
         {
             string sTable = string.Empty;
@@ -678,6 +557,8 @@ namespace WindowPlugins.GUITVSeries
             if (viewSteps[2].Length > 0)
             {
                 string[] orderFields = System.Text.RegularExpressions.Regex.Split(viewSteps[2], ";");
+                thisView.inLineSpecials = orderFields[0] == "<Episode.EpisodeIndex>";
+                thisView.inLineSpecialsAsc = orderFields[0] == "asc";
                 for (int i = 0; i < orderFields.Length; i += 2)
                 {
                     if(thisView.Type != type.group)
@@ -686,6 +567,18 @@ namespace WindowPlugins.GUITVSeries
                         string tableField = string.Empty;
                         thisView.getTableFieldname(orderFields[i], out table, out tableField);
                         tableField = thisView.getQTableNameFromUnknownType(table, tableField);
+
+                        // example of how the user can order by a different table
+                        // needs to be enabled once definable views are ready
+                        /*
+                        if (thisView.Type == type.season && table.GetType() != typeof(DBSeason))
+                        {
+                            Type lType = table.GetType();
+                            if (lType == typeof(DBOnlineSeries))
+                                tableField = "( select " + tableField + " from " + DBOnlineSeries.cTableName
+                                                + " where " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " = " + DBSeason.Q(DBSeason.cSeriesID) + ")";
+                        }*/
+                        
                         if (thisView.Type == type.episode && ( table.GetType() == typeof(DBEpisode) || table.GetType() == typeof(DBOnlineEpisode)))
                         {
                             // for perf reason a subquery is build, otherwise custom orders and the nessesary join really slow down sqllite!
@@ -704,6 +597,7 @@ namespace WindowPlugins.GUITVSeries
                             thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
                             
                         }
+
                         thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
                     }
                 }

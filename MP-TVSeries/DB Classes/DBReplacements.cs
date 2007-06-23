@@ -74,6 +74,24 @@ namespace WindowPlugins.GUITVSeries
                 replacement[DBReplacements.cToReplace] = "-<space>";
                 replacement[DBReplacements.cWith] = @"<empty>";
                 replacement.Commit();
+                // to avoid being parsed as second episode 20/80
+                replacement[DBReplacements.cIndex] = "3";
+                replacement[DBReplacements.cBefore] = "1";
+                replacement[DBReplacements.cToReplace] = "720p";
+                replacement[DBReplacements.cWith] = @"<empty>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "4";
+                replacement[DBReplacements.cBefore] = "1";
+                replacement[DBReplacements.cToReplace] = "1080i";
+                replacement[DBReplacements.cWith] = @"<empty>";
+                replacement.Commit();
+
+                replacement[DBReplacements.cIndex] = "4";
+                replacement[DBReplacements.cBefore] = "1";
+                replacement[DBReplacements.cToReplace] = "1080p";
+                replacement[DBReplacements.cWith] = @"<empty>";
+                replacement.Commit();
             }
         }
 

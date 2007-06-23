@@ -366,7 +366,7 @@ namespace WindowPlugins.GUITVSeries
                         // now go over the touched seasons & series
                         foreach (DBSeason season in relatedSeasons)
                         {
-                            if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true, false).Count > 0)
+                            if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex]).Count > 0)
                             {
                                 season[DBSeason.cHasLocalFilesTemp] = true;
                                 season[DBSeason.cHasEpisodes] = true;
@@ -378,7 +378,7 @@ namespace WindowPlugins.GUITVSeries
 
                         foreach (DBOnlineSeries series in relatedSeries)
                         {
-                            if (DBEpisode.Get(series[DBOnlineSeries.cID], true, false).Count > 0)
+                            if (DBEpisode.Get((int)series[DBOnlineSeries.cID]).Count > 0)
                                 series[DBOnlineSeries.cHasLocalFilesTemp] = true;
                             else
                                 series[DBOnlineSeries.cHasLocalFilesTemp] = false;
@@ -629,12 +629,13 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // check if a subtitle is present alongside the file
-                    String sDirectory = System.IO.Path.GetDirectoryName(progress.full_filename);
-                    String sFileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(progress.full_filename);
-                    if (System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".srt") || System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".sub"))
-                        episode[DBEpisode.cAvailableSubtitles] = true;
-                    else
-                        episode[DBEpisode.cAvailableSubtitles] = false;
+                    episode[DBEpisode.cAvailableSubtitles] = episode.checkHasSubtitles();
+                    //String sDirectory = System.IO.Path.GetDirectoryName(progress.full_filename);
+                    //String sFileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(progress.full_filename);
+                    //if (System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".srt") || System.IO.File.Exists(sDirectory + @"\" + sFileNameNoExt + ".sub"))
+                    //    episode[DBEpisode.cAvailableSubtitles] = true;
+                    //else
+                    //    episode[DBEpisode.cAvailableSubtitles] = false;
                     
                     foreach (KeyValuePair<string, string> match in progress.parser.Matches)
                     {
@@ -772,7 +773,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // set the ID on the current series with the one from the chosen one
                         // we need to update all depending items - seasons & episodes
-                        List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID], false, false, false);
+                        List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);
                         foreach (DBSeason season in seasons)
                             season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
@@ -782,7 +783,7 @@ namespace WindowPlugins.GUITVSeries
 
                         setcondition = new SQLCondition();
                         setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
+                        List<DBEpisode> episodes = DBEpisode.Get(setcondition);
                         foreach (DBEpisode episode in episodes)
                             episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
@@ -896,7 +897,7 @@ namespace WindowPlugins.GUITVSeries
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
-                    List<DBEpisode> episodesList = DBEpisode.Get(conditions, true);
+                    List<DBEpisode> episodesList = DBEpisode.Get(conditions);
                     // if we have unidentified episodes, let's retrieve the full list
                     if (episodesList.Count > 0)
                         nGetEpisodesTimeStamp = 0;
@@ -937,7 +938,7 @@ namespace WindowPlugins.GUITVSeries
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
-                    List<DBEpisode> episodesList = DBEpisode.Get(conditions, true);
+                    List<DBEpisode> episodesList = DBEpisode.Get(conditions);
                     if (episodesList.Count < 5)
                     {
                         foreach (DBEpisode episode in episodesList)
@@ -1293,7 +1294,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 1, SQLConditionType.Equal);
             }
 
-            List<DBEpisode> episodeList = DBEpisode.Get(condition, true);
+            List<DBEpisode> episodeList = DBEpisode.Get(condition);
             int nTotalEpisodeCount = episodeList.Count;
             int nIndex = 0;
 

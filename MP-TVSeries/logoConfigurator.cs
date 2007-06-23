@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public delegate void validDelegate(ref RichTextBox txtBox);
         validDelegate validateTxtBox;
-        string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        string appPath = Settings.GetPath(Settings.Path.app);
         public logoConfigurator(validDelegate validDel)
         {
             init(validDel);
@@ -232,7 +232,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void btnDynFilename_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.SelectedPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            folderBrowserDialog1.SelectedPath = appPath;
             if (DialogResult.OK == folderBrowserDialog1.ShowDialog())
             {
                 this.textBox1.Text = folderBrowserDialog1.SelectedPath + @"\";

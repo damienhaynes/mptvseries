@@ -201,7 +201,7 @@ namespace WindowPlugins.GUITVSeries
         public bool m_CommitNeeded = false;
         public static List<string> FieldsRequiringSplit = new List<string>();
         public List<string> fieldsRequiringSplit = FieldsRequiringSplit;
-        public delegate void dbUpdateOccuredDelegate(string tableName);
+        public delegate void dbUpdateOccuredDelegate(string table);
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
         public DBTable(string tableName)
@@ -492,8 +492,6 @@ namespace WindowPlugins.GUITVSeries
                     sqlQuery = "insert into " + m_tableName + " (" + sParamNames + ") values(" + sParamValues + ")";
                     DBTVSeries.Execute(sqlQuery);
                 }
-                if (dbUpdateOccured != null)
-                    dbUpdateOccured(m_tableName);
                 return true;
             }
             catch (Exception ex)
@@ -545,38 +543,78 @@ namespace WindowPlugins.GUITVSeries
                 dbUpdateOccured(obj.m_tableName);
         }
 
-        protected static string getRandomBanner(List<string> BannerList, bool checkForGraphical)
+        protected static string getRandomBanner(List<string> BannerList)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
+            string langIdentifier = "-lang" + ZsoriParser.SelLanguageAsString + "-";
+
+            // random banners are prefered in the following order
+            // 1) own lang + graphical
+            // 2) own lang but not graphical
+            // 3) english + graphical (english really is any other language banners that are in db)
+            // 4) english but not graphical
+
             string randImage = null;
             if (BannerList == null || BannerList.Count == 0) return string.Empty;
             if (BannerList.Count == 1) randImage = BannerList[0];
 
             if (randImage == null)
             {
-            int randomPick = new Random().Next(0, BannerList.Count);
-
-            try
-            {
-                randImage = BannerList[randomPick];
-                if (checkForGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
+                List<string> langG = new List<string>();
+                List<string> lang = new List<string>();
+                List<string> engG = new List<string>();
+                List<string> eng = new List<string>();
+                for (int i = 0; i < BannerList.Count; i++)
                 {
-                    // prefer graphical banners
-                    List<string> gBanners = new List<string>();
-                    foreach (string banner in BannerList)
-                        if (banner.Contains(graphicalBannerRecognizerSubstring))
-                            gBanners.Add(banner);
-                    if (gBanners.Count > 0)
-                        randImage = getRandomBanner(gBanners, false);
-                    // else no graphical banners avail. -> use text Banner we already picked
+                    if(File.Exists(BannerList[i]))
+                    {
+                        if(BannerList[i].Contains(graphicalBannerRecognizerSubstring))
+                        {
+                            if(BannerList[i].Contains(langIdentifier))
+                                langG.Add(BannerList[i]);
+                            else
+                                engG.Add(BannerList[i]);
+                        }
+                        else
+                        {
+                            if(BannerList[i].Contains(langIdentifier))
+                                lang.Add(BannerList[i]);
+                            else
+                                eng.Add(BannerList[i]);
+                        }
+                    }
+                }
+
+                try
+                {
+                if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
+                else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
+                else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
+                else if(engG.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+                else return string.Empty;
+                }
+
+                //try
+                //{
+                //    randImage = BannerList[randomPick];
+                //    if (preferGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
+                //    {
+                //        // prefer graphical banners
+                //        List<string> gBanners = new List<string>();
+                //        foreach (string banner in BannerList)
+                //            if (banner.Contains(graphicalBannerRecognizerSubstring))
+                //                gBanners.Add(banner);
+                //        if (gBanners.Count > 0)
+                //            randImage = getRandomBanner(gBanners, false);
+                //        // else no graphical banners avail. -> use text Banner we already picked
+                //    }
+                //}
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
+                    return string.Empty;
                 }
             }
-            catch (Exception ex)
-            {
-                    MPTVSeriesLog.Write("Error getting random Image - Index was " + randomPick, " count was " + BannerList.Count.ToString() + ex.Message, MPTVSeriesLog.LogLevel.Normal);
-                return string.Empty;
-            }
-        }
             return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
         }
 

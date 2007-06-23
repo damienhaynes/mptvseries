@@ -162,7 +162,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
         {
-            List<DBSeason> tmpSeasons = DBSeason.Get(seriesID, false, false, false);
+            List<DBSeason> tmpSeasons = DBSeason.Get(seriesID);
             foreach (DBSeason season in tmpSeasons)
                 if (season[DBSeason.cIndex] == seasonIndex)
                 {
@@ -178,6 +178,14 @@ namespace WindowPlugins.GUITVSeries
             if (path2 == null) return path1;
             if (path2.Length > 0 && (path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
             return System.IO.Path.Combine(path1, path2);
+        }
+
+        public static List<T> inverseList<T>(List<T> input)
+        {
+            List<T> result = new List<T>(input.Count);
+            for (int i = 0; i < input.Count; i++)
+                result.Add(input[i]);
+            return result;
         }
     }
 

@@ -109,7 +109,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Error creating the MediaInfo Object, most likely no or wront mediainfo.dll in directory: ", ex.Message , MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Error creating the MediaInfo Object, most likely no or wrong mediainfo.dll in directory: ", ex.Message , MPTVSeriesLog.LogLevel.Normal);
             }
         }
         ~MediaInfo() 
@@ -120,7 +120,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Error deleting the MediaInfo Object, most likely no or wront mediainfo.dll in directory: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Error deleting the MediaInfo Object: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
             } 
         }
         public int Open(String FileName) { return MediaInfo_Open(Handle, FileName); }

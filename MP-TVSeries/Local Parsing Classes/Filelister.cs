@@ -91,30 +91,22 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
+                Console.WriteLine("Error occured while scanning files in '" + folder + "' (" + ex.Message + ") - Going folder by folder.");
+                // an error occured, lets be more conservative and scan folder by folder by going recursive
+                try
+                {
+                    foreach (string subDir in System.IO.Directory.GetDirectories(folder))
+                        filesInFolder(subDir, ref outList, importPathLength);
+                }
+                catch (Exception)
+                {
+                    // if we crash here it means the current folder itself is inacessable
+                    Console.WriteLine("Inacessable folder: " + folder);
+                    return false;
+                }
                 return false;
             }
             return true;
         }
-
-        /*
-        private static List<string> filesInFolder(string folder)
-        {
-            MPTVSeriesLog.Write("get files: " + DateTime.Now.Second + ":" + DateTime.Now.Millisecond);
-            List<string> files = new List<string>();
-            try
-            {
-                if (System.IO.Directory.Exists(folder))
-                    foreach (String extention in MediaPortal.Util.Utils.VideoExtensions)
-                        files.AddRange(System.IO.Directory.GetFiles(folder, "*" + extention, System.IO.SearchOption.AllDirectories));
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("Error occured while scanning files in '" + folder + "' (" + ex.Message + ").");
-            }
-            MPTVSeriesLog.Write("get files done: " + DateTime.Now.Second + ":" + DateTime.Now.Millisecond);
-            return files;
-        }
-         */
     }
 }

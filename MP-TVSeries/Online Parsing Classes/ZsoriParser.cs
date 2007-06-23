@@ -94,9 +94,9 @@ namespace WindowPlugins.GUITVSeries
             return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateEpisodesTimeStamp + "&idlist=" + sEpisodesIDs + langID + SelLanguageAsString);
         }
 
-        static public XmlNodeList GetBanners(int nSeriesID, long nUpdateBannersTimeStamp)
+        static public XmlNodeList GetBanners(int nSeriesID, long nUpdateBannersTimeStamp, string forceLang)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp + langID + SelLanguageAsString);
+            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp + langID + (forceLang == null ? SelLanguageAsString : forceLang));
         }
 
         //static public XmlNodeList GetAllBanners(string idList, long nUpdateBannersTimeStamp)
@@ -119,7 +119,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(sUrl);
-                request.Timeout = 2000;
+                request.Timeout = 20000;
                 response = (HttpWebResponse)request.GetResponse();
             }
             catch (Exception e)

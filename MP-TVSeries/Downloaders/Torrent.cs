@@ -201,7 +201,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                     client.DownloadFile(sRootServer + result.m_sLink, System.IO.Path.GetTempPath() + "MPTVSeries.torrent");
 
                     // ok, we have the torrent link, we just need ... a folder
-                    List<DBEpisode> SeriesEpisodes = DBEpisode.Get(m_dbEpisode[DBEpisode.cSeriesID], true, true);
+                    List<DBEpisode> SeriesEpisodes = DBEpisode.Get((int)m_dbEpisode[DBEpisode.cSeriesID]);
                     if (SeriesEpisodes.Count > 0)
                     {
                         String sDirectory = System.IO.Path.GetDirectoryName(SeriesEpisodes[0][DBEpisode.cFilename]);
