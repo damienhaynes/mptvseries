@@ -31,8 +31,18 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBSeason : DBTable
+    public class DBSeason : DBTable, cache.ICacheable<DBSeason>
     {
+        public static void overRide(DBSeason old, DBSeason newObject)
+        {
+            old = newObject;
+        }
+
+        public DBSeason fullItem
+        {
+            get { return this; }
+            set { overRide(this, value); }
+        }
         public const String cTableName = "season";
         public const String cOutName = "Season";
         public const int cDBVersion = 3;
@@ -52,6 +62,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+
+        public delegate void dbSeasonUpdateOccuredDelegate(DBSeason updated);
+        public static event dbSeasonUpdateOccuredDelegate dbSeasonUpdateOccured;
+
+        public List<string> cachedLogoResults = null;
 
         static DBSeason()
         {
@@ -168,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList, true);
+                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
                 if (base[cCurrentBannerFileName] == String.Empty)
                     return String.Empty;
 
@@ -277,18 +292,46 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBSeason(), sKey1, sKey2, condition);
         }
 
-        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly, Boolean bIncludeHidden)
+        public static SQLCondition stdConditions
         {
-            return Get(nSeriesID, bExistingFilesOnly, bOnlineEpisodesOnly, bIncludeHidden, new SQLCondition());
+            get
+            {
+                SQLCondition conditions = new SQLCondition();
+                if(Settings.isConfig || DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                    conditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
+
+
+                if(!Settings.isConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
+
+                // include hidden?
+                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                    conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+
+                return conditions;
+            }
         }
-        public static List<DBSeason> Get(SQLCondition condition)
+
+        public static string stdGetSQL(SQLCondition condition, bool selectFull)
         {
             string orderBy = !condition.customOrderStringIsSet
                   ? " order by " + Q(cIndex)
                   : condition.orderString;
-            string innerJoin = innerJoins((string)condition + condition.orderString);
+            condition.AddCustom(stdConditions.ConditionsSQLString);
+            if(selectFull)
+               return "select " + new SQLWhat(new DBSeason()) + condition + orderBy + condition.limitString;
+            else
+               return "select " + DBSeason.cID + " from " + DBSeason.cTableName + " " + condition + orderBy + condition.limitString;
+        }
 
-            String sqlQuery = "select "+ new SQLWhat(new DBSeason()) + innerJoin + condition + orderBy + condition.limitString;
+        public static List<DBSeason> Get(int nSeriesID)
+        {
+            return Get(nSeriesID, new SQLCondition());
+        }
+
+        public static List<DBSeason> Get(SQLCondition condition)
+        {
+            string sqlQuery = stdGetSQL(condition, true);
+            //MPTVSeriesLog.Write(sqlQuery);
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();
             if (results.Rows.Count > 0)
@@ -302,43 +345,24 @@ namespace WindowPlugins.GUITVSeries
             }
             return outList;
         }
-        public static List<DBSeason> Get(int nSeriesID, Boolean bExistingFilesOnly, Boolean bOnlineEpisodesOnly, Boolean bIncludeHidden, SQLCondition otherConditions)
+        public static List<DBSeason> Get(int nSeriesID, SQLCondition otherConditions)
         {
             // create table if it doesn't exist already
             if(nSeriesID != default(int))
                 otherConditions.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-            if (bExistingFilesOnly)
-                otherConditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
-            if (bOnlineEpisodesOnly)
-                otherConditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
-            if (!bIncludeHidden)
-                otherConditions.Add(new DBSeason(), cHidden, 0, SQLConditionType.Equal);
 
             return Get(otherConditions);
         }
-
-        static string innerJoins(string conditions_order)
-        {
-            string joins = string.Empty;
-            if (conditions_order.Contains("online_series."))
-            {
-                joins = " inner join " + DBOnlineSeries.cTableName
-                          + " on " + DBSeason.Q(DBSeason.cSeriesID) + " = "
-                          + DBOnlineSeries.Q(DBOnlineSeries.cID);
-            }
-            if (conditions_order.Contains("local_series."))
-            {
-                joins += " inner join " + DBSeries.cTableName
-                          + " on " + DBSeason.Q(DBSeason.cSeriesID) + " = "
-                          + DBSeries.Q(DBSeries.cID);
-            }
-            // cannot join with episodes
-            return joins;
-        }
-
         public static new String Q(String sField)
         {
             return cTableName + "." + sField;
+        }
+
+        public override bool Commit()
+        {
+            if (dbSeasonUpdateOccured != null)
+                dbSeasonUpdateOccured(this);
+            return base.Commit();
         }
     }
 }

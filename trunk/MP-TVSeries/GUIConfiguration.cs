@@ -298,6 +298,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadNewsSearches()
         {
+            /*
             textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
             m_currentNewsSearch = DBNewzbin.Get()[0];
 
@@ -305,6 +306,7 @@ namespace WindowPlugins.GUITVSeries
             textBox_NewsSearchRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegex];
             textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
             textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
+             * */
         }
 
         private void LoadImportPathes()
@@ -454,10 +456,6 @@ namespace WindowPlugins.GUITVSeries
             root.Nodes.Clear();
 
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
-            if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
-                condition.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
-
             List<DBSeries> seriesList = DBSeries.Get(condition);
             if (seriesList.Count == 0)
             {
@@ -478,7 +476,7 @@ namespace WindowPlugins.GUITVSeries
                     seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
                 }
 
-                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID], false, true, DBOption.GetOptions(DBOption.cShowHiddenItems));
+                List<DBSeason> seasonsList = DBSeason.Get(series[DBSeries.cID]);
                 foreach (DBSeason season in seasonsList)
                 {
                     TreeNode seasonNode = null;
@@ -497,7 +495,7 @@ namespace WindowPlugins.GUITVSeries
                         seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
                     }
 
-                    List<DBEpisode> episodesList = DBEpisode.Get(series[DBSeries.cID], season[DBSeason.cIndex], false, DBOption.GetOptions(DBOption.cShowHiddenItems));
+                    List<DBEpisode> episodesList = DBEpisode.Get(series[DBSeries.cID], season[DBSeason.cIndex]);
 
                     foreach (DBEpisode episode in episodesList)
                     {
@@ -1411,7 +1409,7 @@ namespace WindowPlugins.GUITVSeries
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition));
                             DBEpisode.Clear(condition);
 
                             condition = new SQLCondition();
@@ -1443,7 +1441,7 @@ namespace WindowPlugins.GUITVSeries
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
                             
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition));
 
                             DBEpisode.Clear(condition);
                             condition = new SQLCondition();
@@ -1467,7 +1465,7 @@ namespace WindowPlugins.GUITVSeries
                             
                             condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
 
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition));
 
                             DBEpisode.Clear(condition);
                             condition = new SQLCondition();
@@ -1884,9 +1882,9 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
-                    Newzbin.Load Load = new Newzbin.Load(this);
+                    /*Newzbin.Load Load = new Newzbin.Load(this);
                     Load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(NewzbinLoad_LoadCompleted);
-                    Load.Search(episode);
+                    Load.Search(episode);*/
                     break;
             }
         }
@@ -2114,7 +2112,7 @@ namespace WindowPlugins.GUITVSeries
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
-            episodes = DBEpisode.Get(cond, false);
+            episodes = DBEpisode.Get(cond);
 
             if(result == DialogResult.No)
             {
@@ -2177,7 +2175,7 @@ namespace WindowPlugins.GUITVSeries
                 textBox_dblocation.Text = openFileDialog.FileName;
             }
         }
-
+        
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
             m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
@@ -2201,7 +2199,7 @@ namespace WindowPlugins.GUITVSeries
             m_currentNewsSearch[DBNewzbin.cPassword] = textbox_NewzbinPassword.Text;
             m_currentNewsSearch.Commit();
         }
-
+        
         private void newzbinThisToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -2587,6 +2585,27 @@ namespace WindowPlugins.GUITVSeries
                 MessageBox.Show("Watched info succesfully imported!");
                 LoadTree(); // reload tree so the changes are visible
             }
+        }
+
+        private void btnLogoTemplate_Click(object sender, EventArgs e)
+        {
+            logoTemplate t = new logoTemplate();
+            t.ShowDialog();
+            if (t.result != string.Empty)
+            {
+                List<string> entries = new List<string>();
+                foreach (string item in lstLogos.Items)
+                    entries.Add(item.ToString());
+                entries.Add(t.result);
+                localLogos.saveToDB(entries);
+                lstLogos.Items.Clear();
+                lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            }
+        }
+
+        private void tabPage_MP_DisplayControl_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

@@ -55,7 +55,14 @@ namespace WindowPlugins.GUITVSeries
         public List<BannerSeries> seriesBanners = new List<BannerSeries>();
         public List<BannerSeason> seasonBanners = new List<BannerSeason>();
 
+        public seriesBannersMap()
+        {
+        }
 
+        public seriesBannersMap(string seriesID)
+        {
+            this.seriesID = seriesID;
+        }
 
         #region IEquatable<seriesBannersMap> Members
 
@@ -93,10 +100,10 @@ namespace WindowPlugins.GUITVSeries
         //}
 
 
-        public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)
-        {
-            work(nSeriesID, nUpdateBannersTimeStamp, SeasonsToDownload, allSeasons);
-        }
+        //public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)
+        //{
+        //    work(nSeriesID, nUpdateBannersTimeStamp, SeasonsToDownload, allSeasons);
+        //}
 
         /// <summary>
         /// This constructor automatically get's relevant seasons
@@ -106,22 +113,26 @@ namespace WindowPlugins.GUITVSeries
         public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp)
         {
             List<int> relevantSeasons = new List<int>();
-            foreach(DBSeason season in DBSeason.Get(nSeriesID, false, true, true))
+            foreach(DBSeason season in DBSeason.Get(nSeriesID))
                 relevantSeasons.Add(season[DBSeason.cIndex]);
-            work(nSeriesID, nUpdateBannersTimeStamp, relevantSeasons, false);
+            work(nSeriesID, nUpdateBannersTimeStamp, relevantSeasons);
         }
 
-        public GetBanner(string idList, long nUpdateBannersTimeStamp)
+        //public GetBanner(string idList, long nUpdateBannersTimeStamp)
+        //{
+        //    //work(ZsoriParser.GetAllBanners(idList, nUpdateBannersTimeStamp), null, true);
+        //}
+
+        private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload)
         {
-            //work(ZsoriParser.GetAllBanners(idList, nUpdateBannersTimeStamp), null, true);
+            work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, null), SeasonsToDownload, false, ZsoriParser.SelLanguageAsString);
+            // also always get the english ones
+            if(ZsoriParser.SelLanguageAsString != "7")
+                work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, "7"), SeasonsToDownload, false, "7");
+
         }
 
-        private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload, bool allSeasons)
-        {
-            work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp), SeasonsToDownload, allSeasons);
-        }
-
-        private void work(XmlNodeList nodeList, List<int> SeasonsToDownload, bool allSeasons)
+        private void work(XmlNodeList nodeList, List<int> SeasonsToDownload, bool allSeasons, string bannerLang)
         {
             if (nodeList != null)
             {
@@ -259,7 +270,8 @@ namespace WindowPlugins.GUITVSeries
                             sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
                             sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                         }
-                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\" + sOnlineBannerPath;
+                        // mark the filename with the language
+                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
                         // check if banner is already there (don't download twice)
                         if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
                         {
@@ -285,7 +297,7 @@ namespace WindowPlugins.GUITVSeries
                             sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
                             sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                         }
-                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\" + sOnlineBannerPath;
+                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
                         if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
                         {
                             WebClient webClient = new WebClient();

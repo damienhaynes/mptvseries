@@ -43,7 +43,6 @@ namespace WindowPlugins.GUITVSeries
         static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
         static Dictionary<int, List<string>> splitConditions = new Dictionary<int, List<string>>();
         static Dictionary<string, string> cachedFieldValues = new Dictionary<string, string>();
-        public static Dictionary<int, DBSeries> cachedSeries = new Dictionary<int, DBSeries>(); // needs to be cleared on every update
         static List<string> nonExistingFiles = new List<string>();
         static DBEpisode tmpEp;
         static DBSeason tmpSeason;
@@ -56,6 +55,8 @@ namespace WindowPlugins.GUITVSeries
         static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         static NumberFormatInfo provider = new NumberFormatInfo();
         static public bool appendEpImage = true;
+        static string lastResult = string.Empty;
+        static bool lastWasCached = false;
 
         enum Level
         {
@@ -68,21 +69,6 @@ namespace WindowPlugins.GUITVSeries
         static localLogos()
         {
             provider.NumberDecimalSeparator = "."; // because mediainfo
-
-            DBSeries.dbUpdateOccured += new DBTable.dbUpdateOccuredDelegate(DBSeries_dbUpdateOccured);
-        }
-
-        static void DBSeries_dbUpdateOccured(string tableName)
-        {
-            if (tableName == DBSeries.cTableName) clearCachedItems();
-        }
-
-        static void clearCachedItems()
-        {
-            lock (cachedSeries)
-            {
-                cachedSeries.Clear();
-            }
         }
 
         public static void saveToDB(List<string> entries)
@@ -125,9 +111,9 @@ namespace WindowPlugins.GUITVSeries
             return entries;
         }
 
-        static string getLogos(Level level, int imgHeight, int imgWidth)
+        static string getLogos(Level level, int imgHeight, int imgWidth, ref List<string> logosForBuilding)
         {
-            return getLogos(level, imgHeight, imgWidth, false);
+            return getLogos(level, imgHeight, imgWidth, false, ref logosForBuilding);
         }
 
         public static string getFirstEpLogo(DBEpisode ep)
@@ -143,94 +129,113 @@ namespace WindowPlugins.GUITVSeries
             groupedField = groupedBy.Substring(groupedItemType.Length + 2);
             groupedField = groupedField.Substring(0, groupedField.Length - 1);
             groupedSelection = selection;
-            return getLogos(Level.Group, imgHeight, imgWidth, true); // they can logically only have one logo (we don't support hierarchical logos, eg network - genre...genre level will not have network logos)
+            List<string> cache_not_yet = null;
+            return getLogos(Level.Group, imgHeight, imgWidth, true, ref cache_not_yet); // they can logically only have one logo (we don't support hierarchical logos, eg network - genre...genre level will not have network logos)
         }
 
         public static string getLogos(ref DBEpisode ep, int imgHeight, int imgWidth, bool firstOnly)
         {
-            tmpEp = ep;
-            if (tmpEp == null) return null;
-            return getLogos(Level.Episode, imgHeight, imgWidth, firstOnly);
+            if (ep == null) return null;
+            DBEpisode inCache = cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]);
+            tmpEp = inCache == null ? ep : inCache;
+            lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
+            if(!lastWasCached) cache.addChangeEpisode(tmpEp);
+            return lastResult;
         }
 
         public static string getLogos(ref DBEpisode ep, int imgHeight, int imgWidth)
         {
-            return getLogos(ref ep, imgHeight, imgWidth, false);
+            return getLogos(ref ep, imgHeight, imgWidth, false);           
         }
 
         public static string getLogos(ref DBSeason season, int imgHeight, int imgWidth)
         {
-            tmpSeason = season;
-            if (tmpSeason == null) return null;
-            return getLogos(Level.Season, imgHeight, imgWidth);
+            if (season == null) return null;
+            DBSeason inCache = cache.getSeason(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+            tmpSeason = inCache == null ? season : inCache;
+            lastResult = getLogos(Level.Season, imgHeight, imgWidth, ref tmpSeason.cachedLogoResults);
+            if (!lastWasCached) cache.addChangeSeason(tmpSeason);
+            return lastResult;
         }
 
         public static string getLogos(ref DBSeries series, int imgHeight, int imgWidth)
         {
-            tmpSeries = series;
-            if (tmpSeries == null) return null;
-            return getLogos(Level.Series, imgHeight, imgWidth);
+            if (series == null) return null;
+            DBSeries inCache = cache.getSeries(series[DBSeries.cID]);
+            tmpSeries = inCache == null ? series : inCache;
+            lastResult = getLogos(Level.Series, imgHeight, imgWidth, ref tmpSeries.cachedLogoResults);
+            if (!lastWasCached) cache.addChangeSeries(tmpSeries);
+            return lastResult;
         }
 
-        static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly)
+        static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
             if (!entriesInMemory) getFromDB();
-            List<string> logosForBuilding = new List<string>();
-            // downloaded episodeimage into logos (after getFromDB)
-            // also for listview want to get them regardless, so if firstonly is set this is good too
-            if (( appendEpImage || firstOnly) && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
+            lastWasCached = logosForBuilding != null;
+            if (logosForBuilding == null || Settings.isConfig) // means it was tested before, so we don't even test anymore
             {
-                if (firstOnly) return tmpEp.Image; // takes precedence (should it?)
-                logosForBuilding.Add(tmpEp.Image);
-            }
-            if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
-            MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
-            bool debugResult = false;
-            bool debugResult1 = false;
-            // reset all cached Fieldvalues
-            cachedFieldValues.Clear();
-            for (int i = 0; i < entries.Count; i++)
-            {
-                try
+                logosForBuilding = new List<string>(); // null means hasn't been tested yet
+                // downloaded episodeimage into logos (after getFromDB)
+                // also for listview want to get them regardless, so if firstonly is set this is good too
+                if ((appendEpImage || firstOnly) && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
                 {
-                    if (entriesValidForInfo[i].Contains(level) || (level == Level.Group && isRelevant(entries[i], level))) // precalculated relevances (can't do for groups though)
-                    //if (isRelevant(entries[i], level))
+                    if (firstOnly)
                     {
-                        MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
-                        List<string> conditions = splitConditions[i];
-                        // resolve dnyamic image and check if logo img exists
-                        List<string> filenames = getDynamicFileName(conditions[0], level);
-                        for (int f = 0; f < filenames.Count; f++)
+                        logosForBuilding = null; // so it doesnt count as already checked
+                        return tmpEp.Image; // takes precedence (should it?)
+                    }
+                    logosForBuilding.Add(tmpEp.Image);
+                }
+                if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
+                MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                bool debugResult = false;
+                bool debugResult1 = false;
+                // reset all cached Fieldvalues
+                cachedFieldValues.Clear();
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    try
+                    {
+                        if (entriesValidForInfo[i].Contains(level) || (level == Level.Group && isRelevant(entries[i], level))) // precalculated relevances (can't do for groups though)
+                        //if (isRelevant(entries[i], level))
                         {
-                            bool wasCached = false;
-                            if (( wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
+                            MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
+                            List<string> conditions = splitConditions[i];
+                            // resolve dnyamic image and check if logo img exists
+                            List<string> filenames = getDynamicFileName(conditions[0], level);
+                            for (int f = 0; f < filenames.Count; f++)
                             {
-                                if (!wasCached)
+                                bool wasCached = false;
+                                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
                                 {
-                                    MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
-                                    nonExistingFiles.Add(filenames[f]);
+                                    if (!wasCached)
+                                    {
+                                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                                        nonExistingFiles.Add(filenames[f]);
+                                    }
+                                    filenames.RemoveAt(f);
+                                    f--;
                                 }
-                                filenames.RemoveAt(f);
-                                f--;
+                            }
+                            // check if the condition is met
+                            // each image may only exist once
+                            if (filenames.Count > 0 && !(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
+                            {
+                                if (firstOnly) return filenames[0]; // if we only need the first then we just return the original here
+                                else logosForBuilding.AddRange(filenames);
                             }
                         }
-                        // check if the condition is met
-                        // each image may only exist once
-                        if (filenames.Count > 0 && !(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
-                        {
-                            if (firstOnly) return filenames[0]; // if we only need the first then we just return the original here
-                            else logosForBuilding.AddRange(filenames);
-                        }
-                    }
-                    else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
+                        else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
 
-                    //MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
-                }
-                catch (Exception ex)
-                {
-                    MPTVSeriesLog.Write("Logo Rule crashed: " + entries[i] + " - " + ex.Message);
+                        //MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    }
+                    catch (Exception ex)
+                    {
+                        MPTVSeriesLog.Write("Logo Rule crashed: " + entries[i] + " - " + ex.Message);
+                    }
                 }
             }
+
             try
             {
                 if (logosForBuilding.Count == 1) return logosForBuilding[0];
@@ -422,18 +427,16 @@ namespace WindowPlugins.GUITVSeries
                             // tmpEP always has to exists or the isrelevant check would have already failed
                             value = tmpEp[what.Replace("<Episode.", "").Replace(">", "").Trim()];
                         }
-                        else if (what.Contains("Series")) // more optimized than season because it is more likely to be used
+                        else if (what.Contains("Series"))
                         {
                             if (level != Level.Series) // means we might have to get the series object for this episode/season
                             {
                                 int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                                if ((tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID) && !cachedSeries.ContainsKey(seriesID))
+                                if ((tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID) && (tmpSeries = cache.getSeries(seriesID)) == null)
                                 {
                                     tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                                    cachedSeries.Add(tmpSeries[DBSeries.cID], tmpSeries);
+                                    cache.addChangeSeries(tmpSeries);
                                 }
-                                if (tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID)
-                                    tmpSeries = cachedSeries[seriesID];
                             }
                             value = tmpSeries[what.Replace("<Series.", "").Replace(">", "").Trim()];
                         }
@@ -442,11 +445,13 @@ namespace WindowPlugins.GUITVSeries
                             if (level == Level.Episode) // means we might have to get the season object for this episode
                             {
                                 // get the season object if needed (either null, or not the one we need), otherwise dont get it again
-                                if (tmpSeason == null ||
+                                if ((tmpSeason == null ||
                                     tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
                                     tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
+                                    && (tmpSeason = cache.getSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex])) == null)
                                 {
                                     tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
+                                    cache.addChangeSeason(tmpSeason);
                                 }
                                 //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                             }

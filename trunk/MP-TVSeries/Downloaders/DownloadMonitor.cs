@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries.Download
 
             SQLCondition setcondition = new SQLCondition();
             setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
-            m_DownloadingEpisodes = DBEpisode.Get(setcondition, true);
+            m_DownloadingEpisodes = DBEpisode.Get(setcondition);
 
             // full scan of the download folders, then monitor new files 
             m_ActionQueue.Add(new CMonitorParameters());
@@ -210,7 +210,7 @@ namespace WindowPlugins.GUITVSeries.Download
                             SQLCondition conditions = new SQLCondition();
                             conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, episodeBestMatch[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
                             conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
-                            List<DBEpisode> SeriesEpisodes = DBEpisode.Get(conditions, true);
+                            List<DBEpisode> SeriesEpisodes = DBEpisode.Get(conditions);
 
                             if (SeriesEpisodes.Count > 0)
                                 sTargetFolder = System.IO.Path.GetDirectoryName(SeriesEpisodes[0][DBEpisode.cFilename]);
@@ -219,7 +219,7 @@ namespace WindowPlugins.GUITVSeries.Download
                                 // ok, default back to just the series folder
                                 conditions = new SQLCondition();
                                 conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
-                                SeriesEpisodes = DBEpisode.Get(conditions, true);
+                                SeriesEpisodes = DBEpisode.Get(conditions);
 
                                 if (SeriesEpisodes.Count > 0)
                                     sTargetFolder = System.IO.Path.GetDirectoryName(SeriesEpisodes[0][DBEpisode.cFilename]);

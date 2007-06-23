@@ -14,6 +14,10 @@ namespace WindowPlugins.GUITVSeries
         private static string bannersPath = string.Empty;
         private static string langPath = string.Empty;
         private static string thumbsPath = string.Empty;
+        private static string apppath = string.Empty;
+
+        public static string executingAssembly = System.Reflection.Assembly.GetEntryAssembly().Location;
+        public static bool isConfig = System.IO.Path.GetFileNameWithoutExtension(executingAssembly).ToLower() == "configuration";
 
         public enum Path
         {
@@ -21,7 +25,8 @@ namespace WindowPlugins.GUITVSeries
             database,
             banners,
             lang,
-            thumbs
+            thumbs,
+            app
         };
 
         public static string GetPath(Path path)
@@ -38,6 +43,8 @@ namespace WindowPlugins.GUITVSeries
                     return langPath;
                 case Path.thumbs:
                     return thumbsPath;
+                case Path.app:
+                    return apppath;
             }
             return string.Empty;
         }
@@ -72,6 +79,7 @@ namespace WindowPlugins.GUITVSeries
 
         static Settings()
         {
+            apppath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
             // AB: can override DB path, stored in the registry
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("Software\\MPTVSeries");

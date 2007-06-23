@@ -92,6 +92,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Channels = "Channels";
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
+        public static string updateMI = "Update Mediainfo of local file(s)";
 
 
         #endregion

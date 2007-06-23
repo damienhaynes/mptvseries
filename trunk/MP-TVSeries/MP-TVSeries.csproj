@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cache.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBTorrent.cs" />
@@ -86,6 +87,12 @@
     <Compile Include="logoConfigurator.designer.cs">
       <DependentUpon>logoConfigurator.cs</DependentUpon>
     </Compile>
+    <Compile Include="logoTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="logoTemplate.Designer.cs">
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogWriter.cs" />
     <Compile Include="DB Classes\DBBase.cs" />
     <Compile Include="DB Classes\DBEpisode.cs" />
@@ -103,7 +110,7 @@
     <Compile Include="Local Parsing Classes\ParserFilename.cs" />
     <Compile Include="MediaInfoDLL.cs" />
     <Compile Include="Online Parsing Classes\GetBanner.cs" />
-    <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
+    <Compile Include="Local Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetLanguages.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
@@ -145,6 +152,10 @@
       <DependentUpon>logoConfigurator.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="logoTemplate.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -161,13 +172,6 @@
     <None Include="img\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Core.dll" />
-    <Content Include="Databases.dll" />
-    <Content Include="Dialogs.dll" />
-    <Content Include="ICSharpCode.SharpZipLib.dll" />
-    <Content Include="Utils.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -179,6 +183,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "D:\Dev\Own\Mediaportal SVN\xbmc\bin\Debug\plugins\windows\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "h:\MP2\xbmc\bin\release\plugins\windows\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
