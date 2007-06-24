@@ -43,19 +43,19 @@
 	<string Field="No_items" Original="No items!">No items!</string>
 	<string Field="Unknown" Original="Unknown">Unknown</string>
 	<string Field="wrongSkin" Original="Wrong Skin file">Wrong Skin file</string>
-	<string Field="special" Special="Unknown">Special</string>
-	<string Field="specials" Specials="Unknown">Specials</string>
+	<string Field="special" Original="Special">Special</string>
+	<string Field="specials" Original="Specials">Specials</string>
 	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"You are about to permanently delete {0} physical file(s).\nWould you like to proceed?"</string>
-	<string Field="Force_Online_Match" Specials="Force Online Match">Force Online Match</string>
-	<string Field="Load_via_NewsLeecher" Specials="Load via NewsLeecher">Load via NewsLeecher</string>
-	<string Field="Download" Specials="Download">Download</string>
-	<string Field="Actions" Specials="Actions">Actions</string>
-	<string Field="Options" Specials="Options">Options</string>
-	<string Field="Genres" Specials="Genres">Genres</string>
-	<string Field="All" Specials="All">All</string>
-	<string Field="Latest" Specials="Latest">Latest</string>
-	<string Field="Channels" Specials="Channels">Channels</string>
-	<string Field="Unwatched" Specials="Unwatched">Unwatched</string>
-	<string Field="Favourites" Specials="Favourites">Favourites</string>
-	<string Field="updateMI" Specials="Update Mediainfo of local file">Update Mediainfo of local file(s)</string>
+	<string Field="Force_Online_Match" Original="Force Online Match">Force Online Match</string>
+	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Load via NewsLeecher</string>
+	<string Field="Download" Original="Download">Download</string>
+	<string Field="Actions" Original="Actions">Actions</string>
+	<string Field="Options" Original="Options">Options</string>
+	<string Field="Genres" Original="Genres">Genres</string>
+	<string Field="All" Original="All">All</string>
+	<string Field="Latest" Original="Latest">Latest</string>
+	<string Field="Channels" Original="Channels">Channels</string>
+	<string Field="Unwatched" Original="Unwatched">Unwatched</string>
+	<string Field="Favourites" Original="Favourites">Favourites</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Update Mediainfo of local file(s)</string>
 </strings>
