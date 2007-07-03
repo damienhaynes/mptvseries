@@ -1,0 +1,188 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WindowPlugins.GUITVSeries</RootNamespace>
+    <AssemblyName>MP-TVSeries</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Core, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Databases, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Databases.dll</HintPath>
+    </Reference>
+    <Reference Include="Dialogs, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\plugins\windows\Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MP2\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Utils, Version=2.1.2.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Utils.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cache.cs" />
+    <Compile Include="DB Classes\DBNewzbin.cs" />
+    <Compile Include="DB Classes\DBReplacements.cs" />
+    <Compile Include="DB Classes\DBTorrent.cs" />
+    <Compile Include="DB Classes\DBView.cs" />
+    <Compile Include="Downloaders\DownloadMonitor.cs" />
+    <Compile Include="Downloaders\IDownloaders.cs" />
+    <Compile Include="Downloaders\newzbin.cs" />
+    <Compile Include="feedback.cs" />
+    <Compile Include="GUIConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIConfiguration.designer.cs">
+      <DependentUpon>GUIConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helper.cs" />
+    <Compile Include="loadingDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="loadingDisplay.Designer.cs">
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Local Parsing Classes\LocalParse.cs" />
+    <Compile Include="localLogos.cs" />
+    <Compile Include="logoConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="logoConfigurator.designer.cs">
+      <DependentUpon>logoConfigurator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="logoTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="logoTemplate.Designer.cs">
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogWriter.cs" />
+    <Compile Include="DB Classes\DBBase.cs" />
+    <Compile Include="DB Classes\DBEpisode.cs" />
+    <Compile Include="DB Classes\DBExpressions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DB Classes\DBOnlineMirrors.cs" />
+    <Compile Include="DB Classes\DBOptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DB Classes\DBPathes.cs" />
+    <Compile Include="DB Classes\DBSeason.cs" />
+    <Compile Include="DB Classes\DBSeries.cs" />
+    <Compile Include="Local Parsing Classes\Filelister.cs" />
+    <Compile Include="Local Parsing Classes\ParserFilename.cs" />
+    <Compile Include="MediaInfoDLL.cs" />
+    <Compile Include="Online Parsing Classes\GetBanner.cs" />
+    <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\GetLanguages.cs" />
+    <Compile Include="Online Parsing Classes\GetSeries.cs" />
+    <Compile Include="Online Parsing Classes\OnlineParse.cs" />
+    <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Online Parsing Classes\ZsoriParser.cs" />
+    <Compile Include="settings.cs" />
+    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
+    <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
+    <Compile Include="ChooseFromSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChooseFromSelection.Designer.cs">
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Downloaders\Torrent.cs" />
+    <Compile Include="Translation.cs" />
+    <Compile Include="TVSeriesPlugin.cs" />
+    <Compile Include="VideoHandler.cs" />
+    <Compile Include="view.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GUIConfiguration.resx">
+      <DependentUpon>GUIConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="loadingDisplay.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="logoConfigurator.resx">
+      <DependentUpon>logoConfigurator.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="logoTemplate.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChooseFromSelection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\arrows.png" />
+    <None Include="img\arrow_up.png" />
+    <None Include="img\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "h:\MP2\xbmc\bin\release\plugins\windows\" /Y</PostBuildEvent>
+  </PropertyGroup>
+</Project>
