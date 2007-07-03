@@ -37,7 +37,7 @@ namespace WindowPlugins.GUITVSeries
         const string optionName = "logoConfig";
         const string entriesSplit = "<next>";
         public const string condSplit = ";-;";
-        static string pathfortmpfile = Settings.GetPath(Settings.Path.banners);
+        static string pathfortmpfile = Settings.GetPath(Settings.Path.thumbs);
         static string tmpFile = @"tmpLogos.png";
         static List<string> entries = new List<string>();
         static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
@@ -71,6 +71,8 @@ namespace WindowPlugins.GUITVSeries
             provider.NumberDecimalSeparator = "."; // because mediainfo
         }
 
+        private localLogos() { } // prevent instances
+
         public static void saveToDB(List<string> entries)
         {
             StringBuilder logoB = new StringBuilder();
@@ -88,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
             entries.Clear();
             entriesValidForInfo.Clear();
             splitConditions.Clear();
-            if(all != string.Empty)
+            if (all.Length > 0)
                 entries = new List<string>(Regex.Split(all, entriesSplit));
             entriesInMemory = true;
             if (entries.Count == 0)
@@ -136,9 +138,17 @@ namespace WindowPlugins.GUITVSeries
         public static string getLogos(ref DBEpisode ep, int imgHeight, int imgWidth, bool firstOnly)
         {
             if (ep == null) return null;
+            lastWasCached = false;
             DBEpisode inCache = cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]);
             tmpEp = inCache == null ? ep : inCache;
-            lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
+            if (!firstOnly || tmpEp.cachedFirstLogo == null)
+                lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
+            else
+            {
+                lastWasCached = true;
+                lastResult = tmpEp.cachedFirstLogo;
+            }
+            if (firstOnly) tmpEp.cachedFirstLogo = lastResult;
             if(!lastWasCached) cache.addChangeEpisode(tmpEp);
             return lastResult;
         }
@@ -171,33 +181,34 @@ namespace WindowPlugins.GUITVSeries
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
             if (!entriesInMemory) getFromDB();
-            lastWasCached = logosForBuilding != null;
-            if (logosForBuilding == null || Settings.isConfig) // means it was tested before, so we don't even test anymore
+            bool epImgAppended = false;
+            // downloaded episodeimage into logos (after getFromDB)
+            // also for listview want to get them regardless, so if firstonly is set this is good too
+            if ((appendEpImage || firstOnly) && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
+            {
+                if (firstOnly)
+                {
+                    return tmpEp.Image; // takes precedence (should it?)
+                }
+                epImgAppended = true;
+            }
+
+            if ((!(lastWasCached = logosForBuilding != null)) || Settings.isConfig) // means it was tested before, so we don't even test anymore
             {
                 logosForBuilding = new List<string>(); // null means hasn't been tested yet
-                // downloaded episodeimage into logos (after getFromDB)
-                // also for listview want to get them regardless, so if firstonly is set this is good too
-                if ((appendEpImage || firstOnly) && level == Level.Episode && tmpEp.Image.Length > 0 && System.IO.File.Exists(tmpEp.Image))
-                {
-                    if (firstOnly)
-                    {
-                        logosForBuilding = null; // so it doesnt count as already checked
-                        return tmpEp.Image; // takes precedence (should it?)
-                    }
-                    logosForBuilding.Add(tmpEp.Image);
-                }
+                if (epImgAppended) logosForBuilding.Add(tmpEp.Image);
                 if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
                 MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 bool debugResult = false;
                 bool debugResult1 = false;
                 // reset all cached Fieldvalues
+                
                 cachedFieldValues.Clear();
                 for (int i = 0; i < entries.Count; i++)
                 {
                     try
                     {
                         if (entriesValidForInfo[i].Contains(level) || (level == Level.Group && isRelevant(entries[i], level))) // precalculated relevances (can't do for groups though)
-                        //if (isRelevant(entries[i], level))
                         {
                             MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
                             List<string> conditions = splitConditions[i];
@@ -221,13 +232,16 @@ namespace WindowPlugins.GUITVSeries
                             // each image may only exist once
                             if (filenames.Count > 0 && !(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
                             {
-                                if (firstOnly) return filenames[0]; // if we only need the first then we just return the original here
+                                if (firstOnly)
+                                {
+                                    logosForBuilding = null; // reset so it doesn't count as cached
+                                    return filenames[0]; // if we only need the first then we just return the original here
+                                }
                                 else logosForBuilding.AddRange(filenames);
                             }
                         }
                         else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
 
-                        //MPTVSeriesLog.Write("Image needs to be displayed: " + (!debugResult1 && debugResult).ToString(), MPTVSeriesLog.LogLevel.Debug);
                     }
                     catch (Exception ex)
                     {
@@ -238,7 +252,7 @@ namespace WindowPlugins.GUITVSeries
 
             try
             {
-                if (logosForBuilding.Count == 1) return logosForBuilding[0];
+                if (logosForBuilding.Count == 1 || (logosForBuilding.Count > 0 && firstOnly)) return logosForBuilding[0];
                 else if (logosForBuilding.Count > 1)
                 {
                     tmpFile = string.Empty;
@@ -386,12 +400,12 @@ namespace WindowPlugins.GUITVSeries
                 // for genres/actors we need to split dynamic filenames again
                 string[] vals = DBOnlineSeries.splitField(value);
                 for (int i = 0; i < vals.Length; i++)
-                    result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i]), level)); // recursive so we support multiple dyn fields in filename
+                    result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i].Trim()), level)); // recursive so we support multiple dyn fields in filename
                 return result;
             }
             else
             {
-                return new List<string>(new string[] { getCleanAbsolutePath(dynfilename) }); // something went wrong
+                return new List<string>(new string[] { string.Empty }); // something went wrong
             }
         }
 
@@ -413,7 +427,7 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 value = string.Empty;
-                if (what == string.Empty) return true; // just skip it
+                if (what.Length == 0) return true; // just skip it
                 try
                 {
                     if (level == Level.Group)
@@ -545,7 +559,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // clean up all dynLogoFiles
             MPTVSeriesLog.Write("Cleaning up cached, generated Logos");
-            foreach (string file in System.IO.Directory.GetFiles(pathfortmpfile, "TVSeriesDynLogo*.png"))
+            foreach (string file in System.IO.Directory.GetFiles(pathfortmpfile, "TVSeriesDynLogo*"))
             {
                 try
                 {

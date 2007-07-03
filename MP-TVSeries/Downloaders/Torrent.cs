@@ -83,7 +83,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
             if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
             {
                 m_Search = Selected.m_Tag as DBTorrentSearch;
-                if (m_Search[DBTorrentSearch.cSearchUrl] != String.Empty && System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath)))
+                if (m_Search[DBTorrentSearch.cSearchUrl].ToString().Length > 0 && System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath)))
                 {
                     m_dbEpisode = dbEpisode;
                     worker.RunWorkerAsync();

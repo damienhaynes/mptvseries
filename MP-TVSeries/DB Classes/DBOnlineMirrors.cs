@@ -168,7 +168,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                if (s_sCurrentInterface == String.Empty)
+                if (Helper.String.IsNullOrEmpty(s_sCurrentInterface))
                 {
                     Init();
                 }
@@ -182,7 +182,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (s_sCurrentBanner == String.Empty)
+                if (Helper.String.IsNullOrEmpty(s_sCurrentBanner))
                 {
                     Init();
                 }

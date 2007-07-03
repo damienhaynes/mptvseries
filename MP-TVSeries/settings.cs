@@ -87,7 +87,6 @@ namespace WindowPlugins.GUITVSeries
                 rk = Registry.CurrentUser.CreateSubKey("Software\\MPTVSeries");
 
             dbPath = Config.GetFile(Config.Dir.Database, "TVSeriesDatabase4.db3");
-            Directory.CreateDirectory(Config.GetFolder(Config.Dir.Database));
 
             if (rk != null)
             {
@@ -98,13 +97,13 @@ namespace WindowPlugins.GUITVSeries
                     dbPath = value.ToString();
             }
 
-            // now, update the other paths based on the database one
-            String baseDir = dbPath.Remove(dbPath.LastIndexOf('\\')); // remove DB name
-            baseDir = baseDir.Remove(baseDir.LastIndexOf('\\')); // Get out of database folder
-            logPath = System.IO.Path.Combine(baseDir, @"log\MP-TVSeries.log");
-            bannersPath = System.IO.Path.Combine(baseDir, @"thumbs\MPTVSeriesBanners");
-            langPath = System.IO.Path.Combine(baseDir, @"language\MP-TVSeries");
-            thumbsPath = System.IO.Path.Combine(baseDir, @"thumbs");
+            // we respect overall MP settings which can be optinally defined
+            logPath = Config.GetFile(Config.Dir.Log, "MP-TVSeries.log");
+            bannersPath = Config.GetSubFolder(Config.Dir.Thumbs, "MPTVSeriesBanners");
+            langPath = Config.GetSubFolder(Config.Dir.Language, "MP-TVSeries");
+            thumbsPath = Config.GetFolder(Config.Dir.Thumbs);
+
+            initFolders();
         }
 
         private static void initFolders()
@@ -117,7 +116,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Error getting Paths: " + ex.Message);
+                MPTVSeriesLog.Write("Error initiating Paths: " + ex.Message);
             }
         }
     }

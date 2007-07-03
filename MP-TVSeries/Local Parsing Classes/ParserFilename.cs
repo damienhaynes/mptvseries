@@ -160,7 +160,7 @@ namespace WindowPlugins.GUITVSeries
                             string GroupName = regularExpression.GroupNameFromNumber(i);
                             string GroupValue = matchResults.Groups[i].Value;
 
-                            if (GroupValue != "" && GroupName != "unknown")
+                            if (GroupValue.Length > 0 && GroupName != "unknown")
                             {
                                 // ´run after replacements on captures
                                 foreach (KeyValuePair<string, string> replacement in replacements)
@@ -217,7 +217,7 @@ namespace WindowPlugins.GUITVSeries
 
                 field = SimpleExpression.Substring(openTagLocation + 1, closeTagLocation - openTagLocation - 1);
 
-                if (field != "")
+                if (field.Length > 0)
                 {
                     // other tags coming? put lazy *, otherwise put a greedy one
                     if (SimpleExpression.IndexOf('<', closeTagLocation) != -1)

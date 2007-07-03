@@ -39,61 +39,21 @@ namespace WindowPlugins.GUITVSeries
             return steps[step].groupedBy.PrettyName;
         }
         public string Name  { get { return this._name; } }
-        public string[] loadQuickSettings()
-        {
-            String optionsSaveString = DBOption.GetOptions("viewsQuickConfig");
-            string split = "<;>";
-            List<string> viewsConfigs = new List<string>();
-            viewsConfigs.AddRange(optionsSaveString.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries));
-            for (int i = 0; i < viewsConfigs.Count; i++)
-            {
-                try
-                {
-                    string[] Current = viewsConfigs[i].Split(new char[] { ';' }, StringSplitOptions.None);
-                    if (Current[0] == Name)
-                    {
-                        return Current;
-                    }
-                }
-                catch (Exception) { }
-            }
-            return null;
-        }
         public string prettyName
         {
             get 
             {
-                if (_prettyName != null && cachePrettyName) return _prettyName;
-                else
-                {
-                    try
-                    {
-                        string[] quickSettings = loadQuickSettings();
-                        if (quickSettings != null)
-                        {
-                            _prettyName = quickSettings[1];
-                            return quickSettings[1];
-                        }
-                    }
-                    catch (Exception){}
-                    return Name;
-                }
+                return _prettyName;
             }
-        }
-
-        public bool Enabled
-        {
-            get
+            set
             {
-                try 
-	            {	        
-		            string[] quickSettings = loadQuickSettings();
-                    if (quickSettings != null) return quickSettings[2] == "1";
-	            }
-	            catch (Exception){}
-                return true; // by default enabled
+                this._prettyName = value;
             }
         }
+        public string uniqueID = string.Empty;
+        public bool Enabled = true;
+
+        DBView toUpdateForConfig = null;
 
         public List<logicalViewStep> steps = new List<logicalViewStep>();
 
@@ -164,7 +124,12 @@ namespace WindowPlugins.GUITVSeries
             List<string> items = new List<string>();
             // to ensure we respect on the fly filter settings
             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
-                conditions.Add(step.groupedBy.table, DBOnlineSeries.cHasLocalFiles, true, SQLConditionType.Equal);
+            {
+                // not generic
+                SQLCondition fullSubCond = new SQLCondition();
+                fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                conditions.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+            }
             else if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
             {
                 // has to be grouped by something episode
@@ -172,11 +137,12 @@ namespace WindowPlugins.GUITVSeries
             }
             
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
+                                 " , count(*) " +
                                  " from " + step.groupedBy.table.m_tableName + conditions +
+                                 " group by " + step.groupedBy.tableField +
                                  step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
             MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
-            //SQLite.NET.SQLiteResultSet results = SQLiteResultSet.Fake();
             if (results.Rows.Count > 0)
             {
                 
@@ -189,13 +155,13 @@ namespace WindowPlugins.GUITVSeries
                         // we want to try to split by "|" eg. for actors/genres
                         string[] split = DBOnlineEpisode.splitField(tmpItem);
                         foreach (string item in split)
-                            if (item.Trim() == string.Empty)
+                            if (item.Trim().Length == 0)
                                 items.Add(Translation.Unknown);
                             else
                                 items.Add(item.Trim());
                     }
                     else
-                        if (tmpItem.Trim() == string.Empty)
+                        if (tmpItem.Trim().Length == 0)
                             items.Add(Translation.Unknown);
                         else
                             items.Add(tmpItem.Trim());
@@ -209,7 +175,7 @@ namespace WindowPlugins.GUITVSeries
                 items.Sort();
                 if (step.groupedBy.attempSplit)
                 {
-                    // and limit in memory here (agains because those splits are hard to deal with)
+                    // and limit in memory here (again because those splits are hard to deal with)
                     if (step.limitItems > 0)
                         limitList(ref items, step.limitItems);
                 }
@@ -245,10 +211,12 @@ namespace WindowPlugins.GUITVSeries
                     case logicalViewStep.type.season:
                         // we expect to get the seriesID/seasonIndex as stepSel
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
+                        conditions.beginGroup();
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
                         conditions.nextIsOr = true;
                         conditions.Add(new DBOnlineEpisode(), "airsbefore_season", currentStepSelection[1], SQLConditionType.Equal);
                         conditions.nextIsOr = false;
+                        conditions.endGroup();
                         break;
                 }
             }
@@ -275,12 +243,19 @@ namespace WindowPlugins.GUITVSeries
             list.RemoveRange(list.Count - (list.Count - limit), (list.Count - limit));
         }
 
-        public logicalView(string fromDB)
+        public logicalView(DBView fromDB)
         {
-            string[] steps = System.Text.RegularExpressions.Regex.Split(fromDB, logicalViewStep.stepSeperator);
+            string[] steps = System.Text.RegularExpressions.Regex.Split(fromDB[DBView.cViewConfig], logicalViewStep.stepSeperator);
             bool hasSeriesBeforeIt = false;
-            this._name = steps[0].Split(new string[] { "<name>" }, StringSplitOptions.RemoveEmptyEntries)[0];
-            steps[0] = steps[0].Split(new string[] { "<name>" }, StringSplitOptions.RemoveEmptyEntries)[1];
+
+            this._name = fromDB[DBView.cTransToken];
+            this._prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this._name) : (String)fromDB[DBView.cPrettyName];
+            this.uniqueID = fromDB[DBView.cIndex];
+            this.Enabled = fromDB[DBView.cEnabled];
+
+            if (Settings.isConfig) toUpdateForConfig = fromDB;
+
+            //steps[0] = steps[0].Split(new string[] { "<name>" }, StringSplitOptions.RemoveEmptyEntries)[1];
             for (int i = 0; i < steps.Length; i++)
             {
                 this.steps.Add(logicalViewStep.parseFromDB(steps[i], hasSeriesBeforeIt));
@@ -298,33 +273,22 @@ namespace WindowPlugins.GUITVSeries
                     hasSeriesBeforeIt = true;
             }
         }
-        /// <summary>
-        /// Fakes user defined views with hardcoded ones, to be removed once user configuration has been set upt!!!
-        /// </summary>
-        /// <returns></returns>
-        public static List<logicalView> getStaticViews(bool includeDisabled)
+
+        public static List<logicalView> getAll(bool includeDisabled)
         {
-            return getAllFromString(DBOptionFake.Get(string.Empty), includeDisabled);
+            List<logicalView> views = new List<logicalView>();
+            foreach (DBView view in DBView.getAll(includeDisabled))
+                views.Add(new logicalView(view));
+            return views;
         }
 
-        public static List<logicalView> getAllFromDB(bool includeDisabled)
+        public void saveToDB()
         {
-            return getAllFromString(null, includeDisabled);
-        }
-        public static List<logicalView> getAllFromString(string fake, bool includeDisabled)
-        {
-            string[] viewStrings = null;
-            if(fake == null)
-                viewStrings = System.Text.RegularExpressions.Regex.Split(DBOptionFake.Get("logicalViews"), viewSeperator);
-            else
-                viewStrings = System.Text.RegularExpressions.Regex.Split(fake, viewSeperator);
-            List<logicalView> views = new List<logicalView>();
-            foreach (string viewString in viewStrings)
-            {
-                logicalView view = new logicalView(viewString);
-                if (includeDisabled || view.Enabled) views.Add(view);
-            }
-            return views;
+            toUpdateForConfig[DBView.cIndex] = uniqueID;
+            toUpdateForConfig[DBView.cEnabled] = Enabled;
+            toUpdateForConfig[DBView.cTransToken] = _name;
+            toUpdateForConfig[DBView.cPrettyName] = _prettyName != Translation.Get(_name) ? prettyName : string.Empty;
+            toUpdateForConfig.Commit();
         }
     }
 
@@ -370,10 +334,11 @@ namespace WindowPlugins.GUITVSeries
         public grouped groupedBy = null;
         public bool hasSeriesBeforeIt = false;
         
-        string getQTableNameFromUnknownType(DBTable table, string field)
+        static string getQTableNameFromUnknownType(DBTable table, string field)
         {
             return (string)table.GetType().InvokeMember("Q", System.Reflection.BindingFlags.InvokeMethod, null, table, new object[1] { field });
         }
+        
         void setType(string typeString)
         {
             if (typeString.Contains(type.group.ToString()))
@@ -490,7 +455,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        void getTableFieldname(string what, out DBTable table, out string fieldname)
+        static void getTableFieldname(string what, out DBTable table, out string fieldname)
         {
             string sTable = string.Empty;
             fieldname = string.Empty;
@@ -565,8 +530,8 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBTable table = null;
                         string tableField = string.Empty;
-                        thisView.getTableFieldname(orderFields[i], out table, out tableField);
-                        tableField = thisView.getQTableNameFromUnknownType(table, tableField);
+                        getTableFieldname(orderFields[i], out table, out tableField);
+                        tableField = getQTableNameFromUnknownType(table, tableField);
 
                         // example of how the user can order by a different table
                         // needs to be enabled once definable views are ready
@@ -632,29 +597,29 @@ namespace WindowPlugins.GUITVSeries
     {
         public static string Get(string jkld)
         {
-            return Translation.Genres+"<name>group:<Series.Genre><;><;><;>15" +
+            return Translation.Genres + "|Orig:Genre<name>group:<Series.Genre><;><;><;>15" +
                 "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                Translation.All+"<name>series<;><;><Series.Pretty_Name>;asc<;>" +
+                Translation.All+"|Orig:All<name>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                Translation.Latest+"<name>episode<;><;><Episode.FirstAired>;desc<;>25"
+                Translation.Latest + "|Orig:Latest<name>episode<;><;><Episode.FirstAired>;desc<;>25"
                 + "<nextView>" +
-                Translation.Channels+"<name>group:<Series.Network><;><;><;>15" +
+                Translation.Channels + "|Orig:Channels<name>group:<Series.Network><;><;><;>15" +
                 "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                Translation.Unwatched+"<name>series<;><Episode.Watched>;=;0<;><Series.Pretty_Name>;asc<;>" +
+                Translation.Unwatched + "|Orig:Unwatched<name>series<;><Episode.Watched>;=;0<;><Series.Pretty_Name>;asc<;>" +
                 //"Unwatched<name>series<;>custom:(select count(watched) from online_episodes where seriesID = online_series.ID and watched = 0);>;0<;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;>;;<;><Season.seasonIndex>;asc<;>" +
                 //"<nextStep>season<;>custom:(select count(watched) from online_episodes where seriesID = season.seriesID and seasonindex =  season.seasonindex and watched = 0);>;0<;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 + "<nextView>" +
-                Translation.Favourites+"<name>series<;><Series.isFavourite>;=;1<;><Series.Pretty_Name>;asc<;>" +
+                Translation.Favourites + "|Orig:Favourites<name>series<;><Series.isFavourite>;=;1<;><Series.Pretty_Name>;asc<;>" +
                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>"
                 ;

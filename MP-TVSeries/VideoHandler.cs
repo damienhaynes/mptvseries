@@ -106,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Attempting to play: ", episode[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
                 // don't have this file !
-                if (episode[DBEpisode.cFilename] == String.Empty)
+                if (episode[DBEpisode.cFilename].ToString().Length == 0)
                     return false;
 
                 m_currentEpisode = episode;

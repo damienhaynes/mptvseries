@@ -187,6 +187,23 @@ namespace WindowPlugins.GUITVSeries
                 result.Add(input[i]);
             return result;
         }
+
+        public class String
+        {
+            /// <summary>
+            /// Fix for the buggy MS implementation
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public static bool IsNullOrEmpty(string value)
+            {
+                // great, won't be fixed until Orcas
+                // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=113102
+                if (value != null) return value.Length == 0;
+                return true;
+            }
+        }
     }
 
     class perfana
@@ -274,3 +291,4 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
+

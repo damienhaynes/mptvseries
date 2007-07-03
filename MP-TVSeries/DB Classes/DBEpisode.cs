@@ -51,6 +51,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         public const String cLastUpdated = "lastupdated";
         public const String cDownloadPending = "DownloadPending";
+        public const String cEpisodeImageFilename = "filename";
 
         public const String cAirsBeforeSeason = "airsbefore_season";
         public const String cAirsBeforeEpisode = "airsbefore_episode";
@@ -150,9 +151,9 @@ namespace WindowPlugins.GUITVSeries
 		{
 			get
 			{
-				if(this["filename"].ToString().Length>0)
+                if (this[cEpisodeImageFilename].ToString().Length > 0)
 				{
-					return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this["filename"]);
+                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cEpisodeImageFilename]);
 				} else return string.Empty;
 			}
 		}
@@ -219,6 +220,7 @@ namespace WindowPlugins.GUITVSeries
         public static List<string> subTitleExtensions = new List<string>();
 
         public List<string> cachedLogoResults = null;
+        public string cachedFirstLogo = null;
 
         static MediaInfoLib.MediaInfo MI;
         const int maxMIAttempts = 6;
@@ -316,7 +318,7 @@ namespace WindowPlugins.GUITVSeries
             if (!ReadPrimary(filename))
                 InitValues();
             if (System.IO.File.Exists(filename) && !mediaInfoIsSet) readMediaInfoOfLocal();
-            if (base[cSeriesID] != String.Empty && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
+            if (base[cSeriesID].ToString().Length > 0 && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
                 base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
@@ -351,7 +353,7 @@ namespace WindowPlugins.GUITVSeries
             }
             base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
             base[cSeriesID] = nSeriesID;
-            if (base[DBEpisode.cCompositeID2] != String.Empty)
+            if (base[DBEpisode.cCompositeID2].ToString().Length > 0)
                 base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
             m_onlineEpisode = newOnlineEpisode;
             Commit();
@@ -409,7 +411,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (this["localPlaytime"] == "" // ||
+                if (this["localPlaytime"].ToString().Length == 0 // ||
                 //    this["VideoCodec"] == "" ||
                 //    this["VideoBitrate"] == "" ||
                 //    this["VideoFrameRate"] == "" ||
@@ -447,19 +449,19 @@ namespace WindowPlugins.GUITVSeries
                     int.TryParse(this["localPlaytime"], out noAttempts);
                     noAttempts--;
                     bool failed = false;
-                    this["localPlaytime"] = (result = MI.getPlaytime()) != string.Empty ? result : noAttempts.ToString();
-                    if (result != string.Empty)
+                    this["localPlaytime"] = (result = MI.getPlaytime()).Length > 0 ? result : noAttempts.ToString();
+                    if (result.Length > 0)
                     {
-                        this["VideoCodec"] = (result = MI.getVidCodec()) != string.Empty ? result : "-1";
-                        this["VideoBitrate"] = (result = MI.getVidBitrate()) != string.Empty ? result : "-1";
-                        this["VideoFrameRate"] = (result = MI.getFPS()) != string.Empty ? result : "-1";
-                        this["videoWidth"] = (result = MI.getWidth()) != string.Empty ? result : "-1"; // lower case for compat. with older version
-                        this["videoHeight"] = (result = MI.getHeight()) != string.Empty ? result : "-1";
-                        this["VideoAspectRatio"] = (result = MI.getAR()) != string.Empty ? result : "-1";
+                        this["VideoCodec"] = (result = MI.getVidCodec()).Length > 0 ? result : "-1";
+                        this["VideoBitrate"] = (result = MI.getVidBitrate()).Length > 0 ? result : "-1";
+                        this["VideoFrameRate"] = (result = MI.getFPS()).Length > 0 ? result : "-1";
+                        this["videoWidth"] = (result = MI.getWidth()).Length > 0 ? result : "-1"; // lower case for compat. with older version
+                        this["videoHeight"] = (result = MI.getHeight()).Length > 0 ? result : "-1";
+                        this["VideoAspectRatio"] = (result = MI.getAR()).Length > 0 ? result : "-1";
 
-                        this["AudioCodec"] = (result = MI.getAudioCodec()) != string.Empty ? result : "-1";
-                        this["AudioBitrate"] = (result = MI.getAudioBitrate()) != string.Empty ? result : "-1";
-                        this["AudioChannels"] = (result = MI.getNoChannels()) != string.Empty ? result : "-1";
+                        this["AudioCodec"] = (result = MI.getAudioCodec()).Length > 0 ? result : "-1";
+                        this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
+                        this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
                     }
                     else failed = true;
                     MI.Close();
@@ -492,6 +494,7 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
+            if (Helper.String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
             if (subTitleExtensions.Count == 0)
             {
                 // load them in first time
@@ -600,13 +603,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case cEpisodeName:
                             retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                            if (retVal == null || retVal == String.Empty)
+                            if (Helper.String.IsNullOrEmpty(retVal))
                                 retVal = base[cEpisodeName];
                             return retVal;
 
                         default:
                             retVal = m_onlineEpisode[fieldName];
-                            if (retVal == null || retVal == String.Empty)
+                            if (Helper.String.IsNullOrEmpty(retVal))
                                 retVal = base[fieldName];
                             return retVal;
                     }
@@ -644,14 +647,14 @@ namespace WindowPlugins.GUITVSeries
 
                 base[fieldName] = value;
 
-                if (m_onlineEpisode == null && base[cSeriesID] != String.Empty && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
+                if (m_onlineEpisode == null && base[cSeriesID].ToString().Length > 0 && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
                 {
                     // we have enough data to create an online episode
                     m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
                     base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
                     Commit();
                 }
-                else if (m_onlineEpisode == null && base[cSeriesID] != String.Empty && base[DBOnlineEpisode.cFirstAired] != string.Empty)
+                else if (m_onlineEpisode == null && base[cSeriesID].ToString().Length > 0 && base[DBOnlineEpisode.cFirstAired].ToString().Length > 0)
                 {
                     // in case of firstaired matching, we temporarily create an composite id based on it, this will later be changed to season/ep again
                     m_onlineEpisode = new DBOnlineEpisode();
@@ -746,7 +749,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if (Settings.isConfig || DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
@@ -759,17 +762,24 @@ namespace WindowPlugins.GUITVSeries
 
         public static string stdGetSQL(SQLCondition conditions, bool selectFull)
         {
+            return stdGetSQL(conditions, selectFull, true);
+        }
+
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond)
+        {
             String sqlQuery = String.Empty;
             conditions.AddCustom(stdConditions.ConditionsSQLString);
 
-            string orderBy = !conditions.customOrderStringIsSet
-                  ? string.Empty
-                  : conditions.orderString;
-
-            if (orderBy == string.Empty)
-                orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
-            if (selectFull)
+            string orderBy = string.Empty;
+            if(selectFull)
             {
+                orderBy = !conditions.customOrderStringIsSet
+                      ? string.Empty
+                      : conditions.orderString;
+
+                if (Helper.String.IsNullOrEmpty(orderBy))
+                    orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
+
                 SQLWhat what = new SQLWhat(new DBOnlineEpisode());
                 what.AddWhat(new DBEpisode());
                 // one query gets both first & second episode
@@ -782,29 +792,39 @@ namespace WindowPlugins.GUITVSeries
             return sqlQuery + " left join " + cTableName + " on (" + DBEpisode.Q(cCompositeID) + "==" + DBOnlineEpisode.Q(cCompositeID) + " or " + DBEpisode.Q(cCompositeID2) + "==" + DBOnlineEpisode.Q(cCompositeID) + ") " + conditions + orderBy + conditions.limitString;
         }
 
-
         public static List<DBEpisode> Get(int nSeriesID)
+        {
+            return Get(nSeriesID, true);
+        }
+        public static List<DBEpisode> Get(int nSeriesID, bool inclStdCond)
         {
             SQLCondition conditions = new SQLCondition();
             conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
 
-            return Get(conditions);
+            return Get(conditions, inclStdCond);
         }
 
         public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex)
+        {
+            return Get(nSeriesID, nSeasonIndex, true);
+        }
+        public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, bool includeStdCond)
         {
             SQLCondition conditions = new SQLCondition();
             conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
             conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
 
-            return Get(conditions);
+            return Get(conditions, includeStdCond);
         }
 
         public static List<DBEpisode> Get(SQLCondition conditions)
         {
-            List<DBEpisode> outList = new List<DBEpisode>();
-            outList.AddRange(Get(stdGetSQL(conditions, true)));
-            return outList;
+            return Get(conditions, true);
+        }
+
+        public static List<DBEpisode> Get(SQLCondition conditions, bool includeStdCond)
+        {
+            return Get(stdGetSQL(conditions, true, includeStdCond));
         }
 
         public static List<DBEpisode> Get(string sqlQuery)

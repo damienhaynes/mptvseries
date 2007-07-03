@@ -38,6 +38,7 @@ namespace WindowPlugins.GUITVSeries
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
+        public String sBannerLang = String.Empty;
     };
 
     class BannerSeason
@@ -47,6 +48,7 @@ namespace WindowPlugins.GUITVSeries
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
+        public String sBannerLang = String.Empty;
     };
 
     class seriesBannersMap : System.IEquatable<seriesBannersMap>    
@@ -83,7 +85,8 @@ namespace WindowPlugins.GUITVSeries
         public List<seriesBannersMap> seriesBanners = new List<seriesBannersMap>();
 
         static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
-
+        String localizedSeriesName = string.Empty;
+        static bool getBlankBanners = false;
         public long ServerTimeStamp
         {
             get { return m_nServerTimeStamp; }
@@ -110,8 +113,9 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="nSeriesID"></param>
         /// <param name="nUpdateBannersTimeStamp"></param>
-        public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp)
+        public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp, string localSeriesName)
         {
+            localizedSeriesName = localSeriesName;
             List<int> relevantSeasons = new List<int>();
             foreach(DBSeason season in DBSeason.Get(nSeriesID))
                 relevantSeasons.Add(season[DBSeason.cIndex]);
@@ -123,12 +127,21 @@ namespace WindowPlugins.GUITVSeries
         //    //work(ZsoriParser.GetAllBanners(idList, nUpdateBannersTimeStamp), null, true);
         //}
 
+        static GetBanner()
+        {
+            if (!Settings.isConfig)
+                getBlankBanners = DBOption.GetOptions(DBOption.cGetBlankBanners);
+        }
+
         private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload)
         {
             work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, null), SeasonsToDownload, false, ZsoriParser.SelLanguageAsString);
             // also always get the english ones
             if(ZsoriParser.SelLanguageAsString != "7")
                 work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, "7"), SeasonsToDownload, false, "7");
+            // also get blank banners?
+            if(getBlankBanners || (Settings.isConfig && DBOption.GetOptions(DBOption.cGetBlankBanners)))
+                work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, "blank"), SeasonsToDownload, false, "blank");
 
         }
 
@@ -174,9 +187,9 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     switch (propertyNode.Name)
                                     {
-                                        case "SeriesName":
-                                            bannerSeries.sSeriesName = propertyNode.InnerText;
-                                            break;
+                                        //case "SeriesName":
+                                        //    bannerSeries.sSeriesName = propertyNode.InnerText;
+                                        //    break;
 
                                         case "BannerType":
                                             switch (propertyNode.InnerText)
@@ -201,6 +214,8 @@ namespace WindowPlugins.GUITVSeries
                                             break;
                                     }
                                 }
+                                bannerSeries.sSeriesName = localizedSeriesName;
+                                bannerSeries.sBannerLang = bannerLang;
                                 m_bannerSeriesList.Add(bannerSeries);
                                 break;
 
@@ -211,9 +226,9 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     switch (propertyNode.Name)
                                     {
-                                        case "SeriesName":
-                                            bannerSeason.sSeriesName = propertyNode.InnerText;
-                                            break;
+                                        //case "SeriesName":
+                                        //    bannerSeason.sSeriesName = propertyNode.InnerText;
+                                        //    break;
 
                                         case "Season":
                                             bannerSeason.nIndex = Convert.ToInt32(propertyNode.InnerText);
@@ -241,8 +256,12 @@ namespace WindowPlugins.GUITVSeries
                                             break;
                                     }
                                 }
-                                if (bannerSeason.bIsNeeded && ( allSeasons || ( null!= SeasonsToDownload  && SeasonsToDownload.Contains(bannerSeason.nIndex))))
+                                if (bannerSeason.bIsNeeded && (allSeasons || (null != SeasonsToDownload && SeasonsToDownload.Contains(bannerSeason.nIndex))))
+                                {
+                                    bannerSeason.sSeriesName = localizedSeriesName;
+                                    bannerSeason.sBannerLang = bannerLang;
                                     m_bannerSeasonList.Add(bannerSeason);
+                                }
                                 break;
                         }
                         map.seasonBanners = m_bannerSeasonList;
@@ -263,52 +282,58 @@ namespace WindowPlugins.GUITVSeries
                 {
                     foreach (BannerSeries bannerSeries in map.seriesBanners)
                     {
-                        String sBannerSeriesName = bannerSeries.sSeriesName;
-                        String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
-                        foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                        if (bannerLang == bannerSeries.sBannerLang)
                         {
-                            sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
-                            sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
-                        }
-                        // mark the filename with the language
-                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
-                        // check if banner is already there (don't download twice)
-                        if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
-                        {
-                            WebClient webClient = new WebClient();
-                            try
+                            String sBannerSeriesName = bannerSeries.sSeriesName;
+                            String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
+                            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
                             {
-                                Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeries.sBannerFileName));
-                                webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeries.sOnlineBannerPath, sBannersBasePath + bannerSeries.sBannerFileName);
+                                sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
+                                sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                             }
-                            catch (WebException)
+                            // mark the filename with the language
+                            bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
+                            // check if banner is already there (don't download twice)
+                            if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
                             {
-                                MPTVSeriesLog.Write("Banner download failed (" + bannerSeries.sOnlineBannerPath + ")");
+                                WebClient webClient = new WebClient();
+                                try
+                                {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeries.sBannerFileName));
+                                    webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeries.sOnlineBannerPath, sBannersBasePath + bannerSeries.sBannerFileName);
+                                }
+                                catch (WebException)
+                                {
+                                    MPTVSeriesLog.Write("Banner download failed (" + bannerSeries.sOnlineBannerPath + ")");
+                                }
                             }
                         }
                     }
 
                     foreach (BannerSeason bannerSeason in map.seasonBanners)
                     {
-                        String sBannerSeriesName = bannerSeason.sSeriesName;
-                        String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
-                        foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                        if (bannerLang == bannerSeason.sBannerLang)
                         {
-                            sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
-                            sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
-                        }
-                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
-                        if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
-                        {
-                            WebClient webClient = new WebClient();
-                            try
+                            String sBannerSeriesName = bannerSeason.sSeriesName;
+                            String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
+                            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
                             {
-                                Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeason.sBannerFileName));
-                                webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeason.sOnlineBannerPath, sBannersBasePath + bannerSeason.sBannerFileName);
+                                sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
+                                sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                             }
-                            catch (WebException)
+                            bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
+                            if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
                             {
-                                MPTVSeriesLog.Write("Banner download failed (" + bannerSeason.sOnlineBannerPath + ")");
+                                WebClient webClient = new WebClient();
+                                try
+                                {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeason.sBannerFileName));
+                                    webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeason.sOnlineBannerPath, sBannersBasePath + bannerSeason.sBannerFileName);
+                                }
+                                catch (WebException)
+                                {
+                                    MPTVSeriesLog.Write("Banner download failed (" + bannerSeason.sOnlineBannerPath + ")");
+                                }
                             }
                         }
                     }

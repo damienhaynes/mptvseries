@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
                             return base[DBOnlineSeries.cPrettyName];
                         else
                         {
-                            if (base[DBOnlineSeries.cOriginalName] != string.Empty)
+                            if (base[DBOnlineSeries.cOriginalName].ToString().Length > 0)
                                 return base[DBOnlineSeries.cOriginalName];
                             else
                             {
@@ -331,7 +331,7 @@ namespace WindowPlugins.GUITVSeries
                 s_nLastLocalID--;
                 DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
                 base[cID] = m_onlineSeries[DBOnlineSeries.cID];
-                if (m_onlineSeries[DBOnlineSeries.cPrettyName] == String.Empty)
+                if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cPrettyName]))
                 {
                     m_onlineSeries[DBOnlineSeries.cPrettyName] = base[cParsedName];
                     m_onlineSeries[DBOnlineSeries.cSortName] = base[cParsedName];
@@ -376,6 +376,8 @@ namespace WindowPlugins.GUITVSeries
         public void ChangeSeriesID(int nSeriesID)
         {
             DBOnlineSeries newOnlineSeries = new DBOnlineSeries(nSeriesID);
+            if (m_onlineSeries[DBOnlineSeries.cHasLocalFilesTemp])
+                newOnlineSeries[DBOnlineSeries.cHasLocalFilesTemp] = 1;
             if (m_onlineSeries[DBOnlineSeries.cHasLocalFiles])
                 newOnlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
             newOnlineSeries[DBOnlineSeries.cEpisodeOrders] = m_onlineSeries[DBOnlineSeries.cEpisodeOrders];
@@ -429,7 +431,7 @@ namespace WindowPlugins.GUITVSeries
                         if (m_onlineSeries != null)
                             retVal = m_onlineSeries[fieldName];
 
-                        if (retVal == null || retVal == String.Empty)
+                        if (Helper.String.IsNullOrEmpty(retVal))
                             retVal = base[cParsedName];
                         return retVal;
 
@@ -482,7 +484,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                    if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName] == String.Empty)
+                    if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]))
                         return String.Empty;
 
                     //if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
@@ -513,7 +515,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sList = m_onlineSeries[DBOnlineSeries.cBannerFileNames];
-                    if (sList == String.Empty)
+                    if (Helper.String.IsNullOrEmpty(sList))
                         return outList;
 
                     String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -536,7 +538,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int i = 0; i < value.Count; i++)
                     {
                         value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                        if (sIn == String.Empty)
+                        if (Helper.String.IsNullOrEmpty(String.Empty))
                             sIn += value[i];
                         else
                             sIn += "," + value[i];
@@ -606,18 +608,22 @@ namespace WindowPlugins.GUITVSeries
                 if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
 
-                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                    conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal);
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                {
+                    SQLCondition fullSubCond = new SQLCondition();
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                    conditions.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                }
                 return conditions;
             }
         }
 
         public static List<DBSeries> Get(SQLCondition conditions)
         {
-            return Get(conditions, false);
+            return Get(conditions, false, true);
         }
 
-        public static List<DBSeries> Get(SQLCondition conditions, bool onlyWithUnwatchedEpisodes)
+        public static List<DBSeries> Get(SQLCondition conditions, bool onlyWithUnwatchedEpisodes, bool includeStdCond)
         {
             if (onlyWithUnwatchedEpisodes)
             {
@@ -629,10 +635,14 @@ namespace WindowPlugins.GUITVSeries
                             ) > 0");
             }
 
-            String sqlQuery = stdGetSQL(conditions, true);
+            String sqlQuery = stdGetSQL(conditions, true, includeStdCond);
             return Get(sqlQuery);
         }
         public static string stdGetSQL(SQLCondition conditions, bool selectFull)
+        {
+            return stdGetSQL(conditions, selectFull, true);
+        }
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool includeStdCond)
         {
             string field;
             if (selectFull)
@@ -643,13 +653,19 @@ namespace WindowPlugins.GUITVSeries
             }
             else field = DBOnlineSeries.Q(DBOnlineSeries.cID) + " from " + DBOnlineSeries.cTableName;
 
-            conditions.AddCustom(stdConditions.ConditionsSQLString);
+            if (includeStdCond)
+            {
+                conditions.AddCustom(stdConditions.ConditionsSQLString);
+            }
+
             string conds = conditions;
-
-            string oderBy = conditions.customOrderStringIsSet
-                  ? conditions.orderString
-                  : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
-
+            string oderBy = string.Empty;
+            if (selectFull)
+            {
+                oderBy = conditions.customOrderStringIsSet
+                      ? conditions.orderString
+                      : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+            }
             return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
                              + conds
                              + oderBy
@@ -671,7 +687,7 @@ namespace WindowPlugins.GUITVSeries
                     series.m_onlineSeries = new DBOnlineSeries();
                     series.m_onlineSeries.Read(ref results, index);
                     outList.Add(series);
-                    if (series[cID] < 0 && series.m_onlineSeries[DBOnlineSeries.cPrettyName] == String.Empty)
+                    if (series[cID] < 0 && series.m_onlineSeries[DBOnlineSeries.cPrettyName].ToString().Length == 0)
                     {
                         series.m_onlineSeries[DBOnlineSeries.cPrettyName] = series[cParsedName];
                         series.m_onlineSeries.Commit();
@@ -680,12 +696,15 @@ namespace WindowPlugins.GUITVSeries
             }
             return outList;
         }
-
         public static DBSeries Get(int seriesID)
+        {
+            return Get(seriesID, true);
+        }
+        public static DBSeries Get(int seriesID, bool includeStdCond)
         {
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, seriesID, SQLConditionType.Equal);
-            foreach (DBSeries series in Get(cond, false))
+            foreach (DBSeries series in Get(cond, false, includeStdCond))
                 return series;
             return null;
         }

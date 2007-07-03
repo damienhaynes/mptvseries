@@ -135,14 +135,14 @@ namespace WindowPlugins.GUITVSeries
 
         string getResult(bool checkFileExists)
         {
-            if (!this.cond2_what.Enabled || (cond2_what.Text.Trim() == string.Empty && cond2_cond.Text.Trim() == string.Empty))
+            if (!this.cond2_what.Enabled || (cond2_what.Text.Trim().Length == 0 && cond2_cond.Text.Trim().Length == 0))
             {
                 _12_link.SelectedIndex = 0; // force back to AND
                 cond2_what.Text = "";
                 cond2_cond.Text = "";
                 cond2_type.SelectedIndex = 0;
             }
-            if (!this.cond3_what.Enabled || (cond3_what.Text.Trim() == string.Empty && cond3_cond.Text.Trim() == string.Empty))
+            if (!this.cond3_what.Enabled || (cond3_what.Text.Trim().Length == 0 && cond3_cond.Text.Trim().Length == 0))
             {
                 _23_link.SelectedIndex = 0; // force back to AND
                 cond3_what.Text = "";
@@ -197,7 +197,7 @@ namespace WindowPlugins.GUITVSeries
         private void enabled2()
         {
             bool enable = true;
-            if (this.cond1_what.Text != string.Empty && this.cond1_cond.Text != string.Empty)
+            if (this.cond1_what.Text.Length > 0 && this.cond1_cond.Text.Length > 0)
                 enable = true;
             else
                 enable = false;
@@ -210,7 +210,7 @@ namespace WindowPlugins.GUITVSeries
         private void enabled3()
         {
             bool enable = true;
-            if (this.cond2_what.Text != string.Empty && this.cond2_cond.Text != string.Empty)
+            if (this.cond2_what.Text.Length > 0 && this.cond2_cond.Text.Length > 0)
                 enable = true;
             else
                 enable = false;
