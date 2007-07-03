@@ -62,6 +62,7 @@
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBTorrent.cs" />
+    <Compile Include="DB Classes\DBView.cs" />
     <Compile Include="Downloaders\DownloadMonitor.cs" />
     <Compile Include="Downloaders\IDownloaders.cs" />
     <Compile Include="Downloaders\newzbin.cs" />
@@ -110,13 +111,12 @@
     <Compile Include="Local Parsing Classes\ParserFilename.cs" />
     <Compile Include="MediaInfoDLL.cs" />
     <Compile Include="Online Parsing Classes\GetBanner.cs" />
-    <Compile Include="Local Parsing Classes\GetEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetLanguages.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
     <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
     <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
-    <Compile Include="PathMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

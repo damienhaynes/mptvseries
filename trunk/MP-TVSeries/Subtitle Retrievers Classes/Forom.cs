@@ -32,49 +32,6 @@ using System.Threading;
 using System.ComponentModel;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace WindowPlugins.GUITVSeries
-{
-    public class Levenshtein
-    {
-        /// <summary>
-        /// Compute Levenshtein distance.
-        /// http://www.merriampark.com/ld.htm
-        /// </summary>
-        /// <returns>Distance between the two strings.
-        /// The larger the number, the bigger the difference.
-        /// </returns>
-        public static int CalcEditDistance(string s, string t)
-        {
-            int n = s.Length; //length of s
-            int m = t.Length; //length of t
-            int[,] d = new int[n + 1, m + 1]; // matrix
-            int cost; // cost
-            // Step 1
-            if (n == 0) return m;
-            if (m == 0) return n;
-            // Step 2
-            for (int i = 0; i <= n; d[i, 0] = i++) ;
-            for (int j = 0; j <= m; d[0, j] = j++) ;
-            // Step 3
-            for (int i = 1; i <= n; i++)
-            {
-                //Step 4
-                for (int j = 1; j <= m; j++)
-                {
-                    // Step 5
-                    cost = (t.Substring(j - 1, 1) == s.Substring(i - 1, 1) ? 0 : 1);
-                    // Step 6
-                    d[i, j] = System.Math.Min(System.Math.Min(d[i - 1, j] + 1, d[i, j - 1] +
-                    1),
-                    d[i - 1, j - 1] + cost);
-                }
-            }
-            // Step 7
-            return d[n, m];
-        }
-    }
-}
-
 namespace WindowPlugins.GUITVSeries.Subtitles
 {
     class Forom
@@ -155,7 +112,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     sLal = "TZ";
                 }
 
-                if (sLal != String.Empty && m_sID != String.Empty)
+                if (sLal.Length > 0 && m_sID.Length > 0)
                 {
                     String s1stLevelURL = String.Format(@"{0}/index.php?lal={1}&c={2}", m_sBaseUrl, sLal, m_sID);
                     MPTVSeriesLog.Write("Step 1: looking into " + s1stLevelURL);
@@ -249,7 +206,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     do
                     {
                         String s2ndLevelURL = String.Empty;
-                        if (finalSeasonResult.sPHPSessionID != String.Empty)
+                        if (finalSeasonResult.sPHPSessionID.Length > 0)
                             s2ndLevelURL = String.Format(@"{0}/indexb.php?lg={1}&type={2}&c={3}&PHPSESSID={4}", m_sBaseUrl, sLang, finalSeasonResult.sSubLinkName, m_sID, finalSeasonResult.sPHPSessionID);
                         else
                             s2ndLevelURL = String.Format(@"{0}/indexb.php?lg={1}&type={2}&c={3}", m_sBaseUrl, sLang, finalSeasonResult.sSubLinkName, m_sID);
@@ -288,7 +245,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             }
                         }
 
-                        if (sLang == String.Empty)
+                        if (sLang.Length == 0)
                             sLang = "VO";
                         else
                             break;
@@ -346,7 +303,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                             Directory.CreateDirectory(System.IO.Path.GetTempPath() + directoryName);
                                         }
 
-                                        if (fileName != String.Empty && fileName[0] != '.')
+                                        if (fileName.Length > 0 && fileName[0] != '.')
                                         {
                                             using (FileStream streamWriter = File.Create(System.IO.Path.GetTempPath() + theEntry.Name))
                                             {
@@ -474,7 +431,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                     while ((theEntry = s.GetNextEntry()) != null)
                                     {
                                         string fileName = Path.GetFileName(theEntry.Name);
-                                        if (fileName != String.Empty)
+                                        if (fileName.Length > 0)
                                         {
                                             try { System.IO.File.Delete(System.IO.Path.GetTempPath() + theEntry.Name); }
                                             catch { }
@@ -490,7 +447,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                     {
                                         string directoryName = Path.GetDirectoryName(theEntry.Name);
                                         string fileName = Path.GetFileName(theEntry.Name);
-                                        if (fileName == String.Empty)
+                                        if (fileName.Length == 0)
                                         {
                                             try { System.IO.Directory.Delete(System.IO.Path.GetTempPath() + directoryName, true); }
                                             catch { }
@@ -563,7 +520,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         public void ComputeDistance(ForomEpisode episode)
         {
-            m_nDistance = Levenshtein.CalcEditDistance(m_sName, episode.m_sSeriesName);
+            m_nDistance = MediaPortal.Util.Levenshtein.Match(m_sName, episode.m_sSeriesName);
         }
     };
 
@@ -625,7 +582,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         public void ComputeDistance(ForomEpisode episode)
         {
-            nDistance = Levenshtein.CalcEditDistance(sSubName, episode.m_sSeriesName);
+            nDistance = MediaPortal.Util.Levenshtein.Match(sSubName, episode.m_sSeriesName);
         }
     };
 }

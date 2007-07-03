@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) -->
+<!-- German -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -43,4 +43,20 @@
 	<string Field="No_items" Original="No items!">Keine Elemente!</string>	
 	<string Field="Unknown" Original="Unknown">Unbekannt</string>
 	<string Field="wrongSkin" Original="Wrong Skin file">Falsche Skin Datei!</string>
+	<string Field="special" Original="Special">Special</string>
+	<string Field="specials" Original="Specials">Specials</string>
+	<string Field="Original" Original="Original">Original</string>
+	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du bist dabei {0} Datei(en) von der Festplatte zu löschen.\nMöchtest du wirklich fortfahren?"</string>
+	<string Field="Force_Online_Match" Original="Force Online Match">Onlineabgleich erzwingen</string>
+	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Über NewsLeecher laden</string>
+	<string Field="Download" Original="Download">Download</string>
+	<string Field="Actions" Original="Actions">Aktionen</string>
+	<string Field="Options" Original="Options">Optionen</string>
+	<string Field="Genres" Original="Genres">Genre</string>
+	<string Field="All" Original="All">Alle</string>
+	<string Field="Latest" Original="Latest">Neuste</string>
+	<string Field="Channels" Original="Channels">Sender</string>
+	<string Field="Unwatched" Original="Unwatched">Ungesehen</string>
+	<string Field="Favourites" Original="Favourites">Favoriten</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Mediainformationen der lokalen Dateien</string>
 </strings>

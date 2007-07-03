@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries
                 if (sel.template.Contains("<folder>"))
                 {
                     folderBrowserDialog1.ShowDialog();
-                    if (folderBrowserDialog1.SelectedPath == string.Empty)
+                    if (folderBrowserDialog1.SelectedPath.Length == 0)
                     {
                         MessageBox.Show("Please provide an existing path");
                     }
@@ -62,7 +62,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     openFileDialog1.ShowDialog();
-                    if (openFileDialog1.FileName == string.Empty)
+                    if (openFileDialog1.FileName.Length == 0)
                     {
                         MessageBox.Show("Please provide an existing image file");
                     }

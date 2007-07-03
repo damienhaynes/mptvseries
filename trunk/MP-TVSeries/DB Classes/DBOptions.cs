@@ -110,6 +110,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cDeleteFile = "deleteFile";
 
         public const String cMainMirror = "mainMirror";
+        public const String cGetBlankBanners = "getBlankBanners";
 
         static DBOption()
         {
@@ -332,13 +333,13 @@ namespace WindowPlugins.GUITVSeries
             {
 //                UpdateTable();
                 String convertedProperty = property;
-                String convertedvalue = value;
+                String convertedvalue = value.ToString().Replace("'","''");
 
                 String sqlQuery;
                 if (GetOptions(convertedProperty) == null)
                     sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
                 else
-                    sqlQuery = "update options set value = '" + value + "' where property = '" + convertedProperty + "'";
+                    sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
                 DBTVSeries.Execute(sqlQuery);
                 return true;
             }

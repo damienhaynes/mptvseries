@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- Swedish -->
+<!-- English (US) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -42,4 +42,20 @@
 	<string Field="Error" Original="#Error">#Fel</string>
 	<string Field="No_items" Original="No items!">Inga objekt!</string>	
 	<string Field="Unknown" Original="Unknown">Okänd</string>
+	<string Field="wrongSkin" Original="Wrong Skin file">Fel skin fil</string>
+	<string Field="special" Original="Special">Special</string>
+	<string Field="specials" Original="Specials">Specialer</string>
+	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du håller på att permanent radera {0} fysik(a) fil(er).\nVill du fortsätta?"</string>
+	<string Field="Force_Online_Match" Original="Force Online Match">Tvinga Online Träff</string>
+	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Ladda via NewLeecher</string>
+	<string Field="Download" Original="Download">Ladda ner</string>
+	<string Field="Actions" Original="Actions">Actions</string>
+	<string Field="Options" Original="Options">Inställningar</string>
+	<string Field="Genres" Original="Genres">Genrer</string>
+	<string Field="All" Original="All">Alla</string>
+	<string Field="Latest" Original="Latest">Senaste</string>
+	<string Field="Channels" Original="Channels">Kanaler</string>
+	<string Field="Unwatched" Original="Unwatched">Ej sedda</string>
+	<string Field="Favourites" Original="Favourites">Favoriter</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Uppdatera Mediainfo av lokal(a) fil(er)</string>
 </strings>

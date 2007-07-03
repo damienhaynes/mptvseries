@@ -63,7 +63,7 @@ namespace WindowPlugins.GUITVSeries
         
         void Work(String sSeriesIDs, long nUpdateSeriesTimeStamp, string lang)
         {
-            if (sSeriesIDs != String.Empty)
+            if (sSeriesIDs.Length > 0)
             {
                 XmlNodeList nodeList = null;
                 nodeList = ZsoriParser.UpdateSeries(sSeriesIDs, lang, nUpdateSeriesTimeStamp);

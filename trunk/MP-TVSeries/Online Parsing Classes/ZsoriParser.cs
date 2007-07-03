@@ -36,14 +36,17 @@ namespace WindowPlugins.GUITVSeries
         const string langID = "&language=";
         static string selLang = string.Empty;
 
+        private ZsoriParser() { }
+
         public static string SelLanguageAsString
         {
             get
             {
-                if (selLang == string.Empty)
+                if (selLang.Length == 0)
                 {
                     int lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
                     if (lang != 0) selLang = lang.ToString();
+                    else selLang = "7"; // use english
                 }
                 return selLang;
             }

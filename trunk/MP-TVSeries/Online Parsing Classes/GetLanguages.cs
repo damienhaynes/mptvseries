@@ -28,7 +28,7 @@ namespace WindowPlugins.GUITVSeries
                         if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
                         if (node.Name == "language") lang.language = node.InnerText;
                     }
-                    if(lang.id != default(int) && lang.language != string.Empty) languages.Add(lang);
+                    if (lang.id != default(int) && lang.language.Length > 0) languages.Add(lang);
                 }
             }
         }

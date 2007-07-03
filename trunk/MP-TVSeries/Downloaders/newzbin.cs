@@ -47,7 +47,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
         public bool Search(DBEpisode dbEpisode)
         {
             m_Search = DBNewzbin.Get()[0];
-            if (m_Search[DBNewzbin.cSearchUrl] != String.Empty && System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath)))
+            if (m_Search[DBNewzbin.cSearchUrl].ToString().Length > 0 && System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath)))
             {
                 m_dbEpisode = dbEpisode;
                 worker.RunWorkerAsync();
@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
             CookieCollection cookies = new CookieCollection();
             // parse the string;
             String sFromStore = db[DBNewzbin.cCookieList];
-            while (sFromStore != String.Empty)
+            while (sFromStore.Length > 0)
             {
                 String sCookie = sFromStore.Substring(0, sFromStore.IndexOf(':'));
                 sFromStore = sFromStore.Substring(sFromStore.IndexOf(":") + 1);

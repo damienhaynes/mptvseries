@@ -55,7 +55,7 @@ namespace WindowPlugins.GUITVSeries
 
         public UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
         {
-            if (sEpisodesIDs != String.Empty)
+            if (sEpisodesIDs.Length > 0)
             {
                 XmlNodeList nodeList = null;
                 nodeList = ZsoriParser.UpdateEpisodes(sEpisodesIDs, nUpdateEpisodesTimeStamp);
@@ -108,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (null == tmpSeries || tmpSeries[DBSeries.cID] != ep[DBEpisode.cSeriesID])
                 {
-                    tmpSeries = Helper.getCorrespondingSeries(ep[DBOnlineEpisode.cSeriesID]);
+                    tmpSeries = DBSeries.Get(ep[DBOnlineEpisode.cSeriesID], false);
                 }
                 string basePath = Settings.GetPath(Settings.Path.banners);
                 string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];

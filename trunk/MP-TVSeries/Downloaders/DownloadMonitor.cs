@@ -176,7 +176,7 @@ namespace WindowPlugins.GUITVSeries.Download
                         {
                             // episode & season index matches, let's deal with the series name
                             DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
-                            int nDistance = Levenshtein.CalcEditDistance(result.parser.Matches[DBSeries.cParsedName], series[DBOnlineSeries.cPrettyName]);
+                            int nDistance = MediaPortal.Util.Levenshtein.Match(result.parser.Matches[DBSeries.cParsedName], series[DBOnlineSeries.cPrettyName]);
                             if (nDistance < nBestDistance)
                             {
                                 nBestDistance = nDistance;
@@ -232,7 +232,7 @@ namespace WindowPlugins.GUITVSeries.Download
                                 }
                             }
 
-                            if (sTargetFolder != String.Empty)
+                            if (sTargetFolder.ToString().Length > 0)
                             {
                                 // let's move the file, "beautifulizing" it
                                 try

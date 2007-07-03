@@ -87,7 +87,7 @@ namespace WindowPlugins.GUITVSeries
             if (value == null)
                 return false;
 
-            if (value.value != "0" && value.value != "")
+            if (value.value.Length > 0 && value.value != "0")
                 return true;
             else
                 return false;
@@ -310,7 +310,6 @@ namespace WindowPlugins.GUITVSeries
             m_CommitNeeded = true;
         }
 
-
         public virtual DBValue this[String fieldName]
         {
             get 
@@ -425,7 +424,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     }
 
-                if (PrimaryField.Value.Value == null || PrimaryField.Value.Value == String.Empty)
+                if (Helper.String.IsNullOrEmpty(PrimaryField.Value.Value))
                     return false;
 
                 String sWhere = " where ";
@@ -454,7 +453,7 @@ namespace WindowPlugins.GUITVSeries
                             switch (fieldPair.Value.Type)
                             {
                                 case DBField.cTypeInt:
-                                    sqlQuery += fieldPair.Key + " = " + fieldPair.Value.Value + ",";
+                                    sqlQuery += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''" : fieldPair.Value.Value + ",");
                                     break;
 
                                 case DBField.cTypeString:
@@ -669,7 +668,7 @@ namespace WindowPlugins.GUITVSeries
         public void Add(DBTable table)
         {
             AddWhat(table);
-            if (m_sFrom != String.Empty)
+            if (m_sFrom.Length > 0)
                 m_sFrom += ", ";
             m_sFrom += table.m_tableName;
         }
@@ -678,7 +677,7 @@ namespace WindowPlugins.GUITVSeries
         {
             foreach (KeyValuePair<string, DBField> field in table.m_fields)
             {
-                if (m_sWhat == String.Empty)
+                if (Helper.String.IsNullOrEmpty(m_sWhat))
                     m_sWhat += table.m_tableName + "." + field.Key;
                 else
                     m_sWhat += ", " + table.m_tableName + "." + field.Key;
@@ -688,7 +687,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void Add(String sField)
         {
-            if (m_sWhat != String.Empty)
+            if (m_sWhat.Length > 0)
                 m_sWhat += ", ";
             m_sWhat += sField;
         }
@@ -716,6 +715,16 @@ namespace WindowPlugins.GUITVSeries
         private String m_sConditions = String.Empty;
         private String m_sLimit = String.Empty;
         private String m_sOrderstring = String.Empty;
+        bool _beginGroup = false;
+        public void beginGroup()
+        {
+            _beginGroup = true;
+        }
+
+        public void endGroup()
+        {
+            m_sConditions += " ) ";
+        }
 
         public bool limitIsSet = false;
         public bool customOrderStringIsSet = false;
@@ -847,11 +856,18 @@ namespace WindowPlugins.GUITVSeries
 
         public void AddCustom(string SQLString)
         {
-            if (m_sConditions != String.Empty)
-                if(nextIsOr)
+            if (m_sConditions.Length > 0 && SQLString.Length > 0)
+            {
+                if (nextIsOr)
                     m_sConditions += " or ";
                 else
                     m_sConditions += " and ";
+            }
+            if (_beginGroup)
+            {
+                m_sConditions += " ( ";
+                _beginGroup = false;
+            }
             m_sConditions += SQLString;
         }
 
@@ -897,6 +913,10 @@ namespace WindowPlugins.GUITVSeries
                 m_db.Execute("PRAGMA full_column_names=0;\n");
                 m_db.Execute("PRAGMA short_column_names=0;\n");
                 m_db.Execute("PRAGMA temp_store = MEMORY;\n");
+
+                m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
+                m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
+                m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
 
                 MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'.");
             }

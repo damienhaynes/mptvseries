@@ -101,7 +101,7 @@ namespace WindowPlugins.GUITVSeries
         static public void Init()
         {
             string lang = DBOption.GetOptions(DBOption.cLanguage);
-            if (lang == string.Empty)
+            if (lang.Length == 0)
             {
                 MPTVSeriesLog.Write("No Translation selected, using fall back English");
                 lang = "en(us)";
@@ -111,11 +111,12 @@ namespace WindowPlugins.GUITVSeries
             path = Settings.GetPath(Settings.Path.lang);
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
-            loadTranslations(lang);
+            MPTVSeriesLog.Write("Loading Translations for ", lang, MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write(loadTranslations(lang).ToString() + " translated Strings found");
         }
         static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
         
-        static void loadTranslations(string lang)
+        public static int loadTranslations(string lang)
         {
             XmlDocument doc = new XmlDocument();
             TranslatedStrings = new Dictionary<string, string>();
@@ -126,15 +127,15 @@ namespace WindowPlugins.GUITVSeries
             {
                 doc.Load(path + "\\" + lang + ".xml");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 if (lang == "en(us)")
-                    return; // othwerise we are in an endless loop!
-                MPTVSeriesLog.Write("Cannot find Translation File: ", lang, MPTVSeriesLog.LogLevel.Normal);
+                    return 0; // othwerise we are in an endless loop!
+                MPTVSeriesLog.Write("Cannot find Translation File (or error in xml): ", lang, MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write(e.Message);
                 MPTVSeriesLog.Write("Falling back to English", MPTVSeriesLog.LogLevel.Normal);
                 DBOption.SetOptions(DBOption.cLanguage, "en(us)");
-                loadTranslations("en(us)");
-                return;
+                return loadTranslations("en(us)");
             }
             foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes)
                 if (stringEntry.NodeType == XmlNodeType.Element)
@@ -146,19 +147,20 @@ namespace WindowPlugins.GUITVSeries
                     {
                         MPTVSeriesLog.Write("Error in Translation Engine: " + ex.Message);
                     }
-            MPTVSeriesLog.Write(TranslatedStrings.Count.ToString() + " translated Strings found for " + lang);
             foreach (FieldInfo fi in fieldInfos)
             {
                 TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType,
                     new object[] { Get(fi.Name)});
                 
             }
+            int count = TranslatedStrings.Count;
             TranslatedStrings = null; // free up
+            return count;
         }
 
-        static string Get(string Field)
+        public static string Get(string Field)
         {
-            if (TranslatedStrings.ContainsKey(Field)) return TranslatedStrings[Field];
+            if (TranslatedStrings != null && TranslatedStrings.ContainsKey(Field)) return TranslatedStrings[Field];
             else
             {
                 return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));

@@ -56,7 +56,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 	    }
 
-        static private String m_filename;
+        static private String m_filename = Settings.GetPath(Settings.Path.log);
         static private StreamWriter m_LogStream;
         static private System.Windows.Forms.ListBox m_ListLog;
         static private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
@@ -74,22 +74,11 @@ namespace WindowPlugins.GUITVSeries
         static MPTVSeriesLog()
         {
 
-            String logfile = string.Empty;
 
 #if TEST
-            logfile =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            logfile += @"\MP-TVSeries.log";
-#else
-            /*
-            logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of Windows folder
-            logfile = logfile.Remove(logfile.LastIndexOf('\\')); // Get out of plugin folder
-            Directory.CreateDirectory(logfile + @"\Log");
-            logfile += @"\Log\MP-TVSeries.log";
-             */
-            logfile = Settings.GetPath(Settings.Path.log);
+            m_filename =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            m_filename += @"\MP-TVSeries.log";
 #endif
-            
-            m_filename = logfile;
             m_LogStream = File.CreateText(m_filename);
             m_LogStream.Close();
             m_LogStream.Dispose();

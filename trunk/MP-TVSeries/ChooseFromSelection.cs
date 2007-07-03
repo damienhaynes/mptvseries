@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
             textbox_ToMatch.Text = descriptor.m_sItemToMatch;
             label_Choices.Text = descriptor.m_sListLabel;
 
-            if (descriptor.m_sbtnOKLabel == String.Empty)
+            if (descriptor.m_sbtnOKLabel.Length == 0)
                 button_OK.Visible = false;
             else
             {
@@ -54,7 +54,7 @@ namespace WindowPlugins.GUITVSeries
                 button_OK.Text = descriptor.m_sbtnOKLabel;
             }
 
-            if (descriptor.m_sbtnCancelLabel == String.Empty)
+            if (descriptor.m_sbtnCancelLabel.Length == 0)
                 button_Cancel.Visible = false;
             else
             {
@@ -62,7 +62,7 @@ namespace WindowPlugins.GUITVSeries
                 button_Cancel.Text = descriptor.m_sbtnCancelLabel;
             }
 
-            if (descriptor.m_sbtnIgnoreLabel == String.Empty)
+            if (descriptor.m_sbtnIgnoreLabel.Length == 0)
                 button_Ignore.Visible = false;
             else
             {

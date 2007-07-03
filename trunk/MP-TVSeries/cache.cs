@@ -27,26 +27,19 @@ namespace WindowPlugins.GUITVSeries
             new hierarchyCache<int, hierarchyCache<DBSeries, hierarchyCache<DBSeason, DBEpisode, DBEpisode>, DBSeason>, DBSeries>();
 
 
-        static hierarchyCache<DBSeries, hierarchyCache<DBSeason, DBEpisode, DBEpisode>, DBSeason> singleSeriesRef = null;
-        static hierarchyCache<DBSeason, DBEpisode, DBEpisode> singleSeasonRef = null;
+        static hierarchyCache<DBSeries, hierarchyCache<DBSeason, DBEpisode, DBEpisode>, DBSeason> singleSeriesRef;
+        static hierarchyCache<DBSeason, DBEpisode, DBEpisode> singleSeasonRef;
 
-        public static TimeSpan totalTime = new TimeSpan();
-        public static DateTime opStart;
+        public const int maxNoObjects = 750; // if this number is reached the entire cache is dumped and started over
+        public static int currNoObjects; // (typically this will be in the 100-200 range at the most)
+        public static int Reads;
+        public static int Writes;
+        public static int Mods;
 
-        static void start()
-        {
-            opStart = DateTime.Now;
-        }
-
-        static void stop()
-        {
-            DateTime end = DateTime.Now;
-            totalTime += end - opStart;
-        }
 
         public static string getTotalTime()
         {
-            return totalTime.TotalMilliseconds.ToString() + " (" + currNoObjects.ToString() + " objects currently)";
+            return string.Format("({0} objects)", currNoObjects); 
         }
 
         static cache()
@@ -88,7 +81,6 @@ namespace WindowPlugins.GUITVSeries
 
         static void DBTable_dbUpdateOccured(string table)
         {
-            start();
             MPTVSeriesLog.Write("Cache: DB Write operation: ", table, MPTVSeriesLog.LogLevel.Debug);
             switch (table)
             {
@@ -111,14 +103,10 @@ namespace WindowPlugins.GUITVSeries
                     }
                     break;
             }
-            stop();
         }
 
-        public static int maxNoObjects = 750; //typically this will be in the 100-200 range at the most
-        public static int currNoObjects = 0;
         public static DBEpisode getEpisode(int SeriesID, int SeasonIndex, int EpisodeIndex)
         {
-            start();
             singleSeriesRef = _cache.getSubItem(SeriesID);
             DBEpisode e = null;
             if (singleSeriesRef != null)
@@ -126,68 +114,66 @@ namespace WindowPlugins.GUITVSeries
                 singleSeasonRef = singleSeriesRef.getSubItem(SeasonIndex);
                 e = singleSeasonRef == null ? null : singleSeasonRef.getItemOfSubItem(EpisodeIndex);
             }
-            stop();
+            //MPTVSeriesLog.Write("Cache: Requested Episode: " + SeriesID.ToString() + " S" + SeasonIndex.ToString() + " E" + EpisodeIndex.ToString() + (e == null ? " - Failed" : " - Sucess"), MPTVSeriesLog.LogLevel.Debug);
             return e;
 
         }
 
         public static DBSeries getSeries(int SeriesID)
         {
-           start();
            DBSeries s = _cache.getItemOfSubItem(SeriesID);
-           stop();
+           //MPTVSeriesLog.Write("Cache: Requested Series: " + SeriesID.ToString() + (s == null ? " - Failed" : " - Sucess"), MPTVSeriesLog.LogLevel.Debug);
            return s;
         }
 
         public static DBSeason getSeason(int SeriesID, int SeasonIndex)
         {
-            start();
             singleSeriesRef = _cache.getSubItem(SeriesID);
             DBSeason s = singleSeriesRef == null ? null : singleSeriesRef.getItemOfSubItem(SeasonIndex);
-            stop();
+            //MPTVSeriesLog.Write("Cache: Requested Season: " + SeriesID.ToString() + " S" + SeasonIndex.ToString() + (s == null ? " - Failed" : " - Sucess", MPTVSeriesLog.LogLevel.Debug));
             return s;
         }
 
         public static void addChangeEpisode(DBEpisode episode)
         {
-            start();
             if (episode == null) return;
             _cache.AddDummy(episode[DBSeason.cSeriesID]);
             singleSeriesRef = _cache.getSubItem(episode[DBSeason.cSeriesID]);
             singleSeriesRef.AddDummy(episode[DBSeason.cIndex]);
             // use addRaw for episode!!
+            //MPTVSeriesLog.Write("Cache: Adding/Changing Episode: " + episode[DBEpisode.cCompositeID], MPTVSeriesLog.LogLevel.Debug);
             singleSeriesRef.getSubItem(episode[DBSeason.cIndex]).AddRaw(episode[DBEpisode.cEpisodeIndex], episode);
-            stop();
         }
 
         public static void addChangeSeries(DBSeries series)
         {
-            start();
             if (series == null) return;
+            //MPTVSeriesLog.Write("Cache: Adding/Changing Series: " + series[DBSeries.cID], MPTVSeriesLog.LogLevel.Debug);
             _cache.Add(series[DBSeries.cID], series);
-            stop();
         }
 
         public static void addChangeSeason(DBSeason season)
         {
-            start();
             if (season == null) return;
             // does the series exist already, if not create a dummy
             _cache.AddDummy(season[DBSeason.cSeriesID]);
+            //MPTVSeriesLog.Write("Cache: Adding/Changing Season: " + season[DBSeason.cSeriesID] + " S" + season[DBSeason.cIndex], MPTVSeriesLog.LogLevel.Debug);
             _cache.getSubItem(season[DBSeason.cSeriesID]).Add(season[DBSeason.cIndex], season);
-            stop();
         }
 
         static void sizeChanged()
         {
             if (currNoObjects > maxNoObjects)
             {
-                start();
+                dump();
                 // empty cache (yes completely, I know its not ideal)
-                _cache.dump();
                 MPTVSeriesLog.Write("Cache: Dumped....was getting too big (" + maxNoObjects.ToString() + " objects)");
-                stop();
             }
+        }
+
+        public static void dump()
+        {
+            _cache.dump();
         }
 
         class hierarchyCache<T, S, M> : ICacheable<T> where S : ICacheable<M>, new()
@@ -244,7 +230,10 @@ namespace WindowPlugins.GUITVSeries
                     currNoObjects++;
                     cache.sizeChanged();
                 }
-                else subItems[key] = subItem;
+                else
+                {
+                    subItems[key] = subItem;
+                }
             }
 
             public void Add(int key, M subItem)
@@ -264,6 +253,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     subItems[key].fullItem = subItem;
                 }
+                
             }
             public void AddDummy(int key)
             {

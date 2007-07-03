@@ -184,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                if (base[cCurrentBannerFileName] == String.Empty)
+                if (Helper.String.IsNullOrEmpty(base[cCurrentBannerFileName]))
                     return String.Empty;
 
                 //if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
@@ -235,7 +235,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 List<String> outList = new List<string>();
                 String sList = base[cBannerFileNames];
-                if (sList == String.Empty)
+                if (Helper.String.IsNullOrEmpty(sList))
                     return outList;
 
                 String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -257,7 +257,7 @@ namespace WindowPlugins.GUITVSeries
                 for(int i=0; i<value.Count; i++)
                 {
                     value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                    if (sIn == String.Empty)
+                    if (Helper.String.IsNullOrEmpty(sIn))
                         sIn += value[i];
                     else
                         sIn += "," + value[i];
@@ -297,8 +297,8 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if(Settings.isConfig || DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                    conditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
+                //if(!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                //    conditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
 
 
                 if(!Settings.isConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
@@ -307,16 +307,42 @@ namespace WindowPlugins.GUITVSeries
                 if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
 
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                {
+                    SQLCondition fullSubCond = new SQLCondition();
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    conditions.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                }
+
+
                 return conditions;
             }
         }
 
         public static string stdGetSQL(SQLCondition condition, bool selectFull)
         {
+            return stdGetSQL(condition, selectFull, true);
+        }
+        public static string stdGetSQL(SQLCondition condition, bool selectFull, bool includeStdCond)
+        {
             string orderBy = !condition.customOrderStringIsSet
                   ? " order by " + Q(cIndex)
                   : condition.orderString;
-            condition.AddCustom(stdConditions.ConditionsSQLString);
+
+            if (includeStdCond)
+            {
+                condition.AddCustom(stdConditions.ConditionsSQLString);
+
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                {
+                    SQLCondition fullSubCond = new SQLCondition();
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    condition.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                }
+            }
+
             if(selectFull)
                return "select " + new SQLWhat(new DBSeason()) + condition + orderBy + condition.limitString;
             else
@@ -328,9 +354,29 @@ namespace WindowPlugins.GUITVSeries
             return Get(nSeriesID, new SQLCondition());
         }
 
+        /// <summary>
+        /// does not use StdCond
+        /// </summary>
+        /// <param name="seriesID"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static DBSeason getRaw(int seriesID, int index)
+        {
+            SQLCondition cond = new SQLCondition(new DBSeason(), cSeriesID, seriesID, SQLConditionType.Equal);
+            cond.Add(new DBSeason(), cIndex, index, SQLConditionType.Equal);
+            List<DBSeason> res = Get(cond, false);
+            if (res.Count > 0)
+                return res[0];
+            else
+                return null;
+        }
         public static List<DBSeason> Get(SQLCondition condition)
         {
-            string sqlQuery = stdGetSQL(condition, true);
+            return Get(condition, true);
+        }
+        public static List<DBSeason> Get(SQLCondition condition, bool includeStdCond)
+        {
+            string sqlQuery = stdGetSQL(condition, true, includeStdCond);
             //MPTVSeriesLog.Write(sqlQuery);
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeason> outList = new List<DBSeason>();

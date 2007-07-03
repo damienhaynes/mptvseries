@@ -74,6 +74,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.lblClearDB = new System.Windows.Forms.LinkLabel();
             this.checkBox_ShowHidden = new System.Windows.Forms.CheckBox();
             this.treeView_Library = new System.Windows.Forms.TreeView();
             this.contextMenuStrip_DetailsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -98,6 +99,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.chkBlankBanners = new System.Windows.Forms.CheckBox();
             this.linkExWatched = new System.Windows.Forms.LinkLabel();
             this.label37 = new System.Windows.Forms.Label();
             this.comboBox_preferedBannerType = new System.Windows.Forms.ComboBox();
@@ -185,6 +187,8 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.lnkLogoImp = new System.Windows.Forms.LinkLabel();
+            this.lnkLogoExport = new System.Windows.Forms.LinkLabel();
             this.btnLogoTemplate = new System.Windows.Forms.Button();
             this.btnLogoEdit = new System.Windows.Forms.Button();
             this.btnLogoDown = new System.Windows.Forms.Button();
@@ -379,6 +383,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.SelectedIndex = 0;
             this.tabControl_Details.Size = new System.Drawing.Size(692, 769);
             this.tabControl_Details.TabIndex = 64;
+            this.tabControl_Details.SelectedIndexChanged += new System.EventHandler(this.tabControl_Details_SelectedIndexChanged);
             // 
             // tabPage_Details
             // 
@@ -399,6 +404,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.lblClearDB);
             this.splitContainer2.Panel1.Controls.Add(this.checkBox_ShowHidden);
             this.splitContainer2.Panel1.Controls.Add(this.treeView_Library);
             // 
@@ -413,6 +419,18 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Size = new System.Drawing.Size(684, 743);
             this.splitContainer2.SplitterDistance = 196;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // lblClearDB
+            // 
+            this.lblClearDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblClearDB.AutoSize = true;
+            this.lblClearDB.Location = new System.Drawing.Point(132, 723);
+            this.lblClearDB.Name = "lblClearDB";
+            this.lblClearDB.Size = new System.Drawing.Size(54, 13);
+            this.lblClearDB.TabIndex = 153;
+            this.lblClearDB.TabStop = true;
+            this.lblClearDB.Text = "Empty DB";
+            this.lblClearDB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblClearDB_LinkClicked);
             // 
             // checkBox_ShowHidden
             // 
@@ -507,12 +525,12 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_dblocation.Location = new System.Drawing.Point(172, 1);
+            this.textBox_dblocation.Location = new System.Drawing.Point(181, 1);
             this.textBox_dblocation.Name = "textBox_dblocation";
             this.textBox_dblocation.ReadOnly = true;
-            this.textBox_dblocation.Size = new System.Drawing.Size(280, 20);
+            this.textBox_dblocation.Size = new System.Drawing.Size(271, 20);
             this.textBox_dblocation.TabIndex = 151;
-            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Enter path to your uTorrent exe");
+            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Database location");
             // 
             // label28
             // 
@@ -718,6 +736,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.chkBlankBanners);
             this.panel_OnlineData.Controls.Add(this.linkExWatched);
             this.panel_OnlineData.Controls.Add(this.label37);
             this.panel_OnlineData.Controls.Add(this.comboBox_preferedBannerType);
@@ -741,10 +760,22 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.TabIndex = 157;
             this.panel_OnlineData.Tag = "Online Data Sync";
             // 
+            // chkBlankBanners
+            // 
+            this.chkBlankBanners.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkBlankBanners.Location = new System.Drawing.Point(3, 142);
+            this.chkBlankBanners.Name = "chkBlankBanners";
+            this.chkBlankBanners.Size = new System.Drawing.Size(415, 17);
+            this.chkBlankBanners.TabIndex = 22;
+            this.chkBlankBanners.Text = "In addition to localized and english banners, also get blank banners";
+            this.chkBlankBanners.UseVisualStyleBackColor = true;
+            this.chkBlankBanners.CheckedChanged += new System.EventHandler(this.chkBlankBanners_CheckedChanged);
+            // 
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(160, 243);
+            this.linkExWatched.Location = new System.Drawing.Point(159, 257);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(112, 13);
             this.linkExWatched.TabIndex = 21;
@@ -793,7 +824,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkFileDeletion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkFileDeletion.Location = new System.Drawing.Point(4, 169);
+            this.checkFileDeletion.Location = new System.Drawing.Point(3, 183);
             this.checkFileDeletion.Name = "checkFileDeletion";
             this.checkFileDeletion.Size = new System.Drawing.Size(318, 17);
             this.checkFileDeletion.TabIndex = 18;
@@ -804,7 +835,7 @@ namespace WindowPlugins.GUITVSeries
             // linkDelUpdateTime
             // 
             this.linkDelUpdateTime.AutoSize = true;
-            this.linkDelUpdateTime.Location = new System.Drawing.Point(160, 225);
+            this.linkDelUpdateTime.Location = new System.Drawing.Point(159, 239);
             this.linkDelUpdateTime.Name = "linkDelUpdateTime";
             this.linkDelUpdateTime.Size = new System.Drawing.Size(128, 13);
             this.linkDelUpdateTime.TabIndex = 17;
@@ -815,7 +846,7 @@ namespace WindowPlugins.GUITVSeries
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(3, 195);
+            this.label26.Location = new System.Drawing.Point(2, 209);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(85, 13);
             this.label26.TabIndex = 16;
@@ -825,7 +856,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboOnlineLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboOnlineLang.FormattingEnabled = true;
-            this.comboOnlineLang.Location = new System.Drawing.Point(94, 192);
+            this.comboOnlineLang.Location = new System.Drawing.Point(93, 206);
             this.comboOnlineLang.Name = "comboOnlineLang";
             this.comboOnlineLang.Size = new System.Drawing.Size(121, 21);
             this.comboOnlineLang.TabIndex = 15;
@@ -834,7 +865,7 @@ namespace WindowPlugins.GUITVSeries
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(3, 243);
+            this.linkImpWatched.Location = new System.Drawing.Point(2, 257);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(111, 13);
             this.linkImpWatched.TabIndex = 14;
@@ -846,7 +877,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_doFolderWatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 147);
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(3, 161);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(415, 17);
             this.checkBox_doFolderWatch.TabIndex = 13;
@@ -857,7 +888,7 @@ namespace WindowPlugins.GUITVSeries
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 225);
+            this.linkLabel1.Location = new System.Drawing.Point(2, 239);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(132, 13);
             this.linkLabel1.TabIndex = 12;
@@ -1806,6 +1837,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.lnkLogoImp);
+            this.groupBox7.Controls.Add(this.lnkLogoExport);
             this.groupBox7.Controls.Add(this.btnLogoTemplate);
             this.groupBox7.Controls.Add(this.btnLogoEdit);
             this.groupBox7.Controls.Add(this.btnLogoDown);
@@ -1820,9 +1853,34 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Logo Configuration";
             // 
+            // lnkLogoImp
+            // 
+            this.lnkLogoImp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lnkLogoImp.AutoSize = true;
+            this.lnkLogoImp.Location = new System.Drawing.Point(296, 124);
+            this.lnkLogoImp.Name = "lnkLogoImp";
+            this.lnkLogoImp.Size = new System.Drawing.Size(45, 13);
+            this.lnkLogoImp.TabIndex = 8;
+            this.lnkLogoImp.TabStop = true;
+            this.lnkLogoImp.Text = "Import...";
+            this.lnkLogoImp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLogoImp_LinkClicked);
+            // 
+            // lnkLogoExport
+            // 
+            this.lnkLogoExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lnkLogoExport.AutoSize = true;
+            this.lnkLogoExport.Location = new System.Drawing.Point(244, 124);
+            this.lnkLogoExport.Name = "lnkLogoExport";
+            this.lnkLogoExport.Size = new System.Drawing.Size(46, 13);
+            this.lnkLogoExport.TabIndex = 7;
+            this.lnkLogoExport.TabStop = true;
+            this.lnkLogoExport.Text = "Export...";
+            this.lnkLogoExport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLogoExport_LinkClicked);
+            // 
             // btnLogoTemplate
             // 
-            this.btnLogoTemplate.Location = new System.Drawing.Point(269, 119);
+            this.btnLogoTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogoTemplate.Location = new System.Drawing.Point(353, 119);
             this.btnLogoTemplate.Name = "btnLogoTemplate";
             this.btnLogoTemplate.Size = new System.Drawing.Size(75, 23);
             this.btnLogoTemplate.TabIndex = 6;
@@ -1832,9 +1890,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // btnLogoEdit
             // 
-            this.btnLogoEdit.Location = new System.Drawing.Point(448, 119);
+            this.btnLogoEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogoEdit.Location = new System.Drawing.Point(518, 119);
             this.btnLogoEdit.Name = "btnLogoEdit";
-            this.btnLogoEdit.Size = new System.Drawing.Size(90, 23);
+            this.btnLogoEdit.Size = new System.Drawing.Size(63, 23);
             this.btnLogoEdit.TabIndex = 5;
             this.btnLogoEdit.Text = "Edit";
             this.btnLogoEdit.UseVisualStyleBackColor = true;
@@ -1862,22 +1921,23 @@ namespace WindowPlugins.GUITVSeries
             // 
             // btnrmvLogo
             // 
-            this.btnrmvLogo.Location = new System.Drawing.Point(350, 120);
+            this.btnrmvLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnrmvLogo.Location = new System.Drawing.Point(448, 119);
             this.btnrmvLogo.Name = "btnrmvLogo";
-            this.btnrmvLogo.Size = new System.Drawing.Size(92, 23);
+            this.btnrmvLogo.Size = new System.Drawing.Size(64, 23);
             this.btnrmvLogo.TabIndex = 2;
-            this.btnrmvLogo.Text = "Remove LogoRule";
+            this.btnrmvLogo.Text = "Remove";
             this.btnrmvLogo.UseVisualStyleBackColor = true;
             this.btnrmvLogo.Click += new System.EventHandler(this.btnrmvLogo_Click);
             // 
             // addLogo
             // 
             this.addLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addLogo.Location = new System.Drawing.Point(544, 119);
+            this.addLogo.Location = new System.Drawing.Point(587, 119);
             this.addLogo.Name = "addLogo";
-            this.addLogo.Size = new System.Drawing.Size(110, 23);
+            this.addLogo.Size = new System.Drawing.Size(67, 23);
             this.addLogo.TabIndex = 1;
-            this.addLogo.Text = "Add LogoRule";
+            this.addLogo.Text = "Add";
             this.addLogo.UseVisualStyleBackColor = true;
             this.addLogo.Click += new System.EventHandler(this.addLogo_Click);
             // 
@@ -2456,7 +2516,7 @@ namespace WindowPlugins.GUITVSeries
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(328, 23);
+            this.label2.Location = new System.Drawing.Point(336, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 2;
@@ -2464,7 +2524,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // numericUpDown_AutoOnlineDataRefresh
             // 
-            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(284, 18);
+            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(292, 18);
             this.numericUpDown_AutoOnlineDataRefresh.Name = "numericUpDown_AutoOnlineDataRefresh";
             this.numericUpDown_AutoOnlineDataRefresh.Size = new System.Drawing.Size(38, 20);
             this.numericUpDown_AutoOnlineDataRefresh.TabIndex = 1;
@@ -2539,6 +2599,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.Size = new System.Drawing.Size(218, 131);
             this.panel_newssearch.TabIndex = 4;
             this.panel_newssearch.Tag = "News Search";
+            this.panel_newssearch.Visible = false;
             // 
             // label33
             // 
@@ -2631,6 +2692,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.Size = new System.Drawing.Size(448, 59);
             this.panel_newsroot.TabIndex = 3;
             this.panel_newsroot.Tag = "News";
+            this.panel_newsroot.Visible = false;
             // 
             // button_NewsDownloadPathBrowse
             // 
@@ -2812,6 +2874,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentsearch.Size = new System.Drawing.Size(233, 129);
             this.panel_torrentsearch.TabIndex = 1;
             this.panel_torrentsearch.Tag = "Torrent Searches";
+            this.panel_torrentsearch.Visible = false;
             // 
             // textBox_TorrentDetailsRegex
             // 
@@ -3013,6 +3076,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -3265,5 +3329,9 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.ComboBox comboBox_preferedBannerType;
         private System.Windows.Forms.Button btnLogoTemplate;
+        private System.Windows.Forms.CheckBox chkBlankBanners;
+        private System.Windows.Forms.LinkLabel lblClearDB;
+        private System.Windows.Forms.LinkLabel lnkLogoImp;
+        private System.Windows.Forms.LinkLabel lnkLogoExport;
     }
 }
