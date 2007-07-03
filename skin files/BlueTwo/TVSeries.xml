@@ -76,6 +76,21 @@
 	  <colordiffuse>80FFFFFF</colordiffuse>
 		</control>
 		
+		<!-- Episode Images...if this is not defined the ep image will be appended to the generated logos -->		
+		<!-- <control>
+			<type>image</type>
+			<description>Episode Image</description>
+			<id>67</id>
+			<posX>40</posX>
+			<posY>380</posY>
+			<width>300</width>
+			<height>50</height>
+			<texture></texture>
+		  <centered>yes</centered>
+		  <keepaspectratio>yes</keepaspectratio>
+	  <colordiffuse>80FFFFFF</colordiffuse>
+		</control> -->
+		
 	<!-- season image background -->
 	 <control>
       <type>image</type>
