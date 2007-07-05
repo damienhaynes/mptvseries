@@ -13,11 +13,29 @@ namespace WindowPlugins.GUITVSeries
         public loadingDisplay()
         {
             InitializeComponent();
+            ShowWaiting();
         }
 
-        public void ShowWaiting()
+        public new void Close()
         {
+            this.Dispose();
+            base.Close();
+        }
+
+        void ShowWaiting()
+        {
+            this.series.Text = "0 " + Translation.Series_Plural;
+            this.season.Text = "0 " + Translation.Seasons;
+            this.episodes.Text = "0 " + Translation.Episodes;
             this.Show();
+            this.Refresh();
+        }
+
+        public void updateStats(int series, int seasons, int episodes)
+        {
+            this.series.Text = series.ToString() + " " + Translation.Series_Plural;
+            this.season.Text = seasons.ToString() + " " + Translation.Seasons;
+            this.episodes.Text = episodes.ToString() + " " + Translation.Episodes;
             this.Refresh();
         }
 

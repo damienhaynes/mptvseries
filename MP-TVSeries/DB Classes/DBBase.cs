@@ -153,23 +153,36 @@ namespace WindowPlugins.GUITVSeries
     // field class - used to hold information
     public class DBField
     {
-        public const String cTypeInt = "integer";
-        public const String cTypeString = "text";
+        public enum cType
+        {
+            Int,
+            String
+        }
+
+        // the following are remainders to easily change the type (because it was a string! comparision before)
+        public const cType cTypeInt = cType.Int; 
+        public const cType cTypeString = cType.String;
 
         // private access
-        private String m_type;
+        private cType m_type;
         private bool m_primaryKey;
         private DBValue m_value;
 
-        public DBField(String type)
+        public DBField(cType type)
         {
             m_type = type;
             m_primaryKey = false;
         }
-        public DBField(String type, bool primaryKey)
+        public DBField(cType type, bool primaryKey)
         {
             m_type = type;
             m_primaryKey = primaryKey;
+        }
+
+        public DBField(DBFieldType dbFieldT)
+        {
+            m_type = dbFieldT.Type;
+            m_primaryKey = dbFieldT.Primary;
         }
 
         public bool Primary
@@ -178,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
             set { this.m_primaryKey = value; }
         }
 
-        public String Type
+        public cType Type
         {
             get { return this.m_type; }
             set { this.m_type = value; }
@@ -192,6 +205,13 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
+    public struct DBFieldType
+    {
+        public DBField.cType Type;
+        public bool Primary;
+
+    }
+
     // table class - used as a base for table objects (series, episodes, etc)
     // holds a field hash table, includes an update mechanism to keep the DB tables in sync
     public class DBTable
@@ -204,48 +224,76 @@ namespace WindowPlugins.GUITVSeries
         public delegate void dbUpdateOccuredDelegate(string table);
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
+        protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
+        
         public DBTable(string tableName)
         {
+            // this base constructor was very expensive
+            // we now cache the result for all objects : dbtable and only redo it if an alter table occured (this drastically cut down the number of sql statements)
+            // this piece of code alone took over 30% of the time on my machine when entering config and newing up all the episodes
+            
+            Dictionary<string, DBFieldType> cachedForTable;
             m_tableName = tableName;
             m_fields = new Dictionary<string, DBField>();
-            // load up fields from the table
-            SQLiteResultSet results;
-            results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
-            if (results != null && results.Rows.Count > 0) 
+            if (fields.ContainsKey(tableName)) // good, cached, this happens 99% of the time
             {
-                // we have the table definition, parse it for names/types
-                String sCreateTable = results.Rows[0].fields[0];
-                String RegExp = @"CREATE TABLE .*?\((.*?)\)";
-                Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                Match tablematch = Engine.Match(sCreateTable);
-                if (tablematch.Success)
-                {
-                    String sParameters = tablematch.Groups[1].Value;
-                    // we have the list of parameters, parse them
-                    RegExp = @"([^\s,]+) ([^\s,]+)( primary key)?";
-                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                    MatchCollection matches = Engine.Matches(sParameters);
-                    foreach (Match parammatch in matches) 
-                    {
-                        String sName = parammatch.Groups[1].Value;
-                        String sType = parammatch.Groups[2].Value;
-                        bool bPrimary = false;
-                        if (parammatch.Groups[3].Success)
-                            bPrimary = true;
-                        if (!m_fields.ContainsKey(sName)) {
-                            m_fields.Add(sName, new DBField(sType, bPrimary));
-                        }
-                    }
-                }
-                else 
-                {
-                    MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
-                }
-
-
+                cachedForTable = fields[tableName];
+                foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
+                    if (!m_fields.ContainsKey(entry.Key))
+                        m_fields.Add(entry.Key, new DBField(entry.Value));
             }
-            else {
-                // no tables, assume it's going to be created later (using AddColumn)
+            else // we have to get it, happens when the first object is created or after an alter table
+            {
+                cachedForTable = new Dictionary<string, DBFieldType>();
+                // load up fields from the table
+                SQLiteResultSet results;
+                results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
+                if (results != null && results.Rows.Count > 0)
+                {
+                    // we have the table definition, parse it for names/types
+                    String sCreateTable = results.Rows[0].fields[0];
+                    String RegExp = @"CREATE TABLE .*?\((.*?)\)";
+                    Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                    Match tablematch = Engine.Match(sCreateTable);
+                    if (tablematch.Success)
+                    {
+                        String sParameters = tablematch.Groups[1].Value;
+                        // we have the list of parameters, parse them
+                        RegExp = @"([^\s,]+) ([^\s,]+)( primary key)?";
+                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                        MatchCollection matches = Engine.Matches(sParameters);
+                        foreach (Match parammatch in matches)
+                        {
+                            String sName = parammatch.Groups[1].Value;
+                            String sType = parammatch.Groups[2].Value;
+                            bool bPrimary = false;
+                            if (parammatch.Groups[3].Success)
+                                bPrimary = true;
+
+                            DBFieldType cachedInfo = new DBFieldType();
+                            cachedInfo.Primary = bPrimary;
+                            cachedInfo.Type = sType == "integer" ? DBField.cTypeInt : DBField.cType.String;
+
+                            if (!m_fields.ContainsKey(sName))
+                            {
+                                m_fields.Add(sName, new DBField(cachedInfo));
+                            }
+
+                            cachedForTable.Add(sName, cachedInfo);
+                        }
+                        lock(fields)
+                            fields.Add(tableName, cachedForTable);
+                    }
+                    else
+                    {
+                        MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
+                    }
+
+                }
+                else
+                {
+                    // no tables, assume it's going to be created later (using AddColumn)
+                }
             }
         }
 
@@ -269,6 +317,10 @@ namespace WindowPlugins.GUITVSeries
                         // table already exists, alter it
                         String sQuery = "ALTER TABLE " + m_tableName + " ADD " + sName + " " + field.Type;
                         DBTVSeries.Execute(sQuery);
+
+                        // delete the s_fields cache so newed up objects get the right fields
+                        lock(fields)
+                            fields.Remove(m_tableName);
                     }
                     else
                     {
@@ -362,15 +414,39 @@ namespace WindowPlugins.GUITVSeries
             return sField;
         }
 
+        //public bool Read(ref SQLiteResultSet records, int index)
+        //{
+        //    if (records.Rows.Count > 0)
+        //    {
+        //        foreach (KeyValuePair<string, DBField> field in m_fields)
+        //        {
+        //            if (records.ColumnIndices.ContainsKey(field.Key))
+        //                field.Value.Value = DatabaseUtility.Get(records, index, field.Key);
+        //            else
+        //                field.Value.Value = DatabaseUtility.Get(records, index, m_tableName + "." + field.Key);
+        //        }
+        //        m_CommitNeeded = false;
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
         public bool Read(ref SQLiteResultSet records, int index)
         {
-            if (records.Rows.Count > 0)
+            if (records.Rows.Count > 0 || records.Rows.Count < index)
             {
+                SQLiteResultSet.Row row = records.Rows[index];
+                string res = null;
+                int iCol = 0;
                 foreach (KeyValuePair<string, DBField> field in m_fields)
                 {
                     if (records.ColumnIndices.ContainsKey(field.Key))
-                        field.Value.Value = DatabaseUtility.Get(records, index, field.Key);
-                    else
+                    {
+                        iCol = (int)records.ColumnIndices[field.Key];
+                        res = row.fields[iCol];
+                        field.Value.Value = res == null ? string.Empty : res;
+                    }
+                    else // I don't get this? tablename.field ???
                         field.Value.Value = DatabaseUtility.Get(records, index, m_tableName + "." + field.Key);
                 }
                 m_CommitNeeded = false;
