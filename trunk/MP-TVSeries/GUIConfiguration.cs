@@ -57,8 +57,9 @@ namespace WindowPlugins.GUITVSeries
         List<logicalView> availViews = new List<logicalView>();
         logicalView selectedView = null;
         logicalViewStep selectedViewStep = null;
-        loadingDisplay load = new loadingDisplay();
+        loadingDisplay load = null;
         List<Language> onlineLanguages = new List<Language>();
+        bool initLoading = true;
 
         public ConfigurationForm()
         {
@@ -70,12 +71,19 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+
+            TimeSpan t = new TimeSpan();
+            DateTime start = DateTime.Now;
+            load = new loadingDisplay();
             InitSettingsTreeAndPanes();
             InitExtraTreeAndPanes();
             LoadImportPathes();
             LoadExpressions();
             LoadReplacements();
-            LoadTree();
+            initLoading = false;
+            load.Close();
+            t = DateTime.Now - start;
+            MPTVSeriesLog.Write(t.TotalMilliseconds.ToString());
         }
 
 
@@ -458,17 +466,20 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadTree()
         {
-            //load.ShowWaiting();
+            if(null == load) load = new loadingDisplay();
             this.SuspendLayout();
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
             SQLCondition condition = new SQLCondition();
             List<DBSeries> seriesList = DBSeries.Get(condition);
+            load.updateStats(seriesList.Count, 0, 0);
             List<DBSeason> altSeasonList = DBSeason.Get(new SQLCondition(), false);
+            load.updateStats(seriesList.Count, altSeasonList.Count, 0);
             List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false);
+            load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
             if (seriesList.Count == 0)
             {
-                load.Close();
+                if (initLoading) load.Close();
                 return;
             }
             foreach (DBSeries series in seriesList)
@@ -539,7 +550,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             this.ResumeLayout();
-            //load.Close();
+            if (initLoading) load.Close();
         }
 
         #endregion
