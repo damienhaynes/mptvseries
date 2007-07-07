@@ -317,10 +317,6 @@ namespace WindowPlugins.GUITVSeries
                         // table already exists, alter it
                         String sQuery = "ALTER TABLE " + m_tableName + " ADD " + sName + " " + field.Type;
                         DBTVSeries.Execute(sQuery);
-
-                        // delete the s_fields cache so newed up objects get the right fields
-                        lock(fields)
-                            fields.Remove(m_tableName);
                     }
                     else
                     {
@@ -329,6 +325,9 @@ namespace WindowPlugins.GUITVSeries
                         String sQuery = "CREATE TABLE " + m_tableName + " (" + sName + " " + field.Type + (field.Primary ? " primary key)" : ")");
                         DBTVSeries.Execute(sQuery);
                     }
+                    // delete the s_fields cache so newed up objects get the right fields
+                    lock (fields)
+                        fields.Remove(m_tableName);
                     m_fields.Add(sName, field);
                     return true;
                 }
