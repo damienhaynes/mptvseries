@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -208,86 +209,27 @@ namespace WindowPlugins.GUITVSeries
 
     class perfana
     {
-        static DateTime starttime = new DateTime();
-        public static void start()
+        static Stopwatch timer = new Stopwatch();
+
+        public static void Start()
         {
-            starttime = DateTime.Now;
+            timer.Start();
         }
 
-        public static string measorFromStart()
+        public static void Stop()
         {
-            return getTimeFromStart().ToString();
+            timer.Stop();
         }
 
-        public static int getTimeFromStart()
+        public static void logMeasure(MPTVSeriesLog.LogLevel level)
         {
-            if (starttime.Equals(default(DateTime))) return 0;
-            TimeSpan t = DateTime.Now - starttime;
-            return (int)t.TotalMilliseconds;
+            decimal micro = timer.Elapsed.Ticks / 10M;
+            MPTVSeriesLog.Write(string.Format("Code Measurement:  {0} us {1} ms", micro, timer.ElapsedMilliseconds), level);
         }
 
-        public static void writeSimple(string entry)
+        public static void Reset()
         {
-            // get the caller method
-            //System.Diagnostics.StackFrame fr = new System.Diagnostics.StackFrame(1, true);
-            //System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(fr);
-            //string caller = String.Format("{0} {1}", fr.GetMethod().Name,
-            //                                       st.ToString());
-            DateTime now = DateTime.Now;
-            MPTVSeriesLog.Write(" - " + now.Second.ToString() + ":" + now.Millisecond.ToString() + " .... " + entry);
-        }
-
-        static Dictionary<string, codeAreaMeasurement> codeAreas = null;
-        public static void clearAllCodeMeasurements()
-        {
-            codeAreas = null;
-        }
-        public static void measureCodeArea(string name, bool start)
-        {
-            if (null == codeAreas) codeAreas = new Dictionary<string, codeAreaMeasurement>();
-            if (!codeAreas.ContainsKey(name))
-            {
-                codeAreas.Add(name, new codeAreaMeasurement());
-            }
-            if (start)
-                codeAreas[name].lastStart = DateTime.Now;
-            else
-            {
-                TimeSpan t = DateTime.Now - codeAreas[name].lastStart;
-                codeAreas[name].totalTime += t.TotalMilliseconds;
-            }
-            
-        }
-
-        public static string getCodeAreaMeasurement(string name)
-        {
-            if (codeAreas == null) return string.Empty;
-            if (codeAreas.ContainsKey(name))
-            {
-                return codeAreas[name].totalTime.ToString();
-            }
-            else return string.Empty;
-        }
-
-        public static List<string> getAllAreaResults()
-        {
-            List<string> results = new List<string>();
-            if (codeAreas == null) return results;
-            foreach (KeyValuePair<string, codeAreaMeasurement> res in codeAreas)
-                results.Add("-> " + res.Key + ": " + res.Value.totalTime.ToString());
-            return results;
-        }
-
-        public static void writeAllAreaResults()
-        {
-            foreach (string s in getAllAreaResults())
-                MPTVSeriesLog.Write(s);
-        }
-
-        public class codeAreaMeasurement
-        {
-            public double totalTime = default(double);
-            public DateTime lastStart = default(DateTime);
+            timer.Reset();
         }
     }
 }

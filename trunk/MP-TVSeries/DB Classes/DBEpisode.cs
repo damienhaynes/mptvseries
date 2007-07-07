@@ -476,7 +476,7 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
 
                     }
-                    else MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString() + " Time in ms: " + perfana.measorFromStart(), MPTVSeriesLog.LogLevel.Normal);
+                    else MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
                     Commit();
                     
