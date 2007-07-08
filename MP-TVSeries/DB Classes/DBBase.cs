@@ -272,7 +272,7 @@ namespace WindowPlugins.GUITVSeries
 
                             DBFieldType cachedInfo = new DBFieldType();
                             cachedInfo.Primary = bPrimary;
-                            cachedInfo.Type = sType == "integer" ? DBField.cTypeInt : DBField.cType.String;
+                            cachedInfo.Type = (sType.ToLower() == "int" || sType.ToLower() == "integer") ? DBField.cTypeInt : DBField.cType.String;
 
                             if (!m_fields.ContainsKey(sName))
                             {
