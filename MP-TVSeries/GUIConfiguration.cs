@@ -111,6 +111,7 @@ namespace WindowPlugins.GUITVSeries
 
             splitContainer1.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
+            nudWatchedAfter.Value = DBOption.GetOptions(DBOption.cWatchedAfter);
             textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cView_PluginName);
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
@@ -2684,6 +2685,11 @@ namespace WindowPlugins.GUITVSeries
 
                 MessageBox.Show("Logos sucessfully imported");
             }
+        }
+
+        private void nudWatchedAfter_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cWatchedAfter, (int)nudWatchedAfter.Value);
         }
 
     }

@@ -122,7 +122,7 @@ namespace MediaPortal.GUI.Video
         }
 
         #endregion
-        
+
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
@@ -174,8 +174,8 @@ namespace MediaPortal.GUI.Video
         private String m_sFormatEpisodeTitle = String.Empty;
         private String m_sFormatEpisodeSubtitle = String.Empty;
         private String m_sFormatEpisodeMain = String.Empty;
-        
-#region Skin Variables
+
+        #region Skin Variables
         [SkinControlAttribute(2)]
         protected GUIButtonControl m_Button_Back = null;
 
@@ -331,7 +331,7 @@ namespace MediaPortal.GUI.Video
             {
                 m_LastUpdateScan = DateTime.Parse(DBOption.GetOptions(DBOption.cUpdateScanLastTime));
             }
-            catch {}
+            catch { }
 
             if (DBOption.GetOptions(DBOption.cAutoUpdateOnlineData))
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
@@ -393,7 +393,7 @@ namespace MediaPortal.GUI.Video
                 {
                     sOut += sFormat.Substring(0, nTagStart);
                     sFormat = sFormat.Substring(nTagStart);
-                    
+
                     int nTagEnd = sFormat.IndexOf('>');
                     if (nTagEnd != -1)
                     {
@@ -441,13 +441,13 @@ namespace MediaPortal.GUI.Video
                                             if (sFieldName == DBSeason.cIndex && source[sFieldName] == 0)
                                             {
                                                 sOut += Translation.specials;
-                                                if(sOut.Contains(Translation.Season + " " + Translation.specials))
+                                                if (sOut.Contains(Translation.Season + " " + Translation.specials))
                                                     sOut = sOut.Replace(Translation.Season + " " + Translation.specials, Translation.specials);
-                                                else if(sOut.Contains("Season " + Translation.specials))
+                                                else if (sOut.Contains("Season " + Translation.specials))
                                                     sOut = sOut.Replace("Season " + Translation.specials, Translation.specials);
                                             }
                                             else
-                                            sOut += source[sFieldName];
+                                                sOut += source[sFieldName];
                                         }
                                     }
                                     break;
@@ -478,8 +478,8 @@ namespace MediaPortal.GUI.Video
                                                     sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
                                                     break;
                                                 case DBOnlineEpisode.cEpisodeIndex:
-                                                        // let's make them double digets
-                                                        sOut += System.Int32.Parse(source[sFieldName]).ToString("00");
+                                                    // let's make them double digets
+                                                    sOut += System.Int32.Parse(source[sFieldName]).ToString("00");
                                                     break;
                                                 default:
                                                     sOut += source[sFieldName];
@@ -556,7 +556,7 @@ namespace MediaPortal.GUI.Video
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 48);
                     gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    if(season[DBSeason.cIndex] == 0)
+                    if (season[DBSeason.cIndex] == 0)
                         gph.DrawString(Translation.specials, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
                     else
                         gph.DrawString(Translation.Season + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
@@ -589,40 +589,40 @@ namespace MediaPortal.GUI.Video
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Normal);
                 switch (this.listLevel)
                 {
-                        #region Group
-                        case Listlevel.Group:
+                    #region Group
+                    case Listlevel.Group:
+                        {
+                            // these are groups of certain categories, eg. Genres
+
+                            // always list mode
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                            int selectedIndex = -1;
+                            // view handling
+                            List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
+
+                            for (int index = 0; index < items.Count; index++)
                             {
-                                // these are groups of certain categories, eg. Genres
+                                bEmpty = false;
+                                GUIListItem item = new GUIListItem(items[index]);
+                                if (item.Label.Length == 0) item.Label = Translation.Unknown;
+                                item.TVTag = items[index];
+                                item.IsRemote = true;
+                                item.IsDownloading = true;
 
-                                // always list mode
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                                int selectedIndex = -1;
-                                // view handling
-                                List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
+                                // also display fist logo in list directly
+                                item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
 
-                                for (int index = 0; index < items.Count; index++)
-                                {
-                                    bEmpty = false;
-                                    GUIListItem item = new GUIListItem(items[index]);
-                                    if (item.Label.Length == 0) item.Label = Translation.Unknown;
-                                    item.TVTag = items[index];
-                                    item.IsRemote = true;
-                                    item.IsDownloading = true;
+                                this.m_Facade.Add(item);
 
-                                    // also display fist logo in list directly
-                                    item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
-
-                                    this.m_Facade.Add(item);
-
-                                    if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
-                                        selectedIndex = index;
-                                }
-                                if (selectedIndex > -1)
-                                    this.m_Facade.SelectedListItemIndex = selectedIndex;
+                                if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
+                                    selectedIndex = index;
                             }
-                            break;
-#endregion
-                        #region Series
+                            if (selectedIndex > -1)
+                                this.m_Facade.SelectedListItemIndex = selectedIndex;
+                        }
+                        break;
+                    #endregion
+                    #region Series
                     case Listlevel.Series:
                         {
                             int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
@@ -652,9 +652,9 @@ namespace MediaPortal.GUI.Video
                                 m_Image.Visible = true;
                             }
 
-                                // view handling
-                                List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
-                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            // view handling
+                            List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
                             foreach (DBSeries series in seriesList)
                             {
                                 try
@@ -684,11 +684,11 @@ namespace MediaPortal.GUI.Video
                                     else
                                     {
                                         // select the first that has a file
-                                            if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
+                                        if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
                                             selectedIndex = count;
                                     }
-                                        if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
-                                            selectedIndex = count;
+                                    if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
+                                        selectedIndex = count;
 
                                     this.m_Facade.Add(item);
                                 }
@@ -702,8 +702,8 @@ namespace MediaPortal.GUI.Video
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
                         }
                         break;
-#endregion
-                        #region Season
+                    #endregion
+                    #region Season
                     case Listlevel.Season:
                         {
                             m_Image.Visible = true;
@@ -718,8 +718,8 @@ namespace MediaPortal.GUI.Video
                                 // reverse, 1 season picture by page
                                 // integrate the size difference in the offset so the image stays centered & doesn't go "out" of the selection box
                                 sizeImage.Height = m_Facade.AlbumListView.Height - m_Facade.AlbumListView.Space - m_Facade.AlbumListView.SpinHeight - 6; // taken from how itemsperpage is calculated in GUIListControl
-                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * (sizeImage.Height - 2* m_Facade.AlbumListView.IconOffsetY) / m_nInitialItemHeight;
-                                sizeImage.Height -=  2* m_Facade.AlbumListView.IconOffsetY;
+                                m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * (sizeImage.Height - 2 * m_Facade.AlbumListView.IconOffsetY) / m_nInitialItemHeight;
+                                sizeImage.Height -= 2 * m_Facade.AlbumListView.IconOffsetY;
                                 sizeImage.Width = sizeImage.Height * 400 / 578;
                                 m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
                                 m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
@@ -743,11 +743,11 @@ namespace MediaPortal.GUI.Video
                                 catch { }
                             }
 
-                                // view handling
-                                List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeason: ", seasons.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-                                bool canBeSkipped = seasons.Count == 1;
-                                foreach (DBSeason season in seasons)
+                            // view handling
+                            List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeason: ", seasons.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            bool canBeSkipped = seasons.Count == 1;
+                            foreach (DBSeason season in seasons)
                             {
                                 try
                                 {
@@ -801,27 +801,27 @@ namespace MediaPortal.GUI.Video
 
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
-                                // if there is only one season to display, skip directly to the episodes list
-                                if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
-                                {
-                                    MPTVSeriesLog.Write("Skipping season display");
-                                    OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
-                                }
-                                else if (seasons.Count == 1)
-                                {
-                                    // we're back from the ep list, go up one hierarchy more (depending on view, most likly series)
-                                    MPTVSeriesLog.Write("Skipping season display");
-                                    OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
-                                }
+                            // if there is only one season to display, skip directly to the episodes list
+                            if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
+                            {
+                                MPTVSeriesLog.Write("Skipping season display");
+                                OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
+                            }
+                            else if (seasons.Count == 1)
+                            {
+                                // we're back from the ep list, go up one hierarchy more (depending on view, most likly series)
+                                MPTVSeriesLog.Write("Skipping season display");
+                                OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
+                            }
                         }
                         break;
-                        #endregion
-                        #region Episode
+                    #endregion
+                    #region Episode
                     case Listlevel.Episode:
                         {
                             m_Season_Image.Visible = true;
                             int selectedIndex = -1;
-                                //m_SelectedEpisode = null;
+                            //m_SelectedEpisode = null;
                             int count = 0;
                             this.m_Facade.View = GUIFacadeControl.ViewMode.List;
 
@@ -844,44 +844,44 @@ namespace MediaPortal.GUI.Video
                                 catch { }
 
                             }
-                                List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-                                MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
+                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
 
-                                GUIListItem item = null;
-                                foreach (DBEpisode episode in episodesToDisplay)
+                            GUIListItem item = null;
+                            foreach (DBEpisode episode in episodesToDisplay)
                             {
                                 try
                                 {
                                     bEmpty = false;
-                                        item = new GUIListItem();
+                                    item = new GUIListItem();
 
-                                        // its possible the user never selected a series/season (flat view)
-                                        // thus its desirable to display series and season index also)
-                                        
-                                        if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                    // its possible the user never selected a series/season (flat view)
+                                    // thus its desirable to display series and season index also)
+
+                                    if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                    {
+                                        DBSeries corrSeries = null;
+                                        // it is the case
+                                        if ((corrSeries = cache.getSeries(episode[DBEpisode.cSeriesID])) == null)
                                         {
-                                            DBSeries corrSeries = null;
-                                            // it is the case
-                                            if (( corrSeries = cache.getSeries(episode[DBEpisode.cSeriesID])) == null)
-                                            {
-                                                corrSeries = DBSeries.Get(episode[DBEpisode.cSeriesID]);
-                                                cache.addChangeSeries(corrSeries);
-                                            }
-                                            if(corrSeries == null)
-                                            {
-                                                item.Label = FormatField(m_sFormatEpisodeCol2, episode);
-                                            }
-                                            else
-                                            {
-                                                item.Label = corrSeries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
-                                            }
-                                                
+                                            corrSeries = DBSeries.Get(episode[DBEpisode.cSeriesID]);
+                                            cache.addChangeSeries(corrSeries);
+                                        }
+                                        if (corrSeries == null)
+                                        {
+                                            item.Label = FormatField(m_sFormatEpisodeCol2, episode);
                                         }
                                         else
                                         {
-                                            // we came from series on top, only display index/title
-                                            item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                            item.Label = corrSeries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
                                         }
+
+                                    }
+                                    else
+                                    {
+                                        // we came from series on top, only display index/title
+                                        item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                    }
 
                                     item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
                                     item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
@@ -891,18 +891,18 @@ namespace MediaPortal.GUI.Video
 
                                     if (this.m_SelectedEpisode != null)
                                     {
-                                            if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
+                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
                                             selectedIndex = count;
                                     }
                                     else
                                     {
                                         // select the first that has a file and is not watched
-                                            if (selectedIndex == -1 && episode[DBOnlineEpisode.cWatched] == 0 && episode[DBEpisode.cFilename].ToString().Length > 0)
+                                        if (selectedIndex == -1 && episode[DBOnlineEpisode.cWatched] == 0 && episode[DBEpisode.cFilename].ToString().Length > 0)
                                             selectedIndex = count;
                                     }
 
-                                        // first returned logo should also show up here in list view directly
-                                        item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
+                                    // first returned logo should also show up here in list view directly
+                                    item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
                                     this.m_Facade.Add(item);
                                 }
                                 catch (Exception ex)
@@ -916,35 +916,35 @@ namespace MediaPortal.GUI.Video
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
                         }
-                            MPTVSeriesLog.Write("LoadFacade: Finish");
+                        MPTVSeriesLog.Write("LoadFacade: Finish");
                         break;
-                        #endregion
+                    #endregion
                 }
                 if (bEmpty)
                 {
-                        if (m_CurrViewStep == 0)
-                        {
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                            GUIListItem item = new GUIListItem(Translation.No_items);
-                    item.IsRemote = true;
-                    this.m_Facade.Add(item);
+                    if (m_CurrViewStep == 0)
+                    {
+                        this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                        GUIListItem item = new GUIListItem(Translation.No_items);
+                        item.IsRemote = true;
+                        this.m_Facade.Add(item);
 
-                            m_Description.Label = string.Empty;
-                            m_Title.Label = string.Empty;
-                            m_Title.Visible = true;
-                            m_Genre.Label = string.Empty;
+                        m_Description.Label = string.Empty;
+                        m_Title.Label = string.Empty;
+                        m_Title.Visible = true;
+                        m_Genre.Label = string.Empty;
 
-                            m_Image.SetFileName("");
-                            m_Season_Image.SetFileName("");
-                            this.m_Logos_Image.SetFileName("");
+                        m_Image.SetFileName("");
+                        m_Season_Image.SetFileName("");
+                        this.m_Logos_Image.SetFileName("");
 
-                        }
-                        else
-                        {
-                            // probably something was removed
-                            MPTVSeriesLog.Write("Nothing to display, going out");
-                            OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
-                        }
+                    }
+                    else
+                    {
+                        // probably something was removed
+                        MPTVSeriesLog.Write("Nothing to display, going out");
+                        OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
+                    }
                 }
                 MPTVSeriesLog.Write("Cache: " + cache.getTotalTime());
                 GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID);
@@ -1005,13 +1005,13 @@ namespace MediaPortal.GUI.Video
 
                 setViewLabels();
             }
-            
+
             LoadFacade();
             m_Facade.Focus = true;
             m_Title.Height = m_Title.ItemHeight;
             m_Genre.Height = m_Genre.ItemHeight;
             setProcessAnimationStatus(m_parserUpdaterWorking);
-            
+
         }
 
         protected override void OnPageDestroy(int new_windowId)
@@ -1188,7 +1188,7 @@ namespace MediaPortal.GUI.Video
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.downloadSubtitle;
-				}
+                                }
 
                                 //pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
                                 //dlg.Add(pItem);
@@ -1208,7 +1208,7 @@ namespace MediaPortal.GUI.Video
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Actions);
-                                if (listLevel !=  Listlevel.Group)
+                                if (listLevel != Listlevel.Group)
                                 {
                                     pItem = new GUIListItem(Translation.Hide);
                                     dlg.Add(pItem);
@@ -1222,19 +1222,19 @@ namespace MediaPortal.GUI.Video
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionRecheckMI;
                                 }
-                pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
+                                pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionLocalScan;
 
-                pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
+                                pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionFullRefresh;
 
-                pItem = new GUIListItem(Translation.Play_Random_Episode);
+                                pItem = new GUIListItem(Translation.Play_Random_Episode);
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionPlayRandom;
 
-                pItem = new GUIListItem(Translation.Play_Random_First_Unwatched_Episode);
+                                pItem = new GUIListItem(Translation.Play_Random_First_Unwatched_Episode);
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionPlayRandomUnwatched;
 
@@ -1247,13 +1247,13 @@ namespace MediaPortal.GUI.Video
                         case (int)eContextMenus.options:
                             {
                                 dlg.Reset();
-                                dlg.SetHeading(Translation.Actions); 
+                                dlg.SetHeading(Translation.Actions);
 
-                pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
+                                pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
 
-                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched +  " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)? "on" : "off") + ")");
+                                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? "on" : "off") + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
@@ -1272,32 +1272,32 @@ namespace MediaPortal.GUI.Video
 
                 if (dlg.SelectedId == -1) return;
 
-                            switch (dlg.SelectedId)
-                            {
+                switch (dlg.SelectedId)
+                {
                     case (int)eContextItems.toggleWatched:
-                                    {
-                                        // toggle watched
+                        {
+                            // toggle watched
                             if (selectedEpisode != null)
                             {
                                 if (selectedEpisode[DBEpisode.cFilename].ToString().Length > 0)
-                                        {
-                                            SQLCondition condition = new SQLCondition();
+                                {
+                                    SQLCondition condition = new SQLCondition();
                                     condition.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-                                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                                            foreach (DBEpisode episode in episodes)
-                                            {
+                                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                                    foreach (DBEpisode episode in episodes)
+                                    {
                                         episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
-                                                episode.Commit();
-                                            }
-                                        }
-                                        else
-                                        {
+                                        episode.Commit();
+                                    }
+                                }
+                                else
+                                {
                                     selectedEpisode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                     selectedEpisode.Commit();
                                 }
                                 LoadFacade();
                             }
-                                        }
+                        }
                         break;
 
                     case (int)eContextItems.cycleSeriesBanner:
@@ -1309,22 +1309,22 @@ namespace MediaPortal.GUI.Video
 
                             selectedSeries.Banner = selectedSeries.BannerList[nCurrent];
                             selectedSeries.Commit();
-                                        LoadFacade();
-                                    }
-                                    break;
+                            LoadFacade();
+                        }
+                        break;
                     case (int)eContextItems.actionRecheckMI:
                         switch (listLevel)
                         {
-                            case  Listlevel.Episode:
+                            case Listlevel.Episode:
                                 m_SelectedEpisode.readMediaInfoOfLocal();
                                 // reload here so logos update
                                 LoadFacade();
                                 break;
-                            case  Listlevel.Season:
+                            case Listlevel.Season:
                                 foreach (DBEpisode ep in DBEpisode.Get(m_SelectedSeason[DBSeason.cSeriesID], m_SelectedSeason[DBSeason.cIndex], false))
                                     ep.readMediaInfoOfLocal();
                                 break;
-                            case  Listlevel.Series:
+                            case Listlevel.Series:
                                 foreach (DBEpisode ep in DBEpisode.Get((int)m_SelectedSeries[DBSeries.cID], false))
                                     ep.readMediaInfoOfLocal();
                                 break;
@@ -1360,29 +1360,29 @@ namespace MediaPortal.GUI.Video
                     case (int)eContextItems.downloadSubtitle:
                         {
                             if (selectedEpisode != null)
-                                    {
-                                        DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                        setProcessAnimationStatus(true);
-                                        foromWorking = true;
-                                        Forom forom = new Forom(this);
-                                        forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                        forom.GetSubs(selectedEpisode);
+                            {
+                                DBEpisode episode = (DBEpisode)currentitem.TVTag;
+                                setProcessAnimationStatus(true);
+                                foromWorking = true;
+                                Forom forom = new Forom(this);
+                                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                                forom.GetSubs(selectedEpisode);
                             }
-                                    }
-                                    break;
+                        }
+                        break;
 
                     case (int)eContextItems.downloadviaTorrent:
-                                    {
+                        {
                             if (selectedEpisode != null)
                             {
                                 Torrent.Load torrentLoad = new Torrent.Load(this);
-                                        torrentWorking = true;
+                                torrentWorking = true;
                                 torrentLoad.LoadCompleted += new Torrent.Load.LoadCompletedHandler(Load_TorrentLoadCompleted);
                                 if (torrentLoad.Search(selectedEpisode))
-                                            setProcessAnimationStatus(true);
+                                    setProcessAnimationStatus(true);
                             }
                         }
-                                    break;
+                        break;
 
                     case (int)eContextItems.downloadviaNewz:
                         {
@@ -1398,37 +1398,37 @@ namespace MediaPortal.GUI.Video
                         break;
 
                     case (int)eContextItems.actionHide:
-                {
-                        // hide - we can only hide things for now, no unhide
-                    switch (this.listLevel)
                         {
-                            case  Listlevel.Series:
+                            // hide - we can only hide things for now, no unhide
+                            switch (this.listLevel)
+                            {
+                                case Listlevel.Series:
                                     selectedSeries[DBSeries.cHidden] = true;
                                     selectedSeries.Commit();
-                                break;
+                                    break;
 
-                            case  Listlevel.Season:
+                                case Listlevel.Season:
                                     selectedSeason[DBSeason.cHidden] = true;
                                     selectedSeason.Commit();
-                                break;
-                            
-                            case  Listlevel.Episode:
+                                    break;
+
+                                case Listlevel.Episode:
                                     selectedEpisode[DBOnlineEpisode.cHidden] = true;
                                     selectedEpisode.Commit();
                                     break;
                             }
-                                LoadFacade();
+                            LoadFacade();
                         }
                         break;
 
                     case (int)eContextItems.actionMarkAllWatched:
                         // all watched
-                        if (this.listLevel ==  Listlevel.Series && m_SelectedSeries != null)
+                        if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             cache.dump();
                         }
-                        else if (this.listLevel ==  Listlevel.Season && m_SelectedSeason != null)
+                        else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
@@ -1438,12 +1438,12 @@ namespace MediaPortal.GUI.Video
                         break;
                     case (int)eContextItems.actionMarkAllUnwatched:
                         // all unwatched
-                        if (this.listLevel ==  Listlevel.Series && m_SelectedSeries != null)
+                        if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             cache.dump();
                         }
-                        else if (this.listLevel ==  Listlevel.Season && m_SelectedSeason != null)
+                        else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
@@ -1458,15 +1458,15 @@ namespace MediaPortal.GUI.Video
                             String sMsg = String.Empty;
                             switch (this.listLevel)
                             {
-                                case  Listlevel.Series:
+                                case Listlevel.Series:
                                     sMsg = Translation.Delete_that_series;
                                     break;
 
-                                case  Listlevel.Season:
+                                case Listlevel.Season:
                                     sMsg = Translation.Delete_that_season;
                                     break;
-                                
-                                case  Listlevel.Episode:
+
+                                case Listlevel.Episode:
                                     sMsg = Translation.Delete_that_episode;
                                     break;
                             }
@@ -1481,7 +1481,7 @@ namespace MediaPortal.GUI.Video
                                 List<DBEpisode> epsDeletion = new List<DBEpisode>();
                                 switch (this.listLevel)
                                 {
-                                    case  Listlevel.Series:
+                                    case Listlevel.Series:
                                         {
                                             SQLCondition condition = new SQLCondition();
                                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
@@ -1505,7 +1505,7 @@ namespace MediaPortal.GUI.Video
                                         }
                                         break;
 
-                                    case  Listlevel.Season:
+                                    case Listlevel.Season:
                                         {
                                             SQLCondition condition = new SQLCondition();
                                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, selectedSeason[DBSeason.cSeriesID], SQLConditionType.Equal);
@@ -1522,8 +1522,8 @@ namespace MediaPortal.GUI.Video
                                             DBSeason.Clear(condition);
                                         }
                                         break;
-                                    
-                                    case  Listlevel.Episode:
+
+                                    case Listlevel.Episode:
                                         {
                                             SQLCondition condition = new SQLCondition();
                                             condition.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
@@ -1653,7 +1653,7 @@ namespace MediaPortal.GUI.Video
 
         void switchView(int offset) //else previous
         {
-           switchView(Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
+            switchView(Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
         }
 
         void switchView(string viewName)
@@ -1742,14 +1742,14 @@ namespace MediaPortal.GUI.Video
                         LoadFacade();
                         skipSeasonIfOne_DirectionDown = true;
                     }
-                            break;
+                    break;
                 case Action.ActionType.ACTION_MOVE_LEFT:
-                        switchView(-1);
-                        LoadFacade();
-                            break;
+                    switchView(-1);
+                    LoadFacade();
+                    break;
                 case Action.ActionType.ACTION_MOVE_RIGHT:
-                        switchView(1);
-                        LoadFacade();
+                    switchView(1);
+                    LoadFacade();
                     break;
 
                 default:
@@ -1803,16 +1803,20 @@ namespace MediaPortal.GUI.Video
                         if (m_VideoHandler.ResumeOrPlay(m_SelectedEpisode))
                         {
                             // AB: I put back this code as it was before, as if I watch one local episode I think it's safe to consider all local episodes watched
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, this.m_SelectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                            foreach (DBEpisode episode in episodes)
-                            {
-                                episode[DBOnlineEpisode.cWatched] = 1;
-                                episode.Commit();
-                            }
-                            this.LoadFacade();
-                            this.OnPageLoad();
+
+                            //-- Jon: isWatched check now happens on stopping (VideoHandler.OnPlayBackStopped)
+                            /* 
+                             * SQLCondition condition = new SQLCondition();
+                             * condition.Add(new DBEpisode(), DBEpisode.cFilename, this.m_SelectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                             * List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                             * foreach (DBEpisode episode in episodes)
+                             * {
+                             *     episode[DBOnlineEpisode.cWatched] = 1;
+                             *     episode.Commit();
+                             * }
+                             * this.LoadFacade();
+                             * this.OnPageLoad();
+                             */
                         }
                         break;
                 }
@@ -1903,10 +1907,20 @@ namespace MediaPortal.GUI.Video
                     }
                     return true;
                     break;
+                case GUIMessage.MessageType.GUI_MSG_PLAYBACK_ENDED:
+                case GUIMessage.MessageType.GUI_MSG_PLAYBACK_STOPPED:
+                    {
+                        //-- Need to reload the GUI to display changes 
+                        //-- if episode is classified as watched
+                        LoadFacade();
+                    }
+
+                    return true;
+                    break;
                 default:
-                    return base.OnMessage(message); 
+                    return base.OnMessage(message);
             }
-            
+
         }
 
         //private int CountCRLF(String sIn)
@@ -1931,7 +1945,7 @@ namespace MediaPortal.GUI.Video
             m_SelectedSeason = null;
             m_SelectedEpisode = null;
             if (item == null) return;
-            
+
             m_Genre.Label = string.Empty;
 
             this.m_Logos_Image.FileName = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), this.m_Facade.SelectedListItem.Label, m_Logos_Image.Height, m_Logos_Image.Width);
@@ -1972,7 +1986,7 @@ namespace MediaPortal.GUI.Video
                     seriesNames += series + Environment.NewLine;
                     count++;
                 }
-                
+
                 m_Genre.Label = count.ToString() + " " + (count == 1 ? Translation.Series : Translation.Series_Plural);
                 m_Description.Label = seriesNames;
             }
@@ -2081,11 +2095,11 @@ namespace MediaPortal.GUI.Video
             #endregion
 
             if (m_Title != null)
-                    m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
-                if (m_Genre != null)
-                    m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, series);
-                if (m_Description != null)
-                    m_Description.Label = FormatField(m_sFormatSeriesMain, series);
+                m_Title.Label = FormatField(m_sFormatSeriesTitle, series);
+            if (m_Genre != null)
+                m_Genre.Label = FormatField(m_sFormatSeriesSubtitle, series);
+            if (m_Description != null)
+                m_Description.Label = FormatField(m_sFormatSeriesMain, series);
             //}
         }
 
@@ -2139,7 +2153,7 @@ namespace MediaPortal.GUI.Video
                 catch { }
             }
 
-            if(this.m_Episode_Image != null)
+            if (this.m_Episode_Image != null)
                 this.m_Episode_Image.Visible = false;
 
             /*
@@ -2179,12 +2193,12 @@ namespace MediaPortal.GUI.Video
             }
             else
             { */
-                if (m_Title != null)
-                    m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
-                if (m_Genre != null)
-                    m_Genre.Label = FormatField(m_sFormatSeasonSubtitle, season);
-                if (m_Description != null)
-                    m_Description.Label = FormatField(m_sFormatSeasonMain, season);
+            if (m_Title != null)
+                m_Title.Label = FormatField(m_sFormatSeasonTitle, season);
+            if (m_Genre != null)
+                m_Genre.Label = FormatField(m_sFormatSeasonSubtitle, season);
+            if (m_Description != null)
+                m_Description.Label = FormatField(m_sFormatSeasonMain, season);
             //}
         }
         private void Episode_OnItemSelected(GUIListItem item)
@@ -2211,8 +2225,8 @@ namespace MediaPortal.GUI.Video
                 }
                 catch { }
             }
-            else if(m_Episode_Image != null)
-               this.m_Episode_Image.Visible = false;
+            else if (m_Episode_Image != null)
+                this.m_Episode_Image.Visible = false;
 
             // with groups in episode view its possible the user never selected a series/season (flat view)
             // thus its desirable to display the series_banner and season banner on hover)
@@ -2288,20 +2302,20 @@ namespace MediaPortal.GUI.Video
             }
             else
             { */
-                if (m_Title != null)
+            if (m_Title != null)
+            {
+                string title = FormatField(m_sFormatEpisodeTitle, episode);
+                // overwrite ugly Special number (eg: 0x7) if display option is default:
+                if (m_SelectedEpisode[DBEpisode.cSeasonIndex] == 0 && m_sFormatEpisodeTitle.Trim().Contains("<Episode.SeasonIndex>x<Episode.EpisodeIndex>:"))
                 {
-                    string title = FormatField(m_sFormatEpisodeTitle, episode);
-                    // overwrite ugly Special number (eg: 0x7) if display option is default:
-                    if (m_SelectedEpisode[DBEpisode.cSeasonIndex] == 0 && m_sFormatEpisodeTitle.Trim().Contains("<Episode.SeasonIndex>x<Episode.EpisodeIndex>:"))
-                    {
-                        title = title.Replace("0x", Translation.special + " ");
-                    }
-                    m_Title.Label = title;
+                    title = title.Replace("0x", Translation.special + " ");
                 }
-                if (m_Genre != null)
-                    m_Genre.Label = FormatField(m_sFormatEpisodeSubtitle, episode);
-                if (m_Description != null)
-                    m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
+                m_Title.Label = title;
+            }
+            if (m_Genre != null)
+                m_Genre.Label = FormatField(m_sFormatEpisodeSubtitle, episode);
+            if (m_Description != null)
+                m_Description.Label = FormatField(m_sFormatEpisodeMain, episode);
             //}
         }
 
@@ -2311,64 +2325,64 @@ namespace MediaPortal.GUI.Video
             {
                 while (this.m_Facade == null) Thread.Sleep(2000); // don't show anything if we're not inside the plugin window
 
-            GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-            selected = null;
-            if (dlg == null)
-                return ReturnCode.Cancel;
+                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                selected = null;
+                if (dlg == null)
+                    return ReturnCode.Cancel;
 
-            dlg.Reset();
-            if (descriptor.m_sItemToMatchLabel.Length == 0)
-                dlg.SetHeading(descriptor.m_sTitle);
-            else
-                dlg.SetHeading(descriptor.m_sItemToMatchLabel + " " + descriptor.m_sItemToMatch);
+                dlg.Reset();
+                if (descriptor.m_sItemToMatchLabel.Length == 0)
+                    dlg.SetHeading(descriptor.m_sTitle);
+                else
+                    dlg.SetHeading(descriptor.m_sItemToMatchLabel + " " + descriptor.m_sItemToMatch);
 
-            GUIListItem pItem = null;
+                GUIListItem pItem = null;
 
-            if (descriptor.m_sbtnIgnoreLabel.Length > 0)
-            {
+                if (descriptor.m_sbtnIgnoreLabel.Length > 0)
+                {
                     pItem = new GUIListItem(Translation.skip_Never_ask_again);
-                dlg.Add(pItem);
-                pItem.ItemId = 0;
-            }
-
-            if (descriptor.m_List.Count == 0)
-            {
-                    pItem = new GUIListItem(Translation.no_results_found);
-                dlg.Add(pItem);
-                pItem.ItemId = 1;
-            }
-            else
-            {
-                int nCount = 0;
-                foreach (CItem item in descriptor.m_List)
-                {
-                    pItem = new GUIListItem(item.m_sName);
                     dlg.Add(pItem);
-                    pItem.ItemId = 10 + nCount;
-                    nCount++;
+                    pItem.ItemId = 0;
                 }
-            }
 
-            dlg.DoModal(GUIWindowManager.ActiveWindow);
-            if (dlg.SelectedId == -1)
-            {
-                return ReturnCode.Cancel;
-            }
-            else
-            {
-                if (dlg.SelectedId == 0)
+                if (descriptor.m_List.Count == 0)
                 {
-                    return ReturnCode.Ignore;
+                    pItem = new GUIListItem(Translation.no_results_found);
+                    dlg.Add(pItem);
+                    pItem.ItemId = 1;
                 }
-                else if (dlg.SelectedId >= 10)
+                else
                 {
-                    CItem DlgSelected = descriptor.m_List[dlg.SelectedId - 10];
-                    selected = new CItem(descriptor.m_sItemToMatch, String.Empty, DlgSelected.m_Tag);
-                    return ReturnCode.OK;
+                    int nCount = 0;
+                    foreach (CItem item in descriptor.m_List)
+                    {
+                        pItem = new GUIListItem(item.m_sName);
+                        dlg.Add(pItem);
+                        pItem.ItemId = 10 + nCount;
+                        nCount++;
+                    }
                 }
-                else return ReturnCode.Cancel;
+
+                dlg.DoModal(GUIWindowManager.ActiveWindow);
+                if (dlg.SelectedId == -1)
+                {
+                    return ReturnCode.Cancel;
+                }
+                else
+                {
+                    if (dlg.SelectedId == 0)
+                    {
+                        return ReturnCode.Ignore;
+                    }
+                    else if (dlg.SelectedId >= 10)
+                    {
+                        CItem DlgSelected = descriptor.m_List[dlg.SelectedId - 10];
+                        selected = new CItem(descriptor.m_sItemToMatch, String.Empty, DlgSelected.m_Tag);
+                        return ReturnCode.OK;
+                    }
+                    else return ReturnCode.Cancel;
+                }
             }
-        }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("The ChooseFromSelection Method has generated an error: " + ex.Message);
@@ -2411,18 +2425,18 @@ namespace MediaPortal.GUI.Video
                         break;
                     }
                 default:
-                    if(firstUnwatchedOnly)
+                    if (firstUnwatchedOnly)
                         validEps = DBEpisode.GetFirstUnwatched();
                     break;
             }
-            if(!firstUnwatchedOnly)
+            if (!firstUnwatchedOnly)
                 validEps = DBEpisode.Get(conditions);
 
             DBEpisode pickedEp;
 
             if (validEps != null && validEps.Count > 0)
-            {   
-                if(validEps.Count > 1)
+            {
+                if (validEps.Count > 1)
                     pickedEp = validEps[new Random().Next(0, validEps.Count)];
                 else
                     pickedEp = validEps[0];
@@ -2448,7 +2462,7 @@ namespace MediaPortal.GUI.Video
             //MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
             if (m_ImportAnimation != null)
             {
-                if(enable)
+                if (enable)
                     m_ImportAnimation.AllocResources();
                 else
                     m_ImportAnimation.FreeResources();
@@ -2466,7 +2480,7 @@ namespace MediaPortal.GUI.Video
                 this.m_Logos_Image = null;
             }
             // only when inside MP
-            if(!Settings.isConfig) localLogos.cleanUP();
+            if (!Settings.isConfig) localLogos.cleanUP();
         }
     }
 }
