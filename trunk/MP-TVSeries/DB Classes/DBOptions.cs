@@ -112,6 +112,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cMainMirror = "mainMirror";
         public const String cGetBlankBanners = "getBlankBanners";
 
+        public const String cWatchedAfter = "watchedAfter";
+
         static DBOption()
         {
             try
@@ -294,6 +296,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPreferedBannerType) == null)
                     SetOptions(cPreferedBannerType, 2);  // graphical by default
+
+                if (GetOptions(cWatchedAfter) == null)
+                    SetOptions(cWatchedAfter, 95); //-- 95% by default
             }
             catch (Exception ex)
             {

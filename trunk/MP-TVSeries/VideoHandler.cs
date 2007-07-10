@@ -200,6 +200,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         w.RunWorkerAsync(true);
                         m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+
+                        double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
+                        if (!m_currentEpisode[DBOnlineEpisode.cWatched]
+                            && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter) 
+                        {
+                            m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
+                        }
                         m_currentEpisode.Commit();
                         m_currentEpisode = null;
                     }

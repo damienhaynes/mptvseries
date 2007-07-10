@@ -83,15 +83,16 @@ namespace WindowPlugins.GUITVSeries
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button_dbbrowse = new System.Windows.Forms.Button();
-            this.textBox_dblocation = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
+            this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
+            this.panDBLocation = new System.Windows.Forms.Panel();
+            this.textBox_dblocation = new System.Windows.Forms.TextBox();
+            this.button_dbbrowse = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
             this.tabPage_Import = new System.Windows.Forms.TabPage();
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
             this.splitContainerImportSettings = new System.Windows.Forms.SplitContainer();
@@ -235,6 +236,8 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.nudWatchedAfter = new System.Windows.Forms.NumericUpDown();
             this.label32 = new System.Windows.Forms.Label();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
@@ -297,6 +300,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
+            this.panDBLocation.SuspendLayout();
             this.tabPage_Import.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel1.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel2.SuspendLayout();
@@ -324,6 +328,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
             this.tabpage_Extra.SuspendLayout();
             this.splitContainer_treeextra.Panel1.SuspendLayout();
@@ -410,12 +415,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.button_dbbrowse);
-            this.splitContainer2.Panel2.Controls.Add(this.textBox_dblocation);
-            this.splitContainer2.Panel2.Controls.Add(this.label28);
-            this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_Series);
+            this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
+            this.splitContainer2.Panel2.Controls.Add(this.panDBLocation);
             this.splitContainer2.Size = new System.Drawing.Size(684, 743);
             this.splitContainer2.SplitterDistance = 196;
             this.splitContainer2.TabIndex = 0;
@@ -471,97 +474,50 @@ namespace WindowPlugins.GUITVSeries
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(147, 114);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
-            // 
-            // button_dbbrowse
-            // 
-            this.button_dbbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_dbbrowse.Location = new System.Drawing.Point(455, -1);
-            this.button_dbbrowse.Name = "button_dbbrowse";
-            this.button_dbbrowse.Size = new System.Drawing.Size(26, 23);
-            this.button_dbbrowse.TabIndex = 152;
-            this.button_dbbrowse.Text = "...";
-            this.button_dbbrowse.UseVisualStyleBackColor = true;
-            this.button_dbbrowse.Click += new System.EventHandler(this.button_dbbrowse_Click);
-            // 
-            // textBox_dblocation
-            // 
-            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_dblocation.Location = new System.Drawing.Point(181, 1);
-            this.textBox_dblocation.Name = "textBox_dblocation";
-            this.textBox_dblocation.ReadOnly = true;
-            this.textBox_dblocation.Size = new System.Drawing.Size(271, 20);
-            this.textBox_dblocation.TabIndex = 151;
-            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Database location");
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(2, 4);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(173, 13);
-            this.label28.TabIndex = 150;
-            this.label28.Text = "Database location (restart needed):";
-            // 
-            // comboBox_BannerSelection
-            // 
-            this.comboBox_BannerSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox_BannerSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_BannerSelection.FormattingEnabled = true;
-            this.comboBox_BannerSelection.Location = new System.Drawing.Point(0, 24);
-            this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
-            this.comboBox_BannerSelection.Size = new System.Drawing.Size(484, 21);
-            this.comboBox_BannerSelection.TabIndex = 149;
-            this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
-            this.comboBox_BannerSelection.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox_BannerSelection_KeyPress);
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -578,14 +534,15 @@ namespace WindowPlugins.GUITVSeries
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 173);
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 174);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(484, 595);
+            this.dataGridView1.Size = new System.Drawing.Size(484, 569);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 148;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -613,18 +570,71 @@ namespace WindowPlugins.GUITVSeries
             // 
             // pictureBox_Series
             // 
-            this.pictureBox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_Series.BackColor = System.Drawing.Color.White;
             this.pictureBox_Series.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox_Series.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox_Series.ErrorImage = null;
             this.pictureBox_Series.InitialImage = null;
-            this.pictureBox_Series.Location = new System.Drawing.Point(0, 45);
+            this.pictureBox_Series.Location = new System.Drawing.Point(0, 46);
             this.pictureBox_Series.Name = "pictureBox_Series";
             this.pictureBox_Series.Size = new System.Drawing.Size(484, 128);
             this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Series.TabIndex = 147;
             this.pictureBox_Series.TabStop = false;
+            // 
+            // comboBox_BannerSelection
+            // 
+            this.comboBox_BannerSelection.Dock = System.Windows.Forms.DockStyle.Top;
+            this.comboBox_BannerSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_BannerSelection.FormattingEnabled = true;
+            this.comboBox_BannerSelection.Location = new System.Drawing.Point(0, 25);
+            this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
+            this.comboBox_BannerSelection.Size = new System.Drawing.Size(484, 21);
+            this.comboBox_BannerSelection.TabIndex = 149;
+            this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
+            this.comboBox_BannerSelection.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox_BannerSelection_KeyPress);
+            // 
+            // panDBLocation
+            // 
+            this.panDBLocation.Controls.Add(this.textBox_dblocation);
+            this.panDBLocation.Controls.Add(this.button_dbbrowse);
+            this.panDBLocation.Controls.Add(this.label28);
+            this.panDBLocation.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panDBLocation.Location = new System.Drawing.Point(0, 0);
+            this.panDBLocation.Name = "panDBLocation";
+            this.panDBLocation.Size = new System.Drawing.Size(484, 25);
+            this.panDBLocation.TabIndex = 153;
+            // 
+            // textBox_dblocation
+            // 
+            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_dblocation.Location = new System.Drawing.Point(175, 2);
+            this.textBox_dblocation.Name = "textBox_dblocation";
+            this.textBox_dblocation.ReadOnly = true;
+            this.textBox_dblocation.Size = new System.Drawing.Size(279, 20);
+            this.textBox_dblocation.TabIndex = 151;
+            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Database location");
+            // 
+            // button_dbbrowse
+            // 
+            this.button_dbbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_dbbrowse.Location = new System.Drawing.Point(455, 0);
+            this.button_dbbrowse.Name = "button_dbbrowse";
+            this.button_dbbrowse.Size = new System.Drawing.Size(26, 23);
+            this.button_dbbrowse.TabIndex = 152;
+            this.button_dbbrowse.Text = "...";
+            this.button_dbbrowse.UseVisualStyleBackColor = true;
+            this.button_dbbrowse.Click += new System.EventHandler(this.button_dbbrowse_Click);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(0, 3);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(173, 13);
+            this.label28.TabIndex = 150;
+            this.label28.Text = "Database location (restart needed):";
             // 
             // tabPage_Import
             // 
@@ -881,7 +891,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(415, 17);
             this.checkBox_doFolderWatch.TabIndex = 13;
-            this.checkBox_doFolderWatch.Text = "Watch my important folders for changes automatically";
+            this.checkBox_doFolderWatch.Text = "Watch my import folders for changes automatically";
             this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
             this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
             // 
@@ -1846,7 +1856,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.Controls.Add(this.btnrmvLogo);
             this.groupBox7.Controls.Add(this.addLogo);
             this.groupBox7.Controls.Add(this.lstLogos);
-            this.groupBox7.Location = new System.Drawing.Point(4, 478);
+            this.groupBox7.Location = new System.Drawing.Point(5, 498);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(662, 148);
             this.groupBox7.TabIndex = 3;
@@ -1966,7 +1976,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col2);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Title);
-            this.groupBox3.Location = new System.Drawing.Point(4, 231);
+            this.groupBox3.Location = new System.Drawing.Point(5, 251);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(661, 108);
             this.groupBox3.TabIndex = 2;
@@ -2123,7 +2133,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col1);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Location = new System.Drawing.Point(3, 345);
+            this.groupBox4.Location = new System.Drawing.Point(4, 365);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(662, 127);
             this.groupBox4.TabIndex = 1;
@@ -2291,7 +2301,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col1);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(3, 118);
+            this.groupBox2.Location = new System.Drawing.Point(4, 138);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(662, 107);
             this.groupBox2.TabIndex = 1;
@@ -2437,6 +2447,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label38);
+            this.groupBox1.Controls.Add(this.nudWatchedAfter);
             this.groupBox1.Controls.Add(this.label32);
             this.groupBox1.Controls.Add(this.comboLanguage);
             this.groupBox1.Controls.Add(this.checkBox_RandBanner);
@@ -2448,15 +2460,32 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.checkBox_AutoOnlineDataRefresh);
             this.groupBox1.Location = new System.Drawing.Point(4, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(661, 105);
+            this.groupBox1.Size = new System.Drawing.Size(661, 125);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
             // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(2, 79);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(138, 13);
+            this.label38.TabIndex = 10;
+            this.label38.Text = "An episode is watched after";
+            // 
+            // nudWatchedAfter
+            // 
+            this.nudWatchedAfter.Location = new System.Drawing.Point(149, 77);
+            this.nudWatchedAfter.Name = "nudWatchedAfter";
+            this.nudWatchedAfter.Size = new System.Drawing.Size(38, 20);
+            this.nudWatchedAfter.TabIndex = 9;
+            this.nudWatchedAfter.ValueChanged += new System.EventHandler(this.nudWatchedAfter_ValueChanged);
+            // 
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(382, 82);
+            this.label32.Location = new System.Drawing.Point(382, 104);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(58, 13);
             this.label32.TabIndex = 8;
@@ -2466,7 +2495,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboLanguage.FormattingEnabled = true;
-            this.comboLanguage.Location = new System.Drawing.Point(448, 79);
+            this.comboLanguage.Location = new System.Drawing.Point(448, 101);
             this.comboLanguage.Name = "comboLanguage";
             this.comboLanguage.Size = new System.Drawing.Size(119, 21);
             this.comboLanguage.TabIndex = 7;
@@ -2485,7 +2514,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // textBox_PluginHomeName
             // 
-            this.textBox_PluginHomeName.Location = new System.Drawing.Point(149, 79);
+            this.textBox_PluginHomeName.Location = new System.Drawing.Point(149, 101);
             this.textBox_PluginHomeName.Name = "textBox_PluginHomeName";
             this.textBox_PluginHomeName.Size = new System.Drawing.Size(217, 20);
             this.textBox_PluginHomeName.TabIndex = 5;
@@ -2494,7 +2523,7 @@ namespace WindowPlugins.GUITVSeries
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(2, 82);
+            this.label16.Location = new System.Drawing.Point(2, 104);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(141, 13);
             this.label16.TabIndex = 4;
@@ -3042,12 +3071,13 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.Panel2.PerformLayout();
             this.splitContainer2.ResumeLayout(false);
             this.contextMenuStrip_DetailsTree.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
+            this.panDBLocation.ResumeLayout(false);
+            this.panDBLocation.PerformLayout();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel2.ResumeLayout(false);
@@ -3085,6 +3115,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
             this.tabpage_Extra.ResumeLayout(false);
             this.splitContainer_treeextra.Panel1.ResumeLayout(false);
@@ -3333,5 +3364,8 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel lblClearDB;
         private System.Windows.Forms.LinkLabel lnkLogoImp;
         private System.Windows.Forms.LinkLabel lnkLogoExport;
+        private System.Windows.Forms.Panel panDBLocation;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.NumericUpDown nudWatchedAfter;
     }
 }
