@@ -15,6 +15,7 @@ namespace WindowPlugins.GUITVSeries
         private static string langPath = string.Empty;
         private static string thumbsPath = string.Empty;
         private static string apppath = string.Empty;
+        private static string fanArtPath = string.Empty;
 
         public static string executingAssembly = System.Reflection.Assembly.GetEntryAssembly().Location;
         public static bool isConfig = System.IO.Path.GetFileNameWithoutExtension(executingAssembly).ToLower() == "configuration";
@@ -26,7 +27,8 @@ namespace WindowPlugins.GUITVSeries
             banners,
             lang,
             thumbs,
-            app
+            app,
+            fanart
         };
 
         public static string GetPath(Path path)
@@ -45,6 +47,8 @@ namespace WindowPlugins.GUITVSeries
                     return thumbsPath;
                 case Path.app:
                     return apppath;
+                case Path.fanart:
+                    return fanArtPath;
             }
             return string.Empty;
         }
@@ -102,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
             bannersPath = Config.GetSubFolder(Config.Dir.Thumbs, "MPTVSeriesBanners");
             langPath = Config.GetSubFolder(Config.Dir.Language, "MP-TVSeries");
             thumbsPath = Config.GetFolder(Config.Dir.Thumbs);
-
+            fanArtPath = thumbsPath + @"\Fan Art";
             initFolders();
         }
 

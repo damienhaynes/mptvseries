@@ -72,8 +72,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
 
-            TimeSpan t = new TimeSpan();
-            DateTime start = DateTime.Now;
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
             InitExtraTreeAndPanes();
@@ -81,9 +79,8 @@ namespace WindowPlugins.GUITVSeries
             LoadExpressions();
             LoadReplacements();
             initLoading = false;
-            load.Close();
-            t = DateTime.Now - start;
-            MPTVSeriesLog.Write(t.TotalMilliseconds.ToString());
+            LoadTree();
+            if(load != null) load.Close();
         }
 
 
@@ -467,6 +464,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadTree()
         {
+            if (initLoading) return;
             if(null == load) load = new loadingDisplay();
             this.SuspendLayout();
             TreeView root = this.treeView_Library;
@@ -480,7 +478,8 @@ namespace WindowPlugins.GUITVSeries
             load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
             if (seriesList.Count == 0)
             {
-                if (initLoading) load.Close();
+                load.Close();
+                load = null;
                 return;
             }
             foreach (DBSeries series in seriesList)
@@ -551,7 +550,8 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             this.ResumeLayout();
-            if (initLoading) load.Close();
+            load.Close();
+            load = null; ;
         }
 
         #endregion

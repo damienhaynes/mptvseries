@@ -181,10 +181,7 @@ namespace WindowPlugins.GUITVSeries
 
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
-            perfana.Start();
             string res = work(level, imgHeight, imgWidth, firstOnly, ref logosForBuilding);
-            perfana.Stop();
-            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
             return res;
         }
 

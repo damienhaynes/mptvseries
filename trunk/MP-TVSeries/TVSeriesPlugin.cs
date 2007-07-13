@@ -200,35 +200,8 @@ namespace MediaPortal.GUI.Video
         [SkinControlAttribute(33)]
         protected GUITextScrollUpControl m_Genre = null;
 
-        [SkinControlAttribute(34)]
-        protected GUITextControl m_Series_Network = null;
-
-        [SkinControlAttribute(35)]
-        protected GUITextControl m_Series_Duration = null;
-
-        [SkinControlAttribute(36)]
-        protected GUITextControl m_Series_Status = null;
-
-        [SkinControlAttribute(37)]
-        protected GUITextControl m_Series_Premiered = null;
-
         [SkinControlAttribute(40)]
         protected GUITextScrollUpControl m_Title = null;
-
-        [SkinControlAttribute(41)]
-        protected GUITextControl m_Airs = null;
-
-        [SkinControlAttribute(42)]
-        protected GUITextControl m_Episode_SeasonNumber = null;
-
-        [SkinControlAttribute(43)]
-        protected GUITextControl m_Episode_EpisodeNumber = null;
-
-        [SkinControlAttribute(44)]
-        protected GUITextControl m_Episode_Filename = null;
-
-        [SkinControlAttribute(45)]
-        protected GUITextControl m_Episode_Actors = null;
 
         [SkinControlAttribute(46)]
         protected GUIImage m_Season_Image = null;
@@ -247,6 +220,15 @@ namespace MediaPortal.GUI.Video
 
         [SkinControlAttribute(79)]
         protected GUILabelControl view_next = null;
+
+        [SkinControlAttribute(524)]
+        protected GUIImage FanartBackground = null;
+
+        [SkinControlAttribute(1234)]
+        protected GUILabelControl dummyIsLightFanartLoaded = null;
+
+        [SkinControlAttribute(1235)]
+        protected GUILabelControl dummyFacadeListMode = null;
 
         #endregion
 
@@ -519,13 +501,14 @@ namespace MediaPortal.GUI.Video
             }
             else
             {
+                
                 // no image, use text, create our own
                 if (GUITextureManager.LoadFromMemory(null, "[series_" + series[DBSeries.cID] + "]", 0, 0, 0) == 0)
                 {
                     Size sizeImage = new Size(758, 140);
                     Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
                     Graphics gph = Graphics.FromImage(image);
-                    gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
+                    //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 36);
                     gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -533,18 +516,23 @@ namespace MediaPortal.GUI.Video
                     gph.Dispose();
                     GUITextureManager.LoadFromMemory(image, "[series_" + series[DBSeries.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
+                
                 return "[series_" + series[DBSeries.cID] + "]";
             }
         }
 
         String GetSeasonBanner(DBSeason season)
         {
+            return GetSeasonBanner(season, true);
+        }
+        String GetSeasonBanner(DBSeason season, bool createIfNotExist)
+        {
             String filename = season.Banner;
             if (filename.Length > 0 && System.IO.File.Exists(filename))
             {
                 return filename;
             }
-            else
+            else if (createIfNotExist)
             {
                 if (GUITextureManager.LoadFromMemory(null, "[" + season[DBSeason.cID] + "]", 0, 0, 0) == 0)
                 {
@@ -552,7 +540,7 @@ namespace MediaPortal.GUI.Video
                     Size sizeImage = new Size(400, 578);
                     Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
                     Graphics gph = Graphics.FromImage(image);
-                    gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
+                    //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
                     GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
                     Font font = new Font(fontList.FontName, 48);
                     gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -565,6 +553,7 @@ namespace MediaPortal.GUI.Video
                 }
                 return "[" + season[DBSeason.cID] + "]";
             }
+            else return string.Empty;
         }
 
         void LoadFacade()
@@ -594,11 +583,12 @@ namespace MediaPortal.GUI.Video
                         {
                             // these are groups of certain categories, eg. Genres
 
-                            // always list mode
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-                            int selectedIndex = -1;
-                            // view handling
-                            List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
+                                // always list mode
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
+                                int selectedIndex = -1;
+                                // view handling
+                                List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
                             for (int index = 0; index < items.Count; index++)
                             {
@@ -651,7 +641,7 @@ namespace MediaPortal.GUI.Video
                                 this.m_Facade.View = GUIFacadeControl.ViewMode.List;
                                 m_Image.Visible = true;
                             }
-
+                            this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
                             // view handling
                             List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
@@ -732,7 +722,7 @@ namespace MediaPortal.GUI.Video
                                 this.m_Facade.View = GUIFacadeControl.ViewMode.List;
                                 m_Season_Image.Visible = true;
                             }
-
+                            this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
                             if (m_SelectedSeries != null && this.m_Image != null)
                             {
                                 try
@@ -766,8 +756,9 @@ namespace MediaPortal.GUI.Video
                                             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                                 // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
 
-                                                item.Label2 = FormatField(m_sFormatSeasonCol3, season);
+                                            item.Label2 = FormatField(m_sFormatSeasonCol3, season);
                                             item.Label3 = FormatField(m_sFormatSeasonCol1, season);
+                                            item.IconImage = GetSeasonBanner(season, false);
                                         }
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                                         item.IsDownloading = true;
@@ -824,7 +815,7 @@ namespace MediaPortal.GUI.Video
                             //m_SelectedEpisode = null;
                             int count = 0;
                             this.m_Facade.View = GUIFacadeControl.ViewMode.List;
-
+                            this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
                             if (m_SelectedSeries != null && this.m_Image != null)
                             {
                                 try
@@ -901,8 +892,8 @@ namespace MediaPortal.GUI.Video
                                             selectedIndex = count;
                                     }
 
-                                    // first returned logo should also show up here in list view directly
-                                    item.IconImage = item.IconImageBig = localLogos.getFirstEpLogo(episode);
+                                        // first returned logo should also show up here in list view directly
+                                        item.IconImage = localLogos.getFirstEpLogo(episode);
                                     this.m_Facade.Add(item);
                                 }
                                 catch (Exception ex)
@@ -954,7 +945,6 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
-
         }
 
         protected override void OnPageLoad()
@@ -1692,6 +1682,8 @@ namespace MediaPortal.GUI.Video
             // set the skin labels
             setViewLabels();
 
+            if (fanartSet) loadFanart(null);
+
             m_CurrViewStep = 0; // we always start out at step 0
             m_stepSelection = null;
             m_stepSelections = new List<string[]>();
@@ -1740,6 +1732,7 @@ namespace MediaPortal.GUI.Video
                         m_stepSelection = m_stepSelections[m_CurrViewStep];
                         skipSeasonIfOne_DirectionDown = false; // otherwise the user cant get back out
                         LoadFacade();
+                        if (this.listLevel == Listlevel.Series) loadFanart(null);
                         skipSeasonIfOne_DirectionDown = true;
                     }
                     break;
@@ -1755,6 +1748,61 @@ namespace MediaPortal.GUI.Video
                 default:
                     base.OnAction(action);
                     break;
+            }
+        }
+
+        Random fanartRandom = new Random();
+        string getFanart(string seriesID, out bool isLight)
+        {
+            MPTVSeriesLog.Write("Fanart: checking for ", seriesID, MPTVSeriesLog.LogLevel.Normal);
+            string[] fanArts = System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), "*" + seriesID + "*.png", System.IO.SearchOption.TopDirectoryOnly);
+            string fanArt = null;
+            isLight = false;
+            MPTVSeriesLog.Write("Fanart: found ", fanArts.Length.ToString(), MPTVSeriesLog.LogLevel.Normal);
+            
+            if (fanArts.Length == 0) return null;
+            else if (fanArts.Length == 1) fanArt = fanArts[0];
+            else fanArt = fanArts[fanartRandom.Next(0, fanArts.Length)];
+
+            isLight = (fanArt.Contains("_light_"));
+            return fanArt;
+        }
+
+        bool fanartSet = false;
+        bool loadFanart(DBSeries series)
+        {
+            try
+            {
+                if (FanartBackground == null) return false;
+                if (series == null)
+                {
+                    MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
+                    this.FanartBackground.Visible = false;
+                    if (this.dummyIsLightFanartLoaded != null)
+                        this.dummyIsLightFanartLoaded.Visible = false;
+                    fanartSet = false;
+                }
+                else
+                {
+                    bool isLight = false;
+                    string bg = getFanart(series[DBSeries.cID], out isLight);
+                    if (bg != null)
+                    {
+                        MPTVSeriesLog.Write("Fanart: found, loading: " + bg, MPTVSeriesLog.LogLevel.Normal);
+                        FanartBackground.SetFileName(bg);
+                        this.FanartBackground.Visible = true;
+                        if (this.dummyIsLightFanartLoaded != null)
+                            this.dummyIsLightFanartLoaded.Visible = isLight;
+                        fanartSet = true;
+                    }
+                    else fanartSet = false;
+                }
+                return fanartSet;
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Fanart: Problem encountered: " + ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                return false;
             }
         }
 
@@ -1785,7 +1833,10 @@ namespace MediaPortal.GUI.Video
                         m_stepSelections.Add(m_stepSelection);
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Normal);
                         this.LoadFacade();
+                        MPTVSeriesLog.Write("Fanart: Series selected");
+                        this.loadFanart(m_SelectedSeries);
                         this.m_Facade.Focus = true;
+                        
                         break;
                     case Listlevel.Season:
                         this.m_CurrViewStep++;
