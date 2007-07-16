@@ -56,7 +56,6 @@ namespace WindowPlugins.GUITVSeries
         private DBNewzbin m_currentNewsSearch = null;
         List<logicalView> availViews = new List<logicalView>();
         logicalView selectedView = null;
-        logicalViewStep selectedViewStep = null;
         loadingDisplay load = null;
         List<Language> onlineLanguages = new List<Language>();
         bool initLoading = true;
