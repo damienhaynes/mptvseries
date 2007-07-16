@@ -844,6 +844,7 @@ namespace MediaPortal.GUI.Video
                                 }
                                 count++;
                             }
+
                             this.m_Facade.Focus = true;
                             if (selectedIndex != -1)
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
@@ -978,7 +979,6 @@ namespace MediaPortal.GUI.Video
 
         void setGUIProperty(guiProperty which, string value)
         {
-            MPTVSeriesLog.Write("Setting label: #TVSeries." + which.ToString() + " - " + value);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which.ToString(), value);
         }
 
@@ -2080,7 +2080,6 @@ namespace MediaPortal.GUI.Video
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null)
                 return;
-
             DBSeason season = (DBSeason)item.TVTag;
             m_SelectedSeason = season;
 
@@ -2088,7 +2087,10 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Subtitle, FormatField(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FormatField(m_sFormatSeasonMain, season));
 
-            setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(season));
+            
+            setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(season, false));
+            
+            
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
             clearGUIProperty(guiProperty.EpisodeImage);
@@ -2151,7 +2153,7 @@ namespace MediaPortal.GUI.Video
                     setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
                 if (m_SelectedSeason != null)
-                    setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(m_SelectedSeason));
+                    setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(m_SelectedSeason, false));
                 else clearGUIProperty(guiProperty.SeasonBanner);
             }
         }
