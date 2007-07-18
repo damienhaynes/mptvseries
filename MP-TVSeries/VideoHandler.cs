@@ -231,6 +231,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         w.RunWorkerAsync(true);
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
                         m_currentEpisode.Commit();
                         m_currentEpisode = null;
                     }

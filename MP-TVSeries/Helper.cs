@@ -189,6 +189,17 @@ namespace WindowPlugins.GUITVSeries
             return result;
         }
 
+        /// <summary>
+        /// Convertes a given amount of Milliseconds into humanly readable MM:SS format
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        /// <returns></returns>
+        public static System.String MSToMMSS(int milliseconds)
+        {
+            TimeSpan t = new TimeSpan(0, 0, 0, 0, milliseconds);
+            return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
+        }
+
         public class String
         {
             /// <summary>
