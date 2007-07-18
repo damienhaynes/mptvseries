@@ -149,7 +149,11 @@ namespace WindowPlugins.GUITVSeries
                 lastWasCached = true;
                 lastResult = tmpEp.cachedFirstLogo;
             }
-            if (firstOnly) tmpEp.cachedFirstLogo = lastResult;
+            if (firstOnly)
+            {
+                tmpEp.cachedLogoResults = null;
+                tmpEp.cachedFirstLogo = lastResult;
+            }
             if(!lastWasCached) cache.addChangeEpisode(tmpEp);
             return lastResult;
         }
@@ -241,7 +245,6 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 if (firstOnly)
                                 {
-                                    logosForBuilding = null; // reset so it doesn't count as cached
                                     return filenames[0]; // if we only need the first then we just return the original here
                                 }
                                 else logosForBuilding.AddRange(filenames);
@@ -468,7 +471,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                             foreach (Match m in seriesParse.Matches(what))
-                                value = value.Replace("<Series." + m.Value + ">", tmpEp[m.Value]);
+                                value = value.Replace("<Series." + m.Value + ">", tmpSeries[m.Value]);
                             if (value.Contains("<Season")) getFieldValues(value, out value, level); // recursive
                         }
                         else if (what.Contains("<Season"))
@@ -487,7 +490,7 @@ namespace WindowPlugins.GUITVSeries
                                 //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
                             }
                             foreach (Match m in seasonParse.Matches(what))
-                                value = value.Replace("<Season." + m.Value + ">", tmpEp[m.Value]);
+                                value = value.Replace("<Season." + m.Value + ">", tmpSeason[m.Value]);
                             // we can't logically need to be recursive anymore here
                         }
                     }

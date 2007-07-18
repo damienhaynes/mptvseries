@@ -70,6 +70,15 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+            
+            // set height/width
+            int height = DBOption.GetOptions("configSizeHeight");
+            int width = DBOption.GetOptions("configSizeWidth");
+            if (height > this.MinimumSize.Height && width > this.MinimumSize.Width)
+            {
+                System.Drawing.Size s = new Size(width, height);
+                this.Size = s;
+            }
 
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
@@ -1589,6 +1598,9 @@ namespace WindowPlugins.GUITVSeries
                             // same for filesizes
                             bValid |= ((sFieldName == DBEpisode.cFileSize && tag.m_Level == FieldTag.Level.Episode) ||
                                (sFieldName == DBEpisode.cFileSizeBytes && tag.m_Level == FieldTag.Level.Episode));
+                            // and prettyPlaytime
+                            bValid |= (sFieldName == DBEpisode.cPrettyPlaytime && tag.m_Level == FieldTag.Level.Episode);
+
                             switch (tag.m_Level)
                             {
                                 case FieldTag.Level.Series:
@@ -2478,6 +2490,10 @@ namespace WindowPlugins.GUITVSeries
         {
             // so that locallogos can clean up its stuff
             localLogos.cleanUP();
+
+            // save the config size
+            DBOption.SetOptions("configSizeHeight", this.Size.Height);
+            DBOption.SetOptions("configSizeWidth", this.Size.Width);
         }
 
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
@@ -2689,6 +2705,21 @@ namespace WindowPlugins.GUITVSeries
         private void nudWatchedAfter_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cWatchedAfter, (int)nudWatchedAfter.Value);
+        }
+
+        private void resetExpr_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (DialogResult.Yes ==
+                        MessageBox.Show("You are about to delete all parsing expressions," + Environment.NewLine +
+                            "and replace them with the plugin's defaults." + Environment.NewLine +
+                            "Any custom Expressions will be lost!", "Reset Expressions", MessageBoxButtons.YesNo))
+            {
+                DBExpression.ClearAll();
+                DBExpression.AddDefaults();
+
+                dataGridView_Expressions.Rows.Clear();
+                LoadExpressions();
+            }
         }
 
     }

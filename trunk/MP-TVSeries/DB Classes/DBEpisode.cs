@@ -209,6 +209,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cFileSizeBytes = "FileSizeB";
         public const String cFileSize = "FileSize";
 
+        public const String cPrettyPlaytime = "PrettyLocalPlaytime";
+
         private DBOnlineEpisode m_onlineEpisode = null;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -586,7 +588,6 @@ namespace WindowPlugins.GUITVSeries
             get
             {
 
-                // online data always takes precedence over the local file data
                 switch (fieldName)
                 {
                     case cFileSizeBytes:
@@ -595,7 +596,10 @@ namespace WindowPlugins.GUITVSeries
                         return StrFormatByteSize(new System.IO.FileInfo(base[DBEpisode.cFilename]).Length);
                     case cAvailableSubtitles:
                         return (this[cAvailableSubtitles] = checkHasSubtitles());
+                    case cPrettyPlaytime:
+                        return Helper.MSToMMSS(this["localPlaytime"]);
                 }
+                // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {
                     DBValue retVal = null;

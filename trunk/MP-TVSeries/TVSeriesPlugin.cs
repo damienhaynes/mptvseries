@@ -744,6 +744,11 @@ namespace MediaPortal.GUI.Video
                                         if (m_back_up_select_this != null && season != null && selectedIndex == -1 && season[DBSeason.cSeriesID] == m_back_up_select_this[0] && season[DBSeason.cIndex] == m_back_up_select_this[1])
                                             selectedIndex = count;
                                     }
+                                    else
+                                    {
+                                        // since onseasonselected won't be triggered automatically, we have to force it
+                                        Season_OnItemSelected(item);
+                                    }
                                     this.m_Facade.Add(item);
                                 }
                                 catch (Exception ex)
@@ -1505,16 +1510,16 @@ namespace MediaPortal.GUI.Video
                                         }
                                         break;
                                 }
-                                if (epsDeletion.Count > 0 && DBOption.GetOptions(DBOption.cDeleteFile))
+                                if (epsDeletion.Count > 0)// && DBOption.GetOptions(DBOption.cDeleteFile))
                                 {
                                     // delete the actual files!!
 
-                                    dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                                    if (null == dlgYesNo) return;
-                                    dlgYesNo.SetHeading(Translation.Confirm);
-                                    dlgYesNo.SetLine(1, String.Format(Translation.delPhyiscalWarning, epsDeletion.Count));
-                                    dlgYesNo.SetDefaultToYes(false);
-                                    dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+                                    //dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                                    //if (null == dlgYesNo) return;
+                                    //dlgYesNo.SetHeading(Translation.Confirm);
+                                    //dlgYesNo.SetLine(1, String.Format(Translation.delPhyiscalWarning, epsDeletion.Count));
+                                    //dlgYesNo.SetDefaultToYes(false);
+                                    //dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
                                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
                                     if (dlgYesNo.IsConfirmed)
                                     {
