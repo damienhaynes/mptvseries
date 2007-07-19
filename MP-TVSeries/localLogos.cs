@@ -52,7 +52,6 @@ namespace WindowPlugins.GUITVSeries
         static string groupedField = string.Empty;
         static string groupedSelection = string.Empty;
         static bool entriesInMemory = false;
-        static string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         static NumberFormatInfo provider = new NumberFormatInfo();
         static public bool appendEpImage = true;
         static string lastResult = string.Empty;
@@ -424,7 +423,7 @@ namespace WindowPlugins.GUITVSeries
         static string getCleanAbsolutePath(string file)
         {
             if (!System.IO.Path.IsPathRooted(file))
-                file = Helper.PathCombine(appPath, file);
+                file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
            foreach (char c in System.IO.Path.GetInvalidPathChars())
                file = file.Replace(c, '_');
            return file;

@@ -105,8 +105,8 @@ namespace WindowPlugins.GUITVSeries
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
                 Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
                     {
-                        double index1 = e1[DBEpisode.cSeasonIndex] == 0 ? e1[DBOnlineEpisode.cAirsBeforeEpisode] - 0.5 : e1[DBEpisode.cEpisodeIndex];
-                        return index1.CompareTo(e2[DBEpisode.cSeasonIndex] == 0 ? e2[DBOnlineEpisode.cAirsBeforeEpisode] - 0.5 : e2[DBEpisode.cEpisodeIndex]);
+                        double index1 = e1[DBEpisode.cSeasonIndex] == 0 ? ((int)e1[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 : ((int)e1[DBEpisode.cEpisodeIndex]);
+                        return index1.CompareTo(e2[DBEpisode.cSeasonIndex] == 0 ? ((int)e2[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 : ((int)e2[DBEpisode.cEpisodeIndex]));
                     };
                 eps.Sort(inlineSorting);
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
