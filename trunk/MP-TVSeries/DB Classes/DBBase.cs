@@ -35,6 +35,8 @@ namespace WindowPlugins.GUITVSeries
 {
     public class DBValue
     {
+        static System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
+        static DBValue() { provider.NumberDecimalSeparator = "."; }
         private String value = String.Empty;
 
         public override String ToString()
@@ -106,6 +108,17 @@ namespace WindowPlugins.GUITVSeries
             catch (System.FormatException) { return 0; }
         }
 
+        /// <summary>
+        /// NumberDecimalSeperator needs to be "."
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        static public implicit operator double(DBValue value)
+        {
+            try { return Convert.ToDouble(value.value, provider); }
+            catch (System.FormatException) { return 0; }
+        }
+
         static public implicit operator DBValue(String value)
         {
             return new DBValue(value);
@@ -124,6 +137,11 @@ namespace WindowPlugins.GUITVSeries
         static public implicit operator DBValue(long value)
         {
             return new DBValue(value);
+        }
+
+        static public implicit operator DBValue(double value)
+        {
+            return new DBValue(value.ToString(provider));
         }
 
         static public bool operator == (DBValue first, DBValue second)
@@ -528,7 +546,7 @@ namespace WindowPlugins.GUITVSeries
                             switch (fieldPair.Value.Type)
                             {
                                 case DBField.cTypeInt:
-                                    sqlQuery += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''" : fieldPair.Value.Value + ",");
+                                    sqlQuery += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
                                     break;
 
                                 case DBField.cTypeString:
@@ -553,7 +571,7 @@ namespace WindowPlugins.GUITVSeries
                         switch (fieldPair.Value.Type)
                         {
                             case DBField.cTypeInt:
-                                sParamValues += fieldPair.Value.Value + ",";
+                                sParamValues += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
                                 break;
 
                             case DBField.cTypeString:

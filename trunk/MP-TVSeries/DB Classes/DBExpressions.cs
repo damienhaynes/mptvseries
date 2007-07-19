@@ -191,11 +191,24 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             */
-            expressions = DBExpression.GetAll();
+            //expressions = DBExpression.GetAll();
             if (expressions == null || expressions.Length == 0)
             {
                 // no expressions in the db => put the default ones
                 AddDefaults();
+            }
+            else 
+            {
+                foreach (DBExpression e in expressions)
+                {
+                    if(e[DBExpression.cExpression] == @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\w]+)\](( |)(-( |)|))(?<title>(?![^\]*?sample)[^$]*?)\.(?<ext>[^.]*)")
+                    {
+                        // fix typo
+                        e[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>(?![^\\]*?sample)[^$]*?)\.(?<ext>[^.]*)";
+                        e.Commit();
+                        break;
+                    }
+                }
             }
         }
 
