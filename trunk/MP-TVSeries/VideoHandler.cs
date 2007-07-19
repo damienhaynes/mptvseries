@@ -203,7 +203,7 @@ namespace WindowPlugins.GUITVSeries
 
                         double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
                         if (!m_currentEpisode[DBOnlineEpisode.cWatched]
-                            && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter) 
+                            && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
                         {
                             m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
                         }
