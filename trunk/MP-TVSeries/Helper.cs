@@ -194,9 +194,9 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="milliseconds"></param>
         /// <returns></returns>
-        public static System.String MSToMMSS(int milliseconds)
+        public static System.String MSToMMSS(double milliseconds)
         {
-            TimeSpan t = new TimeSpan(0, 0, 0, 0, milliseconds);
+            TimeSpan t = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
             return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
         }
 
