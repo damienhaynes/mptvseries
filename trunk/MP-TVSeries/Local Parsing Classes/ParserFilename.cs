@@ -89,12 +89,20 @@ namespace WindowPlugins.GUITVSeries
                         sExpression = sExpression.Replace("<title>", "<" + DBEpisode.cEpisodeName + ">");
                         sExpression = sExpression.Replace("<firstaired>", "<" + DBOnlineEpisode.cFirstAired + ">");
 
-                        sExpressions.Add(sExpression);
                         // we precompile the expressions here which is faster in the end
-                        regularExpressions.Add(new Regex(sExpression, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Compiled));
+                        try
+                        {
+                            regularExpressions.Add(new Regex(sExpression, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Compiled));
+                            sExpressions.Add(sExpression);
+                        }
+                        catch (Exception e)
+                        {
+                            // wrong regex
+                            MPTVSeriesLog.Write("Cannot use the follow Expression: " + e.Message);
+                        }
                     }
                 }
-                MPTVSeriesLog.Write("Compiled Regex sucessfuly, " + sExpressions.Count.ToString() + " Expressions found");
+                MPTVSeriesLog.Write("Compiled Regex sucessfuly, " + sExpressions.Count.ToString() + " valid Expressions found");
             }
             catch (Exception ex)
             {
