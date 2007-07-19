@@ -88,8 +88,6 @@ namespace WindowPlugins.GUITVSeries
             //#Play.Current.IsWatched
             #endregion
 
-            MPTVSeriesLog.Write("SetGUIProperties: " + clear.ToString());
-            MPTVSeriesLog.Write(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#Play.Current.Title"));
             DBSeries series = null;
             if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
 
@@ -97,7 +95,6 @@ namespace WindowPlugins.GUITVSeries
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
-            MPTVSeriesLog.Write(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#Play.Current.Title"));
         }
 
         public bool ResumeOrPlay(DBEpisode episode)
@@ -198,9 +195,7 @@ namespace WindowPlugins.GUITVSeries
 
                     if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
                     {
-                        w.RunWorkerAsync(true);
                         m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-
                         double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
                         if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                             && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
@@ -209,6 +204,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         m_currentEpisode.Commit();
                         m_currentEpisode = null;
+                        w.RunWorkerAsync(true);
                     }
                 }
                 catch (Exception e)
