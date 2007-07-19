@@ -361,6 +361,12 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+
+        private void btnExpressionBuilder_Click(Control sender, EventArgs e)
+        {
+
+        }
+
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
@@ -1844,6 +1850,17 @@ namespace WindowPlugins.GUITVSeries
         {
             splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
             DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
+
+            if (splitContainer1.Panel2Collapsed) 
+            {
+                button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
+                this.toolTip_Help.SetToolTip(this.button1, "Click to show log");            
+            }
+            else 
+            {
+                button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down_small;
+                this.toolTip_Help.SetToolTip(this.button1, "Click to hide log");  
+            }
         }
 
         private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
@@ -2722,6 +2739,13 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void buildExpr_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ExpressionBuilder expBldForm = new ExpressionBuilder();
+            expBldForm.ShowDialog();
+                //-- ToDo: add result to datagridview
+        }
+
     }
 
     public class BannerComboItem
@@ -2795,5 +2819,6 @@ namespace WindowPlugins.GUITVSeries
                 this.m_Value = value;
             }
         }
+
     }
 }

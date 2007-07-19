@@ -1,4 +1,15 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugGUI|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>C:\Program Files\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -30,22 +41,33 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugConfig\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>C:\Program Files\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Core, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Core.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Core.DLL</HintPath>
     </Reference>
     <Reference Include="Databases, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Databases.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Databases.DLL</HintPath>
     </Reference>
     <Reference Include="Dialogs, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\plugins\windows\Dialogs.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Plugins\Windows\Dialogs.DLL</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\MP2\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\ICSharpCode.SharpZipLib.DLL</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -54,7 +76,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utils, Version=2.1.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Utils.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Utils.DLL</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +88,12 @@
     <Compile Include="Downloaders\DownloadMonitor.cs" />
     <Compile Include="Downloaders\IDownloaders.cs" />
     <Compile Include="Downloaders\newzbin.cs" />
+    <Compile Include="ExpressionBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExpressionBuilder.Designer.cs">
+      <DependentUpon>ExpressionBuilder.cs</DependentUpon>
+    </Compile>
     <Compile Include="feedback.cs" />
     <Compile Include="GUIConfiguration.cs">
       <SubType>Form</SubType>
@@ -136,10 +164,20 @@
     <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
+    <Compile Include="User Controls\ucConfigDisplayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="User Controls\ucConfigDisplayControl.Designer.cs">
+      <DependentUpon>ucConfigDisplayControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ExpressionBuilder.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExpressionBuilder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUIConfiguration.resx">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -165,6 +203,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="User Controls\ucConfigDisplayControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ucConfigDisplayControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="img\arrows.png" />
@@ -172,17 +214,22 @@
     <None Include="img\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="img\arrow_down_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\arrow_up_small.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-  </Target>
-  -->
+  </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "h:\MP2\xbmc\bin\release\plugins\windows\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "c:\Program Files\Team MediaPortal\MediaPortal\plugins\windows\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

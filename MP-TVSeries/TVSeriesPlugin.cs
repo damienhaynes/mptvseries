@@ -780,6 +780,7 @@ namespace MediaPortal.GUI.Video
                         {
                             int selectedIndex = -1;
                             int count = 0;
+                            bool bFindNext = false;
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
 
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
@@ -829,8 +830,26 @@ namespace MediaPortal.GUI.Video
 
                                     if (this.m_SelectedEpisode != null)
                                     {
-                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
+                                       if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID]) 
+                                       {
+
+                                           if (!this.m_SelectedEpisode[DBOnlineEpisode.cWatched])
+                                           {
+                                               //-- video has not been watched so keep it selected
+                                               selectedIndex = count;                                               
+                                           }
+                                           else
+                                           {
+                                               //-- move to the next unwatched video in the list
+                                               bFindNext = true;
+                                               selectedIndex = count;
+                                           }
+                                        }
+                                        else if (bFindNext && !episode[DBOnlineEpisode.cWatched])
+                                        {
                                             selectedIndex = count;
+                                            bFindNext = false;
+                                        }
                                     }
                                     else
                                     {
@@ -852,7 +871,10 @@ namespace MediaPortal.GUI.Video
 
                             this.m_Facade.Focus = true;
                             if (selectedIndex != -1)
+                            {
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
+                            }
+
                         }
                         MPTVSeriesLog.Write("LoadFacade: Finish");
                         break;
