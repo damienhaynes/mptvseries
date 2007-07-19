@@ -513,17 +513,31 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition cond = new SQLCondition();
             
             // for huge libraries a stringBuilder is much better than adding every filename seperatly to the condition (and for small ones it hardly matters)
+            // sqllite expression tree can only be 1000 deep though, to be safe we do 500 at once and no more
+            List<SQLCondition> importProcessedConds = new List<SQLCondition>();
             try
             {
                 StringBuilder condBuilder = new StringBuilder();
                 string field = DBEpisode.Q(DBEpisode.cFilename);
+                int count = 0;
                 foreach (string file in filenames)
                 {
                     if (condBuilder.Length > 0)
                         condBuilder.Append(" or ");
                     condBuilder.Append(field).Append(" = '").Append(file.Replace("'", "''")).Append('\'');
+                    if (count++ >= 500)
+                    {
+                        cond.AddCustom(condBuilder.ToString());
+                        importProcessedConds.Add(cond);
+                        cond = new SQLCondition();
+                        count = 0;
+                    }
                 }
-                cond.AddCustom(condBuilder.ToString());
+                if (count > 0)
+                {
+                    cond.AddCustom(condBuilder.ToString());
+                    importProcessedConds.Add(cond);
+                }
             }
             catch ( Exception ex)
             {
@@ -531,7 +545,8 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
-            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, cond);
+            foreach(SQLCondition condition in importProcessedConds)
+                DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, condition);
 
             SQLCondition condSeason = new SQLCondition();
             condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
