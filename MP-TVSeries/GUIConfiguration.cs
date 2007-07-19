@@ -1848,6 +1848,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.splitContainer1.Panel2MinSize = this.Size.Height / 3;
+            this.splitContainer1.SplitterDistance = this.Size.Height / 3 * 2;
             splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
             DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
 
