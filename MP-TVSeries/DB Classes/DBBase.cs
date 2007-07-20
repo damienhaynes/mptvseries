@@ -535,53 +535,71 @@ namespace WindowPlugins.GUITVSeries
                 // use the primary key field
                 String sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
+                StringBuilder builder = new StringBuilder();
                 if (records.Rows.Count > 0)
                 {
                     // already exists, update
-                    sqlQuery = "update " + m_tableName + " set ";
+                    builder.Append("update ").Append(m_tableName).Append(" set ");
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
                         if (!fieldPair.Value.Primary)
                         {
+                            builder.Append(fieldPair.Key).Append(" = ");
                             switch (fieldPair.Value.Type)
                             {
                                 case DBField.cTypeInt:
-                                    sqlQuery += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
+                                    if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                        builder.Append("'',");
+                                    else
+                                        builder.Append((string)fieldPair.Value.Value).Append(',');
                                     break;
 
                                 case DBField.cTypeString:
-                                    sqlQuery += fieldPair.Key + " = '" + ((String)(fieldPair.Value.Value)).Replace("'", "''") + "',";
+                                    builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
                                     break;
                             }
                             
                         }
                     }
 
-                    sqlQuery = sqlQuery.Substring(0, sqlQuery.Length - 1) + sWhere;
+                    sqlQuery = builder.ToString().Substring(0, builder.Length - 1) + sWhere;
                     DBTVSeries.Execute(sqlQuery);
                 }
                 else
                 {
                     // add new record
-                    String sParamNames = String.Empty;
                     String sParamValues = String.Empty;
+                    StringBuilder paramNames = new StringBuilder();
+                    bool first = true;
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
-                        sParamNames += fieldPair.Key + ",";
+                        if (!first)
+                        {
+                            paramNames.Append(',');
+                            builder.Append(',');
+                        }
+                        else first = false;
+                        paramNames.Append(fieldPair.Key);
                         switch (fieldPair.Value.Type)
                         {
                             case DBField.cTypeInt:
-                                sParamValues += (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
+                                if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                    builder.Append("''");
+                                else
+                                    builder.Append((string)fieldPair.Value.Value);
                                 break;
 
                             case DBField.cTypeString:
-                                sParamValues += "'" + ((String)(fieldPair.Value.Value)).Replace("'", "''") + "',";
+                                builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("'");
                                 break;
                         }
+
                     }
-                    sParamNames = sParamNames.Substring(0, sParamNames.Length - 1);
-                    sParamValues = sParamValues.Substring(0, sParamValues.Length - 1);
-                    sqlQuery = "insert into " + m_tableName + " (" + sParamNames + ") values(" + sParamValues + ")";
+                    sParamValues = builder.ToString();
+                    builder.Remove(0, builder.Length);
+                    builder.Append("insert into ").Append(m_tableName).Append(" (").Append(paramNames).Append(") values(").Append(sParamValues).Append(")");
+                    sqlQuery = builder.ToString();
+
                     DBTVSeries.Execute(sqlQuery);
                 }
                 return true;
@@ -707,7 +725,8 @@ namespace WindowPlugins.GUITVSeries
                     return string.Empty;
                 }
             }
-            return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
+            randImage = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
+            return System.IO.File.Exists(randImage) ? randImage : string.Empty;
         }
 
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)

@@ -516,9 +516,10 @@ namespace MediaPortal.GUI.Video
         String GetSeasonBanner(DBSeason season, bool createIfNotExist)
         {
             String filename = season.Banner;
-            if (filename.Length > 0 && System.IO.File.Exists(filename))
+            if (filename.Length > 0)
             {
-                return filename;
+                return Helper.buildMemoryImageFromFile(filename, new Size(400, 578)); 
+                //return filename;
             }
             else if (createIfNotExist)
             {
@@ -2125,9 +2126,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Subtitle, FormatField(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FormatField(m_sFormatSeasonMain, season));
 
-            
             setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(season, false));
-            
             
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 

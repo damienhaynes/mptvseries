@@ -164,12 +164,6 @@
     <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
-    <Compile Include="User Controls\ucConfigDisplayControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="User Controls\ucConfigDisplayControl.Designer.cs">
-      <DependentUpon>ucConfigDisplayControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
   </ItemGroup>
@@ -203,10 +197,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\ucConfigDisplayControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ucConfigDisplayControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="img\arrows.png" />
@@ -221,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -230,6 +221,6 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "c:\Program Files\Team MediaPortal\MediaPortal\plugins\windows\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "h:\MP2\xbmc\bin\Release\\plugins\windows\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

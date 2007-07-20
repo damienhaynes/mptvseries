@@ -38,6 +38,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cEnabled = "enabled";
         public const String cPath = "Path";
 
+        private static bool _includesNetworkShares;
+        public static bool includesNetworkShares
+        {
+            get { return _includesNetworkShares; }
+        }
+
         public DBImportPath()
             : base(cTableName)
         {
@@ -65,6 +71,7 @@ namespace WindowPlugins.GUITVSeries
         {
             String sqlQuery = "delete from " + cTableName;
             DBTVSeries.Execute(sqlQuery);
+            _includesNetworkShares = false;
         }
 
         public static DBImportPath[] GetAll()
@@ -83,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int index = 0; index < results.Rows.Count; index++)
                     {
                         importPathes[index] = new DBImportPath();
-                        importPathes[index].Read(ref results, index);
+                        importPathes[index].Read(ref results, index);                        
                     }
                     return importPathes;
                 }
