@@ -208,7 +208,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case DBSeason.cUnwatchedItems:
                         // this one is virtual
-                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0");
+                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
                         if (results.Rows.Count > 0)
                         {
                             return results.Rows[0].fields[0];

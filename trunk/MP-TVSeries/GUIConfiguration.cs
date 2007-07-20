@@ -115,6 +115,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             splitContainer1.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
+            log_window_changed();
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
             nudWatchedAfter.Value = DBOption.GetOptions(DBOption.cWatchedAfter);
             textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cView_PluginName);
@@ -1846,23 +1847,29 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSubs_Forom_BaseURL, textBox_foromBaseURL.Text);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void log_window_changed()
         {
-            this.splitContainer1.Panel2MinSize = this.Size.Height / 3;
             this.splitContainer1.SplitterDistance = this.Size.Height / 3 * 2;
-            splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
             DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
 
-            if (splitContainer1.Panel2Collapsed) 
+            if (splitContainer1.Panel2Collapsed)
             {
                 button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
-                this.toolTip_Help.SetToolTip(this.button1, "Click to show log");            
+                this.toolTip_Help.SetToolTip(this.button1, "Click to show log");
             }
-            else 
+            else
             {
                 button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down_small;
-                this.toolTip_Help.SetToolTip(this.button1, "Click to hide log");  
+                this.toolTip_Help.SetToolTip(this.button1, "Click to hide log");
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
+            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
+            log_window_changed();
         }
 
         private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
@@ -2733,11 +2740,13 @@ namespace WindowPlugins.GUITVSeries
                             "and replace them with the plugin's defaults." + Environment.NewLine +
                             "Any custom Expressions will be lost!", "Reset Expressions", MessageBoxButtons.YesNo))
             {
+                dataGridView_Expressions.Rows.Clear();
+
                 DBExpression.ClearAll();
                 DBExpression.AddDefaults();
 
-                dataGridView_Expressions.Rows.Clear();
                 LoadExpressions();
+                
             }
         }
 
