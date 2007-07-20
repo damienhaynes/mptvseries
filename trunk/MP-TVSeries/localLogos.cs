@@ -185,7 +185,9 @@ namespace WindowPlugins.GUITVSeries
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
             string res = work(level, imgHeight, imgWidth, firstOnly, ref logosForBuilding);
-            return res;
+            if (res != null && res.Length > 0 && res[0] != '[')
+                return Helper.buildMemoryImageFromFile(res, new Size(imgWidth, imgHeight));
+            else return res; // we build the memimage already
         }
 
         static string work(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
@@ -268,22 +270,23 @@ namespace WindowPlugins.GUITVSeries
                     foreach (string logo in logosForBuilding)
                         tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
                     tmpFile = Helper.PathCombine(pathfortmpfile, "TVSeriesDynLogo" + tmpFile + ".png");
-                    if (System.IO.File.Exists(tmpFile))
-                        return tmpFile;
+                    //if (System.IO.File.Exists(tmpFile))
+                    //    return tmpFile;
                     Bitmap b = new Bitmap(imgWidth, imgHeight);
                     Image img = b;
                     Graphics g = Graphics.FromImage(img);
                     appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
-                    try
-                    {
-                        b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
-                        return tmpFile;
-                    }
-                    catch (Exception)
-                    {
-                        if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
-                        return string.Empty;
-                    }
+                    //try
+                    //{
+                    //    b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
+                    //    return tmpFile;
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
+                    //    return string.Empty;
+                    //}
+                    return Helper.buildMemoryImage(b, tmpFile, new Size(imgWidth, imgHeight));
                 }
                 else return string.Empty;
             }

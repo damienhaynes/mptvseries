@@ -186,13 +186,13 @@ namespace WindowPlugins.GUITVSeries
                 if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
                 if (Helper.String.IsNullOrEmpty(base[cCurrentBannerFileName]))
                     return String.Empty;
-
-                //if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
-                //    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + base[cCurrentBannerFileName];
+                string filename;
                 if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
-                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), base[cCurrentBannerFileName]);
+                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), base[cCurrentBannerFileName]);
                 else
-                    return base[cCurrentBannerFileName];
+                    filename = base[cCurrentBannerFileName];
+                if (System.IO.File.Exists(filename)) return filename;
+                return string.Empty;
             }
             set
             {

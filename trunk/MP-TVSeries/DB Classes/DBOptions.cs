@@ -114,6 +114,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cWatchedAfter = "watchedAfter";
 
+        private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
+
         static DBOption()
         {
             try
@@ -337,15 +339,19 @@ namespace WindowPlugins.GUITVSeries
             try
             {
 //                UpdateTable();
-                String convertedProperty = property;
-                String convertedvalue = value.ToString().Replace("'","''");
+                if (!optionsCache.ContainsKey(property) || optionsCache[property] != value)
+                {
+                    String convertedProperty = property;
+                    String convertedvalue = value.ToString().Replace("'", "''");
 
-                String sqlQuery;
-                if (GetOptions(convertedProperty) == null)
-                    sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
-                else
-                    sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
-                DBTVSeries.Execute(sqlQuery);
+                    String sqlQuery;
+                    if (GetOptions(convertedProperty) == null)
+                        sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
+                    else
+                        sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
+                    optionsCache[property] = value;
+                    DBTVSeries.Execute(sqlQuery);
+                } 
                 return true;
             }
             catch (Exception ex)
@@ -362,11 +368,17 @@ namespace WindowPlugins.GUITVSeries
 //                UpdateTable();
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
+                if (optionsCache.ContainsKey(convertedProperty)) return optionsCache[convertedProperty];
 
                 string sqlQuery = "select value from options where property = '" + convertedProperty + "'";
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (results.Rows.Count > 0)
-                    return DatabaseUtility.Get(results, 0, "value");
+                {
+                    string res = DatabaseUtility.Get(results, 0, "value");
+                    if(!optionsCache.ContainsKey(property))
+                        optionsCache.Add(property, res);
+                    return res;
+                }
             }
             catch (Exception ex)
             {
