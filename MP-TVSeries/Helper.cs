@@ -221,9 +221,10 @@ namespace WindowPlugins.GUITVSeries
     class perfana
     {
         static Stopwatch timer = new Stopwatch();
-
+        static int noStarted = 0;
         public static void Start()
         {
+            noStarted++;
             timer.Start();
         }
 
@@ -235,12 +236,13 @@ namespace WindowPlugins.GUITVSeries
         public static void logMeasure(MPTVSeriesLog.LogLevel level)
         {
             decimal micro = timer.Elapsed.Ticks / 10M;
-            MPTVSeriesLog.Write(string.Format("Code Measurement:  {0} us {1} ms", micro, timer.ElapsedMilliseconds), level);
+            MPTVSeriesLog.Write(string.Format("Code Measurement:  {0} us {1} ms total, {2} us/{3} ms/run (Counter: {4})", micro, timer.ElapsedMilliseconds, (micro / noStarted).ToString("00.00"), (timer.ElapsedMilliseconds / noStarted).ToString("00.00"), noStarted), level);
         }
 
         public static void Reset()
         {
             timer.Reset();
+            noStarted = 0;
         }
     }
 }

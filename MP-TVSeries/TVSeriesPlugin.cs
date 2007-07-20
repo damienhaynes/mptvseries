@@ -257,6 +257,7 @@ namespace MediaPortal.GUI.Video
 
                 // always do a local scan when starting up the app - later on the watcher will monitor changes
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             }
             else
             {
@@ -299,6 +300,16 @@ namespace MediaPortal.GUI.Video
             m_timerDelegate = new TimerCallback(Clock);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
             return Load(xmlSkin);
+        }
+
+        void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == Microsoft.Win32.PowerModes.Resume)
+            {
+                // lets do a full folder scan since we might have network shares which could have been updated
+                // event is only registered if watch folder option is ticked, so no need to check again here
+                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+            }
         }
 
         void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
