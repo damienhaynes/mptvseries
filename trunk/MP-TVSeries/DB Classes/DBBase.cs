@@ -571,7 +571,7 @@ namespace WindowPlugins.GUITVSeries
                         switch (fieldPair.Value.Type)
                         {
                             case DBField.cTypeInt:
-                                sParamValues += fieldPair.Key + " = " + (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
+                                sParamValues += (Helper.String.IsNullOrEmpty(fieldPair.Value.Value) ? "''," : (fieldPair.Value.Value + ","));
                                 break;
 
                             case DBField.cTypeString:
