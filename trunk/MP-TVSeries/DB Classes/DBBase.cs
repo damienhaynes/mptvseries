@@ -431,23 +431,6 @@ namespace WindowPlugins.GUITVSeries
             return sField;
         }
 
-        //public bool Read(ref SQLiteResultSet records, int index)
-        //{
-        //    if (records.Rows.Count > 0)
-        //    {
-        //        foreach (KeyValuePair<string, DBField> field in m_fields)
-        //        {
-        //            if (records.ColumnIndices.ContainsKey(field.Key))
-        //                field.Value.Value = DatabaseUtility.Get(records, index, field.Key);
-        //            else
-        //                field.Value.Value = DatabaseUtility.Get(records, index, m_tableName + "." + field.Key);
-        //        }
-        //        m_CommitNeeded = false;
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
         public bool Read(ref SQLiteResultSet records, int index)
         {
             if (records.Rows.Count > 0 || records.Rows.Count < index)

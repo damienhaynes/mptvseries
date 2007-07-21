@@ -239,21 +239,7 @@ namespace MediaPortal.GUI.Video
 
             if (DBOption.GetOptions("doFolderWatch"))
             {
-                List<String> importFolders = new List<String>();
-                DBImportPath[] importPaths = DBImportPath.GetAll();
-                if (importPaths != null)
-                {
-                    // ok let's see ... go through all enable import folders, and add a watchfolder on it
-                    foreach (DBImportPath importPath in DBImportPath.GetAll())
-                    {
-                        if (importPath[DBImportPath.cEnabled] != 0)
-                            importFolders.Add(importPath[DBImportPath.cPath]);
-                    }
-                }
-
-                m_watcherUpdater = new Watcher(importFolders);
-                m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
-                m_watcherUpdater.StartFolderWatch();
+                setUpFolderWatches();
 
                 // always do a local scan when starting up the app - later on the watcher will monitor changes
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
@@ -306,8 +292,11 @@ namespace MediaPortal.GUI.Video
         {
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
-                // lets do a full folder scan since we might have network shares which could have been updated
                 // event is only registered if watch folder option is ticked, so no need to check again here
+                // we have to reregister the folder watches
+                setUpFolderWatches();
+
+                // lets do a full folder scan since we might have network shares which could have been updated
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
             }
         }
@@ -480,6 +469,19 @@ namespace MediaPortal.GUI.Video
             return sOut;
         }
 
+        Bitmap drawSimpleBanner(Size sizeImage, string label)
+        {
+            Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
+            Graphics gph = Graphics.FromImage(image);
+            //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
+            GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
+            Font font = new Font(fontList.FontName, 36);
+            gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            gph.DrawString(label, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+            gph.Dispose();
+            return image;
+        }
+
         String GetSeriesBanner(DBSeries series)
         {
             String filename = series.Banner;
@@ -494,17 +496,8 @@ namespace MediaPortal.GUI.Video
                 if (GUITextureManager.LoadFromMemory(null, "[series_" + series[DBSeries.cID] + "]", 0, 0, 0) == 0)
                 {
                     Size sizeImage = new Size(758, 140);
-                    Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
-                    Graphics gph = Graphics.FromImage(image);
-                    //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
-                    GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
-                    Font font = new Font(fontList.FontName, 36);
-                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    gph.DrawString(series[DBOnlineSeries.cPrettyName], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
-                    gph.Dispose();
-                    GUITextureManager.LoadFromMemory(image, "[series_" + series[DBSeries.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
+                    GUITextureManager.LoadFromMemory(drawSimpleBanner(sizeImage, series[DBOnlineSeries.cPrettyName]), "[series_" + series[DBSeries.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
-                
                 return "[series_" + series[DBSeries.cID] + "]";
             }
         }
@@ -527,17 +520,11 @@ namespace MediaPortal.GUI.Video
                 {
                     // no image, use text, create our own
                     Size sizeImage = new Size(400, 578);
-                    Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
-                    Graphics gph = Graphics.FromImage(image);
-                    //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
-                    GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
-                    Font font = new Font(fontList.FontName, 48);
-                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                    Bitmap image;
                     if (season[DBSeason.cIndex] == 0)
-                        gph.DrawString(Translation.specials, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
+                        image = drawSimpleBanner(sizeImage, Translation.specials);
                     else
-                        gph.DrawString(Translation.Season + season[DBSeason.cIndex], font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
-                    gph.Dispose();
+                        image = drawSimpleBanner(sizeImage, Translation.Season + season[DBSeason.cIndex]);
                     GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
                 }
                 return "[" + season[DBSeason.cID] + "]";
@@ -938,54 +925,34 @@ namespace MediaPortal.GUI.Video
                 GUIWindowManager.ShowPreviousWindow();
                 return;
             }
+
+            // for some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
+            // the labels don't display, unless we somehow call them like so
+            // (no, allocResources doesnt work!)
+            clearGUIProperty(guiProperty.Subtitle);
+            clearGUIProperty(guiProperty.Title);
+            clearGUIProperty(guiProperty.Description);
+
+            clearGUIProperty(guiProperty.CurrentView);
+            clearGUIProperty(guiProperty.NextView);
+            clearGUIProperty(guiProperty.LastView);
+
             if (m_CurrLView == null)
             {
                 localLogos.appendEpImage = m_Episode_Image == null ? true : false;
                 // get views
-                //m_allViews = logicalView.getAllFromDB();
                 m_allViews = logicalView.getAll(false); // hardcoded until configuration is set up!
                 if (m_allViews.Count > 0)
                 {
-                    try
-                    {
-                        switchView((string)DBOption.GetOptions("lastView"));
-                    }
-                    catch (Exception)
-                    {
-
-                    }
+                    try { switchView((string)DBOption.GetOptions("lastView")); }
+                    catch (Exception){}
                 }
-                else
-                {
-                    MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
-                }
+                else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
-            else
-            {
-                // for some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
-                // the labels don't display, unless we somehow call them like so
-                // (no, allocResources doesnt work!)
-                clearGUIProperty(guiProperty.Subtitle);
-                clearGUIProperty(guiProperty.Title);
-                clearGUIProperty(guiProperty.Description);
-                //m_Title.Label = string.Empty;
-                //m_Genre.Label = string.Empty;
-                //m_Description.Label = string.Empty;
-
-                clearGUIProperty(guiProperty.CurrentView);
-                clearGUIProperty(guiProperty.NextView);
-                clearGUIProperty(guiProperty.LastView);
-                //view_curr.Label = string.Empty;
-                //view_next.Label = string.Empty;
-                //view_prev.Label = string.Empty;
-
-                setViewLabels();
-            }
+            else setViewLabels();
 
             LoadFacade();
             m_Facade.Focus = true;
-            //m_Title.Height = m_Title.ItemHeight;
-            //m_Genre.Height = m_Genre.ItemHeight;
             setProcessAnimationStatus(m_parserUpdaterWorking);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
 
@@ -993,8 +960,7 @@ namespace MediaPortal.GUI.Video
             {
                 logosHeight = m_Logos_Image.Height;
                 logosWidth = m_Logos_Image.Width;
-            }
-            
+            }   
         }
 
         protected override void OnPageDestroy(int new_windowId)
@@ -1673,21 +1639,16 @@ namespace MediaPortal.GUI.Video
             try
             {
                 setGUIProperty(guiProperty.CurrentView, m_CurrLView.prettyName);
-                //view_curr.Label = m_CurrLView.prettyName;
                 if (m_allViews.Count > 1)
                 {
                     setGUIProperty(guiProperty.NextView, Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).prettyName);
                     setGUIProperty(guiProperty.LastView, Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).prettyName);
-                    //view_next.Label = Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).prettyName;
-                    //view_prev.Label = Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).prettyName;
                 }
                 else
                 {
                     // if only one (enabled) view supress the display of prev/next
                     clearGUIProperty(guiProperty.NextView);
                     clearGUIProperty(guiProperty.LastView);
-                    //view_next.Label = string.Empty;
-                    //view_prev.Label = string.Empty;
                 }
             }
             catch (Exception)
@@ -2016,22 +1977,6 @@ namespace MediaPortal.GUI.Video
 
         }
 
-        //private int CountCRLF(String sIn)
-        //{
-        //    int nCount = -1;
-        //    int nNext = 0;
-        //    do
-        //    {
-        //        nCount++;
-        //        if (nNext < sIn.Length)
-        //            nNext = sIn.IndexOf((char)10, nNext + 1);
-        //        else
-        //            nNext = -1;
-        //    }
-        //    while (nNext != -1);
-        //    return nCount;
-        //}
-
         private void Group_OnItemSelected(GUIListItem item)
         {
             m_SelectedSeries = null;
@@ -2345,6 +2290,25 @@ namespace MediaPortal.GUI.Video
                 m_ImportAnimation.Visible = enable;
                 //MPTVSeriesLog.Write("Set Animation: ", "Done", MPTVSeriesLog.LogLevel.Normal);
             }
+        }
+
+        private void setUpFolderWatches()
+        {
+            List<String> importFolders = new List<String>();
+            DBImportPath[] importPaths = DBImportPath.GetAll();
+            if (importPaths != null)
+            {
+                // ok let's see ... go through all enable import folders, and add a watchfolder on it
+                foreach (DBImportPath importPath in importPaths)
+                {
+                    if (importPath[DBImportPath.cEnabled] != 0)
+                        importFolders.Add(importPath[DBImportPath.cPath]);
+                }
+            }
+
+            m_watcherUpdater = new Watcher(importFolders);
+            m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
+            m_watcherUpdater.StartFolderWatch();
         }
 
         ~TVSeriesPlugin()

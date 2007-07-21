@@ -43,7 +43,6 @@ namespace WindowPlugins.GUITVSeries
         static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
         static Dictionary<int, List<string>> splitConditions = new Dictionary<int, List<string>>();
         static Dictionary<string, string> cachedFieldValues = new Dictionary<string, string>();
-        static List<string> nonExistingFiles = new List<string>();
         static DBEpisode tmpEp;
         static DBSeason tmpSeason;
         static DBSeries tmpSeries;
@@ -211,8 +210,7 @@ namespace WindowPlugins.GUITVSeries
                 if (epImgAppended) logosForBuilding.Add(tmpEp.Image);
                 if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
                 MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
-                bool debugResult = false;
-                bool debugResult1 = false;
+
                 // reset all cached Fieldvalues
                 
                 cachedFieldValues.Clear();
@@ -225,24 +223,11 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
                             List<string> conditions = splitConditions[i];
                             // resolve dnyamic image and check if logo img exists
-                            List<string> filenames = getDynamicFileName(conditions[0], level);
-                            for (int f = 0; f < filenames.Count; f++)
-                            {
-                                bool wasCached = false;
-                                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
-                                {
-                                    if (!wasCached)
-                                    {
-                                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
-                                        nonExistingFiles.Add(filenames[f]);
-                                    }
-                                    filenames.RemoveAt(f);
-                                    f--;
-                                }
-                            }
+                            List<string> filenames = Helper.filterExistingFiles(getDynamicFileName(conditions[0], level));
+
                             // check if the condition is met
                             // each image may only exist once
-                            if (filenames.Count > 0 && !(debugResult1 = logosForBuilding.Contains(conditions[0])) && (debugResult = condIsTrue(conditions, entries[i], level)))
+                            if (filenames.Count > 0 && !logosForBuilding.Contains(conditions[0]) && condIsTrue(conditions, entries[i], level))
                             {
                                 if (firstOnly)
                                 {
@@ -261,31 +246,26 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            return buildLogoImage(logosForBuilding, firstOnly, imgWidth, imgHeight);
+        }
+
+        static string buildLogoImage(List<string> logosForBuilding, bool firstOnly, int imgWidth, int imgHeight)
+        {
             try
             {
-                if (logosForBuilding.Count == 1 || (logosForBuilding.Count > 0 && firstOnly)) return logosForBuilding[0];
+                if (logosForBuilding.Count == 1 || (firstOnly && logosForBuilding.Count > 0)) return logosForBuilding[0];
                 else if (logosForBuilding.Count > 1)
                 {
                     tmpFile = string.Empty;
                     foreach (string logo in logosForBuilding)
                         tmpFile += System.IO.Path.GetFileNameWithoutExtension(logo);
                     tmpFile = Helper.PathCombine(pathfortmpfile, "TVSeriesDynLogo" + tmpFile + ".png");
-                    //if (System.IO.File.Exists(tmpFile))
-                    //    return tmpFile;
+
                     Bitmap b = new Bitmap(imgWidth, imgHeight);
                     Image img = b;
                     Graphics g = Graphics.FromImage(img);
                     appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
-                    //try
-                    //{
-                    //    b.Save(tmpFile, System.Drawing.Imaging.ImageFormat.Png);
-                    //    return tmpFile;
-                    //}
-                    //catch (Exception)
-                    //{
-                    //    if (System.IO.File.Exists(tmpFile)) return tmpFile; // if the tmpfile exists return it regardless
-                    //    return string.Empty;
-                    //}
+
                     return Helper.buildMemoryImage(b, tmpFile, new Size(imgWidth, imgHeight));
                 }
                 else return string.Empty;

@@ -208,6 +208,8 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_episodeFormat_Main);
 
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+
+            this.checkFileDeletion.Checked = DBOption.GetOptions(DBOption.cDeleteFile);
         }
 
         private void InitExtraTreeAndPanes()
