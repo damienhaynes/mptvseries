@@ -151,12 +151,15 @@ namespace WindowPlugins.GUITVSeries
 
         public static DBSeries getCorrespondingSeries(int id)
         {
+            DBSeries cached = cache.getSeries(id);
+            if (cached != null) return cached;
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
             List<DBSeries> tmpSeries = DBSeries.Get(cond);
             foreach (DBSeries series in tmpSeries) // should only be one!
                 if (series[DBSeries.cID] == id)
                 {
+                    cache.addChangeSeries(series);
                     return series;
                 }
             return null;
@@ -164,10 +167,13 @@ namespace WindowPlugins.GUITVSeries
 
         public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
         {
+            DBSeason cached = cache.getSeason(seriesID, seasonIndex);
+            if (cached != null) return cached;
             List<DBSeason> tmpSeasons = DBSeason.Get(seriesID);
             foreach (DBSeason season in tmpSeasons)
                 if (season[DBSeason.cIndex] == seasonIndex)
                 {
+                    cache.addChangeSeason(season);
                     return season;
                 }
             return null;
@@ -188,6 +194,26 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < input.Count; i++)
                 result.Add(input[i]);
             return result;
+        }
+
+        static List<string> nonExistingFiles = new List<string>();
+        public static List<string> filterExistingFiles(List<string> filenames)
+        {
+            for (int f = 0; f < filenames.Count; f++)
+            {
+                bool wasCached = false;
+                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
+                {
+                    if (!wasCached)
+                    {
+                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                        nonExistingFiles.Add(filenames[f]);
+                    }
+                    filenames.RemoveAt(f);
+                    f--;
+                }
+            }
+            return filenames;
         }
 
         /// <summary>
@@ -233,6 +259,7 @@ namespace WindowPlugins.GUITVSeries
                 return string.Empty;
             }
             return name;
+
         }
 
         /// <summary>
