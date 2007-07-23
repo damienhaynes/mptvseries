@@ -208,8 +208,8 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_episodeFormat_Main);
 
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-
-            this.checkFileDeletion.Checked = DBOption.GetOptions(DBOption.cDeleteFile);
+            
+            this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
         }
 
         private void InitExtraTreeAndPanes()
@@ -2757,7 +2757,7 @@ namespace WindowPlugins.GUITVSeries
             ExpressionBuilder expBldForm = new ExpressionBuilder();
             expBldForm.ShowDialog();
                 //-- ToDo: add result to datagridview
-        }
+        }      
 
     }
 
