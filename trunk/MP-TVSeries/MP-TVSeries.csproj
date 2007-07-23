@@ -221,6 +221,6 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "h:\MP2\xbmc\bin\Release\\plugins\windows\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "C:\Program Files\Team MediaPortal\MediaPortal\plugins\windows\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
