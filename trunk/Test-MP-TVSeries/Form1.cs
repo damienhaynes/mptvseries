@@ -18,6 +18,7 @@ namespace Test_MP_TVSeries
         public Form1()
         {
             MediaPortal.GUI.Video.TVSeriesPlugin plugin = new MediaPortal.GUI.Video.TVSeriesPlugin();
+            
             plugin.ShowPlugin();
         }
     }

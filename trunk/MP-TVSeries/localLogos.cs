@@ -184,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
             string res = work(level, imgHeight, imgWidth, firstOnly, ref logosForBuilding);
-            if (res != null && res.Length > 0 && res[0] != '[')
+            if (!Settings.isConfig && res != null && res.Length > 0 && res[0] != '[')
                 return Helper.buildMemoryImageFromFile(res, new Size(imgWidth, imgHeight));
             else return res; // we build the memimage already
         }
@@ -265,8 +265,13 @@ namespace WindowPlugins.GUITVSeries
                     Image img = b;
                     Graphics g = Graphics.FromImage(img);
                     appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
-
-                    return Helper.buildMemoryImage(b, tmpFile, new Size(imgWidth, imgHeight));
+                    if (Settings.isConfig)
+                    {
+                        b.Save(tmpFile);
+                        return tmpFile;
+                    }
+                    else
+                        return Helper.buildMemoryImage(b, tmpFile, new Size(imgWidth, imgHeight));
                 }
                 else return string.Empty;
             }
