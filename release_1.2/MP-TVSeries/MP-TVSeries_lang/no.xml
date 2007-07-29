@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- MP-TV-Series translation file -->
+<!-- Norwegian -->
+<!-- Note: English is the fallback for any strings not found in other languages -->
+
+<strings>
+	<string Field="Series" Original="Series">Serie</string>
+	<string Field="Series_Plural" Original="Series (Plr)">Serier</string> <!-- plural -->
+	<string Field="Season" Original="Season">Sesong</string>
+	<string Field="Seasons" Original="Seasons">Sesonger</string>
+	<string Field="Episode" Original="Episode">Episode</string>
+	<string Field="Episodes" Original="Episodes">Episoder</string>
+	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Sett/usett</string>
+	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Hent tekst</string>
+	<string Field="Load_via_Torrent" Original="Load via Torrent">Hent gjennom torrent</string>
+	<string Field="Mark_all_as_watched" Original="Mark all as watched">Marker alle som sett</string>
+	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Marker alle som usett</string>
+	<string Field="Hide" Original="Hide">Gjem</string>
+	<string Field="Delete" Original="Delete">Slett</string>
+	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Fjern serie fra Favoritter</string>
+	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Legg til serie til Favoritter</string>
+	<string Field="Force_Local_Scan" Original="Force Local Scan ">Lokal-Scanning</string>
+	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Oppdater serie-informasjon</string>
+	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(Arbeider)</string>
+	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Kun vis episoder med en lokal fil</string>
+	<string Field="Hide_summary_on_unwatched" Original="Gjem oppsummering av episode hvis usett"></string>
+	<string Field="on" Original="on">På</string>
+	<string Field="off" Original="off">Av</string>
+	<string Field="Play_Random_Episode" Original="Play Random Episode">Spill av tilfeldig episode</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Spill av tilfeldig første usette episode</string>
+	<string Field="Delete_that_series" Original="Delete that series?">Slette serie?</string>
+	<string Field="Delete_that_season" Original="Delete that season?">Slette sesong?</string>
+	<string Field="Delete_that_episode" Original="Delete that episode?">Slette episode?</string>
+	<string Field="Confirm" Original="Confirm">Bekreft</string>
+	<string Field="Completed" Original="Completed">Ferdig</string>
+	<string Field="No_subtitles_found" Original="No subtitles found">Ingen undertekster funnet</string>
+	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Hopp over / Aldri spør igjen</string>
+	<string Field="no_results_found" Original="no results found!">Ingen resultater funnet</string>
+	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Skjult får å forhindre 'spoilers' *</string>
+	<string Field="Yes" Original="Yes">Ja</string>
+	<string Field="No" Original="No">Nei</string>
+	<string Field="Error" Original="#Error">#Feil</string>
+	<string Field="No_items" Original="No items!">Ingen objekter!</string>	
+	<string Field="Unknown" Original="Unknown">Ukjent</string>
+</strings>
