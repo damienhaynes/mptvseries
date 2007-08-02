@@ -43,12 +43,12 @@ namespace WindowPlugins.GUITVSeries.MathParser
         static Regex number = new Regex(floatNumberRegex, RegexOptions.Compiled);
 
 
-        static public List<mathFunction> SupportedFunctions
+        static public List SupportedFunctions
         {
             get { return functions; }
         }
 
-        static public List<mathConstant> SupportedConstants
+        static public List SupportedConstants
         {
             get { return constants; }
         }
@@ -61,7 +61,9 @@ namespace WindowPlugins.GUITVSeries.MathParser
             addFunction("Sqrt", delegate(double number) { return Math.Sqrt(number); });
             addFunction("Floor", delegate(double number) { return Math.Floor(number); });
             addFunction("Ceil", delegate(double number) { return Math.Ceiling(number); });
-            addFunction(string.Empty, delegate(double number) { return number; });
+            addFunction("Abs", delegate(double number) { return Math.Abs(number); });
+            addFunction("Log10", delegate(double number) { return Math.Log10(number); });
+            addFunction(string.Empty, delegate(double number) { return number; }); // simple parenthesis, needs to be last in list
 
             addConstant("PI", delegate() { return Math.PI; });
             addConstant("Euler", delegate() { return Math.E; });
@@ -100,10 +102,17 @@ namespace WindowPlugins.GUITVSeries.MathParser
         public static double? Parse(string expression)
         {
             MPTVSeriesLog.Write("Mathparser: Trying " + expression, MPTVSeriesLog.LogLevel.Normal);
-            StringBuilder builder = new StringBuilder(expression.Replace(" ", ""));
-            foreach (mathConstant c in constants)
-                builder.Replace(c.form, c.Value.ToString(provider));
-            double? result = breakdDown(builder.ToString());
+            try
+            {
+                StringBuilder builder = new StringBuilder(expression.Replace(" ", ""));
+                foreach (mathConstant c in constants)
+                    builder.Replace(c.form, c.Value.ToString(provider));
+                double? result = breakdDown(builder.ToString());
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Mathparser: Critical Error " + e.Message, MPTVSeriesLog.LogLevel.Normal);
+            }
             if(null != result)
                 MPTVSeriesLog.Write("Mathparser: Total Result: " +  result.ToString(), MPTVSeriesLog.LogLevel.Normal);
             return result;
