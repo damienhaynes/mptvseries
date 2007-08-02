@@ -43,12 +43,12 @@ namespace WindowPlugins.GUITVSeries.MathParser
         static Regex number = new Regex(floatNumberRegex, RegexOptions.Compiled);
 
 
-        static public List SupportedFunctions
+        static public List<mathFunction> SupportedFunctions
         {
             get { return functions; }
         }
 
-        static public List SupportedConstants
+        static public List<mathConstant> SupportedConstants
         {
             get { return constants; }
         }
@@ -102,12 +102,13 @@ namespace WindowPlugins.GUITVSeries.MathParser
         public static double? Parse(string expression)
         {
             MPTVSeriesLog.Write("Mathparser: Trying " + expression, MPTVSeriesLog.LogLevel.Normal);
+            double? result = null;
             try
             {
                 StringBuilder builder = new StringBuilder(expression.Replace(" ", ""));
                 foreach (mathConstant c in constants)
                     builder.Replace(c.form, c.Value.ToString(provider));
-                double? result = breakdDown(builder.ToString());
+                result = breakdDown(builder.ToString());
             }
             catch (Exception e)
             {
