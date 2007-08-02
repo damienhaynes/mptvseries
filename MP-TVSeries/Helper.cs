@@ -308,6 +308,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static void logMeasure(MPTVSeriesLog.LogLevel level)
         {
+            if (noStarted == 0) return; // never started, nothing to report
             decimal micro = timer.Elapsed.Ticks / 10M;
             MPTVSeriesLog.Write(string.Format("Code Measurement:  {0} us {1} ms total, {2} us/{3} ms/run (Counter: {4})", micro, timer.ElapsedMilliseconds, (micro / noStarted).ToString("00.00"), (timer.ElapsedMilliseconds / noStarted).ToString("00.00"), noStarted), level);
         }
@@ -316,6 +317,16 @@ namespace WindowPlugins.GUITVSeries
         {
             timer.Reset();
             noStarted = 0;
+        }
+        public static void stopLogReset()
+        {
+            stopLogReset(MPTVSeriesLog.LogLevel.Normal);
+        }
+        public static void stopLogReset(MPTVSeriesLog.LogLevel level)
+        {
+            Stop();
+            logMeasure(level);
+            Reset();
         }
     }
 }
