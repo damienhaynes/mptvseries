@@ -484,7 +484,7 @@ namespace WindowPlugins.GUITVSeries
                     // we try to cache them
                     cachedFieldValues.Add(what, value);
                     // now lets do the math
-                    value = mathParser(value);
+                    value = MathParser.mathParser.TryParse(value);
                 }
                 catch (Exception)
                 {
@@ -493,116 +493,6 @@ namespace WindowPlugins.GUITVSeries
             }
             return true;
         }
-
-        /// <summary>
-        /// Supports /*+- and Round()
-        /// All operators are equal and evaluated from left to right (10 + 2 * 3 = 36 NOT 16)
-        /// No brackets except in Round() are allowed
-        /// Round() will round everything up to it's closing bracket, so "3.5 + Round(4.3)" = 7.8 = 8! but "Round(4.3) + 3.5" = 7.5
-        /// It's really just meant for very simple expressions, but I'll continue to work on it some more
-        /// </summary>
-        /// <param name="expression">The expression to evaluate</param>
-        /// <returns>Returns the result of a mathematical expression as a String, or the orignal string if the expression is not valid</returns>
-        public static string mathParser(string expression)
-        {
-            if (expression.Length == 0) return expression;
-
-            StringBuilder parser = new StringBuilder();
-            double result = 0d;
-            char? nextOperand = null;
-            char? roundStarted = null;
-            const String Round = "Round()";
-            bool sucess = true;
-            string operands = "*/+-";
-
-            System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
-            provider.NumberDecimalSeparator = ".";
-
-            for (int i = 0; i < expression.Length; i++)
-            {
-                if (((int)expression[i] < 58 && (int)expression[i] > 47) || expression[i] == '.')
-                    parser.Append(expression[i]);
-                else if (operands.IndexOf(expression[i]) != -1)
-                {
-                    if (parser.Length > 0)
-                    {
-                        mathResult(ref result, nextOperand, float.Parse(parser.ToString()));
-                        parser.Remove(0, parser.Length);
-                    }
-                    nextOperand = expression[i];
-                }
-                else
-                {
-                    if (expression[i] != ' ' && Round.IndexOf(expression[i]) == -1 && operands.IndexOf(expression[i]) == -1) // we can't parse this
-                    {
-                        sucess = false;
-                        break;
-                    }
-                    if (parser.Length > 0)
-                    {
-                        mathResult(ref result, nextOperand, System.Convert.ToDouble(parser.ToString(), provider));
-                        parser.Remove(0, parser.Length);
-                    }
-                }
-
-
-                if (roundStarted == null && expression[i] == Round[0]) roundStarted = Round[0];
-                else if (roundStarted != null)
-                {
-                    int index = Round.IndexOf((char)roundStarted);
-                    if (index > -1 && roundStarted != '(' && roundStarted != ')')
-                    {
-                        if (expression[i] != Round[index + 1])
-                        {
-                            roundStarted = null;
-                            sucess = false;
-                            break;
-                        }
-                        else roundStarted = expression[i];
-                    }
-                    else if (expression[i] == ')')
-                    {
-                        // ok we need to take action, round the result so far
-                        result = (float)Math.Round((double)result, 0);
-                        roundStarted = null;
-                    }
-                    else if (roundStarted != '(')
-                        roundStarted = null;
-                }
-            }
-            if (null != roundStarted) // there was no closing bracked for the round, we could assume it, but we fail
-                sucess = false;
-            else if (parser.Length > 0)
-            {
-                mathResult(ref result, nextOperand, System.Convert.ToDouble(parser.ToString(), provider));
-            }
-
-            return sucess ? result.ToString() : expression;
-        }
-
-        public static void mathResult(ref double result, char? operand, double number)
-        {
-            if (operand != null)
-            {
-                switch (operand)
-                {
-                    case '+':
-                        result += number;
-                        break;
-                    case '*':
-                        result *= number;
-                        break;
-                    case '/':
-                        result /= number;
-                        break;
-                    case '-':
-                        result -= number;
-                        break;
-                }
-            }
-            else result = number; // first number
-        }
-
 
         static bool isRelevant(string field, Level level)
         {
