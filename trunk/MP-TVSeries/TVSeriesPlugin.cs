@@ -912,6 +912,7 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
+            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
         }
 
         protected override void OnPageLoad()
@@ -1734,31 +1735,6 @@ namespace MediaPortal.GUI.Video
             }
         }
 
-        Random fanartRandom = new Random();
-        string getFanart(string seriesID, out bool isLight)
-        {
-            MPTVSeriesLog.Write("Fanart: checking for ", seriesID, MPTVSeriesLog.LogLevel.Normal);
-            try
-            {
-                string[] fanArts = System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), "*" + seriesID + "*.png", System.IO.SearchOption.TopDirectoryOnly);
-                string fanArt = null;
-                isLight = false;
-                MPTVSeriesLog.Write("Fanart: found ", fanArts.Length.ToString(), MPTVSeriesLog.LogLevel.Normal);
-
-                if (fanArts.Length == 0) return null;
-                else if (fanArts.Length == 1) fanArt = fanArts[0];
-                else fanArt = fanArts[fanartRandom.Next(0, fanArts.Length)];
-
-                isLight = (fanArt.Contains("_light_"));
-                return fanArt;
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("An error occured looking for fanart: " + ex.Message);
-                isLight = false;
-                return null;
-            }
-        }
 
         bool fanartSet = false;
         bool loadFanart(DBSeries series)
@@ -1771,7 +1747,7 @@ namespace MediaPortal.GUI.Video
                     if (series == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
-                        this.FanartBackground.Visible = false;
+                        FanartBackground.Visible = false;
                         if (this.dummyIsFanartLoaded != null)
                             this.dummyIsFanartLoaded.Visible = false;
                         if (this.dummyIsLightFanartLoaded != null)
@@ -1782,20 +1758,19 @@ namespace MediaPortal.GUI.Video
                     }
                     else
                     {
-                        bool isLight = false;
-                        string bg = getFanart(series[DBSeries.cID], out isLight);
-                        if (bg != null)
+                        Fanart f = Fanart.getFanart(series[DBSeries.cID]);
+                        if (f.Found)
                         {
-                            MPTVSeriesLog.Write("Fanart: found, loading: " + bg, MPTVSeriesLog.LogLevel.Normal);
-                            FanartBackground.SetFileName(bg);
-                            this.FanartBackground.Visible = true;
+                            MPTVSeriesLog.Write("Fanart: found, loading: ",  f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
+                            FanartBackground.SetFileName(f.RandomFanart);
+                            FanartBackground.Visible = true;
                             if (this.dummyIsLightFanartLoaded != null)
-                                this.dummyIsLightFanartLoaded.Visible = isLight;
+                                this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
                             if (this.dummyIsDarkFanartLoaded != null)
-                                this.dummyIsDarkFanartLoaded.Visible = !isLight;
-                            fanartSet = true;
+                                this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+                            
                         }
-                        else fanartSet = false;
+                        fanartSet = f.Found;
                     }
                 }
                 if (this.dummyIsFanartLoaded != null)
