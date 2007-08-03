@@ -217,9 +217,6 @@
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>487, 14</value>
   </metadata>
-  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>686, 14</value>
-  </metadata>
   <data name="textBox_foromID.ToolTip" xml:space="preserve">
     <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
   </data>
