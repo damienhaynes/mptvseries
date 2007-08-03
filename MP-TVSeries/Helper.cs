@@ -171,11 +171,13 @@ namespace WindowPlugins.GUITVSeries
             if (cached != null) return cached;
             List<DBSeason> tmpSeasons = DBSeason.Get(seriesID);
             foreach (DBSeason season in tmpSeasons)
+            {
+                cache.addChangeSeason(season);
                 if (season[DBSeason.cIndex] == seasonIndex)
                 {
-                    cache.addChangeSeason(season);
                     return season;
                 }
+            }
             return null;
         }
 

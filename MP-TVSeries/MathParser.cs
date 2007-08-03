@@ -43,6 +43,10 @@ namespace WindowPlugins.GUITVSeries.MathParser
         static Regex addSub = new Regex(floatNumberRegex + @"\n*[-|+]\n*" + floatNumberRegex, RegexOptions.Compiled);
         static Regex number = new Regex(floatNumberRegex, RegexOptions.Compiled);
 
+        const string ifForm = "if(";
+        const string thenForm = "then(";
+        const string elseForm = "else(";
+
 
         static public List<mathFunction> SupportedFunctions
         {
@@ -96,6 +100,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
             {
                 double? res = Parse(with);
                 if(res != null) expression = expression.Replace(replace, res.Value.ToString());
+                else expression = expression.Replace(replace, with);
             }
             return expression;
         }
@@ -164,49 +169,24 @@ namespace WindowPlugins.GUITVSeries.MathParser
             double result;
             for (int i = 0; i < functions.Count; i++)
             {
-                //int index = -1;
-                //index = expression.IndexOf(functions[i].form);
-                //if (index != -1)
-                //{
-                //    // ok match, lets fast forward to the next ), offsetting +1 for every additional ( we find
-                //    int offset = -1;
-                //    int endPos = index;
-                //    for (int j = index; j < expression.Length; j++)
-                //    {
-                //        if (offset == 0 && expression[j] == ')') // yahoo
-                //        {
-                //            endPos = j;
-                //            break;
-                //        }
-                //        else if (expression[j] == '(') offset++;
-                //        else if (expression[j] == ')') offset--;
-                //    }
-                //    if (endPos != index)
-                //    {
-                //        // we had a succesful match
-                //        int len = index + functions[i].form.Length;
-                //        string toReplace = expression.Substring(index, endPos - index + 1);
-                //        string replaceWith = expression.Substring(len, endPos - len);
-
                 string toReplace;
                 string replaceWith;
                 if(parenthesisFinder(expression, functions[i].form, out toReplace, out replaceWith))
                 {
-                        MPTVSeriesLog.Write("Processing now: " + replaceWith, MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write("Processing now: " + replaceWith, MPTVSeriesLog.LogLevel.Debug);
 
-                        double? subresult = breakdDown(replaceWith);
+                    double? subresult = breakdDown(replaceWith);
 
-                        MPTVSeriesLog.Write("Subresult: " + (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write("Subresult: " + (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)), MPTVSeriesLog.LogLevel.Debug);
 
-                        if (subresult == null) return null; // can't process it
-                        double funcRes = functions[i].perform((double)subresult);
+                    if (subresult == null) return null; // can't process it
+                    double funcRes = functions[i].perform((double)subresult);
 
-                        MPTVSeriesLog.Write("Function: " + functions[i].form + subresult + ") = " + funcRes.ToString(provider), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write("Function: " + functions[i].form + subresult + ") = " + funcRes.ToString(provider), MPTVSeriesLog.LogLevel.Debug);
 
-                        expression = expression.Replace(toReplace, funcRes.ToString(provider));
-                        i = 0;
-                    }
-                //}
+                    expression = expression.Replace(toReplace, funcRes.ToString(provider));
+                    i = 0;
+                 }
             }
             // mult/div first
             if (!processAtomics(ref expression, multDiv)) return null;
@@ -242,8 +222,8 @@ namespace WindowPlugins.GUITVSeries.MathParser
             double no1, no2;
             MatchCollection m = number.Matches(expression);
             if (m.Count != 4 && m.Count != 3) return null;
-            no1 = double.Parse(m[0].Value, provider);
-            no2 = double.Parse(m[2].Value, provider);
+            if (!double.TryParse(m[0].Value, NumberStyles.Number , provider, out no1)) return null;
+            if (!double.TryParse(m[2].Value, NumberStyles.Number, provider, out no2)) return null;
 
             switch (MatchAtomOperation(expression))
             {

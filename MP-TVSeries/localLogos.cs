@@ -42,7 +42,6 @@ namespace WindowPlugins.GUITVSeries
         static List<string> entries = new List<string>();
         static Dictionary<int, List<Level>> entriesValidForInfo = new Dictionary<int, List<Level>>();
         static Dictionary<int, List<string>> splitConditions = new Dictionary<int, List<string>>();
-        static Dictionary<string, string> cachedFieldValues = new Dictionary<string, string>();
         static DBEpisode tmpEp;
         static DBSeason tmpSeason;
         static DBSeries tmpSeries;
@@ -213,7 +212,7 @@ namespace WindowPlugins.GUITVSeries
 
                 // reset all cached Fieldvalues
                 
-                cachedFieldValues.Clear();
+                //cachedFieldValues.Clear();
                 for (int i = 0; i < entries.Count; i++)
                 {
                     try
@@ -341,9 +340,9 @@ namespace WindowPlugins.GUITVSeries
                 if (!getFieldValues(what, out what, level)) return false;
                 if (!getFieldValues(compare, out compare, level)) return false;
 
-                results[i] = singleCondIsTrue(what,
+                results[i] = Condition.evaluate(what,
                                  conditions[i * 4 + 2],
-                                 compare, out cancel);
+                                 compare, out cancel, provider);
 
                 MPTVSeriesLog.Write("Test Result: " + results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
                 if (cancel) return true; // the first empty condition (what + value = empty) means no other conds can follow, we exit
@@ -417,80 +416,27 @@ namespace WindowPlugins.GUITVSeries
            return file;
         }
 
-        static Regex epParse = new Regex(@"(?<=\<Episode\.)(?<fieldtoParse>.*?)(?=\>)", RegexOptions.Compiled | RegexOptions.Singleline);
-        static Regex seasonParse = new Regex(@"(?<=\<Season\.)(?<fieldtoParse>.*?)(?=\>)", RegexOptions.Compiled | RegexOptions.Singleline);
-        static Regex seriesParse = new Regex(@"(?<=\<Series\.)(?<fieldtoParse>.*?)(?=\>)", RegexOptions.Compiled | RegexOptions.Singleline);
         static bool getFieldValues(string what, out string value, Level level)
         {
-            if (cachedFieldValues.ContainsKey(what))
-            {
-                value = cachedFieldValues[what];
-            }
-            else
-            {
+            
                 value = string.Empty;
                 if (what.Trim().Length == 0) return true; // just skip it
-                try
+                if (level == Level.Group)
                 {
-                    if (level == Level.Group)
-                    {
-                        value = groupedSelection.ToString(); // the only thing we can do
-                    }
-                    else
-                    {
-                        value = what;
-                        if (what.Contains("<Episode"))
-                        {
-                            // tmpEP always has to exists or the isrelevant check would have already failed
-                            foreach (Match m in epParse.Matches(what))
-                                value = value.Replace("<Episode." + m.Value + ">", tmpEp[m.Value]);
-                            if (value.Contains("<Series") || value.Contains("<Season")) getFieldValues(value, out value, level); // recursive
-                        }
-                        else if (what.Contains("<Series"))
-                        {
-                            if (level != Level.Series) // means we might have to get the series object for this episode/season
-                            {
-                                int seriesID = level == Level.Episode ? tmpEp[DBEpisode.cSeriesID] : tmpSeason[DBSeason.cSeriesID];
-                                if ((tmpSeries == null || tmpSeries[DBSeries.cID] != seriesID) && (tmpSeries = cache.getSeries(seriesID)) == null)
-                                {
-                                    tmpSeries = Helper.getCorrespondingSeries(seriesID);
-                                    cache.addChangeSeries(tmpSeries);
-                                }
-                            }
-                            foreach (Match m in seriesParse.Matches(what))
-                                value = value.Replace("<Series." + m.Value + ">", tmpSeries[m.Value]);
-                            if (value.Contains("<Season")) getFieldValues(value, out value, level); // recursive
-                        }
-                        else if (what.Contains("<Season"))
-                        {
-                            if (level == Level.Episode) // means we might have to get the season object for this episode
-                            {
-                                // get the season object if needed (either null, or not the one we need), otherwise dont get it again
-                                if ((tmpSeason == null ||
-                                    tmpSeason[DBSeason.cSeriesID] != tmpEp[DBEpisode.cSeriesID] ||
-                                    tmpSeason[DBSeason.cIndex] != tmpEp[DBEpisode.cSeasonIndex])
-                                    && (tmpSeason = cache.getSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex])) == null)
-                                {
-                                    tmpSeason = Helper.getCorrespondingSeason(tmpEp[DBEpisode.cSeriesID], tmpEp[DBEpisode.cSeasonIndex]);
-                                    cache.addChangeSeason(tmpSeason);
-                                }
-                                //else MPTVSeriesLog.Write("SeasonObject was cached - optimisation was good!");
-                            }
-                            foreach (Match m in seasonParse.Matches(what))
-                                value = value.Replace("<Season." + m.Value + ">", tmpSeason[m.Value]);
-                            // we can't logically need to be recursive anymore here
-                        }
-                    }
-                    // we try to cache them
-                    cachedFieldValues.Add(what, value);
-                    // now lets do the math
-                    value = MathParser.mathParser.TryParse(value);
+                    value = groupedSelection.ToString(); // the only thing we can do
                 }
-                catch (Exception)
+                else
                 {
-                    return false;
-                }
+                    DBTable item = null;
+                    switch(level)
+                    {
+                        case Level.Episode: item = tmpEp; break;
+                        case Level.Season: item = tmpSeason; break;
+                        case Level.Series: item = tmpSeries; break;
+                    }
+                    value = FieldGetter.resolveDynString(what, item);
             }
+             
             return true;
         }
 
@@ -518,7 +464,29 @@ namespace WindowPlugins.GUITVSeries
             return true;
         }
 
-        static bool singleCondIsTrue(string what, string type, string value, out bool cancel)
+
+        public static void cleanUP() // there is no static destructor in .NET, so this has to be called explicitally
+        {
+            // clean up all dynLogoFiles
+            MPTVSeriesLog.Write("Cleaning up cached, generated Logos");
+            foreach (string file in System.IO.Directory.GetFiles(pathfortmpfile, "TVSeriesDynLogo*"))
+            {
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                }
+            }
+        }
+    }
+
+    public class Condition
+    {
+        private Condition() { }
+        public static bool evaluate(string what, string type, string value, out bool cancel, NumberFormatInfo provider)
         {
             double testf = 0, test1f = 0;
             cancel = false;
@@ -566,21 +534,5 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        public static void cleanUP() // there is no static destructor in .NET, so this has to be called explicitally
-        {
-            // clean up all dynLogoFiles
-            MPTVSeriesLog.Write("Cleaning up cached, generated Logos");
-            foreach (string file in System.IO.Directory.GetFiles(pathfortmpfile, "TVSeriesDynLogo*"))
-            {
-                try
-                {
-                    System.IO.File.Delete(file);
-                }
-                catch (Exception ex)
-                {
-                    MPTVSeriesLog.Write("Error: Could not delete temporary Logo File " + file, ex.Message, MPTVSeriesLog.LogLevel.Normal);
-                }
-            }
-        }
     }
 }

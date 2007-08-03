@@ -633,9 +633,9 @@ namespace MediaPortal.GUI.Video
                                     }
                                     else
                                     {
-                                        item = new GUIListItem(FormatField(m_sFormatSeriesCol2, series));
-                                        item.Label2 = FormatField(m_sFormatSeriesCol3, series);
-                                        item.Label3 = FormatField(m_sFormatSeriesCol1, series);
+                                        item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeriesCol2, series));
+                                        item.Label2 = FieldGetter.resolveDynString(m_sFormatSeriesCol3, series);
+                                        item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);
                                     }
                                     item.TVTag = series;
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
@@ -714,12 +714,12 @@ namespace MediaPortal.GUI.Video
                                         }
                                         else
                                         {
-                                            item = new GUIListItem(FormatField(m_sFormatSeasonCol2, season));
+                                            item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
                                             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                                 // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
 
-                                            item.Label2 = FormatField(m_sFormatSeasonCol3, season);
-                                            item.Label3 = FormatField(m_sFormatSeasonCol1, season);
+                                                item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
+                                            item.Label3 = FieldGetter.resolveDynString(m_sFormatSeasonCol1, season);
                                             item.IconImage = GetSeasonBanner(season, false);
                                         }
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
@@ -807,22 +807,22 @@ namespace MediaPortal.GUI.Video
                                         }
                                         if (corrSeries == null)
                                         {
-                                            item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                            item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
                                         }
                                         else
                                         {
-                                            item.Label = corrSeries[DBOnlineSeries.cPrettyName] + " - " + FormatField(m_sFormatEpisodeCol2, episode);
+                                            item.Label = corrSeries[DBOnlineSeries.cPrettyName] + " - " + FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
                                         }
 
                                     }
                                     else
                                     {
                                         // we came from series on top, only display index/title
-                                        item.Label = FormatField(m_sFormatEpisodeCol2, episode);
+                                        item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
                                     }
 
-                                    item.Label2 = FormatField(m_sFormatEpisodeCol3, episode);
-                                    item.Label3 = FormatField(m_sFormatEpisodeCol1, episode);
+                                    item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);
+                                    item.Label3 = FieldGetter.resolveDynString(m_sFormatEpisodeCol1, episode);
                                     item.IsRemote = episode[DBEpisode.cFilename].ToString().Length > 0;
                                     item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
                                     item.TVTag = episode;
@@ -2024,10 +2024,10 @@ namespace MediaPortal.GUI.Video
             m_SelectedSeries = series;
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
-            
-            setGUIProperty(guiProperty.Title, FormatField(m_sFormatSeriesTitle, series));
-            setGUIProperty(guiProperty.Subtitle, FormatField(m_sFormatSeriesSubtitle, series));
-            setGUIProperty(guiProperty.Description, FormatField(m_sFormatSeriesMain, series));
+
+            setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeriesTitle, series));
+            setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
+            setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
             setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(series));
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
@@ -2042,9 +2042,9 @@ namespace MediaPortal.GUI.Video
             DBSeason season = (DBSeason)item.TVTag;
             m_SelectedSeason = season;
 
-            setGUIProperty(guiProperty.Title, FormatField(m_sFormatSeasonTitle, season));
-            setGUIProperty(guiProperty.Subtitle, FormatField(m_sFormatSeasonSubtitle, season));
-            setGUIProperty(guiProperty.Description, FormatField(m_sFormatSeasonMain, season));
+            setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeasonTitle, season));
+            setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
+            setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
             setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(season, false));
             
@@ -2055,12 +2055,7 @@ namespace MediaPortal.GUI.Video
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
             {
                 // it is the case
-                m_SelectedSeries = cache.getSeries(season[DBSeason.cSeriesID]);
-                if (m_SelectedSeries == null)
-                {
-                    Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
-                    cache.addChangeSeries(m_SelectedSeries);
-                }
+                m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null)
                     setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
@@ -2078,7 +2073,7 @@ namespace MediaPortal.GUI.Video
                 setGUIProperty(guiProperty.EpisodeImage, episode.Image);
             else clearGUIProperty(guiProperty.EpisodeImage);
 
-            string title = FormatField(m_sFormatEpisodeTitle, episode);
+            string title = FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode);
             // overwrite ugly Special number (eg: 0x7) if display option is default:
             if (m_SelectedEpisode[DBEpisode.cSeasonIndex] == 0 && m_sFormatEpisodeTitle.Trim().Contains("<Episode.SeasonIndex>x<Episode.EpisodeIndex>:"))
             {
@@ -2086,26 +2081,17 @@ namespace MediaPortal.GUI.Video
             }
 
             setGUIProperty(guiProperty.Title, title);
-            setGUIProperty(guiProperty.Subtitle, FormatField(m_sFormatEpisodeSubtitle, episode));
-            setGUIProperty(guiProperty.Description, FormatField(m_sFormatEpisodeMain, episode));
+            setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));
+            setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
 
             // with groups in episode view its possible the user never selected a series/season (flat view)
             // thus its desirable to display the series_banner and season banner on hover)
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
             {
                 // it is the case
-                m_SelectedSeason = cache.getSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                m_SelectedSeries = cache.getSeries(episode[DBEpisode.cSeriesID]);
-                if (m_SelectedSeries == null)
-                {
-                    m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                    cache.addChangeSeries(m_SelectedSeries);
-                }
-                if (m_SelectedSeason == null)
-                {
-                    m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                    cache.addChangeSeason(m_SelectedSeason);
-                }
+                m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+                m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+
                 if (m_SelectedSeries != null)
                     setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
