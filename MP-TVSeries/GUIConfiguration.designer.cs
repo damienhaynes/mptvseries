@@ -53,17 +53,17 @@ namespace WindowPlugins.GUITVSeries
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.columnHeader_Series = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Title = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Season = new System.Windows.Forms.ColumnHeader();
@@ -513,14 +513,14 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.dataGridView1.DataSource = this.detailsPropertyBindingSource;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 174);
             this.dataGridView1.MultiSelect = false;
@@ -724,8 +724,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_Expressions.AllowUserToResizeColumns = false;
             this.dataGridView_Expressions.AllowUserToResizeRows = false;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView_Expressions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -733,21 +733,21 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Expressions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_Expressions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView_Expressions.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_Expressions.MultiSelect = false;
             this.dataGridView_Expressions.Name = "dataGridView_Expressions";
             this.dataGridView_Expressions.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_Expressions.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView_Expressions.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Expressions.RowTemplate.Height = 18;
             this.dataGridView_Expressions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -792,27 +792,27 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_Replace.AllowUserToResizeColumns = false;
             this.dataGridView_Replace.AllowUserToResizeRows = false;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView_Replace.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_Replace.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Replace.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_Replace.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Replace.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Replace.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView_Replace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_Replace.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_Replace.Name = "dataGridView_Replace";
             this.dataGridView_Replace.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_Replace.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Replace.RowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.RowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView_Replace.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Replace.RowTemplate.Height = 18;
             this.dataGridView_Replace.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -1106,27 +1106,27 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_ImportPathes.AllowUserToResizeColumns = false;
             this.dataGridView_ImportPathes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView_ImportPathes.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_ImportPathes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_ImportPathes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_ImportPathes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView_ImportPathes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_ImportPathes.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_ImportPathes.Name = "dataGridView_ImportPathes";
             this.dataGridView_ImportPathes.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_ImportPathes.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridView_ImportPathes.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_ImportPathes.RowTemplate.Height = 18;
             this.dataGridView_ImportPathes.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -2634,7 +2634,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Extra.Location = new System.Drawing.Point(0, 0);
             this.treeView_Extra.Name = "treeView_Extra";
             this.treeView_Extra.Size = new System.Drawing.Size(172, 652);
-            this.treeView_Extra.TabIndex = 154;
+            this.treeView_Extra.TabIndex = 0;
             this.treeView_Extra.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Extra_AfterSelect);
             // 
             // panel_newssearch
@@ -2650,7 +2650,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.Location = new System.Drawing.Point(14, 92);
             this.panel_newssearch.Name = "panel_newssearch";
             this.panel_newssearch.Size = new System.Drawing.Size(218, 131);
-            this.panel_newssearch.TabIndex = 4;
+            this.panel_newssearch.TabIndex = 2;
             this.panel_newssearch.Tag = "News Search";
             this.panel_newssearch.Visible = false;
             // 
@@ -2660,7 +2660,7 @@ namespace WindowPlugins.GUITVSeries
             this.label33.Location = new System.Drawing.Point(16, 37);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(99, 13);
-            this.label33.TabIndex = 7;
+            this.label33.TabIndex = 2;
             this.label33.Text = "Newzbin password:";
             // 
             // label31
@@ -2669,7 +2669,7 @@ namespace WindowPlugins.GUITVSeries
             this.label31.Location = new System.Drawing.Point(39, 11);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(76, 13);
-            this.label31.TabIndex = 7;
+            this.label31.TabIndex = 0;
             this.label31.Text = "Newzbin login:";
             // 
             // textBox_NewsSearchRegex
@@ -2680,7 +2680,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_NewsSearchRegex.Multiline = true;
             this.textBox_NewsSearchRegex.Name = "textBox_NewsSearchRegex";
             this.textBox_NewsSearchRegex.Size = new System.Drawing.Size(97, 51);
-            this.textBox_NewsSearchRegex.TabIndex = 6;
+            this.textBox_NewsSearchRegex.TabIndex = 7;
             this.toolTip_Help.SetToolTip(this.textBox_NewsSearchRegex, "The only important tag used to download: ID");
             this.textBox_NewsSearchRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchRegex_TextChanged);
             // 
@@ -2698,7 +2698,7 @@ namespace WindowPlugins.GUITVSeries
             this.label34.Location = new System.Drawing.Point(15, 89);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(100, 24);
-            this.label34.TabIndex = 4;
+            this.label34.TabIndex = 6;
             this.label34.Text = "Search Regex:";
             this.label34.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -2709,7 +2709,7 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_NewzbinPassword.Location = new System.Drawing.Point(121, 34);
             this.textbox_NewzbinPassword.Name = "textbox_NewzbinPassword";
             this.textbox_NewzbinPassword.Size = new System.Drawing.Size(97, 20);
-            this.textbox_NewzbinPassword.TabIndex = 6;
+            this.textbox_NewzbinPassword.TabIndex = 3;
             this.textbox_NewzbinPassword.TextChanged += new System.EventHandler(this.textbox_NewzbinPassword_TextChanged);
             // 
             // textBox_NewzbinLogin
@@ -2719,7 +2719,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_NewzbinLogin.Location = new System.Drawing.Point(121, 8);
             this.textBox_NewzbinLogin.Name = "textBox_NewzbinLogin";
             this.textBox_NewzbinLogin.Size = new System.Drawing.Size(97, 20);
-            this.textBox_NewzbinLogin.TabIndex = 6;
+            this.textBox_NewzbinLogin.TabIndex = 1;
             this.textBox_NewzbinLogin.TextChanged += new System.EventHandler(this.textBox_NewzbinLogin_TextChanged);
             // 
             // textBox_NewsSearchUrl
@@ -2729,7 +2729,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_NewsSearchUrl.Location = new System.Drawing.Point(121, 60);
             this.textBox_NewsSearchUrl.Name = "textBox_NewsSearchUrl";
             this.textBox_NewsSearchUrl.Size = new System.Drawing.Size(97, 20);
-            this.textBox_NewsSearchUrl.TabIndex = 6;
+            this.textBox_NewsSearchUrl.TabIndex = 5;
             this.textBox_NewsSearchUrl.TextChanged += new System.EventHandler(this.textBox_NewsSearchUrl_TextChanged);
             // 
             // panel_newsroot
@@ -2743,7 +2743,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.Location = new System.Drawing.Point(2, 300);
             this.panel_newsroot.Name = "panel_newsroot";
             this.panel_newsroot.Size = new System.Drawing.Size(448, 59);
-            this.panel_newsroot.TabIndex = 3;
+            this.panel_newsroot.TabIndex = 5;
             this.panel_newsroot.Tag = "News";
             this.panel_newsroot.Visible = false;
             // 
@@ -2753,7 +2753,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_NewsDownloadPathBrowse.Location = new System.Drawing.Point(419, 30);
             this.button_NewsDownloadPathBrowse.Name = "button_NewsDownloadPathBrowse";
             this.button_NewsDownloadPathBrowse.Size = new System.Drawing.Size(26, 23);
-            this.button_NewsDownloadPathBrowse.TabIndex = 3;
+            this.button_NewsDownloadPathBrowse.TabIndex = 5;
             this.button_NewsDownloadPathBrowse.Text = "...";
             this.button_NewsDownloadPathBrowse.UseVisualStyleBackColor = true;
             this.button_NewsDownloadPathBrowse.Click += new System.EventHandler(this.button_NewsDownloadPathBrowse_Click);
@@ -2764,7 +2764,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_newsleecherbrowse.Location = new System.Drawing.Point(419, 4);
             this.button_newsleecherbrowse.Name = "button_newsleecherbrowse";
             this.button_newsleecherbrowse.Size = new System.Drawing.Size(26, 23);
-            this.button_newsleecherbrowse.TabIndex = 3;
+            this.button_newsleecherbrowse.TabIndex = 2;
             this.button_newsleecherbrowse.Text = "...";
             this.button_newsleecherbrowse.UseVisualStyleBackColor = true;
             this.button_newsleecherbrowse.Click += new System.EventHandler(this.button_newsleecherbrowse_Click);
@@ -2774,7 +2774,7 @@ namespace WindowPlugins.GUITVSeries
             this.label35.Location = new System.Drawing.Point(3, 35);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(138, 18);
-            this.label35.TabIndex = 0;
+            this.label35.TabIndex = 3;
             this.label35.Text = "Download Path to Monitor:";
             this.label35.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -2785,7 +2785,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_NewsDownloadPath.Location = new System.Drawing.Point(147, 32);
             this.textBox_NewsDownloadPath.Name = "textBox_NewsDownloadPath";
             this.textBox_NewsDownloadPath.Size = new System.Drawing.Size(266, 20);
-            this.textBox_NewsDownloadPath.TabIndex = 1;
+            this.textBox_NewsDownloadPath.TabIndex = 4;
             this.textBox_NewsDownloadPath.TextChanged += new System.EventHandler(this.textBox_NewsDownloadPath_TextChanged);
             // 
             // label30
@@ -2815,7 +2815,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.Location = new System.Drawing.Point(5, 235);
             this.panel_torrentroot.Name = "panel_torrentroot";
             this.panel_torrentroot.Size = new System.Drawing.Size(448, 59);
-            this.panel_torrentroot.TabIndex = 2;
+            this.panel_torrentroot.TabIndex = 4;
             this.panel_torrentroot.Tag = "Torrents";
             // 
             // button_uTorrentBrowse
@@ -2824,7 +2824,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse.Location = new System.Drawing.Point(419, 9);
             this.button_uTorrentBrowse.Name = "button_uTorrentBrowse";
             this.button_uTorrentBrowse.Size = new System.Drawing.Size(26, 23);
-            this.button_uTorrentBrowse.TabIndex = 3;
+            this.button_uTorrentBrowse.TabIndex = 2;
             this.button_uTorrentBrowse.Text = "...";
             this.button_uTorrentBrowse.UseVisualStyleBackColor = true;
             this.button_uTorrentBrowse.Click += new System.EventHandler(this.button_uTorrentBrowse_Click);
@@ -2854,7 +2854,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_subtitleroot.Location = new System.Drawing.Point(8, 12);
             this.panel_subtitleroot.Name = "panel_subtitleroot";
             this.panel_subtitleroot.Size = new System.Drawing.Size(78, 50);
-            this.panel_subtitleroot.TabIndex = 2;
+            this.panel_subtitleroot.TabIndex = 0;
             this.panel_subtitleroot.Tag = "Subtitles";
             // 
             // panel_forom
@@ -2866,7 +2866,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_forom.Location = new System.Drawing.Point(92, 12);
             this.panel_forom.Name = "panel_forom";
             this.panel_forom.Size = new System.Drawing.Size(224, 71);
-            this.panel_forom.TabIndex = 0;
+            this.panel_forom.TabIndex = 1;
             this.panel_forom.Tag = "Forom Subtitles";
             // 
             // label17
@@ -2875,7 +2875,7 @@ namespace WindowPlugins.GUITVSeries
             this.label17.Location = new System.Drawing.Point(7, 10);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(90, 13);
-            this.label17.TabIndex = 1;
+            this.label17.TabIndex = 0;
             this.label17.Text = "Forom base URL:";
             // 
             // label18
@@ -2884,7 +2884,7 @@ namespace WindowPlugins.GUITVSeries
             this.label18.Location = new System.Drawing.Point(7, 37);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(50, 13);
-            this.label18.TabIndex = 1;
+            this.label18.TabIndex = 2;
             this.label18.Text = "Forom id:";
             // 
             // textBox_foromID
@@ -2894,7 +2894,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_foromID.Location = new System.Drawing.Point(103, 34);
             this.textBox_foromID.Name = "textBox_foromID";
             this.textBox_foromID.Size = new System.Drawing.Size(111, 20);
-            this.textBox_foromID.TabIndex = 0;
+            this.textBox_foromID.TabIndex = 3;
             this.toolTip_Help.SetToolTip(this.textBox_foromID, resources.GetString("textBox_foromID.ToolTip"));
             this.textBox_foromID.TextChanged += new System.EventHandler(this.textBox_foromID_TextChanged);
             // 
@@ -2905,7 +2905,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_foromBaseURL.Location = new System.Drawing.Point(103, 7);
             this.textBox_foromBaseURL.Name = "textBox_foromBaseURL";
             this.textBox_foromBaseURL.Size = new System.Drawing.Size(111, 20);
-            this.textBox_foromBaseURL.TabIndex = 0;
+            this.textBox_foromBaseURL.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.textBox_foromBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
                     ", you\'re on your own :)");
             this.textBox_foromBaseURL.TextChanged += new System.EventHandler(this.textBox_foromBaseURL_TextChanged);
@@ -2925,7 +2925,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentsearch.Location = new System.Drawing.Point(252, 92);
             this.panel_torrentsearch.Name = "panel_torrentsearch";
             this.panel_torrentsearch.Size = new System.Drawing.Size(233, 129);
-            this.panel_torrentsearch.TabIndex = 1;
+            this.panel_torrentsearch.TabIndex = 3;
             this.panel_torrentsearch.Tag = "Torrent Searches";
             this.panel_torrentsearch.Visible = false;
             // 
@@ -2937,7 +2937,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentDetailsRegex.Multiline = true;
             this.textBox_TorrentDetailsRegex.Name = "textBox_TorrentDetailsRegex";
             this.textBox_TorrentDetailsRegex.Size = new System.Drawing.Size(126, 51);
-            this.textBox_TorrentDetailsRegex.TabIndex = 6;
+            this.textBox_TorrentDetailsRegex.TabIndex = 9;
             this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsRegex, resources.GetString("textBox_TorrentDetailsRegex.ToolTip"));
             this.textBox_TorrentDetailsRegex.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsRegex_TextChanged);
             // 
@@ -2946,7 +2946,7 @@ namespace WindowPlugins.GUITVSeries
             this.label20.Location = new System.Drawing.Point(4, 10);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(100, 21);
-            this.label20.TabIndex = 4;
+            this.label20.TabIndex = 0;
             this.label20.Text = "Websearch preset:";
             this.label20.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -2958,7 +2958,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentSearchRegex.Multiline = true;
             this.textBox_TorrentSearchRegex.Name = "textBox_TorrentSearchRegex";
             this.textBox_TorrentSearchRegex.Size = new System.Drawing.Size(126, 51);
-            this.textBox_TorrentSearchRegex.TabIndex = 6;
+            this.textBox_TorrentSearchRegex.TabIndex = 5;
             this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchRegex, resources.GetString("textBox_TorrentSearchRegex.ToolTip"));
             this.textBox_TorrentSearchRegex.TextChanged += new System.EventHandler(this.textBox_TorrentRegex_TextChanged);
             // 
@@ -2967,7 +2967,7 @@ namespace WindowPlugins.GUITVSeries
             this.label21.Location = new System.Drawing.Point(2, 38);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(100, 21);
-            this.label21.TabIndex = 4;
+            this.label21.TabIndex = 2;
             this.label21.Text = "Search Url:";
             this.label21.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -2978,7 +2978,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentDetailsUrl.Location = new System.Drawing.Point(104, 120);
             this.textBox_TorrentDetailsUrl.Name = "textBox_TorrentDetailsUrl";
             this.textBox_TorrentDetailsUrl.Size = new System.Drawing.Size(126, 20);
-            this.textBox_TorrentDetailsUrl.TabIndex = 6;
+            this.textBox_TorrentDetailsUrl.TabIndex = 7;
             this.toolTip_Help.SetToolTip(this.textBox_TorrentDetailsUrl, "Url of the website showing details on a specific torrent.\r\nThis url will replace " +
                     "the $id$ string with the <id> extracted from the search results");
             this.textBox_TorrentDetailsUrl.TextChanged += new System.EventHandler(this.textBox_TorrentDetailsUrl_TextChanged);
@@ -2988,7 +2988,7 @@ namespace WindowPlugins.GUITVSeries
             this.label23.Location = new System.Drawing.Point(7, 123);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(92, 21);
-            this.label23.TabIndex = 4;
+            this.label23.TabIndex = 6;
             this.label23.Text = "Details Url:";
             this.label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -2999,7 +2999,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentSearchUrl.Location = new System.Drawing.Point(104, 35);
             this.textBox_TorrentSearchUrl.Name = "textBox_TorrentSearchUrl";
             this.textBox_TorrentSearchUrl.Size = new System.Drawing.Size(126, 20);
-            this.textBox_TorrentSearchUrl.TabIndex = 6;
+            this.textBox_TorrentSearchUrl.TabIndex = 3;
             this.toolTip_Help.SetToolTip(this.textBox_TorrentSearchUrl, "Url of the website listing the search results.\r\nThe search string will replace th" +
                     "e $search$ string in the specified url.");
             this.textBox_TorrentSearchUrl.TextChanged += new System.EventHandler(this.textBox_TorrentUrl_TextChanged);
@@ -3022,7 +3022,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_TorrentPreset.Name = "comboBox_TorrentPreset";
             this.comboBox_TorrentPreset.Size = new System.Drawing.Size(126, 21);
             this.comboBox_TorrentPreset.Sorted = true;
-            this.comboBox_TorrentPreset.TabIndex = 5;
+            this.comboBox_TorrentPreset.TabIndex = 1;
             this.comboBox_TorrentPreset.SelectedIndexChanged += new System.EventHandler(this.comboBox_TorrentPreset_SelectedIndexChanged);
             this.comboBox_TorrentPreset.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox_TorrentPreset_KeyDown);
             // 
@@ -3031,7 +3031,7 @@ namespace WindowPlugins.GUITVSeries
             this.label24.Location = new System.Drawing.Point(2, 149);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(100, 24);
-            this.label24.TabIndex = 4;
+            this.label24.TabIndex = 8;
             this.label24.Text = "Details Regex:";
             this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
