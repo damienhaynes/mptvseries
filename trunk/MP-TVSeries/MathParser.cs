@@ -33,6 +33,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
     sealed class mathParser
     {
         const string floatNumberRegex = @"[-]?[0-9]*\.?[0-9]*";
+        const string evalFormat = @"Eval(";
         static NumberFormatInfo provider = new NumberFormatInfo();
 
         static List<mathFunction> functions = new List<mathFunction>();
@@ -86,12 +87,17 @@ namespace WindowPlugins.GUITVSeries.MathParser
         /// <summary>
         /// Tries to parse a given mathematical expression and evaluates it
         /// </summary>
-        /// <param name="expression">The expression to parse</param>
+        /// <param name="expression">The expression to parse, eg: "Eval(5) m" -> 5 m</param>
         /// <returns>returns the original expression if it cannot be parsed, otherwise returns the result of the expression as a string</returns>
         public static string TryParse(string expression)
         {
-            double? res = Parse(expression);
-            return res == null ? expression : res.Value.ToString();
+            string replace, with;
+            while (parenthesisFinder(expression, evalFormat, out replace, out with))
+            {
+                double? res = Parse(with);
+                if(res != null) expression = expression.Replace(replace, res.Value.ToString());
+            }
+            return expression;
         }
 
         /// <summary>
@@ -119,36 +125,73 @@ namespace WindowPlugins.GUITVSeries.MathParser
             return result;
         }
 
+        static bool parenthesisFinder(string expression, string form, out string resultWith, out string resultWithout)
+        {
+            int index = -1;
+            index = expression.IndexOf(form);
+            resultWith = null;
+            resultWithout = null;
+            if (index != -1)
+            {
+                // ok match, lets fast forward to the next ), offsetting +1 for every additional ( we find
+                int offset = -1;
+                int endPos = index;
+                for (int j = index; j < expression.Length; j++)
+                {
+                    if (offset == 0 && expression[j] == ')') // yahoo
+                    {
+                        endPos = j;
+                        break;
+                    }
+                    else if (expression[j] == '(') offset++;
+                    else if (expression[j] == ')') offset--;
+                }
+                if (endPos != index)
+                {
+                    // we had a succesful match
+                    int len = index + form.Length;
+                    resultWith = expression.Substring(index, endPos - index + 1);
+                    resultWithout = expression.Substring(len, endPos - len);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         static double? breakdDown(string expression)
         {
             // find parenthesis and apply the desired delegate on the result described in functions
             double result;
             for (int i = 0; i < functions.Count; i++)
             {
-                int index = -1;
-                index = expression.IndexOf(functions[i].form);
-                if (index != -1)
-                {
-                    // ok match, lets fast forward to the next ), offsetting +1 for every additional ( we find
-                    int offset = -1;
-                    int endPos = index;
-                    for (int j = index; j < expression.Length; j++)
-                    {
-                        if (offset == 0 && expression[j] == ')') // yahoo
-                        {
-                            endPos = j;
-                            break;
-                        }
-                        else if (expression[j] == '(') offset++;
-                        else if (expression[j] == ')') offset--;
-                    }
-                    if (endPos != index)
-                    {
-                        // we had a succesful match
-                        int len = index + functions[i].form.Length;
-                        string toReplace = expression.Substring(index, endPos - index + 1);
-                        string replaceWith = expression.Substring(len, endPos - len);
+                //int index = -1;
+                //index = expression.IndexOf(functions[i].form);
+                //if (index != -1)
+                //{
+                //    // ok match, lets fast forward to the next ), offsetting +1 for every additional ( we find
+                //    int offset = -1;
+                //    int endPos = index;
+                //    for (int j = index; j < expression.Length; j++)
+                //    {
+                //        if (offset == 0 && expression[j] == ')') // yahoo
+                //        {
+                //            endPos = j;
+                //            break;
+                //        }
+                //        else if (expression[j] == '(') offset++;
+                //        else if (expression[j] == ')') offset--;
+                //    }
+                //    if (endPos != index)
+                //    {
+                //        // we had a succesful match
+                //        int len = index + functions[i].form.Length;
+                //        string toReplace = expression.Substring(index, endPos - index + 1);
+                //        string replaceWith = expression.Substring(len, endPos - len);
 
+                string toReplace;
+                string replaceWith;
+                if(parenthesisFinder(expression, functions[i].form, out toReplace, out replaceWith))
+                {
                         MPTVSeriesLog.Write("Processing now: " + replaceWith, MPTVSeriesLog.LogLevel.Debug);
 
                         double? subresult = breakdDown(replaceWith);
@@ -163,7 +206,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                         expression = expression.Replace(toReplace, funcRes.ToString(provider));
                         i = 0;
                     }
-                }
+                //}
             }
             // mult/div first
             if (!processAtomics(ref expression, multDiv)) return null;
