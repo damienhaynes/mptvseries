@@ -84,9 +84,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.browse.Location = new System.Drawing.Point(223, 23);
             this.browse.Name = "browse";
-            this.browse.Size = new System.Drawing.Size(64, 23);
-            this.browse.TabIndex = 0;
-            this.browse.Text = "browse...";
+            this.browse.Size = new System.Drawing.Size(75, 23);
+            this.browse.TabIndex = 2;
+            this.browse.Text = "Browse...";
             this.browse.UseVisualStyleBackColor = true;
             this.browse.Click += new System.EventHandler(this.browse_Click);
             // 
@@ -101,10 +101,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // cond1_what
             // 
-            this.cond1_what.Location = new System.Drawing.Point(75, 53);
+            this.cond1_what.Location = new System.Drawing.Point(75, 51);
             this.cond1_what.Name = "cond1_what";
             this.cond1_what.Size = new System.Drawing.Size(142, 20);
-            this.cond1_what.TabIndex = 2;
+            this.cond1_what.TabIndex = 4;
             this.cond1_what.Text = "";
             this.cond1_what.TextChanged += new System.EventHandler(this.cond1_what_TextChanged);
             // 
@@ -124,14 +124,14 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_type.Location = new System.Drawing.Point(223, 51);
             this.cond1_type.Name = "cond1_type";
             this.cond1_type.Size = new System.Drawing.Size(75, 21);
-            this.cond1_type.TabIndex = 3;
+            this.cond1_type.TabIndex = 5;
             // 
             // cond1_cond
             // 
             this.cond1_cond.Location = new System.Drawing.Point(304, 51);
             this.cond1_cond.Name = "cond1_cond";
             this.cond1_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond1_cond.TabIndex = 4;
+            this.cond1_cond.TabIndex = 6;
             this.cond1_cond.TextChanged += new System.EventHandler(this.cond1_cond_TextChanged);
             // 
             // label1
@@ -140,7 +140,7 @@ namespace WindowPlugins.GUITVSeries
             this.label1.Location = new System.Drawing.Point(12, 59);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(30, 13);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 7;
             this.label1.Text = "...if...";
             // 
             // cond2_cond
@@ -149,7 +149,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond2_cond.Location = new System.Drawing.Point(304, 78);
             this.cond2_cond.Name = "cond2_cond";
             this.cond2_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond2_cond.TabIndex = 8;
+            this.cond2_cond.TabIndex = 11;
             this.cond2_cond.TextChanged += new System.EventHandler(this.cond2_cond_TextChanged);
             // 
             // cond2_type
@@ -169,15 +169,15 @@ namespace WindowPlugins.GUITVSeries
             this.cond2_type.Location = new System.Drawing.Point(223, 78);
             this.cond2_type.Name = "cond2_type";
             this.cond2_type.Size = new System.Drawing.Size(75, 21);
-            this.cond2_type.TabIndex = 7;
+            this.cond2_type.TabIndex = 10;
             // 
             // cond2_what
             // 
             this.cond2_what.Enabled = false;
-            this.cond2_what.Location = new System.Drawing.Point(75, 80);
+            this.cond2_what.Location = new System.Drawing.Point(75, 78);
             this.cond2_what.Name = "cond2_what";
             this.cond2_what.Size = new System.Drawing.Size(142, 20);
-            this.cond2_what.TabIndex = 6;
+            this.cond2_what.TabIndex = 9;
             this.cond2_what.Text = "";
             this.cond2_what.TextChanged += new System.EventHandler(this.cond2_what_TextChanged);
             // 
@@ -189,10 +189,10 @@ namespace WindowPlugins.GUITVSeries
             this._12_link.Items.AddRange(new object[] {
             "AND",
             "OR"});
-            this._12_link.Location = new System.Drawing.Point(12, 80);
+            this._12_link.Location = new System.Drawing.Point(12, 78);
             this._12_link.Name = "_12_link";
             this._12_link.Size = new System.Drawing.Size(57, 21);
-            this._12_link.TabIndex = 9;
+            this._12_link.TabIndex = 8;
             // 
             // _23_link
             // 
@@ -202,10 +202,10 @@ namespace WindowPlugins.GUITVSeries
             this._23_link.Items.AddRange(new object[] {
             "AND",
             "OR"});
-            this._23_link.Location = new System.Drawing.Point(12, 106);
+            this._23_link.Location = new System.Drawing.Point(12, 104);
             this._23_link.Name = "_23_link";
             this._23_link.Size = new System.Drawing.Size(57, 21);
-            this._23_link.TabIndex = 13;
+            this._23_link.TabIndex = 12;
             // 
             // cond3_cond
             // 
@@ -213,7 +213,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond3_cond.Location = new System.Drawing.Point(304, 104);
             this.cond3_cond.Name = "cond3_cond";
             this.cond3_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond3_cond.TabIndex = 12;
+            this.cond3_cond.TabIndex = 15;
             // 
             // cond3_type
             // 
@@ -232,34 +232,34 @@ namespace WindowPlugins.GUITVSeries
             this.cond3_type.Location = new System.Drawing.Point(223, 104);
             this.cond3_type.Name = "cond3_type";
             this.cond3_type.Size = new System.Drawing.Size(75, 21);
-            this.cond3_type.TabIndex = 11;
+            this.cond3_type.TabIndex = 14;
             // 
             // cond3_what
             // 
             this.cond3_what.Enabled = false;
-            this.cond3_what.Location = new System.Drawing.Point(75, 106);
+            this.cond3_what.Location = new System.Drawing.Point(75, 104);
             this.cond3_what.Name = "cond3_what";
             this.cond3_what.Size = new System.Drawing.Size(142, 20);
-            this.cond3_what.TabIndex = 10;
+            this.cond3_what.TabIndex = 13;
             this.cond3_what.Text = "";
             this.cond3_what.TextChanged += new System.EventHandler(this.cond3_what_TextChanged);
             // 
             // save
             // 
-            this.save.Location = new System.Drawing.Point(357, 131);
+            this.save.Location = new System.Drawing.Point(359, 131);
             this.save.Name = "save";
             this.save.Size = new System.Drawing.Size(75, 23);
-            this.save.TabIndex = 14;
+            this.save.TabIndex = 19;
             this.save.Text = "Save";
             this.save.UseVisualStyleBackColor = true;
             this.save.Click += new System.EventHandler(this.save_Click);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(276, 131);
+            this.button1.Location = new System.Drawing.Point(278, 131);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 15;
+            this.button1.TabIndex = 18;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -270,7 +270,7 @@ namespace WindowPlugins.GUITVSeries
             this.label2.Location = new System.Drawing.Point(12, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(130, 13);
-            this.label2.TabIndex = 16;
+            this.label2.TabIndex = 0;
             this.label2.Text = "Display the following Logo";
             // 
             // btnDynFilename
@@ -278,27 +278,27 @@ namespace WindowPlugins.GUITVSeries
             this.btnDynFilename.Location = new System.Drawing.Point(304, 23);
             this.btnDynFilename.Name = "btnDynFilename";
             this.btnDynFilename.Size = new System.Drawing.Size(126, 23);
-            this.btnDynFilename.TabIndex = 17;
-            this.btnDynFilename.Text = "dynamic Filename....";
+            this.btnDynFilename.TabIndex = 3;
+            this.btnDynFilename.Text = "Dynamic Filename....";
             this.btnDynFilename.UseVisualStyleBackColor = true;
             this.btnDynFilename.Click += new System.EventHandler(this.btnDynFilename_Click);
             // 
             // btnPaste
             // 
-            this.btnPaste.Location = new System.Drawing.Point(195, 132);
+            this.btnPaste.Location = new System.Drawing.Point(93, 131);
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(75, 23);
-            this.btnPaste.TabIndex = 18;
+            this.btnPaste.TabIndex = 17;
             this.btnPaste.Text = "Paste";
             this.btnPaste.UseVisualStyleBackColor = true;
             this.btnPaste.Click += new System.EventHandler(this.button2_Click);
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(114, 132);
+            this.btnCopy.Location = new System.Drawing.Point(12, 131);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
-            this.btnCopy.TabIndex = 19;
+            this.btnCopy.TabIndex = 16;
             this.btnCopy.Text = "Copy";
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
