@@ -2164,16 +2164,22 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkMediaInfoUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DialogResult result = MessageBox.Show("Force update of previously read-out files?\n(No for new files only)", "Ignore already read-out files?", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show("Force update of Media Info for all files?\n\nSelect No to update new files only.", "Update Media Info", MessageBoxButtons.YesNoCancel);
+
+            if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+            
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
-
-            if(result == DialogResult.No)
+            
+            if (result == DialogResult.No)
             {
                 List<DBEpisode> todoeps = new List<DBEpisode>();
                 // only get the episodes that dont have their resolutions read out already
@@ -2181,11 +2187,11 @@ namespace WindowPlugins.GUITVSeries
                     if (!episodes[i].mediaInfoIsSet)
                         todoeps.Add(episodes[i]);
                 episodes = todoeps;
-            } 
-            
+            }
+
             if (episodes.Count > 0)
             {
-                MPTVSeriesLog.Write("Force update of MediaInfo....(Please be patient!)");
+                MPTVSeriesLog.Write("Updating MediaInfo....(Please be patient!)");
                 BackgroundWorker resReader = new BackgroundWorker();
                 resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
