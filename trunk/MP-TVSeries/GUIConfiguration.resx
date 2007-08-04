@@ -126,11 +126,11 @@
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>791, 14</value>
   </metadata>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>291, 14</value>
-  </metadata>
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>686, 14</value>
+  </metadata>
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>291, 14</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -154,6 +154,10 @@
         JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
         mAY8AAAAAElFTkSuQmCC
 </value>
+  </data>
+  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
+    <value>Enable this option to use the TV Series found online when only one exact match was found.
+In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
   </data>
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -216,9 +220,6 @@
   </data>
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>487, 14</value>
-  </metadata>
-  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>686, 14</value>
   </metadata>
   <data name="textBox_foromID.ToolTip" xml:space="preserve">
     <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>

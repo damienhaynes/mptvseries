@@ -364,12 +364,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-
-        private void btnExpressionBuilder_Click(Control sender, EventArgs e)
-        {
-
-        }
-
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
@@ -2738,10 +2732,10 @@ namespace WindowPlugins.GUITVSeries
         private void resetExpr_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (DialogResult.Yes ==
-                        MessageBox.Show("You are about to delete all parsing expressions," + Environment.NewLine +
-                            "and replace them with the plugin's defaults." + Environment.NewLine +
-                            "Any custom Expressions will be lost!", "Reset Expressions", MessageBoxButtons.YesNo))
-            {
+                        MessageBox.Show("You are about to delete all parsing expressions, and replace" + Environment.NewLine +
+                            "them with the plugin's defaults." + Environment.NewLine + Environment.NewLine +
+                            "Any custom Expressions will be lost, would you like to proceed?", "Reset Expressions", MessageBoxButtons.YesNo))
+            { 
                 dataGridView_Expressions.Rows.Clear();
 
                 DBExpression.ClearAll();

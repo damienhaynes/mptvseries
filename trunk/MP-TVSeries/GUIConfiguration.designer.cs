@@ -53,17 +53,17 @@ namespace WindowPlugins.GUITVSeries
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.columnHeader_Series = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Title = new System.Windows.Forms.ColumnHeader();
             this.columnHeader_Season = new System.Windows.Forms.ColumnHeader();
@@ -449,35 +449,35 @@ namespace WindowPlugins.GUITVSeries
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(153, 136);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(147, 114);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
@@ -485,7 +485,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.newzbinThisToolStripMenuItem.Enabled = false;
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
             // 
@@ -495,9 +495,11 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_ShowHidden.AutoSize = true;
             this.checkBox_ShowHidden.Location = new System.Drawing.Point(3, 638);
             this.checkBox_ShowHidden.Name = "checkBox_ShowHidden";
-            this.checkBox_ShowHidden.Size = new System.Drawing.Size(117, 17);
+            this.checkBox_ShowHidden.Size = new System.Drawing.Size(118, 17);
             this.checkBox_ShowHidden.TabIndex = 1;
-            this.checkBox_ShowHidden.Text = "Show Hidden items";
+            this.checkBox_ShowHidden.Tag = "z";
+            this.checkBox_ShowHidden.Text = "&Show Hidden Items";
+            this.toolTip_Help.SetToolTip(this.checkBox_ShowHidden, "Shows the Series,Seasons and Episodes that have been hidden from view");
             this.checkBox_ShowHidden.UseVisualStyleBackColor = true;
             this.checkBox_ShowHidden.CheckedChanged += new System.EventHandler(this.checkBox_ShowHidden_CheckedChanged);
             // 
@@ -514,14 +516,14 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.dataGridView1.DataSource = this.detailsPropertyBindingSource;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 174);
             this.dataGridView1.MultiSelect = false;
@@ -603,7 +605,8 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_dblocation.ReadOnly = true;
             this.textBox_dblocation.Size = new System.Drawing.Size(230, 20);
             this.textBox_dblocation.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "Database location");
+            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "The Database Path used by MP-TVSeries to store all TV information and settings fo" +
+                    "r this plugin");
             // 
             // lblClearDB
             // 
@@ -615,6 +618,7 @@ namespace WindowPlugins.GUITVSeries
             this.lblClearDB.TabIndex = 3;
             this.lblClearDB.TabStop = true;
             this.lblClearDB.Text = "Empty";
+            this.toolTip_Help.SetToolTip(this.lblClearDB, "Deletes all Series, Season and Episode information from the local database");
             this.lblClearDB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblClearDB_LinkClicked);
             // 
             // button_dbbrowse
@@ -727,6 +731,8 @@ namespace WindowPlugins.GUITVSeries
             this.buildExpr.TabIndex = 4;
             this.buildExpr.TabStop = true;
             this.buildExpr.Text = "Build";
+            this.toolTip_Help.SetToolTip(this.buildExpr, "A Simple Expression Builder that can be used to help the plug-in understand your " +
+                    "TV Shows file structure");
             this.buildExpr.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.buildExpr_LinkClicked);
             // 
             // resetExpr
@@ -739,14 +745,15 @@ namespace WindowPlugins.GUITVSeries
             this.resetExpr.TabIndex = 3;
             this.resetExpr.TabStop = true;
             this.resetExpr.Text = "Reset";
+            this.toolTip_Help.SetToolTip(this.resetExpr, "Removes all custom defined expressions and restores the plug-in defaults");
             this.resetExpr.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.resetExpr_LinkClicked);
             // 
             // dataGridView_Expressions
             // 
             this.dataGridView_Expressions.AllowUserToResizeColumns = false;
             this.dataGridView_Expressions.AllowUserToResizeRows = false;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView_Expressions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -754,21 +761,21 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Expressions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_Expressions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Expressions.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView_Expressions.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_Expressions.MultiSelect = false;
             this.dataGridView_Expressions.Name = "dataGridView_Expressions";
             this.dataGridView_Expressions.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_Expressions.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Expressions.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView_Expressions.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Expressions.RowTemplate.Height = 18;
             this.dataGridView_Expressions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -813,33 +820,35 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_Replace.AllowUserToResizeColumns = false;
             this.dataGridView_Replace.AllowUserToResizeRows = false;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView_Replace.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_Replace.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Replace.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_Replace.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Replace.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Replace.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView_Replace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_Replace.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_Replace.Name = "dataGridView_Replace";
             this.dataGridView_Replace.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_Replace.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_Replace.RowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_Replace.RowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView_Replace.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Replace.RowTemplate.Height = 18;
             this.dataGridView_Replace.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView_Replace.Size = new System.Drawing.Size(156, 139);
             this.dataGridView_Replace.StandardTab = true;
             this.dataGridView_Replace.TabIndex = 0;
+            this.toolTip_Help.SetToolTip(this.dataGridView_Replace, "Strings that are to be replaced before or after parsing data to online database l" +
+                    "ookup");
             this.dataGridView_Replace.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_UserDeletedRow);
             this.dataGridView_Replace.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_Replace_CellEndEdit);
             // 
@@ -871,164 +880,173 @@ namespace WindowPlugins.GUITVSeries
             // 
             // chkBlankBanners
             // 
-            this.chkBlankBanners.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkBlankBanners.Location = new System.Drawing.Point(3, 142);
+            this.chkBlankBanners.Location = new System.Drawing.Point(4, 120);
             this.chkBlankBanners.Name = "chkBlankBanners";
-            this.chkBlankBanners.Size = new System.Drawing.Size(415, 17);
-            this.chkBlankBanners.TabIndex = 8;
-            this.chkBlankBanners.Text = "In addition to localized and english banners, also get blank banners";
+            this.chkBlankBanners.Size = new System.Drawing.Size(417, 17);
+            this.chkBlankBanners.TabIndex = 6;
+            this.chkBlankBanners.Text = "Download &blank series and season banners";
+            this.toolTip_Help.SetToolTip(this.chkBlankBanners, "Enable to download blank series and season banners in addition to localized and E" +
+                    "nglish ones");
             this.chkBlankBanners.UseVisualStyleBackColor = true;
             this.chkBlankBanners.CheckedChanged += new System.EventHandler(this.chkBlankBanners_CheckedChanged);
             // 
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(159, 257);
+            this.linkExWatched.Location = new System.Drawing.Point(161, 238);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
-            this.linkExWatched.TabIndex = 16;
+            this.linkExWatched.TabIndex = 14;
             this.linkExWatched.TabStop = true;
             this.linkExWatched.Text = "Export Watched Flags...";
+            this.toolTip_Help.SetToolTip(this.linkExWatched, "Export the \'Watched\' Status of all episodes to file");
             this.linkExWatched.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExWatched_LinkClicked);
             // 
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 121);
+            this.label37.Location = new System.Drawing.Point(4, 339);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(109, 13);
-            this.label37.TabIndex = 6;
+            this.label37.TabIndex = 15;
             this.label37.Text = "Prefered banner type:";
             this.label37.Visible = false;
             // 
             // comboBox_preferedBannerType
             // 
             this.comboBox_preferedBannerType.FormattingEnabled = true;
-            this.comboBox_preferedBannerType.Location = new System.Drawing.Point(151, 118);
+            this.comboBox_preferedBannerType.Location = new System.Drawing.Point(119, 336);
             this.comboBox_preferedBannerType.Name = "comboBox_preferedBannerType";
             this.comboBox_preferedBannerType.Size = new System.Drawing.Size(121, 21);
-            this.comboBox_preferedBannerType.TabIndex = 7;
+            this.comboBox_preferedBannerType.TabIndex = 16;
             this.comboBox_preferedBannerType.Visible = false;
             this.comboBox_preferedBannerType.SelectedIndexChanged += new System.EventHandler(this.comboBox_preferedBannerType_SelectedIndexChanged);
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(27, 31);
+            this.label29.Location = new System.Drawing.Point(20, 31);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(59, 13);
+            this.label29.Size = new System.Drawing.Size(62, 13);
             this.label29.TabIndex = 1;
-            this.label29.Text = "Main Mirror";
+            this.label29.Text = "&Main Mirror:";
             // 
             // txtMainMirror
             // 
             this.txtMainMirror.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMainMirror.Location = new System.Drawing.Point(92, 28);
+            this.txtMainMirror.Location = new System.Drawing.Point(87, 29);
             this.txtMainMirror.Name = "txtMainMirror";
             this.txtMainMirror.Size = new System.Drawing.Size(252, 20);
             this.txtMainMirror.TabIndex = 2;
+            this.toolTip_Help.SetToolTip(this.txtMainMirror, "Download mirror for online database");
             this.txtMainMirror.TextChanged += new System.EventHandler(this.txtMainMirror_TextChanged);
             // 
             // checkFileDeletion
             // 
-            this.checkFileDeletion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkFileDeletion.Location = new System.Drawing.Point(3, 183);
+            this.checkFileDeletion.Location = new System.Drawing.Point(4, 164);
             this.checkFileDeletion.Name = "checkFileDeletion";
-            this.checkFileDeletion.Size = new System.Drawing.Size(318, 17);
-            this.checkFileDeletion.TabIndex = 10;
-            this.checkFileDeletion.Text = "Delete physical file(s) when deleting database entries";
+            this.checkFileDeletion.Size = new System.Drawing.Size(417, 17);
+            this.checkFileDeletion.TabIndex = 8;
+            this.checkFileDeletion.Text = "Delete &physical file(s) when deleting database entries";
+            this.toolTip_Help.SetToolTip(this.checkFileDeletion, "Enable this option to allow the plug-in to physically remove file(s) when deleted" +
+                    " from with-in Media Portal");
             this.checkFileDeletion.UseVisualStyleBackColor = true;
             this.checkFileDeletion.CheckedChanged += new System.EventHandler(this.checkFileDeletion_CheckedChanged);
             // 
             // linkDelUpdateTime
             // 
             this.linkDelUpdateTime.AutoSize = true;
-            this.linkDelUpdateTime.Location = new System.Drawing.Point(159, 239);
+            this.linkDelUpdateTime.Location = new System.Drawing.Point(161, 220);
             this.linkDelUpdateTime.Name = "linkDelUpdateTime";
             this.linkDelUpdateTime.Size = new System.Drawing.Size(128, 13);
-            this.linkDelUpdateTime.TabIndex = 15;
+            this.linkDelUpdateTime.TabIndex = 12;
             this.linkDelUpdateTime.TabStop = true;
             this.linkDelUpdateTime.Text = "Clear Update Timestamps";
+            this.toolTip_Help.SetToolTip(this.linkDelUpdateTime, "Click here to reset Timestamps for the last date-time data for series was updated" +
+                    " from the online database.\r\nThis will force a re-request of all data on next imp" +
+                    "ort");
             this.linkDelUpdateTime.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDelUpdateTime_LinkClicked);
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(2, 209);
+            this.label26.Location = new System.Drawing.Point(20, 187);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(85, 13);
-            this.label26.TabIndex = 11;
-            this.label26.Text = "Retrieve data in:";
+            this.label26.Size = new System.Drawing.Size(58, 13);
+            this.label26.TabIndex = 9;
+            this.label26.Text = "&Language:";
             // 
             // comboOnlineLang
             // 
             this.comboOnlineLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboOnlineLang.FormattingEnabled = true;
-            this.comboOnlineLang.Location = new System.Drawing.Point(93, 206);
+            this.comboOnlineLang.Location = new System.Drawing.Point(87, 184);
             this.comboOnlineLang.Name = "comboOnlineLang";
             this.comboOnlineLang.Size = new System.Drawing.Size(121, 21);
-            this.comboOnlineLang.TabIndex = 12;
+            this.comboOnlineLang.TabIndex = 10;
+            this.toolTip_Help.SetToolTip(this.comboOnlineLang, "Select the language to download TV Series information in, defaults to English");
             this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
             // 
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(2, 257);
+            this.linkImpWatched.Location = new System.Drawing.Point(4, 238);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
-            this.linkImpWatched.TabIndex = 14;
+            this.linkImpWatched.TabIndex = 13;
             this.linkImpWatched.TabStop = true;
             this.linkImpWatched.Text = "Import Watched Flags...";
+            this.toolTip_Help.SetToolTip(this.linkImpWatched, "Import the \'Watched\' Status of all episodes from file");
             this.linkImpWatched.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkImpWatched_LinkClicked);
             // 
             // checkBox_doFolderWatch
             // 
-            this.checkBox_doFolderWatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(3, 161);
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 142);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
-            this.checkBox_doFolderWatch.Size = new System.Drawing.Size(415, 17);
-            this.checkBox_doFolderWatch.TabIndex = 9;
-            this.checkBox_doFolderWatch.Text = "Watch my import folders for changes automatically";
+            this.checkBox_doFolderWatch.Size = new System.Drawing.Size(417, 17);
+            this.checkBox_doFolderWatch.TabIndex = 7;
+            this.checkBox_doFolderWatch.Text = "&Watch my import folders for changes automatically";
+            this.toolTip_Help.SetToolTip(this.checkBox_doFolderWatch, "Enable this option to allow the plug-in to monitor import folders for new, delete" +
+                    "d and modified TV Series and update the database accordingly.\r\nThis option only " +
+                    "works from with-in Media Portal");
             this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
             this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(2, 239);
+            this.linkLabel1.Location = new System.Drawing.Point(4, 220);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(132, 13);
-            this.linkLabel1.TabIndex = 13;
+            this.linkLabel1.Size = new System.Drawing.Size(95, 13);
+            this.linkLabel1.TabIndex = 11;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Force update of MediaInfo";
-            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plugin to read the mediainfos (such as resolution) now!");
+            this.linkLabel1.Text = "Update Media Info";
+            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plug-in to read the media information for local files aga" +
+                    "in e.g. resolution, codecs");
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // checkBox_DontClearMissingLocalFiles
             // 
-            this.checkBox_DontClearMissingLocalFiles.AutoSize = true;
-            this.checkBox_DontClearMissingLocalFiles.Location = new System.Drawing.Point(4, 101);
+            this.checkBox_DontClearMissingLocalFiles.Location = new System.Drawing.Point(4, 98);
             this.checkBox_DontClearMissingLocalFiles.Name = "checkBox_DontClearMissingLocalFiles";
-            this.checkBox_DontClearMissingLocalFiles.Size = new System.Drawing.Size(289, 17);
+            this.checkBox_DontClearMissingLocalFiles.Size = new System.Drawing.Size(417, 17);
             this.checkBox_DontClearMissingLocalFiles.TabIndex = 5;
-            this.checkBox_DontClearMissingLocalFiles.Text = "Don\'t clear local reference for missing local files on scan";
+            this.checkBox_DontClearMissingLocalFiles.Text = "&Keep reference to files that are not available";
+            this.toolTip_Help.SetToolTip(this.checkBox_DontClearMissingLocalFiles, "Enable this option to keep a reference to files that are no longer available duri" +
+                    "ng scan e.g. series stored on an offline fileserver");
             this.checkBox_DontClearMissingLocalFiles.UseVisualStyleBackColor = true;
             this.checkBox_DontClearMissingLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_DontClearMissingLocalFiles_CheckedChanged);
             // 
             // checkBox_OnlineSearch
             // 
-            this.checkBox_OnlineSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_OnlineSearch.Location = new System.Drawing.Point(4, 7);
             this.checkBox_OnlineSearch.Name = "checkBox_OnlineSearch";
-            this.checkBox_OnlineSearch.Size = new System.Drawing.Size(458, 17);
+            this.checkBox_OnlineSearch.Size = new System.Drawing.Size(417, 17);
             this.checkBox_OnlineSearch.TabIndex = 0;
-            this.checkBox_OnlineSearch.Text = "Enable Online Database data retrieval";
-            this.toolTip_Help.SetToolTip(this.checkBox_OnlineSearch, "When not checked, no online data will be pulled out");
+            this.checkBox_OnlineSearch.Text = "&Download data for TV Series from an online database";
+            this.toolTip_Help.SetToolTip(this.checkBox_OnlineSearch, "Enable this option to download data for TV Series including Banners and Episode t" +
+                    "humbnails.\r\nData can be manually entered or corrected in Details tab");
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
             this.checkBox_OnlineSearch.CheckedChanged += new System.EventHandler(this.checkBox_OnlineSearch_CheckedChanged);
             // 
@@ -1047,30 +1065,25 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_AutoChooseSeries
             // 
-            this.checkBox_AutoChooseSeries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_AutoChooseSeries.Location = new System.Drawing.Point(4, 78);
+            this.checkBox_AutoChooseSeries.Location = new System.Drawing.Point(4, 76);
             this.checkBox_AutoChooseSeries.Name = "checkBox_AutoChooseSeries";
-            this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(458, 17);
+            this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(417, 17);
             this.checkBox_AutoChooseSeries.TabIndex = 4;
-            this.checkBox_AutoChooseSeries.Text = "Auto-Choose series when multiple entries are returned from the Online Database";
-            this.toolTip_Help.SetToolTip(this.checkBox_AutoChooseSeries, "When checked, if there is exactly one exact match in the returned list, it will b" +
-                    "e used. Otherwise, in any conflicting case the choose series dialog will pop up");
+            this.checkBox_AutoChooseSeries.Text = "&Automatically select series when only one exact match is found online";
+            this.toolTip_Help.SetToolTip(this.checkBox_AutoChooseSeries, resources.GetString("checkBox_AutoChooseSeries.ToolTip"));
             this.checkBox_AutoChooseSeries.UseVisualStyleBackColor = true;
             this.checkBox_AutoChooseSeries.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseSeries_CheckedChanged);
             // 
             // checkBox_FullSeriesRetrieval
             // 
-            this.checkBox_FullSeriesRetrieval.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_FullSeriesRetrieval.AutoEllipsis = true;
             this.checkBox_FullSeriesRetrieval.Location = new System.Drawing.Point(4, 54);
             this.checkBox_FullSeriesRetrieval.Name = "checkBox_FullSeriesRetrieval";
-            this.checkBox_FullSeriesRetrieval.Size = new System.Drawing.Size(458, 17);
+            this.checkBox_FullSeriesRetrieval.Size = new System.Drawing.Size(417, 17);
             this.checkBox_FullSeriesRetrieval.TabIndex = 3;
-            this.checkBox_FullSeriesRetrieval.Text = "Retrieve episode information for the whole series";
-            this.toolTip_Help.SetToolTip(this.checkBox_FullSeriesRetrieval, "When unchecked, online data will be pulled out only for the existing episode. Oth" +
-                    "erwise all seasons / episodes will be fetched");
+            this.checkBox_FullSeriesRetrieval.Text = "D&ownload episode information for the whole series";
+            this.toolTip_Help.SetToolTip(this.checkBox_FullSeriesRetrieval, "Enable this option to download data for all seasons and episodes available online" +
+                    " (takes longer).\r\nDisable to download data only for episodes local to this compu" +
+                    "ter");
             this.checkBox_FullSeriesRetrieval.UseVisualStyleBackColor = true;
             this.checkBox_FullSeriesRetrieval.CheckedChanged += new System.EventHandler(this.checkBox_FullSeriesRetrieval_CheckedChanged);
             // 
@@ -1127,27 +1140,27 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.dataGridView_ImportPathes.AllowUserToResizeColumns = false;
             this.dataGridView_ImportPathes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView_ImportPathes.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_ImportPathes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_ImportPathes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView_ImportPathes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_ImportPathes.DefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView_ImportPathes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_ImportPathes.Location = new System.Drawing.Point(0, 0);
             this.dataGridView_ImportPathes.Name = "dataGridView_ImportPathes";
             this.dataGridView_ImportPathes.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView_ImportPathes.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.dataGridView_ImportPathes.RowsDefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridView_ImportPathes.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_ImportPathes.RowTemplate.Height = 18;
             this.dataGridView_ImportPathes.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -1166,7 +1179,7 @@ namespace WindowPlugins.GUITVSeries
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(57, 13);
             this.label11.TabIndex = 7;
-            this.label11.Text = "Log Level:";
+            this.label11.Text = "Lo&g Level:";
             // 
             // comboBox_debuglevel
             // 
@@ -1197,7 +1210,9 @@ namespace WindowPlugins.GUITVSeries
             this.button_Start.Name = "button_Start";
             this.button_Start.Size = new System.Drawing.Size(105, 23);
             this.button_Start.TabIndex = 4;
-            this.button_Start.Text = "Start Import";
+            this.button_Start.Text = "&Start Import";
+            this.toolTip_Help.SetToolTip(this.button_Start, "Click to Start Importing data from the Online Database, updates data for all seri" +
+                    "es, seasons and episodes new and old");
             this.button_Start.UseVisualStyleBackColor = true;
             this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
             // 
@@ -3075,7 +3090,8 @@ namespace WindowPlugins.GUITVSeries
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(692, 13);
             this.button1.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.button1, "Click to show log");
+            this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
+                    "ing progress of Import");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
