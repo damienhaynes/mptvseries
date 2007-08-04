@@ -118,7 +118,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboOnlineLang = new System.Windows.Forms.ComboBox();
             this.linkImpWatched = new System.Windows.Forms.LinkLabel();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkMediaInfoUpdate = new System.Windows.Forms.LinkLabel();
             this.checkBox_DontClearMissingLocalFiles = new System.Windows.Forms.CheckBox();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.checkBox_LocalDataOverride = new System.Windows.Forms.CheckBox();
@@ -866,7 +866,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.comboOnlineLang);
             this.panel_OnlineData.Controls.Add(this.linkImpWatched);
             this.panel_OnlineData.Controls.Add(this.checkBox_doFolderWatch);
-            this.panel_OnlineData.Controls.Add(this.linkLabel1);
+            this.panel_OnlineData.Controls.Add(this.linkMediaInfoUpdate);
             this.panel_OnlineData.Controls.Add(this.checkBox_DontClearMissingLocalFiles);
             this.panel_OnlineData.Controls.Add(this.checkBox_OnlineSearch);
             this.panel_OnlineData.Controls.Add(this.checkBox_LocalDataOverride);
@@ -1013,18 +1013,18 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
             this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
             // 
-            // linkLabel1
+            // linkMediaInfoUpdate
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(4, 220);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(95, 13);
-            this.linkLabel1.TabIndex = 11;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Update Media Info";
-            this.toolTip_Help.SetToolTip(this.linkLabel1, "Click here to force the plug-in to read the media information for local files aga" +
+            this.linkMediaInfoUpdate.AutoSize = true;
+            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(4, 220);
+            this.linkMediaInfoUpdate.Name = "linkMediaInfoUpdate";
+            this.linkMediaInfoUpdate.Size = new System.Drawing.Size(95, 13);
+            this.linkMediaInfoUpdate.TabIndex = 11;
+            this.linkMediaInfoUpdate.TabStop = true;
+            this.linkMediaInfoUpdate.Text = "Update Media Info";
+            this.toolTip_Help.SetToolTip(this.linkMediaInfoUpdate, "Click here to force the plug-in to read the media information for local files aga" +
                     "in e.g. resolution, codecs");
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.linkMediaInfoUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkMediaInfoUpdate_LinkClicked);
             // 
             // checkBox_DontClearMissingLocalFiles
             // 
@@ -3321,7 +3321,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkMediaInfoUpdate;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.ListBox lstLogos;
         private System.Windows.Forms.Button addLogo;
