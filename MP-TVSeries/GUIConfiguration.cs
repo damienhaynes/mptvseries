@@ -2548,6 +2548,8 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
+
+            MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
 
         private void checkFileDeletion_CheckedChanged(object sender, EventArgs e)
@@ -2615,7 +2617,7 @@ namespace WindowPlugins.GUITVSeries
                     w.WriteLine((string)val);
                 }
                 w.Close();
-                MessageBox.Show("Watched info succesfully exported!");
+                MPTVSeriesLog.Write("Watched info succesfully exported!");                
             }
         }
 
@@ -2639,7 +2641,7 @@ namespace WindowPlugins.GUITVSeries
                     DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, cond);
                 }
                 r.Close();
-                MessageBox.Show("Watched info succesfully imported!");
+                MPTVSeriesLog.Write("Watched info succesfully imported!");
                 LoadTree(); // reload tree so the changes are visible
             }
         }
@@ -2680,6 +2682,8 @@ namespace WindowPlugins.GUITVSeries
                 DBTVSeries.Execute("delete from season");
                 DBTVSeries.Execute("delete from local_series");
                 DBTVSeries.Execute("delete from online_series");
+
+                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
                 LoadTree();
             }
         }
@@ -2711,8 +2715,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 StreamReader r = new StreamReader(fd.FileName);
 
-                string line = string.Empty;
-                
+                string line = string.Empty;                
 
                 List<string> entries = new List<string>();
                 foreach (string item in lstLogos.Items)
@@ -2748,6 +2751,7 @@ namespace WindowPlugins.GUITVSeries
                 DBExpression.AddDefaults();
 
                 LoadExpressions();
+                MPTVSeriesLog.Write("Expressions reset to defaults");
                 
             }
         }
