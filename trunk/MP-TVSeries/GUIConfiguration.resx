@@ -218,9 +218,19 @@ In all other cases you will be presented with a choice from available matches an
         mAY8AAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="addLogo.ToolTip" xml:space="preserve">
+    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
+what video and audio codecs the epsiode is encoded in etc...
+
+A Logo package must be installed to succesfully display logos in Media Portal</value>
+  </data>
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>487, 14</value>
   </metadata>
+  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
+    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders. Disable to show all seasons and episodes for series.
+This setting can be changed from within Media Portal</value>
+  </data>
   <data name="textBox_foromID.ToolTip" xml:space="preserve">
     <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
   </data>

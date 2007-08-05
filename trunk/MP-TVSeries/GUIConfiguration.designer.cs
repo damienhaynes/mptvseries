@@ -1069,7 +1069,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoChooseSeries.Name = "checkBox_AutoChooseSeries";
             this.checkBox_AutoChooseSeries.Size = new System.Drawing.Size(417, 17);
             this.checkBox_AutoChooseSeries.TabIndex = 4;
-            this.checkBox_AutoChooseSeries.Text = "&Automatically select series when only one exact match is found online";
+            this.checkBox_AutoChooseSeries.Text = "&Automatically choose series when only one exact match is found online";
             this.toolTip_Help.SetToolTip(this.checkBox_AutoChooseSeries, resources.GetString("checkBox_AutoChooseSeries.ToolTip"));
             this.checkBox_AutoChooseSeries.UseVisualStyleBackColor = true;
             this.checkBox_AutoChooseSeries.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseSeries_CheckedChanged);
@@ -1912,36 +1912,37 @@ namespace WindowPlugins.GUITVSeries
             // 
             // lnkLogoImp
             // 
-            this.lnkLogoImp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lnkLogoImp.Location = new System.Drawing.Point(180, 124);
+            this.lnkLogoImp.Location = new System.Drawing.Point(92, 124);
             this.lnkLogoImp.Name = "lnkLogoImp";
             this.lnkLogoImp.Size = new System.Drawing.Size(51, 13);
-            this.lnkLogoImp.TabIndex = 1;
+            this.lnkLogoImp.TabIndex = 4;
             this.lnkLogoImp.TabStop = true;
             this.lnkLogoImp.Text = "Import...";
             this.lnkLogoImp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip_Help.SetToolTip(this.lnkLogoImp, "Click to import logo rules to file\r\n");
             this.lnkLogoImp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLogoImp_LinkClicked);
             // 
             // lnkLogoExport
             // 
-            this.lnkLogoExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lnkLogoExport.Location = new System.Drawing.Point(233, 124);
+            this.lnkLogoExport.Location = new System.Drawing.Point(145, 124);
             this.lnkLogoExport.Name = "lnkLogoExport";
             this.lnkLogoExport.Size = new System.Drawing.Size(51, 13);
-            this.lnkLogoExport.TabIndex = 2;
+            this.lnkLogoExport.TabIndex = 5;
             this.lnkLogoExport.TabStop = true;
             this.lnkLogoExport.Text = "Export...";
             this.lnkLogoExport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip_Help.SetToolTip(this.lnkLogoExport, "Click to export logo rules to file");
             this.lnkLogoExport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLogoExport_LinkClicked);
             // 
             // btnLogoTemplate
             // 
-            this.btnLogoTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogoTemplate.Location = new System.Drawing.Point(290, 119);
+            this.btnLogoTemplate.Location = new System.Drawing.Point(7, 120);
             this.btnLogoTemplate.Name = "btnLogoTemplate";
             this.btnLogoTemplate.Size = new System.Drawing.Size(75, 23);
             this.btnLogoTemplate.TabIndex = 3;
-            this.btnLogoTemplate.Text = "Templates...";
+            this.btnLogoTemplate.Text = "&Templates...";
+            this.toolTip_Help.SetToolTip(this.btnLogoTemplate, "Click button to select from a pre-defined list of logo templates.\r\nA Logo package" +
+                    " must be installed to succesfully display logos in Media Portal");
             this.btnLogoTemplate.UseVisualStyleBackColor = true;
             this.btnLogoTemplate.Click += new System.EventHandler(this.btnLogoTemplate_Click);
             // 
@@ -1951,8 +1952,9 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoEdit.Location = new System.Drawing.Point(452, 119);
             this.btnLogoEdit.Name = "btnLogoEdit";
             this.btnLogoEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnLogoEdit.TabIndex = 5;
-            this.btnLogoEdit.Text = "Edit...";
+            this.btnLogoEdit.TabIndex = 7;
+            this.btnLogoEdit.Text = "&Edit...";
+            this.toolTip_Help.SetToolTip(this.btnLogoEdit, "Click to edit the selected logo rule in list");
             this.btnLogoEdit.UseVisualStyleBackColor = true;
             this.btnLogoEdit.Click += new System.EventHandler(this.btnLogoEdit_Click);
             // 
@@ -1963,7 +1965,8 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoDown.Location = new System.Drawing.Point(615, 69);
             this.btnLogoDown.Name = "btnLogoDown";
             this.btnLogoDown.Size = new System.Drawing.Size(28, 29);
-            this.btnLogoDown.TabIndex = 8;
+            this.btnLogoDown.TabIndex = 2;
+            this.toolTip_Help.SetToolTip(this.btnLogoDown, "Moves the logo position to the right when displayed in Media Portal");
             this.btnLogoDown.UseVisualStyleBackColor = true;
             this.btnLogoDown.Click += new System.EventHandler(this.btnLogoDown_Click);
             // 
@@ -1974,7 +1977,8 @@ namespace WindowPlugins.GUITVSeries
             this.btnlogoUp.Location = new System.Drawing.Point(614, 34);
             this.btnlogoUp.Name = "btnlogoUp";
             this.btnlogoUp.Size = new System.Drawing.Size(28, 29);
-            this.btnlogoUp.TabIndex = 7;
+            this.btnlogoUp.TabIndex = 1;
+            this.toolTip_Help.SetToolTip(this.btnlogoUp, "Moves the logo position to the left when displayed in Media Portal");
             this.btnlogoUp.UseVisualStyleBackColor = true;
             this.btnlogoUp.Click += new System.EventHandler(this.btnlogoUp_Click);
             // 
@@ -1984,8 +1988,9 @@ namespace WindowPlugins.GUITVSeries
             this.btnrmvLogo.Location = new System.Drawing.Point(371, 119);
             this.btnrmvLogo.Name = "btnrmvLogo";
             this.btnrmvLogo.Size = new System.Drawing.Size(75, 23);
-            this.btnrmvLogo.TabIndex = 4;
-            this.btnrmvLogo.Text = "Remove";
+            this.btnrmvLogo.TabIndex = 6;
+            this.btnrmvLogo.Text = "&Remove";
+            this.toolTip_Help.SetToolTip(this.btnrmvLogo, "Click to remove the selected logo rule in list");
             this.btnrmvLogo.UseVisualStyleBackColor = true;
             this.btnrmvLogo.Click += new System.EventHandler(this.btnrmvLogo_Click);
             // 
@@ -1995,8 +2000,9 @@ namespace WindowPlugins.GUITVSeries
             this.addLogo.Location = new System.Drawing.Point(533, 119);
             this.addLogo.Name = "addLogo";
             this.addLogo.Size = new System.Drawing.Size(75, 23);
-            this.addLogo.TabIndex = 6;
-            this.addLogo.Text = "Add...";
+            this.addLogo.TabIndex = 8;
+            this.addLogo.Text = "&Add...";
+            this.toolTip_Help.SetToolTip(this.addLogo, resources.GetString("addLogo.ToolTip"));
             this.addLogo.UseVisualStyleBackColor = true;
             this.addLogo.Click += new System.EventHandler(this.addLogo_Click);
             // 
@@ -2036,7 +2042,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboBox_seasonFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_seasonFormat.FormattingEnabled = true;
-            this.comboBox_seasonFormat.Location = new System.Drawing.Point(125, 14);
+            this.comboBox_seasonFormat.Location = new System.Drawing.Point(126, 14);
             this.comboBox_seasonFormat.Name = "comboBox_seasonFormat";
             this.comboBox_seasonFormat.Size = new System.Drawing.Size(86, 21);
             this.comboBox_seasonFormat.TabIndex = 1;
@@ -2045,7 +2051,7 @@ namespace WindowPlugins.GUITVSeries
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(4, 18);
+            this.label13.Location = new System.Drawing.Point(3, 18);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(114, 13);
             this.label13.TabIndex = 0;
@@ -2076,7 +2082,7 @@ namespace WindowPlugins.GUITVSeries
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(4, 40);
+            this.label12.Location = new System.Drawing.Point(3, 39);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(150, 13);
             this.label12.TabIndex = 5;
@@ -2125,7 +2131,7 @@ namespace WindowPlugins.GUITVSeries
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(4, 61);
+            this.label14.Location = new System.Drawing.Point(3, 60);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(165, 13);
             this.label14.TabIndex = 7;
@@ -2146,7 +2152,7 @@ namespace WindowPlugins.GUITVSeries
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(4, 82);
+            this.label15.Location = new System.Drawing.Point(3, 81);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(153, 13);
             this.label15.TabIndex = 9;
@@ -2206,13 +2212,13 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_Episode_HideUnwatchedSummary
             // 
             this.checkBox_Episode_HideUnwatchedSummary.AutoSize = true;
-            this.checkBox_Episode_HideUnwatchedSummary.Location = new System.Drawing.Point(292, 104);
+            this.checkBox_Episode_HideUnwatchedSummary.Location = new System.Drawing.Point(217, 104);
             this.checkBox_Episode_HideUnwatchedSummary.Name = "checkBox_Episode_HideUnwatchedSummary";
-            this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(318, 17);
+            this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(211, 17);
             this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 11;
-            this.checkBox_Episode_HideUnwatchedSummary.Text = "Hide Episode summary if the episode hasn\'t been watched yet";
-            this.toolTip_Help.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, "Prevents the summary to be displayed for episodes not already marked as watched (" +
-                    "prevents spoilers!)");
+            this.checkBox_Episode_HideUnwatchedSummary.Text = "Hide su&mmary of episodes not watched";
+            this.toolTip_Help.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, "Enable this option to disable the summary for shows not watched being displayed i" +
+                    "n Media Portal.\r\nThis option is recommended to prevent spoliers");
             this.checkBox_Episode_HideUnwatchedSummary.UseVisualStyleBackColor = true;
             this.checkBox_Episode_HideUnwatchedSummary.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedSummary_CheckedChanged);
             // 
@@ -2233,12 +2239,10 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_OnlyShowLocalFiles.AutoSize = true;
             this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(7, 104);
             this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
-            this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(238, 17);
+            this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(182, 17);
             this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 10;
-            this.checkBox_Episode_OnlyShowLocalFiles.Text = "Show only episodes with a matching local file";
-            this.toolTip_Help.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, "When checked, only episodes / seasons / series with a matching local file will be" +
-                    " displayed in MP; otherwise all episodes are listed. That setting can be changed" +
-                    " from MP");
+            this.checkBox_Episode_OnlyShowLocalFiles.Text = "&Show only episodes found locally";
+            this.toolTip_Help.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
             this.checkBox_Episode_OnlyShowLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_Episode_MatchingLocalFile_CheckedChanged);
             // 
@@ -2446,7 +2450,7 @@ namespace WindowPlugins.GUITVSeries
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 82);
+            this.label6.Location = new System.Drawing.Point(3, 81);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(146, 13);
             this.label6.TabIndex = 9;
@@ -2455,7 +2459,7 @@ namespace WindowPlugins.GUITVSeries
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(4, 61);
+            this.label5.Location = new System.Drawing.Point(3, 60);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(158, 13);
             this.label5.TabIndex = 7;
@@ -2464,7 +2468,7 @@ namespace WindowPlugins.GUITVSeries
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 18);
+            this.label3.Location = new System.Drawing.Point(3, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(107, 13);
             this.label3.TabIndex = 0;
@@ -2486,7 +2490,7 @@ namespace WindowPlugins.GUITVSeries
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(4, 40);
+            this.label4.Location = new System.Drawing.Point(3, 39);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(143, 13);
             this.label4.TabIndex = 5;
@@ -2518,7 +2522,7 @@ namespace WindowPlugins.GUITVSeries
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(190, 79);
+            this.label39.Location = new System.Drawing.Point(191, 79);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(15, 13);
             this.label39.TabIndex = 7;
@@ -2527,37 +2531,42 @@ namespace WindowPlugins.GUITVSeries
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(2, 79);
+            this.label38.Location = new System.Drawing.Point(2, 81);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(138, 13);
+            this.label38.Size = new System.Drawing.Size(141, 13);
             this.label38.TabIndex = 5;
-            this.label38.Text = "An episode is watched after";
+            this.label38.Text = "An episode is &watched after:";
             // 
             // nudWatchedAfter
             // 
             this.nudWatchedAfter.Location = new System.Drawing.Point(149, 77);
             this.nudWatchedAfter.Name = "nudWatchedAfter";
-            this.nudWatchedAfter.Size = new System.Drawing.Size(38, 20);
+            this.nudWatchedAfter.Size = new System.Drawing.Size(36, 20);
             this.nudWatchedAfter.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.nudWatchedAfter, "Enter the percentage of the episode that has been viewed to consider it as watche" +
+                    "d.\r\nEpisode foreground color will change to indicated that it is watched");
             this.nudWatchedAfter.ValueChanged += new System.EventHandler(this.nudWatchedAfter_ValueChanged);
             // 
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(382, 104);
+            this.label32.Location = new System.Drawing.Point(368, 104);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(58, 13);
             this.label32.TabIndex = 10;
-            this.label32.Text = "Language:";
+            this.label32.Text = "&Language:";
             // 
             // comboLanguage
             // 
             this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboLanguage.FormattingEnabled = true;
-            this.comboLanguage.Location = new System.Drawing.Point(448, 101);
+            this.comboLanguage.Location = new System.Drawing.Point(432, 101);
             this.comboLanguage.Name = "comboLanguage";
             this.comboLanguage.Size = new System.Drawing.Size(119, 21);
             this.comboLanguage.TabIndex = 11;
+            this.toolTip_Help.SetToolTip(this.comboLanguage, "Select the language that the plugin user interface will be displayed in Media Por" +
+                    "tal.\r\nThis does not control the language of downloaded data from the online data" +
+                    "base");
             this.comboLanguage.SelectedIndexChanged += new System.EventHandler(this.comboLanguage_SelectedIndexChanged);
             // 
             // checkBox_RandBanner
@@ -2565,9 +2574,10 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_RandBanner.AutoSize = true;
             this.checkBox_RandBanner.Location = new System.Drawing.Point(5, 59);
             this.checkBox_RandBanner.Name = "checkBox_RandBanner";
-            this.checkBox_RandBanner.Size = new System.Drawing.Size(140, 17);
+            this.checkBox_RandBanner.Size = new System.Drawing.Size(145, 17);
             this.checkBox_RandBanner.TabIndex = 4;
-            this.checkBox_RandBanner.Text = "Display Random Banner";
+            this.checkBox_RandBanner.Text = "Display Random &Banners";
+            this.toolTip_Help.SetToolTip(this.checkBox_RandBanner, "Enable this option to display a random banner when entering season view");
             this.checkBox_RandBanner.UseVisualStyleBackColor = true;
             this.checkBox_RandBanner.CheckedChanged += new System.EventHandler(this.checkBox_RandBanner_CheckedChanged);
             // 
@@ -2575,8 +2585,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textBox_PluginHomeName.Location = new System.Drawing.Point(149, 101);
             this.textBox_PluginHomeName.Name = "textBox_PluginHomeName";
-            this.textBox_PluginHomeName.Size = new System.Drawing.Size(217, 20);
+            this.textBox_PluginHomeName.Size = new System.Drawing.Size(213, 20);
             this.textBox_PluginHomeName.TabIndex = 9;
+            this.toolTip_Help.SetToolTip(this.textBox_PluginHomeName, "Enter the name for the plug-in as listed in the Media Portal Home screen");
             this.textBox_PluginHomeName.TextChanged += new System.EventHandler(this.textBox_PluginHomeName_TextChanged);
             // 
             // label16
@@ -2586,7 +2597,7 @@ namespace WindowPlugins.GUITVSeries
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(141, 13);
             this.label16.TabIndex = 8;
-            this.label16.Text = "Name of the plugin in Home:";
+            this.label16.Text = "&Name of the plugin in Home:";
             // 
             // checkBox_AutoHeight
             // 
@@ -2594,28 +2605,27 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoHeight.Enabled = false;
             this.checkBox_AutoHeight.Location = new System.Drawing.Point(5, 39);
             this.checkBox_AutoHeight.Name = "checkBox_AutoHeight";
-            this.checkBox_AutoHeight.Size = new System.Drawing.Size(517, 17);
+            this.checkBox_AutoHeight.Size = new System.Drawing.Size(244, 17);
             this.checkBox_AutoHeight.TabIndex = 3;
-            this.checkBox_AutoHeight.Text = "Automatically resize the height of the InfoPane text elements to accommodate the " +
-                "amount of data shown";
+            this.checkBox_AutoHeight.Text = "Automatically resize the height of the &InfoPane";
             this.checkBox_AutoHeight.UseVisualStyleBackColor = true;
             this.checkBox_AutoHeight.CheckedChanged += new System.EventHandler(this.checkBox_AutoHeight_CheckedChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(336, 23);
+            this.label2.Location = new System.Drawing.Point(368, 20);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "hour(s)";
+            this.label2.TabIndex = 1;
+            this.label2.Text = "&hour(s)";
             // 
             // numericUpDown_AutoOnlineDataRefresh
             // 
-            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(292, 18);
+            this.numericUpDown_AutoOnlineDataRefresh.Location = new System.Drawing.Point(326, 16);
             this.numericUpDown_AutoOnlineDataRefresh.Name = "numericUpDown_AutoOnlineDataRefresh";
-            this.numericUpDown_AutoOnlineDataRefresh.Size = new System.Drawing.Size(38, 20);
-            this.numericUpDown_AutoOnlineDataRefresh.TabIndex = 1;
+            this.numericUpDown_AutoOnlineDataRefresh.Size = new System.Drawing.Size(36, 20);
+            this.numericUpDown_AutoOnlineDataRefresh.TabIndex = 2;
             this.numericUpDown_AutoOnlineDataRefresh.ValueChanged += new System.EventHandler(this.numericUpDown_AutoOnlineDataRefresh_ValueChanged);
             // 
             // checkBox_AutoOnlineDataRefresh
@@ -2623,11 +2633,11 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoOnlineDataRefresh.AutoSize = true;
             this.checkBox_AutoOnlineDataRefresh.Location = new System.Drawing.Point(5, 19);
             this.checkBox_AutoOnlineDataRefresh.Name = "checkBox_AutoOnlineDataRefresh";
-            this.checkBox_AutoOnlineDataRefresh.Size = new System.Drawing.Size(277, 17);
+            this.checkBox_AutoOnlineDataRefresh.Size = new System.Drawing.Size(308, 17);
             this.checkBox_AutoOnlineDataRefresh.TabIndex = 0;
-            this.checkBox_AutoOnlineDataRefresh.Text = "Automatically query the server for updated data every";
-            this.toolTip_Help.SetToolTip(this.checkBox_AutoOnlineDataRefresh, "When checked, the plugin will automatically ask for a refresh of the online data " +
-                    "every x hours");
+            this.checkBox_AutoOnlineDataRefresh.Text = "Automatically &download updated data from the server every:";
+            this.toolTip_Help.SetToolTip(this.checkBox_AutoOnlineDataRefresh, "Enable this option to make the plug-in automatically ask for a refresh of the onl" +
+                    "ine data every x hours");
             this.checkBox_AutoOnlineDataRefresh.UseVisualStyleBackColor = true;
             this.checkBox_AutoOnlineDataRefresh.CheckedChanged += new System.EventHandler(this.checkBox_AutoOnlineDataRefresh_CheckedChanged);
             // 
