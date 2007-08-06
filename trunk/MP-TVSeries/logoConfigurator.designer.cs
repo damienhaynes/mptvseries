@@ -82,20 +82,21 @@ namespace WindowPlugins.GUITVSeries
             // 
             // browse
             // 
+            this.browse.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.browse.Location = new System.Drawing.Point(223, 23);
             this.browse.Name = "browse";
             this.browse.Size = new System.Drawing.Size(75, 23);
             this.browse.TabIndex = 2;
-            this.browse.Text = "Browse...";
+            this.browse.Text = "&Browse...";
             this.browse.UseVisualStyleBackColor = true;
             this.browse.Click += new System.EventHandler(this.browse_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(30, 23);
+            this.textBox1.Location = new System.Drawing.Point(15, 25);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(187, 20);
+            this.textBox1.Size = new System.Drawing.Size(202, 20);
             this.textBox1.TabIndex = 1;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -250,7 +251,7 @@ namespace WindowPlugins.GUITVSeries
             this.save.Name = "save";
             this.save.Size = new System.Drawing.Size(75, 23);
             this.save.TabIndex = 19;
-            this.save.Text = "Save";
+            this.save.Text = "&Save";
             this.save.UseVisualStyleBackColor = true;
             this.save.Click += new System.EventHandler(this.save_Click);
             // 
@@ -260,7 +261,7 @@ namespace WindowPlugins.GUITVSeries
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 18;
-            this.button1.Text = "Cancel";
+            this.button1.Text = "&Cancel";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -269,17 +270,17 @@ namespace WindowPlugins.GUITVSeries
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(130, 13);
+            this.label2.Size = new System.Drawing.Size(133, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Display the following Logo";
+            this.label2.Text = "Display the following Logo:";
             // 
             // btnDynFilename
             // 
             this.btnDynFilename.Location = new System.Drawing.Point(304, 23);
             this.btnDynFilename.Name = "btnDynFilename";
-            this.btnDynFilename.Size = new System.Drawing.Size(126, 23);
+            this.btnDynFilename.Size = new System.Drawing.Size(130, 23);
             this.btnDynFilename.TabIndex = 3;
-            this.btnDynFilename.Text = "Dynamic Filename....";
+            this.btnDynFilename.Text = "&Dynamic Filename....";
             this.btnDynFilename.UseVisualStyleBackColor = true;
             this.btnDynFilename.Click += new System.EventHandler(this.btnDynFilename_Click);
             // 
@@ -289,7 +290,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(75, 23);
             this.btnPaste.TabIndex = 17;
-            this.btnPaste.Text = "Paste";
+            this.btnPaste.Text = "&Paste";
             this.btnPaste.UseVisualStyleBackColor = true;
             this.btnPaste.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -299,7 +300,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
             this.btnCopy.TabIndex = 16;
-            this.btnCopy.Text = "Copy";
+            this.btnCopy.Text = "Cop&y";
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
@@ -328,8 +329,9 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.cond1_what);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.browse);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "logoConfigurator";
-            this.Text = "Edit conditional logo";
+            this.Text = "Logo Configuration";
             this.Load += new System.EventHandler(this.logoConfigurator_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

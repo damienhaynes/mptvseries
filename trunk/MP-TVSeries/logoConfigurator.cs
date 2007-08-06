@@ -124,7 +124,7 @@ namespace WindowPlugins.GUITVSeries
             this.result = getResult(true);
             if (result == null)
             {
-                MessageBox.Show("There was a problem saving the LogoRule.\nDoes the file exist?");
+                MessageBox.Show("There was a problem saving the LogoRule.\nCheck that the file exist and try again.");
             }
             else
             {
