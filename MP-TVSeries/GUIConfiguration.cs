@@ -236,15 +236,15 @@ namespace WindowPlugins.GUITVSeries
             nodeChild.Name = panel_torrentsearch.Name;
             nodeRoot.Nodes.Add(nodeChild);
 
-            //m_paneListExtra.Add(panel_newsroot);
-            //m_paneListExtra.Add(panel_newssearch);
+            m_paneListExtra.Add(panel_newsroot);
+            m_paneListExtra.Add(panel_newssearch);
 
-            //nodeRoot = new TreeNode(panel_newsroot.Tag.ToString());
-            //nodeRoot.Name = panel_newsroot.Name;
-            //treeView_Extra.Nodes.Add(nodeRoot);
-            //nodeChild = new TreeNode(panel_newssearch.Tag.ToString());
-            //nodeChild.Name = panel_newssearch.Name;
-            //nodeRoot.Nodes.Add(nodeChild);
+            nodeRoot = new TreeNode(panel_newsroot.Tag.ToString());
+            nodeRoot.Name = panel_newsroot.Name;
+            treeView_Extra.Nodes.Add(nodeRoot);
+            nodeChild = new TreeNode(panel_newssearch.Tag.ToString());
+            nodeChild.Name = panel_newssearch.Name;
+            nodeRoot.Nodes.Add(nodeChild);
 
             foreach (Panel pane in m_paneListExtra)
             {
@@ -322,7 +322,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadNewsSearches()
         {
-            /*
             textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
             m_currentNewsSearch = DBNewzbin.Get()[0];
 
@@ -330,7 +329,6 @@ namespace WindowPlugins.GUITVSeries
             textBox_NewsSearchRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegex];
             textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
             textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
-             * */
         }
 
         private void LoadImportPathes()
@@ -1941,9 +1939,9 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
-                    /*Newzbin.Load Load = new Newzbin.Load(this);
+                    Newzbin.Load Load = new Newzbin.Load(this);
                     Load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(NewzbinLoad_LoadCompleted);
-                    Load.Search(episode);*/
+                    Load.Search(episode);
                     break;
             }
         }
@@ -2243,20 +2241,20 @@ namespace WindowPlugins.GUITVSeries
         
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
-            //m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
-            //m_currentNewsSearch.Commit();
+            m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
+            m_currentNewsSearch.Commit();
         }
 
         private void textBox_NewsSearchRegex_TextChanged(object sender, EventArgs e)
         {
-            //m_currentNewsSearch[DBNewzbin.cSearchRegex] = textBox_NewsSearchRegex.Text;
-            //m_currentNewsSearch.Commit();
+            m_currentNewsSearch[DBNewzbin.cSearchRegex] = textBox_NewsSearchRegex.Text;
+            m_currentNewsSearch.Commit();
         }
 
         private void textBox_NewzbinLogin_TextChanged(object sender, EventArgs e)
         {
-            //m_currentNewsSearch[DBNewzbin.cLogin] = textBox_NewzbinLogin.Text;
-            //m_currentNewsSearch.Commit();
+            m_currentNewsSearch[DBNewzbin.cLogin] = textBox_NewzbinLogin.Text;
+            m_currentNewsSearch.Commit();
         }
 
         private void textbox_NewzbinPassword_TextChanged(object sender, EventArgs e)
@@ -2306,7 +2304,7 @@ namespace WindowPlugins.GUITVSeries
         private void addLogo_Click(object sender, EventArgs e)
         {
             logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
-            logoConfigurator lc = new logoConfigurator(del);
+            logoConfigurator lc = new logoConfigurator(del, contextMenuStrip_InsertFields);
 
             if (DialogResult.OK == lc.ShowDialog())
             {
@@ -2375,7 +2373,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (lstLogos.SelectedIndex == -1) return;
             logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
-            logoConfigurator lc = new logoConfigurator(del,(string)lstLogos.SelectedItem);
+            logoConfigurator lc = new logoConfigurator(del,contextMenuStrip_InsertFields,(string)lstLogos.SelectedItem);
 
             if (DialogResult.OK == lc.ShowDialog())
             {
