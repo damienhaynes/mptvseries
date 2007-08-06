@@ -219,52 +219,6 @@ namespace WindowPlugins.GUITVSeries
         }
 
         /// <summary>
-        /// Takes an Image filename and tries to load it into MP' graphics memory
-        /// If the filename was already in memory, it will not be reloaded (basically it caches)
-        /// </summary>
-        /// <param name="filename">The filename of the image to load, failes silently if it cannot be loaded</param>
-        /// <returns>memory identifier</returns>
-        public static string buildMemoryImageFromFile(string filename, System.Drawing.Size size)
-        {
-            try
-            {
-                if (String.IsNullOrEmpty(filename) || !System.IO.File.Exists(filename)) return string.Empty;
-                return buildMemoryImage(new System.Drawing.Bitmap(filename), filename, size);
-            }
-            catch (Exception e)
-            {
-                MPTVSeriesLog.Write("Unable to add to MP's Graphics memory: " + filename + " Error: " + e.Message);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Takes an Image and tries to load it into MP' graphics memory
-        /// If the filename was already in memory, it will not be reloaded (basically it caches)
-        /// </summary>
-        /// <param name="image">The System.Drawing.Bitmap to be loaded</param>
-        /// <param name="identifier">A unique identifier for the image so it can be retrieved later on</param>
-        /// <returns>memory identifier</returns>
-        public static string buildMemoryImage(System.Drawing.Bitmap image, string identifier, System.Drawing.Size size)
-        {
-            string name = "[TVSeries:" + identifier + "]";
-            try
-            {
-                if (GUITextureManager.LoadFromMemory(null, name, 0, 0, 0) == 0)
-                {
-                    GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
-                }
-            }
-            catch (Exception)
-            {
-                MPTVSeriesLog.Write("Unable to add to MP's Graphics memory: " + identifier);
-                return string.Empty;
-            }
-            return name;
-
-        }
-
-        /// <summary>
         /// Convertes a given amount of Milliseconds into humanly readable MM:SS format
         /// </summary>
         /// <param name="milliseconds"></param>
