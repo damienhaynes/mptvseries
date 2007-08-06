@@ -37,24 +37,25 @@ namespace WindowPlugins.GUITVSeries
         public delegate void validDelegate(ref RichTextBox txtBox);
         validDelegate validateTxtBox;
         string appPath = Settings.GetPath(Settings.Path.app);
-        public logoConfigurator(validDelegate validDel)
+        public logoConfigurator(validDelegate validDel, ContextMenuStrip strip)
         {
-            init(validDel);
+            init(validDel, strip);
         }
 
-        public logoConfigurator(validDelegate validDel, string entryToEdit)
+        public logoConfigurator(validDelegate validDel, ContextMenuStrip strip, string entryToEdit)
         {
-            init(validDel);
+            init(validDel, strip);
             parseForEdit(entryToEdit);
         }
 
-        public void init(validDelegate validDel)
+        public void init(validDelegate validDel, ContextMenuStrip strip)
         {
             InitializeComponent();
             validateTxtBox = validDel;
             FieldTag forWhats = new FieldTag("lastField", FieldTag.Level.Episode);
             forWhats.m_bInited = true; // avoid autofilling
             this.cond1_what.Tag = forWhats;
+            this.cond1_what.ContextMenuStrip = strip;
             this.cond2_what.Tag = forWhats;
             this.cond3_what.Tag = forWhats;
 
