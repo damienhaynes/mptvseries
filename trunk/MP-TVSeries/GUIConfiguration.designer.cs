@@ -449,35 +449,35 @@ namespace WindowPlugins.GUITVSeries
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(147, 114);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(145, 114);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
@@ -485,7 +485,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.newzbinThisToolStripMenuItem.Enabled = false;
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
             // 
