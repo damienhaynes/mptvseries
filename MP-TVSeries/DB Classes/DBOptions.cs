@@ -98,6 +98,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cNewsLeecherPath = "NewsLeecherPath";
         public const String cNewsLeecherDownloadPath = "NewsLeecherDownloadPath";
 
+        public const String cDownloadMonitor_RenameFiles = "DownloadMonitor_RenameFiles";
+
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
@@ -301,6 +303,10 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default
+
+                if (GetOptions(cDownloadMonitor_RenameFiles) == null)
+                    SetOptions(cDownloadMonitor_RenameFiles, 0); //do not rename by default
+                
             }
             catch (Exception ex)
             {
