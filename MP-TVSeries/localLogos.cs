@@ -139,6 +139,9 @@ namespace WindowPlugins.GUITVSeries
             lastWasCached = false;
             DBEpisode inCache = cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]);
             tmpEp = inCache == null ? ep : inCache;
+            // zeflash: since we use an image allocator we can't use a cache for the episode image anymore - so always call getLogos
+            lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
+/*
             if (!firstOnly || tmpEp.cachedFirstLogo == null)
                 lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
             else
@@ -151,6 +154,7 @@ namespace WindowPlugins.GUITVSeries
                 tmpEp.cachedLogoResults = null;
                 tmpEp.cachedFirstLogo = lastResult;
             }
+ */
             if(!lastWasCached) cache.addChangeEpisode(tmpEp);
             return lastResult;
         }
@@ -184,7 +188,13 @@ namespace WindowPlugins.GUITVSeries
         {
             string res = work(level, imgHeight, imgWidth, firstOnly, ref logosForBuilding);
             if (!Settings.isConfig && res != null && res.Length > 0 && res[0] != '[')
-                return Helper.buildMemoryImageFromFile(res, new Size(imgWidth, imgHeight));
+            {
+                if (tmpEp != null && tmpEp.Image == res)
+                    return ImageAllocator.GetOtherImage(res, new Size(imgWidth, imgHeight), false);
+                else 
+                    return ImageAllocator.GetOtherImage(res, new Size(imgWidth, imgHeight), true);
+
+            }
             else return res; // we build the memimage already
         }
 
@@ -270,7 +280,7 @@ namespace WindowPlugins.GUITVSeries
                         return tmpFile;
                     }
                     else
-                        return Helper.buildMemoryImage(b, tmpFile, new Size(imgWidth, imgHeight));
+                        return ImageAllocator.GetOtherImage(b, tmpFile, new Size(imgWidth, imgHeight), true);
                 }
                 else return string.Empty;
             }

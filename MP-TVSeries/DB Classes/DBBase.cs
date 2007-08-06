@@ -702,7 +702,7 @@ namespace WindowPlugins.GUITVSeries
                 //        // else no graphical banners avail. -> use text Banner we already picked
                 //    }
                 //}
-                catch (Exception ex)
+                catch
                 {
                     MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
                     return string.Empty;

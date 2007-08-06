@@ -469,69 +469,6 @@ namespace MediaPortal.GUI.Video
             return sOut;
         }
 
-        Bitmap drawSimpleBanner(Size sizeImage, string label)
-        {
-            Bitmap image = new Bitmap(sizeImage.Width, sizeImage.Height);
-            Graphics gph = Graphics.FromImage(image);
-            //gph.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.White)), new Rectangle(0, 0, sizeImage.Width, sizeImage.Height));
-            GUIFont fontList = GUIFontManager.GetFont(m_Facade.AlbumListView.FontName);
-            Font font = new Font(fontList.FontName, 36);
-            gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            gph.DrawString(label, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
-            gph.Dispose();
-            return image;
-        }
-
-        String GetSeriesBanner(DBSeries series)
-        {
-            String filename = series.Banner;
-            if (filename.Length > 0 && System.IO.File.Exists(filename))
-            {
-                return filename;
-            }
-            else
-            {
-                
-                // no image, use text, create our own
-                if (GUITextureManager.LoadFromMemory(null, "[series_" + series[DBSeries.cID] + "]", 0, 0, 0) == 0)
-                {
-                    Size sizeImage = new Size(758, 140);
-                    GUITextureManager.LoadFromMemory(drawSimpleBanner(sizeImage, series[DBOnlineSeries.cPrettyName]), "[series_" + series[DBSeries.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
-                }
-                return "[series_" + series[DBSeries.cID] + "]";
-            }
-        }
-
-        String GetSeasonBanner(DBSeason season)
-        {
-            return GetSeasonBanner(season, true);
-        }
-        String GetSeasonBanner(DBSeason season, bool createIfNotExist)
-        {
-            String filename = season.Banner;
-            if (filename.Length > 0)
-            {
-                return Helper.buildMemoryImageFromFile(filename, new Size(400, 578)); 
-                //return filename;
-            }
-            else if (createIfNotExist)
-            {
-                if (GUITextureManager.LoadFromMemory(null, "[" + season[DBSeason.cID] + "]", 0, 0, 0) == 0)
-                {
-                    // no image, use text, create our own
-                    Size sizeImage = new Size(400, 578);
-                    Bitmap image;
-                    if (season[DBSeason.cIndex] == 0)
-                        image = drawSimpleBanner(sizeImage, Translation.specials);
-                    else
-                        image = drawSimpleBanner(sizeImage, Translation.Season + season[DBSeason.cIndex]);
-                    GUITextureManager.LoadFromMemory(image, "[" + season[DBSeason.cID] + "]", 0, sizeImage.Width, sizeImage.Height);
-                }
-                return "[" + season[DBSeason.cID] + "]";
-            }
-            else return string.Empty;
-        }
-
         void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {
             this.m_Facade.View = mode;
@@ -561,7 +498,6 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Group:
                         {
                             // these are groups of certain categories, eg. Genres
-
                             // always list mode
                             setFacadeMode(GUIFacadeControl.ViewMode.List);   
                             int selectedIndex = -1;
@@ -593,6 +529,10 @@ namespace MediaPortal.GUI.Video
                     #region Series
                     case Listlevel.Series:
                         {
+                            // flush episodes & seasons
+                            ImageAllocator.FlushOthers(false);
+                            ImageAllocator.FlushSeasons();
+
                             int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
                             int selectedIndex = -1;
                             int count = 0;
@@ -629,7 +569,7 @@ namespace MediaPortal.GUI.Video
                                     if (nSeriesDisplayMode == 1)
                                     {
                                         item = new GUIListItem();
-                                        item.IconImage = item.IconImageBig = GetSeriesBanner(series);
+                                        item.IconImage = item.IconImageBig = ImageAllocator.GetSeriesBanner(series);
                                     }
                                     else
                                     {
@@ -710,7 +650,7 @@ namespace MediaPortal.GUI.Video
                                         if (nSeasonDisplayMode == 1)
                                         {
                                             item = new GUIListItem();
-                                            item.IconImage = item.IconImageBig = GetSeasonBanner(season);
+                                            item.IconImage = item.IconImageBig = ImageAllocator.GetSeasonBanner(season, true);
                                         }
                                         else
                                         {
@@ -720,7 +660,7 @@ namespace MediaPortal.GUI.Video
 
                                                 item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
                                             item.Label3 = FieldGetter.resolveDynString(m_sFormatSeasonCol1, season);
-                                            item.IconImage = GetSeasonBanner(season, false);
+                                            item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
                                         }
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                                         item.IsDownloading = true;
@@ -926,6 +866,7 @@ namespace MediaPortal.GUI.Video
                 GUIWindowManager.ShowPreviousWindow();
                 return;
             }
+            ImageAllocator.SetFontName(m_Facade.AlbumListView.FontName);
 
             // for some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
             // the labels don't display, unless we somehow call them like so
@@ -1164,9 +1105,9 @@ namespace MediaPortal.GUI.Video
                                     pItem.ItemId = (int)eContextItems.downloadSubtitle;
                                 }
 
-                                //pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
-                                //dlg.Add(pItem);
-                                //pItem.ItemId = (int)eContextItems.downloadviaNewz;
+                                pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.downloadviaNewz;
 
                                 pItem = new GUIListItem(Translation.Load_via_Torrent);
                                 dlg.Add(pItem);
@@ -1935,7 +1876,7 @@ namespace MediaPortal.GUI.Video
                         }
                     }
                     return true;
-                    break;
+
                 case GUIMessage.MessageType.GUI_MSG_PLAYBACK_ENDED:
                 case GUIMessage.MessageType.GUI_MSG_PLAYBACK_STOPPED:
                     {
@@ -1943,9 +1884,8 @@ namespace MediaPortal.GUI.Video
                         //-- if episode is classified as watched
                         LoadFacade();
                     }
-
                     return true;
-                    break;
+
                 default:
                     return base.OnMessage(message);
             }
@@ -2029,7 +1969,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(series));
+            setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
         }
@@ -2046,7 +1986,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
-            setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(season, false));
+            setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
             
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
@@ -2057,7 +1997,7 @@ namespace MediaPortal.GUI.Video
                 // it is the case
                 m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null)
-                    setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(m_SelectedSeries));
+                    setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
             }
         }
@@ -2093,10 +2033,10 @@ namespace MediaPortal.GUI.Video
                 m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
                 if (m_SelectedSeries != null)
-                    setGUIProperty(guiProperty.SeriesBanner, GetSeriesBanner(m_SelectedSeries));
+                    setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
                 if (m_SelectedSeason != null)
-                    setGUIProperty(guiProperty.SeasonBanner, GetSeasonBanner(m_SelectedSeason, false));
+                    setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
                 else clearGUIProperty(guiProperty.SeasonBanner);
             }
         }
