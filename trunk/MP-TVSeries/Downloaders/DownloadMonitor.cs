@@ -186,7 +186,7 @@ namespace WindowPlugins.GUITVSeries.Download
                         }
                     }
 
-                    if (episodeBestMatch != null)
+                    if (episodeBestMatch != null & nBestDistance < 10)
                     {
                         // we are just hoping here that the match is actually a good one!
                         bool bMoveable = true;
@@ -196,7 +196,7 @@ namespace WindowPlugins.GUITVSeries.Download
                             FileStream fileStream = new FileStream(result.full_filename, FileMode.Append);
                             fileStream.Close();
                         }
-                        catch (IOException e)
+                        catch
                         {
                             bMoveable = false;
                         }
@@ -234,10 +234,11 @@ namespace WindowPlugins.GUITVSeries.Download
 
                             if (sTargetFolder.ToString().Length > 0)
                             {
-                                // let's move the file, "beautifulizing" it
-                                try
+                                String sOutputFile;
+                                if (DBOption.GetOptions(DBOption.cDownloadMonitor_RenameFiles) == 1)
                                 {
-                                    String sOutputFile = String.Format("{0} - {1}x{2:D2} - {3}{4}", seriesBestMatch[DBOnlineSeries.cPrettyName], (int)episodeBestMatch[DBEpisode.cSeasonIndex], (int)episodeBestMatch[DBEpisode.cEpisodeIndex], episodeBestMatch[DBOnlineEpisode.cEpisodeName], System.IO.Path.GetExtension(result.full_filename)); 
+                                    // "beautifulizing" the filename
+                                    sOutputFile = String.Format("{0} - {1}x{2:D2} - {3}{4}", seriesBestMatch[DBOnlineSeries.cPrettyName], (int)episodeBestMatch[DBEpisode.cSeasonIndex], (int)episodeBestMatch[DBEpisode.cEpisodeIndex], episodeBestMatch[DBOnlineEpisode.cEpisodeName], System.IO.Path.GetExtension(result.full_filename));
                                     sOutputFile = sOutputFile.Replace(":", "");
                                     sOutputFile = sOutputFile.Replace("?", "");
                                     sOutputFile = sOutputFile.Replace("\\", "");
@@ -246,7 +247,13 @@ namespace WindowPlugins.GUITVSeries.Download
                                     sOutputFile = sOutputFile.Replace(">", "");
                                     sOutputFile = sOutputFile.Replace("|", "");
                                     sOutputFile = sOutputFile.Replace("/", "");
+                                }
+                                else
+                                    sOutputFile = System.IO.Path.GetFileName(result.full_filename);
 
+                                // let's move the file
+                                try
+                                {
                                     System.IO.File.Move(result.full_filename, sTargetFolder + "\\" + sOutputFile);
                                     // if file isn't there anymore, consider success
                                     if (System.IO.File.Exists(result.full_filename))
