@@ -120,6 +120,47 @@
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="toolTipLogos.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>315, 17</value>
+  </metadata>
+  <data name="cond1_type.ToolTip" xml:space="preserve">
+    <value>Click to change one of the comparison operators used to evaluate this statement.
+You can use the 'contains' operator to check if a sub-string exists in the L.H.S of the expression.
+
+Example - Display a MP3 logo which may have different codec names:
+
+          &lt;Episode.AudioCodec&gt; contains MPA
+   OR  &lt;Episode.AudioCodec&gt; contains MPEG-1A L3
+</value>
+  </data>
+  <data name="cond1_cond.ToolTip" xml:space="preserve">
+    <value>Enter in the R.H.S of the expression to be evaluated.
+
+Contents must be numerical if using one of the mathematical comparison operaters e.g. '=,&lt;,&gt;,&lt;=,&gt;=,!=' or
+can be literal if using the 'contains' operators</value>
+  </data>
+  <data name="_12_link.ToolTip" xml:space="preserve">
+    <value>Click to change the conditional operator that will be used to determine the logo visibility.
+
+Use 'AND' when the current statement and the ones above must evaluate to TRUE.
+Use 'OR' when atleast one of the statements must evaluate to TRUE.
+
+Example -  Use AND operater to display a Widescreen logo:
+      
+                 &lt;Episode.VideoAspectRatio&gt; &gt; 1.7
+      AND    &lt;Episode.VideoAspectRatio&gt; &lt; 1.85
+</value>
+  </data>
+  <data name="btnDynFilename.ToolTip" xml:space="preserve">
+    <value>Click to browse to a folder which contains logos for this rule.
+The dynamic filename must be appended to the path to complete this rule.
+
+A dynamic filename may be used to display logos for different TV Network e.g.
+TVSeries_Logos\loggos_glas\&lt;Series.Network&gt;.png
+
+In this example, if the TV Network that airs a series on the ABC network then 
+the plugin will display ABC.png</value>
+  </data>
   <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>157, 17</value>
   </metadata>
