@@ -77,6 +77,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.toolTipLogos = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipLogos2 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -105,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(224, 20);
             this.textBox1.TabIndex = 1;
-            this.toolTipLogos.SetToolTip(this.textBox1, "This contains the filename of the logo that the rule will load if condition is sa" +
+            this.toolTipLogos2.SetToolTip(this.textBox1, "This contains the filename of the logo that the rule will load if condition is sa" +
                     "tisfied.\r\nWhen a dynamic rule is applied, enter in the dynamic filename after th" +
                     "e path chosen");
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -120,7 +121,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_what.Size = new System.Drawing.Size(164, 20);
             this.cond1_what.TabIndex = 4;
             this.cond1_what.Text = "";
-            this.toolTipLogos.SetToolTip(this.cond1_what, "Enter in the L.H.S of the expression to be evaluated.\r\nYou can right click on thi" +
+            this.toolTipLogos2.SetToolTip(this.cond1_what, "Enter in the L.H.S of the expression to be evaluated.\r\nYou can right click on thi" +
                     "s textbox to bring up a menu of available fields from the database");
             this.cond1_what.TextChanged += new System.EventHandler(this.cond1_what_TextChanged);
             // 
@@ -142,7 +143,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_type.Name = "cond1_type";
             this.cond1_type.Size = new System.Drawing.Size(75, 21);
             this.cond1_type.TabIndex = 5;
-            this.toolTipLogos.SetToolTip(this.cond1_type, resources.GetString("cond1_type.ToolTip"));
+            this.toolTipLogos2.SetToolTip(this.cond1_type, resources.GetString("cond1_type.ToolTip"));
             // 
             // cond1_cond
             // 
@@ -151,7 +152,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_cond.Name = "cond1_cond";
             this.cond1_cond.Size = new System.Drawing.Size(130, 20);
             this.cond1_cond.TabIndex = 6;
-            this.toolTipLogos.SetToolTip(this.cond1_cond, resources.GetString("cond1_cond.ToolTip"));
+            this.toolTipLogos2.SetToolTip(this.cond1_cond, resources.GetString("cond1_cond.ToolTip"));
             this.cond1_cond.TextChanged += new System.EventHandler(this.cond1_cond_TextChanged);
             // 
             // label1
@@ -218,7 +219,7 @@ namespace WindowPlugins.GUITVSeries
             this._12_link.Name = "_12_link";
             this._12_link.Size = new System.Drawing.Size(57, 21);
             this._12_link.TabIndex = 8;
-            this.toolTipLogos.SetToolTip(this._12_link, resources.GetString("_12_link.ToolTip"));
+            this.toolTipLogos2.SetToolTip(this._12_link, resources.GetString("_12_link.ToolTip"));
             // 
             // _23_link
             // 
@@ -319,7 +320,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnDynFilename.Size = new System.Drawing.Size(130, 23);
             this.btnDynFilename.TabIndex = 3;
             this.btnDynFilename.Text = "&Dynamic Filename....";
-            this.toolTipLogos.SetToolTip(this.btnDynFilename, resources.GetString("btnDynFilename.ToolTip"));
+            this.toolTipLogos2.SetToolTip(this.btnDynFilename, resources.GetString("btnDynFilename.ToolTip"));
             this.btnDynFilename.UseVisualStyleBackColor = true;
             this.btnDynFilename.Click += new System.EventHandler(this.btnDynFilename_Click);
             // 
@@ -353,9 +354,18 @@ namespace WindowPlugins.GUITVSeries
             // 
             // toolTipLogos
             // 
-            this.toolTipLogos.AutoPopDelay = 15000;
+            this.toolTipLogos.AutoPopDelay = 5000;
             this.toolTipLogos.InitialDelay = 500;
             this.toolTipLogos.ReshowDelay = 100;
+            // 
+            // toolTipLogos2
+            // 
+            this.toolTipLogos2.AutoPopDelay = 10000;
+            this.toolTipLogos2.InitialDelay = 500;
+            this.toolTipLogos2.IsBalloon = true;
+            this.toolTipLogos2.ReshowDelay = 100;
+            this.toolTipLogos2.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTipLogos2.ToolTipTitle = "Logo Configuration Help";
             // 
             // logoConfigurator
             // 
@@ -420,5 +430,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button btnPaste;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.ToolTip toolTipLogos;
+        private System.Windows.Forms.ToolTip toolTipLogos2;
     }
 }
