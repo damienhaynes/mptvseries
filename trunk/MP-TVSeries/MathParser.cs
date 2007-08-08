@@ -27,7 +27,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace ConsoleApplication1.MathParser
+namespace WindowPlugins.GUITVSeries.MathParser
 {
 
     sealed class mathParser
