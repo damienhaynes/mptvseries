@@ -67,6 +67,10 @@ namespace WindowPlugins.GUITVSeries
             this.textBox1.Size = new System.Drawing.Size(354, 112);
             this.textBox1.TabIndex = 1;
             // 
+            // folderBrowserDialog1
+            // 
+            this.folderBrowserDialog1.Description = "Enter in a path that contains the dynamic files for this logo rule.";
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";

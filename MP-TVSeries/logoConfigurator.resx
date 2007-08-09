@@ -158,7 +158,7 @@ Example -  Use AND operater to display a Widescreen logo:
     <value>Click to browse to a folder which contains logos for this rule.
 The dynamic filename must be appended to the path to complete this rule.
 
-A dynamic filename may be used to display logos for different TV Network e.g.
+A dynamic filename can be used to display logos for different Networks or Genre's e.g.
 TVSeries_Logos\loggos_glas\&lt;Series.Network&gt;.png
 
 In this example, if the TV Network that airs a series on the ABC network then 

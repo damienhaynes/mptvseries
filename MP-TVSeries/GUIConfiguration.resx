@@ -123,50 +123,6 @@
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>174, 14</value>
   </metadata>
-  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>487, 14</value>
-  </metadata>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1003, 12</value>
-  </metadata>
-  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
-  </data>
-  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
-    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders.
-Disable to show all seasons and episodes for series.
-
-This setting can also be changed from within Media Portal</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
-  </data>
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>802, 12</value>
   </metadata>
@@ -199,9 +155,6 @@ Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.L
         mAY8AAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>686, 14</value>
-  </metadata>
   <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
     <value>Enable this option to use the TV Series found online when only one exact match was found.
 In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
@@ -271,10 +224,16 @@ what video and audio codecs the epsiode is encoded in etc...
 
 A Logo package must be installed to display logos succesfully in Media Portal</value>
   </data>
+  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>685, 40</value>
+  </metadata>
   <data name="comboBox_seasonFormat.ToolTip" xml:space="preserve">
     <value>Select the format to display the season listing in. Graphical will display the banners downloaded from online.
 Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
   </data>
+  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>487, 14</value>
+  </metadata>
   <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
     <value>Enter in the field(s) to be displayed in the main information pane of the season view.
 You can right click on this textbox to bring up a menu of available fields from the database.
@@ -301,8 +260,46 @@ You can right click on this textbox to bring up a menu of available fields from 
 
 Default: &lt;Series.Pretty_Name&gt; Season &lt;Season.SeasonIndex&gt; e.g. The 4400 Season 1</value>
   </data>
+  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
+  </data>
+  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
+    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders.
+Disable to show all seasons and episodes for series.
+
+This setting can also be changed from within Media Portal</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
+  </data>
   <data name="comboBox_seriesFormat.ToolTip" xml:space="preserve">
-    <value>Select the format to display the series listing in. Graphical will display the banners downloaded from online .
+    <value>Select the format to display the series listing in. Graphical will display the banners downloaded from online.
 Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
   </data>
   <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
@@ -338,19 +335,21 @@ You can right click on this textbox to bring up a menu of available fields from 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
   <data name="textBox_foromID.ToolTip" xml:space="preserve">
-    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
+    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste 
+the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
   </data>
   <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
-    <value>Regular expression that is going to extract data from the detail page of a specific torrent.
+    <value>Regular expression that is going to extract data from the details page of a specific torrent.
 The plugin is only looking for one group:
-&lt;filecount&gt; is the number of files in this torrent. Only torrents with one file will be taken in account</value>
+&lt;filecount&gt; is the number of files in the torrent. Only torrents with one file will be taken into account</value>
   </data>
   <data name="textBox_TorrentSearchRegex.ToolTip" xml:space="preserve">
     <value>Regular expression that is going to extract data from the search results.
 Various group names are mandatory:
+
 &lt;name&gt; is the name of the torrent file
 &lt;link&gt; is the url of the torrent file, used to download (should be relative to the search website address)
-&lt;id&gt; is the id of the torrent file, that is used to then go in the details &amp; find out how many files there are in this release (the plugin filters out all multiple parts torrents; extracting files from a RAR is unpractical)
+&lt;id&gt; is the id of the torrent file, that is used to then go in the details and find out how many files there are in the release (the plugin filters out all multi part torrents; extracting files from a RAR is inpractical)
 &lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
 &lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
   </data>
