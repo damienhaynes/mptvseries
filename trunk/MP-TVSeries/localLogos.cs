@@ -220,9 +220,6 @@ namespace WindowPlugins.GUITVSeries
                 if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
                 MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
 
-                // reset all cached Fieldvalues
-                
-                //cachedFieldValues.Clear();
                 for (int i = 0; i < entries.Count; i++)
                 {
                     try

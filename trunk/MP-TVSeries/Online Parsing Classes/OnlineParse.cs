@@ -530,6 +530,7 @@ namespace WindowPlugins.GUITVSeries
                         cond.AddCustom(condBuilder.ToString());
                         importProcessedConds.Add(cond);
                         cond = new SQLCondition();
+                        condBuilder.Remove(0, condBuilder.Length);
                         count = 0;
                     }
                 }

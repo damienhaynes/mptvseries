@@ -341,134 +341,6 @@ namespace MediaPortal.GUI.Video
             }
         }
 
-        String FormatField(String sFormat, DBTable table)
-        {
-            String sOut = String.Empty;
-
-            while (sFormat.Length != 0)
-            {
-                int nTagStart = sFormat.IndexOf('<');
-                if (nTagStart != -1)
-                {
-                    sOut += sFormat.Substring(0, nTagStart);
-                    sFormat = sFormat.Substring(nTagStart);
-
-                    int nTagEnd = sFormat.IndexOf('>');
-                    if (nTagEnd != -1)
-                    {
-                        String sTag = sFormat.Substring(1, nTagEnd - 1);
-                        sFormat = sFormat.Substring(nTagEnd + 1);
-
-                        if (sTag.IndexOf('.') != -1)
-                        {
-                            String sTableName = sTag.Substring(0, sTag.IndexOf('.'));
-                            String sFieldName = sTag.Substring(sTag.IndexOf('.') + 1);
-
-                            switch (sTableName)
-                            {
-                                case DBSeries.cOutName:
-                                    {
-                                        DBSeries source = table as DBSeries;
-                                        if (source == null)
-                                            source = m_SelectedSeries;
-                                        if (source != null)
-                                        {
-                                            switch (sFieldName)
-                                            {
-                                                case DBOnlineSeries.cActors:
-                                                case DBOnlineSeries.cGenre:
-                                                    sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
-                                                    break;
-                                                case DBOnlineSeries.cSummary:
-                                                    sOut += source[sFieldName].ToString().Length == 0 ? Translation.Unknown : (String)source[sFieldName];
-                                                    break;
-                                                default:
-                                                    sOut += source[sFieldName];
-                                                    break;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                                case DBSeason.cOutName:
-                                    {
-                                        DBSeason source = table as DBSeason;
-                                        if (source == null)
-                                            source = m_SelectedSeason;
-                                        if (source != null)
-                                        {
-                                            if (sFieldName == DBSeason.cIndex && source[sFieldName] == 0)
-                                            {
-                                                sOut += Translation.specials;
-                                                if (sOut.Contains(Translation.Season + " " + Translation.specials))
-                                                    sOut = sOut.Replace(Translation.Season + " " + Translation.specials, Translation.specials);
-                                                else if (sOut.Contains("Season " + Translation.specials))
-                                                    sOut = sOut.Replace("Season " + Translation.specials, Translation.specials);
-                                            }
-                                            else
-                                                sOut += source[sFieldName];
-                                        }
-                                    }
-                                    break;
-
-                                case DBEpisode.cOutName:
-                                    {
-                                        DBEpisode source = table as DBEpisode;
-                                        if (source == null)
-                                            source = m_SelectedEpisode;
-                                        if (source != null)
-                                        {
-                                            switch (sFieldName)
-                                            {
-                                                case DBOnlineEpisode.cEpisodeSummary:
-                                                    if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || table[DBOnlineEpisode.cWatched] != 0)
-                                                        sOut += source[sFieldName].ToString().Length == 0 ? Translation.Unknown : (String)source[sFieldName];
-                                                    else
-                                                        sOut += Translation._Hidden_to_prevent_spoilers_;
-                                                    break;
-
-                                                case DBOnlineEpisode.cWatched:
-                                                    sOut += source[sFieldName] == 0 ? Translation.No : Translation.Yes;
-                                                    break;
-
-                                                case DBOnlineEpisode.cGuestStars:
-                                                case DBOnlineEpisode.cDirector:
-                                                case DBOnlineEpisode.cWriter:
-                                                    sOut += ((String)source[sFieldName]).Trim('|').Replace("|", ", ");
-                                                    break;
-                                                case DBOnlineEpisode.cEpisodeIndex:
-                                                    // let's make them double digets
-                                                    sOut += System.Int32.Parse(source[sFieldName]).ToString("00");
-                                                    break;
-                                                default:
-                                                    sOut += source[sFieldName];
-                                                    break;
-                                            }
-                                        }
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        sOut += Translation.Error;
-                        sFormat = String.Empty;
-                    }
-                }
-                else
-                {
-                    // no more opening tag
-                    sOut += sFormat;
-                    sFormat = String.Empty;
-                }
-            }
-
-            String sCR = "" + (char)10 + (char)13;
-            sOut = sOut.Replace("\\n", sCR);
-            return sOut;
-        }
-
         void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {
             this.m_Facade.View = mode;
@@ -866,7 +738,7 @@ namespace MediaPortal.GUI.Video
                 GUIWindowManager.ShowPreviousWindow();
                 return;
             }
-            ImageAllocator.SetFontName(m_Facade.AlbumListView.FontName);
+            ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
             // for some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
             // the labels don't display, unless we somehow call them like so
@@ -1658,6 +1530,7 @@ namespace MediaPortal.GUI.Video
                         skipSeasonIfOne_DirectionDown = false; // otherwise the user cant get back out
                         LoadFacade();
                         if (this.listLevel == Listlevel.Series) loadFanart(null);
+                        else if (this.listLevel == Listlevel.Season) loadFanart(m_SelectedSeries);
                         skipSeasonIfOne_DirectionDown = true;
                     }
                     break;
@@ -1678,14 +1551,14 @@ namespace MediaPortal.GUI.Video
 
 
         bool fanartSet = false;
-        bool loadFanart(DBSeries series)
+        bool loadFanart(DBTable item)
         {
             try
             {
                 if (FanartBackground == null) fanartSet = false;
                 else
                 {
-                    if (series == null)
+                    if (item == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
                         FanartBackground.Visible = false;
@@ -1699,19 +1572,30 @@ namespace MediaPortal.GUI.Video
                     }
                     else
                     {
-                        Fanart f = Fanart.getFanart(series[DBSeries.cID]);
-                        if (f.Found)
+                        Fanart f = null;
+                        DBSeries s = item as DBSeries;
+                        if (s != null)
+                            f = Fanart.getFanart(s[DBSeries.cID]);
+                        else
                         {
-                            MPTVSeriesLog.Write("Fanart: found, loading: ",  f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
-                            FanartBackground.SetFileName(f.RandomFanart);
+                            DBSeason se = item as DBSeason;
+                            if(se != null)
+                                f =  Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
+                        }
+                        if (f != null && f.Found)
+                        {
+                            MPTVSeriesLog.Write("Fanart: found, loading: ", f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
+                            FanartBackground.SetFileName(f.RandomFanartAsTexture);
                             FanartBackground.Visible = true;
                             if (this.dummyIsLightFanartLoaded != null)
                                 this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
                             if (this.dummyIsDarkFanartLoaded != null)
                                 this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
-                            
+
                         }
-                        fanartSet = f.Found;
+                        else if(f != null && !f.SeasonMode) loadFanart(null);
+
+                        fanartSet = f != null && f.Found;
                     }
                 }
                 if (this.dummyIsFanartLoaded != null)
@@ -1751,9 +1635,9 @@ namespace MediaPortal.GUI.Video
                         m_stepSelection = new string[] { m_SelectedSeries[DBSeries.cID].ToString() };
                         m_stepSelections.Add(m_stepSelection);
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Normal);
-                        this.LoadFacade();
                         MPTVSeriesLog.Write("Fanart: Series selected");
                         this.loadFanart(m_SelectedSeries);
+                        this.LoadFacade();
                         this.m_Facade.Focus = true;
                         
                         break;
@@ -1765,6 +1649,8 @@ namespace MediaPortal.GUI.Video
                         m_stepSelections.Add(m_stepSelection);
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Normal);
                         this.LoadFacade();
+                        MPTVSeriesLog.Write("Fanart: Season selected");
+                        this.loadFanart(m_SelectedSeason);
                         this.m_Facade.Focus = true;
                         break;
                     case Listlevel.Episode:
@@ -2182,14 +2068,20 @@ namespace MediaPortal.GUI.Video
         private void setProcessAnimationStatus(bool enable)
         {
             //MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
-            if (m_ImportAnimation != null)
+            try
             {
-                if (enable)
-                    m_ImportAnimation.AllocResources();
-                else
-                    m_ImportAnimation.FreeResources();
-                m_ImportAnimation.Visible = enable;
-                //MPTVSeriesLog.Write("Set Animation: ", "Done", MPTVSeriesLog.LogLevel.Normal);
+                if (m_ImportAnimation != null)
+                {
+                    if (enable)
+                        m_ImportAnimation.AllocResources();
+                    else
+                        m_ImportAnimation.FreeResources();
+                    m_ImportAnimation.Visible = enable;
+                    //MPTVSeriesLog.Write("Set Animation: ", "Done", MPTVSeriesLog.LogLevel.Normal);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 

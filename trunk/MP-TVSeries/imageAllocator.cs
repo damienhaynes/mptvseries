@@ -36,7 +36,9 @@ namespace WindowPlugins.GUITVSeries
         private static List<String> s_SeriesImageList = new List<string>();
         private static List<String> s_SeasonsImageList = new List<string>();
         private static List<String> s_OtherPersistentImageList = new List<string>();
-        private static List<String> s_OtherDiscardableImageList = new List<string>(); 
+        private static List<String> s_OtherDiscardableImageList = new List<string>();
+        private static Size reqSeriesBannerSize = new Size(758, 140);
+        private static Size reqSeasonBannerSize = new Size(400, 578);
 
         static ImageAllocator()
         {
@@ -107,13 +109,18 @@ namespace WindowPlugins.GUITVSeries
             return name;
         }
 
-        private static void Flush(List<String> toFlush)
+        public static void Flush(List<String> toFlush)
         {
             foreach (String sTextureName in toFlush)
             {
-                GUITextureManager.ReleaseTexture(sTextureName);
+                Flush(sTextureName);
             }
             toFlush.Clear();
+        }
+
+        public static void Flush(string sTextureName)
+        {
+            GUITextureManager.ReleaseTexture(sTextureName);
         }
         #endregion
 
@@ -127,28 +134,30 @@ namespace WindowPlugins.GUITVSeries
             s_sFontName = sFontName;
         }
 
+        /// <summary>
+        /// Sets or gets the default Series banner size with which banners will be loaded into memory
+        /// </summary>
+        public static Size SetSeriesBannerSize { set { reqSeriesBannerSize = value; } get { return reqSeriesBannerSize;} }
+
+        /// <summary>
+        /// Sets or gets the default Season banner size with which banners will be loaded into memory
+        /// </summary>
+        public static Size SetSeasonBannerSize { set { reqSeasonBannerSize = value; } get { return reqSeasonBannerSize; } }
+
         public static String GetSeriesBanner(DBSeries series)
         {
             String sFileName = series.Banner;
             String sTextureName;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
-            {
-                sTextureName = buildMemoryImageFromFile(sFileName, new Size(758, 140));
-                s_SeriesImageList.Add(sTextureName);
-                return sTextureName;
-            }
+                sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);  
             else
             {
                 // no image, use text, create our own
-                sTextureName = "[series_" + series[DBSeries.cID] + "]";
-                if (GUITextureManager.LoadFromMemory(null, sTextureName, 0, 0, 0) == 0)
-                {
-                    Size sizeImage = new Size(758, 140);
-                    GUITextureManager.LoadFromMemory(drawSimpleBanner(sizeImage, series[DBOnlineSeries.cPrettyName]), sTextureName, 0, sizeImage.Width, sizeImage.Height);
-                }
-                s_SeriesImageList.Add(sTextureName);
-                return sTextureName;
+                string ident = "series_" + series[DBSeries.cID];
+                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize);
             }
+            if(sTextureName.Length > 0) s_SeriesImageList.Add(sTextureName);
+            return sTextureName;
         }
 
         public static String GetSeasonBanner(DBSeason season, bool createIfNotExist)
@@ -156,29 +165,18 @@ namespace WindowPlugins.GUITVSeries
             String sFileName = season.Banner;
             String sTextureName;
             if (sFileName.Length > 0)
-            {
-                sTextureName = buildMemoryImageFromFile(sFileName, new Size(400, 578));
-                s_SeasonsImageList.Add(sTextureName);
-                return sTextureName;
-            }
+                sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
             else if (createIfNotExist)
             {
-                sTextureName = "[" + season[DBSeason.cID] + "]";
-                if (GUITextureManager.LoadFromMemory(null, sTextureName, 0, 0, 0) == 0)
-                {
-                    // no image, use text, create our own
-                    Size sizeImage = new Size(400, 578);
-                    Bitmap image;
-                    if (season[DBSeason.cIndex] == 0)
-                        image = drawSimpleBanner(sizeImage, Translation.specials);
-                    else
-                        image = drawSimpleBanner(sizeImage, Translation.Season + season[DBSeason.cIndex]);
-                    GUITextureManager.LoadFromMemory(image, sTextureName, 0, sizeImage.Width, sizeImage.Height);
-                }
-                s_SeasonsImageList.Add(sTextureName);
-                return sTextureName;
+                // no image, use text, create our own
+                string text = (season[DBSeason.cIndex] == 0) ? Translation.specials : Translation.Season + season[DBSeason.cIndex];
+                string ident = season[DBSeason.cSeriesID] + "S" + season[DBSeason.cIndex];
+                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeasonBannerSize, text), ident, reqSeasonBannerSize);
             }
             else return string.Empty;
+
+            s_SeasonsImageList.Add(sTextureName);
+            return sTextureName;
         }
 
         public static String GetOtherImage(string sFileName, System.Drawing.Size size, bool bPersistent)

@@ -235,7 +235,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBTable
     {
         public string m_tableName;
-        public Dictionary<string, DBField> m_fields;
+        public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
         public bool m_CommitNeeded = false;
         public static List<string> FieldsRequiringSplit = new List<string>();
         public List<string> fieldsRequiringSplit = FieldsRequiringSplit;
@@ -249,16 +249,17 @@ namespace WindowPlugins.GUITVSeries
             // this base constructor was very expensive
             // we now cache the result for all objects : dbtable and only redo it if an alter table occured (this drastically cut down the number of sql statements)
             // this piece of code alone took over 30% of the time on my machine when entering config and newing up all the episodes
-            
+
             Dictionary<string, DBFieldType> cachedForTable;
             m_tableName = tableName;
-            m_fields = new Dictionary<string, DBField>();
+            //m_fields = new Dictionary<string, DBField>();
             if (fields.ContainsKey(tableName)) // good, cached, this happens 99% of the time
             {
                 cachedForTable = fields[tableName];
                 foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
                     if (!m_fields.ContainsKey(entry.Key))
                         m_fields.Add(entry.Key, new DBField(entry.Value));
+                
             }
             else // we have to get it, happens when the first object is created or after an alter table
             {
@@ -301,6 +302,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         lock(fields)
                             fields.Add(tableName, cachedForTable);
+                        
                     }
                     else
                     {
@@ -1002,12 +1004,12 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_db = new SQLiteClient(databaseFile);
 
-                m_db.Execute("PRAGMA cache_size=5000;\n");
-                m_db.Execute("PRAGMA synchronous='OFF';\n");
-                m_db.Execute("PRAGMA count_changes=1;\n");
-                m_db.Execute("PRAGMA full_column_names=0;\n");
-                m_db.Execute("PRAGMA short_column_names=0;\n");
-                m_db.Execute("PRAGMA temp_store = MEMORY;\n");
+                m_db.Execute("PRAGMA cache_size=5000;");
+                m_db.Execute("PRAGMA synchronous='OFF';");
+                m_db.Execute("PRAGMA count_changes=1;");
+                m_db.Execute("PRAGMA full_column_names=0;");
+                m_db.Execute("PRAGMA short_column_names=0;");
+                m_db.Execute("PRAGMA temp_store = MEMORY;");
 
                 m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
                 m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
