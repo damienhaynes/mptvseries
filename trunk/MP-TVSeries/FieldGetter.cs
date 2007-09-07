@@ -24,9 +24,39 @@ namespace WindowPlugins.GUITVSeries
         static string seasonIdentifier = String.Format("{0}{1}{2}", openTag, Season, typeFieldSeperator);
         static string seriesIdentifier = String.Format("{0}{1}{2}", openTag, Series, typeFieldSeperator);
 
+        static List<formatingRule> formatingRules = new List<formatingRule>();
+        static List<string> nonFormattingFields = new List<string>();
+
         static bool _splitFields = true; // not thread safe
 
         private FieldGetter() { }
+        static FieldGetter()
+        {
+            formatingRule fr = new formatingRule("\\n", Environment.NewLine);
+            formatingRules.Add(fr);
+
+            fr = new formatingRule("''", "'");
+            formatingRules.Add(fr);
+
+            fr = new formatingRule(Translation.Season + @"\:{0,1}\s{0,2}0", Translation.specials, true);
+            formatingRules.Add(fr);
+
+            fr = new formatingRule(@"Season\:{0,1}\s{0,2}0", Translation.specials, true);
+            formatingRules.Add(fr);
+
+            fr = new formatingRule(@"0x\d{1,3}", Translation.special + " ", true);
+            formatingRules.Add(fr);
+
+            // enable user to show 0/1 as Boolean (will show up as Yes/No)
+            fr = new formatingRule("asBool(0)", Translation.No);
+            formatingRules.Add(fr);
+
+            fr = new formatingRule("asBool(1)", Translation.Yes);
+            formatingRules.Add(fr);
+
+            // want to ensure these show as is
+            nonFormattingFields.Add("<Episode.EpisodeFilename>");
+        }
         public enum Level
         {
             Series,
@@ -83,6 +113,10 @@ namespace WindowPlugins.GUITVSeries
             {
                 value = replaceSeriesTags(item as DBSeries, value);
             }
+
+            if (nonFormattingFields.Contains(what)) return value;
+            value = doFormatting(value);
+
             value = MathParser.mathParser.TryParse(value);
             return value;
         }
@@ -125,6 +159,85 @@ namespace WindowPlugins.GUITVSeries
                 value = value.Replace(Identifier + m.Value + ">", result);
             }
             return value;
+        }
+
+        static string doFormatting(string input)
+        {
+            foreach (formatingRule fr in formatingRules)
+                if (fr.Format(input))
+                    input = fr.Result;
+            return input;
+        }
+    }
+
+    class formatingRule
+    {
+        public enum Type
+        {
+            simpleReplace,
+            Regex,
+            Custom // todo set up constructor to allow for total custom formatting rules (easy but not needed for now?)
+            //others
+        }
+
+        public delegate bool tester();
+        public tester applies;
+        public delegate void action();
+        public action doAction;
+        private Type _type = Type.Custom;
+        string input = null;
+        string result = null;
+        Regex regEx = null;
+        
+        public bool Applies { get { return applies(); } }
+        public Type TypeOf { get { return _type; } }
+        public String Result { get { return result; } }
+
+        public formatingRule(string replaceWhat, string replaceWith)
+        {
+            setUp(replaceWhat, replaceWith, false);
+        }
+
+        public formatingRule(string replaceWhat, string replaceWith, bool isRegex)
+        {
+            setUp(replaceWhat, replaceWith, isRegex);
+        }
+
+        void setUp(string replaceWhat, string replaceWith, bool isRegex)
+        {
+            if (!isRegex)
+            {
+                _type = Type.simpleReplace;
+                applies = delegate { return this.input.Contains(replaceWhat); };
+                doAction = delegate { result = input.Replace(replaceWhat, replaceWith); };
+            }
+            else
+            {
+                _type = Type.Regex;
+                regEx = new Regex(replaceWhat, RegexOptions.Compiled);
+                if (regEx != null)
+                {
+                    applies = delegate { return regEx.IsMatch(this.input); };
+                    doAction = delegate 
+                               { 
+                                   result = input;
+                                   foreach(Match m in regEx.Matches(this.input))
+                                        result = result.Replace(m.Value, replaceWith); 
+                               };
+                }
+                else applies = delegate { return false; };
+            }
+        }
+
+        public bool Format(string input)
+        {
+            this.input = input;
+            if (Applies)
+            {
+                doAction();
+                return true;
+            }
+            return false;
         }
     }
 }
