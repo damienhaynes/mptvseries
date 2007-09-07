@@ -58,7 +58,6 @@ namespace WindowPlugins.GUITVSeries
         }
         public static string resolveDynString(string what, DBTable item, bool splitFields)
         {
-            perfana.Start();
             Level level = levelOfItem(item);
             string value = what;
             List<Level> whatLevels = getLevel(what);
@@ -85,7 +84,6 @@ namespace WindowPlugins.GUITVSeries
                 value = replaceSeriesTags(item as DBSeries, value);
             }
             value = MathParser.mathParser.TryParse(value);
-            perfana.Stop();
             return value;
         }
 

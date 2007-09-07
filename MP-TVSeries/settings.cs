@@ -61,16 +61,6 @@ namespace WindowPlugins.GUITVSeries
                     RegistryKey rk = Registry.CurrentUser.CreateSubKey("Software\\MPTVSeries");
                     rk.SetValue("DBFile", databaseFile);
                     return true;
-
-                case Path.log:
-                    return false;
-                case Path.banners:
-                    return false;
-                case Path.lang:
-                    return false;
-                case Path.thumbs:
-                    return false;
-
                 default:
                     return false;
             }

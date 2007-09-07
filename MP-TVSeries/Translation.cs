@@ -161,10 +161,10 @@ namespace WindowPlugins.GUITVSeries
         public static string Get(string Field)
         {
             if (TranslatedStrings != null && TranslatedStrings.ContainsKey(Field)) return TranslatedStrings[Field];
-            else
+            else if(Field != null && Field.Length > 0)
             {
                 return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));
-            }
+            } else return string.Empty;
         }
 
         public static List<string> getSupportedLangs()
