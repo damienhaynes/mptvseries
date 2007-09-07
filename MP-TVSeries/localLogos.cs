@@ -140,6 +140,7 @@ namespace WindowPlugins.GUITVSeries
             DBEpisode inCache = cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]);
             tmpEp = inCache == null ? ep : inCache;
             // zeflash: since we use an image allocator we can't use a cache for the episode image anymore - so always call getLogos
+            tmpEp.cachedLogoResults = null; // have to redo caching here
             lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
 /*
             if (!firstOnly || tmpEp.cachedFirstLogo == null)

@@ -41,6 +41,9 @@ namespace WindowPlugins.GUITVSeries
             fr = new formatingRule("\\\"", "\"");
             formatingRules.Add(fr);
 
+            fr = new formatingRule("\\'", "'");
+            formatingRules.Add(fr);
+
             fr = new formatingRule(Translation.Season + @"\:{0,1}\s{0,2}0", Translation.specials, true);
             formatingRules.Add(fr);
 

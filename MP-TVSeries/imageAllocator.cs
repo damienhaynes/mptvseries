@@ -201,6 +201,12 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
+        public static void FlushAll()
+        {
+            FlushOthers(true);
+            FlushSeasons();
+            FlushSeries();
+        }
         public static void FlushSeries()
         {
             Flush(s_SeriesImageList);

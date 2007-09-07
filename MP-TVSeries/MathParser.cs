@@ -133,7 +133,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 subLog("Mathparser: Critical Error " + e.Message);
             }
             if (null != result)
-                MPTVSeriesLog.Write("Mathparser: Total Result: " + result.ToString());
+                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result: {0} = {1}", expression, result.ToString()));
             return result;
         }
 

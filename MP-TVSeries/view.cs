@@ -105,13 +105,21 @@ namespace WindowPlugins.GUITVSeries
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
                 Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
                     {
-                        double index1 = e1[DBEpisode.cSeasonIndex] == 0 ? ((int)e1[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 : ((int)e1[DBEpisode.cEpisodeIndex]);
-                        return index1.CompareTo(e2[DBEpisode.cSeasonIndex] == 0 ? ((int)e2[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 : ((int)e2[DBEpisode.cEpisodeIndex]));
+                        return getRelSortingIndexOfEp(e1).CompareTo(getRelSortingIndexOfEp(e2));
                     };
                 eps.Sort(inlineSorting);
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
             }
             return eps;
+        }
+
+        double getRelSortingIndexOfEp(DBEpisode ep)
+        {
+            return ep[DBEpisode.cSeasonIndex] == 0
+                   ? ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty
+                     ? 99999
+                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5
+                   : ((int)ep[DBEpisode.cEpisodeIndex]);
         }
 
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
@@ -214,7 +222,8 @@ namespace WindowPlugins.GUITVSeries
                         conditions.beginGroup();
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
                         conditions.nextIsOr = true;
-                        conditions.Add(new DBOnlineEpisode(), "airsbefore_season", currentStepSelection[1], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
                         conditions.nextIsOr = false;
                         conditions.endGroup();
                         break;
