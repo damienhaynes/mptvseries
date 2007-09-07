@@ -227,7 +227,6 @@ namespace WindowPlugins.GUITVSeries
     {
         public DBField.cType Type;
         public bool Primary;
-
     }
 
     // table class - used as a base for table objects (series, episodes, etc)

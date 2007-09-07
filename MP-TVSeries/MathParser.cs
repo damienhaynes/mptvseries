@@ -133,7 +133,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 subLog("Mathparser: Critical Error " + e.Message);
             }
             if (null != result)
-                subLog("Mathparser: Total Result: " + result.ToString());
+                MPTVSeriesLog.Write("Mathparser: Total Result: " + result.ToString());
             return result;
         }
 
@@ -180,16 +180,16 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 string replaceWith;
                 if (parenthesisFinder(expression, functions[i].form, out toReplace, out replaceWith))
                 {
-                    subLog("Processing now: " + replaceWith);
+                    //subLog("Processing now: " + replaceWith);
 
                     double? subresult = breakdDown(replaceWith);
 
-                    subLog("Subresult: " + (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)));
+                    //subLog("Subresult: " + (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)));
 
                     if (subresult == null) return null; // can't process it
                     double funcRes = functions[i].perform((double)subresult);
 
-                    subLog("Function: " + functions[i].form + subresult + ") = " + funcRes.ToString(provider));
+                    //subLog("Function: " + functions[i].form + subresult + ") = " + funcRes.ToString(provider));
                     if (Double.IsNaN(funcRes)) return null; // function not possible
                     expression = expression.Replace(toReplace, funcRes.ToString(provider));
                     i--; //because each function may exist more than once per "level" we have to try again
@@ -210,7 +210,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
             while ((m = operations.Match(expression)).Value.Length > 0)
             {
                 double? atomRes = atomicOperation(m.Value);
-                subLog("Atomic operation: " + m.Value + " = " + (atomRes == null ? "unable" : atomRes.ToString()));
+                //subLog("Atomic operation: " + m.Value + " = " + (atomRes == null ? "unable" : atomRes.ToString()));
                 if (atomRes == null) return false; // unsovlable
                 expression = expression.Replace(m.Value, 
                                                (atomRes.Value >= 0 ? provider.PositiveSign : provider.NegativeSign) 
@@ -253,7 +253,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                     return no1 % no2;
                 case atomicOperationType.pow:
                     return Math.Pow(no1, no2);
-                default: subLog("MathParser: Unknown operand: " + m.Groups["type"].Value);
+                default: MPTVSeriesLog.Write("MathParser: Unknown operand: " + m.Groups["type"].Value);
                     break;
             }
 
@@ -274,7 +274,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
 
         public static void subLog(string entry)
         {
-            MPTVSeriesLog.Write(entry, MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write(entry, MPTVSeriesLog.LogLevel.Debug);
         }
     }
 
