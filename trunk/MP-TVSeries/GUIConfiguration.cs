@@ -2760,6 +2760,7 @@ namespace WindowPlugins.GUITVSeries
             expBldForm.ShowDialog();
                 //-- ToDo: add result to datagridview
         }
+
     }
 
     public class BannerComboItem

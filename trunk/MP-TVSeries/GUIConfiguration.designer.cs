@@ -2842,7 +2842,7 @@ namespace WindowPlugins.GUITVSeries
             this.label34.Size = new System.Drawing.Size(138, 20);
             this.label34.TabIndex = 6;
             this.label34.Text = "Search &RegEx:";
-            this.label34.TextAlign = System.Drawing.ContentAlignment.TopRight;            
+            this.label34.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textbox_NewzbinPassword
             // 
@@ -2852,6 +2852,7 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_NewzbinPassword.Name = "textbox_NewzbinPassword";
             this.textbox_NewzbinPassword.Size = new System.Drawing.Size(68, 20);
             this.textbox_NewzbinPassword.TabIndex = 3;
+            this.textbox_NewzbinPassword.UseSystemPasswordChar = true;
             this.textbox_NewzbinPassword.TextChanged += new System.EventHandler(this.textbox_NewzbinPassword_TextChanged);
             // 
             // textBox_NewzbinLogin
@@ -3244,7 +3245,7 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v";
+            this.Text = "MP-TV Series Configuration v";            
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);

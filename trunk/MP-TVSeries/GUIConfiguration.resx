@@ -225,7 +225,7 @@ what video and audio codecs the epsiode is encoded in etc...
 A Logo package must be installed to display logos succesfully in Media Portal</value>
   </data>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>685, 40</value>
+    <value>1007, 14</value>
   </metadata>
   <data name="comboBox_seasonFormat.ToolTip" xml:space="preserve">
     <value>Select the format to display the season listing in. Graphical will display the banners downloaded from online.
@@ -354,7 +354,7 @@ Various group names are mandatory:
 &lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>86</value>
+    <value>44</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
