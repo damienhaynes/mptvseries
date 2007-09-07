@@ -93,6 +93,12 @@ namespace WindowPlugins.GUITVSeries
             if (item != null)
             {
                 textbox_Description.Text = item.m_sDescription;
+                if (item.m_sDescription != "")
+                {
+                    // Replace edit text field with selected item
+                    // Text Changed event will pick up new selected item for feedback
+                    textbox_ToMatch.Text = item.m_sName;                    
+                }
                 button_OK.Text = m_descriptor.m_sbtnOKLabel;
             }
         }
@@ -101,6 +107,14 @@ namespace WindowPlugins.GUITVSeries
         {
             m_sTypedText = textbox_ToMatch.Text;
             button_OK.Text = m_descriptor.m_sbtnOKLabelAlternate;
+        }
+
+        private void listbox_Choices_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // Return OK for Item Double Clicked
+            Feedback.CItem item = listbox_Choices.SelectedItem as Feedback.CItem;
+            if (item != null && item.m_sDescription != "")
+                this.DialogResult = DialogResult.OK;       
         }
     }
 }

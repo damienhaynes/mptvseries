@@ -67,7 +67,7 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_ToMatch.Location = new System.Drawing.Point(15, 25);
             this.textbox_ToMatch.Name = "textbox_ToMatch";
             this.textbox_ToMatch.Size = new System.Drawing.Size(406, 20);
-            this.textbox_ToMatch.TabIndex = 0;
+            this.textbox_ToMatch.TabIndex = 1;
             this.textbox_ToMatch.TextChanged += new System.EventHandler(this.textbox_ToMatch_TextChanged);
             // 
             // label_ToMatch
@@ -76,7 +76,7 @@ namespace WindowPlugins.GUITVSeries
             this.label_ToMatch.Location = new System.Drawing.Point(12, 9);
             this.label_ToMatch.Name = "label_ToMatch";
             this.label_ToMatch.Size = new System.Drawing.Size(63, 13);
-            this.label_ToMatch.TabIndex = 11;
+            this.label_ToMatch.TabIndex = 0;
             this.label_ToMatch.Text = "Looking for:";
             // 
             // label_Choices
@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
             this.label_Choices.Location = new System.Drawing.Point(12, 47);
             this.label_Choices.Name = "label_Choices";
             this.label_Choices.Size = new System.Drawing.Size(161, 13);
-            this.label_Choices.TabIndex = 10;
+            this.label_Choices.TabIndex = 2;
             this.label_Choices.Text = "Please Select the matching item:";
             // 
             // listbox_Choices
@@ -96,7 +96,8 @@ namespace WindowPlugins.GUITVSeries
             this.listbox_Choices.Location = new System.Drawing.Point(15, 65);
             this.listbox_Choices.Name = "listbox_Choices";
             this.listbox_Choices.Size = new System.Drawing.Size(406, 95);
-            this.listbox_Choices.TabIndex = 1;
+            this.listbox_Choices.TabIndex = 3;
+            this.listbox_Choices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listbox_Choices_MouseDoubleClick);
             this.listbox_Choices.SelectedIndexChanged += new System.EventHandler(this.listbox_Choices_SelectedIndexChanged);
             // 
             // button_OK
@@ -107,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_OK.Location = new System.Drawing.Point(15, 259);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
-            this.button_OK.TabIndex = 2;
+            this.button_OK.TabIndex = 5;
             this.button_OK.Text = "OK";
             this.button_OK.UseVisualStyleBackColor = true;
             // 
@@ -119,7 +120,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Cancel.Location = new System.Drawing.Point(174, 259);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(75, 23);
-            this.button_Cancel.TabIndex = 3;
+            this.button_Cancel.TabIndex = 6;
             this.button_Cancel.Text = "Cancel";
             this.button_Cancel.UseVisualStyleBackColor = true;
             // 
@@ -131,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Ignore.Location = new System.Drawing.Point(346, 259);
             this.button_Ignore.Name = "button_Ignore";
             this.button_Ignore.Size = new System.Drawing.Size(75, 23);
-            this.button_Ignore.TabIndex = 4;
+            this.button_Ignore.TabIndex = 7;
             this.button_Ignore.Text = "Ignore";
             this.button_Ignore.UseVisualStyleBackColor = true;
             // 
@@ -145,7 +146,7 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_Description.ReadOnly = true;
             this.textbox_Description.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textbox_Description.Size = new System.Drawing.Size(406, 86);
-            this.textbox_Description.TabIndex = 15;
+            this.textbox_Description.TabIndex = 4;
             // 
             // ChooseFromSelectionDialog
             // 
@@ -162,7 +163,7 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.label_ToMatch);
             this.Controls.Add(this.label_Choices);
             this.Controls.Add(this.listbox_Choices);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ChooseFromSelectionDialog";
             this.Text = "ChooseFromSelection";
             this.ResumeLayout(false);
