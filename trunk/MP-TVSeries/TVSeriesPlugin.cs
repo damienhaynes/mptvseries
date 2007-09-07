@@ -347,7 +347,32 @@ namespace MediaPortal.GUI.Video
             if(dummyFacadeListMode != null)
                 this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;            
         }
+        /*
+        bool facadeLoaded = false;
+        void LoadFacade()
+        {
+            System.ComponentModel.BackgroundWorker bg = new System.ComponentModel.BackgroundWorker();
+            bg.DoWork += new System.ComponentModel.DoWorkEventHandler(bgLoadFacade);
+            bg.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgFacadeDone);
 
+            bg.RunWorkerAsync();
+            //GUIWindowManager.Process();
+            //while (!facadeLoaded) ;
+        }
+
+        void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            facadeLoaded = true;
+        }
+
+        void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            facadeLoaded = false; // reset
+            using (WaitCursor c = new WaitCursor())
+                lock (this) { bgLoadFacade(); }
+        }
+
+        void bgLoadFacade()*/
         void LoadFacade()
         {
             MPTVSeriesLog.Write("Begin LoadFacade");
@@ -1516,10 +1541,16 @@ namespace MediaPortal.GUI.Video
             {
                 case Action.ActionType.ACTION_PARENT_DIR:
                 case Action.ActionType.ACTION_HOME:
+                    ImageAllocator.FlushAll();
+                    GUIWindowManager.ShowPreviousWindow();
+                    break;
                 case Action.ActionType.ACTION_PREVIOUS_MENU:
                     // back one level
                     MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
-                    if (m_CurrViewStep == 0) GUIWindowManager.ShowPreviousWindow();
+                    if (m_CurrViewStep == 0)
+                    {
+                        goto case Action.ActionType.ACTION_HOME;
+                    }
                     else
                     {
                         m_stepSelections.RemoveAt(m_CurrViewStep);
@@ -1591,11 +1622,11 @@ namespace MediaPortal.GUI.Video
                                 this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
                             if (this.dummyIsDarkFanartLoaded != null)
                                 this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+                            fanartSet = true;
 
                         }
                         else if(f != null && !f.SeasonMode) loadFanart(null);
 
-                        fanartSet = f != null && f.Found;
                     }
                 }
                 if (this.dummyIsFanartLoaded != null)
@@ -1899,14 +1930,7 @@ namespace MediaPortal.GUI.Video
                 setGUIProperty(guiProperty.EpisodeImage, episode.Image);
             else clearGUIProperty(guiProperty.EpisodeImage);
 
-            string title = FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode);
-            // overwrite ugly Special number (eg: 0x7) if display option is default:
-            if (m_SelectedEpisode[DBEpisode.cSeasonIndex] == 0 && m_sFormatEpisodeTitle.Trim().Contains("<Episode.SeasonIndex>x<Episode.EpisodeIndex>:"))
-            {
-                title = title.Replace("0x", Translation.special + " ");
-            }
-
-            setGUIProperty(guiProperty.Title, title);
+            setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
 

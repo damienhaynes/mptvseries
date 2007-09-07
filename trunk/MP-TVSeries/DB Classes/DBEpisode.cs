@@ -56,6 +56,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cAirsBeforeSeason = "airsbefore_season";
         public const String cAirsBeforeEpisode = "airsbefore_episode";
 
+        public const String cAirsAfterSeason = "airsafter_season";
+
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 

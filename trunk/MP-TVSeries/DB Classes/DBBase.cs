@@ -983,6 +983,11 @@ namespace WindowPlugins.GUITVSeries
             copy.m_sOrderstring = m_sOrderstring;
             return copy;
         }
+
+        public override string ToString()
+        {
+            return this;
+        }
     };
 
     // DB class - static, one instance only. 
