@@ -417,9 +417,10 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
                     fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
-                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                    conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                 }
             }
             else if (logicalViewStep.type.season == Type && lType != typeof(DBSeason))
@@ -433,10 +434,12 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else if (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode))
                 {
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
-                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
+                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                    // we rely on the join in dbseason for this (much, much faster)
+                    conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
                 }
             }
             else if (logicalViewStep.type.episode == Type && (lType != typeof(DBEpisode) && lType != typeof(DBOnlineEpisode)))
@@ -553,24 +556,24 @@ namespace WindowPlugins.GUITVSeries
                                                 + " where " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " = " + DBSeason.Q(DBSeason.cSeriesID) + ")";
                         }*/
                         
-                        if (thisView.Type == type.episode && ( table.GetType() == typeof(DBEpisode) || table.GetType() == typeof(DBOnlineEpisode)))
-                        {
-                            // for perf reason a subquery is build, otherwise custom orders and the nessesary join really slow down sqllite!
-                            SQLCondition subQueryConditions = thisView.conds.Copy(); // have to have all conds too
-                            subQueryConditions.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
-                            if (viewSteps[3].Length > 0) // set the limit too
-                            {
-                                try
-                                {
-                                    subQueryConditions.SetLimit(System.Convert.ToInt32(viewSteps[3]));
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                            thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
+                        //if (thisView.Type == type.episode && ( table.GetType() == typeof(DBEpisode) || table.GetType() == typeof(DBOnlineEpisode)))
+                        //{
+                        //    // for perf reason a subquery is build, otherwise custom orders and the nessesary join really slow down sqllite!
+                        //    SQLCondition subQueryConditions = thisView.conds.Copy(); // have to have all conds too
+                        //    subQueryConditions.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
+                        //    if (viewSteps[3].Length > 0) // set the limit too
+                        //    {
+                        //        try
+                        //        {
+                        //            subQueryConditions.SetLimit(System.Convert.ToInt32(viewSteps[3]));
+                        //        }
+                        //        catch (Exception)
+                        //        {
+                        //        }
+                        //    }
+                        //    thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
                             
-                        }
+                        //}
 
                         thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
                     }

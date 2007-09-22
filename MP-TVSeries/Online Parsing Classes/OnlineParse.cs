@@ -585,10 +585,22 @@ namespace WindowPlugins.GUITVSeries
                     parsedFiles.RemoveAt(i);
                     i--;
                 }
-            }          
+            }
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+            //parsedFiles.AddRange(parsedFiles);
+
             UpdateStatus(updateStatusEps);
             MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
-
+            int nSeason = 0;
             foreach (parseResult progress in parsedFiles)
             {
                 if (worker.CancellationPending)
@@ -596,8 +608,6 @@ namespace WindowPlugins.GUITVSeries
                 if (progress.success)
                 {
                     DBSeries series = null;
-                    int nEpisode = default(int);
-                    int nSeason = default(int);
                     if (progress.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
                     {
                         // series first
@@ -608,7 +618,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                     else
                     {
-                        nEpisode = Convert.ToInt32(progress.parser.Matches[DBEpisode.cEpisodeIndex]);
                         nSeason = Convert.ToInt32(progress.parser.Matches[DBEpisode.cSeasonIndex]);
 
                         // ok, we are sure it's valid now
@@ -710,10 +719,10 @@ namespace WindowPlugins.GUITVSeries
                     foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
                     {
                         // make sure it has a status for an exact match
-                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().IndexOf(sSeriesNameToSearch.ToLower()) != -1)
+                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().Contains(sSeriesNameToSearch.ToLower()))
                             SubStringCount++;
                         if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
-                             (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().ToLower() == sSeriesNameToSearch.Trim().ToLower() || onlineSeries["SortName"].ToString().Trim().ToLower() == sSeriesNameToSearch.Trim().ToLower()))
+                             (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(sSeriesNameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(sSeriesNameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase)))
                             ExactMatchCount++;
                     }
 

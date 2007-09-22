@@ -45,6 +45,7 @@ namespace WindowPlugins.GUITVSeries
             label_ToMatch.Text = descriptor.m_sItemToMatchLabel;
             textbox_ToMatch.Text = descriptor.m_sItemToMatch;
             label_Choices.Text = descriptor.m_sListLabel;
+            this.Text += " (" + descriptor.m_sItemToMatch + ")";
 
             if (descriptor.m_sbtnOKLabel.Length == 0)
                 button_OK.Visible = false;
@@ -69,13 +70,24 @@ namespace WindowPlugins.GUITVSeries
                 button_Ignore.Visible = true;
                 button_Ignore.Text = descriptor.m_sbtnIgnoreLabel;
             }
-
+            // use levenshtein to sort
+            orderListBestGuess(descriptor.m_List, descriptor.m_sItemToMatch);
             foreach (Feedback.CItem item in descriptor.m_List)
             {
                 listbox_Choices.Items.Add(item);
             }
             if (listbox_Choices.Items.Count > 0)
                 listbox_Choices.SelectedIndex = 0;
+        }
+
+        void orderListBestGuess(List<Feedback.CItem> items, string toMatch)
+        {
+            foreach (Feedback.CItem item in items) item.matchValue = MediaPortal.Util.Levenshtein.Match(item.m_sName, toMatch);
+            items.Sort(delegate(Feedback.CItem i1, Feedback.CItem i2)
+            {
+                return i1.matchValue.CompareTo(i2.matchValue);
+            });
+            
         }
 
         public Feedback.CItem SelectedItem
@@ -89,6 +101,10 @@ namespace WindowPlugins.GUITVSeries
 
         private void listbox_Choices_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Comment by Inker:
+            // ahmm, this change would have needed communication
+            // the thing is you now can't see anymore what its searching for, not even before you select something
+            // i've added it to the window title instead now
             Feedback.CItem item = listbox_Choices.SelectedItem as Feedback.CItem;
             if (item != null)
             {
