@@ -1887,9 +1887,8 @@ namespace MediaPortal.GUI.Video
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null)
                 return;
-
             DBSeries series = (DBSeries)item.TVTag;
-            
+            item.Selected = true;
             m_SelectedSeries = series;
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
