@@ -226,7 +226,14 @@ namespace WindowPlugins.GUITVSeries
         public static System.String MSToMMSS(double milliseconds)
         {
             TimeSpan t = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
-            return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
+            //cs1 anomalies or no disc/data available -> -:- 
+            if (milliseconds <= 0)
+            { return ("-- : --"); }
+            //cs1 playtimes >= 1 hour -> 1:MM:SS 
+            else if (milliseconds >= 3600000)
+            { return t.Hours.ToString("0") + ":" + t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00"); }
+            //cs1 playtimes < 1 hour -> MM:SS 
+            else { return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00"); }
         }
 
         public class String

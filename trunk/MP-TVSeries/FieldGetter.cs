@@ -32,7 +32,24 @@ namespace WindowPlugins.GUITVSeries
         private FieldGetter() { }
         static FieldGetter()
         {
-            formatingRule fr = new formatingRule("\\n", Environment.NewLine);
+            formatingRule fr = null;
+
+            // hide the episodesummary if option is set
+            fr = new formatingRule(delegate(string value, string field, DBTable item)
+                                   {
+                                       DBEpisode e = item as DBEpisode;
+                                       if (null == e) return false;
+                                       return field == "<Episode.Summary>" &&
+                                               DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)
+                                               && !e[DBOnlineEpisode.cWatched];
+                                   },
+                                   delegate(string value, string field, DBTable item)
+                                   {
+                                       return Translation._Hidden_to_prevent_spoilers_;
+                                   });
+            formatingRules.Add(fr);
+
+            fr = new formatingRule("\\n", Environment.NewLine);
             formatingRules.Add(fr);
 
             fr = new formatingRule("''", "'");
@@ -55,6 +72,9 @@ namespace WindowPlugins.GUITVSeries
 
             // enable user to show 0/1 as Boolean (will show up as Yes/No)
             fr = new formatingRule("asBool(0)", Translation.No);
+            formatingRules.Add(fr);
+
+            fr = new formatingRule("asBool(1)", Translation.Yes);
             formatingRules.Add(fr);
 
             fr = new formatingRule("asBool(1)", Translation.Yes);
@@ -110,7 +130,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (level == Level.Season && !whatLevels.Contains(Level.Episode)) // we can do season/series
             {
-                if(whatLevels.Contains(Level.Season))
+                if (whatLevels.Contains(Level.Season))
                     value = replaceSeasonTags(item as DBSeason, value);
                 if (whatLevels.Contains(Level.Series))
                     value = replaceSeriesTags(item[DBSeason.cSeriesID], value);
@@ -121,7 +141,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (nonFormattingFields.Contains(what)) return value;
-            value = doFormatting(value);
+            value = doFormatting(value, what, item);
 
             value = MathParser.mathParser.TryParse(value);
             return value;
@@ -167,10 +187,10 @@ namespace WindowPlugins.GUITVSeries
             return value;
         }
 
-        static string doFormatting(string input)
+        static string doFormatting(string input, string fieldname, DBTable item)
         {
             foreach (formatingRule fr in formatingRules)
-                if (fr.Format(input))
+                if (fr.Format(input, fieldname, item))
                     input = fr.Result;
             return input;
         }
@@ -182,20 +202,22 @@ namespace WindowPlugins.GUITVSeries
         {
             simpleReplace,
             Regex,
-            Custom // todo set up constructor to allow for total custom formatting rules (easy but not needed for now?)
-            //others
+            Custom
+            //others ??
         }
 
-        public delegate bool tester();
+        public delegate bool tester(string value, string field, DBTable item);
         public tester applies;
-        public delegate void action();
+        public delegate string action(string value, string field, DBTable item);
         public action doAction;
         private Type _type = Type.Custom;
         string input = null;
+        string field = null;
         string result = null;
+        DBTable item = null;
         Regex regEx = null;
-        
-        public bool Applies { get { return applies(); } }
+
+        public bool Applies { get { return applies(input, field, item); } }
         public Type TypeOf { get { return _type; } }
         public String Result { get { return result; } }
 
@@ -209,13 +231,19 @@ namespace WindowPlugins.GUITVSeries
             setUp(replaceWhat, replaceWith, isRegex);
         }
 
+        public formatingRule(tester Tester, action Action)
+        {
+            this.applies = Tester;
+            this.doAction = Action;
+        }
+
         void setUp(string replaceWhat, string replaceWith, bool isRegex)
         {
             if (!isRegex)
             {
                 _type = Type.simpleReplace;
                 applies = delegate { return this.input.Contains(replaceWhat); };
-                doAction = delegate { result = input.Replace(replaceWhat, replaceWith); };
+                doAction = delegate { return input.Replace(replaceWhat, replaceWith); };
             }
             else
             {
@@ -224,23 +252,26 @@ namespace WindowPlugins.GUITVSeries
                 if (regEx != null)
                 {
                     applies = delegate { return regEx.IsMatch(this.input); };
-                    doAction = delegate 
-                               { 
-                                   result = input;
-                                   foreach(Match m in regEx.Matches(this.input))
-                                        result = result.Replace(m.Value, replaceWith); 
+                    doAction = delegate
+                               {
+                                   string res = input;
+                                   foreach (Match m in regEx.Matches(this.input))
+                                       res = res.Replace(m.Value, replaceWith);
+                                   return res;
                                };
                 }
                 else applies = delegate { return false; };
             }
         }
 
-        public bool Format(string input)
+        public bool Format(string input, string field, DBTable item)
         {
             this.input = input;
+            this.field = field;
+            this.item = item;
             if (Applies)
             {
-                doAction();
+                result = doAction(input, field, item);
                 return true;
             }
             return false;

@@ -152,6 +152,7 @@ namespace WindowPlugins.GUITVSeries
                 sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);  
             else
             {
+                return string.Empty;
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
                 sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize);

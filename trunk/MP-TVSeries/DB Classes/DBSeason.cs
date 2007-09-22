@@ -334,12 +334,29 @@ namespace WindowPlugins.GUITVSeries
             {
                 condition.AddCustom(stdConditions.ConditionsSQLString);
 
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if (!Settings.isConfig)
                 {
                     SQLCondition fullSubCond = new SQLCondition();
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
-                    condition.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    //condition.AddCustom(" season.seasonindex in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
+                    string join = null;
+                    if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                    {
+                        fullSubCond = DBEpisode.stdConditions;
+                        condition.AddCustom(fullSubCond.ConditionsSQLString.Replace("where", "and"));
+                        join = " left join local_episodes on season.seriesid = local_episodes.seriesid " +
+                            " and season.seasonindex = local_episodes.seasonindex left join online_episodes on local_episodes.compositeid = online_episodes.compositeid ";
+
+                    }
+                    else
+                    {
+                        join = " left join online_episodes on season.seriesid = online_episodes.seriesid " +
+                            " and season.seasonindex = online_episodes.seasonindex";
+                    }
+                    return "select " + new SQLWhat(new DBSeason()) + 
+                        join +
+                        condition  + " group by season.id " + orderBy + condition.limitString;
                 }
             }
 

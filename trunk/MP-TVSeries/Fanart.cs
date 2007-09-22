@@ -25,6 +25,12 @@ namespace WindowPlugins.GUITVSeries
             return f;
         }
 
+        public static void FlushTextures()
+        {
+            foreach (KeyValuePair<int, Fanart> p in fanartsCache)
+                p.Value.FlushTexture();
+        }
+
         public static Fanart getFanart(int seriesID, int seasonIndex)
         {
             // no cache for now for series
@@ -80,8 +86,12 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                FlushTexture();
-                _textureName = ImageAllocator.buildMemoryImageFromFile(RandomFanart, requiredSize);
+                string _textureName_temp = ImageAllocator.buildMemoryImageFromFile(RandomFanart, requiredSize);
+                if (_textureName != _textureName_temp)
+                {
+                    FlushTexture(); // flush the old one
+                    _textureName = _textureName_temp;
+                }
                 return _textureName;
             }
         }

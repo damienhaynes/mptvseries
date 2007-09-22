@@ -466,7 +466,11 @@ namespace MediaPortal.GUI.Video
                                     if (nSeriesDisplayMode == 1)
                                     {
                                         item = new GUIListItem();
-                                        item.IconImage = item.IconImageBig = ImageAllocator.GetSeriesBanner(series);
+                                        string img = ImageAllocator.GetSeriesBanner(series);
+
+                                        if (Helper.String.IsNullOrEmpty(img))
+                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
+                                        else item.IconImage = item.IconImageBig = img;
                                     }
                                     else
                                     {
@@ -618,10 +622,9 @@ namespace MediaPortal.GUI.Video
                             int count = 0;
                             bool bFindNext = false;
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
-
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-
+                            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
                             GUIListItem item = null;
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
@@ -704,7 +707,6 @@ namespace MediaPortal.GUI.Video
                                 }
                                 count++;
                             }
-
                             this.m_Facade.Focus = true;
                             if (selectedIndex != -1)
                             {
@@ -1582,6 +1584,7 @@ namespace MediaPortal.GUI.Video
 
 
         bool fanartSet = false;
+        Fanart currSeriesFanart = null;
         bool loadFanart(DBTable item)
         {
             try
@@ -1589,10 +1592,13 @@ namespace MediaPortal.GUI.Video
                 if (FanartBackground == null) fanartSet = false;
                 else
                 {
+                    FanartBackground.Visible = true; // always visible, no more triggered animations (sorry)
                     if (item == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
-                        FanartBackground.Visible = false;
+                        
+                        //FanartBackground.Visible = false;
+                        FanartBackground.SetFileName(string.Empty);
                         if (this.dummyIsFanartLoaded != null)
                             this.dummyIsFanartLoaded.Visible = false;
                         if (this.dummyIsLightFanartLoaded != null)
@@ -1603,21 +1609,27 @@ namespace MediaPortal.GUI.Video
                     }
                     else
                     {
-                        Fanart f = null;
+                        Fanart f = currSeriesFanart;
                         DBSeries s = item as DBSeries;
                         if (s != null)
-                            f = Fanart.getFanart(s[DBSeries.cID]);
+                        {
+                            if(f == null || f.SeriesID != s[DBSeries.cID])
+                               f = Fanart.getFanart(s[DBSeries.cID]);
+                            // else we came back from season, we want the same fanart again
+
+                           currSeriesFanart = f;
+                        }
                         else
                         {
                             DBSeason se = item as DBSeason;
-                            if(se != null)
-                                f =  Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
+                            if (se != null)
+                                f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
                         }
                         if (f != null && f.Found)
                         {
                             MPTVSeriesLog.Write("Fanart: found, loading: ", f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
                             FanartBackground.SetFileName(f.RandomFanartAsTexture);
-                            FanartBackground.Visible = true;
+                            //FanartBackground.Visible = true;
                             if (this.dummyIsLightFanartLoaded != null)
                                 this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
                             if (this.dummyIsDarkFanartLoaded != null)

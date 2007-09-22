@@ -980,7 +980,7 @@ namespace WindowPlugins.GUITVSeries
                         string logos = localLogos.getLogos(ref episode, 200, 500);
                         if (logos.Length > 0)
                         {
-                            BannerComboItem newItem = new BannerComboItem("Logos", logos);
+                            BannerComboItem newItem = new BannerComboItem("EpisodeImage/Logos", logos);
                             comboBox_BannerSelection.Items.Add(newItem);
                             comboBox_BannerSelection.SelectedIndex = 0; // force the display
                         }
