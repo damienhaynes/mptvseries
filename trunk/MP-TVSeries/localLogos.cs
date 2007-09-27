@@ -137,7 +137,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (ep == null) return null;
             lastWasCached = false;
-            DBEpisode inCache = cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]);
+            DBEpisode inCache = !Settings.isConfig ? cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]) : null;
             tmpEp = inCache == null ? ep : inCache;
             // zeflash: since we use an image allocator we can't use a cache for the episode image anymore - so always call getLogos
             tmpEp.cachedLogoResults = null; // have to redo caching here
@@ -168,7 +168,7 @@ namespace WindowPlugins.GUITVSeries
         public static string getLogos(ref DBSeason season, int imgHeight, int imgWidth)
         {
             if (season == null) return null;
-            DBSeason inCache = cache.getSeason(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+            DBSeason inCache = !Settings.isConfig ? cache.getSeason(season[DBSeason.cSeriesID], season[DBSeason.cIndex]) : null;
             tmpSeason = inCache == null ? season : inCache;
             lastResult = getLogos(Level.Season, imgHeight, imgWidth, ref tmpSeason.cachedLogoResults);
             if (!lastWasCached) cache.addChangeSeason(tmpSeason);
@@ -178,7 +178,7 @@ namespace WindowPlugins.GUITVSeries
         public static string getLogos(ref DBSeries series, int imgHeight, int imgWidth)
         {
             if (series == null) return null;
-            DBSeries inCache = cache.getSeries(series[DBSeries.cID]);
+            DBSeries inCache = !Settings.isConfig ? cache.getSeries(series[DBSeries.cID]) : null;
             tmpSeries = inCache == null ? series : inCache;
             lastResult = getLogos(Level.Series, imgHeight, imgWidth, ref tmpSeries.cachedLogoResults);
             if (!lastWasCached) cache.addChangeSeries(tmpSeries);

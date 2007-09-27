@@ -962,17 +962,17 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     {
                         DBEpisode episode = (DBEpisode)node.Tag;
-                        // assume an episode is always in a season which is always in a series
-                        DBSeries series = (DBSeries)node.Parent.Parent.Tag;
-                        String filename = series.Banner;
-                        if (filename.Length > 0)
-                            try
-                            {
-                                this.pictureBox_Series.Image = Image.FromFile(filename);
-                            }
-                            catch (Exception)
-                            {
-                            }
+                        //// assume an episode is always in a season which is always in a series
+                        //DBSeries series = (DBSeries)node.Parent.Parent.Tag;
+                        //String filename = series.Banner;
+                        //if (filename.Length > 0)
+                        //    try
+                        //    {
+                        //        this.pictureBox_Series.Image = Image.FromFile(filename);
+                        //    }
+                        //    catch (Exception)
+                        //    {
+                        //    }
 
                         comboBox_BannerSelection.Items.Clear();
 
@@ -1338,9 +1338,12 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     {
-                        DBSeries series = (DBSeries)treeView_Library.SelectedNode.Parent.Parent.Tag;
-                        if (((BannerComboItem)comboBox_BannerSelection.SelectedItem).sName != "Logos")
-                            series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
+                        // that was actually a BAD bug ever since logos/ep images, surprisingly nobody found it?
+                        // we can't change anythign here, there is exactly 1 ep images/Logos item
+
+                        //DBSeries series = (DBSeries)treeView_Library.SelectedNode.Parent.Parent.Tag;
+                        //if (((BannerComboItem)comboBox_BannerSelection.SelectedItem).sName != "Logos")
+                        //    series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
                             this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
@@ -1348,7 +1351,7 @@ namespace WindowPlugins.GUITVSeries
                         catch (Exception)
                         {
                         } 
-                        series.Commit();
+                        //series.Commit();
                     }
                     break;
             }

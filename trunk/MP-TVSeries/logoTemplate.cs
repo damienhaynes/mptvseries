@@ -140,7 +140,7 @@ namespace WindowPlugins.GUITVSeries
                        + Environment.NewLine +
                        "Expected Filename: static";
 
-            t.template = @"<file>;-;<Episode.Episodefilename>;-;contains;-;HDTV;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;";
+            t.template = @"<file>;-;<Episode.EpisodeFilename>;-;contains;-;HDTV;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;";
             templates.Add(t);
 
             t = new Template();

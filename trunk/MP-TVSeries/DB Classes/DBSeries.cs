@@ -211,6 +211,10 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public override string ToString()
+        {
+            return this[cPrettyName] + " (" + this[cID] + ")";
+        }
     };
 
     public class DBSeries : DBTable

@@ -33,15 +33,32 @@ namespace WindowPlugins.GUITVSeries
     class GetSeries
     {
         private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
+        private bool sorted = false;
+        private string nameToMatch = null;
 
         public List<DBOnlineSeries> Results
         {
-            get { return listSeries; }
+            get 
+            {
+                if (!sorted) sortLD();
+                return listSeries; 
+            }
+        }
+
+        private void sortLD()
+        {
+            // use LD to sort to most likely
+            listSeries.Sort(delegate(DBOnlineSeries i1, DBOnlineSeries i2)
+            {
+                return MediaPortal.Util.Levenshtein.Match(i1[DBOnlineSeries.cPrettyName], nameToMatch)
+                      .CompareTo(MediaPortal.Util.Levenshtein.Match(i2[DBOnlineSeries.cPrettyName], nameToMatch));
+            });
         }
 
         public GetSeries(String sSeriesName)
         {
             XmlNodeList nodeList = ZsoriParser.GetSeries(sSeriesName);
+            nameToMatch = sSeriesName;
             if (nodeList != null)
             {
                 foreach (XmlNode itemNode in nodeList)
