@@ -714,23 +714,24 @@ namespace WindowPlugins.GUITVSeries
 
                     MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + sSeriesNameToSearch);
                     // find out if our name is found in multiple results
-                    int SubStringCount = 0;
-                    int ExactMatchCount = 0;
+                    int exactMatchIndex = -1;
+                    int index = 0;
                     foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
                     {
                         // make sure it has a status for an exact match
-                        if (onlineSeries[DBOnlineSeries.cPrettyName].ToString().ToLower().Contains(sSeriesNameToSearch.ToLower()))
-                            SubStringCount++;
                         if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
                              (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(sSeriesNameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(sSeriesNameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase)))
-                            ExactMatchCount++;
+                        {
+                            exactMatchIndex = index;
+                        }
+                        index++;
                     }
 
                     DBOnlineSeries UserChosenSeries = null;
-                    if (GetSeriesParser.Results.Count > 0)
-                        UserChosenSeries = GetSeriesParser.Results[0];
+                    if (GetSeriesParser.Results.Count > 0 && exactMatchIndex != -1 && exactMatchIndex < GetSeriesParser.Results.Count)
+                        UserChosenSeries = GetSeriesParser.Results[exactMatchIndex];
 
-                    if (m_bNoExactMatch || ExactMatchCount != 1 || (SubStringCount != 1 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0))
+                    if (m_bNoExactMatch || exactMatchIndex == -1 || DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0)
                     {
                         // User has three choices:
                         // 1) Pick a series from the list

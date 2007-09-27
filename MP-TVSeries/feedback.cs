@@ -39,7 +39,6 @@ namespace WindowPlugins.GUITVSeries.Feedback
 
         public String m_sName = String.Empty;
         public String m_sDescription = String.Empty;
-        public int matchValue = default(int);
         public object m_Tag;
 
         public override string ToString()

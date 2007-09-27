@@ -36,6 +36,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public String m_sTypedText = String.Empty;
         private Feedback.CDescriptor m_descriptor = null;
+        string origTitle = string.Empty;
 
         public ChooseFromSelectionDialog(Feedback.CDescriptor descriptor)
         {
@@ -45,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
             label_ToMatch.Text = descriptor.m_sItemToMatchLabel;
             textbox_ToMatch.Text = descriptor.m_sItemToMatch;
             label_Choices.Text = descriptor.m_sListLabel;
-            this.Text += " (" + descriptor.m_sItemToMatch + ")";
+            origTitle = this.Text;
 
             if (descriptor.m_sbtnOKLabel.Length == 0)
                 button_OK.Visible = false;
@@ -70,8 +71,7 @@ namespace WindowPlugins.GUITVSeries
                 button_Ignore.Visible = true;
                 button_Ignore.Text = descriptor.m_sbtnIgnoreLabel;
             }
-            // use levenshtein to sort
-            orderListBestGuess(descriptor.m_List, descriptor.m_sItemToMatch);
+
             foreach (Feedback.CItem item in descriptor.m_List)
             {
                 listbox_Choices.Items.Add(item);
@@ -80,15 +80,6 @@ namespace WindowPlugins.GUITVSeries
                 listbox_Choices.SelectedIndex = 0;
         }
 
-        void orderListBestGuess(List<Feedback.CItem> items, string toMatch)
-        {
-            foreach (Feedback.CItem item in items) item.matchValue = MediaPortal.Util.Levenshtein.Match(item.m_sName, toMatch);
-            items.Sort(delegate(Feedback.CItem i1, Feedback.CItem i2)
-            {
-                return i1.matchValue.CompareTo(i2.matchValue);
-            });
-            
-        }
 
         public Feedback.CItem SelectedItem
         {
@@ -102,18 +93,18 @@ namespace WindowPlugins.GUITVSeries
         private void listbox_Choices_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Comment by Inker:
-            // ahmm, this change would have needed communication
+            // ahmm, this change would have needed communication and TESTING
             // the thing is you now can't see anymore what its searching for, not even before you select something
-            // i've added it to the window title instead now
+            // and another thing resulted from this....(chosen series was not accepted and instead always the first!!)
+            // please be careful with changes that change what is returned from the interfaces!
+
             Feedback.CItem item = listbox_Choices.SelectedItem as Feedback.CItem;
             if (item != null)
             {
-                textbox_Description.Text = item.m_sDescription;
                 if (item.m_sDescription != "")
                 {
-                    // Replace edit text field with selected item
-                    // Text Changed event will pick up new selected item for feedback
-                    textbox_ToMatch.Text = item.m_sName;                    
+                    this.Text = origTitle + " (" + item.m_sName + ")";
+                    this.textbox_Description.Text = item.m_sDescription;
                 }
                 button_OK.Text = m_descriptor.m_sbtnOKLabel;
             }

@@ -67,14 +67,11 @@ namespace WindowPlugins.GUITVSeries
             fr = new formatingRule(@"Season\:{0,1}\s{0,2}0", Translation.specials, true);
             formatingRules.Add(fr);
 
-            fr = new formatingRule(@"0x\d{1,3}", Translation.special + " ", true);
+            fr = new formatingRule(@"(?<!\d)0x\d{1,3}", Translation.special + " ", true);
             formatingRules.Add(fr);
 
             // enable user to show 0/1 as Boolean (will show up as Yes/No)
             fr = new formatingRule("asBool(0)", Translation.No);
-            formatingRules.Add(fr);
-
-            fr = new formatingRule("asBool(1)", Translation.Yes);
             formatingRules.Add(fr);
 
             fr = new formatingRule("asBool(1)", Translation.Yes);
