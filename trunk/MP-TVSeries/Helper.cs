@@ -193,7 +193,7 @@ namespace WindowPlugins.GUITVSeries
         public static List<T> inverseList<T>(List<T> input)
         {
             List<T> result = new List<T>(input.Count);
-            for (int i = 0; i < input.Count; i++)
+            for (int i = input.Count - 1; i >= 0; i--)
                 result.Add(input[i]);
             return result;
         }

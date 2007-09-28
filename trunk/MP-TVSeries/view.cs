@@ -100,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
 
             // WARNING: this naturally only works if the ordering is by season/episodeOrder
             // inline the special episodes to there relevant positions (Season == 0 by airsbefore_episode)
-            if (steps[stepIndex].inLineSpecials)
+            if (steps[stepIndex].inLineSpecials && currentStepSelection.Length >= stepIndex -1 && currentStepSelection[stepIndex -1] != "0")
             {
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
                 Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
@@ -108,7 +108,6 @@ namespace WindowPlugins.GUITVSeries
                         return getRelSortingIndexOfEp(e1).CompareTo(getRelSortingIndexOfEp(e2));
                     };
                 eps.Sort(inlineSorting);
-                if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
             }
             return eps;
         }
@@ -117,8 +116,8 @@ namespace WindowPlugins.GUITVSeries
         {
             return ep[DBEpisode.cSeasonIndex] == 0
                    ? ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty
-                     ? 99999
-                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5
+                     ? 9999 + ep[DBOnlineEpisode.cEpisodeIndex]
+                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 + ((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100
                    : ((int)ep[DBEpisode.cEpisodeIndex]);
         }
 
@@ -535,7 +534,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 string[] orderFields = System.Text.RegularExpressions.Regex.Split(viewSteps[2], ";");
                 thisView.inLineSpecials = orderFields[0] == "<Episode.EpisodeIndex>";
-                thisView.inLineSpecialsAsc = orderFields[0] == "asc";
+                thisView.inLineSpecialsAsc = orderFields[0] != "desc";
                 for (int i = 0; i < orderFields.Length; i += 2)
                 {
                     if(thisView.Type != type.group)
