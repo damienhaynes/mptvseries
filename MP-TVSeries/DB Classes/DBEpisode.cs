@@ -498,7 +498,6 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
-            return false;
             if (Helper.String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
             if (subTitleExtensions.Count == 0)
             {
@@ -535,18 +534,13 @@ namespace WindowPlugins.GUITVSeries
                 subTitleExtensions.Add(".zeg");
                 
             }
-            bool exists = false;
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
-            filenameNoExt = System.IO.Path.GetDirectoryName(this[cFilename]) + "\\" + filenameNoExt;
-            for (int i = 0; i < subTitleExtensions.Count; i++)
+            foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
             {
-                if (System.IO.File.Exists(filenameNoExt + subTitleExtensions[i]))
-                {
-                    exists = true;
-                    break;
-                }
+                System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                if(subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
             }
-            return exists;
+            return false;
         }
 
         public DBOnlineEpisode onlineEpisode
