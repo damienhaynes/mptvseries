@@ -1596,7 +1596,7 @@ namespace MediaPortal.GUI.Video
                     if (item == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
-                        
+                        Fanart.FlushTextures();
                         //FanartBackground.Visible = false;
                         FanartBackground.SetFileName(string.Empty);
                         if (this.dummyIsFanartLoaded != null)
@@ -1613,8 +1613,14 @@ namespace MediaPortal.GUI.Video
                         DBSeries s = item as DBSeries;
                         if (s != null)
                         {
-                            if(f == null || f.SeriesID != s[DBSeries.cID])
-                               f = Fanart.getFanart(s[DBSeries.cID]);
+                            if (f == null || f.SeriesID != s[DBSeries.cID])
+                            {
+                                f = Fanart.getFanart(s[DBSeries.cID]);
+                                if (f != null)
+                                {
+                                    f.FlushTexture();
+                                }
+                            }
                             // else we came back from season, we want the same fanart again
 
                            currSeriesFanart = f;

@@ -100,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
 
             // WARNING: this naturally only works if the ordering is by season/episodeOrder
             // inline the special episodes to there relevant positions (Season == 0 by airsbefore_episode)
-            if (steps[stepIndex].inLineSpecials && currentStepSelection.Length >= stepIndex -1 && currentStepSelection[stepIndex -1] != "0")
+            if (steps[stepIndex].inLineSpecials && currentStepSelection[currentStepSelection.Length - 1] != "0")
             {
                 if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
                 Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
