@@ -121,6 +121,76 @@ namespace WindowPlugins.GUITVSeries
                    : ((int)ep[DBEpisode.cEpisodeIndex]);
         }
 
+        /*
+         * Returns a list of all episodes that are available from the specified level with the
+         * given currentStepSelection (the selection from the previous level).
+         */
+        public List<DBEpisode> getAllEpisodesForStep(int stepIndex, string[] currentStepSelection)
+        {
+            // make sure we have been given a valid step number
+            if ((stepIndex >= steps.Count) || (stepIndex < 0))
+                return null;
+
+            // our return object
+            List<DBEpisode> episodeList = new List<DBEpisode>();
+
+            // determine which level we are at, and if we are not at the episode level
+            // make recursive calls to step down to the next level for each possible selection
+            // adding the return results (a list of episodes) to the episodeList
+            logicalViewStep.type stepType = gettypeOfStep(stepIndex);
+            switch (stepType)
+            {
+
+                // if we are at the group level we need to go deeper, so just request all
+                // episodes for each visible group and add them all to the list
+                case logicalViewStep.type.group:
+                    List<String> groupList = getGroupItems(stepIndex, currentStepSelection);
+                    foreach (String currGroupName in groupList)
+                    {
+                        string[] stepSelection = new string[] { currGroupName };
+                        List<DBEpisode> episodeSubset = getAllEpisodesForStep(stepIndex + 1, stepSelection);
+                        if (episodeSubset != null)
+                            episodeList.AddRange(episodeSubset);
+                    }
+                    return episodeList;
+
+                // if we are at the series level, we need to go deeper
+                case logicalViewStep.type.series:
+                    List<DBSeries> seriesList = getSeriesItems(stepIndex, currentStepSelection);
+                    foreach (DBSeries currSeries in seriesList)
+                    {
+                        string[] stepSelection = new string[] { currSeries[DBSeries.cID].ToString() };
+                        List<DBEpisode> episodeSubset = getAllEpisodesForStep(stepIndex + 1, stepSelection);
+                        if (episodeSubset != null)
+                            episodeList.AddRange(episodeSubset);
+                    }
+                    return episodeList;
+
+                // keep digging!
+                case logicalViewStep.type.season:
+                    List<DBSeason> seasonList = getSeasonItems(stepIndex, currentStepSelection);
+                    foreach (DBSeason currSeason in seasonList)
+                    {
+                        string[] stepSelection = new string[] { currSeason[DBSeason.cSeriesID].ToString(), currSeason[DBSeason.cIndex].ToString() };
+                        List<DBEpisode> episodeSubset = getAllEpisodesForStep(stepIndex + 1, stepSelection);
+                        if (episodeSubset != null)
+                            episodeList.AddRange(episodeSubset);
+                    }
+                    return episodeList;
+
+                // something we know. return the list of episodes visible at the given level
+                case logicalViewStep.type.episode:
+                    episodeList = getEpisodeItems(stepIndex, currentStepSelection);
+                    return episodeList;
+            }
+
+            // we should never get to this point. this indicates there 
+            // is a new, unaccounted for step type.
+            MPTVSeriesLog.Write("WARNING: Unhandled logicalViewStep.type enum in logicalView.getAllEpisodesForStep()");
+            return null;
+        }
+
+
         public List<string> getGroupItems(int stepIndex, string[] currentStepSelection) // in nested groups, eg. Networks-Genres-.. we also need selections
         {
             SQLCondition conditions = null;
