@@ -849,7 +849,6 @@ namespace MediaPortal.GUI.Video
             actionLocalScan,
             actionFullRefresh,
             actionPlayRandom,
-            actionPlayRandomUnwatched,
             optionsOnlyShowLocal,
             optionsPreventSpoilers,
             actionRecheckMI
@@ -1047,10 +1046,6 @@ namespace MediaPortal.GUI.Video
                                 pItem = new GUIListItem(Translation.Play_Random_Episode);
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionPlayRandom;
-
-                                pItem = new GUIListItem(Translation.Play_Random_First_Unwatched_Episode);
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.actionPlayRandomUnwatched;
 
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                                 if (dlg.SelectedId != -1)
@@ -1401,11 +1396,7 @@ namespace MediaPortal.GUI.Video
                         break;
 
                     case (int)eContextItems.actionPlayRandom:
-                        playRandomEp(false);
-                        break;
-
-                    case (int)eContextItems.actionPlayRandomUnwatched:
-                        playRandomEp(true);
+                        playRandomEp();
                         break;
 
                     case (int)eContextItems.optionsOnlyShowLocal:
@@ -2044,66 +2035,16 @@ namespace MediaPortal.GUI.Video
             }
         }
 
-        private void playRandomEp(bool firstUnwatchedOnly)
+        private void playRandomEp()
         {
-            List<DBEpisode> validEps = new List<DBEpisode>();
-            SQLCondition conditions = new SQLCondition();
-            if (!firstUnwatchedOnly)
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(true), SQLConditionType.Equal);
-            switch (this.listLevel)
-            {
-                case Listlevel.Episode:
-                    {
-                        // pick one from the current series/season only
-                        if (firstUnwatchedOnly)
-                        {
-                            validEps.Add(DBEpisode.GetFirstUnwatched(Convert.ToInt32((string)m_SelectedSeries[DBSeries.cID]), Convert.ToInt32((string)m_SelectedSeason[DBSeason.cIndex])));
-                            break;
-                        }
-                        else
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, new DBValue((string)m_SelectedSeason[DBSeason.cIndex]), SQLConditionType.Equal);
-                        goto case Listlevel.Season; // also add the series condition
-                    }
-                case Listlevel.Season:
-                    {
-                        // pick one from the current series only
-                        if (firstUnwatchedOnly)
-                            validEps.Add(DBEpisode.GetFirstUnwatched(Convert.ToInt32((string)m_SelectedSeries[DBSeries.cID])));
-                        else
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue((string)m_SelectedSeries[DBSeries.cID]), SQLConditionType.Equal);
-                        break;
-                    }
-                default:
-                    if (firstUnwatchedOnly)
-                        validEps = DBEpisode.GetFirstUnwatched();
-                    break;
-            }
-            if (!firstUnwatchedOnly)
-                validEps = DBEpisode.Get(conditions);
+            List<DBEpisode> episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep, m_stepSelection);
+            DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count)];
 
-            DBEpisode pickedEp;
+            MPTVSeriesLog.Write("Randomly Selected: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
-            if (validEps != null && validEps.Count > 0)
-            {
-                if (validEps.Count > 1)
-                    pickedEp = validEps[new Random().Next(0, validEps.Count)];
-                else
-                    pickedEp = validEps[0];
-            }
-            else
-                return;
-            if (m_VideoHandler.ResumeOrPlay(pickedEp))
-            {
-                SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cFilename, pickedEp[DBEpisode.cFilename], SQLConditionType.Equal);
-                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                foreach (DBEpisode episode in episodes)
-                {
-                    episode[DBOnlineEpisode.cWatched] = 1;
-                    episode.Commit();
-                }
-                this.LoadFacade();
-            }
+            // removed the if statement here to mimic functionality when an episode is selected
+            // via the regular UI, since watched flag is now set after viewing (is this right?)
+            m_VideoHandler.ResumeOrPlay(selectedEpisode);
         }
 
         private void setProcessAnimationStatus(bool enable)
