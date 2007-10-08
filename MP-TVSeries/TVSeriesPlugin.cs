@@ -207,6 +207,9 @@ namespace MediaPortal.GUI.Video
         [SkinControlAttribute(1235)]
         protected GUILabelControl dummyFacadeListMode = null;
 
+        [SkinControlAttribute(1236)]
+        protected GUILabelControl dummyThumbnailGraphicalMode = null;
+
         #endregion
 
         enum Listlevel
@@ -343,7 +346,19 @@ namespace MediaPortal.GUI.Video
 
         void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {
-            this.m_Facade.View = mode;
+            if (this.dummyThumbnailGraphicalMode == null || mode == GUIFacadeControl.ViewMode.List)
+            {
+                this.m_Facade.View = mode;
+            }
+            else 
+            {
+                if (mode == GUIFacadeControl.ViewMode.AlbumView)
+                {
+                    MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons");
+                    this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                }
+                this.dummyThumbnailGraphicalMode.Visible = mode == GUIFacadeControl.ViewMode.AlbumView; // so you can trigger animations
+            }
             if(dummyFacadeListMode != null)
                 this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;            
         }
@@ -387,6 +402,8 @@ namespace MediaPortal.GUI.Video
 
                 this.m_Facade.ListView.Clear();
                 this.m_Facade.AlbumListView.Clear();
+                if(this.m_Facade.ThumbnailView != null)
+                    this.m_Facade.ThumbnailView.Clear();
                 bool bEmpty = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Normal);
                 switch (this.listLevel)
@@ -744,7 +761,7 @@ namespace MediaPortal.GUI.Video
                         OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                     }
                 }
-                GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID);
+                GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
             }
 
             catch (Exception e)
@@ -1528,6 +1545,7 @@ namespace MediaPortal.GUI.Video
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString());
         }
 
+        int thumbnail_last_selected = 0;
         public override void OnAction(Action action)
         {
             switch (action.wID)
@@ -1559,12 +1577,45 @@ namespace MediaPortal.GUI.Video
                     }
                     break;
                 case Action.ActionType.ACTION_MOVE_LEFT:
-                    switchView(-1);
-                    LoadFacade();
+                    if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
+                    {
+                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
+                        base.OnAction(action);
+                        if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
+                        {
+                            switchView(-1);
+                            LoadFacade();
+                        }
+                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
+                    }
+                    else
+                    {
+                        switchView(-1);
+                        LoadFacade();
+                    }
+                    
                     break;
                 case Action.ActionType.ACTION_MOVE_RIGHT:
-                    switchView(1);
-                    LoadFacade();
+                    if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
+                    {
+                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
+                        base.OnAction(action);
+                        if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
+                        {
+                            switchView(1);
+                            LoadFacade();
+                            //m_Facade.sele
+                            OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
+                            OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
+                            //GUIControl.FocusItemControl(this.GetID, m_Facade.GetID, m_Facade.SelectedListItemIndex);
+                        }
+                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
+                    }
+                    else
+                    {
+                        switchView(1);
+                        LoadFacade();
+                    }
                     break;
 
                 default:
@@ -1882,7 +1933,7 @@ namespace MediaPortal.GUI.Video
         {
             m_SelectedSeason = null;
             m_SelectedEpisode = null;
-            if (item == null || item.TVTag == null)
+            if (item == null || item.TVTag == null || !(item.TVTag is DBSeries))
                 return;
             DBSeries series = (DBSeries)item.TVTag;
             item.Selected = true;
