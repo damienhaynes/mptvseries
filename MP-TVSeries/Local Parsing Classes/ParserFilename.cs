@@ -151,7 +151,7 @@ namespace WindowPlugins.GUITVSeries
                 int index = 0;
 
                 string _Source;
-                _Source = m_Filename;
+                _Source = m_Filename.ToLower();
                 // run Before replacements
                 foreach (KeyValuePair<string, string> replacement in replacementsBefore)
                     _Source = _Source.Replace(replacement.Key, replacement.Value);

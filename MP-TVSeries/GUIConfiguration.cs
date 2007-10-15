@@ -1604,6 +1604,8 @@ namespace WindowPlugins.GUITVSeries
                                (sFieldName == DBEpisode.cFileSizeBytes && tag.m_Level == FieldTag.Level.Episode));
                             // and prettyPlaytime
                             bValid |= (sFieldName == DBEpisode.cPrettyPlaytime && tag.m_Level == FieldTag.Level.Episode);
+                            // and cFilenameWOPath
+                            bValid |= (sFieldName == DBEpisode.cFilenameWOPath && tag.m_Level == FieldTag.Level.Episode);
 
                             switch (tag.m_Level)
                             {
