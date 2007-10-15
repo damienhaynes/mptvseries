@@ -151,17 +151,40 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                playlistPlayer.Reset();
-                playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_VIDEO_TEMP;
-                PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_VIDEO_TEMP);
-                playlist.Clear();
+                //playlistPlayer.Reset();
+                //playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_VIDEO_TEMP;
+                //PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_VIDEO_TEMP);
+                //playlist.Clear();
 
-                PlayListItem itemNew = new PlayListItem();
-                itemNew.FileName = m_currentEpisode[DBEpisode.cFilename];
-                itemNew.Type = PlayListItem.PlayListItemType.Video;
-                playlist.Add(itemNew);
+                //PlayListItem itemNew = new PlayListItem();
+                //itemNew.FileName = m_currentEpisode[DBEpisode.cFilename];
+                //itemNew.Type = PlayListItem.PlayListItemType.Video;
+                //playlist.Add(itemNew);
 
-                playlistPlayer.Play(0);
+                string filename = m_currentEpisode[DBEpisode.cFilename];
+
+                // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
+                // lets force fullscreen here
+                // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
+                // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
+                // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)
+                GUIGraphicsContext.IsFullScreenVideo = true;
+                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+                g_Player.Play(filename, g_Player.MediaType.Video);
+
+
+                // thnx BakerQ for external player watched flag fix
+                if (DBOption.GetOptions(DBOption.cWatchedAfter) > 0 && m_currentEpisode[DBOnlineEpisode.cWatched] == 0)
+                {
+                    using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
+                    {
+                        if (!xmlreader.GetValueAsBool("movieplayer", "internal", true))
+                        { 
+                            m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
+                            m_currentEpisode.Commit();
+                        }
+                    }
+                }
 
                 if (g_Player.Playing && timeMovieStopped > 0)
                 {

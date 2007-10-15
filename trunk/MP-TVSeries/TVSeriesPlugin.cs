@@ -349,6 +349,8 @@ namespace MediaPortal.GUI.Video
             if (this.dummyThumbnailGraphicalMode == null || mode == GUIFacadeControl.ViewMode.List)
             {
                 this.m_Facade.View = mode;
+                if (this.dummyThumbnailGraphicalMode != null)
+                    dummyThumbnailGraphicalMode.Visible = false;
             }
             else 
             {
@@ -411,6 +413,7 @@ namespace MediaPortal.GUI.Video
                     #region Group
                     case Listlevel.Group:
                         {
+                            ImageAllocator.FlushAll();
                             // these are groups of certain categories, eg. Genres
                             // always list mode
                             setFacadeMode(GUIFacadeControl.ViewMode.List);   
@@ -443,9 +446,13 @@ namespace MediaPortal.GUI.Video
                     #region Series
                     case Listlevel.Series:
                         {
-                            // flush episodes & seasons
-                            ImageAllocator.FlushOthers(false);
-                            ImageAllocator.FlushSeasons();
+                            if (DBOption.GetOptions(DBOption.cRandomBanner)) ImageAllocator.FlushAll();
+                            else
+                            {
+                                // flush episodes & seasons
+                                ImageAllocator.FlushOthers(false);
+                                ImageAllocator.FlushSeasons();
+                            }
 
                             int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
                             int selectedIndex = -1;
@@ -808,7 +815,7 @@ namespace MediaPortal.GUI.Video
                 else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
             else setViewLabels();
-
+            loadFanart(null); // init dummy labels
             LoadFacade();
             m_Facade.Focus = true;
             setProcessAnimationStatus(m_parserUpdaterWorking);
@@ -1639,6 +1646,7 @@ namespace MediaPortal.GUI.Video
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
                         Fanart.FlushTextures();
+                        currSeriesFanart = null;
                         //FanartBackground.Visible = false;
                         FanartBackground.SetFileName(string.Empty);
                         if (this.dummyIsFanartLoaded != null)
@@ -1658,6 +1666,7 @@ namespace MediaPortal.GUI.Video
                             if (f == null || f.SeriesID != s[DBSeries.cID])
                             {
                                 f = Fanart.getFanart(s[DBSeries.cID]);
+                                f.ForceNewPick(); // k, lets get more random then
                                 if (f != null)
                                 {
                                     f.FlushTexture();
@@ -1747,8 +1756,9 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        if (m_VideoHandler.ResumeOrPlay(m_SelectedEpisode))
-                        {
+                        /*if (*/
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);//)
+                        //{
                             // AB: I put back this code as it was before, as if I watch one local episode I think it's safe to consider all local episodes watched
 
                             //-- Jon: isWatched check now happens on stopping (VideoHandler.OnPlayBackStopped)
@@ -1764,7 +1774,7 @@ namespace MediaPortal.GUI.Video
                              * this.LoadFacade();
                              * this.OnPageLoad();
                              */
-                        }
+                        //}
                         break;
                 }
             }

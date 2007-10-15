@@ -212,6 +212,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cFileSize = "FileSize";
 
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
+        public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
 
         private DBOnlineEpisode m_onlineEpisode = null;
 
@@ -595,6 +596,8 @@ namespace WindowPlugins.GUITVSeries
                         return (this[cAvailableSubtitles] = checkHasSubtitles());
                     case cPrettyPlaytime:
                         return Helper.MSToMMSS(this["localPlaytime"]);
+                    case cFilenameWOPath:
+                        return System.IO.Path.GetFileName(this[cFilename]);
                 }
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
