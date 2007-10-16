@@ -169,7 +169,9 @@ namespace WindowPlugins.GUITVSeries
         }
         public override string ToString()
         {
-            return this[DBOnlineEpisode.cCompositeID] + " - " + this[DBOnlineEpisode.cEpisodeIndex];
+            return "[" + this[DBOnlineEpisode.cSeasonIndex] + "x" + 
+                         this[DBOnlineEpisode.cEpisodeIndex] + "] " + this[cEpisodeName];
+            //return this[DBOnlineEpisode.cCompositeID] + " - " + this[DBOnlineEpisode.cEpisodeIndex];
         }
     };
 

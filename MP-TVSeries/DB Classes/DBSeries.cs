@@ -98,6 +98,19 @@ namespace WindowPlugins.GUITVSeries
             DBOnlineSeries dummy = new DBOnlineSeries();
         }
 
+        // returns a list of all series with nformation stored in the database. 
+        public static List<DBOnlineSeries> getAllSeries() {
+            List<DBValue> seriesIDs = DBOnlineSeries.GetSingleField(DBOnlineSeries.cID, new SQLCondition(), new DBOnlineSeries());
+            List<DBOnlineSeries> rtn = new List<DBOnlineSeries>();
+
+            foreach (DBValue currSeriesID in seriesIDs) {
+                rtn.Add(new DBOnlineSeries(currSeriesID));
+            }
+
+            return rtn;
+        }
+
+
         public DBOnlineSeries()
             : base(cTableName)
         {
@@ -213,7 +226,7 @@ namespace WindowPlugins.GUITVSeries
 
         public override string ToString()
         {
-            return this[cPrettyName] + " (" + this[cID] + ")";
+            return this[cPrettyName]; // +" (" + this[cID] + ")";
         }
     };
 

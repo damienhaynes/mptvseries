@@ -1183,6 +1183,7 @@ namespace WindowPlugins.GUITVSeries
             this.listView_ParsingResults.TabIndex = 0;
             this.listView_ParsingResults.UseCompatibleStateImageBehavior = false;
             this.listView_ParsingResults.View = System.Windows.Forms.View.Details;
+            this.listView_ParsingResults.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_ParsingResults_mouseClick);
             // 
             // panel_ImportPathes
             // 
@@ -3245,7 +3246,7 @@ namespace WindowPlugins.GUITVSeries
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MP-TV Series Configuration v";            
+            this.Text = "MP-TV Series Configuration v";
             this.tabControl_Details.ResumeLayout(false);
             this.tabPage_Details.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
