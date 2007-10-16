@@ -216,6 +216,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
         public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
 
+        public const String cIsOnRemovable = "Removable";
+        public const String cVolumeLabel = "VolumeLabel";
+
         private DBOnlineEpisode m_onlineEpisode = null;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -637,6 +640,8 @@ namespace WindowPlugins.GUITVSeries
                         case cSeasonIndex:
                         case cEpisodeIndex2:
                         case cCompositeID2:
+                        case cIsOnRemovable:
+                        case cVolumeLabel:
                             // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
 

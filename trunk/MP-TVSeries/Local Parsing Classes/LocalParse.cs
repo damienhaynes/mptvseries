@@ -59,6 +59,25 @@ namespace WindowPlugins.GUITVSeries
             e.Result = Parse(files);
         }
 
+        static DBImportPath[] paths = null;
+
+        public static bool isOnRemovable(string filename)
+        {
+            if (paths == null) paths = DBImportPath.GetAll();
+            foreach (DBImportPath path in paths)
+            {
+                if (path[DBImportPath.cRemovable] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
+            }
+            return false;
+        }
+
+        public static string getDiskID(string filename)
+        {
+            System.IO.DriveInfo di = new System.IO.DriveInfo(filename);
+            if (di != null) return di.VolumeLabel;
+            return string.Empty;
+        }
+
         public static List<parseResult> Parse(List<PathPair> files)
         {
             return Parse(files, true);
@@ -71,9 +90,24 @@ namespace WindowPlugins.GUITVSeries
             int nFailed = 0;
             FilenameParser parser = null;
             ListViewItem item = null;
+            paths = null;
             foreach (PathPair file in files)
             {
                 parser = new FilenameParser(file.sMatch_FileName);
+                try
+                {
+                    if (isOnRemovable(file.sFull_FileName))
+                    {
+                        parser.Matches.Add(DBEpisode.cIsOnRemovable, "1");
+                        parser.Matches.Add(DBEpisode.cVolumeLabel, getDiskID(file.sFull_FileName));
+                    }
+                    else parser.Matches.Add(DBEpisode.cIsOnRemovable, "0");
+                }
+                catch (Exception)
+                {
+                    MPTVSeriesLog.Write("Warning: Could not add VolumenLabel/IsOnRemovable Property to episode - are you using these as a capture group?");
+                }
+
                 item = new ListViewItem(file.sMatch_FileName);
                 item.UseItemStyleForSubItems = true;
                 

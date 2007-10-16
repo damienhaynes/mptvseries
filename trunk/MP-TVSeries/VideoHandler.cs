@@ -108,6 +108,34 @@ namespace WindowPlugins.GUITVSeries
 
                 m_currentEpisode = episode;
 
+                bool isOnRemovable = false;
+                if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
+                else if(episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
+                {
+                    isOnRemovable = LocalParse.isOnRemovable(episode[DBEpisode.cFilename]);
+                    episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
+                    if (isOnRemovable) episode[DBEpisode.cVolumeLabel] = LocalParse.getDiskID(episode[DBEpisode.cFilename]);
+                    episode.Commit();
+                }
+
+                if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                {
+                    // ask the user to input cd/dvd whatever
+                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                    if (null == dlgOK)
+                        return false;
+                    dlgOK.SetHeading(Translation.insertDisk);
+                    dlgOK.SetLine(1, string.Empty);
+                    dlgOK.SetLine(2, m_currentEpisode[DBEpisode.cVolumeLabel].ToString());
+                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+
+                    if (!System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                    {
+                        return false; // still not found, return to list
+                    }
+
+                }
+                    
                 byte[] resumeData = null; // I don't even need resumeData?
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 

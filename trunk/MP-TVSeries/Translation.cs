@@ -93,6 +93,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
         public static string updateMI = "Update Mediainfo of local file(s)";
+        public static string insertDisk = "Please insert Disk";
 
 
         #endregion
