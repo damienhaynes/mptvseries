@@ -34,6 +34,8 @@ using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
 using WindowPlugins.GUITVSeries;
+using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
+
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -47,6 +49,9 @@ namespace WindowPlugins.GUITVSeries
         private TreeNode nodeEdited = null;
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
+
+        private MenuItem manuallyAddEpisodeMI;
+        private ContextMenu parsingTestPopup;
 
         private DBSeries m_SeriesReference = new DBSeries(true);
         private DBSeason m_SeasonReference = new DBSeason();
@@ -79,6 +84,11 @@ namespace WindowPlugins.GUITVSeries
                 System.Drawing.Size s = new Size(width, height);
                 this.Size = s;
             }
+
+            // initialize the context menu for the parsing test window
+            manuallyAddEpisodeMI = new MenuItem("Manually Add Episode", new System.EventHandler(manuallyAddEpisodeMI_Click));
+            parsingTestPopup = new ContextMenu();
+            parsingTestPopup.MenuItems.Add(manuallyAddEpisodeMI);
 
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
@@ -771,8 +781,6 @@ namespace WindowPlugins.GUITVSeries
                 ListViewItem item = new ListViewItem(progress.match_filename);
                 item.SubItems[0].Name = listView_ParsingResults.Columns[0].Name;
 
-
-
                 foreach (ColumnHeader column in listView_ParsingResults.Columns)
                 {
                     if (column.Index > 0)
@@ -786,6 +794,12 @@ namespace WindowPlugins.GUITVSeries
                         item.SubItems.Add(subItem);
                     }
                 }
+
+                // add in the full filename as a subitem of the list item. this is not used for the
+                // actual list but is needed by the manual parser that is launched from a list listener
+                ListViewItem.ListViewSubItem fullFileName = new ListViewItem.ListViewSubItem(item, progress.full_filename);
+                fullFileName.Name = "FullFileName";
+                item.SubItems.Add(fullFileName);
 
                 if (progress.failedSeason)
                 {
@@ -882,7 +896,30 @@ namespace WindowPlugins.GUITVSeries
             runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler(TestParsing_LocalParseCompleted);
             runner.AsyncFullParse();
         }
+
+        // lanches the manual parse dialog
+        private void manuallyAddEpisodeMI_Click(object sender, EventArgs e) {
+            foreach (ListViewItem currItem in listView_ParsingResults.SelectedItems) {
+                string filename = currItem.SubItems["FullFileName"].Text;
+
+                ManualParseDialog parseDialog = new ManualParseDialog(filename);
+                DialogResult result = parseDialog.ShowDialog(this);
+
+                // refresh the tree socanges are visible
+                if (result == DialogResult.OK)
+                    this.LoadTree();
+            }
+            
+        }
+        
+        // launches the context menu for the parse tester on a right click
+        private void listView_ParsingResults_mouseClick(object sender, MouseEventArgs mouseEvent) {
+            if (mouseEvent.Button == MouseButtons.Right && sender == listView_ParsingResults) 
+                parsingTestPopup.Show((Control)sender, mouseEvent.Location);
+        }
+
         #endregion
+
 
 
         private void Parsing_Start()

@@ -710,84 +710,7 @@ namespace WindowPlugins.GUITVSeries
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];
                 while (!bDone)
                 {
-                    GetSeries GetSeriesParser = new GetSeries(sSeriesNameToSearch);
-
-                    MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + sSeriesNameToSearch);
-                    // find out if our name is found in multiple results
-                    int exactMatchIndex = -1;
-                    int index = 0;
-                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
-                    {
-                        // make sure it has a status for an exact match
-                        if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
-                             (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(sSeriesNameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(sSeriesNameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            exactMatchIndex = index;
-                        }
-                        index++;
-                    }
-
-                    DBOnlineSeries UserChosenSeries = null;
-                    if (GetSeriesParser.Results.Count > 0 && exactMatchIndex != -1 && exactMatchIndex < GetSeriesParser.Results.Count)
-                        UserChosenSeries = GetSeriesParser.Results[exactMatchIndex];
-
-                    if (m_bNoExactMatch || exactMatchIndex == -1 || DBOption.GetOptions(DBOption.cAutoChooseSeries) == 0)
-                    {
-                        // User has three choices:
-                        // 1) Pick a series from the list
-                        // 2) Simply skip
-                        // 3) Skip and never ask for this series again
-
-                        List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                        foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
-                            Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "First Aired: " + onlineSeries["FirstAired"] + "\r\nOverview:\r\n" + onlineSeries[DBOnlineSeries.cSummary], onlineSeries));
-
-                        if (Choices.Count == 0)
-                            Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));
-
-                        Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
-                        descriptor.m_sTitle = "Unable to find matching series";
-                        descriptor.m_sItemToMatchLabel = "Local series:";
-                        descriptor.m_sItemToMatch = sSeriesNameToSearch;
-                        descriptor.m_sListLabel = "Choose the correct series from this list:";
-                        descriptor.m_List = Choices;
-                        descriptor.m_sbtnCancelLabel = "Skip this time";
-                        descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
-
-                        Feedback.CItem Selected = null;
-                        Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
-                        switch (result)
-                        {
-                            case Feedback.ReturnCode.Cancel:
-                                UserChosenSeries = null;
-                                bDone = true;
-                                break;
-
-                            case Feedback.ReturnCode.Ignore:
-                                UserChosenSeries = null;
-                                series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
-                                series[DBSeries.cHidden] = true;
-                                series.Commit();
-                                bDone = true;
-                                break;
-
-                            case Feedback.ReturnCode.OK:
-                                DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-                                if (sSeriesNameToSearch != Selected.m_sName)
-                                {
-                                    sSeriesNameToSearch = Selected.m_sName;
-                                    UserChosenSeries = null;
-                                }
-                                else
-                                {
-                                    UserChosenSeries = selectedSeries;
-                                    bDone = true;
-                                }
-                                break;
-                        }
-                    }
-                    else
-                        bDone = true;
+                    DBOnlineSeries UserChosenSeries = SearchForSeries(sSeriesNameToSearch);
 
                     if (UserChosenSeries != null) // make sure selection was not cancelled
                     {
@@ -876,6 +799,76 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                     }
+                }
+            }
+        }
+
+        public DBOnlineSeries SearchForSeries(string seriesName) {
+            string nameToSearch = seriesName;
+            
+            while (true) {
+                // query online db for possible matches
+                GetSeries GetSeriesParser = new GetSeries(nameToSearch);
+                MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + nameToSearch);
+
+                // try to find an exact match in our results, if found, return
+                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
+                    if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
+                         (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(nameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase))) {
+                        return onlineSeries;
+                    }
+                }
+
+                // if we found no exact match but we have auto-select turned on, use the first in the list
+                if (GetSeriesParser.Results.Count > 0 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
+                    return GetSeriesParser.Results[0];
+                }
+
+                // User has three choices:
+                // 1) Pick a series from the list
+                // 2) Simply skip
+                // 3) Skip and never ask for this series again
+
+                List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
+                    Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "First Aired: " + onlineSeries["FirstAired"] + "\r\nOverview:\r\n" + onlineSeries[DBOnlineSeries.cSummary], onlineSeries));
+
+                if (Choices.Count == 0)
+                    Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));
+
+                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                descriptor.m_sTitle = "Unable to find matching series";
+                descriptor.m_sItemToMatchLabel = "Local series:";
+                descriptor.m_sItemToMatch = nameToSearch;
+                descriptor.m_sListLabel = "Choose the correct series from this list:";
+                descriptor.m_List = Choices;
+                descriptor.m_sbtnCancelLabel = "Skip this time";
+                descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
+
+                Feedback.CItem Selected = null;
+                Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
+                switch (result) {
+                    case Feedback.ReturnCode.Cancel:
+                        return null;
+                        break;
+
+                    case Feedback.ReturnCode.Ignore:
+                        nameToSearch = null;
+                        DBSeries series = new DBSeries(seriesName);
+                        series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
+                        series[DBSeries.cHidden] = true;
+                        series.Commit();
+                        return null;
+                        break;
+
+                    case Feedback.ReturnCode.OK:
+                        DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
+                        if (nameToSearch != Selected.m_sName) 
+                            nameToSearch = Selected.m_sName;
+                        else 
+                            return selectedSeries;
+                        break;
+
                 }
             }
         }
@@ -1074,7 +1067,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void UpdateSeries(bool bUpdateNewSeries)
+        public void UpdateSeries(bool bUpdateNewSeries)
         {
             long nUpdateSeriesTimeStamp = 0;
             // now retrieve the info about the series
@@ -1184,7 +1177,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void UpdateBanners(bool bUpdateNewSeries)
+        public void UpdateBanners(bool bUpdateNewSeries)
         {
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( > 0)
@@ -1326,7 +1319,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void UpdateEpisodes(bool bUpdateNewEpisodes)
+        public void UpdateEpisodes(bool bUpdateNewEpisodes)
         {
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( != 0)

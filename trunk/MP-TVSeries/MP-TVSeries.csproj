@@ -112,6 +112,12 @@
       <DependentUpon>loadingDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Local Parsing Classes\LocalParse.cs" />
+    <Compile Include="Local Parsing Classes\ManualParseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Local Parsing Classes\ManualParseDialog.Designer.cs">
+      <DependentUpon>ManualParseDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="localLogos.cs" />
     <Compile Include="logoConfigurator.cs">
       <SubType>Form</SubType>
@@ -183,6 +189,10 @@
     <EmbeddedResource Include="loadingDisplay.resx">
       <SubType>Designer</SubType>
       <DependentUpon>loadingDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ManualParseDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="logoConfigurator.resx">
       <DependentUpon>logoConfigurator.cs</DependentUpon>

@@ -50,6 +50,10 @@ namespace WindowPlugins.GUITVSeries
             Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp, default(DateTime));
         }
 
+        public GetEpisodes(int nSeriesID) {
+            Work(nSeriesID, -1, -1, 0, default(DateTime));
+        }
+
         public GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)
         {
             Work(nSeriesID, nSeasonIndex, nEpisodeIndex, 0, default(DateTime));
@@ -63,7 +67,14 @@ namespace WindowPlugins.GUITVSeries
         public void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
-            string choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
+            string choosenOrdering;
+            
+            DBSeries localSeries = DBSeries.Get(nSeriesID, false);
+            if (localSeries != null)
+                choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
+            else
+                choosenOrdering = "Aired";
+
             if (nEpisodeIndex != -1 && nSeasonIndex != -1)
                 nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex, choosenOrdering);
             else if (!firstAired.Equals(default(DateTime)))
