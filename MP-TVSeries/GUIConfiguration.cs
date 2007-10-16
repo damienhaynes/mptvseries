@@ -350,6 +350,11 @@ namespace WindowPlugins.GUITVSeries
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_ImportPathes.Columns.Add(columnEnabled);
 
+                DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
+                columnRemovable.Name = DBImportPath.cRemovable;
+                columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_ImportPathes.Columns.Add(columnRemovable);
+
                 DataGridViewButtonColumn columnPath = new DataGridViewButtonColumn();
                 columnPath.Name = DBImportPath.cPath;
                 columnPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -367,6 +372,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
                     row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
+                    row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
             }

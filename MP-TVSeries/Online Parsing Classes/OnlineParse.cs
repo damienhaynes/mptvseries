@@ -159,7 +159,9 @@ namespace WindowPlugins.GUITVSeries
                         watcher.Filter = "*" + extention;
                         watcher.Path = sWatchedFolder;
                         watcher.IncludeSubdirectories = true;
-                        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; // only check for lastwrite .. I believe that's the only thing we're interested in
+                        watcher.NotifyFilter = NotifyFilters.FileName; 
+                        // Inker, I don't think lastwrite is such as good idea if you have your download/recording dir monitored
+                        // only check for lastwrite .. I believe that's the only thing we're interested in
                         watcher.Changed += new FileSystemEventHandler(watcher_Changed);
                         watcher.Created += new FileSystemEventHandler(watcher_Changed);
                         watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
@@ -336,31 +338,35 @@ namespace WindowPlugins.GUITVSeries
 
                         foreach (PathPair pair in m_params.m_files)
                         {
-                            DBEpisode episode = new DBEpisode(pair.sFull_FileName);
-                            // already in?
-                            bool bSeasonFound = false;
-                            foreach (DBSeason season in relatedSeasons)
-                                if (season[DBSeason.cSeriesID] == episode[DBEpisode.cSeriesID] && season[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex])
-                                {
-                                    bSeasonFound = true;
-                                    break;
-                                }
-                            if (!bSeasonFound)
-                                relatedSeasons.Add(new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
+                            if(!LocalParse.isOnRemovable(pair.sFull_FileName))
+                            {
+                                DBEpisode episode = new DBEpisode(pair.sFull_FileName);
+                                
+                                // already in?
+                                bool bSeasonFound = false;
+                                foreach (DBSeason season in relatedSeasons)
+                                    if (season[DBSeason.cSeriesID] == episode[DBEpisode.cSeriesID] && season[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex])
+                                    {
+                                        bSeasonFound = true;
+                                        break;
+                                    }
+                                if (!bSeasonFound)
+                                    relatedSeasons.Add(new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
 
-                            bool bSeriesFound = false;
-                            foreach (DBOnlineSeries series in relatedSeries)
-                                if (series[DBOnlineSeries.cID] == episode[DBEpisode.cSeriesID])
-                                {
-                                    bSeriesFound = true;
-                                    break;
-                                }
-                            if (!bSeriesFound)
-                                relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
+                                bool bSeriesFound = false;
+                                foreach (DBOnlineSeries series in relatedSeries)
+                                    if (series[DBOnlineSeries.cID] == episode[DBEpisode.cSeriesID])
+                                    {
+                                        bSeriesFound = true;
+                                        break;
+                                    }
+                                if (!bSeriesFound)
+                                    relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
 
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.sFull_FileName, SQLConditionType.Equal);
-                            DBEpisode.Clear(condition);
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.sFull_FileName, SQLConditionType.Equal);
+                                DBEpisode.Clear(condition);
+                            }
                         }
 
                         // now go over the touched seasons & series
@@ -441,6 +447,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+                            condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
                             DBEpisode.Clear(condition);
                         }
                         // and copy the HasLocalFileTemp value into the real one
@@ -586,17 +593,6 @@ namespace WindowPlugins.GUITVSeries
                     i--;
                 }
             }
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
-            //parsedFiles.AddRange(parsedFiles);
 
             UpdateStatus(updateStatusEps);
             MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
