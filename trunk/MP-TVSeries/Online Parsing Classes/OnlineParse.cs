@@ -694,8 +694,7 @@ namespace WindowPlugins.GUITVSeries
             else
                 MPTVSeriesLog.Write("No Series without an online ID found");
 
-            foreach (DBSeries series in seriesList)
-            {
+            foreach (DBSeries series in seriesList) {
                 if (worker.CancellationPending)
                     return;
 
@@ -704,98 +703,90 @@ namespace WindowPlugins.GUITVSeries
 
                 bool bDone = false;
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];
-                while (!bDone)
-                {
-                    DBOnlineSeries UserChosenSeries = SearchForSeries(sSeriesNameToSearch);
 
-                    if (UserChosenSeries != null) // make sure selection was not cancelled
+                DBOnlineSeries UserChosenSeries = SearchForSeries(sSeriesNameToSearch);
+                MPTVSeriesLog.Write(UserChosenSeries.ToString() + " " + UserChosenSeries[DBSeries.cID]);
+
+                if (UserChosenSeries != null) // make sure selection was not cancelled
                     {
-                        // set the ID on the current series with the one from the chosen one
-                        // we need to update all depending items - seasons & episodes
-                        List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);
-                        foreach (DBSeason season in seasons)
-                            season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+                    // set the ID on the current series with the one from the chosen one
+                    // we need to update all depending items - seasons & episodes
+                    List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);
+                    foreach (DBSeason season in seasons)
+                        season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
-                        SQLCondition setcondition = new SQLCondition();
-                        setcondition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBSeason.Clear(setcondition);
+                    SQLCondition setcondition = new SQLCondition();
+                    setcondition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    DBSeason.Clear(setcondition);
 
-                        setcondition = new SQLCondition();
-                        setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
-                        foreach (DBEpisode episode in episodes)
-                            episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+                    setcondition = new SQLCondition();
+                    setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
+                    foreach (DBEpisode episode in episodes)
+                        episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
-                        setcondition = new SQLCondition();
-                        setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBOnlineEpisode.Clear(setcondition);
+                    setcondition = new SQLCondition();
+                    setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    DBOnlineEpisode.Clear(setcondition);
 
-                        int nSeriesID = series[DBSeries.cID];
+                    int nSeriesID = series[DBSeries.cID];
 
-                        // Support different Episode orders (dvd/aired/absolute, etc)
-                        try
-                        {
-                            series[DBOnlineSeries.cEpisodeOrders] = UserChosenSeries[DBOnlineSeries.cEpisodeOrders];
-                            List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-                            if (episodeOrders.Count > 1)
-                            {
-                                // let the user choose
-                                List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                                foreach (string orderOption in episodeOrders)
-                                    Choices.Add(new Feedback.CItem(orderOption, orderOption, orderOption));
+                    // Support different Episode orders (dvd/aired/absolute, etc)
+                    try {
+                        series[DBOnlineSeries.cEpisodeOrders] = UserChosenSeries[DBOnlineSeries.cEpisodeOrders];
+                        List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+                        if (episodeOrders.Count > 1) {
+                            // let the user choose
+                            List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                            foreach (string orderOption in episodeOrders)
+                                Choices.Add(new Feedback.CItem(orderOption, orderOption, orderOption));
 
-                                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
-                                descriptor.m_sTitle = "Multiple ordering Options detected";
-                                descriptor.m_sItemToMatchLabel = "Order Option";
-                                descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
-                                descriptor.m_sListLabel = "Choose the desired Order Option from the list:";
-                                descriptor.m_List = Choices;
-                                //descriptor.m_sbtnCancelLabel = "Skip this time";
-                                //descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
+                            Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                            descriptor.m_sTitle = "Multiple ordering Options detected";
+                            descriptor.m_sItemToMatchLabel = "Order Option";
+                            descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
+                            descriptor.m_sListLabel = "Choose the desired Order Option from the list:";
+                            descriptor.m_List = Choices;
+                            //descriptor.m_sbtnCancelLabel = "Skip this time";
+                            //descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
 
-                                Feedback.CItem selectedOrdering = null;
-                                Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
-                                if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK)
-                                {
-                                    series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
-                                }
+                            Feedback.CItem selectedOrdering = null;
+                            Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
+                            if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK) {
+                                series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
                             }
-
                         }
-                        catch (Exception)
-                        {
 
-                        }
-                        // End support for ordering
+                    }
+                    catch (Exception) {
 
-                        series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
-                        series.Commit();
+                    }
+                    // End support for ordering
 
-                        setcondition = new SQLCondition();
-                        setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
-                        DBOnlineSeries.Clear(setcondition);
+                    series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
+                    series.Commit();
 
-                        // only keep one local dbseries marked as non dupe
-                        setcondition = new SQLCondition();
-                        setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
-                        List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
-                        bool bFirst = true;
-                        foreach (DBSeries seriesDupeSet in seriesDupeSetList)
-                        {
-                            if (bFirst)
-                            {
-                                seriesDupeSet[DBSeries.cDuplicateLocalName] = 0;
-                                seriesDupeSet.Commit();
-                                bFirst = false;
-                            }
-                            else
-                            {
-                                seriesDupeSet[DBSeries.cDuplicateLocalName] = 1;
-                                seriesDupeSet.Commit();
-                            }
+                    setcondition = new SQLCondition();
+                    setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
+                    DBOnlineSeries.Clear(setcondition);
+
+                    // only keep one local dbseries marked as non dupe
+                    setcondition = new SQLCondition();
+                    setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
+                    List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
+                    bool bFirst = true;
+                    foreach (DBSeries seriesDupeSet in seriesDupeSetList) {
+                        if (bFirst) {
+                            seriesDupeSet[DBSeries.cDuplicateLocalName] = 0;
+                            seriesDupeSet.Commit();
+                            bFirst = false;
+                        } else {
+                            seriesDupeSet[DBSeries.cDuplicateLocalName] = 1;
+                            seriesDupeSet.Commit();
                         }
                     }
                 }
+                
             }
         }
 
@@ -808,17 +799,13 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + nameToSearch);
 
                 // try to find an exact match in our results, if found, return
-                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
-                    if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
-                         (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(nameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase))) {
-                        return onlineSeries;
+                if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1)
+                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
+                        if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
+                           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(nameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase))) {
+                            return onlineSeries;
+                        }
                     }
-                }
-
-                // if we found no exact match but we have auto-select turned on, use the first in the list
-                if (GetSeriesParser.Results.Count > 0 && DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
-                    return GetSeriesParser.Results[0];
-                }
 
                 // User has three choices:
                 // 1) Pick a series from the list

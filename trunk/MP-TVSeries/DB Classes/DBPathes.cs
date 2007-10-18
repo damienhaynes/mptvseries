@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
             AddColumn(cPath, new DBField(DBField.cTypeString));
-            AddColumn(cPath, new DBField(DBField.cTypeInt));
+            AddColumn(cRemovable, new DBField(DBField.cTypeInt));
         }
 
         public static void ClearAll()
