@@ -13,8 +13,11 @@ namespace WindowPlugins.GUITVSeries {
     public partial class ManualEpisodeManagementPane : UserControl {
         ConfigurationForm owner;
 
-        public ManualEpisodeManagementPane(ConfigurationForm owner) {
+        public ManualEpisodeManagementPane() {
             InitializeComponent();
+        }
+
+        public void SetOwner(ConfigurationForm owner) {
             this.owner = owner;
         }
 
@@ -125,10 +128,6 @@ namespace WindowPlugins.GUITVSeries {
         private void fileListView_mouseClick(object sender, MouseEventArgs mouseEvent) {
             if (mouseEvent.Button == MouseButtons.Right && sender == fileListView)
                 fileListContextMenu.Show((Control)sender, mouseEvent.Location);
-        }
-
-        void ManualEpisodeManagementPane_VisibleChanged(object sender, System.EventArgs e) {
-            if (this.Visible && fileListView.Items.Count == 0) refreshFileList();
         }
 
         private void refreshFileListButton_Click(object sender, EventArgs e) {

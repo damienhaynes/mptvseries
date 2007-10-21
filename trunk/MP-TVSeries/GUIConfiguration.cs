@@ -90,6 +90,8 @@ namespace WindowPlugins.GUITVSeries
                 this.Size = s;
             }
 
+            panel_manualEpisodeManagement.SetOwner(this);
+            
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
             InitExtraTreeAndPanes();
@@ -609,6 +611,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     dataGridView_ImportPathes.Rows.Add();
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
                 }
 
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
@@ -1307,6 +1310,8 @@ namespace WindowPlugins.GUITVSeries
             // special behavior for some nodes
             if (e.Node.Name == panel_ParsingTest.Name)
                 TestParsing_Start(false);
+            if (e.Node.Name == this.panel_manualEpisodeManagement.Name)
+                panel_manualEpisodeManagement.refreshFileList();
         }
 
         private void button_Start_Click(object sender, EventArgs e)
