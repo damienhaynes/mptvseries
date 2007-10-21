@@ -16,6 +16,8 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         private static List<DBOnlineEpisode> allEpisodes;
         private static List<DBOnlineSeries> allSeries;
 
+        private bool checkingForSeries = false;
+
         private const string SERIES_HELP_MESSAGE = "For an unlisted series, type series name here...";
 
         // launches the dialog with no default information specified
@@ -244,7 +246,12 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         private void checkForNewSeries() {
             if (seriesComboBox.Text == SERIES_HELP_MESSAGE)
                 return;
-            
+
+            if (checkingForSeries)
+                return;
+
+            checkingForSeries = true;
+
             DBOnlineSeries selectedSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
             if (seriesComboBox.Text.Length != 0 && seriesComboBox.SelectedItem == null) {
                 OnlineParsing parser = new OnlineParsing((Feedback.Interface)ConfigurationForm.GetInstance());
@@ -270,6 +277,8 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
                     }
                 }
             }
+
+            checkingForSeries = false;
         }
 
         private void filterEpisodeList() {
