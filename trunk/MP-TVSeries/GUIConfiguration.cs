@@ -44,14 +44,13 @@ namespace WindowPlugins.GUITVSeries
 {
     public partial class ConfigurationForm : Form, Feedback.Interface
     {
-        private List<Panel> m_paneListSettings = new List<Panel>();
+        private List<Control> m_paneListSettings = new List<Control>();
         private List<Panel> m_paneListExtra = new List<Panel>();
         private TreeNode nodeEdited = null;
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
 
         private MenuItem manuallyAddEpisodeMI;
-        private ContextMenu parsingTestPopup;
 
         private DBSeries m_SeriesReference = new DBSeries(true);
         private DBSeason m_SeasonReference = new DBSeason();
@@ -64,6 +63,12 @@ namespace WindowPlugins.GUITVSeries
         loadingDisplay load = null;
         List<Language> onlineLanguages = new List<Language>();
         bool initLoading = true;
+
+        private static ConfigurationForm instance = null;
+
+        public static ConfigurationForm GetInstance() {
+            return instance;
+        }
 
         public ConfigurationForm()
         {
@@ -85,11 +90,6 @@ namespace WindowPlugins.GUITVSeries
                 this.Size = s;
             }
 
-            // initialize the context menu for the parsing test window
-            manuallyAddEpisodeMI = new MenuItem("Manually Add Episode", new System.EventHandler(manuallyAddEpisodeMI_Click));
-            parsingTestPopup = new ContextMenu();
-            parsingTestPopup.MenuItems.Add(manuallyAddEpisodeMI);
-
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
             InitExtraTreeAndPanes();
@@ -99,6 +99,8 @@ namespace WindowPlugins.GUITVSeries
             initLoading = false;
             LoadTree();
             if(load != null) load.Close();
+
+            instance = this;
         }
 
 
@@ -114,8 +116,9 @@ namespace WindowPlugins.GUITVSeries
             m_paneListSettings.Add(panel_StringReplacements);
             m_paneListSettings.Add(panel_ParsingTest);
             m_paneListSettings.Add(panel_OnlineData);
+            m_paneListSettings.Add(panel_manualEpisodeManagement);
 
-            foreach (Panel pane in m_paneListSettings)
+            foreach (Control pane in m_paneListSettings)
             {
                 pane.Dock = DockStyle.Fill;
                 pane.Visible = false;
@@ -256,7 +259,7 @@ namespace WindowPlugins.GUITVSeries
             nodeChild.Name = panel_newssearch.Name;
             nodeRoot.Nodes.Add(nodeChild);
 
-            foreach (Panel pane in m_paneListExtra)
+            foreach (Control pane in m_paneListExtra)
             {
                 pane.Dock = DockStyle.Fill;
                 pane.Visible = false;
@@ -487,7 +490,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void LoadTree()
+        public void LoadTree()
         {
             if (initLoading) return;
             if(null == load) load = new loadingDisplay();
@@ -918,12 +921,6 @@ namespace WindowPlugins.GUITVSeries
             
         }
         
-        // launches the context menu for the parse tester on a right click
-        private void listView_ParsingResults_mouseClick(object sender, MouseEventArgs mouseEvent) {
-            if (mouseEvent.Button == MouseButtons.Right && sender == listView_ParsingResults) 
-                parsingTestPopup.Show((Control)sender, mouseEvent.Location);
-        }
-
         #endregion
 
 
@@ -1297,7 +1294,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            foreach (Panel pane in m_paneListSettings)
+            foreach (Control pane in m_paneListSettings)
             {
                 if (pane.Name == e.Node.Name)
                 {

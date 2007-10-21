@@ -105,6 +105,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
             this.splitContainerImportSettings = new System.Windows.Forms.SplitContainer();
             this.treeView_Settings = new System.Windows.Forms.TreeView();
+            this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane(this);
             this.panel_Expressions = new System.Windows.Forms.Panel();
             this.buildExpr = new System.Windows.Forms.LinkLabel();
             this.resetExpr = new System.Windows.Forms.LinkLabel();
@@ -714,6 +715,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainerImportSettings.Panel2
             // 
+            this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_manualEpisodeManagement);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_Expressions);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_StringReplacements);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_OnlineData);
@@ -732,6 +734,14 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Size = new System.Drawing.Size(151, 592);
             this.treeView_Settings.TabIndex = 0;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
+            // 
+            // panel_manualEpisodeManagement
+            // 
+            this.panel_manualEpisodeManagement.Location = new System.Drawing.Point(4, 432);
+            this.panel_manualEpisodeManagement.Name = "panel_manualEpisodeManagement";
+            this.panel_manualEpisodeManagement.Size = new System.Drawing.Size(200, 143);
+            this.panel_manualEpisodeManagement.TabIndex = 157;
+            this.panel_manualEpisodeManagement.Tag = "Manual Episode Importer";
             // 
             // panel_Expressions
             // 
@@ -1183,7 +1193,6 @@ namespace WindowPlugins.GUITVSeries
             this.listView_ParsingResults.TabIndex = 0;
             this.listView_ParsingResults.UseCompatibleStateImageBehavior = false;
             this.listView_ParsingResults.View = System.Windows.Forms.View.Details;
-            this.listView_ParsingResults.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_ParsingResults_mouseClick);
             // 
             // panel_ImportPathes
             // 
@@ -3552,5 +3561,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel buildExpr;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.ToolTip toolTip_InfoHelp;
+        private ManualEpisodeManagementPane panel_manualEpisodeManagement;
     }
 }
