@@ -12,6 +12,9 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
     public partial class ManualParseDialog : Form {
         private FileInfo videoFile;
         private static Hashtable episodeCache;
+        
+        private static List<DBOnlineEpisode> allEpisodes;
+        private static List<DBOnlineSeries> allSeries;
 
         private const string SERIES_HELP_MESSAGE = "For an unlisted series, type series name here...";
 
@@ -27,9 +30,15 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         public ManualParseDialog(string filename) {
             InitializeComponent();
 
+            if (filename != string.Empty)
+                selectFileButton.Enabled = false;
+
             videoFile = null;
  
             setFile(filename);
+
+            allEpisodes = new List<DBOnlineEpisode>();
+            allSeries = new List<DBOnlineSeries>();
 
             // populate the series dropdown listed with series that currently exist in the DB
             List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
@@ -135,7 +144,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             onlineEp.Commit();
 
             // update detailed online data for new stuff
-            OnlineParsing onlineParser = new OnlineParsing((Feedback.Interface) this.Owner);
+            OnlineParsing onlineParser = new OnlineParsing(ConfigurationForm.GetInstance());
             onlineParser.UpdateSeries(true);
             onlineParser.UpdateBanners(true);
             onlineParser.UpdateEpisodes(true);
@@ -180,23 +189,15 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         private void populateEpisodeList() {
             int selectedSeason;
 
+            allEpisodes.Clear();
+            episodeComboBox.Items.Clear();
+
             // grab the season and series selected
             DBOnlineSeries selectedSeries = (DBOnlineSeries) seriesComboBox.SelectedItem;
-            bool seasonIsValidNum = int.TryParse(seasonComboBox.Text, out selectedSeason);
+            bool filterBySeason = int.TryParse(seasonComboBox.Text, out selectedSeason);
 
-            // if we dont have a valid season and series, exit
-            if (!seasonIsValidNum || selectedSeries == null) {
-                episodeComboBox.Text = "";
-                episodeComboBox.SelectedItem = null;
-                episodeComboBox.Enabled = false;
-                return;
-            }
-
-            // if the series the combobox is returning doesn't match up with the text it is
-            // displaying, fail. for some reason, with a text edit of one additonal char, a 
-            // combo box still returns the last selected item, even though the user manually 
-            // modified the selected value... a bug in .NET?
-            if (selectedSeries[DBOnlineSeries.cPrettyName] != seriesComboBox.Text) {
+            // if we dont have a valid series, exit
+            if (selectedSeries == null) {
                 episodeComboBox.Text = "";
                 episodeComboBox.SelectedItem = null;
                 episodeComboBox.Enabled = false;
@@ -205,15 +206,16 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             // update the entries in the GUI controls
             episodeComboBox.Enabled = true;
-            episodeComboBox.Items.Clear();
             episodeComboBox.SelectedItem = null;
             episodeComboBox.Text = "";
 
             // grab the episodes for the given series and season from the online DB
             List<DBOnlineEpisode> episodeList = this.getEpisodes(selectedSeries);
             foreach (DBOnlineEpisode currEpisode in episodeList) {
-                if ((int)currEpisode[DBOnlineEpisode.cSeasonIndex] == selectedSeason)
+                if (!filterBySeason || (int)currEpisode[DBOnlineEpisode.cSeasonIndex] == selectedSeason) {
                     episodeComboBox.Items.Add(currEpisode);
+                    allEpisodes.Add(currEpisode);
+                }
             }
         }
 
@@ -245,7 +247,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             
             DBOnlineSeries selectedSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
             if (seriesComboBox.Text.Length != 0 && seriesComboBox.SelectedItem == null) {
-                OnlineParsing parser = new OnlineParsing((Feedback.Interface) this.Owner);
+                OnlineParsing parser = new OnlineParsing((Feedback.Interface)ConfigurationForm.GetInstance());
                 DBOnlineSeries newSeries = parser.SearchForSeries(seriesComboBox.Text);
 
                 // if a series was able to be parsed from the custom text, 
@@ -270,13 +272,44 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             }
         }
 
+        private void filterEpisodeList() {
+            int    cursorPos = episodeComboBox.SelectionStart;
+            string typedText = episodeComboBox.Text.ToLower();
+
+            episodeComboBox.BeginUpdate();
+            episodeComboBox.Items.Remove("");
+
+            // go through and only add episodes that match the filtering of the text typed
+            foreach (DBOnlineEpisode currEp in allEpisodes) {
+                string epName = currEp[DBOnlineEpisode.cEpisodeName];
+                if (epName.ToLower().Contains(typedText) && !episodeComboBox.Items.Contains(currEp))
+                    episodeComboBox.Items.Add(currEp);
+                if (!epName.ToLower().Contains(typedText) && episodeComboBox.Items.Contains(currEp))
+                    episodeComboBox.Items.Remove(currEp);
+            }
+
+            episodeComboBox.EndUpdate();
+            episodeComboBox.SelectionStart = cursorPos;
+            Cursor.Show();
+        }
+
+        private void clearEpisodeFilter() {
+            episodeComboBox.BeginUpdate();
+
+            foreach (DBOnlineEpisode currEp in allEpisodes) 
+                if (!episodeComboBox.Items.Contains(currEp))
+                    episodeComboBox.Items.Add(currEp);
+            
+            episodeComboBox.EndUpdate();
+        }
+
         // when an episode is selected, validate the data in the combo boxes and if
         // everything looks ok, enable the OK button
         private void updateOKButton() {
             DBOnlineEpisode onlineEp = (DBOnlineEpisode)episodeComboBox.SelectedItem;
             DBOnlineSeries onlineSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
 
-            if (onlineEp == null || onlineSeries == null)
+            if (onlineEp == null || onlineSeries == null || videoFile == null)
                 okButton.Enabled = false;
             else
                 okButton.Enabled = true;
@@ -292,8 +325,10 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             DialogResult result = openFileDialog.ShowDialog();
 
-            if (result == DialogResult.OK)
+            if (result == DialogResult.OK) {
                 setFile(openFileDialog.FileName);
+                updateOKButton();
+            }
         }
 
         private void seriesComboBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -325,6 +360,21 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
         private void episodeComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             updateOKButton();
+        }
+
+        private void episodeComboBox_TextChanged(object sender, EventArgs e) {
+            if (episodeComboBox.SelectedItem == null ||
+                episodeComboBox.SelectedItem.ToString() != episodeComboBox.Text) {
+
+                filterEpisodeList();
+            }
+                
+        }
+
+        private void episodeComboBox_DropDownClosed(object sender, EventArgs e) {
+            MPTVSeriesLog.Write("count: " + episodeComboBox.Items.Count);
+            if (episodeComboBox.Items.Count > 0 && episodeComboBox.SelectedItem != null)
+                clearEpisodeFilter();
         }
         
         private void okButton_Click(object sender, EventArgs e) {

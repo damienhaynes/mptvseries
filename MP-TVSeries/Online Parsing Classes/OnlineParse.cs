@@ -705,10 +705,11 @@ namespace WindowPlugins.GUITVSeries
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];
 
                 DBOnlineSeries UserChosenSeries = SearchForSeries(sSeriesNameToSearch);
-                MPTVSeriesLog.Write(UserChosenSeries.ToString() + " " + UserChosenSeries[DBSeries.cID]);
 
                 if (UserChosenSeries != null) // make sure selection was not cancelled
                     {
+                    MPTVSeriesLog.Write(UserChosenSeries.ToString() + " " + UserChosenSeries[DBSeries.cID]);
+                    
                     // set the ID on the current series with the one from the chosen one
                     // we need to update all depending items - seasons & episodes
                     List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);

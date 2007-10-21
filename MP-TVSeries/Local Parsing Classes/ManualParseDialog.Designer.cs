@@ -89,9 +89,9 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             this.seriesComboBox.Sorted = true;
             this.seriesComboBox.TabIndex = 4;
             this.seriesComboBox.SelectedIndexChanged += new System.EventHandler(this.seriesComboBox_SelectedIndexChanged);
-            this.seriesComboBox.TextChanged += new System.EventHandler(this.seriesComboBox_TextChanged);
             this.seriesComboBox.LostFocus += new System.EventHandler(this.seriesComboBox_LostFocus);
             this.seriesComboBox.GotFocus += new System.EventHandler(this.seriesComboBox_GotFocus);
+            this.seriesComboBox.TextChanged += new System.EventHandler(this.seriesComboBox_TextChanged);
             // 
             // seasonLabel
             // 
@@ -113,13 +113,16 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // 
             // episodeComboBox
             // 
+            this.episodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.episodeComboBox.Enabled = false;
             this.episodeComboBox.FormattingEnabled = true;
             this.episodeComboBox.Location = new System.Drawing.Point(16, 127);
             this.episodeComboBox.Name = "episodeComboBox";
-            this.episodeComboBox.Size = new System.Drawing.Size(330, 21);
+            this.episodeComboBox.Size = new System.Drawing.Size(330, 190);
             this.episodeComboBox.TabIndex = 10;
             this.episodeComboBox.SelectedIndexChanged += new System.EventHandler(this.episodeComboBox_SelectedIndexChanged);
+            this.episodeComboBox.TextChanged += new System.EventHandler(this.episodeComboBox_TextChanged);
+            this.episodeComboBox.DropDownClosed += new System.EventHandler(this.episodeComboBox_DropDownClosed);
             // 
             // seasonComboBox
             // 
@@ -129,12 +132,12 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             this.seasonComboBox.Name = "seasonComboBox";
             this.seasonComboBox.Size = new System.Drawing.Size(50, 21);
             this.seasonComboBox.TabIndex = 11;
-            this.seasonComboBox.SelectedIndexChanged += new System.EventHandler(seasonComboBox_SelectedIndexChanged);
+            this.seasonComboBox.SelectedIndexChanged += new System.EventHandler(this.seasonComboBox_SelectedIndexChanged);
             // 
             // okButton
             // 
             this.okButton.Enabled = false;
-            this.okButton.Location = new System.Drawing.Point(181, 174);
+            this.okButton.Location = new System.Drawing.Point(181, 322);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(84, 23);
             this.okButton.TabIndex = 12;
@@ -144,7 +147,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(271, 174);
+            this.cancelButton.Location = new System.Drawing.Point(271, 322);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 13;
@@ -156,7 +159,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 215);
+            this.ClientSize = new System.Drawing.Size(363, 357);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.seasonComboBox);
