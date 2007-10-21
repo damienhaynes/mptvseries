@@ -177,7 +177,6 @@ namespace WindowPlugins.GUITVSeries {
             this.Controls.Add(this.fileListView);
             this.Name = "ManualEpisodeManagementPane";
             this.Size = new System.Drawing.Size(662, 369);
-            this.VisibleChanged += new System.EventHandler(this.ManualEpisodeManagementPane_VisibleChanged);
             this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
