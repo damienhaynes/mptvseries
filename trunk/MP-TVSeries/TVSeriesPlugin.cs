@@ -509,16 +509,24 @@ namespace MediaPortal.GUI.Video
                                     if (this.m_SelectedSeries != null)
                                     {
                                         if (series[DBSeries.cID] == this.m_SelectedSeries[DBSeries.cID])
+                                        {
                                             selectedIndex = count;
+                                        }
                                     }
                                     else
                                     {
                                         // select the first that has a file
                                         if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
+                                        {
                                             selectedIndex = count;
+                                            item.Selected = true;
+                                        }
                                     }
                                     if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
+                                    {
                                         selectedIndex = count;
+                                        item.Selected = true;
+                                    }
 
                                     this.m_Facade.Add(item);
                                 }
@@ -529,7 +537,13 @@ namespace MediaPortal.GUI.Video
                                 count++;
                             }
                             if (selectedIndex != -1)
+                            {
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
+
+                                //System.Reflection.FieldInfo fi =
+                                //this.m_Facade.ThumbnailView.GetType().GetField("iItem", System.Reflection.BindingFlags.NonPublic);
+                                //fi.SetValue(this.m_Facade.ThumbnailView, selectedIndex);
+                            }
                         }
                         break;
                     #endregion
@@ -849,10 +863,20 @@ namespace MediaPortal.GUI.Video
 
         void setGUIProperty(guiProperty which, string value)
         {
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which.ToString(), value);
+            setGUIProperty(which.ToString(), value);
+        }
+
+        void setGUIProperty(string which, string value)
+        {
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which, value);
         }
 
         void clearGUIProperty(guiProperty which)
+        {
+            setGUIProperty(which, string.Empty);
+        }
+
+        void clearGUIProperty(string which)
         {
             setGUIProperty(which, string.Empty);
         }
@@ -1937,6 +1961,10 @@ namespace MediaPortal.GUI.Video
             clearGUIProperty(guiProperty.SeriesBanner);
             clearGUIProperty(guiProperty.SeasonBanner);
 
+            clearFieldsForskin("Episode");
+            clearFieldsForskin("Season");
+            clearFieldsForskin("Series");
+
         }
 
         private void Series_OnItemSelected(GUIListItem item)
@@ -1957,6 +1985,12 @@ namespace MediaPortal.GUI.Video
 
             setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
+
+            pushFieldsToSkin(m_SelectedSeries, "Series");
+            pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
+
+            clearFieldsForskin("Episode");
+            clearFieldsForskin("Season");
 
         }
 
@@ -1986,6 +2020,9 @@ namespace MediaPortal.GUI.Video
                     setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
                 else clearGUIProperty(guiProperty.SeriesBanner);
             }
+
+            pushFieldsToSkin(m_SelectedSeason, "Season");
+            clearFieldsForskin("Episode");
         }
         private void Episode_OnItemSelected(GUIListItem item)
         {
@@ -2018,6 +2055,8 @@ namespace MediaPortal.GUI.Video
                     setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
                 else clearGUIProperty(guiProperty.SeasonBanner);
             }
+            pushFieldsToSkin(m_SelectedEpisode, "Episode");
+            pushFieldsToSkin(m_SelectedEpisode.onlineEpisode, "Episode");
         }
 
         public ReturnCode ChooseFromSelection(CDescriptor descriptor, out CItem selected)
@@ -2145,6 +2184,34 @@ namespace MediaPortal.GUI.Video
             m_watcherUpdater = new Watcher(importFolders);
             m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
             m_watcherUpdater.StartFolderWatch();
+        }
+
+        Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
+        private void pushFieldsToSkin(DBTable item, string pre)
+        {
+            if(item == null) return;
+            foreach (KeyValuePair<string, DBField> kv in item.m_fields)
+            {
+                List<string> l = null;
+                if (_allFieldsForSkin.ContainsKey(pre)) l = _allFieldsForSkin[pre];
+                else
+                {
+                    l = new List<string>();
+                    _allFieldsForSkin.Add(pre, l);
+                }
+                if(l!= null && !l.Contains(kv.Key)) l.Add(kv.Key);
+
+                setGUIProperty(pre + "." + kv.Key, kv.Value.Value);
+            }
+        }
+        private void clearFieldsForskin(string pre)
+        {
+            if (_allFieldsForSkin.ContainsKey(pre))
+            {
+                List<string> fields = _allFieldsForSkin[pre];
+                foreach (string field in fields)
+                    clearGUIProperty(field);
+            }
         }
 
         ~TVSeriesPlugin()
