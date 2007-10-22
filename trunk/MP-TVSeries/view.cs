@@ -474,20 +474,21 @@ namespace WindowPlugins.GUITVSeries
             Type lType = table.GetType();
 
             SQLCondition fullSubCond = new SQLCondition();
+                        
             if (logicalViewStep.type.series == Type && (lType != typeof(DBSeries) && lType != typeof(DBOnlineSeries)))
             {
 
                 if (lType == typeof(DBSeason))
                 {
                     fullSubCond.AddCustom(DBSeason.Q(DBSeason.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype);
+                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype, true);
 
                     conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
                 }
                 else
                 {
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                     //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                     conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                 }
@@ -498,7 +499,7 @@ namespace WindowPlugins.GUITVSeries
                 if (lType == typeof(DBOnlineSeries) || lType == typeof(DBSeries))
                 {
                     fullSubCond.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype);
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype, true);
                     conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
                 }
                 else if (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode))
@@ -508,7 +509,7 @@ namespace WindowPlugins.GUITVSeries
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
                     //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                     // we rely on the join in dbseason for this (much, much faster)
-                    conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
+                    conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                 }
             }
             else if (logicalViewStep.type.episode == Type && (lType != typeof(DBEpisode) && lType != typeof(DBOnlineEpisode)))
@@ -517,14 +518,14 @@ namespace WindowPlugins.GUITVSeries
                 if (lType == typeof(DBOnlineSeries) || lType == typeof(DBSeries))
                 {
                     fullSubCond.AddCustom(DBOnlineSeries.Q(DBOnlineSeries.cID), DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype);
+                    fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype, true);
                     conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
                 }
                 if (lType == typeof(DBSeason))
                 {
                     fullSubCond.AddCustom(DBSeason.Q(DBSeason.cSeriesID), DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionType.Equal);
                     fullSubCond.AddCustom(DBSeason.Q(DBSeason.cIndex), DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype);
+                    fullSubCond.AddCustom(DBSeason.Q(tableField), condition, condtype, true);
                     conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
                 }
             }

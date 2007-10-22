@@ -913,6 +913,16 @@ namespace WindowPlugins.GUITVSeries
             customOrderStringIsSet = true;
         }
 
+        public void AddCustom(string what, string value, SQLConditionType type, bool EncloseIfString)
+        {
+            if (EncloseIfString)
+            {
+                if (value.Length > 2 && value[0] != '\'' && !Helper.StringIsNumerical(value))
+                    value = "'" + value + "'";
+            }
+            AddCustom(what, value, type);
+        }
+
         public void AddCustom(string what, string value, SQLConditionType type)
         {
 
