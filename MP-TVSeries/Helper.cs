@@ -31,6 +31,13 @@ namespace WindowPlugins.GUITVSeries
 {
     public class Helper
     {
+        public static bool StringIsNumerical(string number)
+        {
+            double isNumber = 0;
+            return System.Double.TryParse(number, out isNumber);
+                
+        }
+
         public static List<T> getFilteredList<T, P>(List<T> inputList, string PropertyName, P ValueOfProperty)
         {
             List<T> resultList = new List<T>();
