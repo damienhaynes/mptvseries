@@ -329,14 +329,16 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // allow all extensions set in MP
             string filter = "Video Files|";
             foreach (string ext in MediaPortal.Util.Utils.VideoExtensions)
-                filter += "*." + ext + ";";
+                filter += "*" + ext + ";";
             filter.Remove(filter.Length - 2, 1); // last ;
             openFileDialog.Filter = filter;
             // if we already have a file loaded, init the dialog with that file selected
-            if (videoFile != null) {
+            if (videoFile != null)
+            {
                 openFileDialog.FileName = videoFile.Name;
                 openFileDialog.InitialDirectory = videoFile.DirectoryName;
             }
+            else openFileDialog.FileName = string.Empty;
 
             DialogResult result = openFileDialog.ShowDialog();
 
