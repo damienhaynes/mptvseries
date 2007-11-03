@@ -326,6 +326,12 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
         // action performed when the "Browse..." button is clicked. Launches file select dialog.
         private void selectFileButton_click(object sender, EventArgs e) {
+            // allow all extensions set in MP
+            string filter = "Video Files|";
+            foreach (string ext in MediaPortal.Util.Utils.VideoExtensions)
+                filter += "*." + ext + ";";
+            filter.Remove(filter.Length - 2, 1); // last ;
+
             // if we already have a file loaded, init the dialog with that file selected
             if (videoFile != null) {
                 openFileDialog.FileName = videoFile.Name;

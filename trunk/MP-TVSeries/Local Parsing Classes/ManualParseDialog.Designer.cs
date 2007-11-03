@@ -50,7 +50,6 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // 
             this.openFileDialog.DefaultExt = "avi";
             this.openFileDialog.FileName = "openFileDialog";
-            this.openFileDialog.Filter = "Video Files|*.avi";
             this.openFileDialog.Title = "Video File to Add";
             // 
             // fileTextBox
