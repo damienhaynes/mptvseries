@@ -236,7 +236,6 @@ namespace MediaPortal.GUI.Video
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
 
             m_VideoHandler = new VideoHandler();
-
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
 
@@ -829,7 +828,7 @@ namespace MediaPortal.GUI.Video
                 else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
             else setViewLabels();
-            loadFanart(null); // init dummy labels
+            if(!fanartSet) loadFanart(null); // init dummy labels
             LoadFacade();
             m_Facade.Focus = true;
             setProcessAnimationStatus(m_parserUpdaterWorking);
