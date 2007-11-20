@@ -491,9 +491,8 @@ namespace MediaPortal.GUI.Video
                                         item = new GUIListItem();
                                         string img = ImageAllocator.GetSeriesBanner(series);
 
-                                        if (Helper.String.IsNullOrEmpty(img))
-                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
-                                        else item.IconImage = item.IconImageBig = img;
+                                        item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
+                                        item.IconImage = item.IconImageBig = img;
                                     }
                                     else
                                     {
@@ -587,7 +586,7 @@ namespace MediaPortal.GUI.Video
                                     {
                                         if (nSeasonDisplayMode == 1)
                                         {
-                                            item = new GUIListItem();
+                                            item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
                                             item.IconImage = item.IconImageBig = ImageAllocator.GetSeasonBanner(season, true);
                                         }
                                         else
