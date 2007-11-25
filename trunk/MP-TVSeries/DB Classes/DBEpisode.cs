@@ -541,10 +541,17 @@ namespace WindowPlugins.GUITVSeries
                 
             }
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
-            foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+            try
             {
-                System.IO.FileInfo fi = new System.IO.FileInfo(file);
-                if(subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
+                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
+                }
+            }
+            catch (Exception)
+            {
+                // most likley path not available
             }
             return false;
         }

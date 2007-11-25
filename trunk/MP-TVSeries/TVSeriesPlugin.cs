@@ -491,8 +491,9 @@ namespace MediaPortal.GUI.Video
                                         item = new GUIListItem();
                                         string img = ImageAllocator.GetSeriesBanner(series);
 
-                                        item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
-                                        item.IconImage = item.IconImageBig = img;
+                                        if (Helper.String.IsNullOrEmpty(img))
+                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
+                                        else item.IconImage = item.IconImageBig = img;
                                     }
                                     else
                                     {
@@ -586,7 +587,7 @@ namespace MediaPortal.GUI.Video
                                     {
                                         if (nSeasonDisplayMode == 1)
                                         {
-                                            item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
+                                            item = new GUIListItem();
                                             item.IconImage = item.IconImageBig = ImageAllocator.GetSeasonBanner(season, true);
                                         }
                                         else
@@ -2188,10 +2189,11 @@ namespace MediaPortal.GUI.Video
         private void pushFieldsToSkin(DBTable item, string pre)
         {
             if(item == null) return;
+            List<string> l = null;
             foreach (KeyValuePair<string, DBField> kv in item.m_fields)
             {
-                List<string> l = null;
-                if (_allFieldsForSkin.ContainsKey(pre)) l = _allFieldsForSkin[pre];
+                
+                if (l == null && _allFieldsForSkin.ContainsKey(pre)) l = _allFieldsForSkin[pre];
                 else
                 {
                     l = new List<string>();
@@ -2199,8 +2201,20 @@ namespace MediaPortal.GUI.Video
                 }
                 if(l!= null && !l.Contains(kv.Key)) l.Add(kv.Key);
 
-                setGUIProperty(pre + "." + kv.Key, kv.Value.Value);
+                pushFieldToSkin(item, pre, kv.Key);
             }
+
+            // lets also push the virtual fields
+            if (pre == "Episode")
+            {
+                pushFieldToSkin(item, pre, DBEpisode.cFileSize);
+                pushFieldToSkin(item, pre, DBEpisode.cPrettyPlaytime);
+                pushFieldToSkin(item, pre, DBEpisode.cFilenameWOPath);
+            }
+        }
+        private void pushFieldToSkin(DBTable item, string pre, string field)
+        {
+            setGUIProperty(pre + "." + field, FieldGetter.resolveDynString(string.Format("<{0}.{1}>", pre, field), item));
         }
         private void clearFieldsForskin(string pre)
         {
@@ -2209,6 +2223,13 @@ namespace MediaPortal.GUI.Video
                 List<string> fields = _allFieldsForSkin[pre];
                 foreach (string field in fields)
                     clearGUIProperty(field);
+            }
+            // lets also push the virtual fields
+            if (pre == "Episode")
+            {
+                clearGUIProperty(DBEpisode.cFileSize);
+                clearGUIProperty(DBEpisode.cPrettyPlaytime);
+                clearGUIProperty(DBEpisode.cFilenameWOPath);
             }
         }
 
@@ -2225,3 +2246,4 @@ namespace MediaPortal.GUI.Video
         }
     }
 }
+
