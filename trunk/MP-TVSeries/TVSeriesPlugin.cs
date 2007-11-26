@@ -2048,10 +2048,17 @@ namespace MediaPortal.GUI.Video
                 m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
                 if (m_SelectedSeries != null)
+                {
                     setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
+                    pushFieldsToSkin(m_SelectedSeries, "Series");
+                    pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
+                }
                 else clearGUIProperty(guiProperty.SeriesBanner);
                 if (m_SelectedSeason != null)
+                {
                     setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
+                    pushFieldsToSkin(m_SelectedSeason, "Season");
+                }
                 else clearGUIProperty(guiProperty.SeasonBanner);
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
@@ -2194,7 +2201,7 @@ namespace MediaPortal.GUI.Video
             {
                 
                 if (l == null && _allFieldsForSkin.ContainsKey(pre)) l = _allFieldsForSkin[pre];
-                else
+                else if(l==null)
                 {
                     l = new List<string>();
                     _allFieldsForSkin.Add(pre, l);
