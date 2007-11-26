@@ -601,9 +601,9 @@ namespace WindowPlugins.GUITVSeries
                 switch (fieldName)
                 {
                     case cFileSizeBytes:
-                        return new System.IO.FileInfo(base[DBEpisode.cFilename]).Length;
+                        return System.IO.File.Exists(base[DBEpisode.cFilename]) ? new System.IO.FileInfo(base[DBEpisode.cFilename]).Length : 0;
                     case cFileSize:
-                        return StrFormatByteSize(new System.IO.FileInfo(base[DBEpisode.cFilename]).Length);
+                        return  StrFormatByteSize(this[cFileSizeBytes]);
                     case cAvailableSubtitles:
                         return (this[cAvailableSubtitles] = checkHasSubtitles());
                     case cPrettyPlaytime:

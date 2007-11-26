@@ -99,9 +99,9 @@ namespace WindowPlugins.GUITVSeries
         static Level levelOfItem(DBTable item)
         {
             Type p = item.GetType();
-            if (p == typeof(DBSeries)) return Level.Series;
+            if (p == typeof(DBSeries) || p == typeof(DBOnlineSeries)) return Level.Series;
             if (p == typeof(DBSeason)) return Level.Season;
-            if (p == typeof(DBEpisode)) return Level.Episode;
+            if (p == typeof(DBEpisode) || p==typeof(DBOnlineEpisode)) return Level.Episode;
             return Level.Series;
         }
 
@@ -119,9 +119,13 @@ namespace WindowPlugins.GUITVSeries
             if (level == Level.Episode) // we can do everything
             {
                 if (whatLevels.Contains(Level.Episode))
-                    value = replaceEpisodeTags(item as DBEpisode, value);
+                {
+                    DBOnlineEpisode o = item as DBOnlineEpisode;
+                    if (o == null) value = replaceEpisodeTags(item as DBEpisode, value);
+                    else value = replaceEpisodeTags(o, value);
+                }
                 if (whatLevels.Contains(Level.Season))
-                    value = replaceSeriesTags(item[DBEpisode.cSeriesID], value);
+                    value = replaceSeasonTags(item[DBEpisode.cSeriesID], item[DBEpisode.cSeasonIndex], value);
                 if (whatLevels.Contains(Level.Series))
                     value = replaceSeriesTags(item[DBEpisode.cSeriesID], value);
             }
@@ -134,7 +138,9 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (level == Level.Series && !whatLevels.Contains(Level.Episode) && !whatLevels.Contains(Level.Season)) // we can only do series
             {
-                value = replaceSeriesTags(item as DBSeries, value);
+                DBOnlineSeries o = item as DBOnlineSeries;
+                if (o == null) value = replaceSeriesTags(item as DBSeries, value);
+                else value = replaceSeriesTags(item[DBSeries.cID], value);
             }
 
             if (nonFormattingFields.Contains(what)) return value;
@@ -167,6 +173,12 @@ namespace WindowPlugins.GUITVSeries
         }
 
         static string replaceEpisodeTags(DBEpisode s, string what)
+        {
+            if (s == null || what.Length < epIdentifier.Length) return what;
+            return getValuesOfType(s, what, epParse, epIdentifier);
+        }
+
+        static string replaceEpisodeTags(DBOnlineEpisode s, string what)
         {
             if (s == null || what.Length < epIdentifier.Length) return what;
             return getValuesOfType(s, what, epParse, epIdentifier);
