@@ -31,6 +31,7 @@ namespace WindowPlugins.GUITVSeries
     public class FilenameParser
     {
         private string m_Filename = string.Empty;
+        private string m_FileNameAfterReplacement = string.Empty;
         private Dictionary<string, string> m_Matches = new Dictionary<string, string>();
         private String m_RegexpMatched = string.Empty;
         static List<String> sExpressions = new List<String>();
@@ -47,6 +48,11 @@ namespace WindowPlugins.GUITVSeries
         public String RegexpMatched
         {
             get { return m_RegexpMatched; }
+        }
+
+        public string FileNameAfterReplacement
+        {
+            get { return m_FileNameAfterReplacement; }
         }
 
         /// <summary>
@@ -150,16 +156,15 @@ namespace WindowPlugins.GUITVSeries
 
                 int index = 0;
 
-                string _Source;
-                _Source = m_Filename.ToLower();
+                m_FileNameAfterReplacement = m_Filename.ToLower();
                 // run Before replacements
                 foreach (KeyValuePair<string, string> replacement in replacementsBefore)
-                    _Source = _Source.Replace(replacement.Key, replacement.Value);
+                    m_FileNameAfterReplacement = m_FileNameAfterReplacement.Replace(replacement.Key, replacement.Value);
                     
                 foreach(Regex regularExpression in regularExpressions)
                 {
                     Match matchResults;
-                    matchResults = regularExpression.Match(_Source);
+                    matchResults = regularExpression.Match(m_FileNameAfterReplacement);
 
                     if (matchResults.Success)
                     {

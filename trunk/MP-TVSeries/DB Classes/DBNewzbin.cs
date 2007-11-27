@@ -10,11 +10,23 @@ namespace WindowPlugins.GUITVSeries
         public class DBNewzbin : DBTable
     {
         public const String cTableName = "news";
-        public const int cDBVersion = 1;
+        public const int cDBVersion = 2;
 
         public const String cID = "ID"; 
         public const String cSearchUrl = "searchUrl";
-        public const String cSearchRegex = "searchRegex";
+
+        public const String cSearchRegexReport = "searchRegexMain";
+        public const String cSearchRegexName = "searchRegexName";
+        public const String cSearchRegexID = "searchRegexID";
+        public const String cSearchRegexSize = "searchRegexSize";
+        public const String cSearchRegexPostDate = "searchRegexPost";
+        public const String cSearchRegexReportDate = "searchRegexReport";
+        public const String cSearchRegexFormat = "searchRegexFormat";
+        public const String cSearchRegexLanguage = "searchRegexLanguage";
+        public const String cSearchRegexGroup = "searchRegexGroup";
+        public const String cSearchRegexIsolateArticleName = "searchRegexIsolateArticleName";
+        public const String cSearchRegexParseArticleName = "searchRegexParseArticleName";
+
         public const String cLogin = "login";
         public const String cPassword = "password";
         public const String cCookieList = "cookielist";
@@ -34,11 +46,48 @@ namespace WindowPlugins.GUITVSeries
                 // put the default ones
                 DBNewzbin item = new DBNewzbin("Newzbin");
                 item[DBNewzbin.cSearchUrl] = "http://v3.newzbin.com/search/query/?fpn=p&q=$search$&category=8&searchaction=Go&sort=date&order=desc";
-//                item[DBNewzbin.cSearchRegex] = "<td rowspan=\"2\" class=\"title\">.*?browse/post/(?<ID>\\d*)/\">(?<name>.*?)</a>.*?\"fileSize\".*?<span>(?<size>.*?)</span>.*?<span[^>]*>(?<post>.*?)</span>.*?<span[^>]*>(?<report>.*?)</span>";
-                // logged in version
-                item[DBNewzbin.cSearchRegex] = "<td colspan=\"3\" class=\"title\">.*?browse/post/(?<ID>\\d*)/\">(?<name>.*?)</a>.*?<span[^>]*>(?<post>.*?)</span>.*?<span[^>]*>(?<report>.*?)</span>.*?\"fileSize\".*?<span>(?<size>.*?)</span>(?:.*?Video Fmt:\\s*<a[^>]*>(?<format>[^<]*)</a>.*?|.*?)</tr>\\s*</tbody>";
+                item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
+                item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
+                item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
+                item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
+                item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
+                item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
+                item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
+                item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
+                item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
+                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
+                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
                 item.Commit();
             }
+
+            int nCurrentDBVersion = cDBVersion;
+            while (DBOption.GetOptions(DBOption.cDBNewzbinVersion) != nCurrentDBVersion)
+                // take care of the upgrade in the table
+                switch ((int)DBOption.GetOptions(DBOption.cDBNewzbinVersion))
+                {
+                    case 1:
+                        // upgrade to version 2; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
+                        try
+                        {
+                            DBNewzbin item = NewzsSearchList[0];
+                            item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
+                            item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
+                            item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
+                            item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
+                            item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
+                            item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
+                            item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
+                            item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
+                            item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
+                            item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
+                            item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
+                            item.Commit();
+
+                            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                        }
+                        catch { }
+                        break;
+                }
         }
 
         public DBNewzbin()
@@ -64,7 +113,17 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             AddColumn(cID, new DBField(DBField.cTypeString, true));
             AddColumn(cSearchUrl, new DBField(DBField.cTypeString));
-            AddColumn(cSearchRegex, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexReport, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexName, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexID, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexSize, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexPostDate, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexReportDate, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexFormat, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexLanguage, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexGroup, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexIsolateArticleName, new DBField(DBField.cTypeString));
+            AddColumn(cSearchRegexParseArticleName, new DBField(DBField.cTypeString));
             AddColumn(cLogin, new DBField(DBField.cTypeString));
             AddColumn(cPassword, new DBField(DBField.cTypeString));
             AddColumn(cCookieList, new DBField(DBField.cTypeString));

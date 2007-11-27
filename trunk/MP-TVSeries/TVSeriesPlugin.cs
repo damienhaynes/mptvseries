@@ -177,6 +177,7 @@ namespace MediaPortal.GUI.Video
         private String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
         private int logosHeight = 100;
         private int logosWidth = 250;
+        private Control m_localControlForInvoke;
 
         #region Skin Variables
 
@@ -230,11 +231,14 @@ namespace MediaPortal.GUI.Video
 
         public override bool Init()
         {
+            m_localControlForInvoke = new Control();
+            m_localControlForInvoke.CreateControl();
             Translation.Init();
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
 
+            Download.Monitor.Start(this);
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
@@ -2033,7 +2037,8 @@ namespace MediaPortal.GUI.Video
 
             if (!localLogos.appendEpImage)
                 setGUIProperty(guiProperty.EpisodeImage, episode.Image);
-            else clearGUIProperty(guiProperty.EpisodeImage);
+            else 
+                clearGUIProperty(guiProperty.EpisodeImage);
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));
@@ -2054,6 +2059,7 @@ namespace MediaPortal.GUI.Video
                     pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
                 }
                 else clearGUIProperty(guiProperty.SeriesBanner);
+
                 if (m_SelectedSeason != null)
                 {
                     setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
@@ -2067,10 +2073,33 @@ namespace MediaPortal.GUI.Video
 
         public ReturnCode ChooseFromSelection(CDescriptor descriptor, out CItem selected)
         {
+            if (this.m_Facade == null)
+            {
+                selected = null;
+                return ReturnCode.NotReady;
+            }
+
+            if (m_localControlForInvoke.InvokeRequired)
+                selected = m_localControlForInvoke.Invoke(new ChooseFromSelectionDelegate(ChooseFromSelection_), new Object[] { descriptor }) as CItem;
+            else
+                selected = ChooseFromSelection_(descriptor);
+            if (selected != null)
+                return ReturnCode.OK;
+            else
+                return ReturnCode.Cancel;
+        }
+
+        public CItem ChooseFromSelection_(CDescriptor descriptor)
+        {
+            CItem selected = null;
+            ChooseFromSelectionSync(descriptor, out selected);
+            return selected;
+        }
+
+        public ReturnCode ChooseFromSelectionSync(CDescriptor descriptor, out CItem selected)
+        {
             try
             {
-                while (this.m_Facade == null) Thread.Sleep(2000); // don't show anything if we're not inside the plugin window
-
                 GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
                 selected = null;
                 if (dlg == null)

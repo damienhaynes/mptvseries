@@ -34,6 +34,7 @@ using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
 using WindowPlugins.GUITVSeries;
+using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 
 #if DEBUG
@@ -64,6 +65,7 @@ namespace WindowPlugins.GUITVSeries
         List<Language> onlineLanguages = new List<Language>();
         bool initLoading = true;
 
+        private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
 
         public static ConfigurationForm GetInstance() {
@@ -72,6 +74,8 @@ namespace WindowPlugins.GUITVSeries
 
         public ConfigurationForm()
         {
+            m_localControlForInvoke = new Control();
+            m_localControlForInvoke.CreateControl();
 #if DEBUG
             //    Debugger.Launch();
 #endif
@@ -90,6 +94,7 @@ namespace WindowPlugins.GUITVSeries
                 this.Size = s;
             }
 
+            Download.Monitor.Start(this);
             panel_manualEpisodeManagement.SetOwner(this);
             
             load = new loadingDisplay();
@@ -103,6 +108,16 @@ namespace WindowPlugins.GUITVSeries
             if(load != null) load.Close();
 
             instance = this;
+        }
+
+        void Monitor_m_NeedUserSelectionEvent(WindowPlugins.GUITVSeries.Feedback.CDescriptor descriptor)
+        {
+            Feedback.CItem Selected = null;
+            if (ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
+            {
+//                 episodeBestMatch = Selected.m_Tag as DBEpisode;
+//                 seriesBestMatch = new DBOnlineSeries(episodeBestMatch[DBEpisode.cSeriesID]);
+            }
         }
 
 
@@ -129,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
                 treeView_Settings.Nodes.Add(node);
             }
 
-            splitContainer1.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
+            splitMain_Log.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
             log_window_changed();
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
             nudWatchedAfter.Value = DBOption.GetOptions(DBOption.cWatchedAfter);
@@ -148,6 +163,7 @@ namespace WindowPlugins.GUITVSeries
             comboBox_preferedBannerType.SelectedIndex = DBOption.GetOptions(DBOption.cPreferedBannerType);
 
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
+            checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
 
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
@@ -341,9 +357,19 @@ namespace WindowPlugins.GUITVSeries
             m_currentNewsSearch = DBNewzbin.Get()[0];
 
             textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
-            textBox_NewsSearchRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegex];
             textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
             textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
+            textBox_NewsSearchReportRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReport];
+            textBox_NewsSearchNameRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexName];
+            textBox_NewsSearchIDRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexID];
+            textBox_NewsSearchSizeRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexSize];
+            textBox_NewsSearchPostDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate];
+            textBox_NewsSearchReportDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate];
+            textBox_NewsSearchFormatRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexFormat];
+            textBox_NewsSearchGroupRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexGroup];
+            textBox_NewsSearchLanguageRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage];
+            textBox_NewsSearchIsolateArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName];
+            textBox_NewsSearchParseArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName];
         }
 
         private void LoadImportPathes()
@@ -877,7 +903,7 @@ namespace WindowPlugins.GUITVSeries
             listView_ParsingResults.Columns.Clear();
             // add mandatory columns
             ColumnHeader columnFileName = new ColumnHeader();
-            columnFileName.Name = "FileName";
+            columnFileName.Name = DBOnlineEpisode.cEpisodeImageFilename;
             columnFileName.Text = "FileName";
             listView_ParsingResults.Columns.Add(columnFileName);
 
@@ -1893,10 +1919,10 @@ namespace WindowPlugins.GUITVSeries
 
         private void log_window_changed()
         {
-            this.splitContainer1.SplitterDistance = this.Size.Height / 3 * 2;
-            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
+            this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
+            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
 
-            if (splitContainer1.Panel2Collapsed)
+            if (splitMain_Log.Panel2Collapsed)
             {
                 button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
                 this.toolTip_Help.SetToolTip(this.button1, "Click to show log");
@@ -1910,9 +1936,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
-            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitContainer1.Panel2Collapsed);
+            splitMain_Log.Panel2Collapsed = !splitMain_Log.Panel2Collapsed;
+            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
             log_window_changed();
         }
 
@@ -2008,6 +2033,26 @@ namespace WindowPlugins.GUITVSeries
 
         public Feedback.ReturnCode ChooseFromSelection(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
         {
+            if (m_localControlForInvoke.InvokeRequired)
+                selected = m_localControlForInvoke.Invoke(new Feedback.ChooseFromSelectionDelegate(ChooseFromSelection_), new Object[] { descriptor }) as Feedback.CItem;
+            else
+                selected = ChooseFromSelection_(descriptor);
+            if (selected != null)
+                return Feedback.ReturnCode.OK;
+            else
+                return Feedback.ReturnCode.Cancel;
+        }
+
+        public Feedback.CItem ChooseFromSelection_(Feedback.CDescriptor descriptor)
+        {
+            Feedback.CItem selected = null;
+            if (ChooseFromSelectionSync(descriptor, out selected) == ReturnCode.Cancel)
+                selected = null;
+            return selected;
+        }
+
+        public Feedback.ReturnCode ChooseFromSelectionSync(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
+        {
             ChooseFromSelectionDialog userSelection = new ChooseFromSelectionDialog(descriptor);
             DialogResult result = userSelection.ShowDialog();
             selected = userSelection.SelectedItem;
@@ -2067,18 +2112,24 @@ namespace WindowPlugins.GUITVSeries
                     DBSeries series = (DBSeries)node.Tag;
                     bHidden = series[DBSeries.cHidden];
                     contextMenuStrip_DetailsTree.Items[2].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items[3].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items[4].Enabled = false;
                     break;
 
                 case DBSeason.cTableName:
                     DBSeason season = (DBSeason)node.Tag;
                     bHidden = season[DBSeason.cHidden];
                     contextMenuStrip_DetailsTree.Items[2].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items[3].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items[4].Enabled = false;
                     break;
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
                     contextMenuStrip_DetailsTree.Items[2].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items[3].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items[4].Enabled = true;
                     break;
             }
             if (bHidden)
@@ -2297,7 +2348,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void textBox_NewsSearchRegex_TextChanged(object sender, EventArgs e)
         {
-            m_currentNewsSearch[DBNewzbin.cSearchRegex] = textBox_NewsSearchRegex.Text;
+            m_currentNewsSearch[DBNewzbin.cSearchRegexReport] = textBox_NewsSearchReportRegex.Text;
             m_currentNewsSearch.Commit();
         }
 
@@ -2312,7 +2363,67 @@ namespace WindowPlugins.GUITVSeries
             m_currentNewsSearch[DBNewzbin.cPassword] = textbox_NewzbinPassword.Text;
             m_currentNewsSearch.Commit();
         }
-        
+
+        private void textBox_NewsSearchIDRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexID] = textBox_NewsSearchIDRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchNameRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexName] = textBox_NewsSearchNameRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchSizeRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexSize] = textBox_NewsSearchSizeRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchPostDateRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate] = textBox_NewsSearchPostDateRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchReportDateRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate] = textBox_NewsSearchReportDateRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchFormatRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexFormat] = textBox_NewsSearchFormatRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchGroupRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexGroup] = textBox_NewsSearchGroupRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchLanguageRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage] = textBox_NewsSearchLanguageRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchIsolateArticleRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName] = textBox_NewsSearchIsolateArticleRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
+        private void textBox_NewsSearchParseArticleRegex_TextChanged(object sender, EventArgs e)
+        {
+            m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName] = textBox_NewsSearchParseArticleRegex.Text;
+            m_currentNewsSearch.Commit();
+        }
+
         private void newzbinThisToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -2809,6 +2920,11 @@ namespace WindowPlugins.GUITVSeries
             ExpressionBuilder expBldForm = new ExpressionBuilder();
             expBldForm.ShowDialog();
                 //-- ToDo: add result to datagridview
+        }
+
+        private void checkDownloadEpisodeSnapshots_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cGetEpisodeSnapshots, checkDownloadEpisodeSnapshots.Checked);
         }
 
     }

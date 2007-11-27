@@ -56,7 +56,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
             return false;
         }
 
-        public CookieCollection LoadCookies(DBNewzbin db)
+        public static CookieCollection LoadCookies(DBNewzbin db)
         {
             CookieCollection cookies = new CookieCollection();
             // parse the string;
@@ -249,12 +249,12 @@ namespace WindowPlugins.GUITVSeries.Newzbin
 
                 if (bSuccess)
                 {
-                    RegExp = m_Search[DBNewzbin.cSearchRegex];
+                    RegExp = m_Search[DBNewzbin.cSearchRegexReport];
                     Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     MatchCollection matches = Engine.Matches(sPage);
                     foreach (Match match in matches)
                     {
-                        sortedMatchList.Add(new NewzbinResult(match));
+                        sortedMatchList.Add(new NewzbinResult(m_Search, match));
                     }
 
                     // show the user the list and ask for the right one
@@ -264,7 +264,10 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                         String sName = match.m_sName;
                         if (sName.Length > 20)
                             sName = sName.Substring(0, 18) + "..";
-                        Choices.Add(new Feedback.CItem(sName + "(" + match.m_sFormat + ") - " + match.m_sSize + ", " + match.m_sPost, String.Empty, match));
+                        String sDesc = "Title: " + match.m_sName + "\r\nPost: " + match.m_sPost + "\r\nReport: " + match.m_sReport + "\r\nFormat: " + match.m_sFormat + "\r\nGroups: " + match.m_sGroup + "\r\nLanguage: " + match.m_sLanguage;
+//                         foreach (String s in match.m_sParsedArticleName)
+//                             sDesc += s + " / ";
+                        Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
                     }
                     Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                     descriptor.m_sTitle = "Found reports:";
@@ -337,8 +340,50 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                             file.Close();
                             responseDownload.Close();
 
-                            Download.Monitor.AddPendingDownload(m_dbEpisode);
-                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+                            List<String> sParsedArticleName = new List<String>();
+                            // now, retrieve the article subject page, get on of the subject name & store
+                            // assume we don't need to login, given we were able to read the search url fine previously
+                            RegExp = "http://[^/]*/";
+                            Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                            sUrl = Engine.Match(m_Search[DBNewzbin.cSearchUrl]).Groups[0].Value + "browse/post/" + result.m_sID + "/";
+
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);
+                            request.CookieContainer = new CookieContainer();
+                            request.CookieContainer.Add(Load.LoadCookies(m_Search));
+
+                            WebResponse response = request.GetResponse();
+                            Stream data = response.GetResponseStream();
+                            StreamReader reader = new StreamReader(data);
+                            // isolate article name
+                            char[] sBlock = new char[1000];
+                            sPage = String.Empty;
+                            while (reader.Read(sBlock, 0, 1000) != 0)
+                            {
+                                String sTemp = new String(sBlock, 0, 1000);
+                                sPage += sTemp;
+                                RegExp = m_Search[DBNewzbin.cSearchRegexIsolateArticleName];
+                                Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                Match matchLocal = Engine.Match(sPage);
+                                if (matchLocal.Success)
+                                {
+                                    String sArticleName = matchLocal.Groups[1].Value;
+                                    // and now extract all the strings from it
+                                    RegExp = m_Search[DBNewzbin.cSearchRegexParseArticleName];
+                                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                    matches = Engine.Matches(sArticleName);
+                                    foreach (Match matchIter in matches)
+                                    {
+                                        sParsedArticleName.Add(matchIter.Groups[1].Value);
+                                    }
+                                    break;
+                                }
+                            }
+                            data.Close();
+                            reader.Close();
+                            response.Close();
+
+                            Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
+//                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
                             m_bSuccess = true;
                         }
                     }
@@ -359,20 +404,79 @@ namespace WindowPlugins.GUITVSeries.Newzbin
         public String m_sPost;
         public String m_sReport;
         public String m_sFormat;
+        public String m_sLanguage;
+        public String m_sGroup;
 
         public int CompareTo(NewzbinResult other)
         {
             return other.m_sSize.CompareTo(m_sSize);
         }
 
-        public NewzbinResult(Match match)
+        public NewzbinResult(DBNewzbin item, Match match)
         {
-            m_sName = match.Groups["name"].Value;
-            m_sID = match.Groups["ID"].Value;
-            m_sSize = match.Groups["size"].Value;
-            m_sPost = match.Groups["post"].Value;
-            m_sReport = match.Groups["report"].Value;
-            m_sFormat = match.Groups["format"].Value;
+            // in match we have the html subzone containing everything about one specific report. We'll parse this to figure the necessary info we need
+            String sReport = match.Groups[1].Value;
+            String RegExp;
+            Regex Engine;
+            MatchCollection matches;
+            Match matchLocal;
+            // match name
+            RegExp = item[DBNewzbin.cSearchRegexName];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sName = matchLocal.Groups[1].Value;
+
+            // match ID
+            RegExp = item[DBNewzbin.cSearchRegexID];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sID = matchLocal.Groups[1].Value;
+
+            // match size
+            RegExp = item[DBNewzbin.cSearchRegexSize];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sSize = matchLocal.Groups[1].Value;            
+
+            // match post date
+            RegExp = item[DBNewzbin.cSearchRegexPostDate];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sPost = matchLocal.Groups[1].Value;     
+                        
+            // match report date
+            RegExp = item[DBNewzbin.cSearchRegexReportDate];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sReport = matchLocal.Groups[1].Value;     
+
+            // match format
+            RegExp = item[DBNewzbin.cSearchRegexFormat];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matchLocal = Engine.Match(sReport);
+            m_sFormat = matchLocal.Groups[1].Value;     
+
+            // groups: multiples are possible
+            RegExp = item[DBNewzbin.cSearchRegexGroup];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matches = Engine.Matches(sReport);
+            foreach (Match matchIter in matches)
+            {
+                if (m_sGroup != null)
+                    m_sGroup += ", ";
+                m_sGroup += matchIter.Groups[1].Value;
+            }
+
+            // languages: multiples are possible
+            RegExp = item[DBNewzbin.cSearchRegexLanguage];
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            matches = Engine.Matches(sReport);
+            foreach (Match matchIter in matches)
+            {
+                if (m_sLanguage != null)
+                    m_sLanguage += ", ";
+                m_sLanguage += matchIter.Groups[1].Value;
+            }
         }
     };
 }

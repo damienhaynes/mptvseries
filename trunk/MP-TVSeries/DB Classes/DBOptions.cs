@@ -41,6 +41,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
         public const String cDBExpressionsVersion = "DBExpressionsVersion";
+        public const String cDBNewzbinVersion = "DBNewzbinVersion";
+        public const String cDBTorrentVersion = "dbTorrentVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -113,6 +115,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cMainMirror = "mainMirror";
         public const String cGetBlankBanners = "getBlankBanners";
+        public const String cGetEpisodeSnapshots = "getEpisodeSnapshots";
 
         public const String cWatchedAfter = "watchedAfter";
 
@@ -138,6 +141,9 @@ namespace WindowPlugins.GUITVSeries
 
                     if (GetOptions(cDBExpressionsVersion) == null)
                         SetOptions(cDBExpressionsVersion, 1);
+
+                    if (GetOptions(cDBNewzbinVersion) == null)
+                        SetOptions(cDBNewzbinVersion, 1);
                 }
                 else
                 {
@@ -156,6 +162,9 @@ namespace WindowPlugins.GUITVSeries
 
                     if (GetOptions(cDBExpressionsVersion) == null)
                         SetOptions(cDBExpressionsVersion, DBExpression.cDBVersion);
+
+                    if (GetOptions(cDBNewzbinVersion) == null)
+                        SetOptions(cDBNewzbinVersion, DBNewzbin.cDBVersion);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
