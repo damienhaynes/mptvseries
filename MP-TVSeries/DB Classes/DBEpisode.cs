@@ -51,6 +51,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         public const String cLastUpdated = "lastupdated";
         public const String cDownloadPending = "DownloadPending";
+        public const String cDownloadExpectedNames = "DownloadExpectedName";
         public const String cEpisodeImageFilename = "filename";
 
         public const String cAirsBeforeSeason = "airsbefore_season";
@@ -115,6 +116,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
             base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
             base.AddColumn(cDownloadPending, new DBField(DBField.cTypeInt));
+            base.AddColumn(cDownloadExpectedNames, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {

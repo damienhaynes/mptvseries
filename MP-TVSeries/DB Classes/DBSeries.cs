@@ -67,6 +67,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cOriginalName = "origName";
 
+        public const String cTaggedToDownload = "taggedToDownload";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -237,7 +239,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 7;
+        public const int cDBVersion = 8;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -302,6 +304,12 @@ namespace WindowPlugins.GUITVSeries
                     case 6:
                         // set all watched flag timestamp to 0 (will be created)
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        break;
+
+                    case 7:
+                        // all series no tagged for auto download at first
+                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                         break;
 

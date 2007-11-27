@@ -144,8 +144,9 @@ namespace WindowPlugins.GUITVSeries.Torrent
                     reader.Close();
 
                     RegExp = m_Search[DBTorrentSearch.cSearchRegex];
-                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     MatchCollection matches = Engine.Matches(sPage);
+                    MPTVSeriesLog.Write("Torrentsearch: processing " + matches.Count + " entries for search " + sSearch);
                     foreach (Match match in matches)
                     {
                         RegExp = "\\$id\\$";
@@ -162,12 +163,17 @@ namespace WindowPlugins.GUITVSeries.Torrent
 
                         // and extract the number of files
                         RegExp = m_Search[DBTorrentSearch.cDetailsRegex];
-                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                         Match matchDetails = Engine.Match(sPage);
                         if (matchDetails.Success)
                         {
                             if (Convert.ToInt32(matchDetails.Groups[1].Value) <= 2) // consider a possible nfo file along with the avi?
-                                sortedMatchList.Add(new TorrentResult(match));
+                            {
+                                TorrentResult res = null;
+                                try { res = new TorrentResult(match); } catch {}
+                                if (res != null)
+                                    sortedMatchList.Add(res);
+                            }
                         }
                     }
                 }
@@ -178,7 +184,11 @@ namespace WindowPlugins.GUITVSeries.Torrent
                 List<Feedback.CItem> Choices = new List<Feedback.CItem>();
                 foreach (TorrentResult match in sortedMatchList)
                 {
-                    Choices.Add(new Feedback.CItem(match.m_sName + " (" + match.m_nSeeds + " / " + match.m_nLeechers + ")", String.Empty, match));
+                    String sName = match.m_sName;
+                    if (sName.Length > 25)
+                        sName = sName.Substring(0, 23) + "..";
+
+                    Choices.Add(new Feedback.CItem(sName + " (" + match.m_sSize + ") - " + match.m_nSeeds + " / " + match.m_nLeechers, String.Empty, match));
                 }
                 Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                 descriptor.m_sTitle = "Found torrents:";
@@ -202,10 +212,9 @@ namespace WindowPlugins.GUITVSeries.Torrent
 
                     // ok, we have the torrent link, we just need ... a folder
                     List<DBEpisode> SeriesEpisodes = DBEpisode.Get((int)m_dbEpisode[DBEpisode.cSeriesID]);
-                    if (SeriesEpisodes.Count > 0)
+                    if (SeriesEpisodes.Count > 0 && SeriesEpisodes[0][DBEpisode.cFilename] != String.Empty)
                     {
                         String sDirectory = System.IO.Path.GetDirectoryName(SeriesEpisodes[0][DBEpisode.cFilename]);
-
                         System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cUTorrentPath), "/directory \"" + sDirectory + "\" \"" + System.IO.Path.GetTempPath() + "MPTVSeries.torrent\" /MINIMIZED");
                         m_bSuccess = true;
                     }
@@ -225,7 +234,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
             }
             catch 
             {
-
+                MPTVSeriesLog.Write("Torrentsearch process exception catched");
             }
         }
     }
@@ -234,6 +243,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
     {
         public String m_sName;
         public String m_sLink;
+        public String m_sSize;
         public int m_nSeeds;
         public int m_nLeechers;
 
@@ -246,6 +256,8 @@ namespace WindowPlugins.GUITVSeries.Torrent
         {
             m_sName = match.Groups["name"].Value;
             m_sLink = match.Groups["link"].Value;
+            m_sSize = match.Groups["size"].Value;
+            m_sSize = m_sSize.Replace("&nbsp;", " ");
             m_nSeeds = Convert.ToInt32(match.Groups["seeds"].Value);
             m_nLeechers = Convert.ToInt32(match.Groups["leechers"].Value);
         }

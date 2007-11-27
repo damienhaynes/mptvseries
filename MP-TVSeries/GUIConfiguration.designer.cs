@@ -115,6 +115,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.checkDownloadEpisodeSnapshots = new System.Windows.Forms.CheckBox();
             this.chkBlankBanners = new System.Windows.Forms.CheckBox();
             this.linkExWatched = new System.Windows.Forms.LinkLabel();
             this.label37 = new System.Windows.Forms.Label();
@@ -265,7 +266,27 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch = new System.Windows.Forms.Panel();
             this.label33 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
-            this.textBox_NewsSearchRegex = new System.Windows.Forms.TextBox();
+            this.textBox_NewsSearchLanguageRegex = new System.Windows.Forms.TextBox();
+            this.textBox_NewsSearchGroupRegex = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchParseArticleRegex = new System.Windows.Forms.TextBox();
+            this.textBox_NewsSearchIsolateArticleRegex = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchFormatRegex = new System.Windows.Forms.TextBox();
+            this.textBox_NewsSearchReportDateRegex = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label48 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchPostDateRegex = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchSizeRegex = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchNameRegex = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchIDRegex = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.textBox_NewsSearchReportRegex = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.textbox_NewzbinPassword = new System.Windows.Forms.TextBox();
@@ -302,7 +323,7 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log = new System.Windows.Forms.ListBox();
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl_Details.SuspendLayout();
             this.tabPage_Details.SuspendLayout();
@@ -352,9 +373,9 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.SuspendLayout();
             this.panel_forom.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.splitMain_Log.Panel1.SuspendLayout();
+            this.splitMain_Log.Panel2.SuspendLayout();
+            this.splitMain_Log.SuspendLayout();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -396,7 +417,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Details.Name = "tabControl_Details";
             this.tabControl_Details.SelectedIndex = 0;
-            this.tabControl_Details.Size = new System.Drawing.Size(692, 684);
+            this.tabControl_Details.Size = new System.Drawing.Size(692, 683);
             this.tabControl_Details.TabIndex = 0;
             this.tabControl_Details.SelectedIndexChanged += new System.EventHandler(this.tabControl_Details_SelectedIndexChanged);
             // 
@@ -405,7 +426,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_Details.Controls.Add(this.splitContainer2);
             this.tabPage_Details.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Details.Name = "tabPage_Details";
-            this.tabPage_Details.Size = new System.Drawing.Size(684, 658);
+            this.tabPage_Details.Size = new System.Drawing.Size(684, 657);
             this.tabPage_Details.TabIndex = 2;
             this.tabPage_Details.Text = "Details";
             this.tabPage_Details.UseVisualStyleBackColor = true;
@@ -428,7 +449,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_Series);
             this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
             this.splitContainer2.Panel2.Controls.Add(this.panDBLocation);
-            this.splitContainer2.Size = new System.Drawing.Size(684, 658);
+            this.splitContainer2.Size = new System.Drawing.Size(684, 657);
             this.splitContainer2.SplitterDistance = 194;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -444,7 +465,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Library.Location = new System.Drawing.Point(0, 0);
             this.treeView_Library.MinimumSize = new System.Drawing.Size(100, 100);
             this.treeView_Library.Name = "treeView_Library";
-            this.treeView_Library.Size = new System.Drawing.Size(194, 632);
+            this.treeView_Library.Size = new System.Drawing.Size(194, 631);
             this.treeView_Library.TabIndex = 0;
             this.treeView_Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Library_AfterSelect);
             this.treeView_Library.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_Library_NodeMouseClick);
@@ -460,6 +481,7 @@ namespace WindowPlugins.GUITVSeries
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
             this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
+            this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
@@ -493,7 +515,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             // newzbinThisToolStripMenuItem
             // 
-            this.newzbinThisToolStripMenuItem.Enabled = false;
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
             this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
@@ -503,7 +524,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_ShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_ShowHidden.AutoSize = true;
-            this.checkBox_ShowHidden.Location = new System.Drawing.Point(3, 638);
+            this.checkBox_ShowHidden.Location = new System.Drawing.Point(3, 637);
             this.checkBox_ShowHidden.Name = "checkBox_ShowHidden";
             this.checkBox_ShowHidden.Size = new System.Drawing.Size(118, 17);
             this.checkBox_ShowHidden.TabIndex = 1;
@@ -558,7 +579,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(486, 484);
+            this.dataGridView1.Size = new System.Drawing.Size(486, 483);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -674,7 +695,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_Import.Controls.Add(this.splitContainer_SettingsOutput);
             this.tabPage_Import.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Import.Name = "tabPage_Import";
-            this.tabPage_Import.Size = new System.Drawing.Size(684, 658);
+            this.tabPage_Import.Size = new System.Drawing.Size(684, 657);
             this.tabPage_Import.TabIndex = 4;
             this.tabPage_Import.Text = "Import Settings";
             this.tabPage_Import.UseVisualStyleBackColor = true;
@@ -697,8 +718,8 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.progressBar_Parsing);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.button_Start);
             this.splitContainer_SettingsOutput.Panel2MinSize = 30;
-            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 658);
-            this.splitContainer_SettingsOutput.SplitterDistance = 592;
+            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 657);
+            this.splitContainer_SettingsOutput.SplitterDistance = 591;
             this.splitContainer_SettingsOutput.TabIndex = 157;
             this.splitContainer_SettingsOutput.TabStop = false;
             // 
@@ -722,7 +743,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ParsingTest);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
             this.splitContainerImportSettings.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerImportSettings_Panel2_Paint);
-            this.splitContainerImportSettings.Size = new System.Drawing.Size(684, 592);
+            this.splitContainerImportSettings.Size = new System.Drawing.Size(684, 591);
             this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
             // 
@@ -731,7 +752,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Settings.Location = new System.Drawing.Point(0, 0);
             this.treeView_Settings.Name = "treeView_Settings";
-            this.treeView_Settings.Size = new System.Drawing.Size(151, 592);
+            this.treeView_Settings.Size = new System.Drawing.Size(151, 591);
             this.treeView_Settings.TabIndex = 0;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
             // 
@@ -921,6 +942,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.checkDownloadEpisodeSnapshots);
             this.panel_OnlineData.Controls.Add(this.chkBlankBanners);
             this.panel_OnlineData.Controls.Add(this.linkExWatched);
             this.panel_OnlineData.Controls.Add(this.label37);
@@ -945,9 +967,21 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.TabIndex = 0;
             this.panel_OnlineData.Tag = "Online Data Sync";
             // 
+            // checkDownloadEpisodeSnapshots
+            // 
+            this.checkDownloadEpisodeSnapshots.Location = new System.Drawing.Point(4, 121);
+            this.checkDownloadEpisodeSnapshots.Name = "checkDownloadEpisodeSnapshots";
+            this.checkDownloadEpisodeSnapshots.Size = new System.Drawing.Size(417, 17);
+            this.checkDownloadEpisodeSnapshots.TabIndex = 18;
+            this.checkDownloadEpisodeSnapshots.Text = "Download Episode Snapshots";
+            this.toolTip_Help.SetToolTip(this.checkDownloadEpisodeSnapshots, "Enable to download blank series and season banners in addition to localized and E" +
+                    "nglish ones");
+            this.checkDownloadEpisodeSnapshots.UseVisualStyleBackColor = true;
+            this.checkDownloadEpisodeSnapshots.CheckedChanged += new System.EventHandler(this.checkDownloadEpisodeSnapshots_CheckedChanged);
+            // 
             // chkBlankBanners
             // 
-            this.chkBlankBanners.Location = new System.Drawing.Point(4, 120);
+            this.chkBlankBanners.Location = new System.Drawing.Point(4, 144);
             this.chkBlankBanners.Name = "chkBlankBanners";
             this.chkBlankBanners.Size = new System.Drawing.Size(417, 17);
             this.chkBlankBanners.TabIndex = 6;
@@ -960,7 +994,7 @@ namespace WindowPlugins.GUITVSeries
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(161, 238);
+            this.linkExWatched.Location = new System.Drawing.Point(161, 262);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
             this.linkExWatched.TabIndex = 14;
@@ -1011,7 +1045,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkFileDeletion
             // 
-            this.checkFileDeletion.Location = new System.Drawing.Point(4, 164);
+            this.checkFileDeletion.Location = new System.Drawing.Point(4, 188);
             this.checkFileDeletion.Name = "checkFileDeletion";
             this.checkFileDeletion.Size = new System.Drawing.Size(417, 17);
             this.checkFileDeletion.TabIndex = 8;
@@ -1024,7 +1058,7 @@ namespace WindowPlugins.GUITVSeries
             // linkDelUpdateTime
             // 
             this.linkDelUpdateTime.AutoSize = true;
-            this.linkDelUpdateTime.Location = new System.Drawing.Point(161, 220);
+            this.linkDelUpdateTime.Location = new System.Drawing.Point(161, 244);
             this.linkDelUpdateTime.Name = "linkDelUpdateTime";
             this.linkDelUpdateTime.Size = new System.Drawing.Size(128, 13);
             this.linkDelUpdateTime.TabIndex = 12;
@@ -1038,7 +1072,7 @@ namespace WindowPlugins.GUITVSeries
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(20, 187);
+            this.label26.Location = new System.Drawing.Point(20, 211);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(58, 13);
             this.label26.TabIndex = 9;
@@ -1048,7 +1082,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboOnlineLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboOnlineLang.FormattingEnabled = true;
-            this.comboOnlineLang.Location = new System.Drawing.Point(87, 184);
+            this.comboOnlineLang.Location = new System.Drawing.Point(87, 208);
             this.comboOnlineLang.Name = "comboOnlineLang";
             this.comboOnlineLang.Size = new System.Drawing.Size(121, 21);
             this.comboOnlineLang.TabIndex = 10;
@@ -1058,7 +1092,7 @@ namespace WindowPlugins.GUITVSeries
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(4, 238);
+            this.linkImpWatched.Location = new System.Drawing.Point(4, 262);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
             this.linkImpWatched.TabIndex = 13;
@@ -1069,7 +1103,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_doFolderWatch
             // 
-            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 142);
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 166);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(417, 17);
             this.checkBox_doFolderWatch.TabIndex = 7;
@@ -1083,7 +1117,7 @@ namespace WindowPlugins.GUITVSeries
             // linkMediaInfoUpdate
             // 
             this.linkMediaInfoUpdate.AutoSize = true;
-            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(4, 220);
+            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(4, 244);
             this.linkMediaInfoUpdate.Name = "linkMediaInfoUpdate";
             this.linkMediaInfoUpdate.Size = new System.Drawing.Size(95, 13);
             this.linkMediaInfoUpdate.TabIndex = 11;
@@ -1312,7 +1346,7 @@ namespace WindowPlugins.GUITVSeries
             this.tab_view.Location = new System.Drawing.Point(4, 22);
             this.tab_view.Name = "tab_view";
             this.tab_view.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_view.Size = new System.Drawing.Size(684, 658);
+            this.tab_view.Size = new System.Drawing.Size(684, 657);
             this.tab_view.TabIndex = 7;
             this.tab_view.Text = "Views";
             this.tab_view.UseVisualStyleBackColor = true;
@@ -1967,7 +2001,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MP_DisplayControl.Name = "tabPage_MP_DisplayControl";
             this.tabPage_MP_DisplayControl.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(684, 658);
+            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(684, 657);
             this.tabPage_MP_DisplayControl.TabIndex = 5;
             this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
             this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
@@ -2752,7 +2786,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabpage_Extra.Location = new System.Drawing.Point(4, 22);
             this.tabpage_Extra.Name = "tabpage_Extra";
             this.tabpage_Extra.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpage_Extra.Size = new System.Drawing.Size(684, 658);
+            this.tabpage_Extra.Size = new System.Drawing.Size(684, 657);
             this.tabpage_Extra.TabIndex = 6;
             this.tabpage_Extra.Text = "Extras";
             this.tabpage_Extra.UseVisualStyleBackColor = true;
@@ -2775,7 +2809,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
-            this.splitContainer_treeextra.Size = new System.Drawing.Size(678, 652);
+            this.splitContainer_treeextra.Size = new System.Drawing.Size(678, 651);
             this.splitContainer_treeextra.SplitterDistance = 172;
             this.splitContainer_treeextra.TabIndex = 5;
             // 
@@ -2784,7 +2818,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Extra.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Extra.Location = new System.Drawing.Point(0, 0);
             this.treeView_Extra.Name = "treeView_Extra";
-            this.treeView_Extra.Size = new System.Drawing.Size(172, 652);
+            this.treeView_Extra.Size = new System.Drawing.Size(172, 651);
             this.treeView_Extra.TabIndex = 0;
             this.treeView_Extra.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Extra_AfterSelect);
             // 
@@ -2792,15 +2826,35 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.panel_newssearch.Controls.Add(this.label33);
             this.panel_newssearch.Controls.Add(this.label31);
-            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchRegex);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchLanguageRegex);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchGroupRegex);
+            this.panel_newssearch.Controls.Add(this.label47);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchParseArticleRegex);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchIsolateArticleRegex);
+            this.panel_newssearch.Controls.Add(this.label46);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchFormatRegex);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchReportDateRegex);
+            this.panel_newssearch.Controls.Add(this.label49);
+            this.panel_newssearch.Controls.Add(this.label45);
+            this.panel_newssearch.Controls.Add(this.label48);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchPostDateRegex);
+            this.panel_newssearch.Controls.Add(this.label44);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchSizeRegex);
+            this.panel_newssearch.Controls.Add(this.label43);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchNameRegex);
+            this.panel_newssearch.Controls.Add(this.label42);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchIDRegex);
+            this.panel_newssearch.Controls.Add(this.label41);
+            this.panel_newssearch.Controls.Add(this.textBox_NewsSearchReportRegex);
+            this.panel_newssearch.Controls.Add(this.label40);
             this.panel_newssearch.Controls.Add(this.label36);
             this.panel_newssearch.Controls.Add(this.label34);
             this.panel_newssearch.Controls.Add(this.textbox_NewzbinPassword);
             this.panel_newssearch.Controls.Add(this.textBox_NewzbinLogin);
             this.panel_newssearch.Controls.Add(this.textBox_NewsSearchUrl);
-            this.panel_newssearch.Location = new System.Drawing.Point(30, 195);
+            this.panel_newssearch.Location = new System.Drawing.Point(8, 222);
             this.panel_newssearch.Name = "panel_newssearch";
-            this.panel_newssearch.Size = new System.Drawing.Size(226, 182);
+            this.panel_newssearch.Size = new System.Drawing.Size(480, 410);
             this.panel_newssearch.TabIndex = 2;
             this.panel_newssearch.Tag = "News Search";
             this.panel_newssearch.Visible = false;
@@ -2823,18 +2877,217 @@ namespace WindowPlugins.GUITVSeries
             this.label31.Text = "newzBin &Login:";
             this.label31.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // textBox_NewsSearchRegex
+            // textBox_NewsSearchLanguageRegex
             // 
-            this.textBox_NewsSearchRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox_NewsSearchLanguageRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_NewsSearchRegex.Location = new System.Drawing.Point(147, 86);
-            this.textBox_NewsSearchRegex.Multiline = true;
-            this.textBox_NewsSearchRegex.Name = "textBox_NewsSearchRegex";
-            this.textBox_NewsSearchRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_NewsSearchRegex.Size = new System.Drawing.Size(68, 85);
-            this.textBox_NewsSearchRegex.TabIndex = 7;
-            this.toolTip_Help.SetToolTip(this.textBox_NewsSearchRegex, "ID is the only important tag used to download");
-            this.textBox_NewsSearchRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchRegex_TextChanged);
+            this.textBox_NewsSearchLanguageRegex.Location = new System.Drawing.Point(147, 304);
+            this.textBox_NewsSearchLanguageRegex.Name = "textBox_NewsSearchLanguageRegex";
+            this.textBox_NewsSearchLanguageRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchLanguageRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchLanguageRegex.TabIndex = 7;
+            this.textBox_NewsSearchLanguageRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchLanguageRegex_TextChanged);
+            // 
+            // textBox_NewsSearchGroupRegex
+            // 
+            this.textBox_NewsSearchGroupRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchGroupRegex.Location = new System.Drawing.Point(147, 278);
+            this.textBox_NewsSearchGroupRegex.Name = "textBox_NewsSearchGroupRegex";
+            this.textBox_NewsSearchGroupRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchGroupRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchGroupRegex.TabIndex = 7;
+            this.textBox_NewsSearchGroupRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchGroupRegex_TextChanged);
+            // 
+            // label47
+            // 
+            this.label47.Location = new System.Drawing.Point(4, 307);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(138, 14);
+            this.label47.TabIndex = 6;
+            this.label47.Text = "Search L&anguage RegEx:";
+            this.label47.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchParseArticleRegex
+            // 
+            this.textBox_NewsSearchParseArticleRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchParseArticleRegex.Location = new System.Drawing.Point(147, 366);
+            this.textBox_NewsSearchParseArticleRegex.Name = "textBox_NewsSearchParseArticleRegex";
+            this.textBox_NewsSearchParseArticleRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchParseArticleRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchParseArticleRegex.TabIndex = 7;
+            this.textBox_NewsSearchParseArticleRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchParseArticleRegex_TextChanged);
+            // 
+            // textBox_NewsSearchIsolateArticleRegex
+            // 
+            this.textBox_NewsSearchIsolateArticleRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchIsolateArticleRegex.Location = new System.Drawing.Point(147, 337);
+            this.textBox_NewsSearchIsolateArticleRegex.Name = "textBox_NewsSearchIsolateArticleRegex";
+            this.textBox_NewsSearchIsolateArticleRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchIsolateArticleRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchIsolateArticleRegex.TabIndex = 7;
+            this.textBox_NewsSearchIsolateArticleRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchIsolateArticleRegex_TextChanged);
+            // 
+            // label46
+            // 
+            this.label46.Location = new System.Drawing.Point(4, 281);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(138, 14);
+            this.label46.TabIndex = 6;
+            this.label46.Text = "Search &Group RegEx:";
+            this.label46.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchFormatRegex
+            // 
+            this.textBox_NewsSearchFormatRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchFormatRegex.Location = new System.Drawing.Point(147, 252);
+            this.textBox_NewsSearchFormatRegex.Name = "textBox_NewsSearchFormatRegex";
+            this.textBox_NewsSearchFormatRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchFormatRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchFormatRegex.TabIndex = 7;
+            this.textBox_NewsSearchFormatRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchFormatRegex_TextChanged);
+            // 
+            // textBox_NewsSearchReportDateRegex
+            // 
+            this.textBox_NewsSearchReportDateRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchReportDateRegex.Location = new System.Drawing.Point(147, 226);
+            this.textBox_NewsSearchReportDateRegex.Name = "textBox_NewsSearchReportDateRegex";
+            this.textBox_NewsSearchReportDateRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchReportDateRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchReportDateRegex.TabIndex = 7;
+            this.textBox_NewsSearchReportDateRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchReportDateRegex_TextChanged);
+            // 
+            // label49
+            // 
+            this.label49.Location = new System.Drawing.Point(4, 368);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(138, 29);
+            this.label49.TabIndex = 6;
+            this.label49.Text = "Parse Article Name RegEx:";
+            this.label49.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label45
+            // 
+            this.label45.Location = new System.Drawing.Point(4, 334);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(138, 29);
+            this.label45.TabIndex = 6;
+            this.label45.Text = "Isolate Article Name RegEx:";
+            this.label45.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label48
+            // 
+            this.label48.Location = new System.Drawing.Point(2, 255);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(140, 14);
+            this.label48.TabIndex = 6;
+            this.label48.Text = "Search &Format Date RegEx:";
+            this.label48.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchPostDateRegex
+            // 
+            this.textBox_NewsSearchPostDateRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchPostDateRegex.Location = new System.Drawing.Point(147, 200);
+            this.textBox_NewsSearchPostDateRegex.Name = "textBox_NewsSearchPostDateRegex";
+            this.textBox_NewsSearchPostDateRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchPostDateRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchPostDateRegex.TabIndex = 7;
+            this.textBox_NewsSearchPostDateRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchPostDateRegex_TextChanged);
+            // 
+            // label44
+            // 
+            this.label44.Location = new System.Drawing.Point(2, 229);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(140, 14);
+            this.label44.TabIndex = 6;
+            this.label44.Text = "Search R&eport Date RegEx:";
+            this.label44.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchSizeRegex
+            // 
+            this.textBox_NewsSearchSizeRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchSizeRegex.Location = new System.Drawing.Point(147, 174);
+            this.textBox_NewsSearchSizeRegex.Name = "textBox_NewsSearchSizeRegex";
+            this.textBox_NewsSearchSizeRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchSizeRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchSizeRegex.TabIndex = 7;
+            this.textBox_NewsSearchSizeRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchSizeRegex_TextChanged);
+            // 
+            // label43
+            // 
+            this.label43.Location = new System.Drawing.Point(4, 203);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(138, 14);
+            this.label43.TabIndex = 6;
+            this.label43.Text = "Search P&ost Date RegEx:";
+            this.label43.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchNameRegex
+            // 
+            this.textBox_NewsSearchNameRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchNameRegex.Location = new System.Drawing.Point(147, 148);
+            this.textBox_NewsSearchNameRegex.Name = "textBox_NewsSearchNameRegex";
+            this.textBox_NewsSearchNameRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchNameRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchNameRegex.TabIndex = 7;
+            this.textBox_NewsSearchNameRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchNameRegex_TextChanged);
+            // 
+            // label42
+            // 
+            this.label42.Location = new System.Drawing.Point(4, 177);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(138, 14);
+            this.label42.TabIndex = 6;
+            this.label42.Text = "Search &Size RegEx:";
+            this.label42.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchIDRegex
+            // 
+            this.textBox_NewsSearchIDRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchIDRegex.Location = new System.Drawing.Point(147, 122);
+            this.textBox_NewsSearchIDRegex.Name = "textBox_NewsSearchIDRegex";
+            this.textBox_NewsSearchIDRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchIDRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchIDRegex.TabIndex = 7;
+            this.textBox_NewsSearchIDRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchIDRegex_TextChanged);
+            // 
+            // label41
+            // 
+            this.label41.Location = new System.Drawing.Point(4, 151);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(138, 14);
+            this.label41.TabIndex = 6;
+            this.label41.Text = "Search &Name RegEx:";
+            this.label41.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBox_NewsSearchReportRegex
+            // 
+            this.textBox_NewsSearchReportRegex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_NewsSearchReportRegex.Location = new System.Drawing.Point(147, 91);
+            this.textBox_NewsSearchReportRegex.Name = "textBox_NewsSearchReportRegex";
+            this.textBox_NewsSearchReportRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_NewsSearchReportRegex.Size = new System.Drawing.Size(322, 20);
+            this.textBox_NewsSearchReportRegex.TabIndex = 7;
+            this.toolTip_Help.SetToolTip(this.textBox_NewsSearchReportRegex, "ID is the only important tag used to download");
+            this.textBox_NewsSearchReportRegex.TextChanged += new System.EventHandler(this.textBox_NewsSearchRegex_TextChanged);
+            // 
+            // label40
+            // 
+            this.label40.Location = new System.Drawing.Point(4, 125);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(138, 14);
+            this.label40.TabIndex = 6;
+            this.label40.Text = "Search &ID RegEx:";
+            this.label40.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label36
             // 
@@ -2847,11 +3100,11 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label34
             // 
-            this.label34.Location = new System.Drawing.Point(4, 89);
+            this.label34.Location = new System.Drawing.Point(4, 94);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(138, 20);
+            this.label34.Size = new System.Drawing.Size(138, 14);
             this.label34.TabIndex = 6;
-            this.label34.Text = "Search &RegEx:";
+            this.label34.Text = "Search &Report RegEx:";
             this.label34.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textbox_NewzbinPassword
@@ -2860,7 +3113,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textbox_NewzbinPassword.Location = new System.Drawing.Point(147, 34);
             this.textbox_NewzbinPassword.Name = "textbox_NewzbinPassword";
-            this.textbox_NewzbinPassword.Size = new System.Drawing.Size(68, 20);
+            this.textbox_NewzbinPassword.Size = new System.Drawing.Size(322, 20);
             this.textbox_NewzbinPassword.TabIndex = 3;
             this.textbox_NewzbinPassword.UseSystemPasswordChar = true;
             this.textbox_NewzbinPassword.TextChanged += new System.EventHandler(this.textbox_NewzbinPassword_TextChanged);
@@ -2871,7 +3124,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_NewzbinLogin.Location = new System.Drawing.Point(147, 8);
             this.textBox_NewzbinLogin.Name = "textBox_NewzbinLogin";
-            this.textBox_NewzbinLogin.Size = new System.Drawing.Size(68, 20);
+            this.textBox_NewzbinLogin.Size = new System.Drawing.Size(322, 20);
             this.textBox_NewzbinLogin.TabIndex = 1;
             this.textBox_NewzbinLogin.TextChanged += new System.EventHandler(this.textBox_NewzbinLogin_TextChanged);
             // 
@@ -2881,7 +3134,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_NewsSearchUrl.Location = new System.Drawing.Point(147, 60);
             this.textBox_NewsSearchUrl.Name = "textBox_NewsSearchUrl";
-            this.textBox_NewsSearchUrl.Size = new System.Drawing.Size(68, 20);
+            this.textBox_NewsSearchUrl.Size = new System.Drawing.Size(322, 20);
             this.textBox_NewsSearchUrl.TabIndex = 5;
             this.textBox_NewsSearchUrl.TextChanged += new System.EventHandler(this.textBox_NewsSearchUrl_TextChanged);
             // 
@@ -3203,38 +3456,38 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
-            this.button1.Location = new System.Drawing.Point(0, 684);
+            this.button1.Location = new System.Drawing.Point(0, 683);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(692, 13);
+            this.button1.Size = new System.Drawing.Size(692, 14);
             this.button1.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
                     "ing progress of Import");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // splitContainer1
+            // splitMain_Log
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitMain_Log.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitMain_Log.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitMain_Log.IsSplitterFixed = true;
+            this.splitMain_Log.Location = new System.Drawing.Point(0, 0);
+            this.splitMain_Log.Name = "splitMain_Log";
+            this.splitMain_Log.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel1
+            // splitMain_Log.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.tabControl_Details);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitMain_Log.Panel1.Controls.Add(this.tabControl_Details);
+            this.splitMain_Log.Panel1.Controls.Add(this.button1);
             // 
-            // splitContainer1.Panel2
+            // splitMain_Log.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.listBox_Log);
-            this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.splitContainer1.Panel2Collapsed = true;
-            this.splitContainer1.Size = new System.Drawing.Size(692, 697);
-            this.splitContainer1.SplitterDistance = 382;
-            this.splitContainer1.SplitterWidth = 1;
-            this.splitContainer1.TabIndex = 65;
+            this.splitMain_Log.Panel2.Controls.Add(this.listBox_Log);
+            this.splitMain_Log.Panel2.Padding = new System.Windows.Forms.Padding(10);
+            this.splitMain_Log.Panel2Collapsed = true;
+            this.splitMain_Log.Size = new System.Drawing.Size(692, 697);
+            this.splitMain_Log.SplitterDistance = 382;
+            this.splitMain_Log.SplitterWidth = 1;
+            this.splitMain_Log.TabIndex = 65;
             // 
             // toolTip_InfoHelp
             // 
@@ -3250,7 +3503,7 @@ namespace WindowPlugins.GUITVSeries
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(692, 697);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitMain_Log);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "ConfigurationForm";
@@ -3321,9 +3574,9 @@ namespace WindowPlugins.GUITVSeries
             this.panel_forom.PerformLayout();
             this.panel_torrentsearch.ResumeLayout(false);
             this.panel_torrentsearch.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
+            this.splitMain_Log.Panel1.ResumeLayout(false);
+            this.splitMain_Log.Panel2.ResumeLayout(false);
+            this.splitMain_Log.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -3420,7 +3673,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_PluginHomeName;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TabPage tabpage_Extra;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitMain_Log;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBox_DontClearMissingLocalFiles;
         private System.Windows.Forms.CheckBox checkBox_ShowHidden;
@@ -3535,7 +3788,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button button_dbbrowse;
         private System.Windows.Forms.TextBox textBox_dblocation;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox textBox_NewsSearchRegex;
+        private System.Windows.Forms.TextBox textBox_NewsSearchReportRegex;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.TextBox textBox_NewsSearchUrl;
@@ -3561,6 +3814,27 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel buildExpr;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.ToolTip toolTip_InfoHelp;
+        private System.Windows.Forms.CheckBox checkDownloadEpisodeSnapshots;
+        private System.Windows.Forms.TextBox textBox_NewsSearchLanguageRegex;
+        private System.Windows.Forms.TextBox textBox_NewsSearchGroupRegex;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.TextBox textBox_NewsSearchIsolateArticleRegex;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox textBox_NewsSearchReportDateRegex;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.TextBox textBox_NewsSearchPostDateRegex;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox textBox_NewsSearchSizeRegex;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox textBox_NewsSearchNameRegex;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox textBox_NewsSearchIDRegex;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.TextBox textBox_NewsSearchFormatRegex;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox textBox_NewsSearchParseArticleRegex;
+        private System.Windows.Forms.Label label49;
         private ManualEpisodeManagementPane panel_manualEpisodeManagement;
     }
 }

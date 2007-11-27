@@ -701,9 +701,7 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(10 + (10 * nIndex / seriesList.Count));
                 nIndex++;
 
-                bool bDone = false;
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];
-
                 DBOnlineSeries UserChosenSeries = SearchForSeries(sSeriesNameToSearch);
 
                 if (UserChosenSeries != null) // make sure selection was not cancelled
@@ -829,31 +827,39 @@ namespace WindowPlugins.GUITVSeries
                 descriptor.m_sbtnCancelLabel = "Skip this time";
                 descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
 
-                Feedback.CItem Selected = null;
-                Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
-                switch (result) {
-                    case Feedback.ReturnCode.Cancel:
-                        return null;
-                        break;
+                        while (true)
+                        {
+                            Feedback.CItem Selected = null;
+                            Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
+                            switch (result)
+                            {
+                                case Feedback.ReturnCode.Cancel:
+                                    return null;
 
-                    case Feedback.ReturnCode.Ignore:
-                        nameToSearch = null;
-                        DBSeries series = new DBSeries(seriesName);
-                        series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
-                        series[DBSeries.cHidden] = true;
-                        series.Commit();
-                        return null;
-                        break;
+                                case Feedback.ReturnCode.Ignore:
+                                    nameToSearch = null;
+                                    DBSeries series = new DBSeries(seriesName);
+                                    series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
+                                    series[DBSeries.cHidden] = true;
+                                    series.Commit();
+                                    return null;
 
-                    case Feedback.ReturnCode.OK:
-                        DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-                        if (nameToSearch != Selected.m_sName) 
-                            nameToSearch = Selected.m_sName;
-                        else 
-                            return selectedSeries;
-                        break;
+                                case Feedback.ReturnCode.OK:
+                                    DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
+                                    if (nameToSearch != Selected.m_sName) 
+                                        nameToSearch = Selected.m_sName;
+                                    else
+                                        return selectedSeries;
+                                    break;
 
-                }
+                                case Feedback.ReturnCode.NotReady:
+                                    {
+                                        // plugin's not loaded (yet?) so wait and ask again later
+                                        Thread.Sleep(2000);
+                                    }
+                                    break;
+                            }
+                         }
             }
         }
 
@@ -1203,7 +1209,18 @@ namespace WindowPlugins.GUITVSeries
                 else
                     MPTVSeriesLog.Write("Refreshing banners for " + series[DBOnlineSeries.cPrettyName]);
 
-                GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], bUpdateNewSeries ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp], series[DBOnlineSeries.cPrettyName]);
+                // check if the files are still there - if not, redownload
+                bool bMissingBanners = false;
+                foreach (String filename in series.BannerList)
+                {
+                    if (!System.IO.File.Exists(filename)) 
+                    {
+                        bMissingBanners = true;
+                        break;
+                    }
+                }
+
+                GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], (bUpdateNewSeries | bMissingBanners) ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp], series[DBOnlineSeries.cPrettyName]);
                 // end disable for new way
 
                 String sLastTextBanner = String.Empty;
@@ -1309,6 +1326,7 @@ namespace WindowPlugins.GUITVSeries
             // all series that have an onlineID ( != 0)
             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.NotEqual);
             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, -1, SQLConditionType.NotEqual);
+            bool bDownloadEpisodesnapshots = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
 
             if (bUpdateNewEpisodes)
             {
@@ -1384,15 +1402,27 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cCompositeID:
                                 case DBEpisode.cSeriesID:
                                 case DBOnlineEpisode.cWatched:
+                                case DBOnlineEpisode.cDownloadPending:
+                                case DBOnlineEpisode.cDownloadExpectedNames:
                                     // do nothing here, those information are local only
                                     break;
+                                
                                 case DBOnlineEpisode.cSeasonIndex:
                                 case DBOnlineEpisode.cEpisodeIndex:
                                     break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
-                                case "filename":
+
+                                case DBOnlineEpisode.cEpisodeImageFilename:
                                     // this is the episode image
-                                    if (onlineEpisode["filename"].ToString().Length > 0) onlineEpisode["filename"] = updateEpisodesParser.getEpisodeImage(localEpisode.onlineEpisode, onlineEpisode["filename"]);
+                                    if (bDownloadEpisodesnapshots)
+                                    {
+                                        if (onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename].ToString().Length > 0)
+                                            onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename] = updateEpisodesParser.getEpisodeImage(localEpisode.onlineEpisode, onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename]);
+                                    }
+                                    else
+                                        onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename] = String.Empty;
+
                                     goto default;
+                                
                                 default:
                                     localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
                                     localEpisode[key] = onlineEpisode[key];
