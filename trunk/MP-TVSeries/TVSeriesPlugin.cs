@@ -2241,7 +2241,7 @@ namespace MediaPortal.GUI.Video
             }
 
             // lets also push the virtual fields
-            if (pre == "Episode")
+            if (item is DBEpisode && pre == "Episode")
             {
                 pushFieldToSkin(item, pre, DBEpisode.cFileSize);
                 pushFieldToSkin(item, pre, DBEpisode.cPrettyPlaytime);
@@ -2260,7 +2260,7 @@ namespace MediaPortal.GUI.Video
                 foreach (string field in fields)
                     clearGUIProperty(field);
             }
-            // lets also push the virtual fields
+            // lets also clear the virtual fields
             if (pre == "Episode")
             {
                 clearGUIProperty(DBEpisode.cFileSize);
