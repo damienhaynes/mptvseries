@@ -383,7 +383,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                             response.Close();
 
                             Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
-//                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
                             m_bSuccess = true;
                         }
                     }
