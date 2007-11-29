@@ -29,39 +29,39 @@ namespace WindowPlugins.GUITVSeries
 {
     public class logicalView
     {
-        const string viewSeperator = "<nextView>";
-        string _name = string.Empty;
-        string _prettyName = null;
-        public static bool cachePrettyName = true;
+        const string m_viewSeperator = "<nextView>";
+        string m_name = string.Empty;
+        string m_prettyName = null;
+        public static bool s_cachePrettyName = true;
         //public bool isGroupType = false;
         public string groupedInfo(int step)
         {
-            return steps[step].groupedBy.PrettyName;
+            return m_steps[step].groupedBy.PrettyName;
         }
-        public string Name  { get { return this._name; } }
+        public string Name  { get { return this.m_name; } }
         public string prettyName
         {
             get 
             {
-                return _prettyName;
+                return m_prettyName;
             }
             set
             {
-                this._prettyName = value;
+                this.m_prettyName = value;
             }
         }
-        public string uniqueID = string.Empty;
-        public bool Enabled = true;
+        public string m_uniqueID = string.Empty;
+        public bool m_Enabled = true;
 
-        DBView toUpdateForConfig = null;
+        DBView m_toUpdateForConfig = null;
 
-        public List<logicalViewStep> steps = new List<logicalViewStep>();
+        public List<logicalViewStep> m_steps = new List<logicalViewStep>();
 
         public List<DBSeries> getSeriesItems(int stepIndex, string[] currentStepSelection)
         {
             MPTVSeriesLog.Write("View: GetSeriesItems: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
-            if (stepIndex >= steps.Count) return null; // wrong index specified!!
+            if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
@@ -69,19 +69,19 @@ namespace WindowPlugins.GUITVSeries
 
         public logicalViewStep.type gettypeOfStep(int step)
         {
-           return steps[step].Type;
+           return m_steps[step].Type;
         }
         public bool stepHasSeriesBeforeIt(int step)
         {
-            if (step >= steps.Count) return false; // wrong index!
-            return steps[step].hasSeriesBeforeIt;
+            if (step >= m_steps.Count) return false; // wrong index!
+            return m_steps[step].hasSeriesBeforeIt;
         }
         
         public List<DBSeason> getSeasonItems(int stepIndex, string[] currentStepSelection)
         {
             MPTVSeriesLog.Write("View: GetSeason: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
-            if (stepIndex >= steps.Count) return null; // wrong index specified!!
+            if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             MPTVSeriesLog.Write("View: GetSeason: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
             //return DBSeason.Get(default(int), DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false, conditions);
@@ -92,7 +92,7 @@ namespace WindowPlugins.GUITVSeries
         {
             MPTVSeriesLog.Write("View: GetEps: Begin", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
-            if (stepIndex >= steps.Count) return null; // wrong index specified!!
+            if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
             
             MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
@@ -100,9 +100,9 @@ namespace WindowPlugins.GUITVSeries
 
             // WARNING: this naturally only works if the ordering is by season/episodeOrder
             // inline the special episodes to there relevant positions (Season == 0 by airsbefore_episode)
-            if (steps[stepIndex].inLineSpecials && currentStepSelection[currentStepSelection.Length - 1] != "0")
+            if (m_steps[stepIndex].inLineSpecials && currentStepSelection[currentStepSelection.Length - 1] != "0")
             {
-                if (steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
+                if (m_steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
                 Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
                     {
                         return getRelSortingIndexOfEp(e1).CompareTo(getRelSortingIndexOfEp(e2));
@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
         public List<DBEpisode> getAllEpisodesForStep(int stepIndex, string[] currentStepSelection)
         {
             // make sure we have been given a valid step number
-            if ((stepIndex >= steps.Count) || (stepIndex < 0))
+            if ((stepIndex >= m_steps.Count) || (stepIndex < 0))
                 return null;
 
             // our return object
@@ -195,9 +195,9 @@ namespace WindowPlugins.GUITVSeries
         {
             SQLCondition conditions = null;
             MPTVSeriesLog.Write("View: GetGroupItems: Begin", MPTVSeriesLog.LogLevel.Debug);
-            if (stepIndex >= steps.Count) return null; // wrong index specified!!
+            if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            logicalViewStep step = steps[stepIndex];
+            logicalViewStep step = m_steps[stepIndex];
             List<string> items = new List<string>();
             // to ensure we respect on the fly filter settings
             if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
@@ -263,23 +263,23 @@ namespace WindowPlugins.GUITVSeries
 
         public void addHierarchyConditions(ref int stepIndex, ref string[] currentStepSelection, ref SQLCondition conditions)
         {
-            logicalViewStep step = steps[stepIndex];
+            logicalViewStep step = m_steps[stepIndex];
             conditions = step.conds.Copy(); // important, don't change the steps themselves
 
             // we need to add one additional condition to reflect the selection one hierarchy up
             if (currentStepSelection != null && currentStepSelection.Length > 0 && stepIndex > 0)
             {
-                switch (steps[stepIndex - 1].Type)
+                switch (m_steps[stepIndex - 1].Type)
                 {
                     case logicalViewStep.type.group:
                         // we expect to get the selected group's label
                         if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
-                            conditions.Add(steps[stepIndex - 1].groupedBy.table, steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
+                            conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
                         else 
-                            if(steps[stepIndex - 1].groupedBy.attempSplit) // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
-                                conditions.Add(steps[stepIndex - 1].groupedBy.table, steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
+                            if(m_steps[stepIndex - 1].groupedBy.attempSplit) // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
+                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
                             else
-                                conditions.Add(steps[stepIndex - 1].groupedBy.table, steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
+                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
                         break;
                     case logicalViewStep.type.series:
                         // we expect to get the seriesID as stepSel
@@ -323,31 +323,31 @@ namespace WindowPlugins.GUITVSeries
 
         public logicalView(DBView fromDB)
         {
-            string[] steps = System.Text.RegularExpressions.Regex.Split(fromDB[DBView.cViewConfig], logicalViewStep.stepSeperator);
+            string[] steps = System.Text.RegularExpressions.Regex.Split(fromDB[DBView.cViewConfig], logicalViewStep.s_stepSeperator);
             bool hasSeriesBeforeIt = false;
 
-            this._name = fromDB[DBView.cTransToken];
-            this._prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this._name) : (String)fromDB[DBView.cPrettyName];
-            this.uniqueID = fromDB[DBView.cIndex];
-            this.Enabled = fromDB[DBView.cEnabled];
+            this.m_name = fromDB[DBView.cTransToken];
+            this.m_prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this.m_name) : (String)fromDB[DBView.cPrettyName];
+            this.m_uniqueID = fromDB[DBView.cIndex];
+            this.m_Enabled = fromDB[DBView.cEnabled];
 
-            if (Settings.isConfig) toUpdateForConfig = fromDB;
+            if (Settings.isConfig) m_toUpdateForConfig = fromDB;
 
             //steps[0] = steps[0].Split(new string[] { "<name>" }, StringSplitOptions.RemoveEmptyEntries)[1];
             for (int i = 0; i < steps.Length; i++)
             {
-                this.steps.Add(logicalViewStep.parseFromDB(steps[i], hasSeriesBeforeIt));
+                this.m_steps.Add(logicalViewStep.parseFromDB(steps[i], hasSeriesBeforeIt));
                 //if (this.steps[i].Type == logicalViewStep.type.group) isGroupType = true;
                 // inherit the conditions, so each step will always have all the conditions from steps before it!
                 if (i > 0)
                 {
-                    foreach (string condsToInh in this.steps[i - 1].conditionsToInherit)
+                    foreach (string condsToInh in this.m_steps[i - 1].conditionsToInherit)
                     {
-                        this.steps[i].addInheritedConditions(condsToInh);
+                        this.m_steps[i].addInheritedConditions(condsToInh);
                     }
                 }
                 // so lists can query if they'll have to append the seriesname in episode view (when no series was selected, eg. Flat View
-                if (this.steps[i].Type == logicalViewStep.type.series)
+                if (this.m_steps[i].Type == logicalViewStep.type.series)
                     hasSeriesBeforeIt = true;
             }
         }
@@ -362,11 +362,11 @@ namespace WindowPlugins.GUITVSeries
 
         public void saveToDB()
         {
-            toUpdateForConfig[DBView.cIndex] = uniqueID;
-            toUpdateForConfig[DBView.cEnabled] = Enabled;
-            toUpdateForConfig[DBView.cTransToken] = _name;
-            toUpdateForConfig[DBView.cPrettyName] = _prettyName != Translation.Get(_name) ? prettyName : string.Empty;
-            toUpdateForConfig.Commit();
+            m_toUpdateForConfig[DBView.cIndex] = m_uniqueID;
+            m_toUpdateForConfig[DBView.cEnabled] = m_Enabled;
+            m_toUpdateForConfig[DBView.cTransToken] = m_name;
+            m_toUpdateForConfig[DBView.cPrettyName] = m_prettyName != Translation.Get(m_name) ? prettyName : string.Empty;
+            m_toUpdateForConfig.Commit();
         }
     }
 
@@ -374,9 +374,9 @@ namespace WindowPlugins.GUITVSeries
     {
         // steps are in db as: type<;>condition;=720<cond>condition;=520<;>orderField;desc<;>limit
         // groups look so: "group:<Series.Network><;><Series.isFavourite>;=;1<cond>condition2;=;520<;>orderField;desc;orderField2;asc<;>15";
-        public const string stepSeperator = "<nextStep>";
-        const string intSeperator = "<;>";
-        const string condSeperator = "<cond>";
+        public const string s_stepSeperator = "<nextStep>";
+        const string s_intSeperator = "<;>";
+        const string s_condSeperator = "<cond>";
         public enum type
         {
             group,
@@ -452,13 +452,13 @@ namespace WindowPlugins.GUITVSeries
                     condtype = SQLConditionType.GreaterThan;
                     break;
                 case ">=":
-                    condtype = SQLConditionType.GreaterThan;
+                    condtype = SQLConditionType.GreaterEqualThan;
                     break;
                 case "<":
                     condtype = SQLConditionType.LessThan;
                     break;
                 case "<=":
-                    condtype = SQLConditionType.LessThan;
+                    condtype = SQLConditionType.LessEqualThan;
                     break;
                 case "!=":
                     condtype = SQLConditionType.NotEqual;
@@ -585,11 +585,26 @@ namespace WindowPlugins.GUITVSeries
         void addConditionsFromString(string allConditionsAsString)
         {
             if (allConditionsAsString.Length == 0) return;
-            string[] allConditions = System.Text.RegularExpressions.Regex.Split(allConditionsAsString, condSeperator);
+            string[] allConditions = System.Text.RegularExpressions.Regex.Split(allConditionsAsString, s_condSeperator);
             for (int i = 0; i < allConditions.Length; i++)
             {
                 string[] condSplit = System.Text.RegularExpressions.Regex.Split(allConditions[i], ";");
-                addSQLCondition(condSplit[0], condSplit[1], condSplit[2].Replace("\"", "").Replace("'", ""));
+                string condSplit2 = condSplit[2].Replace("\"", "").Replace("'", "");
+                if (condSplit2.StartsWith("<today"))
+                {
+                    // relative date value
+                    if (condSplit2 == "<today>")
+                        condSplit2 = DateTime.Now.ToString("yyyy-MM-dd");
+                    else 
+                    {
+                        // figure out how long before/after we're going
+                        int nDayOffset = System.Convert.ToInt32(condSplit2.Substring("<today".Length).TrimEnd('>'));
+                        DateTime offsetDate = DateTime.Now;
+                        offsetDate = offsetDate.AddDays(nDayOffset);
+                        condSplit2 = offsetDate.ToString("yyyy-MM-dd");
+                    }
+                }
+                addSQLCondition(condSplit[0], condSplit[1], condSplit2);
             }
             conditionsToInherit.Add(allConditionsAsString);
         }
@@ -598,7 +613,7 @@ namespace WindowPlugins.GUITVSeries
         {
             logicalViewStep thisView = new logicalViewStep();
             thisView.hasSeriesBeforeIt = hasSeriesBeforeIt;
-            string[] viewSteps = System.Text.RegularExpressions.Regex.Split(viewStep, intSeperator);
+            string[] viewSteps = System.Text.RegularExpressions.Regex.Split(viewStep, s_intSeperator);
             thisView.setType(viewSteps[0]);
             thisView.addConditionsFromString(viewSteps[1]);
             if (viewSteps[2].Length > 0)

@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBView : DBTable
     {
         public const String cTableName = "Views";
+        public const int cDBVersion = 2;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -173,10 +174,25 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "6";
                 view[cTransToken] = "Latest";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"episode<;><;><Episode.FirstAired>;desc<;>25";
+                view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
                 view.Commit();
-
             }
+
+            int nCurrentDBVersion = cDBVersion;
+            while (DBOption.GetOptions(DBOption.cDBViewsVersion) != nCurrentDBVersion)
+                // take care of the upgrade in the table
+                switch ((int)DBOption.GetOptions(DBOption.cDBViewsVersion))
+                {
+                    default:
+                        {
+                            // upgrade to version 2; latest view doesn't show anything from the future, and shows only from the last 30 days
+                            DBView view = new DBView(5);
+                            view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
+                            view.Commit();
+                            DBOption.SetOptions(DBOption.cDBViewsVersion, nCurrentDBVersion);
+                        }
+                        break;
+                }
         }
     }
 }
