@@ -2628,15 +2628,15 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!pauseViewConfigSave)
             {
-                logicalView.cachePrettyName = false;
+                logicalView.s_cachePrettyName = false;
                 pauseViewConfigSave = true;
                 view_selectedName.Text = string.Empty;
                 view_selStepsList.Items.Clear();
 
                 selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
                 view_selectedName.Text = selectedView.prettyName;
-                checkCurViewEnabled.Checked = selectedView.Enabled;
-                foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.steps))
+                checkCurViewEnabled.Checked = selectedView.m_Enabled;
+                foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.m_steps))
                     view_selStepsList.Items.Add(step);
 
                 pauseViewConfigSave = false;
@@ -2726,11 +2726,11 @@ namespace WindowPlugins.GUITVSeries
                 if (selectedView != null)
                 {
                     selectedView.prettyName = view_selectedName.Text;
-                    selectedView.Enabled = checkCurViewEnabled.Checked;
+                    selectedView.m_Enabled = checkCurViewEnabled.Checked;
                     selectedView.saveToDB();
                     LoadViews();
                     for (int i = 0; i < availViews.Count; i++)
-                        if (availViews[i].uniqueID == selectedView.uniqueID)
+                        if (availViews[i].m_uniqueID == selectedView.m_uniqueID)
                         {
                             pauseViewConfigSave = true;
                             _availViews.SelectedIndex = i;

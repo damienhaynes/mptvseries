@@ -10,7 +10,7 @@ namespace WindowPlugins.GUITVSeries
         public class DBNewzbin : DBTable
     {
         public const String cTableName = "news";
-        public const int cDBVersion = 2;
+        public const int cDBVersion = 3;
 
         public const String cID = "ID"; 
         public const String cSearchUrl = "searchUrl";
@@ -66,26 +66,38 @@ namespace WindowPlugins.GUITVSeries
                 switch ((int)DBOption.GetOptions(DBOption.cDBNewzbinVersion))
                 {
                     case 1:
-                        // upgrade to version 2; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
-                        try
+                        {
+                            // upgrade to version 2; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
+                            try
+                            {
+                                DBNewzbin item = NewzsSearchList[0];
+                                item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
+                                item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
+                                item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
+                                item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
+                                item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
+                                item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
+                                item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
+                                item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
+                                item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
+                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
+                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
+                                item.Commit();
+
+                                DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                            }
+                            catch { }
+                        }
+                        break;
+
+                    case 2:
                         {
                             DBNewzbin item = NewzsSearchList[0];
-                            item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
-                            item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
-                            item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
-                            item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
-                            item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
-                            item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
-                            item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
-                            item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
-                            item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
-                            item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
-                            item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
+                            item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
+                            item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
                             item.Commit();
-
                             DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
                         }
-                        catch { }
                         break;
                 }
         }
