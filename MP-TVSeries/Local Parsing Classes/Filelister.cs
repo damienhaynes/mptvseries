@@ -30,13 +30,13 @@ namespace WindowPlugins.GUITVSeries
 {
     public class PathPair
     {
-        public String sMatch_FileName;
-        public String sFull_FileName;
+        public String m_sMatch_FileName;
+        public String m_sFull_FileName;
 
         public PathPair(String match, String full)
         {
-            sMatch_FileName = match;
-            sFull_FileName = full;
+            m_sMatch_FileName = match;
+            m_sFull_FileName = full;
         }
     };
 
@@ -57,7 +57,7 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
-        static System.Text.RegularExpressions.Regex reg = null;
+        static System.Text.RegularExpressions.Regex s_reg = null;
         static void buildExtRegex()
         {
             string extPattern = string.Empty;
@@ -67,13 +67,13 @@ namespace WindowPlugins.GUITVSeries
                     extPattern += '|';
                 extPattern += ext.Replace(".", "\\.");
             }
-            reg = new System.Text.RegularExpressions.Regex(extPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
+            s_reg = new System.Text.RegularExpressions.Regex(extPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
         }
 
         private static bool filesInFolder(string folder, ref List<PathPair> outList, int importPathLength)
         {
             // this is much faster than calling Directory.Getfiles for every extension (and even about twice as fast as the old recursive way, especially over network paths!
-            if (null == reg) buildExtRegex();
+            if (null == s_reg) buildExtRegex();
             try
             {
                 if (System.IO.Directory.Exists(folder))
@@ -81,7 +81,7 @@ namespace WindowPlugins.GUITVSeries
                     string[] sfiles = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
                     for (int i = 0; i < sfiles.Length; i++)
                     {
-                        if (reg.IsMatch(System.IO.Path.GetExtension(sfiles[i])))
+                        if (s_reg.IsMatch(System.IO.Path.GetExtension(sfiles[i])))
                         {
                             // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
                             outList.Add(new PathPair(sfiles[i].Substring(importPathLength).TrimStart('\\'), sfiles[i]));

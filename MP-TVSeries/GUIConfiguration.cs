@@ -2105,6 +2105,9 @@ namespace WindowPlugins.GUITVSeries
         private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;
+            if (node == null)
+                return;
+
             bool bHidden = false;
             switch (node.Name)
             {

@@ -482,7 +482,6 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
             this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
-            this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
             // hideToolStripMenuItem

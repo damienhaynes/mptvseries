@@ -44,6 +44,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBNewzbinVersion = "DBNewzbinVersion";
         public const String cDBTorrentVersion = "dbTorrentVersion";
         public const String cDBViewsVersion = "DBViewsVersion";
+        public const String cDBReplacementsVersion = "DBReplacementsVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";

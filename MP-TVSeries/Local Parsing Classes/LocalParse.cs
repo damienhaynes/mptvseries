@@ -93,13 +93,13 @@ namespace WindowPlugins.GUITVSeries
             paths = null;
             foreach (PathPair file in files)
             {
-                parser = new FilenameParser(file.sMatch_FileName);
+                parser = new FilenameParser(file.m_sMatch_FileName);
                 try
                 {
-                    if (isOnRemovable(file.sFull_FileName))
+                    if (isOnRemovable(file.m_sFull_FileName))
                     {
                         parser.Matches.Add(DBEpisode.cIsOnRemovable, "1");
-                        parser.Matches.Add(DBEpisode.cVolumeLabel, getDiskID(file.sFull_FileName));
+                        parser.Matches.Add(DBEpisode.cVolumeLabel, getDiskID(file.m_sFull_FileName));
                     }
                     else parser.Matches.Add(DBEpisode.cIsOnRemovable, "0");
                 }
@@ -108,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Warning: Could not add VolumenLabel/IsOnRemovable Property to episode - are you using these as a capture group?");
                 }
 
-                item = new ListViewItem(file.sMatch_FileName);
+                item = new ListViewItem(file.m_sMatch_FileName);
                 item.UseItemStyleForSubItems = true;
                 
                 progressReporter = new parseResult();
@@ -159,8 +159,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                progressReporter.match_filename = file.sMatch_FileName;
-                progressReporter.full_filename = file.sFull_FileName;
+                progressReporter.match_filename = file.m_sMatch_FileName;
+                progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
                 if(includeFailed ||progressReporter.success)
                     results.Add(progressReporter);

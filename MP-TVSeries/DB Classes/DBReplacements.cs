@@ -33,6 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
+        public const int cDBVersion = 2;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -51,48 +52,62 @@ namespace WindowPlugins.GUITVSeries
 
             DBReplacements dummy = new DBReplacements();
 
-            DBReplacements[] replacements = DBReplacements.GetAll();
-            if (replacements == null || replacements.Length == 0)
-            {
-                // no replacements in the db => put the default ones
-                DBReplacements replacement = new DBReplacements();
-                replacement[DBReplacements.cIndex] = "0";
-                replacement[DBReplacements.cEnabled] = "1";
-                replacement[DBReplacements.cBefore] = "0";
-                replacement[DBReplacements.cToReplace] = ".";
-                replacement[DBReplacements.cWith] = @"<space>";
-                replacement.Commit();
+            int nCurrentDBVersion = cDBVersion;
+            while (DBOption.GetOptions(DBOption.cDBReplacementsVersion) != nCurrentDBVersion)
+                // take care of the upgrade in the table
+                switch ((int)DBOption.GetOptions(DBOption.cDBReplacementsVersion))
+                {
+                    default:
+                        {
+                            // no replacements in the db => put the default ones
+                            DBReplacements replacement = new DBReplacements();
+                            replacement[DBReplacements.cIndex] = "0";
+                            replacement[DBReplacements.cEnabled] = "1";
+                            replacement[DBReplacements.cBefore] = "0";
+                            replacement[DBReplacements.cToReplace] = ".";
+                            replacement[DBReplacements.cWith] = @"<space>";
+                            replacement.Commit();
 
-                replacement[DBReplacements.cIndex] = "1";
-                replacement[DBReplacements.cBefore] = "0";
-                replacement[DBReplacements.cToReplace] = "_";
-                replacement[DBReplacements.cWith] = @"<space>";
-                replacement.Commit();
+                            replacement[DBReplacements.cIndex] = "1";
+                            replacement[DBReplacements.cBefore] = "0";
+                            replacement[DBReplacements.cToReplace] = "_";
+                            replacement[DBReplacements.cWith] = @"<space>";
+                            replacement.Commit();
 
-                replacement[DBReplacements.cIndex] = "2";
-                replacement[DBReplacements.cBefore] = "0";
-                replacement[DBReplacements.cToReplace] = "-<space>";
-                replacement[DBReplacements.cWith] = @"<empty>";
-                replacement.Commit();
-                // to avoid being parsed as second episode 20/80
-                replacement[DBReplacements.cIndex] = "3";
-                replacement[DBReplacements.cBefore] = "1";
-                replacement[DBReplacements.cToReplace] = "720p";
-                replacement[DBReplacements.cWith] = @"<empty>";
-                replacement.Commit();
+                            replacement[DBReplacements.cIndex] = "2";
+                            replacement[DBReplacements.cBefore] = "0";
+                            replacement[DBReplacements.cToReplace] = "-<space>";
+                            replacement[DBReplacements.cWith] = @"<empty>";
+                            replacement.Commit();
+                            // to avoid being parsed as second episode 20/80
+                            replacement[DBReplacements.cIndex] = "3";
+                            replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cToReplace] = "720p";
+                            replacement[DBReplacements.cWith] = @"<empty>";
+                            replacement.Commit();
 
-                replacement[DBReplacements.cIndex] = "4";
-                replacement[DBReplacements.cBefore] = "1";
-                replacement[DBReplacements.cToReplace] = "1080i";
-                replacement[DBReplacements.cWith] = @"<empty>";
-                replacement.Commit();
+                            replacement[DBReplacements.cIndex] = "4";
+                            replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cToReplace] = "1080i";
+                            replacement[DBReplacements.cWith] = @"<empty>";
+                            replacement.Commit();
 
-                replacement[DBReplacements.cIndex] = "4";
-                replacement[DBReplacements.cBefore] = "1";
-                replacement[DBReplacements.cToReplace] = "1080p";
-                replacement[DBReplacements.cWith] = @"<empty>";
-                replacement.Commit();
-            }
+                            replacement[DBReplacements.cIndex] = "5";
+                            replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cToReplace] = "1080p";
+                            replacement[DBReplacements.cWith] = @"<empty>";
+                            replacement.Commit();
+
+                            replacement[DBReplacements.cIndex] = "6";
+                            replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cToReplace] = "x264";
+                            replacement[DBReplacements.cWith] = @"<empty>";
+                            replacement.Commit();
+
+                            DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
+                        }
+                        break;
+                }
         }
 
         public static String PrettyFieldName(String sFieldName)

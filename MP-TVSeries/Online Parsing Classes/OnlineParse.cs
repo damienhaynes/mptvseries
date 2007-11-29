@@ -338,9 +338,9 @@ namespace WindowPlugins.GUITVSeries
 
                         foreach (PathPair pair in m_params.m_files)
                         {
-                            if(!LocalParse.isOnRemovable(pair.sFull_FileName))
+                            if(!LocalParse.isOnRemovable(pair.m_sFull_FileName))
                             {
-                                DBEpisode episode = new DBEpisode(pair.sFull_FileName);
+                                DBEpisode episode = new DBEpisode(pair.m_sFull_FileName);
                                 
                                 // already in?
                                 bool bSeasonFound = false;
@@ -364,7 +364,7 @@ namespace WindowPlugins.GUITVSeries
                                     relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
 
                                 SQLCondition condition = new SQLCondition();
-                                condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.sFull_FileName, SQLConditionType.Equal);
+                                condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
                                 DBEpisode.Clear(condition);
                             }
                         }
