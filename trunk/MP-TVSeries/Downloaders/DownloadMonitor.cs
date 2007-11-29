@@ -8,6 +8,15 @@ using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries.Download
 {
+    class MyLevenshtein
+    {
+        public static double Match(string s, string t)
+        {
+            int nDistance = MediaPortal.Util.Levenshtein.Match(s.ToLower(), t.ToLower());
+            return (Math.Max(s.Length, t.Length) - nDistance) / (double)Math.Max(s.Length, t.Length);
+        }
+    }
+
     enum MonitorAction
     {
         Full,
@@ -18,16 +27,28 @@ namespace WindowPlugins.GUITVSeries.Download
     class CMonitorParameters
     {
         public MonitorAction m_action = MonitorAction.Full;
-        public List<PathPair> m_files = null;
+        public List<MonitorPathPair> m_files = null;
 
         public CMonitorParameters()
         {
         }
 
-        public CMonitorParameters(MonitorAction action, List<PathPair> files)
+        public CMonitorParameters(MonitorAction action, List<MonitorPathPair> files)
         {
             m_action = action;
             m_files = files;
+        }
+    };
+
+    class MonitorPathPair : PathPair
+    {
+        public String m_sTargetFileName = String.Empty;
+        public DBEpisode m_episodeBestMatch = null;
+        public MonitorPathPair(String sMatch, String sFull) : base(sMatch, sFull) {}
+        public MonitorPathPair(String sMatch, String sFull, String sTargetFileName, DBEpisode episodeBestMatch) : base(sMatch, sFull)
+        {
+            m_sTargetFileName = sTargetFileName;
+            m_episodeBestMatch = episodeBestMatch;
         }
     };
 
@@ -66,9 +87,9 @@ namespace WindowPlugins.GUITVSeries.Download
             // full scan of the download folders, then monitor new files 
             m_ActionQueue.Add(new CMonitorParameters());
 
-            // timer check every seconds
+            // timer check every 10 seconds
             m_timerDelegate = new TimerCallback(Clock);
-            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
+            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 10000, 10000);
         }
 
         public static void AddPendingDownload(List<String> sSubjectNames, DBEpisode episode)
@@ -88,8 +109,8 @@ namespace WindowPlugins.GUITVSeries.Download
 
         void m_watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
         {
-            List<PathPair> filesAdded = new List<PathPair>();
-            List<PathPair> filesRemoved = new List<PathPair>();
+            List<MonitorPathPair> filesAdded = new List<MonitorPathPair>();
+            List<MonitorPathPair> filesRemoved = new List<MonitorPathPair>();
 
             // go over the modified files list once in a while & update
             foreach (WatcherItem item in modifiedFilesList)
@@ -97,11 +118,11 @@ namespace WindowPlugins.GUITVSeries.Download
                 switch (item.m_type)
                 {
                     case WatcherItemType.Added:
-                        filesAdded.Add(new PathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
+                        filesAdded.Add(new MonitorPathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
                         break;
 
                     case WatcherItemType.Deleted:
-                        filesRemoved.Add(new PathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
+                        filesRemoved.Add(new MonitorPathPair(item.m_sParsedFileName, item.m_sFullPathFileName));
                         break;
                 }
             }
@@ -130,15 +151,21 @@ namespace WindowPlugins.GUITVSeries.Download
         {
             if (!m_moverWorking)
             {
+                // extract the current param, so that we don't call movefiles (which can invoke other threads) while the actionQueue is locked - that could cause a deadlock
+                CMonitorParameters currentParam = null;
                 lock (m_ActionQueue)
                 {
                     if (m_ActionQueue.Count > 0)
                     {
-                        m_moverWorking = true;
-                        MoveFiles(m_ActionQueue[0]);
+                        currentParam = m_ActionQueue[0];
                         m_ActionQueue.RemoveAt(0);
-                        m_moverWorking = false;
                     }
+                }
+                if (currentParam != null)
+                {
+                    m_moverWorking = true;
+                    MoveFiles(currentParam);
+                    m_moverWorking = false;
                 }
             }
         }
@@ -152,8 +179,11 @@ namespace WindowPlugins.GUITVSeries.Download
                     // full scan of the folder(s)
                     List<String> watchedFolders = new List<String>();
                     watchedFolders.Add(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath));
-
-                    TryAndMoveFile(Filelister.GetFiles(watchedFolders));
+                    List<PathPair> watchedFiles_simple = Filelister.GetFiles(watchedFolders);
+                    List<MonitorPathPair> watchedFiles = new List<MonitorPathPair>();
+                    foreach (PathPair pair in watchedFiles_simple)
+                        watchedFiles.Add(new MonitorPathPair(pair.m_sMatch_FileName, pair.m_sFull_FileName));
+                    TryAndMoveFile(watchedFiles);
                 }
                 break;
 
@@ -177,170 +207,156 @@ namespace WindowPlugins.GUITVSeries.Download
             return y.Key.CompareTo(x.Key);
         }
 
-        public void TryAndMoveFile(List<PathPair> files)
+        public void TryAndMoveFile(List<MonitorPathPair> files)
         {
-            List<parseResult> parseResults = LocalParse.Parse(files);
-            foreach (parseResult result in parseResults)
+            foreach (MonitorPathPair pair in files)
             {
+                List<PathPair> currentFile = new List<PathPair>();
+                currentFile.Add(new PathPair(pair.m_sMatch_FileName, pair.m_sFull_FileName));
+                parseResult result = LocalParse.Parse(currentFile)[0];
                 if (result.success)
                 {
-                    result.match_filename.ToLower();
-                    List<KeyValuePair<double, DBEpisode>> episodeMatches = new List<KeyValuePair<double, DBEpisode>>();
-
-                    // first, figure out if the detected file is part of the pending downloads
-                    foreach (DBEpisode episode in m_DownloadingEpisodes)
+                    if (pair.m_sTargetFileName == String.Empty) 
                     {
-                        // use nfo name if available
-                        double fOverallMatchValue = 0;
-                        int nTotalChecks = 2;
+                        result.match_filename.ToLower();
+                        List<KeyValuePair<double, DBEpisode>> episodeMatches = new List<KeyValuePair<double, DBEpisode>>();
 
-                        if (episode[DBOnlineEpisode.cDownloadExpectedNames] != String.Empty) 
+                        // first, figure out if the detected file is part of the pending downloads
+                        foreach (DBEpisode episode in m_DownloadingEpisodes)
                         {
-                            nTotalChecks++;
-                            double fLocalMatchValue = 0;
-                            String sFileToMatch = System.IO.Path.GetFileNameWithoutExtension(result.match_filename);
-                            String sPathToMatch = String.Empty;
-                            if (result.match_filename.IndexOf(sFileToMatch) > 0)
-                                sPathToMatch = result.match_filename.Substring(0, result.match_filename.IndexOf(sFileToMatch) - 1);
-                            String RegExp = @"([^|]+)\|\|\|";
-                            Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                            MatchCollection matches = Engine.Matches(episode[DBOnlineEpisode.cDownloadExpectedNames]);
-                            foreach (Match match in matches) 
+                            // use nfo name if available
+                            double fOverallMatchValue = 0;
+                            int nTotalChecks = 2;
+
+                            if (episode[DBOnlineEpisode.cDownloadExpectedNames] != String.Empty)
                             {
-                                int nDistance = MediaPortal.Util.Levenshtein.Match(sFileToMatch, match.Groups[1].Value.ToLower());
-                                double fTempMatchValue = (sFileToMatch.Length - nDistance) / (double)sFileToMatch.Length;
-                                if (fTempMatchValue > fLocalMatchValue)
-                                {
-                                    fLocalMatchValue = fTempMatchValue;
-                                }
-                                // also work on the path as it's often more related than the filename
-                                nDistance = MediaPortal.Util.Levenshtein.Match(sPathToMatch, match.Groups[1].Value.ToLower());
-                                fTempMatchValue = (sPathToMatch.Length - nDistance) / (double)sPathToMatch.Length;
-                                if (fTempMatchValue > fLocalMatchValue)
-                                {
-                                    fLocalMatchValue = fTempMatchValue;
-                                }
-                            }
-
-                            fOverallMatchValue += fLocalMatchValue;
-                        }
-
-                        // otherwise try to parse the name and pray
-                        if (Convert.ToInt32(result.parser.Matches[DBEpisode.cSeasonIndex]) == episode[DBEpisode.cSeasonIndex] && Convert.ToInt32(result.parser.Matches[DBEpisode.cEpisodeIndex]) == episode[DBEpisode.cEpisodeIndex])
-                        {
-                            double fLocalMatchValue = 0;
-                            // episode & season index matches, let's deal with the series name
-                            DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
-                            int nDistance = MediaPortal.Util.Levenshtein.Match(result.parser.Matches[DBSeries.cParsedName].ToLower(), ((String)series[DBOnlineSeries.cPrettyName]).ToLower());
-                            fLocalMatchValue = (result.parser.Matches[DBSeries.cParsedName].Length - nDistance) / (double)result.parser.Matches[DBSeries.cParsedName].Length;
-                            fOverallMatchValue += fLocalMatchValue;
-
-                            // and also do a simple find: if we can find parts of the pretty name somewhere in the filename, consider it a bonus
-                            String RegExp = @"([^ ]+)";
-                            Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                            MatchCollection matches = Engine.Matches(series[DBOnlineSeries.cPrettyName]);
-                            if (matches.Count != 0) 
-                            {
+                                // this has a lot of weight. If we find a good match it's probably it
+                                nTotalChecks+=4;
+                                double fLocalMatchValue = 0;
+                                String sFileToMatch = System.IO.Path.GetFileNameWithoutExtension(result.match_filename);
+                                String sPathToMatch = String.Empty;
+                                if (result.match_filename.IndexOf(sFileToMatch) > 0)
+                                    sPathToMatch = result.match_filename.Substring(0, result.match_filename.IndexOf(sFileToMatch) - 1);
+                                String RegExp = @"([^|]+)\|\|\|";
+                                Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                MatchCollection matches = Engine.Matches(episode[DBOnlineEpisode.cDownloadExpectedNames]);
                                 foreach (Match match in matches)
                                 {
-                                    if (result.match_filename.Contains(match.Groups[1].Value.ToLower()))
-                                        fOverallMatchValue += 1 / matches.Count;
+                                    double fTempMatchValue = MyLevenshtein.Match(sFileToMatch, match.Groups[1].Value);
+                                    if (fTempMatchValue > fLocalMatchValue)
+                                    {
+                                        fLocalMatchValue = fTempMatchValue;
+                                    }
+                                    // also work on the path as it's often more related than the filename
+                                    fTempMatchValue = MyLevenshtein.Match(sPathToMatch, match.Groups[1].Value);
+                                    if (fTempMatchValue > fLocalMatchValue)
+                                    {
+                                        fLocalMatchValue = fTempMatchValue;
+                                    }
+                                }
+
+                                fOverallMatchValue += 4*fLocalMatchValue;
+                            }
+
+                            // otherwise try to parse the name and pray
+                            if (Convert.ToInt32(result.parser.Matches[DBEpisode.cSeasonIndex]) == episode[DBEpisode.cSeasonIndex] && Convert.ToInt32(result.parser.Matches[DBEpisode.cEpisodeIndex]) == episode[DBEpisode.cEpisodeIndex])
+                            {
+                                double fLocalMatchValue = 0;
+                                // episode & season index matches, let's deal with the series name
+                                DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
+                                fLocalMatchValue = MyLevenshtein.Match(result.parser.Matches[DBSeries.cParsedName], ((String)series[DBOnlineSeries.cPrettyName]));
+                                fOverallMatchValue += fLocalMatchValue;
+
+                                // and also do a simple find: if we can find parts of the pretty name somewhere in the filename, consider it a bonus
+                                String RegExp = @"([^ ]+)";
+                                Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                MatchCollection matches = Engine.Matches(series[DBOnlineSeries.cPrettyName]);
+                                if (matches.Count != 0)
+                                {
+                                    foreach (Match match in matches)
+                                    {
+                                        if (result.match_filename.Contains(match.Groups[1].Value.ToLower()))
+                                            fOverallMatchValue += 1 / (double)matches.Count;
+                                    }
+                                }
+                            }
+
+                            // final verdict:
+                            fOverallMatchValue /= nTotalChecks;
+                            episodeMatches.Add(new KeyValuePair<double, DBEpisode>(fOverallMatchValue, episode));
+                        }
+
+                        episodeMatches.Sort(EpisodeMatchesCompare);
+                        if (episodeMatches.Count == 0)
+                            return;
+
+                        if (episodeMatches[0].Key < 0.6)
+                        {
+                            // we didn't get any proper match. I assume in this case we need to ask the user
+                            // now, sort & take the first one as our best result
+                            List<CItem> Choices = new List<CItem>();
+                            foreach (KeyValuePair<double, DBEpisode> match in episodeMatches)
+                            {
+                                // online episode has to exist here
+                                Choices.Add(new CItem(match.Value.onlineEpisode.CompleteTitle, String.Empty, match.Value));
+                            }
+
+                            CDescriptor descriptor = new CDescriptor();
+                            descriptor.m_sTitle = "What is this file?";
+                            descriptor.m_sItemToMatchLabel = "filename:";
+                            descriptor.m_sItemToMatch = System.IO.Path.GetFileNameWithoutExtension(result.match_filename);
+                            descriptor.m_sListLabel = "Matching file to episode:";
+                            descriptor.m_List = Choices;
+                            descriptor.m_sbtnIgnoreLabel = String.Empty;
+
+                            bool bReady = false;
+                            while (!bReady)
+                            {
+                                CItem Selected = null;
+                                ReturnCode resultFeedback = m_feedback.ChooseFromSelection(descriptor, out Selected);
+                                switch (resultFeedback)
+                                {
+                                    case ReturnCode.NotReady:
+                                        {
+                                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                                            Thread.Sleep(5000);
+                                        }
+                                        break;
+
+                                    case ReturnCode.OK:
+                                        {
+                                            pair.m_episodeBestMatch = Selected.m_Tag as DBEpisode;
+                                            bReady = true;
+                                        }
+                                        break;
+
+                                    default:
+                                        {
+                                            // exit too if cancelled
+                                            pair.m_episodeBestMatch = null;
+                                            bReady = true;
+                                        }
+                                        break;
                                 }
                             }
                         }
-
-                        // final verdict:
-                        fOverallMatchValue /= nTotalChecks;
-                        episodeMatches.Add(new KeyValuePair<double, DBEpisode>(fOverallMatchValue, episode));
-                    }
-
-                    episodeMatches.Sort(EpisodeMatchesCompare);
-                    DBEpisode episodeBestMatch = null;
-                    if (episodeMatches.Count == 0)
-                        return; 
-
-                    if (episodeMatches[0].Key < 0.6)
-                    {
-                        // we didn't get any proper match. I assume in this case we need to ask the user
-                        // now, sort & take the first one as our best result
-                        List<CItem> Choices = new List<CItem>();
-                        foreach (KeyValuePair<double, DBEpisode> match in episodeMatches)
+                        else
                         {
-                            // online episode has to exist here
-                            Choices.Add(new CItem(match.Value.onlineEpisode.CompleteTitle, String.Empty, match.Value));
+                            pair.m_episodeBestMatch = episodeMatches[0].Value;
                         }
 
-                        CDescriptor descriptor = new CDescriptor();
-                        descriptor.m_sTitle = "What is this file?";
-                        descriptor.m_sItemToMatchLabel = "filename:";
-                        descriptor.m_sItemToMatch = System.IO.Path.GetFileNameWithoutExtension(result.match_filename);
-                        descriptor.m_sListLabel = "Matching file to episode:";
-                        descriptor.m_List = Choices;
-                        descriptor.m_sbtnIgnoreLabel = String.Empty;
-
-                        bool bReady = false;
-                        while (!bReady) 
+                        // arbitrary value to trigger a manual selection. More than 60% success is likely to be the good one
+                        if (pair.m_episodeBestMatch != null)
                         {
-                            CItem Selected = null;
-                            ReturnCode resultFeedback = m_feedback.ChooseFromSelection(descriptor, out Selected);
-                            switch (resultFeedback)
-                            {
-                                case ReturnCode.NotReady:
-                                    {
-                                        // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-                                        Thread.Sleep(5000);
-                                    }
-                                    break;
-
-                                case ReturnCode.OK:
-                                    {
-                                        episodeBestMatch = Selected.m_Tag as DBEpisode;
-                                        bReady = true;
-                                    }
-                                    break;
-
-                                default:
-                                    {
-                                        // exit too if cancelled
-                                        episodeBestMatch = null;
-                                        bReady = true;
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        episodeBestMatch = episodeMatches[0].Value;
-                    }
-
-                    // arbitrary value to trigger a manual selection. More than 60% success is likely to be the good one
-                    if (episodeBestMatch != null)
-                    {
-                        DBOnlineSeries seriesBestMatch = new DBOnlineSeries(episodeBestMatch[DBEpisode.cSeriesID]);
-
-                        // we are just hoping here that the match is actually a good one!
-                        bool bMoveable = true;
-                        // will check if the file is locked for writing, and if it is, we'll keep it in a list for further tries
-                        try
-                        {
-                            FileStream stream = System.IO.File.OpenWrite(result.full_filename);
-                            stream.Close();
-                        }
-                        catch
-                        {
-                            bMoveable = false;
-                        }
-
-                        if (bMoveable)
-                        {
-                            // ok, file isn't locked, so try to figure out where it should go
                             String sTargetFolder = String.Empty;
+                            DBOnlineSeries seriesBestMatch = new DBOnlineSeries(pair.m_episodeBestMatch[DBEpisode.cSeriesID]);
+
+                            // ok, file isn't locked, so try to figure out where it should go
 
                             // to figure out where to move the file, first try to see if there is a season folder already present
                             SQLCondition conditions = new SQLCondition();
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, episodeBestMatch[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, pair.m_episodeBestMatch[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
                             List<DBEpisode> SeriesEpisodes = DBEpisode.Get(conditions);
 
                             if (SeriesEpisodes.Count > 0)
@@ -349,7 +365,7 @@ namespace WindowPlugins.GUITVSeries.Download
                             {
                                 // ok, default back to just the series folder
                                 conditions = new SQLCondition();
-                                conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                                conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
                                 SeriesEpisodes = DBEpisode.Get(conditions);
 
                                 if (SeriesEpisodes.Count > 0)
@@ -363,13 +379,13 @@ namespace WindowPlugins.GUITVSeries.Download
                                 }
                             }
 
-                            if (sTargetFolder.ToString().Length > 0)
+                            if (sTargetFolder != String.Empty)
                             {
                                 String sOutputFile;
                                 if (DBOption.GetOptions(DBOption.cDownloadMonitor_RenameFiles) == 1)
                                 {
                                     // "beautifulizing" the filename
-                                    sOutputFile = String.Format("{0} - {1}x{2:D2} - {3}{4}", seriesBestMatch[DBOnlineSeries.cPrettyName], (int)episodeBestMatch[DBEpisode.cSeasonIndex], (int)episodeBestMatch[DBEpisode.cEpisodeIndex], episodeBestMatch[DBOnlineEpisode.cEpisodeName], System.IO.Path.GetExtension(result.full_filename));
+                                    sOutputFile = String.Format("{0} - {1}x{2:D2} - {3}{4}", seriesBestMatch[DBOnlineSeries.cPrettyName], (int)pair.m_episodeBestMatch[DBEpisode.cSeasonIndex], (int)pair.m_episodeBestMatch[DBEpisode.cEpisodeIndex], pair.m_episodeBestMatch[DBOnlineEpisode.cEpisodeName], System.IO.Path.GetExtension(result.full_filename));
                                     sOutputFile = sOutputFile.Replace(":", "");
                                     sOutputFile = sOutputFile.Replace("?", "");
                                     sOutputFile = sOutputFile.Replace("\\", "");
@@ -382,35 +398,55 @@ namespace WindowPlugins.GUITVSeries.Download
                                 else
                                     sOutputFile = System.IO.Path.GetFileName(result.full_filename);
 
-                                // let's move the file
-                                try
-                                {
-                                    System.IO.File.Move(result.full_filename, sTargetFolder + "\\" + sOutputFile);
-                                    // if file isn't there anymore, consider success
-                                    if (System.IO.File.Exists(result.full_filename))
-                                        bMoveable = false;
-                                }
-                                catch (Exception e)
-                                {
-                                    bMoveable = false;
-                                }
+                                pair.m_sTargetFileName = sTargetFolder + "\\" + sOutputFile;
                             }
                         }
+                    }
 
+                    if (pair.m_sTargetFileName != String.Empty)
+                    {
+                        bool bMoveable = true;
+                        // will check if the file is locked for writing, and if it is, we'll keep it in a list for further tries
+                        try
+                        {
+                            if (System.IO.File.Exists(result.full_filename))
+                            {
+                                FileStream stream = System.IO.File.OpenWrite(result.full_filename);
+                                stream.Close();
+                            }
+                        }
+                        catch
+                        {
+                            bMoveable = false;
+                        }
 
-                        if (!bMoveable)
+                        bool bMoved = false;
+                        if (bMoveable)
+                        {
+                            // let's move the file
+                            try
+                            {
+                                System.IO.File.Move(result.full_filename, pair.m_sTargetFileName);
+                                // if file isn't there anymore, consider success
+                                if (!System.IO.File.Exists(result.full_filename))
+                                    bMoved = true;
+                            }
+                            catch {}
+                        }
+
+                        if (!bMoved)
                         {
                             // move failed for some reason - reinsert this file in the loop
-                            List<PathPair> path = new List<PathPair>();
-                            path.Add(new PathPair(result.match_filename, result.full_filename));
+                            List<MonitorPathPair> path = new List<MonitorPathPair>();
+                            path.Add(pair);
                             m_ActionQueue.Add(new CMonitorParameters(MonitorAction.List_Add, path));
                         }
-                        else 
+                        else
                         {
                             // file has been moved - remove from our list, clears the pending download flag
-                            m_DownloadingEpisodes.Remove(episodeBestMatch);
-                            episodeBestMatch[DBOnlineEpisode.cDownloadPending] = 0;
-                            episodeBestMatch.Commit();
+                            m_DownloadingEpisodes.Remove(pair.m_episodeBestMatch);
+                            pair.m_episodeBestMatch[DBOnlineEpisode.cDownloadPending] = 0;
+                            pair.m_episodeBestMatch.Commit();
                         }
                     }
                 }

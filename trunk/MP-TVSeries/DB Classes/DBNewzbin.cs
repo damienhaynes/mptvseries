@@ -10,7 +10,7 @@ namespace WindowPlugins.GUITVSeries
         public class DBNewzbin : DBTable
     {
         public const String cTableName = "news";
-        public const int cDBVersion = 3;
+        public const int cDBVersion = 4;
 
         public const String cID = "ID"; 
         public const String cSearchUrl = "searchUrl";
@@ -41,33 +41,14 @@ namespace WindowPlugins.GUITVSeries
             DBNewzbin dummy = new DBNewzbin();
 
             List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
-            if (NewzsSearchList.Count == 0)
-            {
-                // put the default ones
-                DBNewzbin item = new DBNewzbin("Newzbin");
-                item[DBNewzbin.cSearchUrl] = "http://v3.newzbin.com/search/query/?fpn=p&q=$search$&category=8&searchaction=Go&sort=date&order=desc";
-                item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
-                item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
-                item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
-                item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
-                item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
-                item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
-                item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
-                item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
-                item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
-                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
-                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
-                item.Commit();
-            }
-
             int nCurrentDBVersion = cDBVersion;
             while (DBOption.GetOptions(DBOption.cDBNewzbinVersion) != nCurrentDBVersion)
                 // take care of the upgrade in the table
                 switch ((int)DBOption.GetOptions(DBOption.cDBNewzbinVersion))
                 {
-                    case 1:
+                    default:
                         {
-                            // upgrade to version 2; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
+                            // from scratch or from earlier version; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
                             try
                             {
                                 DBNewzbin item = NewzsSearchList[0];
@@ -75,13 +56,13 @@ namespace WindowPlugins.GUITVSeries
                                 item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
                                 item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
                                 item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
-                                item[DBNewzbin.cSearchRegexPostDate] = "class=\"ageVeryNew\">([^<]*)(?=.*ageVeryNew)";
-                                item[DBNewzbin.cSearchRegexReportDate] = "class=\"ageVeryNew\">([^<]*)(?!.*ageVeryNew)";
+                                item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
+                                item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
                                 item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
                                 item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
                                 item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
-                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>([^<]*\.(?:r00|part0?1\.rar)[^<]*)";
-                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;)?(.*?)(?:&quot;)?( - | -=- |\]-\[| \(|&quot;)";
+                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
+                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
                                 item.Commit();
 
                                 DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
@@ -95,6 +76,16 @@ namespace WindowPlugins.GUITVSeries
                             DBNewzbin item = NewzsSearchList[0];
                             item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
                             item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
+                            item.Commit();
+                            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            DBNewzbin item = NewzsSearchList[0];
+                            item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
+                            item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
                             item.Commit();
                             DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
                         }

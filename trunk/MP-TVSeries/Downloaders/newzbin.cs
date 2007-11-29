@@ -267,7 +267,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                         String sDesc = "Title: " + match.m_sName + "\r\nPost: " + match.m_sPost + "\r\nReport: " + match.m_sReport + "\r\nFormat: " + match.m_sFormat + "\r\nGroups: " + match.m_sGroup + "\r\nLanguage: " + match.m_sLanguage;
 //                         foreach (String s in match.m_sParsedArticleName)
 //                             sDesc += s + " / ";
-                        Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
+                        Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + (match.m_sLanguage.ToLower() != "english"?("/" + match.m_sLanguage):"") + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
                     }
                     Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                     descriptor.m_sTitle = "Found reports:";
@@ -383,7 +383,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                             response.Close();
 
                             Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
-                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+//                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
                             m_bSuccess = true;
                         }
                     }
