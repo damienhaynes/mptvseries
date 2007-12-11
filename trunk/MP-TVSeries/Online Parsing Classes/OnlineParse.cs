@@ -1454,7 +1454,7 @@ namespace WindowPlugins.GUITVSeries
                 
                 // scan all the episodes that don't have an episode thumbnail url - and mark them as no OnlineDataImported to retrieve clean data from the base
                 SQLCondition conditionNoEpisodeSnapshot = new SQLCondition();
-                conditionNoEpisodeSnapshot.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.Equal);
+                conditionNoEpisodeSnapshot.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "init", SQLConditionType.Equal);
                 conditionNoEpisodeSnapshot.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, DateTime.Now.ToString("yyyy-MM-dd"), SQLConditionType.LessThan);
                 DBTable.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 0, conditionNoEpisodeSnapshot);
             }
