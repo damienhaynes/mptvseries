@@ -2031,31 +2031,26 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
+        private delegate ReturnCode ChooseFromSelectionDelegate(CDescriptor descriptor);
+        private Feedback.CItem m_selected;
         public Feedback.ReturnCode ChooseFromSelection(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
         {
+            Feedback.ReturnCode returnCode;
             if (m_localControlForInvoke.InvokeRequired)
-                selected = m_localControlForInvoke.Invoke(new Feedback.ChooseFromSelectionDelegate(ChooseFromSelection_), new Object[] { descriptor }) as Feedback.CItem;
+            {
+                returnCode = (Feedback.ReturnCode)m_localControlForInvoke.Invoke(new ChooseFromSelectionDelegate(ChooseFromSelectionSync), new Object[] { descriptor });
+            }
             else
-                selected = ChooseFromSelection_(descriptor);
-            if (selected != null)
-                return Feedback.ReturnCode.OK;
-            else
-                return Feedback.ReturnCode.Cancel;
+                returnCode = ChooseFromSelectionSync(descriptor);
+            selected = m_selected;
+            return returnCode;
         }
 
-        public Feedback.CItem ChooseFromSelection_(Feedback.CDescriptor descriptor)
-        {
-            Feedback.CItem selected = null;
-            if (ChooseFromSelectionSync(descriptor, out selected) == ReturnCode.Cancel)
-                selected = null;
-            return selected;
-        }
-
-        public Feedback.ReturnCode ChooseFromSelectionSync(Feedback.CDescriptor descriptor, out Feedback.CItem selected)
+        public Feedback.ReturnCode ChooseFromSelectionSync(Feedback.CDescriptor descriptor)
         {
             ChooseFromSelectionDialog userSelection = new ChooseFromSelectionDialog(descriptor);
             DialogResult result = userSelection.ShowDialog();
-            selected = userSelection.SelectedItem;
+            m_selected = userSelection.SelectedItem;
             switch (result)
             {
                 case DialogResult.OK:

@@ -890,39 +890,39 @@ namespace WindowPlugins.GUITVSeries
                 descriptor.m_sbtnCancelLabel = "Skip this time";
                 descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
 
-                        while (true)
-                        {
-                            Feedback.CItem Selected = null;
-                            Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
-                            switch (result)
+                while (true)
+                {
+                    Feedback.CItem Selected = null;
+                    Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
+                    switch (result)
+                    {
+                        case Feedback.ReturnCode.Cancel:
+                            return null;
+
+                        case Feedback.ReturnCode.Ignore:
+                            nameToSearch = null;
+                            DBSeries series = new DBSeries(seriesName);
+                            series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
+                            series[DBSeries.cHidden] = true;
+                            series.Commit();
+                            return null;
+
+                        case Feedback.ReturnCode.OK:
+                            DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
+                            if (nameToSearch != Selected.m_sName) 
+                                nameToSearch = Selected.m_sName;
+                            else
+                                return selectedSeries;
+                            break;
+
+                        case Feedback.ReturnCode.NotReady:
                             {
-                                case Feedback.ReturnCode.Cancel:
-                                    return null;
-
-                                case Feedback.ReturnCode.Ignore:
-                                    nameToSearch = null;
-                                    DBSeries series = new DBSeries(seriesName);
-                                    series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
-                                    series[DBSeries.cHidden] = true;
-                                    series.Commit();
-                                    return null;
-
-                                case Feedback.ReturnCode.OK:
-                                    DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-                                    if (nameToSearch != Selected.m_sName) 
-                                        nameToSearch = Selected.m_sName;
-                                    else
-                                        return selectedSeries;
-                                    break;
-
-                                case Feedback.ReturnCode.NotReady:
-                                    {
-                                        // plugin's not loaded (yet?) so wait and ask again later
-                                        Thread.Sleep(2000);
-                                    }
-                                    break;
+                                // plugin's not loaded (yet?) so wait and ask again later
+                                Thread.Sleep(2000);
                             }
-                         }
+                            break;
+                    }
+                }
             }
         }
 

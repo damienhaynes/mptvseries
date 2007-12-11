@@ -69,7 +69,6 @@ namespace WindowPlugins.GUITVSeries.Feedback
         Ignore,
         NotReady
     }
-    public delegate CItem ChooseFromSelectionDelegate(CDescriptor descriptor);
     public interface Interface
     {
         ReturnCode ChooseFromSelection(CDescriptor descriptor, out CItem selected);
