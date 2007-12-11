@@ -2058,6 +2058,8 @@ namespace MediaPortal.GUI.Video
             pushFieldsToSkin(m_SelectedEpisode.onlineEpisode, "Episode");
         }
 
+        private delegate ReturnCode ChooseFromSelectionDelegate(CDescriptor descriptor);
+        private CItem m_selected;
         public ReturnCode ChooseFromSelection(CDescriptor descriptor, out CItem selected)
         {
             if (this.m_Facade == null)
@@ -2066,29 +2068,23 @@ namespace MediaPortal.GUI.Video
                 return ReturnCode.NotReady;
             }
 
+            ReturnCode returnCode;
             if (m_localControlForInvoke.InvokeRequired)
-                selected = m_localControlForInvoke.Invoke(new ChooseFromSelectionDelegate(ChooseFromSelection_), new Object[] { descriptor }) as CItem;
+            {
+                returnCode = (ReturnCode)m_localControlForInvoke.Invoke(new ChooseFromSelectionDelegate(ChooseFromSelectionSync), new Object[] { descriptor });
+            }
             else
-                selected = ChooseFromSelection_(descriptor);
-            if (selected != null)
-                return ReturnCode.OK;
-            else
-                return ReturnCode.Cancel;
+                returnCode = ChooseFromSelectionSync(descriptor);
+            selected = m_selected;
+            return returnCode;
         }
 
-        public CItem ChooseFromSelection_(CDescriptor descriptor)
-        {
-            CItem selected = null;
-            ChooseFromSelectionSync(descriptor, out selected);
-            return selected;
-        }
-
-        public ReturnCode ChooseFromSelectionSync(CDescriptor descriptor, out CItem selected)
+        public ReturnCode ChooseFromSelectionSync(CDescriptor descriptor)
         {
             try
             {
                 GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-                selected = null;
+                m_selected = null;
                 if (dlg == null)
                     return ReturnCode.Cancel;
 
@@ -2139,7 +2135,7 @@ namespace MediaPortal.GUI.Video
                     else if (dlg.SelectedId >= 10)
                     {
                         CItem DlgSelected = descriptor.m_List[dlg.SelectedId - 10];
-                        selected = new CItem(descriptor.m_sItemToMatch, String.Empty, DlgSelected.m_Tag);
+                        m_selected = new CItem(descriptor.m_sItemToMatch, String.Empty, DlgSelected.m_Tag);
                         return ReturnCode.OK;
                     }
                     else return ReturnCode.Cancel;
@@ -2148,7 +2144,7 @@ namespace MediaPortal.GUI.Video
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("The ChooseFromSelection Method has generated an error: " + ex.Message);
-                selected = null;
+                m_selected = null;
                 return ReturnCode.Cancel;
             }
             finally
