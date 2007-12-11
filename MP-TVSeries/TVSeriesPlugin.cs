@@ -507,7 +507,8 @@ namespace MediaPortal.GUI.Video
                                     }
                                     item.TVTag = series;
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
-                                    item.IsDownloading = true;
+                                    item.IsDownloading = series[DBOnlineSeries.cUnwatchedItems] != 0;
+;
 
                                     if (this.m_SelectedSeries != null)
                                     {
@@ -605,7 +606,7 @@ namespace MediaPortal.GUI.Video
                                             item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
                                         }
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                        item.IsDownloading = true;
+                                        item.IsDownloading = season[DBSeason.cUnwatchedItems] != 0;
                                     }
                                     else item = new GUIListItem();
                                     item.TVTag = season;
@@ -619,7 +620,7 @@ namespace MediaPortal.GUI.Video
                                         else
                                         {
                                             // select the first that has a file
-                                            if (season[DBOnlineSeries.cHasLocalFiles] != 0 && selectedIndex == -1)
+                                            if (season[DBOnlineSeries.cHasLocalFiles] != 0 && season[DBSeason.cUnwatchedItems] != 0 && selectedIndex == -1)
                                                 selectedIndex = count;
                                         }
                                         if (m_back_up_select_this != null && season != null && selectedIndex == -1 && season[DBSeason.cSeriesID] == m_back_up_select_this[0] && season[DBSeason.cIndex] == m_back_up_select_this[1])
@@ -713,7 +714,7 @@ namespace MediaPortal.GUI.Video
                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID]) 
                                        {
 
-                                           if (!this.m_SelectedEpisode[DBOnlineEpisode.cWatched])
+                                           if (!episode[DBOnlineEpisode.cWatched])
                                            {
                                                //-- video has not been watched so keep it selected
                                                selectedIndex = count;                                               
@@ -1148,12 +1149,16 @@ namespace MediaPortal.GUI.Video
                                     {
                                         episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                         episode.Commit();
+                                        DBSeason.UpdateUnWached(episode);
+                                        DBSeries.UpdateUnWached(episode);
                                     }
                                 }
                                 else
                                 {
                                     selectedEpisode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                     selectedEpisode.Commit();
+                                    DBSeason.UpdateUnWached(selectedEpisode);
+                                    DBSeries.UpdateUnWached(selectedEpisode);
                                 }
                                 LoadFacade();
                             }
@@ -1783,25 +1788,7 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        /*if (*/
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);//)
-                        //{
-                            // AB: I put back this code as it was before, as if I watch one local episode I think it's safe to consider all local episodes watched
-
-                            //-- Jon: isWatched check now happens on stopping (VideoHandler.OnPlayBackStopped)
-                            /* 
-                             * SQLCondition condition = new SQLCondition();
-                             * condition.Add(new DBEpisode(), DBEpisode.cFilename, this.m_SelectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-                             * List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                             * foreach (DBEpisode episode in episodes)
-                             * {
-                             *     episode[DBOnlineEpisode.cWatched] = 1;
-                             *     episode.Commit();
-                             * }
-                             * this.LoadFacade();
-                             * this.OnPageLoad();
-                             */
-                        //}
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
                         break;
                 }
             }

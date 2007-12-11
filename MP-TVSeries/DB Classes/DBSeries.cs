@@ -150,6 +150,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
             base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
+            base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -239,7 +240,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 8;
+        public const int cDBVersion = 9;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -310,6 +311,22 @@ namespace WindowPlugins.GUITVSeries
                     case 7:
                         // all series no tagged for auto download at first
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        break;
+
+                    case 8:
+                        // create the unwatcheditem value by parsin the episodes
+                        SQLCondition condEmpty = new SQLCondition();
+                        List<DBSeries> AllSeries = Get(condEmpty);
+                        foreach (DBSeries series in AllSeries)
+                        {
+                            DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+                            if (episode != null)
+                                series[DBOnlineSeries.cUnwatchedItems] = true;
+                            else
+                                series[DBOnlineSeries.cUnwatchedItems] = false;
+                            series.Commit();
+                        }
                         DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
                         break;
 
@@ -441,14 +458,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    case DBOnlineSeries.cUnwatchedItems:
-                        // this one is virtual
-                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeries.cID] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
-                        if (results.Rows.Count > 0)
-                        {
-                            return results.Rows[0].fields[0];
-                        }
-                        else return 0;
+//                     case DBOnlineSeries.cUnwatchedItems:
+//                         // this one is virtual
+//                         SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeries.cID] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
+//                         if (results.Rows.Count > 0)
+//                         {
+//                             return results.Rows[0].fields[0];
+//                         }
+//                         else return 0;
                         
                     case DBOnlineSeries.cPrettyName:
                     case DBOnlineSeries.cSortName:
@@ -479,9 +496,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    case DBOnlineSeries.cUnwatchedItems:
-                        // this one is virtual
-                        break;
+//                     case DBOnlineSeries.cUnwatchedItems:
+//                         // this one is virtual
+//                         break;
                     case cScanIgnore:
                     case cDuplicateLocalName:
                     case cHidden:
@@ -737,6 +754,17 @@ namespace WindowPlugins.GUITVSeries
         public override string ToString()
         {
             return this[DBSeries.cID];
+        }
+
+        public static void UpdateUnWached(DBEpisode episode)
+        {
+            DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
+            DBEpisode FirstUnwatchedEpisode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+            if (FirstUnwatchedEpisode != null)
+                series[DBOnlineSeries.cUnwatchedItems] = true;
+            else
+                series[DBOnlineSeries.cUnwatchedItems] = false;
+            series.Commit();
         }
     }
 }

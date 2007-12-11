@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediaPortal.Util;
 using MediaPortal.GUI.Library;
+using System.Text.RegularExpressions;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -107,6 +108,17 @@ namespace WindowPlugins.GUITVSeries
                 return string.Empty;
             }
             return name;
+        }
+
+        public static string ExtractFullName(string identifier)
+        {
+            String RegExp = @"\[TVSeries:(.*)\]";
+            Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+            Match match = Engine.Match(identifier);
+            if (match.Success)
+                return match.Groups[1].Value;
+            else
+                return identifier;            
         }
 
         public static void Flush(List<String> toFlush)

@@ -903,8 +903,8 @@ namespace WindowPlugins.GUITVSeries
             listView_ParsingResults.Columns.Clear();
             // add mandatory columns
             ColumnHeader columnFileName = new ColumnHeader();
-            columnFileName.Name = DBOnlineEpisode.cEpisodeImageFilename;
-            columnFileName.Text = "FileName";
+            columnFileName.Name = DBOnlineEpisode.cEpisodeThumbnailFilename;
+            columnFileName.Text = "Thumbnail FileName";
             listView_ParsingResults.Columns.Add(columnFileName);
 
             ColumnHeader columnSeriesName = new ColumnHeader();
@@ -1046,7 +1046,7 @@ namespace WindowPlugins.GUITVSeries
                         comboBox_BannerSelection.Items.Clear();
 
                         // if we have logos add them to the list
-                        string logos = localLogos.getLogos(ref episode, 200, 500);
+                        string logos = localLogos.getLogos(ref episode, 200, 500, true);
                         if (logos.Length > 0)
                         {
                             BannerComboItem newItem = new BannerComboItem("EpisodeImage/Logos", logos);
@@ -1382,7 +1382,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
+                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {
@@ -1398,7 +1398,7 @@ namespace WindowPlugins.GUITVSeries
                             season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
+                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {
@@ -1417,7 +1417,7 @@ namespace WindowPlugins.GUITVSeries
                         //    series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath);
+                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {

@@ -803,7 +803,8 @@ namespace WindowPlugins.GUITVSeries
         GreaterThan,
         GreaterEqualThan,
         Like,
-        In
+        In,
+        NotIn,
     };
 
     public class SQLCondition
@@ -954,10 +955,15 @@ namespace WindowPlugins.GUITVSeries
                 case SQLConditionType.In:
                     sType = " in ";
                     break;
-                }
-            if(SQLConditionType.In == type) // reverse
-                AddCustom(value + sType + what);
-            else AddCustom(what + sType + value);
+
+                    case SQLConditionType.NotIn:
+                    sType = " not in ";
+                    break;
+            }
+            if (SQLConditionType.In == type || SQLConditionType.NotIn == type) // reverse
+                AddCustom(value + sType + "(" + what + ")");
+            else 
+                AddCustom(what + sType + value);
             }
 
         public void AddCustom(string SQLString)

@@ -28,6 +28,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using SQLite.NET;
 using MediaPortal.Database;
+using System.Text.RegularExpressions;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -52,7 +53,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cLastUpdated = "lastupdated";
         public const String cDownloadPending = "DownloadPending";
         public const String cDownloadExpectedNames = "DownloadExpectedName";
-        public const String cEpisodeImageFilename = "filename";
+
+        public const String cEpisodeThumbnailUrl = "ThumbUrl";
+        public const String cEpisodeThumbnailFilename = "thumbFilename";
 
         public const String cAirsBeforeSeason = "airsbefore_season";
         public const String cAirsBeforeEpisode = "airsbefore_episode";
@@ -70,6 +73,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
             s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
+            s_OnlineToFieldMap.Add("filename", cEpisodeThumbnailUrl);
 
             // lately it also returns seriesID (which we already had before - but unfortunatly not in all lower case, prevents an error msg, thats all
             s_OnlineToFieldMap.Add("seriesid", cSeriesID);
@@ -117,6 +121,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
             base.AddColumn(cDownloadPending, new DBField(DBField.cTypeInt));
             base.AddColumn(cDownloadExpectedNames, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -155,9 +161,9 @@ namespace WindowPlugins.GUITVSeries
 		{
 			get
 			{
-                if (this[cEpisodeImageFilename].ToString().Length > 0)
+                if (this[cEpisodeThumbnailFilename].ToString().Length > 0)
 				{
-                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cEpisodeImageFilename]);
+                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cEpisodeThumbnailFilename]);
 				} else return string.Empty;
 			}
 		}
@@ -192,7 +198,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
-        public const int cDBVersion = 5;
+        public const int cDBVersion = 6;
 
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
@@ -280,7 +286,13 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 4:
-                        DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        break;
+
+                    case 5:
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, (DBValue)"", new SQLCondition());
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", new SQLCondition());
                         DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
                         break;
 
@@ -794,6 +806,28 @@ namespace WindowPlugins.GUITVSeries
             String sqlWhat = string.Empty;
             conditions.AddCustom(stdConditions.ConditionsSQLString);
 
+            SQLCondition conditionsFirst = conditions.Copy();
+            SQLCondition conditionsSecond = conditions.Copy();
+            // need to extract the series condition from the original conditions, to retrieve the series this is based upon
+            String sWhere = conditions;
+            String RegExp = DBOnlineEpisode.Q(cSeriesID) + @" = (\d*)";
+            Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+            Match matchSeriesID = Engine.Match(conditions);
+            RegExp = DBOnlineEpisode.Q(cSeasonIndex) + @" = (\d*)";
+            Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+            Match matchSeasonIndex = Engine.Match(conditions);
+
+            SQLCondition subQueryConditions = new SQLCondition();
+            if (matchSeriesID.Success)
+                subQueryConditions.Add(new DBEpisode(), cSeriesID, matchSeriesID.Groups[1].Value, SQLConditionType.Equal);
+            if (matchSeasonIndex.Success)
+                subQueryConditions.Add(new DBEpisode(), cSeasonIndex, matchSeasonIndex.Groups[1].Value, SQLConditionType.Equal);
+            subQueryConditions.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
+
+            String sqlSubQuery = "select distinct " + DBEpisode.Q(cCompositeID2) + " from " + DBEpisode.cTableName + subQueryConditions;
+            conditionsFirst.AddCustom(sqlSubQuery, DBOnlineEpisode.Q(cCompositeID), SQLConditionType.NotIn);
+            conditionsSecond.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
+
             string orderBy = string.Empty;
             if(selectFull)
             {
@@ -831,11 +865,10 @@ namespace WindowPlugins.GUITVSeries
             }
 
             sqlQuery = sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
-                + ") " + conditions
+                + ") " + conditionsFirst
                 + " union ";
-            conditions.Add(new DBEpisode(), DBEpisode.cCompositeID2, string.Empty, SQLConditionType.NotEqual);
             sqlQuery += sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
-                + ") " + conditions +orderBy + conditions.limitString;
+                + ") " + conditionsSecond + orderBy + conditions.limitString;
             
             return sqlQuery;
         }
