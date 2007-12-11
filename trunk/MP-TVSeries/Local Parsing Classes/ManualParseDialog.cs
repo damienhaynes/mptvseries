@@ -114,22 +114,8 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             int seasonNum = (int) onlineEp[DBOnlineEpisode.cSeasonIndex];
             int episodeNum = (int) onlineEp[DBOnlineEpisode.cEpisodeIndex]; 
 
-            // build the local series
-            DBSeries localSeries = DBSeries.Get(onlineSeries[DBOnlineSeries.cID]);
-            if (localSeries == null) {
-                localSeries = new DBSeries((string)onlineSeries[DBOnlineSeries.cPrettyName]);
-                localSeries[DBSeries.cID] = onlineSeries[DBOnlineSeries.cID];
-            }
-            localSeries.Commit();
-            onlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
-            onlineSeries.Commit();            
+          
             
-            // make sure the season is in the DB
-            DBSeason season = new DBSeason(seriesID, seasonNum);
-            season[DBSeason.cHasLocalFilesTemp] = true;
-            season[DBSeason.cHasEpisodes] = true;
-            season.Commit();
-
             // construct and add the episode (i am not sure how much of this is required...
             // would be nice if a DBOnlineEpisode object could just create a DBEpisode object...
             DBEpisode episode = new DBEpisode(this.videoFile.FullName);
@@ -144,6 +130,28 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
                 episode[DBOnlineEpisode.cEpisodeName] = onlineEp[DBOnlineEpisode.cEpisodeName];
             episode.Commit();
             onlineEp.Commit();
+
+
+            // make sure the season is in the DB
+            DBSeason season = new DBSeason(seriesID, seasonNum);
+            season[DBSeason.cHasLocalFilesTemp] = true;
+            season[DBSeason.cHasEpisodes] = true;
+            if (onlineEp[DBOnlineEpisode.cWatched] == 0)
+                season[DBSeason.cUnwatchedItems] = 1;
+            season.Commit();
+
+            // build the local series
+            DBSeries localSeries = DBSeries.Get(onlineSeries[DBOnlineSeries.cID]);
+            if (localSeries == null)
+            {
+                localSeries = new DBSeries((string)onlineSeries[DBOnlineSeries.cPrettyName]);
+                localSeries[DBSeries.cID] = onlineSeries[DBOnlineSeries.cID];
+            }
+            localSeries.Commit();
+            onlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
+            if (onlineEp[DBOnlineEpisode.cWatched] == 0)
+                onlineSeries[DBOnlineSeries.cUnwatchedItems] = 1;
+            onlineSeries.Commit();  
 
             // update detailed online data for new stuff
             OnlineParsing onlineParser = new OnlineParsing(ConfigurationForm.GetInstance());

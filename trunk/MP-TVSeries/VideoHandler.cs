@@ -97,6 +97,14 @@ namespace WindowPlugins.GUITVSeries
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
         }
 
+        void MarkEpisodeAsWatched(DBEpisode episode)
+        {
+            episode[DBOnlineEpisode.cWatched] = 1;
+            episode.Commit();
+            DBSeason.UpdateUnWached(episode);
+            DBSeries.UpdateUnWached(episode);
+        }
+
         public bool ResumeOrPlay(DBEpisode episode)
         {
             try
@@ -207,9 +215,8 @@ namespace WindowPlugins.GUITVSeries
                     using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
                     {
                         if (!xmlreader.GetValueAsBool("movieplayer", "internal", true))
-                        { 
-                            m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
-                            m_currentEpisode.Commit();
+                        {
+                            MarkEpisodeAsWatched(m_currentEpisode);
                         }
                     }
                 }
@@ -251,7 +258,7 @@ namespace WindowPlugins.GUITVSeries
                         if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                             && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
                         {
-                            m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
+                            MarkEpisodeAsWatched(m_currentEpisode);
                         }
                         m_currentEpisode.Commit();
                         m_currentEpisode = null;
@@ -278,7 +285,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         w.RunWorkerAsync(true);
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
-                        m_currentEpisode[DBOnlineEpisode.cWatched] = 1;
+                        MarkEpisodeAsWatched(m_currentEpisode);
                         m_currentEpisode.Commit();
                         m_currentEpisode = null;
                     }

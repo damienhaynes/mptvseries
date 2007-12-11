@@ -379,6 +379,13 @@ namespace WindowPlugins.GUITVSeries
                             }
                             else
                                 season[DBSeason.cHasLocalFilesTemp] = false;
+
+                            DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                            if (episode != null)
+                                season[DBSeason.cUnwatchedItems] = true;
+                            else
+                                season[DBSeason.cUnwatchedItems] = false;
+
                             season.Commit();
                         }
 
@@ -388,6 +395,13 @@ namespace WindowPlugins.GUITVSeries
                                 series[DBOnlineSeries.cHasLocalFilesTemp] = true;
                             else
                                 series[DBOnlineSeries.cHasLocalFilesTemp] = false;
+
+                            DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+                            if (episode != null)
+                                series[DBOnlineSeries.cUnwatchedItems] = true;
+                            else
+                                series[DBOnlineSeries.cUnwatchedItems] = false;
+
                             series.Commit();
                         }
 
@@ -500,6 +514,8 @@ namespace WindowPlugins.GUITVSeries
                     // refresh existing banners
                     UpdateBanners(false);
                 }
+
+                UpdateEpisodeThumbNails();
             }
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
@@ -597,6 +613,9 @@ namespace WindowPlugins.GUITVSeries
             UpdateStatus(updateStatusEps);
             MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
             int nSeason = 0;
+            List<DBSeries> relatedSeries = new List<DBSeries>();
+            List<DBSeason> relatedSeasons = new List<DBSeason>();
+
             foreach (parseResult progress in parsedFiles)
             {
                 if (worker.CancellationPending)
@@ -628,10 +647,30 @@ namespace WindowPlugins.GUITVSeries
                         season[DBSeason.cHasLocalFilesTemp] = true;
                         season[DBSeason.cHasEpisodes] = true;
                         season.Commit();
+
+                        // already in?
+                        bool bSeasonFound = false;
+                        foreach (DBSeason seasonLoop in relatedSeasons)
+                            if (seasonLoop[DBSeason.cSeriesID] == series[DBOnlineSeries.cID] && seasonLoop[DBSeason.cIndex] == nSeason)
+                            {
+                                bSeasonFound = true;
+                                break;
+                            }
+                        if (!bSeasonFound)
+                            relatedSeasons.Add(season);
+
+                        bool bSeriesFound = false;
+                        foreach (DBSeries seriesLoop in relatedSeries)
+                            if (seriesLoop[DBOnlineSeries.cID] == series[DBOnlineSeries.cID])
+                            {
+                                bSeriesFound = true;
+                                break;
+                            }
+                        if (!bSeriesFound)
+                            relatedSeries.Add(series);
+
                     }
-
-
-
+                    
                     // then episode
                     DBEpisode episode = new DBEpisode(progress.full_filename);
                     bool bNewFile = false;
@@ -663,6 +702,29 @@ namespace WindowPlugins.GUITVSeries
                     episode.Commit();
                 }
             }
+
+            // now go over the touched seasons & series
+            foreach (DBSeason season in relatedSeasons)
+            {
+                DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                if (episode != null)
+                    season[DBSeason.cUnwatchedItems] = true;
+                else
+                    season[DBSeason.cUnwatchedItems] = false;
+
+                season.Commit();
+            }
+
+            foreach (DBSeries series in relatedSeries)
+            {
+                DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+                if (episode != null)
+                    series[DBOnlineSeries.cUnwatchedItems] = true;
+                else
+                    series[DBOnlineSeries.cUnwatchedItems] = false;
+
+                series.Commit();
+            }
         }
 
         void GetSeries()
@@ -676,6 +738,7 @@ namespace WindowPlugins.GUITVSeries
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);
                 DBTable.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, condition);
+
                 // mark existing banners as "old", needs a refresh too
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 2, SQLConditionType.Equal);
@@ -1167,6 +1230,62 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public void UpdateEpisodeThumbNails()
+        {
+            if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true)
+            {
+                // get a list of all the episodes with thumbnailUrl
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);
+                condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+                List<DBEpisode> episodes = DBEpisode.Get(condition);
+                DBSeries tmpSeries = null; 
+                foreach (DBEpisode episode in episodes)
+                {
+                    String sThumbNailFilename = episode[DBOnlineEpisode.cEpisodeThumbnailFilename];
+                    string basePath = Settings.GetPath(Settings.Path.banners);
+                    string completePath = Helper.PathCombine(basePath, sThumbNailFilename);
+                    if (!File.Exists(completePath))
+                    {
+                        // we need the pretty name to figure out the folder to store to
+                        try
+                        {
+                            if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
+                            {
+                                tmpSeries = DBSeries.Get(episode[DBOnlineEpisode.cSeriesID], false);
+                            }
+                            string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
+                            foreach (char c in System.IO.Path.GetInvalidFileNameChars()) seriesFolder = seriesFolder.Replace(c, '_');
+                            sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg");
+                            completePath = Helper.PathCombine(basePath, sThumbNailFilename);
+
+                            if (!File.Exists(completePath))
+                            {
+                                MPTVSeriesLog.Write("New EpisodeImage found: " + episode[DBOnlineEpisode.cEpisodeThumbnailUrl]);
+                                System.Net.WebClient webClient = new System.Net.WebClient();
+                                try
+                                {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));
+                                    webClient.DownloadFile(DBOnlineMirror.Banners + "/" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl], completePath);
+                                }
+                                catch (System.Net.WebException)
+                                {
+                                    MPTVSeriesLog.Write("Banner download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl] + ")");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write("There was a problem getting the episode image: " + ex.Message);
+                        }
+                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
+                        episode.Commit();
+                    }
+                }
+            }
+
+        }
+
         public void UpdateBanners(bool bUpdateNewSeries)
         {
             SQLCondition condition = new SQLCondition();
@@ -1326,13 +1445,18 @@ namespace WindowPlugins.GUITVSeries
             // all series that have an onlineID ( != 0)
             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.NotEqual);
             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, -1, SQLConditionType.NotEqual);
-            bool bDownloadEpisodesnapshots = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
 
             if (bUpdateNewEpisodes)
             {
                 MPTVSeriesLog.Write("*********  UpdateEpisodes - retrieve unknown episodes  *********");
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 0, SQLConditionType.Equal);
+                
+                // scan all the episodes that don't have an episode thumbnail url - and mark them as no OnlineDataImported to retrieve clean data from the base
+                SQLCondition conditionNoEpisodeSnapshot = new SQLCondition();
+                conditionNoEpisodeSnapshot.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.Equal);
+                conditionNoEpisodeSnapshot.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, DateTime.Now.ToString("yyyy-MM-dd"), SQLConditionType.LessThan);
+                DBTable.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 0, conditionNoEpisodeSnapshot);
             }
             else
             {
@@ -1391,7 +1515,7 @@ namespace WindowPlugins.GUITVSeries
                     // find the corresponding series in our list
                     DBEpisode localEpisode = IDToEpisodesMap[onlineEpisode[DBOnlineEpisode.cID]];
                     MPTVSeriesLog.Write("Updating data for " + localEpisode[DBEpisode.cCompositeID]);
-                    bool isSecondOfDoubleEpisode = localEpisode.m_fields[DBEpisode.cSeriesID].Value.ToString().Length == 0;
+//                    bool isSecondOfDoubleEpisode = localEpisode.m_fields[DBEpisode.cSeriesID].Value.ToString().Length == 0;
                     if (localEpisode != null)
                     {
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
@@ -1411,18 +1535,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cEpisodeIndex:
                                     break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
-                                case DBOnlineEpisode.cEpisodeImageFilename:
-                                    // this is the episode image
-                                    if (bDownloadEpisodesnapshots)
-                                    {
-                                        if (onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename].ToString().Length > 0)
-                                            onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename] = updateEpisodesParser.getEpisodeImage(localEpisode.onlineEpisode, onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename]);
-                                    }
-                                    else
-                                        onlineEpisode[DBOnlineEpisode.cEpisodeImageFilename] = String.Empty;
-
-                                    goto default;
-                                
                                 default:
                                     localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
                                     localEpisode[key] = onlineEpisode[key];
@@ -1430,13 +1542,13 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         
-                        if (isSecondOfDoubleEpisode) // dont commit the local ep if so
-                            localEpisode.onlineEpisode.Commit();
-                        else
-                        {
+//                         if (isSecondOfDoubleEpisode) // dont commit the local ep if so
+//                             localEpisode.onlineEpisode.Commit();
+//                         else
+//                         {
                             localEpisode[DBOnlineEpisode.cOnlineDataImported] = 2;
                             localEpisode.Commit();
-                        }
+//                        }
                     }
                     else
                     {

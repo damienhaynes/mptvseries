@@ -45,7 +45,7 @@ namespace WindowPlugins.GUITVSeries
         }
         public const String cTableName = "season";
         public const String cOutName = "Season";
-        public const int cDBVersion = 3;
+        public const int cDBVersion = 4;
 
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesID = "SeriesID";
@@ -97,6 +97,22 @@ namespace WindowPlugins.GUITVSeries
                     case 2:
                         DBSeason.GlobalSet(DBSeason.cHidden, 0, new SQLCondition());
                         DBSeries.GlobalSet(DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+                        DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
+                        break;
+
+                    case 3:
+                        // create the unwatcheditem value by parsin the episodes
+                        SQLCondition condEmpty = new SQLCondition();
+                        List<DBSeason> AllSeasons = Get(condEmpty, false);
+                        foreach (DBSeason season in AllSeasons)
+                        {
+                            DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                            if (episode != null)
+                                season[DBSeason.cUnwatchedItems] = true;
+                            else
+                                season[DBSeason.cUnwatchedItems] = false;
+                            season.Commit();
+                        }
                         DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
                         break;
 
@@ -152,6 +168,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cHasEpisodesTemp, new DBField(DBField.cTypeInt));
             AddColumn(cHidden, new DBField(DBField.cTypeInt));
             AddColumn(cForomSubtitleRoot, new DBField(DBField.cTypeString));
+            AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -206,14 +223,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    case DBSeason.cUnwatchedItems:
-                        // this one is virtual
-                        SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
-                        if (results.Rows.Count > 0)
-                        {
-                            return results.Rows[0].fields[0];
-                        }
-                        else return 0;   
+//                     case DBSeason.cUnwatchedItems:
+//                         // this one is virtual
+//                         SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
+//                         if (results.Rows.Count > 0)
+//                         {
+//                             return results.Rows[0].fields[0];
+//                         }
+//                         else return 0;   
                     default: return base[fieldName];
                 }
             }
@@ -221,8 +238,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    case DBSeason.cUnwatchedItems:
-                        break;
+//                     case DBSeason.cUnwatchedItems:
+//                         break;
                     default:
                         base[fieldName] = value;
                         break;
@@ -426,6 +443,17 @@ namespace WindowPlugins.GUITVSeries
             if (dbSeasonUpdateOccured != null)
                 dbSeasonUpdateOccured(this);
             return base.Commit();
+        }
+
+        public static void UpdateUnWached(DBEpisode episode)
+        {
+            DBSeason season = new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+            DBEpisode FirstUnwatchedEpisode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+            if (FirstUnwatchedEpisode != null)
+                season[DBSeason.cUnwatchedItems] = true;
+            else
+                season[DBSeason.cUnwatchedItems] = false;
+            season.Commit();
         }
     }
 }
