@@ -257,10 +257,12 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cID, "Episode ID");
             s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cEpisodeSummary, "Overview");
 
-            int nCurrentDBEpisodeVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBEpisodesVersion) != nCurrentDBEpisodeVersion)
+            int nCurrentDBVersion = cDBVersion;
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBEpisodesVersion);
+
+            while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBEpisodesVersion))
+                switch (nUpgradeDBVersion)
                 {
                     case 1:
                         // upgrade to version 2; clear the series table (we use 2 other tables now)
@@ -270,35 +272,37 @@ namespace WindowPlugins.GUITVSeries
                             DBTVSeries.Execute(sqlQuery);
                             sqlQuery = "DROP TABLE " + DBOnlineEpisode.cTableName;
                             DBTVSeries.Execute(sqlQuery);
-                            DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                            nUpgradeDBVersion++;
                         }
                         catch { }
                         break;
 
                     case 2:
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 3:
                         DBEpisode.GlobalSet(new DBEpisode(), DBEpisode.cEpisodeIndex2, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 4:
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 5:
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, (DBValue)"init", new SQLCondition());
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBEpisodeVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     default:
+                        nUpgradeDBVersion = nCurrentDBVersion;
                         break;
                 }
+            DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBVersion);
             // create the dll interop for getting MediaInfo
             try
             {

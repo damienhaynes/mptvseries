@@ -53,9 +53,10 @@ namespace WindowPlugins.GUITVSeries
             DBReplacements dummy = new DBReplacements();
 
             int nCurrentDBVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBReplacementsVersion) != nCurrentDBVersion)
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
+            while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBReplacementsVersion))
+                switch (nUpgradeDBVersion)
                 {
                     default:
                         {
@@ -104,10 +105,11 @@ namespace WindowPlugins.GUITVSeries
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
-                            DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
+                            nUpgradeDBVersion = nCurrentDBVersion;
                         }
                         break;
                 }
+            DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
         }
 
         public static String PrettyFieldName(String sFieldName)
