@@ -129,49 +129,15 @@ namespace WindowPlugins.GUITVSeries
             {
                 SQLiteResultSet results;
                 results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
-                if (results != null && results.Rows.Count > 0)
-                {
-                    // table is already there, perfect
-                    if (GetOptions(cDBSeriesVersion) == null)
-                        SetOptions(cDBSeriesVersion, 1);
-
-                    if (GetOptions(cDBSeasonVersion) == null)
-                        SetOptions(cDBSeasonVersion, 1);
-
-                    if (GetOptions(cDBEpisodesVersion) == null)
-                        SetOptions(cDBEpisodesVersion, 1);
-
-                    if (GetOptions(cDBExpressionsVersion) == null)
-                        SetOptions(cDBExpressionsVersion, 1);
-
-                    if (GetOptions(cDBNewzbinVersion) == null)
-                        SetOptions(cDBNewzbinVersion, 1);
-                }
-                else
+                if (results == null || results.Rows.Count == 0)
                 {
                     // no table, create it
                     String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
                     DBTVSeries.Execute(sQuery);
-
-                    if (GetOptions(cDBSeriesVersion) == null)
-                        SetOptions(cDBSeriesVersion, DBSeries.cDBVersion);
-
-                    if (GetOptions(cDBSeasonVersion) == null)
-                        SetOptions(cDBSeasonVersion, DBSeason.cDBVersion);
-
-                    if (GetOptions(cDBEpisodesVersion) == null)
-                        SetOptions(cDBEpisodesVersion, DBEpisode.cDBVersion);
-
-                    if (GetOptions(cDBExpressionsVersion) == null)
-                        SetOptions(cDBExpressionsVersion, DBExpression.cDBVersion);
-
-                    if (GetOptions(cDBNewzbinVersion) == null)
-                        SetOptions(cDBNewzbinVersion, DBNewzbin.cDBVersion);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
                     SetOptions(cConfig_LogCollapsed, true);
-
 
                 if (GetOptions(cDBSeriesLastLocalID) == null)
                     SetOptions(cDBSeriesLastLocalID, -1);

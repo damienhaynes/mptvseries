@@ -78,10 +78,11 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
             s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
 
-            int nCurrentDBSeasonVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBSeasonVersion) != nCurrentDBSeasonVersion)
+            int nCurrentDBVersion = cDBVersion;
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeasonVersion);
+            while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBSeasonVersion))
+                switch (nUpgradeDBVersion)
                 {
                     case 1:
                         // upgrade to version 2; clear the season table (series table format changed)
@@ -89,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             String sqlQuery = "DROP TABLE season";
                             DBTVSeries.Execute(sqlQuery);
-                            DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
+                            nUpgradeDBVersion++;
                         }
                         catch {}
                         break;
@@ -97,7 +98,7 @@ namespace WindowPlugins.GUITVSeries
                     case 2:
                         DBSeason.GlobalSet(DBSeason.cHidden, 0, new SQLCondition());
                         DBSeries.GlobalSet(DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 3:
@@ -113,12 +114,14 @@ namespace WindowPlugins.GUITVSeries
                                 season[DBSeason.cUnwatchedItems] = false;
                             season.Commit();
                         }
-                        DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBSeasonVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     default:
+                        nUpgradeDBVersion = nCurrentDBVersion;
                         break;
                 }
+            DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBVersion);
         }
 
         public static String PrettyFieldName(String sFieldName)

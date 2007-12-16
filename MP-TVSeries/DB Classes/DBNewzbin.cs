@@ -42,16 +42,22 @@ namespace WindowPlugins.GUITVSeries
 
             List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
             int nCurrentDBVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBNewzbinVersion) != nCurrentDBVersion)
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
+            while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBNewzbinVersion))
+                switch (nUpgradeDBVersion)
                 {
                     default:
                         {
                             // from scratch or from earlier version; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
                             try
                             {
-                                DBNewzbin item = NewzsSearchList[0];
+                                DBNewzbin item = null;
+                                if (NewzsSearchList.Count != 0)
+                                    item = NewzsSearchList[0];
+                                else
+                                    item = new DBNewzbin("0");
+
                                 item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
                                 item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
                                 item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
@@ -64,8 +70,7 @@ namespace WindowPlugins.GUITVSeries
                                 item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
                                 item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
                                 item.Commit();
-
-                                DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                                nUpgradeDBVersion = nCurrentDBVersion;
                             }
                             catch { }
                         }
@@ -73,24 +78,38 @@ namespace WindowPlugins.GUITVSeries
 
                     case 2:
                         {
-                            DBNewzbin item = NewzsSearchList[0];
-                            item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
-                            item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
-                            item.Commit();
-                            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                            DBNewzbin item = null;
+                            if (NewzsSearchList.Count != 0)
+                            {
+                                item = NewzsSearchList[0];
+                                item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
+                                item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
+                                item.Commit();
+                                nUpgradeDBVersion++;
+                            }
+                            else
+                                nUpgradeDBVersion = 0;
+                            
                         }
                         break;
 
                     case 3:
                         {
-                            DBNewzbin item = NewzsSearchList[0];
-                            item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
-                            item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
-                            item.Commit();
-                            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+                            DBNewzbin item = null;
+                            if (NewzsSearchList.Count != 0)
+                            {
+                                item = NewzsSearchList[0];
+                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
+                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
+                                item.Commit();
+                                nUpgradeDBVersion++;
+                            }
+                            else
+                                nUpgradeDBVersion = 0;
                         }
                         break;
                 }
+            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
         }
 
         public DBNewzbin()

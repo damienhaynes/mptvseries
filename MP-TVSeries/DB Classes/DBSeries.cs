@@ -264,10 +264,12 @@ namespace WindowPlugins.GUITVSeries
 
             s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
 
-            int nCurrentDBSeriesVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBSeriesVersion) != nCurrentDBSeriesVersion)
+            int nCurrentDBVersion = cDBVersion;
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeriesVersion);
+
+            while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBSeriesVersion))
+                switch (nUpgradeDBVersion)
                 {
                     case 1:
                     case 2:
@@ -276,7 +278,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             String sqlQuery = "DROP TABLE series";
                             DBTVSeries.Execute(sqlQuery);
-                            DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                            nUpgradeDBVersion++;
                         }
                         catch {}
                         break;
@@ -285,12 +287,12 @@ namespace WindowPlugins.GUITVSeries
                         // set all new perseries timestamps to 0
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 4:
                         DBSeries.GlobalSet(new DBSeries(), DBSeries.cHidden, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 5:
@@ -299,19 +301,19 @@ namespace WindowPlugins.GUITVSeries
                         conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
                         // just getting the series should be enough
                         List<DBSeries> seriesList = DBSeries.Get(conditions);
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 6:
                         // set all watched flag timestamp to 0 (will be created)
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 7:
                         // all series no tagged for auto download at first
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     case 8:
@@ -327,12 +329,15 @@ namespace WindowPlugins.GUITVSeries
                                 series[DBOnlineSeries.cUnwatchedItems] = false;
                             series.Commit();
                         }
-                        DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBSeriesVersion);
+                        nUpgradeDBVersion++;
                         break;
 
                     default:
+                        // new DB, nothing special to do
+                        nUpgradeDBVersion = nCurrentDBVersion;
                         break;
                 }
+            DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBVersion);
         }
 
         public static String PrettyFieldName(String sFieldName)
