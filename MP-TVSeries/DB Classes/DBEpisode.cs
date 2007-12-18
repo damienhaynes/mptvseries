@@ -814,10 +814,10 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition conditionsSecond = conditions.Copy();
             // need to extract the series condition from the original conditions, to retrieve the series this is based upon
             String sWhere = conditions;
-            String RegExp = DBOnlineEpisode.Q(cSeriesID) + @" = (\d*)";
+            String RegExp = DBOnlineEpisode.Q(cSeriesID) + @" = (-?\d+)";
             Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
             Match matchSeriesID = Engine.Match(conditions);
-            RegExp = DBOnlineEpisode.Q(cSeasonIndex) + @" = (\d*)";
+            RegExp = DBOnlineEpisode.Q(cSeasonIndex) + @" = (-?\d+)";
             Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
             Match matchSeasonIndex = Engine.Match(conditions);
 
