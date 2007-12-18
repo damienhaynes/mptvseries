@@ -706,16 +706,17 @@ namespace WindowPlugins.GUITVSeries
             }
 
             string conds = conditions;
-            string oderBy = string.Empty;
+            string orderBy = string.Empty;
             if (selectFull)
             {
-                oderBy = conditions.customOrderStringIsSet
+                bool bUseSortName = DBOption.GetOptions(DBOption.cSeries_UseSortName);
+                orderBy = conditions.customOrderStringIsSet
                       ? conditions.orderString
-                      : " order by upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+                      : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
             }
             return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
                              + conds
-                             + oderBy
+                             + orderBy
                              + conditions.limitString;
 
         }

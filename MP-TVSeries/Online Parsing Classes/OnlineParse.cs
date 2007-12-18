@@ -890,7 +890,8 @@ namespace WindowPlugins.GUITVSeries
                 descriptor.m_sbtnCancelLabel = "Skip this time";
                 descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
 
-                while (true)
+                bool bKeepTrying = true;
+                while (bKeepTrying)
                 {
                     Feedback.CItem Selected = null;
                     Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out Selected);
@@ -909,8 +910,11 @@ namespace WindowPlugins.GUITVSeries
 
                         case Feedback.ReturnCode.OK:
                             DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-                            if (nameToSearch != Selected.m_sName) 
+                            if (nameToSearch != Selected.m_sName || selectedSeries == null)
+                            {
                                 nameToSearch = Selected.m_sName;
+                                bKeepTrying = false;
+                            }
                             else
                                 return selectedSeries;
                             break;

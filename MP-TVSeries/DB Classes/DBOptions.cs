@@ -77,6 +77,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Series_Subtitle = "View_Series_Secondary";
         public const String cView_Series_Main = "View_Series_Main";
 
+        public const String cSeries_UseSortName = "Series_UseSortName";
+
         public const String cView_Season_ListFormat = "View_Season_ListFormat";
         public const String cView_Season_Col1 = "View_Season_Col1";
         public const String cView_Season_Col2 = "View_Season_Col2";
@@ -218,6 +220,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cView_Series_Main) == null)
                     SetOptions(cView_Series_Main, "<" + DBSeries.cOutName + "." + DBOnlineSeries.cSummary + ">");
+
+                if (GetOptions(cSeries_UseSortName) == null)
+                    SetOptions(cSeries_UseSortName, 0); // default sort is by pretty name
 
                 if (GetOptions(cView_Season_ListFormat) == null)
                     SetOptions(cView_Season_ListFormat, 0); // text by default
