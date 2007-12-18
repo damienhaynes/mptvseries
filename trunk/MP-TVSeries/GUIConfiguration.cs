@@ -177,6 +177,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
 
             checkBox_AutoHeight.Checked = DBOption.GetOptions(DBOption.cViewAutoHeight);
+            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);
             comboBox_seriesFormat.Items.Add("Text");
             comboBox_seriesFormat.Items.Add("Graphical");
             comboBox_seriesFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
@@ -2923,6 +2924,12 @@ namespace WindowPlugins.GUITVSeries
         private void checkDownloadEpisodeSnapshots_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cGetEpisodeSnapshots, checkDownloadEpisodeSnapshots.Checked);
+        }
+
+        private void checkBox_Series_UseSortName_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
+            LoadTree();
         }
 
     }
