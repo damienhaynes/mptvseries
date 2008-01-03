@@ -1267,6 +1267,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 MPTVSeriesLog.Write("New EpisodeImage found: " + episode[DBOnlineEpisode.cEpisodeThumbnailUrl]);
                                 System.Net.WebClient webClient = new System.Net.WebClient();
+                                webClient.Headers.Add("user-agent", Settings.UserAgent);
                                 try
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(completePath));

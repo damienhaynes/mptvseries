@@ -17,8 +17,21 @@ namespace WindowPlugins.GUITVSeries
         private static string apppath = string.Empty;
         private static string fanArtPath = string.Empty;
 
-        public static string executingAssembly = System.Reflection.Assembly.GetEntryAssembly().Location;
-        public static bool isConfig = System.IO.Path.GetFileNameWithoutExtension(executingAssembly).ToLower() == "configuration";
+        static string _executingAssembly = System.Reflection.Assembly.GetEntryAssembly().Location;
+        public static string ExecutingAssembly
+        { get { return _executingAssembly; } }
+
+        public static bool _isConfig = System.IO.Path.GetFileNameWithoutExtension(ExecutingAssembly).ToLower() == "configuration";
+        public static bool isConfig
+        { get { return _isConfig; } }
+
+        static string _version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+        public static string Version
+        { get { return _version; } }
+
+        static string _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
+        public static string UserAgent
+        { get { return _userAgent; } }
 
         public enum Path
         {
