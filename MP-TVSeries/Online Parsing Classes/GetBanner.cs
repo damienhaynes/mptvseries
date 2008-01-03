@@ -297,6 +297,7 @@ namespace WindowPlugins.GUITVSeries
                             if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
                             {
                                 WebClient webClient = new WebClient();
+                                webClient.Headers.Add("user-agent", Settings.UserAgent);
                                 try
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeries.sBannerFileName));
@@ -325,6 +326,7 @@ namespace WindowPlugins.GUITVSeries
                             if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
                             {
                                 WebClient webClient = new WebClient();
+                                webClient.Headers.Add("user-agent", Settings.UserAgent);
                                 try
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeason.sBannerFileName));

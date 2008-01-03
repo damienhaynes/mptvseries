@@ -122,6 +122,9 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(sUrl);
+                // Note: some network proxies require the useragent string to be set or they will deny the http request
+                // this is true for instance for EVERY thailand internet connection (also needs to be set for banners/episodethumbs and any other http request we send)
+                request.UserAgent = Settings.UserAgent;
                 request.Timeout = 20000;
                 response = (HttpWebResponse)request.GetResponse();
             }
