@@ -180,7 +180,7 @@ namespace WindowPlugins.GUITVSeries
             " Expected Filename: dynamic (example below)"
            + Environment.NewLine + "V_MPEG4_ISO_AVC.png";
 
-            t.template = @"<folder>\<Episode.VideoCodec>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;";
+            t.template = @"<folder>\<Episode.AudioCodec>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;";
             templates.Add(t);
 
             t = new Template();
