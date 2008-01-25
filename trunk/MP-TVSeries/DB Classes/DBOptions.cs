@@ -123,6 +123,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cWatchedAfter = "watchedAfter";
 
+        public const String cAltImgLoading = "altImageLoading";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()

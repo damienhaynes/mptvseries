@@ -123,51 +123,6 @@
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>174, 14</value>
   </metadata>
-  <data name="comboBox_seriesFormat.ToolTip" xml:space="preserve">
-    <value>Select the format to display the series listing in. Graphical will display the banners downloaded from online.
-Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
-  </data>
-  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>487, 14</value>
-  </metadata>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1007, 14</value>
-  </metadata>
-  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
-  </data>
-  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>686, 14</value>
-  </metadata>
-  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
-  </data>
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>802, 12</value>
   </metadata>
@@ -276,6 +231,9 @@ A Logo package must be installed to display logos succesfully in Media Portal</v
     <value>Select the format to display the season listing in. Graphical will display the banners downloaded from online.
 Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
   </data>
+  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>487, 14</value>
+  </metadata>
   <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
     <value>Enter in the field(s) to be displayed in the main information pane of the season view.
 You can right click on this textbox to bring up a menu of available fields from the database.
@@ -339,6 +297,46 @@ Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
 You can right click on this textbox to bring up a menu of available fields from the database.
 
 Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
+  </data>
+  <data name="comboBox_seriesFormat.ToolTip" xml:space="preserve">
+    <value>Select the format to display the series listing in. Graphical will display the banners downloaded from online.
+Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="checkBox_altImage.ToolTip" xml:space="preserve">
+    <value>Enables the image loading routine as was used in older Versions.
+Try this if only if you find that images (such as banners) do not load or dissapear inside Mediaportal. May be slower under certain conditions and has no effect in the Configuration.</value>
   </data>
   <data name="textBox_foromID.ToolTip" xml:space="preserve">
     <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste 

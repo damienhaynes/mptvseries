@@ -31,7 +31,7 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBSeason : DBTable, cache.ICacheable<DBSeason>
+    public class DBSeason : DBTable, ICacheable<DBSeason>
     {
         public static void overRide(DBSeason old, DBSeason newObject)
         {

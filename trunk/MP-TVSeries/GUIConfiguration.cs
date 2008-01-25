@@ -93,7 +93,8 @@ namespace WindowPlugins.GUITVSeries
                 System.Drawing.Size s = new Size(width, height);
                 this.Size = s;
             }
-
+            this.Resize += new EventHandler(ConfigurationForm_Resize);
+            
             Download.Monitor.Start(this);
             panel_manualEpisodeManagement.SetOwner(this);
             
@@ -106,8 +107,12 @@ namespace WindowPlugins.GUITVSeries
             initLoading = false;
             LoadTree();
             if(load != null) load.Close();
-
             instance = this;
+        }
+
+        void ConfigurationForm_Resize(object sender, EventArgs e)
+        {
+            this.Refresh();
         }
 
         void Monitor_m_NeedUserSelectionEvent(WindowPlugins.GUITVSeries.Feedback.CDescriptor descriptor)
@@ -127,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
             this.comboBox_debuglevel.SelectedIndex = 0;
-
+            this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
             m_paneListSettings.Add(panel_Expressions);
             m_paneListSettings.Add(panel_StringReplacements);
@@ -242,6 +247,13 @@ namespace WindowPlugins.GUITVSeries
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             
             this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
+
+            this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+        }
+
+        void Panel1_SizeChanged(object sender, EventArgs e)
+        {
+            this.Refresh();
         }
 
         private void InitExtraTreeAndPanes()
@@ -523,7 +535,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (initLoading) return;
             if(null == load) load = new loadingDisplay();
-            this.SuspendLayout();
+            //this.SuspendLayout();
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
             SQLCondition condition = new SQLCondition();
@@ -620,12 +632,15 @@ namespace WindowPlugins.GUITVSeries
             importPath[DBImportPath.cIndex] = e.RowIndex.ToString();
             foreach (DataGridViewCell cell in dataGridView_ImportPathes.Rows[e.RowIndex].Cells)
             {
-                if (cell.Value == null)
-                    return;
-                if (cell.ValueType == typeof(Boolean))
-                    importPath[cell.OwningColumn.Name] = (Boolean)cell.Value;
-                else
-                    importPath[cell.OwningColumn.Name] = (String)cell.Value;
+                //if (cell.Value == null)
+                    // causes importpath adding to be buggy (Inker) return;
+                if (cell.Value != null)
+                {
+                    if (cell.ValueType == typeof(Boolean))
+                        importPath[cell.OwningColumn.Name] = (Boolean)cell.Value;
+                    else
+                        importPath[cell.OwningColumn.Name] = (String)cell.Value;
+                }
             }
             importPath.Commit();
         }
@@ -803,6 +818,9 @@ namespace WindowPlugins.GUITVSeries
         #region Test Parsing Handling
         void TestParsing_FillList(List<parseResult> results)
         {
+            listView_ParsingResults.SuspendLayout();
+            IComparer sorter = listView_ParsingResults.ListViewItemSorter;
+            listView_ParsingResults.ListViewItemSorter = null;
             foreach (parseResult progress in results)
             {
                 foreach (KeyValuePair<String, String> MatchPair in progress.parser.Matches)
@@ -864,10 +882,11 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Parsing failed for " + progress.match_filename);
                 if (progress.failedSeason || progress.failedEpisode)
                     MPTVSeriesLog.Write(progress.exception + " for " + progress.match_filename);
-                listView_ParsingResults.Items.Add(item);
-                listView_ParsingResults.EnsureVisible(listView_ParsingResults.Items.Count - 1);
-                // only do that once in a while, it's really slow
+                listView_ParsingResults.Items.Add(item);                
             }
+            listView_ParsingResults.ListViewItemSorter = sorter;
+            listView_ParsingResults.Sort();
+            listView_ParsingResults.ResumeLayout();
             listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             foreach (ColumnHeader header in listView_ParsingResults.Columns)
@@ -877,12 +896,13 @@ namespace WindowPlugins.GUITVSeries
                 if (header.Width < 80)
                     header.Width = 80;
             }
+            
         }
 
         void TestParsing_LocalParseCompleted(List<parseResult> results)
         {
-            TestParsing_FillList(results);
             MPTVSeriesLog.Write("Parsing test completed");
+            TestParsing_FillList(results);
             this.progressBar_Parsing.Value = 100;
         }
 
@@ -904,8 +924,8 @@ namespace WindowPlugins.GUITVSeries
             listView_ParsingResults.Columns.Clear();
             // add mandatory columns
             ColumnHeader columnFileName = new ColumnHeader();
-            columnFileName.Name = DBOnlineEpisode.cEpisodeThumbnailFilename;
-            columnFileName.Text = "Thumbnail FileName";
+            columnFileName.Name = DBEpisode.cFilename;
+            columnFileName.Text = "FileName";
             listView_ParsingResults.Columns.Add(columnFileName);
 
             ColumnHeader columnSeriesName = new ColumnHeader();
@@ -2142,7 +2162,7 @@ namespace WindowPlugins.GUITVSeries
             if (e.Button == MouseButtons.Right)
                 contextMenuStrip_DetailsTree.Tag = e.Node;
         }
-
+        # region Torrent
         private void textBox_uTorrentPath_TextChanged(object sender, EventArgs e)
         {
             String sPath = textBox_uTorrentPath.Text;
@@ -2256,7 +2276,7 @@ namespace WindowPlugins.GUITVSeries
             m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex] = textBox_TorrentDetailsRegex.Text;
             m_currentTorrentSearch.Commit();
         }
-
+        # endregion
         private void checkBox_RandBanner_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
@@ -2334,11 +2354,11 @@ namespace WindowPlugins.GUITVSeries
             openFileDialog.Filter = "Executable files (*.db3)|";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Settings.SetPath(Settings.Path.database, openFileDialog.FileName);
+                Settings.SetDBPath(openFileDialog.FileName);
                 textBox_dblocation.Text = openFileDialog.FileName;
             }
         }
-        
+        # region Newsbin
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
             m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
@@ -2455,7 +2475,7 @@ namespace WindowPlugins.GUITVSeries
                 textBox_NewsDownloadPath.Text = folderBrowserDialog1.SelectedPath;
             }
         }
-
+        # endregion
         private void comboBox_preferedBannerType_SelectedIndexChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cPreferedBannerType, comboBox_preferedBannerType.SelectedIndex);
@@ -2930,6 +2950,11 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
             LoadTree();
+        }
+
+        private void checkBox_altImage_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAltImgLoading, checkBox_altImage.Checked);
         }
 
     }

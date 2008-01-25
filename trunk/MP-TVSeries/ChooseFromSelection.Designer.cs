@@ -60,6 +60,12 @@ namespace WindowPlugins.GUITVSeries
             this.button_Cancel = new System.Windows.Forms.Button();
             this.button_Ignore = new System.Windows.Forms.Button();
             this.textbox_Description = new System.Windows.Forms.TextBox();
+            this.radOption1 = new System.Windows.Forms.RadioButton();
+            this.radOption2 = new System.Windows.Forms.RadioButton();
+            this.radOption4 = new System.Windows.Forms.RadioButton();
+            this.radOption3 = new System.Windows.Forms.RadioButton();
+            this.radOption6 = new System.Windows.Forms.RadioButton();
+            this.radOption5 = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // textbox_ToMatch
@@ -148,6 +154,78 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_Description.Size = new System.Drawing.Size(406, 86);
             this.textbox_Description.TabIndex = 4;
             // 
+            // radOption1
+            // 
+            this.radOption1.AutoSize = true;
+            this.radOption1.Location = new System.Drawing.Point(37, 61);
+            this.radOption1.Name = "radOption1";
+            this.radOption1.Size = new System.Drawing.Size(77, 17);
+            this.radOption1.TabIndex = 8;
+            this.radOption1.TabStop = true;
+            this.radOption1.Text = "radOption1";
+            this.radOption1.UseVisualStyleBackColor = true;
+            this.radOption1.CheckedChanged += new System.EventHandler(this.radOption1_CheckedChanged);
+            // 
+            // radOption2
+            // 
+            this.radOption2.AutoSize = true;
+            this.radOption2.Location = new System.Drawing.Point(37, 78);
+            this.radOption2.Name = "radOption2";
+            this.radOption2.Size = new System.Drawing.Size(77, 17);
+            this.radOption2.TabIndex = 9;
+            this.radOption2.TabStop = true;
+            this.radOption2.Text = "radOption2";
+            this.radOption2.UseVisualStyleBackColor = true;
+            this.radOption2.CheckedChanged += new System.EventHandler(this.radOption2_CheckedChanged);
+            // 
+            // radOption4
+            // 
+            this.radOption4.AutoSize = true;
+            this.radOption4.Location = new System.Drawing.Point(37, 112);
+            this.radOption4.Name = "radOption4";
+            this.radOption4.Size = new System.Drawing.Size(77, 17);
+            this.radOption4.TabIndex = 11;
+            this.radOption4.TabStop = true;
+            this.radOption4.Text = "radOption4";
+            this.radOption4.UseVisualStyleBackColor = true;
+            this.radOption4.CheckedChanged += new System.EventHandler(this.radOption4_CheckedChanged);
+            // 
+            // radOption3
+            // 
+            this.radOption3.AutoSize = true;
+            this.radOption3.Location = new System.Drawing.Point(37, 95);
+            this.radOption3.Name = "radOption3";
+            this.radOption3.Size = new System.Drawing.Size(77, 17);
+            this.radOption3.TabIndex = 10;
+            this.radOption3.TabStop = true;
+            this.radOption3.Text = "radOption3";
+            this.radOption3.UseVisualStyleBackColor = true;
+            this.radOption3.CheckedChanged += new System.EventHandler(this.radOption3_CheckedChanged);
+            // 
+            // radOption6
+            // 
+            this.radOption6.AutoSize = true;
+            this.radOption6.Location = new System.Drawing.Point(37, 145);
+            this.radOption6.Name = "radOption6";
+            this.radOption6.Size = new System.Drawing.Size(77, 17);
+            this.radOption6.TabIndex = 13;
+            this.radOption6.TabStop = true;
+            this.radOption6.Text = "radOption6";
+            this.radOption6.UseVisualStyleBackColor = true;
+            this.radOption6.CheckedChanged += new System.EventHandler(this.radOption6_CheckedChanged);
+            // 
+            // radOption5
+            // 
+            this.radOption5.AutoSize = true;
+            this.radOption5.Location = new System.Drawing.Point(37, 128);
+            this.radOption5.Name = "radOption5";
+            this.radOption5.Size = new System.Drawing.Size(77, 17);
+            this.radOption5.TabIndex = 12;
+            this.radOption5.TabStop = true;
+            this.radOption5.Text = "radOption5";
+            this.radOption5.UseVisualStyleBackColor = true;
+            this.radOption5.CheckedChanged += new System.EventHandler(this.radOption5_CheckedChanged);
+            // 
             // ChooseFromSelectionDialog
             // 
             this.AcceptButton = this.button_OK;
@@ -155,7 +233,12 @@ namespace WindowPlugins.GUITVSeries
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Cancel;
             this.ClientSize = new System.Drawing.Size(435, 293);
-            this.Controls.Add(this.textbox_Description);
+            this.Controls.Add(this.radOption6);
+            this.Controls.Add(this.radOption5);
+            this.Controls.Add(this.radOption4);
+            this.Controls.Add(this.radOption3);
+            this.Controls.Add(this.radOption2);
+            this.Controls.Add(this.radOption1);
             this.Controls.Add(this.button_Ignore);
             this.Controls.Add(this.button_Cancel);
             this.Controls.Add(this.button_OK);
@@ -163,8 +246,10 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.label_ToMatch);
             this.Controls.Add(this.label_Choices);
             this.Controls.Add(this.listbox_Choices);
+            this.Controls.Add(this.textbox_Description);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ChooseFromSelectionDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChooseFromSelection";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -181,5 +266,11 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button button_Cancel;
         private System.Windows.Forms.Button button_Ignore;
         private System.Windows.Forms.TextBox textbox_Description;
+        private System.Windows.Forms.RadioButton radOption1;
+        private System.Windows.Forms.RadioButton radOption2;
+        private System.Windows.Forms.RadioButton radOption4;
+        private System.Windows.Forms.RadioButton radOption3;
+        private System.Windows.Forms.RadioButton radOption6;
+        private System.Windows.Forms.RadioButton radOption5;
     }
 }

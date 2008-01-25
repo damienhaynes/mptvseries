@@ -29,13 +29,40 @@ using MediaPortal.GUI.Library;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class Helper
+    class Helper
     {
-        public static bool StringIsNumerical(string number)
+        #region String Methods
+        public class String
         {
-            double isNumber = 0;
-            return System.Double.TryParse(number, out isNumber);
-                
+            /// <summary>
+            /// Fix for the buggy MS implementation
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public static bool IsNullOrEmpty(string value)
+            {
+                // great, won't be fixed until Orcas
+                // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=113102
+                if (value != null) return value.Length == 0;
+                return true;
+            }
+
+            public static bool IsNumerical(string number)
+            {
+                double isNumber = 0;
+                return System.Double.TryParse(number, out isNumber);
+            }
+        }
+        #endregion
+
+        #region List<T> Methods
+        public static List<T> inverseList<T>(List<T> input)
+        {
+            List<T> result = new List<T>(input.Count);
+            for (int i = input.Count - 1; i >= 0; i--)
+                result.Add(input[i]);
+            return result;
         }
 
         public static List<T> getFilteredList<T, P>(List<T> inputList, string PropertyName, P ValueOfProperty)
@@ -155,7 +182,9 @@ namespace WindowPlugins.GUITVSeries
             return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOp, onRemove, inverse);
         }
         #endregion
+        #endregion
 
+        #region getCorrespondingX Methods
         public static DBSeries getCorrespondingSeries(int id)
         {
             DBSeries cached = cache.getSeries(id);
@@ -187,24 +216,9 @@ namespace WindowPlugins.GUITVSeries
             }
             return null;
         }
+        #endregion
 
-        public static string PathCombine(string path1, string path2)
-        {
-            if (path1 == null && path2 == null) return string.Empty;
-            if (path1 == null) return path2;
-            if (path2 == null) return path1;
-            if (path2.Length > 0 && (path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
-            return System.IO.Path.Combine(path1, path2);
-        }
-
-        public static List<T> inverseList<T>(List<T> input)
-        {
-            List<T> result = new List<T>(input.Count);
-            for (int i = input.Count - 1; i >= 0; i--)
-                result.Add(input[i]);
-            return result;
-        }
-
+        #region Other Public Methods
         static List<string> nonExistingFiles = new List<string>();
         public static List<string> filterExistingFiles(List<string> filenames)
         {
@@ -243,24 +257,21 @@ namespace WindowPlugins.GUITVSeries
             else { return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00"); }
         }
 
-        public class String
+        public static string PathCombine(string path1, string path2)
         {
-            /// <summary>
-            /// Fix for the buggy MS implementation
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-            public static bool IsNullOrEmpty(string value)
-            {
-                // great, won't be fixed until Orcas
-                // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=113102
-                if (value != null) return value.Length == 0;
-                return true;
-            }
+            if (path1 == null && path2 == null) return string.Empty;
+            if (path1 == null) return path2;
+            if (path2 == null) return path1;
+            if (path2.Length > 0 && (path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
+            return System.IO.Path.Combine(path1, path2);
         }
+        #endregion
     }
 
+    /// <summary>
+    /// Class can be used to measure Performance (each time between Start() and Stop()
+    /// Provides Microsecond Accuracy
+    /// </summary>
     class perfana
     {
         static Stopwatch timer = new Stopwatch();

@@ -1,6 +1,28 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -9,12 +31,26 @@ namespace WindowPlugins.GUITVSeries
     using System.Text;
 
     /// <summary>
+    /// Interface needed to be Implemented by a class in order to be cachable
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface ICacheable<T>
+    {
+        T fullItem
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
     /// Is used to keep objects in memory to avoid havint to do some SQL queries
     /// particularly when hierarchical information would need to be loaded additionally
     /// after the main query (logos/flat views, etc)
     /// </summary>
     public class cache
     {
+        #region Main Object Declarations
         /// <summary>
         /// The cache object, containing all series/seasons/episodes that are in cache!
         /// </summary>
@@ -29,19 +65,17 @@ namespace WindowPlugins.GUITVSeries
 
         static hierarchyCache<DBSeries, hierarchyCache<DBSeason, DBEpisode, DBEpisode>, DBSeason> singleSeriesRef;
         static hierarchyCache<DBSeason, DBEpisode, DBEpisode> singleSeasonRef;
+        #endregion
 
+        #region Setup Variables
         public const int maxNoObjects = 750; // if this number is reached the entire cache is dumped and started over
         public static int currNoObjects; // (typically this will be in the 100-200 range at the most)
         public static int Reads;
         public static int Writes;
         public static int Mods;
+        #endregion
 
-
-        public static string getTotalTime()
-        {
-            return string.Format("({0} objects)", currNoObjects); 
-        }
-
+        #region Constructor
         static cache()
         {
             if (!Settings.isConfig)
@@ -57,24 +91,26 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Cache Initialized");
             }
         }
+        #endregion
 
+        #region Update Event Handlers
         static void DBEpisode_dbEpisodeUpdateOccured(DBEpisode updated)
         {
-            MPTVSeriesLog.Write("Cache: Episode Commit occured: ", updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
+            //MPTVSeriesLog.Write("Cache: Episode Commit occured: ", updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
             if (getEpisode(updated[DBEpisode.cSeriesID], updated[DBEpisode.cSeasonIndex], updated[DBEpisode.cEpisodeIndex]) != null)
                 addChangeEpisode(updated);
         }
 
         static void DBSeason_dbSeasonUpdateOccured(DBSeason updated)
         {
-            MPTVSeriesLog.Write("Cache: Season Commit occured: ", updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
+            //MPTVSeriesLog.Write("Cache: Season Commit occured: ", updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
             if (getSeason(updated[DBSeason.cSeriesID], updated[DBSeason.cIndex]) != null)
                 addChangeSeason(updated);
         }
 
         static void DBSeries_dbSeriesUpdateOccured(DBSeries updated)
         {
-            MPTVSeriesLog.Write("Cache: Series Commit occured: ",  updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
+            //MPTVSeriesLog.Write("Cache: Series Commit occured: ",  updated.ToString(), MPTVSeriesLog.LogLevel.Debug);
             if (_cache.getItemOfSubItem(updated[DBSeries.cID]) != null) 
                 addChangeSeries(updated);
         }
@@ -104,7 +140,9 @@ namespace WindowPlugins.GUITVSeries
                     break;
             }
         }
+        #endregion
 
+        #region Retrieval Methods
         public static DBEpisode getEpisode(int SeriesID, int SeasonIndex, int EpisodeIndex)
         {
             singleSeriesRef = _cache.getSubItem(SeriesID);
@@ -133,7 +171,9 @@ namespace WindowPlugins.GUITVSeries
             //MPTVSeriesLog.Write("Cache: Requested Season: " + SeriesID.ToString() + " S" + SeasonIndex.ToString() + (s == null ? " - Failed" : " - Sucess", MPTVSeriesLog.LogLevel.Debug));
             return s;
         }
+        #endregion
 
+        #region Add Methods
         public static void addChangeEpisode(DBEpisode episode)
         {
             if (episode == null) return;
@@ -160,7 +200,9 @@ namespace WindowPlugins.GUITVSeries
             //MPTVSeriesLog.Write("Cache: Adding/Changing Season: " + season[DBSeason.cSeriesID] + " S" + season[DBSeason.cIndex], MPTVSeriesLog.LogLevel.Debug);
             _cache.getSubItem(season[DBSeason.cSeriesID]).Add(season[DBSeason.cIndex], season);
         }
+        #endregion
 
+        #region Impl. Methods
         static void sizeChanged()
         {
             if (currNoObjects > maxNoObjects)
@@ -175,7 +217,9 @@ namespace WindowPlugins.GUITVSeries
         {
             _cache.dump();
         }
+        #endregion
 
+        #region HierarchyCache Implementation
         class hierarchyCache<T, S, M> : ICacheable<T> where S : ICacheable<M>, new()
         {
             T _Item = default(T);
@@ -230,10 +274,7 @@ namespace WindowPlugins.GUITVSeries
                     currNoObjects++;
                     cache.sizeChanged();
                 }
-                else
-                {
-                    subItems[key] = subItem;
-                }
+                else { subItems[key] = subItem; }
             }
 
             public void Add(int key, M subItem)
@@ -249,10 +290,7 @@ namespace WindowPlugins.GUITVSeries
                         cache.sizeChanged();
                     }
                 }
-                else
-                {
-                    subItems[key].fullItem = subItem;
-                }
+                else { subItems[key].fullItem = subItem; }
                 
             }
             public void AddDummy(int key)
@@ -266,14 +304,6 @@ namespace WindowPlugins.GUITVSeries
                 return fullItem.ToString() + " Subitems: " + subItems.Count.ToString();
             }
         }
-        public interface ICacheable<T>
-        {
-            T fullItem
-            {
-                get;
-                set;
-            }
-        }
-
+        #endregion
     }
 }

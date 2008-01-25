@@ -60,6 +60,9 @@ namespace WindowPlugins.GUITVSeries.Feedback
         public String m_sbtnOKLabelAlternate = "Search Again";
         public String m_sbtnCancelLabel = "Cancel";
         public String m_sbtnIgnoreLabel = "Ignore";
+
+        public bool m_useRadioToSelect = false; // just looks nicer for instance for OrderOption, ignored inside MP
+        public bool m_allowAlter = true; // if true user will be able to alter what was searched for
     };
 
     public enum ReturnCode
