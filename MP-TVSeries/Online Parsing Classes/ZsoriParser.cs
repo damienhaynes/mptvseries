@@ -21,22 +21,19 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Net;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class ZsoriParser
+    sealed class ZsoriParser
     {
-        const string langID = "&language=";
-        static string selLang = string.Empty;
+        ZsoriParser() { }
 
-        private ZsoriParser() { }
+        # region Language
+        static string selLang = string.Empty;
 
         public static string SelLanguageAsString
         {
@@ -50,65 +47,75 @@ namespace WindowPlugins.GUITVSeries
                 }
                 return selLang;
             }
-            set
-            {
-                selLang = value;
-            }
+            set { selLang = value; }
         }
+        #endregion
 
+        #region Public Methods
         static public XmlNodeList GetMirrors(String sServer)
         {
-            return Generic(sServer + "/GetMirrors.php");
+            return Generic(sServer + "/GetMirrors.php", false);
         }
 
         static public XmlNodeList GetLanguages()
         {
-            return Generic(DBOnlineMirror.Interface + "/GetLanguages.php");
+            return Generic("/GetLanguages.php");
         }
 
         static public XmlNodeList GetSeries(String sSeriesName)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetSeries.php?seriesname=" + sSeriesName.Replace(' ', '+') + langID + SelLanguageAsString);
+            return Generic(string.Format(@"/GetSeries.php?seriesname={0}&language={1}", 
+                                           sSeriesName.Replace(' ', '+'),
+                                           SelLanguageAsString));
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&lasttime=" + nGetEpisodesTimeStamp + "&order=" + order + langID + SelLanguageAsString);
+            return Generic(string.Format(@"/GetEpisodes.php?seriesid={0}&lasttime={1}&order={2}&language={3}",
+                                            nSeriesID, nGetEpisodesTimeStamp, order, SelLanguageAsString));
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, DateTime firstAired, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&firstaired=" + firstAired.Date.ToString("yyyy-MM-dd") + "&order=" + order + langID + SelLanguageAsString);
+            return Generic(string.Format(@"/GetEpisodes.php?seriesid={0}&firstaired={1}&order={2}&language={3}",
+                                           nSeriesID, firstAired.Date.ToString("yyyy-MM-dd"),
+                                           order, SelLanguageAsString));
         }
 
         static public XmlNodeList GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, string order)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetEpisodes.php?seriesid=" + nSeriesID + "&season=" + nSeasonIndex + "&episode=" + nEpisodeIndex + "&order=" + order + langID + SelLanguageAsString);
+            return Generic(string.Format(@"/GetEpisodes.php?seriesid={0}&season={1}&episode={2}&order={3}&language={4}",
+                                           nSeriesID, nSeasonIndex, nEpisodeIndex, order, SelLanguageAsString));
         }
 
         static public XmlNodeList UpdateSeries(String sSeriesIDs, string forcedLang, long nUpdateSeriesTimeStamp)
         {
-            forcedLang = forcedLang == null ? SelLanguageAsString : forcedLang;
-            return Generic(DBOnlineMirror.Interface + "/SeriesUpdates.php?lasttime=" + nUpdateSeriesTimeStamp + "&idlist=" + sSeriesIDs + langID + forcedLang);
+            return Generic(string.Format(@"/SeriesUpdates.php?lasttime={0}&idlist={1}&language={2}",
+                                           nUpdateSeriesTimeStamp, sSeriesIDs, 
+                                           (forcedLang == null ? SelLanguageAsString : forcedLang)));
         }
 
         static public XmlNodeList UpdateEpisodes(String sEpisodesIDs, long nUpdateEpisodesTimeStamp)
         {
-            return Generic(DBOnlineMirror.Interface + "/EpisodeUpdates.php?lasttime=" + nUpdateEpisodesTimeStamp + "&idlist=" + sEpisodesIDs + langID + SelLanguageAsString);
+            return Generic(string.Format(@"/EpisodeUpdates.php?lasttime={0}&idlist={1}&language={2}",
+                                           nUpdateEpisodesTimeStamp, sEpisodesIDs, SelLanguageAsString));
         }
 
         static public XmlNodeList GetBanners(int nSeriesID, long nUpdateBannersTimeStamp, string forceLang)
         {
-            return Generic(DBOnlineMirror.Interface + "/GetBanners.php?seriesid=" + nSeriesID + "&lasttime=" + nUpdateBannersTimeStamp + langID + (forceLang == null ? SelLanguageAsString : forceLang));
+            return Generic(string.Format(@"/GetBanners.php?seriesid={0}&lasttime={1}&language={2}",
+                                           nSeriesID, nUpdateBannersTimeStamp,
+                                           (forceLang == null ? SelLanguageAsString : forceLang)));
         }
+        #endregion
 
-        //static public XmlNodeList GetAllBanners(string idList, long nUpdateBannersTimeStamp)
-        //{
-        //    return Generic(DBOnlineMirror.Interface + "/GetBanners.php?idlist=" + idList + "&lasttime=" + nUpdateBannersTimeStamp);
-        //}
+        #region Generic Private Implementation
+        static XmlNodeList Generic(String sUrl)
+        { return Generic(sUrl, true); }
 
-        static private XmlNodeList Generic(String sUrl)
+        static XmlNodeList Generic(String sUrl, bool appendBaseUrl)
         {
+            if (appendBaseUrl) sUrl = DBOnlineMirror.Interface + sUrl; 
             MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug);
             if (sUrl == null || sUrl.Length < 1 || sUrl[0] == '/')
             {
@@ -138,12 +145,12 @@ namespace WindowPlugins.GUITVSeries
             {
                 // Get the stream associated with the response.
                 data = response.GetResponseStream();
-                StreamReader reader = new StreamReader(data, Encoding.Default, true);
+                StreamReader reader = new StreamReader(data, System.Text.Encoding.Default, true);
                 String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
                 data.Close();
                 reader.Close();
                 MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
-                MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug, false);
+                MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug);
                 MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
                 try
                 {
@@ -167,5 +174,7 @@ namespace WindowPlugins.GUITVSeries
 
             return null;
         }
+
+        #endregion
     }
 }

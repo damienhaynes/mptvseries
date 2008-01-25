@@ -67,7 +67,7 @@ namespace MediaPortal.GUI.Video
         // Returns the author of the plugin which is shown in the plugin menu
         public string Author()
         {
-            return "Zeflash, based on the work of WeeToddDid (Luc Theriault)";
+            return "Zeflash & Inker";
         }
 
         // show the setup dialog
@@ -666,7 +666,6 @@ namespace MediaPortal.GUI.Video
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
-                            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
                             GUIListItem item = null;
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
@@ -793,7 +792,6 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
-            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
         }
 
         protected override void OnPageLoad()

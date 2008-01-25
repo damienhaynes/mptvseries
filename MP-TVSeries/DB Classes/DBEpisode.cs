@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
-    public class DBEpisode : DBTable, cache.ICacheable<DBEpisode>
+    public class DBEpisode : DBTable, ICacheable<DBEpisode>
     {
         public static void overRide(DBEpisode old, DBEpisode newObject)
         {
@@ -470,7 +470,7 @@ namespace WindowPlugins.GUITVSeries
                 
                 try
                 {
-                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
                     MI.Open(this[DBEpisode.cFilename]);
                     string result = string.Empty;
                     int noAttempts = 0;
@@ -663,11 +663,18 @@ namespace WindowPlugins.GUITVSeries
                         case cCompositeID:
                         case cEpisodeIndex:
                         case cSeasonIndex:
-                        case cEpisodeIndex2:
                         case cCompositeID2:
                         case cIsOnRemovable:
                         case cVolumeLabel:
                             // the only flags we are not rerouting to the onlineEpisode if it exists
+                            break;
+                        case cEpisodeIndex2:
+                            if (!Helper.String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
+                            {
+                                MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discared because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
+                                    base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
+                                return;
+                            }
                             break;
 
 

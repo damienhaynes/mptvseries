@@ -21,14 +21,8 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Collections;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -40,9 +34,21 @@ namespace WindowPlugins.GUITVSeries
             Debug
         }
 
+        #region Vars
         static private LogLevel _selectedLogLevel = LogLevel.Normal;
+        static String m_filename = Settings.GetPath(Settings.Path.log);
+        static StreamWriter m_LogStream;
+        static System.Windows.Forms.ListBox m_ListLog;
+        static MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
+        delegate void Log_WriteCallback(string input);
+        #endregion
+
+        #region Public Fields
         public static bool pauseAutoWriteDB = false;
-	    public static LogLevel selectedLogLevel
+        #endregion
+
+        #region Properties
+        public static LogLevel selectedLogLevel
 	    {
 		    get { return _selectedLogLevel;}
 		    set {
@@ -54,31 +60,17 @@ namespace WindowPlugins.GUITVSeries
                             DBOption.SetOptions("logLevel", (int)value);
                     }
                 }
-	    }
+            }
+        #endregion
 
-        static private String m_filename = Settings.GetPath(Settings.Path.log);
-        static private StreamWriter m_LogStream;
-        static private System.Windows.Forms.ListBox m_ListLog;
-        static private MediaPortal.Dialogs.GUIDialogProgress m_DlgProgress;
-        private delegate void Log_WriteCallback(string input);
-
-        static public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
-        {
-            m_ListLog = notifier;
-        }
-        static public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
-        {
-            m_DlgProgress = notifier;
-        }
-
+        #region Constructor
         static MPTVSeriesLog()
         {
-
-
-#if TEST
+            #if TEST
             m_filename =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             m_filename += @"\MP-TVSeries.log";
-#endif
+            #endif
+
             m_LogStream = File.CreateText(m_filename);
             m_LogStream.Close();
             m_LogStream.Dispose();
@@ -89,7 +81,20 @@ namespace WindowPlugins.GUITVSeries
             pauseAutoWriteDB = true;
             Write("MPTVSeries Build: " + Settings.Version);
         }
+        #endregion
 
+        #region Public Config Methods
+        static public void AddNotifier(ref System.Windows.Forms.ListBox notifier)
+        {
+            m_ListLog = notifier;
+        }
+        static public void AddNotifier(ref MediaPortal.Dialogs.GUIDialogProgress notifier)
+        {
+            m_DlgProgress = notifier;
+        }
+        #endregion
+
+        #region Public Write Methods
         /// <summary>
         /// Use this for Std. Log entries, only show up in LogLevel.Normal
         /// </summary>
@@ -139,8 +144,10 @@ namespace WindowPlugins.GUITVSeries
         {
             Write(entry, level, true);
         }
+        #endregion
 
-        static public void Write(string entry, LogLevel level, bool singleLine)
+        #region Implementation
+        static void Write(string entry, LogLevel level, bool singleLine)
         {
             if ((int)level <= (int)selectedLogLevel)
             {
@@ -160,15 +167,17 @@ namespace WindowPlugins.GUITVSeries
                         m_LogStream.Dispose();
                         if (level != LogLevel.Debug) Log_Write(entry);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // well we can't write...maybe no file acces or something....and we can't even log the error
+                        Log_Write(entry);
+                        Log_Write(ex.Message);
                     }
                 }
             }
         }
 
-        static public void Log_Write(String entry)
+        static void Log_Write(String entry)
         {
             if (m_ListLog != null)
             {
@@ -187,5 +196,6 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+        #endregion
     }
 }

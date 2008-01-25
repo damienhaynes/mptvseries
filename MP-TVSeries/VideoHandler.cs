@@ -38,10 +38,13 @@ namespace WindowPlugins.GUITVSeries
 {
     class VideoHandler
     {
+        #region Vars
         static PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
+        #endregion
 
+        #region Constructor
         public VideoHandler()
         {
             playlistPlayer = PlayListPlayer.SingletonPlayer;
@@ -51,60 +54,9 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
             w.DoWork += new System.ComponentModel.DoWorkEventHandler(w_DoWork);
         }
+        #endregion
 
-        void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            System.Threading.Thread.Sleep(2000);
-            SetGUIProperties((bool)e.Argument);
-        }
-
-
-        void SetGUIProperties(bool clear)
-        {
-            #region availProperties
-            //#Play.Current.Thumb
-            //#Play.Current.File
-            //#Play.Current.Title
-            //#Play.Current.Genre
-            //#Play.Current.Comment
-            //#Play.Current.Artist
-            //#Play.Current.Director
-            //#Play.Current.Album
-            //#Play.Current.Track
-            //#Play.Current.Year
-            //#Play.Current.Duration
-            //#Play.Current.Plot
-            //#Play.Current.PlotOutline
-            //#Play.Current.Channel
-            //#Play.Current.Cast
-            //#Play.Current.DVDLabel
-            //#Play.Current.IMDBNumber
-            //#Play.Current.Rating
-            //#Play.Current.TagLine
-            //#Play.Current.Votes
-            //#Play.Current.Credits
-            //#Play.Current.Runtime
-            //#Play.Current.MPAARating
-            //#Play.Current.IsWatched
-            #endregion
-
-            DBSeries series = null;
-            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
-
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
-        }
-
-        void MarkEpisodeAsWatched(DBEpisode episode)
-        {
-            episode[DBOnlineEpisode.cWatched] = 1;
-            episode.Commit();
-            DBSeason.UpdateUnWached(episode);
-            DBSeries.UpdateUnWached(episode);
-        }
-
+        #region Public Methods
         public bool ResumeOrPlay(DBEpisode episode)
         {
             try
@@ -115,10 +67,12 @@ namespace WindowPlugins.GUITVSeries
                     return false;
 
                 m_currentEpisode = episode;
+                int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 
+                #region Removable Media Handling
                 bool isOnRemovable = false;
                 if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
-                else if(episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
+                else if (episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
                 {
                     isOnRemovable = LocalParse.isOnRemovable(episode[DBEpisode.cFilename]);
                     episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
@@ -143,33 +97,29 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                 }
-                    
-                byte[] resumeData = null; // I don't even need resumeData?
-                int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
+                #endregion
 
+                #region Ask user to Resume
                 if (timeMovieStopped > 0)
                 {
                     GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                    if (null == dlgYesNo) 
+                    if (null == dlgYesNo)
                         return false;
                     dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
                     dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
                     dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
                     dlgYesNo.SetDefaultToYes(true);
                     dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                    if (dlgYesNo.IsConfirmed)
+                    if (!dlgYesNo.IsConfirmed) // reset resume data in DB
                     {
-                        Play(timeMovieStopped, resumeData);
-                        return true;
-                    }
-                    else
-                    {
-                        m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        timeMovieStopped = 0;
+                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                         m_currentEpisode.Commit();
                     }
                 }
+                #endregion
 
-                Play(-1, null);
+                Play(timeMovieStopped);
                 return true;
             }
             catch (Exception e)
@@ -178,27 +128,56 @@ namespace WindowPlugins.GUITVSeries
                 return false;
             }
         }
+        #endregion
 
-        private void Play()
+        /// <summary>
+        /// Waits 2 seconds and then Sets the GuiProperties (clears them if EventArgs.Argument == true)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+            System.Threading.Thread.Sleep(2000);
+            SetGUIProperties((bool)e.Argument);
         }
 
-        private void Play(int timeMovieStopped, byte[] resumeData)
+        /// <summary>
+        /// Sets the following Properties:
+        /// "#Play.Current.Title"
+        /// "#Play.Current.Plot"
+        /// "#Play.Current.Thumb"
+        /// "#Play.Current.Year"
+        /// </summary>
+        /// <param name="clear">Clears the properties instead of filling them if True</param>
+        void SetGUIProperties(bool clear)
         {
+            DBSeries series = null;
+            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
+        }
+
+        void MarkEpisodeAsWatched(DBEpisode episode)
+        {
+            episode[DBOnlineEpisode.cWatched] = 1;
+            episode.Commit();
+            DBSeason.UpdateUnWached(episode);
+            DBSeries.UpdateUnWached(episode);
+        }
+
+        /// <summary>
+        /// Initiates Playback of m_currentEpisode[DBEpisode.cFilename] and calls Fullscreen Window
+        /// </summary>
+        /// <param name="timeMovieStopped">Resumepoint of Movie, 0 or negative for Start from Beginning</param>
+        /// 
+        bool Play(int timeMovieStopped)
+        {
+            bool result = false;
             try
             {
-                //playlistPlayer.Reset();
-                //playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_VIDEO_TEMP;
-                //PlayList playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_VIDEO_TEMP);
-                //playlist.Clear();
-
-                //PlayListItem itemNew = new PlayListItem();
-                //itemNew.FileName = m_currentEpisode[DBEpisode.cFilename];
-                //itemNew.Type = PlayListItem.PlayListItemType.Video;
-                //playlist.Add(itemNew);
-
-                string filename = m_currentEpisode[DBEpisode.cFilename];
-
                 // sometimes it takes up to 30+ secs to go to fullscreen even though the video is already playing
                 // lets force fullscreen here
                 // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
@@ -206,9 +185,9 @@ namespace WindowPlugins.GUITVSeries
                 // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)
                 GUIGraphicsContext.IsFullScreenVideo = true;
                 GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
-                g_Player.Play(filename, g_Player.MediaType.Video);
+                result = g_Player.Play(m_currentEpisode[DBEpisode.cFilename], g_Player.MediaType.Video);
 
-
+                #region Set ep as watched immediatly if External Player
                 // thnx BakerQ for external player watched flag fix
                 if (DBOption.GetOptions(DBOption.cWatchedAfter) > 0 && m_currentEpisode[DBOnlineEpisode.cWatched] == 0)
                 {
@@ -220,50 +199,45 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
+                #endregion
 
+                // tell player where to resume
                 if (g_Player.Playing && timeMovieStopped > 0)
                 {
-                    if (g_Player.IsDVD)
-                    {
-                        g_Player.Player.SetResumeState(resumeData);
-                    }
-                    else
-                    {
-                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
-                        msg.Param1 = (int)timeMovieStopped;
-                        GUIGraphicsContext.SendMessage(msg);
-                    }
+                    GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
+                    msg.Param1 = (int)timeMovieStopped;
+                    GUIGraphicsContext.SendMessage(msg);
                 }
+
             }
             catch (Exception e)
             {
                 MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.Play()\r\n" + e.ToString());
+                result = false;
             }
+            return result;
         }
 
-
-        private void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
+        #region Playback Event Handlers
+        void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
         {
-            if (m_currentEpisode != null)
+            if (PlayBackOpIsOfConcern(type, filename))
             {
-                MPTVSeriesLog.Write("Playback stopped for: ", filename, MPTVSeriesLog.LogLevel.Normal);
+                LogPlayBackOp("stopped", filename);
                 try
                 {
-                    if (type != g_Player.MediaType.Video) return;
-
-                    if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
+                    #region Set Resume Point or Watched
+                    m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                    double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
+                    if (!m_currentEpisode[DBOnlineEpisode.cWatched]
+                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
                     {
-                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-                        double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
-                        if (!m_currentEpisode[DBOnlineEpisode.cWatched]
-                            && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
-                        {
-                            MarkEpisodeAsWatched(m_currentEpisode);
-                        }
-                        m_currentEpisode.Commit();
-                        m_currentEpisode = null;
-                        w.RunWorkerAsync(true);
+                        MarkEpisodeAsWatched(m_currentEpisode);
                     }
+                    m_currentEpisode.Commit();
+                    #endregion
+
+                    PlaybackOperationEnded();
                 }
                 catch (Exception e)
                 {
@@ -272,23 +246,18 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void OnPlayBackEnded(MediaPortal.Player.g_Player.MediaType type, string filename)
+        void OnPlayBackEnded(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
-            if (m_currentEpisode != null)
+            if (PlayBackOpIsOfConcern(type, filename))
             {
-                MPTVSeriesLog.Write("Playback ended for: ", filename, MPTVSeriesLog.LogLevel.Normal);
+                LogPlayBackOp("ended", filename);
                 try
                 {
-                    if (type != g_Player.MediaType.Video) return;
+                    m_currentEpisode[DBEpisode.cStopTime] = 0;
+                    MarkEpisodeAsWatched(m_currentEpisode);
+                    m_currentEpisode.Commit();
 
-                    if (m_currentEpisode != null && m_currentEpisode[DBEpisode.cFilename] == filename)
-                    {
-                        w.RunWorkerAsync(true);
-                        m_currentEpisode[DBEpisode.cStopTime] = 0;
-                        MarkEpisodeAsWatched(m_currentEpisode);
-                        m_currentEpisode.Commit();
-                        m_currentEpisode = null;
-                    }
+                    PlaybackOperationEnded();
                 }
                 catch (Exception e)
                 {
@@ -297,21 +266,35 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void OnPlayBackStarted(MediaPortal.Player.g_Player.MediaType type, string filename)
+        void OnPlayBackStarted(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
-            if (m_currentEpisode != null)
+            if (PlayBackOpIsOfConcern(type, filename))
             {
-                MPTVSeriesLog.Write("Playback started for: ", filename, MPTVSeriesLog.LogLevel.Normal);
-                try
-                {
-                    if (type != g_Player.MediaType.Video) return;
-                    w.RunWorkerAsync(false); // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
-                }
-                catch (Exception e)
-                {
-                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackStarted()\r\n" + e.ToString());
-                }
+                LogPlayBackOp("started", filename);
+                // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
+                w.RunWorkerAsync(false);
             }
         }
+        #endregion
+
+        #region Helpers
+        bool PlayBackOpIsOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename)
+        {
+            return (m_currentEpisode != null && 
+                    type == g_Player.MediaType.Video && 
+                    m_currentEpisode[DBEpisode.cFilename] == filename);
+        }
+
+        void PlaybackOperationEnded()
+        {
+            m_currentEpisode = null; // reset, we are done with it
+            SetGUIProperties(true); // clear GUI Properties
+        }
+
+        void LogPlayBackOp(string OperationType, string filename)
+        {
+            MPTVSeriesLog.Write(string.Format("Playback {0} for: {1}", OperationType, filename), MPTVSeriesLog.LogLevel.Normal);
+        }
+        #endregion
     }
 }

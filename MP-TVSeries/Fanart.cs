@@ -1,14 +1,80 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WindowPlugins.GUITVSeries
 {
     class Fanart
     {
+        #region config Constants
+        const string seriesFanArtFilenameFormat = "*{0}*.png";
+        const string seasonFanArtFilenameFormat = "*{0}S{1}*.png";
+        const string lightIdentifier = "_light_";
+        #endregion
+
+        #region Static Vars
         static Dictionary<int, Fanart> fanartsCache = new Dictionary<int, Fanart>();
         static System.Drawing.Size requiredSize = new System.Drawing.Size();
+        static Random fanartRandom = new Random();
+        #endregion
 
+        #region Vars
+        int _seriesID = -1;
+        int _seasonIndex = -1;
+        bool? _isLight = null;
+        bool _seasonMode = false;
+        List<string> _fanArts = null;
+        string _randomPick = null;
+        string _textureName = null;
+        #endregion
+
+        #region Properties
+        public int SeriesID { get { return _seriesID; } }
+        public int SeasonIndex { get { return _seasonIndex; } }
+        public bool Found { get { return _fanArts != null && _fanArts.Count > 0; } }
+        public bool SeasonMode { get { return _seasonMode; } }
+        #endregion
+
+        #region Private Constructors
+        Fanart(int seriesID)
+        {
+            _seriesID = seriesID;
+            _seasonMode = false;
+            getFanart();
+        }
+
+        Fanart(int seriesID, int seasonIndex)
+        {
+            _seriesID = seriesID;
+            _seasonIndex = seasonIndex;
+            _seasonMode = true;
+            getFanart();
+        }
+        #endregion
+
+        #region Static Methods
         public static Fanart getFanart(int seriesID)
         {
             Fanart f = null;
@@ -36,40 +102,9 @@ namespace WindowPlugins.GUITVSeries
             // no cache for now for series
             return new Fanart(seriesID, seasonIndex);
         }
+        #endregion
 
-        static Random fanartRandom = new Random();
-        const string seriesFanArtFilenameFormat = "*{0}*.png";
-        const string seasonFanArtFilenameFormat = "*{0}S{1}*.png";
-        const string lightIdentifier = "_light_";
-
-        int _seriesID = -1;
-        int _seasonIndex = -1;
-        bool? _isLight = null;
-        bool _seasonMode = false;
-        List<string> _fanArts = null;
-        string _randomPick = null;
-        string _textureName = null;
-
-        public int SeriesID { get { return _seriesID; } }
-        public int SeasonIndex { get { return _seasonIndex; } }
-        public bool Found { get { return _fanArts != null && _fanArts.Count > 0; } }
-        public bool SeasonMode { get { return _seasonMode; } }
-
-        private Fanart(int seriesID)
-        {
-            _seriesID = seriesID;
-            _seasonMode = false;
-            getFanart();
-        }
-
-        private Fanart(int seriesID, int seasonIndex)
-        {
-            _seriesID = seriesID;
-            _seasonIndex = seasonIndex;
-            _seasonMode = true;
-            getFanart();
-        }
-
+        #region Instance Methods
         public string RandomFanart
         {
             get 
@@ -116,7 +151,9 @@ namespace WindowPlugins.GUITVSeries
             _isLight = null;
             _randomPick = null;
         }
+        #endregion
 
+        #region Implementation Instance Methods
         bool fanArtIsLight(string fanartFilename)
         {
             return (fanartFilename.Contains(lightIdentifier));
@@ -154,6 +191,6 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
-
+        #endregion
     }
 }

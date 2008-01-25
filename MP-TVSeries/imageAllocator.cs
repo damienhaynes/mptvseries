@@ -33,13 +33,13 @@ namespace WindowPlugins.GUITVSeries
 {
     public class ImageAllocator
     {
-        private static String s_sFontName;
-        private static List<String> s_SeriesImageList = new List<string>();
-        private static List<String> s_SeasonsImageList = new List<string>();
-        private static List<String> s_OtherPersistentImageList = new List<string>();
-        private static List<String> s_OtherDiscardableImageList = new List<string>();
-        private static Size reqSeriesBannerSize = new Size(758, 140);
-        private static Size reqSeasonBannerSize = new Size(400, 578);
+        static String s_sFontName;
+        static List<String> s_SeriesImageList = new List<string>();
+        static List<String> s_SeasonsImageList = new List<string>();
+        static List<String> s_OtherPersistentImageList = new List<string>();
+        static List<String> s_OtherDiscardableImageList = new List<string>();
+        static Size reqSeriesBannerSize = new Size(758, 140);
+        static Size reqSeasonBannerSize = new Size(400, 578);
 
         static ImageAllocator()
         {
@@ -161,10 +161,13 @@ namespace WindowPlugins.GUITVSeries
             String sFileName = series.Banner;
             String sTextureName;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
-                sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);  
+            {
+                if (DBOption.GetOptions(DBOption.cAltImgLoading)) sTextureName = sFileName; // bypass memoryimagebuilder
+                else sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
+            }
             else
             {
-                return string.Empty;
+                //return string.Empty;
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
                 sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize);
@@ -177,8 +180,11 @@ namespace WindowPlugins.GUITVSeries
         {
             String sFileName = season.Banner;
             String sTextureName;
-            if (sFileName.Length > 0)
-                sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
+            if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
+            {
+                if (DBOption.GetOptions(DBOption.cAltImgLoading)) sTextureName = sFileName; // bypass memoryimagebuilder
+                else sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
+            }
             else if (createIfNotExist)
             {
                 // no image, use text, create our own

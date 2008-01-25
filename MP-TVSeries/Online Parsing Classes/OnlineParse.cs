@@ -799,18 +799,22 @@ namespace WindowPlugins.GUITVSeries
                         List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
                         if (episodeOrders.Count > 1) {
                             // let the user choose
+                            string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
+                                              "Note that your file numbering must match the option you choose here." + Environment.NewLine +
+                                              "Choose the default \"Aired\" option unless you have a specific reason not to!";
+
                             List<Feedback.CItem> Choices = new List<Feedback.CItem>();
                             foreach (string orderOption in episodeOrders)
-                                Choices.Add(new Feedback.CItem(orderOption, orderOption, orderOption));
+                                Choices.Add(new Feedback.CItem(orderOption, helpText, orderOption));
 
                             Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
                             descriptor.m_sTitle = "Multiple ordering Options detected";
-                            descriptor.m_sItemToMatchLabel = "Order Option";
+                            descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
                             descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
-                            descriptor.m_sListLabel = "Choose the desired Order Option from the list:";
+                            descriptor.m_sListLabel = "Please choose the desired Option:";
                             descriptor.m_List = Choices;
-                            //descriptor.m_sbtnCancelLabel = "Skip this time";
-                            //descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
+                            descriptor.m_useRadioToSelect = true;
+                            descriptor.m_allowAlter = false;
 
                             Feedback.CItem selectedOrdering = null;
                             Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
