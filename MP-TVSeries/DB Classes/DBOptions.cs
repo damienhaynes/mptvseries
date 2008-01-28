@@ -94,8 +94,15 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
 
+        public const String cSubs_Forom_Enable = "Subs_Forom_Enable";
         public const String cSubs_Forom_BaseURL = "Subs_Forom_BaseURL";
         public const String cSubs_Forom_ID = "Subs_Forom_ID";
+
+        public const String cSubs_Remository_Enable = "Subs_Remository_Enable";
+        public const String cSubs_Remository_BaseURL = "Subs_Remository_BaseURL";
+        public const String cSubs_Remository_MainIdx = "Subs_Remository_MainIdx";
+        public const String cSubs_Remository_UserName = "Subs_Remository_UserName";
+        public const String cSubs_Remository_Password = "Subs_Remository_Password";
 
         public const String cUTorrentPath = "uTorrentPath";
         public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
@@ -267,6 +274,12 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cSubs_Forom_BaseURL) == null)
                     SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents");
+
+                if (GetOptions(cSubs_Remository_BaseURL) == null)
+                    SetOptions(cSubs_Remository_BaseURL, @"http://www.italiansubs.net/");
+                
+                if (GetOptions(cSubs_Remository_MainIdx) == null)
+                    SetOptions(cSubs_Remository_MainIdx, "27");
 
                 if (GetOptions(cTorrentSearch) == null)
                     SetOptions(cTorrentSearch, String.Empty);

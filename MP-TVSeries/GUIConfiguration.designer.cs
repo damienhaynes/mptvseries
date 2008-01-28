@@ -307,10 +307,21 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_uTorrentPath = new System.Windows.Forms.TextBox();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
             this.panel_forom = new System.Windows.Forms.Panel();
+          this.checkBox_foromEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.textBox_foromID = new System.Windows.Forms.TextBox();
             this.textBox_foromBaseURL = new System.Windows.Forms.TextBox();
+          this.panel_remository = new System.Windows.Forms.Panel();
+          this.checkBox_remositoryEnable = new System.Windows.Forms.CheckBox();
+          this.textBox_remositoryMainIdx = new System.Windows.Forms.TextBox();
+          this.label53 = new System.Windows.Forms.Label();
+          this.textBox_remositoryPassword = new System.Windows.Forms.TextBox();
+          this.label52 = new System.Windows.Forms.Label();
+          this.textBox_remositoryUserId = new System.Windows.Forms.TextBox();
+          this.label51 = new System.Windows.Forms.Label();
+          this.textBox_remositoryBaseURL = new System.Windows.Forms.TextBox();
+          this.label50 = new System.Windows.Forms.Label();
             this.panel_torrentsearch = new System.Windows.Forms.Panel();
             this.textBox_TorrentDetailsRegex = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -374,6 +385,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.SuspendLayout();
             this.panel_torrentroot.SuspendLayout();
             this.panel_forom.SuspendLayout();
+          this.panel_remository.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
             this.splitMain_Log.Panel1.SuspendLayout();
             this.splitMain_Log.Panel2.SuspendLayout();
@@ -2840,6 +2852,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
+          this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
             this.splitContainer_treeextra.Size = new System.Drawing.Size(935, 551);
             this.splitContainer_treeextra.SplitterDistance = 234;
@@ -3297,6 +3310,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_forom
             // 
+          this.panel_forom.Controls.Add(this.checkBox_foromEnable);
             this.panel_forom.Controls.Add(this.label17);
             this.panel_forom.Controls.Add(this.label18);
             this.panel_forom.Controls.Add(this.textBox_foromID);
@@ -3306,7 +3320,18 @@ namespace WindowPlugins.GUITVSeries
             this.panel_forom.Size = new System.Drawing.Size(226, 62);
             this.panel_forom.TabIndex = 1;
             this.panel_forom.Tag = "Forom Subtitles";
-            // 
+          // 
+          // checkBox_foromEnable
+          // 
+          this.checkBox_foromEnable.AutoSize = true;
+          this.checkBox_foromEnable.Location = new System.Drawing.Point(7, 47);
+          this.checkBox_foromEnable.Name = "checkBox_foromEnable";
+          this.checkBox_foromEnable.Size = new System.Drawing.Size(58, 17);
+          this.checkBox_foromEnable.TabIndex = 4;
+          this.checkBox_foromEnable.Text = "enable";
+          this.checkBox_foromEnable.UseVisualStyleBackColor = true;
+          this.checkBox_foromEnable.CheckedChanged += new System.EventHandler(this.checkbox_foromEnable_checkedChanged);
+          // 
             // label17
             // 
             this.label17.Location = new System.Drawing.Point(4, 10);
@@ -3347,7 +3372,112 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.textBox_foromBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
                     ", you\'re on your own :)");
             this.textBox_foromBaseURL.TextChanged += new System.EventHandler(this.textBox_foromBaseURL_TextChanged);
-            // 
+          // 
+          // panel_remository
+          // 
+          this.panel_remository.Controls.Add(this.checkBox_remositoryEnable);
+          this.panel_remository.Controls.Add(this.textBox_remositoryMainIdx);
+          this.panel_remository.Controls.Add(this.label53);
+          this.panel_remository.Controls.Add(this.textBox_remositoryPassword);
+          this.panel_remository.Controls.Add(this.label52);
+          this.panel_remository.Controls.Add(this.textBox_remositoryUserId);
+          this.panel_remository.Controls.Add(this.label51);
+          this.panel_remository.Controls.Add(this.textBox_remositoryBaseURL);
+          this.panel_remository.Controls.Add(this.label50);
+          this.panel_remository.Location = new System.Drawing.Point(30, 83);
+          this.panel_remository.Name = "panel_remository";
+          this.panel_remository.Size = new System.Drawing.Size(226, 116);
+          this.panel_remository.TabIndex = 6;
+          this.panel_remository.Tag = "Remository Subtitle";
+          // 
+          // checkBox_remositoryEnable
+          // 
+          this.checkBox_remositoryEnable.AutoSize = true;
+          this.checkBox_remositoryEnable.Location = new System.Drawing.Point(7, 98);
+          this.checkBox_remositoryEnable.Name = "checkBox_remositoryEnable";
+          this.checkBox_remositoryEnable.Size = new System.Drawing.Size(58, 17);
+          this.checkBox_remositoryEnable.TabIndex = 7;
+          this.checkBox_remositoryEnable.Text = "enable";
+          this.checkBox_remositoryEnable.UseVisualStyleBackColor = true;
+          this.checkBox_remositoryEnable.CheckedChanged += new System.EventHandler(this.checkbox_remositoryEnable_checkedChanged);
+          // 
+          // textBox_remositoryMainIdx
+          // 
+          this.textBox_remositoryMainIdx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                      | System.Windows.Forms.AnchorStyles.Right)));
+          this.textBox_remositoryMainIdx.Location = new System.Drawing.Point(147, 28);
+          this.textBox_remositoryMainIdx.Name = "textBox_remositoryMainIdx";
+          this.textBox_remositoryMainIdx.Size = new System.Drawing.Size(94, 20);
+          this.textBox_remositoryMainIdx.TabIndex = 2;
+          this.textBox_remositoryMainIdx.TextChanged += new System.EventHandler(this.textBox_remositoryMainIdx_TextChanged);
+          // 
+          // label53
+          // 
+          this.label53.AutoSize = true;
+          this.label53.Location = new System.Drawing.Point(42, 31);
+          this.label53.Name = "label53";
+          this.label53.Size = new System.Drawing.Size(99, 13);
+          this.label53.TabIndex = 6;
+          this.label53.Text = "Remository &MainID:";
+          // 
+          // textBox_remositoryPassword
+          // 
+          this.textBox_remositoryPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                      | System.Windows.Forms.AnchorStyles.Right)));
+          this.textBox_remositoryPassword.Location = new System.Drawing.Point(147, 79);
+          this.textBox_remositoryPassword.Name = "textBox_remositoryPassword";
+          this.textBox_remositoryPassword.PasswordChar = '*';
+          this.textBox_remositoryPassword.Size = new System.Drawing.Size(94, 20);
+          this.textBox_remositoryPassword.TabIndex = 4;
+          this.textBox_remositoryPassword.TextChanged += new System.EventHandler(this.textbox_remositoryPassword_TextChanged);
+          // 
+          // label52
+          // 
+          this.label52.AutoSize = true;
+          this.label52.Location = new System.Drawing.Point(27, 82);
+          this.label52.Name = "label52";
+          this.label52.Size = new System.Drawing.Size(111, 13);
+          this.label52.TabIndex = 4;
+          this.label52.Text = "Remository &Password:";
+          // 
+          // textBox_remositoryUserId
+          // 
+          this.textBox_remositoryUserId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                      | System.Windows.Forms.AnchorStyles.Right)));
+          this.textBox_remositoryUserId.Location = new System.Drawing.Point(147, 53);
+          this.textBox_remositoryUserId.Name = "textBox_remositoryUserId";
+          this.textBox_remositoryUserId.Size = new System.Drawing.Size(94, 20);
+          this.textBox_remositoryUserId.TabIndex = 3;
+          this.textBox_remositoryUserId.TextChanged += new System.EventHandler(this.textbox_remositoryUserId_TextChanged);
+          // 
+          // label51
+          // 
+          this.label51.AutoSize = true;
+          this.label51.Location = new System.Drawing.Point(40, 56);
+          this.label51.Name = "label51";
+          this.label51.Size = new System.Drawing.Size(98, 13);
+          this.label51.TabIndex = 2;
+          this.label51.Text = "Remository U&serID:";
+          // 
+          // textBox_remositoryBaseURL
+          // 
+          this.textBox_remositoryBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                      | System.Windows.Forms.AnchorStyles.Right)));
+          this.textBox_remositoryBaseURL.Location = new System.Drawing.Point(147, 4);
+          this.textBox_remositoryBaseURL.Name = "textBox_remositoryBaseURL";
+          this.textBox_remositoryBaseURL.Size = new System.Drawing.Size(94, 20);
+          this.textBox_remositoryBaseURL.TabIndex = 1;
+          this.textBox_remositoryBaseURL.TextChanged += new System.EventHandler(this.textBox_remositoryBaseURL_TextChanged);
+          // 
+          // label50
+          // 
+          this.label50.AutoSize = true;
+          this.label50.Location = new System.Drawing.Point(27, 7);
+          this.label50.Name = "label50";
+          this.label50.Size = new System.Drawing.Size(114, 13);
+          this.label50.TabIndex = 0;
+          this.label50.Text = "Remository Base &URL:";
+          // 
             // panel_torrentsearch
             // 
             this.panel_torrentsearch.Controls.Add(this.textBox_TorrentDetailsRegex);
@@ -3604,6 +3734,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.PerformLayout();
             this.panel_forom.ResumeLayout(false);
             this.panel_forom.PerformLayout();
+          this.panel_remository.ResumeLayout(false);
+          this.panel_remository.PerformLayout();
             this.panel_torrentsearch.ResumeLayout(false);
             this.panel_torrentsearch.PerformLayout();
             this.splitMain_Log.Panel1.ResumeLayout(false);
@@ -3867,6 +3999,17 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.TextBox textBox_NewsSearchParseArticleRegex;
         private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Panel panel_remository;
+    private System.Windows.Forms.TextBox textBox_remositoryBaseURL;
+    private System.Windows.Forms.Label label50;
+    private System.Windows.Forms.TextBox textBox_remositoryPassword;
+    private System.Windows.Forms.Label label52;
+    private System.Windows.Forms.TextBox textBox_remositoryUserId;
+    private System.Windows.Forms.Label label51;
+    private System.Windows.Forms.TextBox textBox_remositoryMainIdx;
+    private System.Windows.Forms.Label label53;
+    private System.Windows.Forms.CheckBox checkBox_remositoryEnable;
+    private System.Windows.Forms.CheckBox checkBox_foromEnable;
         private ManualEpisodeManagementPane panel_manualEpisodeManagement;
         private System.Windows.Forms.CheckBox checkBox_Series_UseSortName;
         private System.Windows.Forms.CheckBox checkBox_altImage;

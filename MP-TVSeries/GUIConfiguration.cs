@@ -262,12 +262,16 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
             m_paneListExtra.Add(panel_forom);
+      m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
             nodeRoot.Name = panel_subtitleroot.Name;
             treeView_Extra.Nodes.Add(nodeRoot);
             nodeChild = new TreeNode(panel_forom.Tag.ToString());
             nodeChild.Name = panel_forom.Name;
+      nodeRoot.Nodes.Add(nodeChild);
+      nodeChild = new TreeNode(panel_remository.Tag.ToString());
+      nodeChild.Name = panel_remository.Name;
             nodeRoot.Nodes.Add(nodeChild);
 
             m_paneListExtra.Add(panel_torrentroot);
@@ -298,8 +302,14 @@ namespace WindowPlugins.GUITVSeries
 
             treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
 
+      checkBox_foromEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
+      checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+      textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
+      textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
+      textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
+      textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
 
             LoadTorrentSearches();
 
@@ -2107,14 +2117,27 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
+          if (checkBox_foromEnable.Checked)
+          {
                     Subtitles.Forom forom = new Subtitles.Forom(this);
                     forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
                     forom.GetSubs(episode);
+          }
+          if (checkBox_remositoryEnable.Checked)
+          {
+            Subtitles.Remository remository = new Subtitles.Remository(this);
+            remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+            remository.GetSubs(episode);
+          }
                     break;
             }
         }
 
         void forom_SubtitleRetrievalCompleted(bool bFound)
+    {
+    }
+
+    void remository_SubtitleRetrievalCompleted(bool bFound)
         {
         }
 
@@ -2952,6 +2975,40 @@ namespace WindowPlugins.GUITVSeries
             LoadTree();
         }
 
+    private void detailsPropertyBindingSource_CurrentChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    private void textBox_remositoryBaseURL_TextChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Remository_BaseURL, textBox_remositoryBaseURL.Text);
+    }
+
+    private void textBox_remositoryMainIdx_TextChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Remository_MainIdx, textBox_remositoryMainIdx.Text);
+    }
+
+    private void textbox_remositoryUserId_TextChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Remository_UserName, textBox_remositoryUserId.Text);
+    }
+
+    private void textbox_remositoryPassword_TextChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Remository_Password, textBox_remositoryPassword.Text);
+    }
+
+    private void checkbox_foromEnable_checkedChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Forom_Enable, checkBox_foromEnable.Checked);
+    }
+
+    private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
+    {
+      DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
+    }
         private void checkBox_altImage_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAltImgLoading, checkBox_altImage.Checked);

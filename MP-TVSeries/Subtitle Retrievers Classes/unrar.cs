@@ -24,14 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace WindowPlugins.GUITVSeries
 {
-    /// <summary>
-    /// Summary description for Class1.
-    /// </summary>
+
     class Unrar
     {
         public const int ERAR_END_ARCHIVE = 10;
@@ -205,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (Open(m_sArchiveFileName))
             {
-                int iStatus;
+                int iStatus = -1;
                 if (m_lHandle != null)
                 {
                     RARHeaderData uHeader = new RARHeaderData();
@@ -224,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (Open(m_sArchiveFileName))
             {
-                int iStatus;
+                int iStatus = - 1;
                 if (m_lHandle != null)
                 {
                     RARHeaderData uHeader = new RARHeaderData();

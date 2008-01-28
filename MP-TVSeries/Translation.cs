@@ -68,6 +68,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Confirm = "Confirm";
         public static string Completed = "Completed";
         public static string No_subtitles_found = "No subtitles found";
+        public static string Subtitles_download_complete = "Subtitles Download Complete";
         public static string skip_Never_ask_again = "skip / Never ask again";
         public static string no_results_found = "no results found!";
         public static string _Hidden_to_prevent_spoilers_ = " * Hidden to prevent spoilers *";
@@ -180,4 +181,5 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
+
 
