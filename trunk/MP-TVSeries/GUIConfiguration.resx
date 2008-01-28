@@ -174,50 +174,6 @@ In all other cases you will be presented with a choice from available matches an
         05d8OjNKAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
-        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
-        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
-        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
-        xtkWAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="button4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
-        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
-        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
-        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
-        mAY8AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnViewUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
-        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
-        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
-        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
-        xtkWAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnViewDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
-        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
-        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
-        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
-        mAY8AAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="addLogo.ToolTip" xml:space="preserve">
     <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
 what video and audio codecs the epsiode is encoded in etc...

@@ -34,6 +34,7 @@
 	<string Field="Confirm" Original="Confirm">Confirm</string>
 	<string Field="Completed" Original="Completed">Completed</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">No subtitles found</string>
+	<string Field="Subtitles_download_complete" Original="Subtitles download complete">Subtitles download complete</string>
 	<string Field="skip_Never_ask_again" Original="skip / Never ask again">skip / Never ask again</string>
 	<string Field="no_results_found" Original="no results found!">no results found!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Hidden to prevent spoilers *</string>

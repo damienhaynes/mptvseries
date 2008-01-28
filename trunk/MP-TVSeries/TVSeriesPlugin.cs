@@ -136,8 +136,10 @@ namespace MediaPortal.GUI.Video
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
         private bool foromWorking = false;
+        private bool remositoryWorking = false;
         private bool torrentWorking = false;
-        private string foromID = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
+        private string foromEnable = "0";
+        private string remositoryEnable = "0";
 
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
@@ -256,6 +258,12 @@ namespace MediaPortal.GUI.Video
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
+
+            //init enable flags
+            if (DBOption.GetOptions(DBOption.cSubs_Forom_Enable) != null) 
+              foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+            if (DBOption.GetOptions(DBOption.cSubs_Remository_Enable) != null)
+              remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable); 
 
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
@@ -1045,8 +1053,8 @@ namespace MediaPortal.GUI.Video
                         case (int)eContextMenus.download:
                             {
                                 dlg.Reset();
-                                dlg.SetHeading(Translation.Download);
-                                if (foromID.Length > 0)
+                                dlg.SetHeading(Translation.Download);                                
+                                if (foromEnable == "1" || remositoryEnable == "1")
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
@@ -1226,10 +1234,21 @@ namespace MediaPortal.GUI.Video
                             {
                                 DBEpisode episode = (DBEpisode)currentitem.TVTag;
                                 setProcessAnimationStatus(true);
-                                foromWorking = true;
-                                Forom forom = new Forom(this);
-                                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                forom.GetSubs(selectedEpisode);
+                                if (Convert.ToInt32(foromEnable) == 1)
+                                {
+                                  foromWorking = true;
+                                  Forom forom = new Forom(this);
+                                  forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                                  forom.GetSubs(selectedEpisode);
+                                }
+                                if (Convert.ToInt32(remositoryEnable) == 1)
+                                {
+                                  remositoryWorking = true;
+                                  Remository remository = new Remository(this);
+                                  remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                  remository.GetSubs(selectedEpisode);
+                                }
+
                             }
                         }
                         break;
@@ -1466,7 +1485,7 @@ namespace MediaPortal.GUI.Video
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("The 'OnShowContextMenu' function has generated an error: " + ex.Message);
+                MPTVSeriesLog.Write("The 'OnShowContextMenu' function has generated an error: " + ex.Message + ", StackTrace : " + ex.StackTrace);
             }
 
         }
@@ -1501,6 +1520,24 @@ namespace MediaPortal.GUI.Video
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
         }
+
+      void remository_SubtitleRetrievalCompleted(bool bFound)
+      {
+        setProcessAnimationStatus(false);
+        remositoryWorking = false;
+        GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+        dlgOK.SetHeading(Translation.Completed);
+        if (bFound)
+        {
+          LoadFacade();
+          dlgOK.SetLine(1, Translation.Subtitles_download_complete);
+        }
+        else
+        {
+          dlgOK.SetLine(1, Translation.No_subtitles_found);
+        }
+        dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+      }
 
         void Load_TorrentLoadCompleted(bool bOK)
         {
@@ -1824,7 +1861,7 @@ namespace MediaPortal.GUI.Video
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
-                    else if (!foromWorking && !torrentWorking)
+                    else if (!foromWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
                 }
             }
@@ -2263,4 +2300,5 @@ namespace MediaPortal.GUI.Video
         }
     }
 }
+
 

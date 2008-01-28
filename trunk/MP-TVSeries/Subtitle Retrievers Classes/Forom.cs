@@ -471,20 +471,30 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         }
     }
 
-    class ForomEpisode
+    public class SubtitleEpisode
     {
         public String m_sSeriesName = String.Empty;
         public String m_sFileName = String.Empty;
         public int m_nSeasonIndex = 0;
         public int m_nEpisodeIndex = 0;
 
-        public ForomEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
+      public SubtitleEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
         {
             m_sSeriesName = sSeriesName.ToLower();
             m_sFileName = sFileName;
             m_nSeasonIndex = nSeasonIndex;
             m_nEpisodeIndex = nEpisodeIndex;
         }
+    };
+
+    class ForomEpisode: SubtitleEpisode 
+    {
+
+      public ForomEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
+        :
+        base(sSeriesName, sFileName, nSeasonIndex, nEpisodeIndex)
+      {
+      }
     };
 
     class EpisodeMatchResult : IComparable<EpisodeMatchResult>
@@ -518,7 +528,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             return m_nDistance.CompareTo(other.m_nDistance);
         }
 
-        public void ComputeDistance(ForomEpisode episode)
+        public void ComputeDistance(SubtitleEpisode episode)
         {
             m_nDistance = MediaPortal.Util.Levenshtein.Match(m_sName, episode.m_sSeriesName);
         }
@@ -580,7 +590,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             }
         }
 
-        public void ComputeDistance(ForomEpisode episode)
+        public void ComputeDistance(SubtitleEpisode episode)
         {
             nDistance = MediaPortal.Util.Levenshtein.Match(sSubName, episode.m_sSeriesName);
         }
