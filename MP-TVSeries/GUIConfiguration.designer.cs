@@ -307,21 +307,21 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_uTorrentPath = new System.Windows.Forms.TextBox();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
             this.panel_forom = new System.Windows.Forms.Panel();
-          this.checkBox_foromEnable = new System.Windows.Forms.CheckBox();
+            this.checkBox_foromEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.textBox_foromID = new System.Windows.Forms.TextBox();
             this.textBox_foromBaseURL = new System.Windows.Forms.TextBox();
-          this.panel_remository = new System.Windows.Forms.Panel();
-          this.checkBox_remositoryEnable = new System.Windows.Forms.CheckBox();
-          this.textBox_remositoryMainIdx = new System.Windows.Forms.TextBox();
-          this.label53 = new System.Windows.Forms.Label();
-          this.textBox_remositoryPassword = new System.Windows.Forms.TextBox();
-          this.label52 = new System.Windows.Forms.Label();
-          this.textBox_remositoryUserId = new System.Windows.Forms.TextBox();
-          this.label51 = new System.Windows.Forms.Label();
-          this.textBox_remositoryBaseURL = new System.Windows.Forms.TextBox();
-          this.label50 = new System.Windows.Forms.Label();
+            this.panel_remository = new System.Windows.Forms.Panel();
+            this.checkBox_remositoryEnable = new System.Windows.Forms.CheckBox();
+            this.textBox_remositoryMainIdx = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.textBox_remositoryPassword = new System.Windows.Forms.TextBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.textBox_remositoryUserId = new System.Windows.Forms.TextBox();
+            this.label51 = new System.Windows.Forms.Label();
+            this.textBox_remositoryBaseURL = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
             this.panel_torrentsearch = new System.Windows.Forms.Panel();
             this.textBox_TorrentDetailsRegex = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -385,7 +385,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.SuspendLayout();
             this.panel_torrentroot.SuspendLayout();
             this.panel_forom.SuspendLayout();
-          this.panel_remository.SuspendLayout();
+            this.panel_remository.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
             this.splitMain_Log.Panel1.SuspendLayout();
             this.splitMain_Log.Panel2.SuspendLayout();
@@ -473,15 +473,17 @@ namespace WindowPlugins.GUITVSeries
             // 
             // treeView_Library
             // 
+            this.treeView_Library.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView_Library.ContextMenuStrip = this.contextMenuStrip_DetailsTree;
-            this.treeView_Library.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Library.ForeColor = System.Drawing.SystemColors.WindowText;
             this.treeView_Library.FullRowSelect = true;
             this.treeView_Library.HideSelection = false;
             this.treeView_Library.Location = new System.Drawing.Point(0, 0);
             this.treeView_Library.MinimumSize = new System.Drawing.Size(100, 100);
             this.treeView_Library.Name = "treeView_Library";
-            this.treeView_Library.Size = new System.Drawing.Size(266, 557);
+            this.treeView_Library.Size = new System.Drawing.Size(266, 531);
             this.treeView_Library.TabIndex = 0;
             this.treeView_Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Library_AfterSelect);
             this.treeView_Library.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_Library_NodeMouseClick);
@@ -497,8 +499,8 @@ namespace WindowPlugins.GUITVSeries
             this.newzbinThisToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
             this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
-            this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
+            this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
             // hideToolStripMenuItem
             // 
@@ -1301,8 +1303,8 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_ImportPathes.Size = new System.Drawing.Size(157, 75);
             this.dataGridView_ImportPathes.StandardTab = true;
             this.dataGridView_ImportPathes.TabIndex = 150;
-            this.dataGridView_ImportPathes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_ImportPathes_CellValueChanged);
             this.dataGridView_ImportPathes.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_ImportPathes_UserDeletedRow);
+            this.dataGridView_ImportPathes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_ImportPathes_CellValueChanged);
             this.dataGridView_ImportPathes.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_ImportPathes_CellContentClick);
             // 
             // label11
@@ -1839,7 +1841,6 @@ namespace WindowPlugins.GUITVSeries
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.Location = new System.Drawing.Point(270, 143);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(28, 29);
@@ -1850,7 +1851,6 @@ namespace WindowPlugins.GUITVSeries
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
             this.button4.Location = new System.Drawing.Point(270, 178);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(28, 29);
@@ -1922,7 +1922,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnViewUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnViewUp.Enabled = false;
-            this.btnViewUp.Image = ((System.Drawing.Image)(resources.GetObject("btnViewUp.Image")));
             this.btnViewUp.Location = new System.Drawing.Point(203, 108);
             this.btnViewUp.Name = "btnViewUp";
             this.btnViewUp.Size = new System.Drawing.Size(28, 29);
@@ -1933,7 +1932,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnViewDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnViewDown.Enabled = false;
-            this.btnViewDown.Image = ((System.Drawing.Image)(resources.GetObject("btnViewDown.Image")));
             this.btnViewDown.Location = new System.Drawing.Point(203, 143);
             this.btnViewDown.Name = "btnViewDown";
             this.btnViewDown.Size = new System.Drawing.Size(28, 29);
@@ -2039,7 +2037,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.Controls.Add(this.lstLogos);
             this.groupBox7.Location = new System.Drawing.Point(6, 522);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(804, 148);
+            this.groupBox7.Size = new System.Drawing.Size(770, 148);
             this.groupBox7.TabIndex = 4;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Logo Configuration";
@@ -2083,7 +2081,7 @@ namespace WindowPlugins.GUITVSeries
             // btnLogoEdit
             // 
             this.btnLogoEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogoEdit.Location = new System.Drawing.Point(607, 119);
+            this.btnLogoEdit.Location = new System.Drawing.Point(573, 119);
             this.btnLogoEdit.Name = "btnLogoEdit";
             this.btnLogoEdit.Size = new System.Drawing.Size(75, 23);
             this.btnLogoEdit.TabIndex = 7;
@@ -2096,7 +2094,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnLogoDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLogoDown.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down;
-            this.btnLogoDown.Location = new System.Drawing.Point(770, 69);
+            this.btnLogoDown.Location = new System.Drawing.Point(736, 69);
             this.btnLogoDown.Name = "btnLogoDown";
             this.btnLogoDown.Size = new System.Drawing.Size(28, 29);
             this.btnLogoDown.TabIndex = 2;
@@ -2108,7 +2106,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnlogoUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnlogoUp.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up;
-            this.btnlogoUp.Location = new System.Drawing.Point(769, 34);
+            this.btnlogoUp.Location = new System.Drawing.Point(735, 34);
             this.btnlogoUp.Name = "btnlogoUp";
             this.btnlogoUp.Size = new System.Drawing.Size(28, 29);
             this.btnlogoUp.TabIndex = 1;
@@ -2119,7 +2117,7 @@ namespace WindowPlugins.GUITVSeries
             // btnrmvLogo
             // 
             this.btnrmvLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnrmvLogo.Location = new System.Drawing.Point(526, 119);
+            this.btnrmvLogo.Location = new System.Drawing.Point(492, 119);
             this.btnrmvLogo.Name = "btnrmvLogo";
             this.btnrmvLogo.Size = new System.Drawing.Size(75, 23);
             this.btnrmvLogo.TabIndex = 6;
@@ -2131,7 +2129,7 @@ namespace WindowPlugins.GUITVSeries
             // addLogo
             // 
             this.addLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addLogo.Location = new System.Drawing.Point(688, 119);
+            this.addLogo.Location = new System.Drawing.Point(654, 119);
             this.addLogo.Name = "addLogo";
             this.addLogo.Size = new System.Drawing.Size(75, 23);
             this.addLogo.TabIndex = 8;
@@ -2147,7 +2145,7 @@ namespace WindowPlugins.GUITVSeries
             this.lstLogos.FormattingEnabled = true;
             this.lstLogos.Location = new System.Drawing.Point(7, 19);
             this.lstLogos.Name = "lstLogos";
-            this.lstLogos.Size = new System.Drawing.Size(756, 95);
+            this.lstLogos.Size = new System.Drawing.Size(722, 95);
             this.lstLogos.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.lstLogos, "Contains the list of Logo rules defined to display in Media Portal");
             // 
@@ -2168,7 +2166,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Title);
             this.groupBox3.Location = new System.Drawing.Point(6, 275);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(804, 108);
+            this.groupBox3.Size = new System.Drawing.Size(770, 108);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Season View Settings";
@@ -2198,7 +2196,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Col3.Location = new System.Drawing.Point(675, 15);
+            this.richTextBox_seasonFormat_Col3.Location = new System.Drawing.Point(641, 15);
             this.richTextBox_seasonFormat_Col3.Multiline = false;
             this.richTextBox_seasonFormat_Col3.Name = "richTextBox_seasonFormat_Col3";
             this.richTextBox_seasonFormat_Col3.Size = new System.Drawing.Size(123, 20);
@@ -2214,8 +2212,8 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_InsertFields.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.contextMenuStrip_InsertFields.Name = "contextMenuStrip_SeriesFields";
             this.contextMenuStrip_InsertFields.Size = new System.Drawing.Size(61, 4);
-            this.contextMenuStrip_InsertFields.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
             this.contextMenuStrip_InsertFields.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_SeriesFields_Opening);
+            this.contextMenuStrip_InsertFields.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
             // 
             // label12
             // 
@@ -2235,7 +2233,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Main.Location = new System.Drawing.Point(217, 80);
             this.richTextBox_seasonFormat_Main.Multiline = false;
             this.richTextBox_seasonFormat_Main.Name = "richTextBox_seasonFormat_Main";
-            this.richTextBox_seasonFormat_Main.Size = new System.Drawing.Size(581, 20);
+            this.richTextBox_seasonFormat_Main.Size = new System.Drawing.Size(547, 20);
             this.richTextBox_seasonFormat_Main.TabIndex = 10;
             this.richTextBox_seasonFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Main, resources.GetString("richTextBox_seasonFormat_Main.ToolTip"));
@@ -2265,7 +2263,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Subtitle.Location = new System.Drawing.Point(217, 59);
             this.richTextBox_seasonFormat_Subtitle.Multiline = false;
             this.richTextBox_seasonFormat_Subtitle.Name = "richTextBox_seasonFormat_Subtitle";
-            this.richTextBox_seasonFormat_Subtitle.Size = new System.Drawing.Size(581, 20);
+            this.richTextBox_seasonFormat_Subtitle.Size = new System.Drawing.Size(547, 20);
             this.richTextBox_seasonFormat_Subtitle.TabIndex = 8;
             this.richTextBox_seasonFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Subtitle, resources.GetString("richTextBox_seasonFormat_Subtitle.ToolTip"));
@@ -2289,7 +2287,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Col2.Location = new System.Drawing.Point(368, 15);
             this.richTextBox_seasonFormat_Col2.Multiline = false;
             this.richTextBox_seasonFormat_Col2.Name = "richTextBox_seasonFormat_Col2";
-            this.richTextBox_seasonFormat_Col2.Size = new System.Drawing.Size(307, 20);
+            this.richTextBox_seasonFormat_Col2.Size = new System.Drawing.Size(273, 20);
             this.richTextBox_seasonFormat_Col2.TabIndex = 3;
             this.richTextBox_seasonFormat_Col2.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Col2, resources.GetString("richTextBox_seasonFormat_Col2.ToolTip"));
@@ -2313,7 +2311,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Title.Location = new System.Drawing.Point(217, 38);
             this.richTextBox_seasonFormat_Title.Multiline = false;
             this.richTextBox_seasonFormat_Title.Name = "richTextBox_seasonFormat_Title";
-            this.richTextBox_seasonFormat_Title.Size = new System.Drawing.Size(581, 20);
+            this.richTextBox_seasonFormat_Title.Size = new System.Drawing.Size(547, 20);
             this.richTextBox_seasonFormat_Title.TabIndex = 6;
             this.richTextBox_seasonFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Title, resources.GetString("richTextBox_seasonFormat_Title.ToolTip"));
@@ -2337,7 +2335,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Location = new System.Drawing.Point(6, 389);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(804, 127);
+            this.groupBox4.Size = new System.Drawing.Size(770, 127);
             this.groupBox4.TabIndex = 3;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Episode View Settings";
@@ -2347,7 +2345,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col3.Location = new System.Drawing.Point(674, 14);
+            this.richTextBox_episodeFormat_Col3.Location = new System.Drawing.Point(640, 14);
             this.richTextBox_episodeFormat_Col3.Multiline = false;
             this.richTextBox_episodeFormat_Col3.Name = "richTextBox_episodeFormat_Col3";
             this.richTextBox_episodeFormat_Col3.Size = new System.Drawing.Size(123, 20);
@@ -2379,7 +2377,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(368, 14);
             this.richTextBox_episodeFormat_Col2.Multiline = false;
             this.richTextBox_episodeFormat_Col2.Name = "richTextBox_episodeFormat_Col2";
-            this.richTextBox_episodeFormat_Col2.Size = new System.Drawing.Size(306, 20);
+            this.richTextBox_episodeFormat_Col2.Size = new System.Drawing.Size(272, 20);
             this.richTextBox_episodeFormat_Col2.TabIndex = 2;
             this.richTextBox_episodeFormat_Col2.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Col2, resources.GetString("richTextBox_episodeFormat_Col2.ToolTip"));
@@ -2406,7 +2404,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Main.Location = new System.Drawing.Point(217, 80);
             this.richTextBox_episodeFormat_Main.Multiline = false;
             this.richTextBox_episodeFormat_Main.Name = "richTextBox_episodeFormat_Main";
-            this.richTextBox_episodeFormat_Main.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_episodeFormat_Main.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_episodeFormat_Main.TabIndex = 9;
             this.richTextBox_episodeFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Main, resources.GetString("richTextBox_episodeFormat_Main.ToolTip"));
@@ -2430,7 +2428,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Subtitle.Location = new System.Drawing.Point(217, 58);
             this.richTextBox_episodeFormat_Subtitle.Multiline = false;
             this.richTextBox_episodeFormat_Subtitle.Name = "richTextBox_episodeFormat_Subtitle";
-            this.richTextBox_episodeFormat_Subtitle.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_episodeFormat_Subtitle.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_episodeFormat_Subtitle.TabIndex = 7;
             this.richTextBox_episodeFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Subtitle, resources.GetString("richTextBox_episodeFormat_Subtitle.ToolTip"));
@@ -2454,7 +2452,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Title.Location = new System.Drawing.Point(217, 36);
             this.richTextBox_episodeFormat_Title.Multiline = false;
             this.richTextBox_episodeFormat_Title.Name = "richTextBox_episodeFormat_Title";
-            this.richTextBox_episodeFormat_Title.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_episodeFormat_Title.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_episodeFormat_Title.TabIndex = 5;
             this.richTextBox_episodeFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Title, resources.GetString("richTextBox_episodeFormat_Title.ToolTip"));
@@ -2512,7 +2510,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Location = new System.Drawing.Point(6, 142);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(804, 127);
+            this.groupBox2.Size = new System.Drawing.Size(770, 127);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Series View Settings";
@@ -2533,7 +2531,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(674, 15);
+            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(640, 15);
             this.richTextBox_seriesFormat_Col3.Multiline = false;
             this.richTextBox_seriesFormat_Col3.Name = "richTextBox_seriesFormat_Col3";
             this.richTextBox_seriesFormat_Col3.Size = new System.Drawing.Size(123, 20);
@@ -2551,7 +2549,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(217, 80);
             this.richTextBox_seriesFormat_Main.Multiline = false;
             this.richTextBox_seriesFormat_Main.Name = "richTextBox_seriesFormat_Main";
-            this.richTextBox_seriesFormat_Main.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_seriesFormat_Main.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_seriesFormat_Main.TabIndex = 10;
             this.richTextBox_seriesFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Main, resources.GetString("richTextBox_seriesFormat_Main.ToolTip"));
@@ -2566,7 +2564,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(217, 59);
             this.richTextBox_seriesFormat_Subtitle.Multiline = false;
             this.richTextBox_seriesFormat_Subtitle.Name = "richTextBox_seriesFormat_Subtitle";
-            this.richTextBox_seriesFormat_Subtitle.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_seriesFormat_Subtitle.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_seriesFormat_Subtitle.TabIndex = 8;
             this.richTextBox_seriesFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Subtitle, resources.GetString("richTextBox_seriesFormat_Subtitle.ToolTip"));
@@ -2581,7 +2579,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(368, 15);
             this.richTextBox_seriesFormat_Col2.Multiline = false;
             this.richTextBox_seriesFormat_Col2.Name = "richTextBox_seriesFormat_Col2";
-            this.richTextBox_seriesFormat_Col2.Size = new System.Drawing.Size(306, 20);
+            this.richTextBox_seriesFormat_Col2.Size = new System.Drawing.Size(272, 20);
             this.richTextBox_seriesFormat_Col2.TabIndex = 3;
             this.richTextBox_seriesFormat_Col2.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Col2, resources.GetString("richTextBox_seriesFormat_Col2.ToolTip"));
@@ -2609,7 +2607,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(217, 38);
             this.richTextBox_seriesFormat_Title.Multiline = false;
             this.richTextBox_seriesFormat_Title.Name = "richTextBox_seriesFormat_Title";
-            this.richTextBox_seriesFormat_Title.Size = new System.Drawing.Size(580, 20);
+            this.richTextBox_seriesFormat_Title.Size = new System.Drawing.Size(546, 20);
             this.richTextBox_seriesFormat_Title.TabIndex = 6;
             this.richTextBox_seriesFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Title, resources.GetString("richTextBox_seriesFormat_Title.ToolTip"));
@@ -2685,7 +2683,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.checkBox_AutoOnlineDataRefresh);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(804, 130);
+            this.groupBox1.Size = new System.Drawing.Size(770, 130);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
@@ -2852,7 +2850,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
-          this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
             this.splitContainer_treeextra.Size = new System.Drawing.Size(935, 551);
             this.splitContainer_treeextra.SplitterDistance = 234;
@@ -3310,7 +3308,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_forom
             // 
-          this.panel_forom.Controls.Add(this.checkBox_foromEnable);
+            this.panel_forom.Controls.Add(this.checkBox_foromEnable);
             this.panel_forom.Controls.Add(this.label17);
             this.panel_forom.Controls.Add(this.label18);
             this.panel_forom.Controls.Add(this.textBox_foromID);
@@ -3320,18 +3318,18 @@ namespace WindowPlugins.GUITVSeries
             this.panel_forom.Size = new System.Drawing.Size(226, 62);
             this.panel_forom.TabIndex = 1;
             this.panel_forom.Tag = "Forom Subtitles";
-          // 
-          // checkBox_foromEnable
-          // 
-          this.checkBox_foromEnable.AutoSize = true;
-          this.checkBox_foromEnable.Location = new System.Drawing.Point(7, 47);
-          this.checkBox_foromEnable.Name = "checkBox_foromEnable";
-          this.checkBox_foromEnable.Size = new System.Drawing.Size(58, 17);
-          this.checkBox_foromEnable.TabIndex = 4;
-          this.checkBox_foromEnable.Text = "enable";
-          this.checkBox_foromEnable.UseVisualStyleBackColor = true;
-          this.checkBox_foromEnable.CheckedChanged += new System.EventHandler(this.checkbox_foromEnable_checkedChanged);
-          // 
+            // 
+            // checkBox_foromEnable
+            // 
+            this.checkBox_foromEnable.AutoSize = true;
+            this.checkBox_foromEnable.Location = new System.Drawing.Point(7, 47);
+            this.checkBox_foromEnable.Name = "checkBox_foromEnable";
+            this.checkBox_foromEnable.Size = new System.Drawing.Size(58, 17);
+            this.checkBox_foromEnable.TabIndex = 4;
+            this.checkBox_foromEnable.Text = "enable";
+            this.checkBox_foromEnable.UseVisualStyleBackColor = true;
+            this.checkBox_foromEnable.CheckedChanged += new System.EventHandler(this.checkbox_foromEnable_checkedChanged);
+            // 
             // label17
             // 
             this.label17.Location = new System.Drawing.Point(4, 10);
@@ -3372,112 +3370,112 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.textBox_foromBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
                     ", you\'re on your own :)");
             this.textBox_foromBaseURL.TextChanged += new System.EventHandler(this.textBox_foromBaseURL_TextChanged);
-          // 
-          // panel_remository
-          // 
-          this.panel_remository.Controls.Add(this.checkBox_remositoryEnable);
-          this.panel_remository.Controls.Add(this.textBox_remositoryMainIdx);
-          this.panel_remository.Controls.Add(this.label53);
-          this.panel_remository.Controls.Add(this.textBox_remositoryPassword);
-          this.panel_remository.Controls.Add(this.label52);
-          this.panel_remository.Controls.Add(this.textBox_remositoryUserId);
-          this.panel_remository.Controls.Add(this.label51);
-          this.panel_remository.Controls.Add(this.textBox_remositoryBaseURL);
-          this.panel_remository.Controls.Add(this.label50);
-          this.panel_remository.Location = new System.Drawing.Point(30, 83);
-          this.panel_remository.Name = "panel_remository";
-          this.panel_remository.Size = new System.Drawing.Size(226, 116);
-          this.panel_remository.TabIndex = 6;
-          this.panel_remository.Tag = "Remository Subtitle";
-          // 
-          // checkBox_remositoryEnable
-          // 
-          this.checkBox_remositoryEnable.AutoSize = true;
-          this.checkBox_remositoryEnable.Location = new System.Drawing.Point(7, 98);
-          this.checkBox_remositoryEnable.Name = "checkBox_remositoryEnable";
-          this.checkBox_remositoryEnable.Size = new System.Drawing.Size(58, 17);
-          this.checkBox_remositoryEnable.TabIndex = 7;
-          this.checkBox_remositoryEnable.Text = "enable";
-          this.checkBox_remositoryEnable.UseVisualStyleBackColor = true;
-          this.checkBox_remositoryEnable.CheckedChanged += new System.EventHandler(this.checkbox_remositoryEnable_checkedChanged);
-          // 
-          // textBox_remositoryMainIdx
-          // 
-          this.textBox_remositoryMainIdx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                      | System.Windows.Forms.AnchorStyles.Right)));
-          this.textBox_remositoryMainIdx.Location = new System.Drawing.Point(147, 28);
-          this.textBox_remositoryMainIdx.Name = "textBox_remositoryMainIdx";
-          this.textBox_remositoryMainIdx.Size = new System.Drawing.Size(94, 20);
-          this.textBox_remositoryMainIdx.TabIndex = 2;
-          this.textBox_remositoryMainIdx.TextChanged += new System.EventHandler(this.textBox_remositoryMainIdx_TextChanged);
-          // 
-          // label53
-          // 
-          this.label53.AutoSize = true;
-          this.label53.Location = new System.Drawing.Point(42, 31);
-          this.label53.Name = "label53";
-          this.label53.Size = new System.Drawing.Size(99, 13);
-          this.label53.TabIndex = 6;
-          this.label53.Text = "Remository &MainID:";
-          // 
-          // textBox_remositoryPassword
-          // 
-          this.textBox_remositoryPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                      | System.Windows.Forms.AnchorStyles.Right)));
-          this.textBox_remositoryPassword.Location = new System.Drawing.Point(147, 79);
-          this.textBox_remositoryPassword.Name = "textBox_remositoryPassword";
-          this.textBox_remositoryPassword.PasswordChar = '*';
-          this.textBox_remositoryPassword.Size = new System.Drawing.Size(94, 20);
-          this.textBox_remositoryPassword.TabIndex = 4;
-          this.textBox_remositoryPassword.TextChanged += new System.EventHandler(this.textbox_remositoryPassword_TextChanged);
-          // 
-          // label52
-          // 
-          this.label52.AutoSize = true;
-          this.label52.Location = new System.Drawing.Point(27, 82);
-          this.label52.Name = "label52";
-          this.label52.Size = new System.Drawing.Size(111, 13);
-          this.label52.TabIndex = 4;
-          this.label52.Text = "Remository &Password:";
-          // 
-          // textBox_remositoryUserId
-          // 
-          this.textBox_remositoryUserId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                      | System.Windows.Forms.AnchorStyles.Right)));
-          this.textBox_remositoryUserId.Location = new System.Drawing.Point(147, 53);
-          this.textBox_remositoryUserId.Name = "textBox_remositoryUserId";
-          this.textBox_remositoryUserId.Size = new System.Drawing.Size(94, 20);
-          this.textBox_remositoryUserId.TabIndex = 3;
-          this.textBox_remositoryUserId.TextChanged += new System.EventHandler(this.textbox_remositoryUserId_TextChanged);
-          // 
-          // label51
-          // 
-          this.label51.AutoSize = true;
-          this.label51.Location = new System.Drawing.Point(40, 56);
-          this.label51.Name = "label51";
-          this.label51.Size = new System.Drawing.Size(98, 13);
-          this.label51.TabIndex = 2;
-          this.label51.Text = "Remository U&serID:";
-          // 
-          // textBox_remositoryBaseURL
-          // 
-          this.textBox_remositoryBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                      | System.Windows.Forms.AnchorStyles.Right)));
-          this.textBox_remositoryBaseURL.Location = new System.Drawing.Point(147, 4);
-          this.textBox_remositoryBaseURL.Name = "textBox_remositoryBaseURL";
-          this.textBox_remositoryBaseURL.Size = new System.Drawing.Size(94, 20);
-          this.textBox_remositoryBaseURL.TabIndex = 1;
-          this.textBox_remositoryBaseURL.TextChanged += new System.EventHandler(this.textBox_remositoryBaseURL_TextChanged);
-          // 
-          // label50
-          // 
-          this.label50.AutoSize = true;
-          this.label50.Location = new System.Drawing.Point(27, 7);
-          this.label50.Name = "label50";
-          this.label50.Size = new System.Drawing.Size(114, 13);
-          this.label50.TabIndex = 0;
-          this.label50.Text = "Remository Base &URL:";
-          // 
+            // 
+            // panel_remository
+            // 
+            this.panel_remository.Controls.Add(this.checkBox_remositoryEnable);
+            this.panel_remository.Controls.Add(this.textBox_remositoryMainIdx);
+            this.panel_remository.Controls.Add(this.label53);
+            this.panel_remository.Controls.Add(this.textBox_remositoryPassword);
+            this.panel_remository.Controls.Add(this.label52);
+            this.panel_remository.Controls.Add(this.textBox_remositoryUserId);
+            this.panel_remository.Controls.Add(this.label51);
+            this.panel_remository.Controls.Add(this.textBox_remositoryBaseURL);
+            this.panel_remository.Controls.Add(this.label50);
+            this.panel_remository.Location = new System.Drawing.Point(30, 83);
+            this.panel_remository.Name = "panel_remository";
+            this.panel_remository.Size = new System.Drawing.Size(226, 116);
+            this.panel_remository.TabIndex = 6;
+            this.panel_remository.Tag = "Remository Subtitle";
+            // 
+            // checkBox_remositoryEnable
+            // 
+            this.checkBox_remositoryEnable.AutoSize = true;
+            this.checkBox_remositoryEnable.Location = new System.Drawing.Point(7, 98);
+            this.checkBox_remositoryEnable.Name = "checkBox_remositoryEnable";
+            this.checkBox_remositoryEnable.Size = new System.Drawing.Size(58, 17);
+            this.checkBox_remositoryEnable.TabIndex = 7;
+            this.checkBox_remositoryEnable.Text = "enable";
+            this.checkBox_remositoryEnable.UseVisualStyleBackColor = true;
+            this.checkBox_remositoryEnable.CheckedChanged += new System.EventHandler(this.checkbox_remositoryEnable_checkedChanged);
+            // 
+            // textBox_remositoryMainIdx
+            // 
+            this.textBox_remositoryMainIdx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_remositoryMainIdx.Location = new System.Drawing.Point(147, 28);
+            this.textBox_remositoryMainIdx.Name = "textBox_remositoryMainIdx";
+            this.textBox_remositoryMainIdx.Size = new System.Drawing.Size(94, 20);
+            this.textBox_remositoryMainIdx.TabIndex = 2;
+            this.textBox_remositoryMainIdx.TextChanged += new System.EventHandler(this.textBox_remositoryMainIdx_TextChanged);
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(42, 31);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(99, 13);
+            this.label53.TabIndex = 6;
+            this.label53.Text = "Remository &MainID:";
+            // 
+            // textBox_remositoryPassword
+            // 
+            this.textBox_remositoryPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_remositoryPassword.Location = new System.Drawing.Point(147, 79);
+            this.textBox_remositoryPassword.Name = "textBox_remositoryPassword";
+            this.textBox_remositoryPassword.PasswordChar = '*';
+            this.textBox_remositoryPassword.Size = new System.Drawing.Size(94, 20);
+            this.textBox_remositoryPassword.TabIndex = 4;
+            this.textBox_remositoryPassword.TextChanged += new System.EventHandler(this.textbox_remositoryPassword_TextChanged);
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(27, 82);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(111, 13);
+            this.label52.TabIndex = 4;
+            this.label52.Text = "Remository &Password:";
+            // 
+            // textBox_remositoryUserId
+            // 
+            this.textBox_remositoryUserId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_remositoryUserId.Location = new System.Drawing.Point(147, 53);
+            this.textBox_remositoryUserId.Name = "textBox_remositoryUserId";
+            this.textBox_remositoryUserId.Size = new System.Drawing.Size(94, 20);
+            this.textBox_remositoryUserId.TabIndex = 3;
+            this.textBox_remositoryUserId.TextChanged += new System.EventHandler(this.textbox_remositoryUserId_TextChanged);
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(40, 56);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(98, 13);
+            this.label51.TabIndex = 2;
+            this.label51.Text = "Remository U&serID:";
+            // 
+            // textBox_remositoryBaseURL
+            // 
+            this.textBox_remositoryBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_remositoryBaseURL.Location = new System.Drawing.Point(147, 4);
+            this.textBox_remositoryBaseURL.Name = "textBox_remositoryBaseURL";
+            this.textBox_remositoryBaseURL.Size = new System.Drawing.Size(94, 20);
+            this.textBox_remositoryBaseURL.TabIndex = 1;
+            this.textBox_remositoryBaseURL.TextChanged += new System.EventHandler(this.textBox_remositoryBaseURL_TextChanged);
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(27, 7);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(114, 13);
+            this.label50.TabIndex = 0;
+            this.label50.Text = "Remository Base &URL:";
+            // 
             // panel_torrentsearch
             // 
             this.panel_torrentsearch.Controls.Add(this.textBox_TorrentDetailsRegex);
@@ -3734,8 +3732,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.PerformLayout();
             this.panel_forom.ResumeLayout(false);
             this.panel_forom.PerformLayout();
-          this.panel_remository.ResumeLayout(false);
-          this.panel_remository.PerformLayout();
+            this.panel_remository.ResumeLayout(false);
+            this.panel_remository.PerformLayout();
             this.panel_torrentsearch.ResumeLayout(false);
             this.panel_torrentsearch.PerformLayout();
             this.splitMain_Log.Panel1.ResumeLayout(false);
