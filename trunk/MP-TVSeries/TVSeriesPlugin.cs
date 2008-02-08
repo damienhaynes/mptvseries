@@ -213,6 +213,19 @@ namespace MediaPortal.GUI.Video
         [SkinControlAttribute(1236)]
         protected GUILabelControl dummyThumbnailGraphicalMode = null;
 
+        // let the skins react to what we are displaying
+        [SkinControlAttribute(1237)]
+        protected GUILabelControl dummyIsSeries = null;
+
+        [SkinControlAttribute(1238)]
+        protected GUILabelControl dummyIsSeasons = null;
+
+        [SkinControlAttribute(1239)]
+        protected GUILabelControl dummyIsEpisodes = null;
+
+        [SkinControlAttribute(1240)]
+        protected GUILabelControl dummyIsGroups = null;
+
         #endregion
 
         enum Listlevel
@@ -1308,12 +1321,17 @@ namespace MediaPortal.GUI.Video
                         if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+                            DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+                            m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
+                            m_SelectedSeries.Commit();
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
+                            m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
+                            m_SelectedSeason.Commit();
                             cache.dump();
                         }
                         LoadFacade(); // refresh
@@ -1323,12 +1341,17 @@ namespace MediaPortal.GUI.Video
                         if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+                            DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+                            m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
+                            m_SelectedSeries.Commit();
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
                         {
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
+                            m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
+                            m_SelectedSeason.Commit();
                             cache.dump();
                         }
                         LoadFacade(); // refresh
@@ -1601,22 +1624,35 @@ namespace MediaPortal.GUI.Video
 
         void setNewListLevelOfCurrView(int step)
         {
+            resetListLevelDummies();
             switch (m_CurrLView.gettypeOfStep(step))
             {
                 case logicalViewStep.type.group:
                     listLevel = Listlevel.Group;
+                    if(dummyIsGroups != null) dummyIsGroups.Visible = true;
                     break;
                 case logicalViewStep.type.series:
                     listLevel = Listlevel.Series;
+                    if (dummyIsSeries != null) dummyIsSeries.Visible = true;
                     break;
                 case logicalViewStep.type.season:
                     listLevel = Listlevel.Season;
+                    if (dummyIsSeasons != null) dummyIsSeasons.Visible = true;
                     break;
                 case logicalViewStep.type.episode:
                     listLevel = Listlevel.Episode;
+                    if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
                     break;
             }
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString());
+        }
+
+        void resetListLevelDummies()
+        {
+            if(dummyIsSeries != null) dummyIsSeries.Visible = false;
+            if (dummyIsSeasons != null) dummyIsSeasons.Visible = false;
+            if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = false;
+            if (dummyIsGroups != null) dummyIsGroups.Visible = false;
         }
 
         int thumbnail_last_selected = 0;
