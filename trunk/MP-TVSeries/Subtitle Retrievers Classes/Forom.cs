@@ -176,7 +176,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 else
                                     Choices.Add(new Feedback.CItem(match.sSubName + " seasons between " + match.nSeasonMin + " and " + match.nSeasonMax, String.Empty, match));
                             }
-                            Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                            Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                             descriptor.m_sTitle = "Choose correct series / season item";
                             descriptor.m_sItemToMatchLabel = "Local series:";
                             descriptor.m_sItemToMatch = episode.m_sSeriesName + " season " + episode.m_nSeasonIndex;
@@ -363,7 +363,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             if (match.Success)
                             {
                                 // has to be 
-                                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                                Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                                 descriptor.m_sTitle = "Select matching subtitle file";
                                 descriptor.m_sItemToMatchLabel = "filename:";
                                 descriptor.m_sItemToMatch = match.Groups[1].Value;

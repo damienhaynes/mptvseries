@@ -36,12 +36,12 @@ namespace WindowPlugins.GUITVSeries
     {
         Feedback.CItem SelectedItemRadOption = null;
         public String m_sTypedText = String.Empty;
-        private Feedback.CDescriptor m_descriptor = null;
+        private Feedback.ChooseFromSelectionDescriptor m_descriptor = null;
         string origTitle = string.Empty;
         bool useRadioMode = false;
         const int maxItemsForRadioMode = 6; // doesn't scale to above 6 items
 
-        public ChooseFromSelectionDialog(Feedback.CDescriptor descriptor)
+        public ChooseFromSelectionDialog(Feedback.ChooseFromSelectionDescriptor descriptor)
         {
             m_descriptor = descriptor;
             InitializeComponent();
@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
                 this.DialogResult = DialogResult.OK;       
         }
 
-        private bool useRadioMethod(Feedback.CDescriptor descriptor)
+        private bool useRadioMethod(Feedback.ChooseFromSelectionDescriptor descriptor)
         {
             return descriptor.m_useRadioToSelect && descriptor.m_List.Count <= maxItemsForRadioMode;
         }

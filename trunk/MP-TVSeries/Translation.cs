@@ -95,7 +95,34 @@ namespace WindowPlugins.GUITVSeries
         public static string Favourites = "Favourites";
         public static string updateMI = "Update Mediainfo of local file(s)";
         public static string insertDisk = "Please insert Disk";
-
+        public static string OK = "OK";
+        public static string Cancel = "Cancel";
+        public static string Ignore = "Ignore";
+        // ChooseFromSelectionDescriptor
+        public static string CFS_Choose_Item = "Choose item";
+        public static string CFS_Select_Matching_Item = "Select matching item:";
+        public static string CFS_Search_Again = "Search again";
+        public static string CFS_Select_Matching_Subitle_File = "Select Matching Subtitle File";
+        public static string CFS_Subtitle_Episode = "Episode:";
+        public static string CFS_Matching_Subtitles = "Matching Subtitles";
+        public static string CFS_Choose_Correct_Series = "Choose Correct Series";
+        public static string CFS_Local_Series  = "Local Series";
+        public static string CFS_Available_Series = "Available Series";
+        public static string CFS_Select_Correct_Subtitle_Version = "Select desired subtitles version";
+        public static string CFS_Select_Version = "Version:";
+        public static string CFS_Choose_Correct_Episode = "Choose Corret Episode";
+        public static string CFS_Local_Episode_Index = "Local Episiode index:";
+        public static string CFS_Available_Episode_List = "Available Episode list:";
+        public static string CFS_Choose_Search_Site = "Choose search site:";
+        public static string CFS_List_Search_Site = "List of search sites:";
+        public static string CFS_Found_Torrents = "Found torrents:";
+        public static string CFS_Looking_For = "Looking for:";
+        public static string CFS_Choose_Correct_Season = "Choose correct season";
+        public static string CFS_Local_Season_Index = "Local Season index:";
+        public static string CFS_Available_Seasons = "Available Seasons list:";
+        // ChooseYesNoDescriptor
+        public static string CYN_Subtitle_File_Replace = "Subtitle File Replace";
+        public static string CYN_Old_Subtitle_Replace = "Old subtitle File present: overwrite?";
 
         #endregion
 
@@ -181,5 +208,6 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
+
 
 

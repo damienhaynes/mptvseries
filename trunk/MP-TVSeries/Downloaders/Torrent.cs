@@ -71,11 +71,11 @@ namespace WindowPlugins.GUITVSeries.Torrent
             foreach (DBTorrentSearch torrentSearch in DBTorrentSearch.Get())
                 Choices.Add(new Feedback.CItem(torrentSearch[DBTorrentSearch.cID], String.Empty, torrentSearch));
 
-            Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
-            descriptor.m_sTitle = "Choose search site:";
+            Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
+            descriptor.m_sTitle = Translation.CFS_Choose_Search_Site;
             descriptor.m_sItemToMatchLabel = "";
             descriptor.m_sItemToMatch = "";
-            descriptor.m_sListLabel = "List of search sites:";
+            descriptor.m_sListLabel = Translation.CFS_List_Search_Site;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 
@@ -190,11 +190,11 @@ namespace WindowPlugins.GUITVSeries.Torrent
 
                     Choices.Add(new Feedback.CItem(sName + " (" + match.m_sSize + ") - " + match.m_nSeeds + " / " + match.m_nLeechers, String.Empty, match));
                 }
-                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
-                descriptor.m_sTitle = "Found torrents:";
-                descriptor.m_sItemToMatchLabel = "Looking for:";
+                Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
+                descriptor.m_sTitle = Translation.CFS_Found_Torrents;
+                descriptor.m_sItemToMatchLabel = Translation.CFS_Looking_For;
                 descriptor.m_sItemToMatch = String.Format("{0} {1}x{2:D2}", sSeries, m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
-                descriptor.m_sListLabel = "Found torrents:";
+                descriptor.m_sListLabel = Translation.CFS_Found_Torrents;
                 descriptor.m_List = Choices;
                 descriptor.m_sbtnIgnoreLabel = String.Empty;
 

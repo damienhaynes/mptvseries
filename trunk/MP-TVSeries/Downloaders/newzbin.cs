@@ -292,7 +292,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
 //                             sDesc += s + " / ";
                         Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + (match.m_sLanguage.ToLower() != "english"?("/" + match.m_sLanguage):"") + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
                     }
-                    Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                    Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                     descriptor.m_sTitle = "Found reports:";
                     descriptor.m_sItemToMatchLabel = "Looking for:";
                     descriptor.m_sItemToMatch = String.Format("{0} {1}x{2:D2}", sSeries, m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);

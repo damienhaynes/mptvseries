@@ -435,7 +435,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Details.Name = "tabControl_Details";
             this.tabControl_Details.SelectedIndex = 0;
-            this.tabControl_Details.Size = new System.Drawing.Size(949, 583);
+            this.tabControl_Details.Size = new System.Drawing.Size(692, 544);
             this.tabControl_Details.TabIndex = 0;
             this.tabControl_Details.SelectedIndexChanged += new System.EventHandler(this.tabControl_Details_SelectedIndexChanged);
             // 
@@ -444,7 +444,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_Details.Controls.Add(this.splitContainer2);
             this.tabPage_Details.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Details.Name = "tabPage_Details";
-            this.tabPage_Details.Size = new System.Drawing.Size(941, 557);
+            this.tabPage_Details.Size = new System.Drawing.Size(684, 518);
             this.tabPage_Details.TabIndex = 2;
             this.tabPage_Details.Text = "Details";
             this.tabPage_Details.UseVisualStyleBackColor = true;
@@ -467,8 +467,8 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_Series);
             this.splitContainer2.Panel2.Controls.Add(this.comboBox_BannerSelection);
             this.splitContainer2.Panel2.Controls.Add(this.panDBLocation);
-            this.splitContainer2.Size = new System.Drawing.Size(941, 557);
-            this.splitContainer2.SplitterDistance = 266;
+            this.splitContainer2.Size = new System.Drawing.Size(684, 518);
+            this.splitContainer2.SplitterDistance = 193;
             this.splitContainer2.TabIndex = 0;
             // 
             // treeView_Library
@@ -505,35 +505,35 @@ namespace WindowPlugins.GUITVSeries
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
             // 
@@ -541,7 +541,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.checkBox_ShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_ShowHidden.AutoSize = true;
-            this.checkBox_ShowHidden.Location = new System.Drawing.Point(3, 537);
+            this.checkBox_ShowHidden.Location = new System.Drawing.Point(3, 498);
             this.checkBox_ShowHidden.Name = "checkBox_ShowHidden";
             this.checkBox_ShowHidden.Size = new System.Drawing.Size(118, 17);
             this.checkBox_ShowHidden.TabIndex = 1;
@@ -598,7 +598,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(671, 387);
+            this.dataGridView1.Size = new System.Drawing.Size(487, 348);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -634,7 +634,7 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series.InitialImage = null;
             this.pictureBox_Series.Location = new System.Drawing.Point(0, 46);
             this.pictureBox_Series.Name = "pictureBox_Series";
-            this.pictureBox_Series.Size = new System.Drawing.Size(671, 128);
+            this.pictureBox_Series.Size = new System.Drawing.Size(487, 128);
             this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Series.TabIndex = 147;
             this.pictureBox_Series.TabStop = false;
@@ -646,7 +646,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_BannerSelection.FormattingEnabled = true;
             this.comboBox_BannerSelection.Location = new System.Drawing.Point(0, 25);
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
-            this.comboBox_BannerSelection.Size = new System.Drawing.Size(671, 21);
+            this.comboBox_BannerSelection.Size = new System.Drawing.Size(487, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
             this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
             this.comboBox_BannerSelection.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox_BannerSelection_KeyPress);
@@ -660,7 +660,7 @@ namespace WindowPlugins.GUITVSeries
             this.panDBLocation.Dock = System.Windows.Forms.DockStyle.Top;
             this.panDBLocation.Location = new System.Drawing.Point(0, 0);
             this.panDBLocation.Name = "panDBLocation";
-            this.panDBLocation.Size = new System.Drawing.Size(671, 25);
+            this.panDBLocation.Size = new System.Drawing.Size(487, 25);
             this.panDBLocation.TabIndex = 0;
             // 
             // textBox_dblocation
@@ -670,7 +670,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_dblocation.Location = new System.Drawing.Point(179, 2);
             this.textBox_dblocation.Name = "textBox_dblocation";
             this.textBox_dblocation.ReadOnly = true;
-            this.textBox_dblocation.Size = new System.Drawing.Size(410, 20);
+            this.textBox_dblocation.Size = new System.Drawing.Size(226, 20);
             this.textBox_dblocation.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.textBox_dblocation, "The Database Path used by MP-TVSeries to store all TV information and settings fo" +
                     "r this plugin");
@@ -679,7 +679,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lblClearDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblClearDB.AutoSize = true;
-            this.lblClearDB.Location = new System.Drawing.Point(627, 5);
+            this.lblClearDB.Location = new System.Drawing.Point(443, 5);
             this.lblClearDB.Name = "lblClearDB";
             this.lblClearDB.Size = new System.Drawing.Size(36, 13);
             this.lblClearDB.TabIndex = 3;
@@ -691,7 +691,7 @@ namespace WindowPlugins.GUITVSeries
             // button_dbbrowse
             // 
             this.button_dbbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_dbbrowse.Location = new System.Drawing.Point(595, 0);
+            this.button_dbbrowse.Location = new System.Drawing.Point(411, 0);
             this.button_dbbrowse.Name = "button_dbbrowse";
             this.button_dbbrowse.Size = new System.Drawing.Size(26, 23);
             this.button_dbbrowse.TabIndex = 2;
@@ -715,7 +715,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_Import.Controls.Add(this.splitContainer_SettingsOutput);
             this.tabPage_Import.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Import.Name = "tabPage_Import";
-            this.tabPage_Import.Size = new System.Drawing.Size(941, 557);
+            this.tabPage_Import.Size = new System.Drawing.Size(684, 518);
             this.tabPage_Import.TabIndex = 4;
             this.tabPage_Import.Text = "Import Settings";
             this.tabPage_Import.UseVisualStyleBackColor = true;
@@ -738,8 +738,8 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.progressBar_Parsing);
             this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.button_Start);
             this.splitContainer_SettingsOutput.Panel2MinSize = 30;
-            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(941, 557);
-            this.splitContainer_SettingsOutput.SplitterDistance = 498;
+            this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(684, 518);
+            this.splitContainer_SettingsOutput.SplitterDistance = 463;
             this.splitContainer_SettingsOutput.TabIndex = 157;
             this.splitContainer_SettingsOutput.TabStop = false;
             // 
@@ -763,7 +763,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ParsingTest);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
             this.splitContainerImportSettings.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerImportSettings_Panel2_Paint);
-            this.splitContainerImportSettings.Size = new System.Drawing.Size(941, 498);
+            this.splitContainerImportSettings.Size = new System.Drawing.Size(684, 463);
             this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
             // 
@@ -772,7 +772,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Settings.Location = new System.Drawing.Point(0, 0);
             this.treeView_Settings.Name = "treeView_Settings";
-            this.treeView_Settings.Size = new System.Drawing.Size(151, 498);
+            this.treeView_Settings.Size = new System.Drawing.Size(151, 463);
             this.treeView_Settings.TabIndex = 0;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
             // 
@@ -1311,7 +1311,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(768, 9);
+            this.label11.Location = new System.Drawing.Point(511, 9);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(57, 13);
             this.label11.TabIndex = 7;
@@ -1325,7 +1325,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_debuglevel.Items.AddRange(new object[] {
             "Normal",
             "Debug (huge!)"});
-            this.comboBox_debuglevel.Location = new System.Drawing.Point(831, 5);
+            this.comboBox_debuglevel.Location = new System.Drawing.Point(574, 5);
             this.comboBox_debuglevel.Name = "comboBox_debuglevel";
             this.comboBox_debuglevel.Size = new System.Drawing.Size(99, 21);
             this.comboBox_debuglevel.TabIndex = 6;
@@ -1337,7 +1337,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar_Parsing.Location = new System.Drawing.Point(111, 6);
             this.progressBar_Parsing.Name = "progressBar_Parsing";
-            this.progressBar_Parsing.Size = new System.Drawing.Size(642, 20);
+            this.progressBar_Parsing.Size = new System.Drawing.Size(385, 20);
             this.progressBar_Parsing.TabIndex = 3;
             // 
             // button_Start
@@ -1365,7 +1365,7 @@ namespace WindowPlugins.GUITVSeries
             this.tab_view.Location = new System.Drawing.Point(4, 22);
             this.tab_view.Name = "tab_view";
             this.tab_view.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_view.Size = new System.Drawing.Size(941, 557);
+            this.tab_view.Size = new System.Drawing.Size(684, 518);
             this.tab_view.TabIndex = 7;
             this.tab_view.Text = "Views";
             this.tab_view.UseVisualStyleBackColor = true;
@@ -2016,7 +2016,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 22);
             this.tabPage_MP_DisplayControl.Name = "tabPage_MP_DisplayControl";
             this.tabPage_MP_DisplayControl.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(941, 557);
+            this.tabPage_MP_DisplayControl.Size = new System.Drawing.Size(684, 518);
             this.tabPage_MP_DisplayControl.TabIndex = 5;
             this.tabPage_MP_DisplayControl.Text = "MediaPortal Display Control";
             this.tabPage_MP_DisplayControl.UseVisualStyleBackColor = true;
@@ -2828,7 +2828,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabpage_Extra.Location = new System.Drawing.Point(4, 22);
             this.tabpage_Extra.Name = "tabpage_Extra";
             this.tabpage_Extra.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpage_Extra.Size = new System.Drawing.Size(941, 557);
+            this.tabpage_Extra.Size = new System.Drawing.Size(684, 518);
             this.tabpage_Extra.TabIndex = 6;
             this.tabpage_Extra.Text = "Extras";
             this.tabpage_Extra.UseVisualStyleBackColor = true;
@@ -2852,8 +2852,8 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
-            this.splitContainer_treeextra.Size = new System.Drawing.Size(935, 551);
-            this.splitContainer_treeextra.SplitterDistance = 234;
+            this.splitContainer_treeextra.Size = new System.Drawing.Size(678, 512);
+            this.splitContainer_treeextra.SplitterDistance = 169;
             this.splitContainer_treeextra.TabIndex = 5;
             // 
             // treeView_Extra
@@ -2861,7 +2861,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Extra.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Extra.Location = new System.Drawing.Point(0, 0);
             this.treeView_Extra.Name = "treeView_Extra";
-            this.treeView_Extra.Size = new System.Drawing.Size(234, 551);
+            this.treeView_Extra.Size = new System.Drawing.Size(169, 512);
             this.treeView_Extra.TabIndex = 0;
             this.treeView_Extra.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Extra_AfterSelect);
             // 
@@ -2895,7 +2895,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.Controls.Add(this.textbox_NewzbinPassword);
             this.panel_newssearch.Controls.Add(this.textBox_NewzbinLogin);
             this.panel_newssearch.Controls.Add(this.textBox_NewsSearchUrl);
-            this.panel_newssearch.Location = new System.Drawing.Point(8, 222);
+            this.panel_newssearch.Location = new System.Drawing.Point(8, 286);
             this.panel_newssearch.Name = "panel_newssearch";
             this.panel_newssearch.Size = new System.Drawing.Size(480, 410);
             this.panel_newssearch.TabIndex = 2;
@@ -3189,7 +3189,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.Controls.Add(this.textBox_NewsDownloadPath);
             this.panel_newsroot.Controls.Add(this.label30);
             this.panel_newsroot.Controls.Add(this.textBox_newsleecher);
-            this.panel_newsroot.Location = new System.Drawing.Point(30, 130);
+            this.panel_newsroot.Location = new System.Drawing.Point(262, 221);
             this.panel_newsroot.Name = "panel_newsroot";
             this.panel_newsroot.Size = new System.Drawing.Size(226, 59);
             this.panel_newsroot.TabIndex = 5;
@@ -3261,7 +3261,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.Controls.Add(this.button_uTorrentBrowse);
             this.panel_torrentroot.Controls.Add(this.label19);
             this.panel_torrentroot.Controls.Add(this.textBox_uTorrentPath);
-            this.panel_torrentroot.Location = new System.Drawing.Point(30, 79);
+            this.panel_torrentroot.Location = new System.Drawing.Point(30, 221);
             this.panel_torrentroot.Name = "panel_torrentroot";
             this.panel_torrentroot.Size = new System.Drawing.Size(226, 45);
             this.panel_torrentroot.TabIndex = 4;
@@ -3616,9 +3616,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
-            this.button1.Location = new System.Drawing.Point(0, 583);
+            this.button1.Location = new System.Drawing.Point(0, 544);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(949, 14);
+            this.button1.Size = new System.Drawing.Size(692, 14);
             this.button1.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
                     "ing progress of Import");
@@ -3644,7 +3644,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitMain_Log.Panel2.Controls.Add(this.listBox_Log);
             this.splitMain_Log.Panel2.Padding = new System.Windows.Forms.Padding(10);
             this.splitMain_Log.Panel2Collapsed = true;
-            this.splitMain_Log.Size = new System.Drawing.Size(949, 597);
+            this.splitMain_Log.Size = new System.Drawing.Size(692, 558);
             this.splitMain_Log.SplitterDistance = 382;
             this.splitMain_Log.SplitterWidth = 1;
             this.splitMain_Log.TabIndex = 65;
@@ -3662,7 +3662,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(949, 597);
+            this.ClientSize = new System.Drawing.Size(692, 558);
             this.Controls.Add(this.splitMain_Log);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 450);
