@@ -330,15 +330,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            // get the online languages from the interface
-            onlineLanguages.AddRange(new GetLanguages().languages);
-            int selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
-            foreach (Language lang in onlineLanguages)
-            {
-                comboOnlineLang.Items.Add(lang.language);
-                if (lang.id == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
-            }
-
+            
             LoadViews();
 
             txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
@@ -3091,6 +3083,19 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_altImage_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAltImgLoading, checkBox_altImage.Checked);
+        }
+
+        private void comboOnlineLang_DropDown(object sender, EventArgs e)
+        {
+            if (onlineLanguages.Count != 0) return;
+            // get the online languages from the interface
+            onlineLanguages.AddRange(new GetLanguages().languages);
+            int selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
+            foreach (Language lang in onlineLanguages)
+            {
+                comboOnlineLang.Items.Add(lang.language);
+                if (lang.id == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+            }
         }
 
     }
