@@ -807,7 +807,7 @@ namespace WindowPlugins.GUITVSeries
                             foreach (string orderOption in episodeOrders)
                                 Choices.Add(new Feedback.CItem(orderOption, helpText, orderOption));
 
-                            Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                            Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                             descriptor.m_sTitle = "Multiple ordering Options detected";
                             descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
                             descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
@@ -885,7 +885,7 @@ namespace WindowPlugins.GUITVSeries
                 if (Choices.Count == 0)
                     Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));
 
-                Feedback.CDescriptor descriptor = new Feedback.CDescriptor();
+                Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                 descriptor.m_sTitle = "Unable to find matching series";
                 descriptor.m_sItemToMatchLabel = "Local series:";
                 descriptor.m_sItemToMatch = nameToSearch;

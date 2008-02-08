@@ -59,65 +59,31 @@
 	<string Field="Unwatched" Original="Unwatched">Non visti</string>
 	<string Field="Favourites" Original="Favourites">Preferiti</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Aggiornare le informazioni multimediali di un contenuto locale</string>
-</strings>
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- MP-TV-Series translation file -->
-<!-- Italian (Italiano) -->
-<!-- Note: English is the fallback for any strings not found in other languages -->
-
-<strings>
-	<string Field="Series" Original="Series">Serie</string>
-	<string Field="Series_Plural" Original="Series (Plr)">Serie</string> <!-- plural -->
-	<string Field="Season" Original="Season">Stagione</string>
-	<string Field="Seasons" Original="Seasons">Stagioni</string>
-	<string Field="Episode" Original="Episode">Episodio</string>
-	<string Field="Episodes" Original="Episodes">Episodi</string>
-	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Segnare come visto</string>
-	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Scaricare i sottotitoli</string>
-	<string Field="Load_via_Torrent" Original="Load via Torrent">Scaricare da Torrent</string>
-	<string Field="Mark_all_as_watched" Original="Mark all as watched">Segnare tutti come visti</string>
-	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Segnare tutti come da vedere</string>
-	<string Field="Hide" Original="Hide">Nascondere</string>
-	<string Field="Delete" Original="Delete">Cancellare</string>
-	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Rimuovere la serie dai preferiti</string>
-	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Aggiungere la serie ai preferiti</string>
-	<string Field="Force_Local_Scan" Original="Force Local Scan ">Forzare aggiornamento per i contenuti locali</string>
-	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forzare aggiornamento per i contenuti on-line</string>
-	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(Attendere...)</string>
-	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Attiva solo gli episodi disponibili in locale</string>
-	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Nascondi il riassunto degli episodi non visti</string>
-	<string Field="on" Original="on">on</string>
-	<string Field="off" Original="off">off</string>
-	<string Field="Play_Random_Episode" Original="Play Random Episode">Riproduci causalmente</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Riproduci un episodio non visto</string>
-	<string Field="Delete_that_series" Original="Delete that series?">Rimuovere la serie?</string>
-	<string Field="Delete_that_season" Original="Delete that season?">Rimuovere la stagione</string>
-	<string Field="Delete_that_episode" Original="Delete that episode?">Rimuovere l'episodio</string>
-	<string Field="Confirm" Original="Confirm">Confermare</string>
-	<string Field="Completed" Original="Completed">Completato</string>
-	<string Field="No_subtitles_found" Original="No subtitles found">Nessun sottotitolo disponibile</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Salta / Non chiedere più</string>
-	<string Field="no_results_found" Original="no results found!">Nessun risultato trovato</string>
-	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Nascosto per evitare le spoilerate * *</string>
-	<string Field="Yes" Original="Yes">Si</string>
-	<string Field="No" Original="No">No</string>
-	<string Field="Error" Original="#Error">#Errore</string>
-	<string Field="No_items" Original="No items!">Nessun elemento!</string>
-	<string Field="Unknown" Original="Unknown">Sconosciuto</string>
-	<string Field="wrongSkin" Original="Wrong Skin file">Skin non disponibile</string>
-	<string Field="special" Original="Special">Speciale</string>
-	<string Field="specials" Original="Specials">Speciali</string>
-	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Vuoi cancellare in modo definitivo {0} file(s).\nVuoi continuare?"</string>
-	<string Field="Force_Online_Match" Original="Force Online Match">Forzare corrispondenza on-line</string>
-	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Scaricare da NewsLeecher</string>
-	<string Field="Download" Original="Download">Download</string>
-	<string Field="Actions" Original="Actions">Azioni</string>
-	<string Field="Options" Original="Options">Opzioni</string>
-	<string Field="Genres" Original="Genres">Generi</string>
-	<string Field="All" Original="All">Tutti</string>
-	<string Field="Latest" Original="Latest">Recenti</string>
-	<string Field="Channels" Original="Channels">Canali</string>
-	<string Field="Unwatched" Original="Unwatched">Non visti</string>
-	<string Field="Favourites" Original="Favourites">Preferiti</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Aggiornare le informazioni multimediali di un contenuto locale</string>
+	<string Field="OK" Original="OK">OK</string>
+	<string Field="Cancel" Original="Cancel">Cancella</string>
+	<string Field="Ignore" Original="Ignore">Ignora</string>
+	<!-- Feedback.ChooseFromSelectionDescriptor -->
+	<string Field="CFS_Choose_Item" Original="Choose item">Seleziona l'elemento</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Seleziona l'elemento corretto:</string>
+	<string Field="CFS_Search_Again" Original="Search Again">Cerca nuovamente</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Seleziona il sottotitolo corretto</string>
+	<string Field="CFS_Subtitle_Episode" Original="Episode:">Episodio:</string>
+	<string Field="CFS_Matching_Subtitles" Original="Matching subtitles">Sottotitoli disponibili</string>
+	<string Field="CFS_Local_Series" Original="Local series">Serie scaricate in locale</string>
+	<string Field="CFS_Available_Series" Original="Available Series">Serie disponibili</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles Version">Seleziona la versione dei sottitoli corretti</string>
+	<string Field="CFS_Select_Version" Original="Version:">Versione:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose correct Episode">Seleziona l&quot;episodio corretto</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Numero di episodio scaricato in locale:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Lista episodi disponibili:</string>
+	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Scegli in sito per la ricerca:</string>
+	<string Field="CFS_List_Search_Site" Original="List of search sites:">Lista dei siti per le ricerche disponibili:</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">Torrent trovati:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">Ricerca:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season:">Seleziona la stagione corretta</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Episiode index:">Numero di stagione scaricata:</string>
+	<string Field="CFS_Available_Seasons" Original="Available seasons list:">Lista delle stagioni disponibili:</string>
+	<!-- Feedback.ChooseYesNoDescriptor -->
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle file replace">Sovrascrittura del file di sottititoli</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Trovato un file di sottititoli: lo vuoi sovrascrivere?</string>
 </strings>

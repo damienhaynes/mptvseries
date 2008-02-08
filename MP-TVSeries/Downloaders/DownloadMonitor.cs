@@ -324,7 +324,7 @@ namespace WindowPlugins.GUITVSeries.Download
                                 Choices.Add(new CItem(match.Value.onlineEpisode.CompleteTitle, String.Empty, match.Value));
                             }
 
-                            CDescriptor descriptor = new CDescriptor();
+                            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
                             descriptor.m_sTitle = "What is this file?";
                             descriptor.m_sItemToMatchLabel = "filename:";
                             descriptor.m_sItemToMatch = System.IO.Path.GetFileNameWithoutExtension(result.match_filename);

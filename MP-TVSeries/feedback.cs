@@ -47,33 +47,51 @@ namespace WindowPlugins.GUITVSeries.Feedback
         }
     };
 
-    public class CDescriptor
+    public class ChooseFromSelectionDescriptor
     {
-        public String m_sTitle = "Choose item";             // dialog title (if possible)
-        public String m_sItemToMatchLabel = "Looking for:";  // label of the thing to match
-        public String m_sItemToMatch = String.Empty;       // the thing to match
-        public String m_sListLabel = "Select matching item:";         // label of the list
-        public List<CItem> m_List;  // the list items (names + descriptions)
+        public String m_sTitle = Translation.CFS_Choose_Item;              // dialog title (if possible)
+        public String m_sItemToMatchLabel = Translation.CFS_Looking_For;   // label of the thing to match
+        public String m_sItemToMatch = String.Empty;                       // the thing to match
+        public String m_sListLabel = Translation.CFS_Select_Matching_Item; // label of the list
+        public List<CItem> m_List;                                         // the list items (names + descriptions)
 
         // buttons: no label => no button shown
-        public String m_sbtnOKLabel = "Ok";
-        public String m_sbtnOKLabelAlternate = "Search Again";
-        public String m_sbtnCancelLabel = "Cancel";
-        public String m_sbtnIgnoreLabel = "Ignore";
+        public String m_sbtnOKLabel = Translation.OK;
+        public String m_sbtnOKLabelAlternate = Translation.CFS_Search_Again;
+        public String m_sbtnCancelLabel = Translation.Cancel;
+        public String m_sbtnIgnoreLabel = Translation.Ignore;
 
-        public bool m_useRadioToSelect = false; // just looks nicer for instance for OrderOption, ignored inside MP
-        public bool m_allowAlter = true; // if true user will be able to alter what was searched for
+        public bool m_useRadioToSelect = false;                            // just looks nicer for instance for OrderOption, ignored inside MP
+        public bool m_allowAlter = true;                                   // if true user will be able to alter what was searched for 
     };
+
+    public class ChooseFromYesNoDescriptor
+    {
+        public String m_sTitle = Translation.CFS_Choose_Item;              // dialog title (if possible)
+        public String m_sLabel = Translation.CFS_Looking_For;              // label of the thing to mat
+        public DialogButtons m_dialogButtons = DialogButtons.OK;
+        public ReturnCode m_dialogDefaultButton = ReturnCode.OK;
+    }
+
+    public enum DialogButtons
+    {
+        OK,
+        YesNo,
+        YesNoCancel
+    }
 
     public enum ReturnCode
     {
         OK,
+        Yes,
+        No,
         Cancel,
         Ignore,
         NotReady
     }
     public interface Interface
     {
-        ReturnCode ChooseFromSelection(CDescriptor descriptor, out CItem selected);
+        ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected);
+        ReturnCode YesNoOkDialog(ChooseFromYesNoDescriptor descriptor);
     }
 }
