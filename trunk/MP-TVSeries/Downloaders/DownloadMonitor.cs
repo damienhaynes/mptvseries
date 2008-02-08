@@ -98,21 +98,24 @@ namespace WindowPlugins.GUITVSeries.Download
             m_feedback = feedback;
             List<String> watchedFolders = new List<String>();
             watchedFolders.Add(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath));
+            if (watchedFolders.Count > 0 && watchedFolders[0] != string.Empty) //path not set
+            {
 
-            m_watcherUpdater = new Watcher(watchedFolders);
-            m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(m_watcherUpdater_WatcherProgress);
-            m_watcherUpdater.StartFolderWatch();
+                m_watcherUpdater = new Watcher(watchedFolders);
+                m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(m_watcherUpdater_WatcherProgress);
+                m_watcherUpdater.StartFolderWatch();
 
-            SQLCondition setcondition = new SQLCondition();
-            setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
-            m_DownloadingEpisodes = DBEpisode.Get(setcondition);
+                SQLCondition setcondition = new SQLCondition();
+                setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
+                m_DownloadingEpisodes = DBEpisode.Get(setcondition);
 
-            // full scan of the download folders, then monitor new files 
-            m_ActionQueue.Add(new CMonitorParameters());
+                // full scan of the download folders, then monitor new files 
+                m_ActionQueue.Add(new CMonitorParameters());
 
-            // timer check every 10 seconds
-            m_timerDelegate = new TimerCallback(Clock);
-            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 10000, 10000);
+                // timer check every 10 seconds
+                m_timerDelegate = new TimerCallback(Clock);
+                m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 10000, 10000);
+            }
         }
 
         public static void AddPendingDownload(List<String> sSubjectNames, DBEpisode episode)
