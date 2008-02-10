@@ -105,6 +105,11 @@ namespace WindowPlugins.GUITVSeries
 
         static DBView()
         {
+            fillDefaults();
+        }
+
+        public static void fillDefaults()
+        {
             DBView dummy = new DBView();
 
             DBView[] views = DBView.getAll(true);
@@ -117,7 +122,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "1";
                 view[cTransToken] = "All";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"series<;><;><Series.Pretty_Name>;asc<;>" +
+                view[cViewConfig] = @"series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view.Commit();
@@ -128,7 +133,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "3";
                 view[cTransToken] = "Favourites";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><Series.Pretty_Name>;asc<;>" +
+                view[cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view.Commit();
@@ -139,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "2";
                 view[cTransToken] = "Unwatched";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><Series.Pretty_Name>;asc<;>" +
+                view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><;>" +
                                     "<nextStep>season<;>;;<;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view.Commit();
@@ -151,7 +156,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cTransToken] = "Channels";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Network><;><;><;>15" +
-                                    "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
+                                    "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view.Commit();
@@ -163,7 +168,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cTransToken] = "Genres";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Genre><;><;><;>15" +
-                                    "<nextStep>series<;><;><Series.Pretty_Name>;asc<;>" +
+                                    "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view.Commit();
