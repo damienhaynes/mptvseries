@@ -3098,6 +3098,13 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void lnkResetView_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DBView.ClearAll();
+            DBView.fillDefaults();
+            LoadViews();
+        }
+
     }
 
     public class BannerComboItem
