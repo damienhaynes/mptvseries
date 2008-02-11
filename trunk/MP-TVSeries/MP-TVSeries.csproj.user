@@ -10,5 +10,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartAction>Program</StartAction>
     <StartProgram>h:\MP2\xbmc\bin\Release\Configuration.exe</StartProgram>
+    <StartWorkingDirectory>h:\MP2\xbmc\bin\Release</StartWorkingDirectory>
   </PropertyGroup>
 </Project>

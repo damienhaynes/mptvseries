@@ -34,6 +34,7 @@ namespace WindowPlugins.GUITVSeries
         public enum Path
         {
             log,
+            logBackup,
             database,
             banners,
             lang,
@@ -44,6 +45,7 @@ namespace WindowPlugins.GUITVSeries
 
         #region Path Vars
         static string logPath = string.Empty;
+        static string backupLogPath = string.Empty;
         static string dbPath = string.Empty;
         static string bannersPath = string.Empty;
         static string langPath = string.Empty;
@@ -53,9 +55,9 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Vars
-        static string _executingAssembly = Assembly.GetEntryAssembly().Location;
-        static bool _isConfig = System.IO.Path.GetFileNameWithoutExtension(ExecutingAssembly).Equals("configuration", StringComparison.InvariantCultureIgnoreCase);        
-        static string _version = Assembly.GetCallingAssembly().GetName().Version.ToString();
+        static Assembly _entryAssembly = Assembly.GetEntryAssembly();
+        static bool _isConfig = System.IO.Path.GetFileNameWithoutExtension(EntryAssembly.Location).Equals("configuration", StringComparison.InvariantCultureIgnoreCase);        
+        static Version _version = Assembly.GetCallingAssembly().GetName().Version;
         static DateTime _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
         static string _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
         #endregion
@@ -85,6 +87,7 @@ namespace WindowPlugins.GUITVSeries
 
             // we respect overall MP settings which can be optinally defined
             logPath = Config.GetFile(Config.Dir.Log, "MP-TVSeries.log");
+            backupLogPath = Config.GetFile(Config.Dir.Log, "MP-TVSeries.bak");
             bannersPath = Config.GetSubFolder(Config.Dir.Thumbs, "MPTVSeriesBanners");
             langPath = Config.GetSubFolder(Config.Dir.Language, "MP-TVSeries");
             thumbsPath = Config.GetFolder(Config.Dir.Thumbs);
@@ -94,13 +97,22 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Properties
-        public static string ExecutingAssembly
-        { get { return _executingAssembly; } }
+        /// <summary>
+        /// Gets the Assembly that loaded the Plugin (usually Mediaportal.exe or Configuration.exe)
+        /// </summary>
+        public static Assembly EntryAssembly
+        { get { return _entryAssembly; } }
 
+        /// <summary>
+        /// Gets a bool indicating wether or not the plugin has been loaded inside the configuration (checks EntryAssembly)
+        /// </summary>
         public static bool isConfig
         { get { return _isConfig; } }
 
-        public static string Version
+        /// <summary>
+        /// Gets a the Version of the Plugin
+        /// </summary>
+        public static Version Version
         { get { return _version; } }
 
         public static DateTime BuildDate
@@ -122,6 +134,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 case Path.log:
                     return logPath;
+                case Path.logBackup:
+                    return backupLogPath;
                 case Path.database:
                     return dbPath;
                 case Path.banners:
@@ -184,8 +198,7 @@ namespace WindowPlugins.GUITVSeries
 
             int secondsSince1970 = BitConverter.ToInt32(b, BitConverter.ToInt32(b, PeHeaderOffset) + LinkerTimestampOffset);
 
-            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
-            return date.AddSeconds(secondsSince1970);
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(secondsSince1970);
         }
 
         #endregion

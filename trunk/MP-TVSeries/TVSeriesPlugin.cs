@@ -67,7 +67,7 @@ namespace MediaPortal.GUI.Video
         // Returns the author of the plugin which is shown in the plugin menu
         public string Author()
         {
-            return "Zeflash & Inker";
+            return "Zeflash Inker";
         }
 
         // show the setup dialog

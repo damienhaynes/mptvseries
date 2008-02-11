@@ -71,6 +71,20 @@ namespace WindowPlugins.GUITVSeries
             m_filename += @"\MP-TVSeries.log";
             #endif
 
+            // let's rename the old one to .bak just like MP does
+            try
+            {
+                if (File.Exists(m_filename))
+                {
+                    string bgFile = Settings.GetPath(Settings.Path.logBackup);
+                    if (File.Exists(bgFile)) File.Delete(bgFile);
+                    File.Move(m_filename, Settings.GetPath(Settings.Path.logBackup));
+                }
+            }
+            catch (Exception e)
+            {
+                Write("Problem backing up Log file: " + e.Message);
+            }
             m_LogStream = File.CreateText(m_filename);
             m_LogStream.Close();
             m_LogStream.Dispose();
