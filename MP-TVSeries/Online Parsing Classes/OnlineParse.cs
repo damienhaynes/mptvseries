@@ -323,13 +323,14 @@ namespace WindowPlugins.GUITVSeries
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             m_bNoExactMatch = false;
             worker.ReportProgress(0);
-
+            string initialMsg = string.Empty; ;
             switch (m_params.m_action)
             {
                 case ParsingAction.List_Remove:
-                    MPTVSeriesLog.Write("***************************************************************************");
-                    MPTVSeriesLog.Write("*******************    List_Remove Starting     ***************************");
-                    MPTVSeriesLog.Write("***************************************************************************");
+                    initialMsg = "*******************    Remove Run Starting     ***************************";
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
+                    MPTVSeriesLog.Write(initialMsg);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
                     // should we remove deleted files?
                     if (!DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles))
                     {
@@ -416,23 +417,26 @@ namespace WindowPlugins.GUITVSeries
                     return;
 
                 case ParsingAction.List_Add:
-                    MPTVSeriesLog.Write("***************************************************************************");
-                    MPTVSeriesLog.Write("*******************       List_Add Starting     ***************************");
-                    MPTVSeriesLog.Write("***************************************************************************");
+                    initialMsg = "*******************       Add Run Starting     ***************************";
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
+                    MPTVSeriesLog.Write(initialMsg);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
                     ParseLocal(m_params.m_files);
                     break;
 
                 case ParsingAction.LocalScanNoExactMatch:
-                    MPTVSeriesLog.Write("***************************************************************************");
-                    MPTVSeriesLog.Write(String.Format("******************* LocalScanNoExactMatch Starting {0} - {1}   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan));
-                    MPTVSeriesLog.Write("***************************************************************************");
+                    initialMsg = String.Format("******************* NoExactMatch Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
+                    MPTVSeriesLog.Write(initialMsg);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
                     m_bNoExactMatch = true;
                     goto case ParsingAction.Full;
 
                 case ParsingAction.Full:
-                    MPTVSeriesLog.Write("***************************************************************************");
-                    MPTVSeriesLog.Write(String.Format("******************* Full Starting {0} - {1}   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan));
-                    MPTVSeriesLog.Write("***************************************************************************");
+                    initialMsg = String.Format("******************* Full Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
+                    MPTVSeriesLog.Write(initialMsg);
+                    MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
                     if (m_params.m_bLocalScan)
                     {
                         // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
@@ -587,6 +591,7 @@ namespace WindowPlugins.GUITVSeries
 
         void ParseLocal(List<PathPair> files)
         {
+            MPTVSeriesLog.Write(bigLogMessage("Gathering Local Information"));
             List<parseResult> parsedFiles = LocalParse.Parse(files, false);
             
             // don't process those already in DB
@@ -611,7 +616,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             UpdateStatus(updateStatusEps);
-            MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " found that sucessfully parsed and are not already in DB");
+            MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " local files found that sucessfully parsed and are not already in Database, now adding/upading Database");
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
             List<DBSeason> relatedSeasons = new List<DBSeason>();
@@ -1637,7 +1642,14 @@ namespace WindowPlugins.GUITVSeries
 
         string bigLogMessage(string msg)
         {
-            return string.Format("***********     {0}     ***********", msg);
+            return string.Format("***************     {0}     ***************", msg);
+        }
+
+        string prettyStars(int lenght)
+        {
+            StringBuilder b = new StringBuilder(lenght);
+            for (int i = 0; i < lenght; i++) b.Append('*');
+            return b.ToString();
         }
     }
 }

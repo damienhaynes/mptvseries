@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
         }
         public static List<parseResult> Parse(List<PathPair> files, bool includeFailed)
         {
-            MPTVSeriesLog.Write("ParseLocal starting, processing " + files.Count.ToString() + " files..." );
+            MPTVSeriesLog.Write(string.Format("Local Filename Parsing starting, processing {0} files...", files.Count.ToString()));
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
             int nFailed = 0;
