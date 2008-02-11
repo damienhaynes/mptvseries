@@ -138,6 +138,7 @@ namespace MediaPortal.GUI.Video
         private bool foromWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;
+        private bool m_bUpdateBanner = false;
         private string foromEnable = "0";
         private string remositoryEnable = "0";
 
@@ -1214,6 +1215,7 @@ namespace MediaPortal.GUI.Video
 
                             selectedSeason.Banner = selectedSeason.BannerList[nCurrent];
                             selectedSeason.Commit();
+                            m_bUpdateBanner = true;
                             LoadFacade();
                         }
                         break;
@@ -2126,7 +2128,7 @@ namespace MediaPortal.GUI.Video
 
             // with groups in episode view its possible the user never selected a series/season (flat view)
             // thus its desirable to display the series_banner and season banner on hover)
-            if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+            if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep) || m_bUpdateBanner)
             {
                 // it is the case
                 m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
@@ -2146,9 +2148,11 @@ namespace MediaPortal.GUI.Video
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
                 else clearGUIProperty(guiProperty.SeasonBanner);
+
+                m_bUpdateBanner = false;
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
-            pushFieldsToSkin(m_SelectedEpisode.onlineEpisode, "Episode");
+            pushFieldsToSkin(m_SelectedEpisode.onlineEpisode, "Episode");            
         }
 
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
