@@ -79,7 +79,8 @@ namespace WindowPlugins.GUITVSeries
             int.TryParse(DBOption.GetOptions("logLevel"), out level);
             selectedLogLevel = (LogLevel)level;
             pauseAutoWriteDB = true;
-            Write("MPTVSeries Build: " + Settings.Version);
+            Write("MPTVSeries Version: " + Settings.Version);
+            Write("MPTVSeries BuildDate: " + Settings.BuildDate);
         }
         #endregion
 

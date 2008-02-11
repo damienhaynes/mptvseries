@@ -28,12 +28,11 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(loadingDisplay));
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.series = new System.Windows.Forms.Label();
             this.season = new System.Windows.Forms.Label();
             this.episodes = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,18 +46,6 @@ namespace WindowPlugins.GUITVSeries
             this.label1.TabIndex = 0;
             this.label1.Text = "Please wait, loading your library...";
             this.label1.UseWaitCursor = true;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(560, 186);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.UseWaitCursor = true;
             // 
             // series
             // 
@@ -92,6 +79,18 @@ namespace WindowPlugins.GUITVSeries
             this.episodes.TabIndex = 5;
             this.episodes.Text = "label3";
             this.episodes.UseWaitCursor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.ErrorImage = null;
+            this.pictureBox1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(560, 148);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.UseWaitCursor = true;
             // 
             // loadingDisplay
             // 

@@ -122,5 +122,12 @@ namespace WindowPlugins.GUITVSeries.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap tv_series_logo {
+            get {
+                object obj = ResourceManager.GetObject("tv_series_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

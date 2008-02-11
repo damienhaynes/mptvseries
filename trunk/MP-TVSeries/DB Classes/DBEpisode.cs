@@ -175,11 +175,15 @@ namespace WindowPlugins.GUITVSeries
                 return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID])[DBOnlineSeries.cPrettyName] + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
             }
         }
+
+        /// <summary>
+        /// Returns a pretty String representation of this DBOnlineEpisode (Series - 1x01 - Pilot)
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return "[" + this[DBOnlineEpisode.cSeasonIndex] + "x" + 
-                         this[DBOnlineEpisode.cEpisodeIndex] + "] " + this[cEpisodeName];
-            //return this[DBOnlineEpisode.cCompositeID] + " - " + this[DBOnlineEpisode.cEpisodeIndex];
+            DBSeries s = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            return string.Format("{0} - {1}x{2} - {3}", (s == null ? string.Empty : s[DBOnlineSeries.cPrettyName].ToString()), this[DBOnlineEpisode.cSeasonIndex], this[DBOnlineEpisode.cEpisodeIndex], this[cEpisodeName]);
         }
     };
 
@@ -937,9 +941,15 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
+        /// <summary>
+        /// If the episode contains an OnlineEpisode returns it's ToString() result
+        /// </summary>
+        /// <returns>"series.toString() - 1x01" or OnlineEpisode.ToString() result</returns>
         public override string ToString()
         {
-            return this[DBEpisode.cCompositeID];
+            if (this.m_onlineEpisode != null) return m_onlineEpisode.ToString();
+            DBSeries s = Helper.getCorrespondingSeries(this[DBEpisode.cSeriesID]);
+            return string.Format("{0} - {1}x{2}", (s == null ? "(" + this[DBEpisode.cSeriesID] + ")" : s.ToString()), this[DBEpisode.cSeasonIndex], this[DBEpisode.cEpisodeIndex]);
         }
 
         public static void Clear(SQLCondition conditions)

@@ -84,6 +84,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="cache.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
@@ -189,6 +195,10 @@
     <Compile Include="view.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExpressionBuilder.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
@@ -244,7 +254,7 @@
     <Content Include="img\television_add.png" />
     <Content Include="img\television_add_unlisted.png" />
     <Content Include="img\textfield_rename.png" />
-    <None Include="Resources\info_i.png" />
+    <None Include="Resources\tv_series_logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />

@@ -109,6 +109,8 @@ namespace WindowPlugins.GUITVSeries
             LoadTree();
             if (load != null) load.Close();
             instance = this;
+
+            this.about1.setUpMPInfo(Settings.Version, Settings.BuildDate);
         }
 
         void ConfigurationForm_Resize(object sender, EventArgs e)
@@ -548,6 +550,7 @@ namespace WindowPlugins.GUITVSeries
             load.updateStats(seriesList.Count, altSeasonList.Count, 0);
             List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false);
             load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
+            about1.setUpLocalInfo(seriesList.Count, altSeasonList.Count, altEpList.Count);
             if (seriesList.Count == 0)
             {
                 load.Close();
