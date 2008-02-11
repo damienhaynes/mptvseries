@@ -55,7 +55,8 @@ namespace WindowPlugins.GUITVSeries
         #region Vars
         static string _executingAssembly = Assembly.GetEntryAssembly().Location;
         static bool _isConfig = System.IO.Path.GetFileNameWithoutExtension(ExecutingAssembly).Equals("configuration", StringComparison.InvariantCultureIgnoreCase);        
-        static string _version = Assembly.GetCallingAssembly().GetName().Version.ToString();        
+        static string _version = Assembly.GetCallingAssembly().GetName().Version.ToString();
+        static DateTime _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
         static string _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
         #endregion
 
@@ -101,6 +102,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static string Version
         { get { return _version; } }
+
+        public static DateTime BuildDate
+        { get { return _buildDate; } }
 
         public static string UserAgent
         { get { return _userAgent; } }
@@ -166,6 +170,24 @@ namespace WindowPlugins.GUITVSeries
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(dir))) 
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dir));
         }
+
+        private static DateTime getLinkerTimeStamp(string filePath)
+        {
+            const int PeHeaderOffset = 60;
+            const int LinkerTimestampOffset = 8;
+
+            byte[] b = new byte[2047];
+            using (System.IO.Stream s = new System.IO.FileStream(filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                s.Read(b, 0, 2047);
+            }
+
+            int secondsSince1970 = BitConverter.ToInt32(b, BitConverter.ToInt32(b, PeHeaderOffset) + LinkerTimestampOffset);
+
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+            return date.AddSeconds(secondsSince1970);
+        }
+
         #endregion
     }
 }

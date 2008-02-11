@@ -227,9 +227,13 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        /// <summary>
+        /// Returns PrettyName
+        /// </summary>
+        /// <returns>PrettyName</returns>
         public override string ToString()
         {
-            return this[cPrettyName]; // +" (" + this[cID] + ")";
+            return this[cPrettyName];
         }
     };
 
@@ -757,9 +761,18 @@ namespace WindowPlugins.GUITVSeries
             return null;
         }
 
+        /// <summary>
+        /// If Series contains an OnlineSeries, returns its ToString() instead
+        /// </summary>
+        /// <returns>ParsedName or OnlineSeries.ToString() result</returns>
         public override string ToString()
         {
-            return this[DBSeries.cID];
+            if (m_onlineSeries != null)
+            {
+                string pretty = m_onlineSeries.ToString();
+                if (!Helper.String.IsNullOrEmpty(pretty)) return pretty;
+            }
+            return this[DBSeries.cParsedName];
         }
 
         public static void UpdateUnWached(DBEpisode episode)

@@ -729,7 +729,7 @@ namespace WindowPlugins.GUITVSeries
 
         void GetSeries()
         {
-            MPTVSeriesLog.Write("*********  GetSeries - unknown series  *********");
+            MPTVSeriesLog.Write(bigLogMessage("Identifying Unknown Series Online"));
 
             SQLCondition condition = null;
             if (m_params.m_bUpdateScan)
@@ -753,9 +753,9 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
             if(seriesList.Count > 0)
-                MPTVSeriesLog.Write("Found " + seriesList.Count + " Series without an online ID, looking for them");
+                MPTVSeriesLog.Write(string.Format("Found {0} Unknown Series, attempting to identify them now...", seriesList.Count));
             else
-                MPTVSeriesLog.Write("No Series without an online ID found");
+                MPTVSeriesLog.Write("All Series are already identified.");
 
             foreach (DBSeries series in seriesList) {
                 if (worker.CancellationPending)
@@ -769,8 +769,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (UserChosenSeries != null) // make sure selection was not cancelled
                     {
-                    MPTVSeriesLog.Write(UserChosenSeries.ToString() + " " + UserChosenSeries[DBSeries.cID]);
-                    
                     // set the ID on the current series with the one from the chosen one
                     // we need to update all depending items - seasons & episodes
                     List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);
@@ -798,6 +796,7 @@ namespace WindowPlugins.GUITVSeries
                         series[DBOnlineSeries.cEpisodeOrders] = UserChosenSeries[DBOnlineSeries.cEpisodeOrders];
                         List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
                         if (episodeOrders.Count > 1) {
+                            MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", UserChosenSeries.ToString(), episodeOrders.Count));
                             // let the user choose
                             string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
                                               "Note that your file numbering must match the option you choose here." + Environment.NewLine +
@@ -862,16 +861,21 @@ namespace WindowPlugins.GUITVSeries
             while (true) {
                 // query online db for possible matches
                 GetSeries GetSeriesParser = new GetSeries(nameToSearch);
-                MPTVSeriesLog.Write("Found " + GetSeriesParser.Results.Count + " matching results for " + nameToSearch);
 
                 // try to find an exact match in our results, if found, return
                 if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1)
-                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
-                        if (onlineSeries[DBOnlineSeries.cStatus].ToString().Length > 0 &&
-                           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(nameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase))) {
+                {
+                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
+                    {
+                        if (!Helper.String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cStatus]) &&
+                           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase) || onlineSeries["SortName"].ToString().Trim().Equals(nameToSearch.Trim(), StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
                             return onlineSeries;
                         }
                     }
+                }
+                MPTVSeriesLog.Write(string.Format("Found {0} possible matches for \"{1}\"", GetSeriesParser.Results.Count, nameToSearch));
 
                 // User has three choices:
                 // 1) Pick a series from the list
@@ -902,9 +906,11 @@ namespace WindowPlugins.GUITVSeries
                     switch (result)
                     {
                         case Feedback.ReturnCode.Cancel:
+                            MPTVSeriesLog.Write("User cancelled Series Selection");
                             return null;
 
                         case Feedback.ReturnCode.Ignore:
+                            MPTVSeriesLog.Write("User chose to Ignore \"" + nameToSearch + "\" in the future");
                             nameToSearch = null;
                             DBSeries series = new DBSeries(seriesName);
                             series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
@@ -920,7 +926,10 @@ namespace WindowPlugins.GUITVSeries
                                 bKeepTrying = false;
                             }
                             else
+                            {
+                                MPTVSeriesLog.Write(string.Format("User matched \"{0}\" to \"{1}\" (SeriesID: {2})", nameToSearch, selectedSeries.ToString(), selectedSeries[DBOnlineSeries.cID]));
                                 return selectedSeries;
+                            }
                             break;
 
                         case Feedback.ReturnCode.NotReady:
@@ -931,6 +940,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
                     }
                 }
+                if (!bKeepTrying) MPTVSeriesLog.Write("User typed a new Search term: \"" + nameToSearch + "\"");
             }
         }
 
@@ -938,7 +948,7 @@ namespace WindowPlugins.GUITVSeries
         {
             long nGetEpisodesTimeStamp = 0;
 
-            MPTVSeriesLog.Write("*********  Starting GetEpisodes  *********");
+            MPTVSeriesLog.Write(bigLogMessage("Identifying unknown Episodes Online"));
             SQLCondition condition = null;
             if (m_params.m_bUpdateScan)
             {
@@ -957,6 +967,12 @@ namespace WindowPlugins.GUITVSeries
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
             int nIndex = 0;
 
+            if (seriesList.Count == 0)
+                MPTVSeriesLog.Write("All Episodes are already identified");
+
+            if (m_bFullSeriesRetrieval && m_params.m_bUpdateScan)
+                MPTVSeriesLog.Write("Mode: Get all Episodes of Series");
+
             foreach (DBSeries series in seriesList)
             {
                 if (worker.CancellationPending)
@@ -967,7 +983,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (m_bFullSeriesRetrieval && m_params.m_bUpdateScan)
                 {
-                    MPTVSeriesLog.Write("Looking for all the episodes of " + series[DBSeries.cParsedName]);
+                    MPTVSeriesLog.Write(string.Format("Looking for all the Episodes of \"{0}\"", series.ToString()));
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
@@ -981,7 +997,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], nGetEpisodesTimeStamp);
                     if (episodesParser.Results.Count > 0)
                     {
-                        MPTVSeriesLog.Write("Found " + episodesParser.Results.Count + " episodes for " + series[DBSeries.cParsedName]);
+                        MPTVSeriesLog.Write(string.Format("Found {0} Episodes for \"{1}\"", episodesParser.Results.Count, series.ToString()));
                         // add all online episodes in the local db
                         foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
                         {
@@ -1021,17 +1037,19 @@ namespace WindowPlugins.GUITVSeries
                     List<DBEpisode> episodesList = DBEpisode.Get(conditions, false);
                     if (episodesList.Count < 5)
                     {
+                        if(episodesList.Count > 0)
+                            MPTVSeriesLog.Write(string.Format("\"{0}\" has few ({1}) unidentified Episodes, doing them individually", series.ToString(), episodesList.Count));
                         foreach (DBEpisode episode in episodesList)
                         {
 
-                            MPTVSeriesLog.Write("Looking for the single episode " + episode[DBOnlineEpisode.cCompositeID]);
+                            MPTVSeriesLog.Write("Looking for the single episode \"" + episode.ToString() + "\"");
                             GetEpisodes episodesParser = null;
                             if (episode[DBEpisode.cSeasonIndex] >= 0 && episode[DBEpisode.cEpisodeIndex] >= 0)
                             {
                                 episodesParser = new GetEpisodes(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex]);
                                 if (episode[DBEpisode.cEpisodeIndex2] > 0)
                                 {
-                                    MPTVSeriesLog.Write("Found double episode, looking for the single episode " + episode[DBEpisode.cCompositeID2]);
+                                    MPTVSeriesLog.Write("Episode is a double Episode, now looking for the second Episode");
                                     episodesParser.Work(series[DBSeries.cID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2], 0, default(DateTime));
                                 }
                             }
@@ -1064,7 +1082,6 @@ namespace WindowPlugins.GUITVSeries
 
                                 // end cleanup
 
-                                MPTVSeriesLog.Write("Found episodeID for " + episode[DBOnlineEpisode.cCompositeID]);
                                 episode[DBEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
                                 episode[DBEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
                                 episode.onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
@@ -1072,29 +1089,33 @@ namespace WindowPlugins.GUITVSeries
                                 episode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
                                 if (episode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                                     episode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+
+                                MPTVSeriesLog.Write(string.Format("\"{0}\" identified", episode.ToString()));
                                 episode.Commit();
 
                                 if (episodesParser.Results.Count > 1)
                                 {
                                     // we matched a double episode, add it too
-                                    MPTVSeriesLog.Write("Found episodeID for " + episode[DBEpisode.cCompositeID2]);
                                     DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], episodesParser.Results[1][DBOnlineEpisode.cSeasonIndex], episodesParser.Results[1][DBOnlineEpisode.cEpisodeIndex]);
                                     newOnlineEpisode[DBOnlineEpisode.cID] = episodesParser.Results[1][DBOnlineEpisode.cID];
                                     if (newOnlineEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                                         newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                    MPTVSeriesLog.Write("Second Episode also identified...");
                                     newOnlineEpisode.Commit();
                                 }
-                                
+
                             }
+                            else MPTVSeriesLog.Write("This episode could not be identified (Possible reasons: Wrong filename/OnlineDatabase does not have these episodes)");
                         }
                     }
                     else
                     {
+                        MPTVSeriesLog.Write(string.Format("\"{0}\" has many ({1}) unidentified Episodes, using batch mode", series.ToString(), episodesList.Count));
                         // no need to do single matches for many episodes, it's more efficient to do it all at once
                         GetEpisodes episodesParser = new GetEpisodes(series[DBSeries.cID], 0);
                         if (episodesParser.Results.Count > 0)
                         {
-                            MPTVSeriesLog.Write("Found " + episodesParser.Results.Count + " episodes for " + series[DBSeries.cParsedName]);
+                            MPTVSeriesLog.Write(string.Format("Found {0} Episodes for \"{1}\", matching them up with local Episodes now", episodesParser.Results.Count, series.ToString()));
                             // look for the episodes for that series, and compare / update the values
                             foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
                             {
@@ -1110,11 +1131,11 @@ namespace WindowPlugins.GUITVSeries
                                         season[DBSeason.cHasEpisodes] = true;
                                         season.Commit();
 
-                                        MPTVSeriesLog.Write(localEpisode[DBOnlineEpisode.cCompositeID] + " identified");
                                         // update data
                                         localEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
                                         if (localEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                                             localEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                        MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified");
                                         localEpisode.Commit();
                                         // remove the localEpisode from the local list (we found it, it's updated, it's faster this way)
                                         episodesList.Remove(localEpisode);
@@ -1123,6 +1144,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                         }
+                        else MPTVSeriesLog.Write("None of these episodes could be identified (Possible reasons: Wrong filename/OnlineDatabase does not have these episodes)");
                     }
                 }
             }
@@ -1138,7 +1160,7 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries)
             {
-                MPTVSeriesLog.Write("*********  UpdateSeries - retrieve unknown series  *********");
+                MPTVSeriesLog.Write(bigLogMessage("Retrieving Metadata for new Series"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 0, SQLConditionType.Equal);
                 // in that case, don't use the lasttime of import
@@ -1146,7 +1168,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                MPTVSeriesLog.Write("*********  UpdateSeries - refresh series  *********");
+                MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Series"));
                 // and that already had data imported from the online DB (but not the new ones, that are set to 2)
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, SQLConditionType.Equal);
                 nUpdateSeriesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp);
@@ -1159,8 +1181,10 @@ namespace WindowPlugins.GUITVSeries
                 String sSeriesIDs = generateIDList(SeriesList, DBSeries.cID);
 
                 // use the last known timestamp from when we updated the series
-                MPTVSeriesLog.Write("Updating " + SeriesList.Count + " Series");
+                MPTVSeriesLog.Write(string.Format("{0} metadata of {1} Series", (bUpdateNewSeries ? "Retrieving" : "Looking for updated"), SeriesList.Count));
                 UpdateSeries UpdateSeriesParser = new UpdateSeries(sSeriesIDs, nUpdateSeriesTimeStamp);
+                if (UpdateSeriesParser.Results.Count == 0)
+                    MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewSeries ? "metadata" : "updates")));
 
                 foreach (DBOnlineSeries updatedSeries in UpdateSeriesParser.Results)
                 {
@@ -1168,7 +1192,7 @@ namespace WindowPlugins.GUITVSeries
                     if (worker.CancellationPending)
                         return;
 
-                    MPTVSeriesLog.Write("Updating data for " + updatedSeries[DBOnlineSeries.cPrettyName]);
+                    MPTVSeriesLog.Write(string.Format("Metadata {0} for \"{1}\"", (bUpdateNewSeries ? "retrieved" : "updated"), updatedSeries.ToString()));
                     // find the corresponding series in our list
                     foreach (DBSeries localSeries in SeriesList)
                     {
@@ -1236,12 +1260,14 @@ namespace WindowPlugins.GUITVSeries
                 if (!bUpdateNewSeries)
                     DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, UpdateSeriesParser.ServerTimeStamp);
             }
+            else MPTVSeriesLog.Write("Nothing to do...");
         }
 
         public void UpdateEpisodeThumbNails()
         {
             if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true)
             {
+                MPTVSeriesLog.Write(bigLogMessage("Checking for EpisodeThumbnails..."));
                 // get a list of all the episodes with thumbnailUrl
                 SQLCondition condition = new SQLCondition();
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);
@@ -1269,7 +1295,8 @@ namespace WindowPlugins.GUITVSeries
 
                             if (!File.Exists(completePath))
                             {
-                                MPTVSeriesLog.Write("New EpisodeImage found: " + episode[DBOnlineEpisode.cEpisodeThumbnailUrl]);
+                                DBSeries s = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                                MPTVSeriesLog.Write(string.Format("New EpisodeImage found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
                                 try
@@ -1303,20 +1330,25 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries)
             {
-                MPTVSeriesLog.Write("*********  UpdateBanners - retrieve banners series without any banners  *********");
+                MPTVSeriesLog.Write(bigLogMessage("Checking for banners for series without any banners"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 0, SQLConditionType.Equal);
             }
             else
             {
-                MPTVSeriesLog.Write("*********  UpdateBanners - refresh banners for series with existing banners *********");
+                MPTVSeriesLog.Write(bigLogMessage("Checking for new banners"));                
                 // and that already had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 1, SQLConditionType.Equal);
             }
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
             int nIndex = 0;
-            MPTVSeriesLog.Write("Looking for banners on " + seriesList.Count + " Series");
+            if (seriesList.Count == 0)
+            {
+                if (bUpdateNewSeries) MPTVSeriesLog.Write("All Series appear to have banners already");
+                else MPTVSeriesLog.Write("Nothing to do");
+            }
+            else MPTVSeriesLog.Write("Looking for banners on " + seriesList.Count + " Series");
 
             // TODO: new way to make only one webrequest
             //String sSeriesIDs = generateIDList(seriesList, DBSeries.cID);
@@ -1333,9 +1365,9 @@ namespace WindowPlugins.GUITVSeries
 
                 // disable for new way
                 if (bUpdateNewSeries)
-                    MPTVSeriesLog.Write("Downloading banners for " + series[DBOnlineSeries.cPrettyName]);
+                    MPTVSeriesLog.Write("Downloading banners for \"" + series.ToString() + "\"");
                 else
-                    MPTVSeriesLog.Write("Refreshing banners for " + series[DBOnlineSeries.cPrettyName]);
+                    MPTVSeriesLog.Write("Refreshing banners for \"" + series.ToString() +"\"");
 
                 // check if the files are still there - if not, redownload
                 bool bMissingBanners = false;
@@ -1363,7 +1395,7 @@ namespace WindowPlugins.GUITVSeries
                         if (series[DBOnlineSeries.cBannerFileNames].ToString().IndexOf(bannerSeries.sBannerFileName) == -1)
                         {
                             m_bDataUpdated = true;
-                            MPTVSeriesLog.Write("New banner found for " + series[DBOnlineSeries.cPrettyName] + " : " + bannerSeries.sOnlineBannerPath);
+                            MPTVSeriesLog.Write("New banner found for \"" + series.ToString() + "\" : " + bannerSeries.sOnlineBannerPath);
                             if (series[DBOnlineSeries.cBannerFileNames].ToString().Trim().Length == 0)
                             {
                                 series[DBOnlineSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
@@ -1418,7 +1450,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 season[DBSeason.cBannerFileNames] += "|" + bannerSeason.sBannerFileName;
-                                MPTVSeriesLog.Write("New banner found for " + series[DBOnlineSeries.cPrettyName] + "S " + season[DBSeason.cID] + " : " + bannerSeason.sOnlineBannerPath);
+                                MPTVSeriesLog.Write("New banner found for \"" + series.ToString() + "\"Season " + season[DBSeason.cIndex] + ": " + bannerSeason.sOnlineBannerPath);
                             }
                         }
      
@@ -1457,7 +1489,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (bUpdateNewEpisodes)
             {
-                MPTVSeriesLog.Write("*********  UpdateEpisodes - retrieve unknown episodes  *********");
+                MPTVSeriesLog.Write(bigLogMessage("Retrieving Metadata for new Episodes"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 0, SQLConditionType.Equal);
                 
@@ -1469,7 +1501,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                MPTVSeriesLog.Write("*********  UpdateEpisodes - refresh episodes  *********");
+                MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Episodes"));
                 // and that already had data imported from the online DB
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 1, SQLConditionType.Equal);
             }
@@ -1483,6 +1515,8 @@ namespace WindowPlugins.GUITVSeries
             if (!bUpdateNewEpisodes)
                 nUpdateEpisodesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateEpisodesTimeStamp);
             long nReturnedUpdateEpisodesTimeStamp = 0;
+            if (episodeList.Count == 0)
+                MPTVSeriesLog.Write("Nothing to do...");
             while (episodeList.Count > 0)
             {
                 if (worker.CancellationPending)
@@ -1515,15 +1549,17 @@ namespace WindowPlugins.GUITVSeries
                 }
                 
                 // use the last known timestamp from when we updated the episode
-                MPTVSeriesLog.Write("Updating " + IDToEpisodesMap.Count + " Episodes, " + episodeList.Count + " left");
+                MPTVSeriesLog.Write(string.Format("Updating {0} episodes, {1} left", IDToEpisodesMap.Count, episodeList.Count));
                 UpdateEpisodes updateEpisodesParser = new UpdateEpisodes(sEpisodeIDs, nUpdateEpisodesTimeStamp);
                 nReturnedUpdateEpisodesTimeStamp = updateEpisodesParser.ServerTimeStamp;
+                if (updateEpisodesParser.Results.Count == 0)
+                    MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewEpisodes ? "metadata" : "updates")));
                 foreach (DBOnlineEpisode onlineEpisode in updateEpisodesParser.Results)
                 {
                     m_bDataUpdated = true;
                     // find the corresponding series in our list
                     DBEpisode localEpisode = IDToEpisodesMap[onlineEpisode[DBOnlineEpisode.cID]];
-                    MPTVSeriesLog.Write("Updating data for " + localEpisode[DBEpisode.cCompositeID]);
+                    MPTVSeriesLog.Write(string.Format("{0} metadata for \"{1}\"", (bUpdateNewEpisodes ? "Retrieved" : "Updating"), localEpisode.ToString()));
 //                    bool isSecondOfDoubleEpisode = localEpisode.m_fields[DBEpisode.cSeriesID].Value.ToString().Length == 0;
                     if (localEpisode != null)
                     {
@@ -1597,6 +1633,11 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return sSeriesIDs;
+        }
+
+        string bigLogMessage(string msg)
+        {
+            return string.Format("***********     {0}     ***********", msg);
         }
     }
 }
