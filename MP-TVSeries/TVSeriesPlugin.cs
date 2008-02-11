@@ -908,6 +908,7 @@ namespace MediaPortal.GUI.Video
         {
             toggleWatched,
             cycleSeriesBanner,
+            cycleSeasonBanner,
             forceSeriesQuery,
             downloadSubtitle,
             downloadviaTorrent,
@@ -1025,6 +1026,13 @@ namespace MediaPortal.GUI.Video
                             pItem = new GUIListItem(Translation.Force_Online_Match);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.forceSeriesQuery;
+                        }
+                        
+                        if (this.listLevel == Listlevel.Season || this.listLevel == Listlevel.Episode)
+                        {
+                            pItem = new GUIListItem(Translation.Cycle_Banner);
+                            dlg.Add(pItem);
+                            pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
                         }
 
                         if (listLevel != Listlevel.Group)
@@ -1196,6 +1204,20 @@ namespace MediaPortal.GUI.Video
                             LoadFacade();
                         }
                         break;
+
+                        case (int)eContextItems.cycleSeasonBanner:
+                        {
+                            int nCurrent = selectedSeason.BannerList.IndexOf(selectedSeason.Banner);
+                            nCurrent++;
+                            if (nCurrent >= selectedSeason.BannerList.Count)
+                                nCurrent = 0;
+
+                            selectedSeason.Banner = selectedSeason.BannerList[nCurrent];
+                            selectedSeason.Commit();
+                            LoadFacade();
+                        }
+                        break;
+
                     case (int)eContextItems.actionRecheckMI:
                         switch (listLevel)
                         {
