@@ -83,7 +83,8 @@ namespace WindowPlugins.GUITVSeries
             // pictureBox1
             // 
             this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo;
+            this.pictureBox1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo_noreflection;
+            this.pictureBox1.InitialImage = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo_noreflection;
             this.pictureBox1.Location = new System.Drawing.Point(12, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(560, 148);

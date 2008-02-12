@@ -123,9 +123,9 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap tv_series_logo {
+        internal static System.Drawing.Bitmap tv_series_logo_noreflection {
             get {
-                object obj = ResourceManager.GetObject("tv_series_logo", resourceCulture);
+                object obj = ResourceManager.GetObject("tv_series_logo_noreflection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

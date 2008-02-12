@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP-TVSeries", "MP-TVSeries\MP-TVSeries.csproj", "{A983AA7A-DE3C-4587-9416-22373A35B721}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test-MP-TVSeries", "Test-MP-TVSeries\Test-MP-TVSeries.csproj", "{B2ECBD02-DD25-48C0-AEE8-792F1F071B3C}"

@@ -266,7 +266,7 @@
     <Content Include="img\television_add.png" />
     <Content Include="img\television_add_unlisted.png" />
     <Content Include="img\textfield_rename.png" />
-    <None Include="Resources\tv_series_logo.png" />
+    <None Include="img\tv_series_logo_noreflection.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
