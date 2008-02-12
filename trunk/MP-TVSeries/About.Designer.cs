@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblBuild = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
@@ -40,12 +39,12 @@
             this.lblSeasons = new System.Windows.Forms.Label();
             this.lblSeries = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.locationBrowser5 = new WindowPlugins.GUITVSeries.LocationBrowser();
             this.locationBrowser4 = new WindowPlugins.GUITVSeries.LocationBrowser();
             this.locationBrowser3 = new WindowPlugins.GUITVSeries.LocationBrowser();
             this.locationBrowser2 = new WindowPlugins.GUITVSeries.LocationBrowser();
             this.locationBrowser1 = new WindowPlugins.GUITVSeries.LocationBrowser();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -173,20 +172,6 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Local Paths:";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(23, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(353, 141);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.UseWaitCursor = true;
-            // 
             // locationBrowser5
             // 
             this.locationBrowser5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -236,6 +221,21 @@
             this.locationBrowser1.Name = "locationBrowser1";
             this.locationBrowser1.Size = new System.Drawing.Size(341, 29);
             this.locationBrowser1.TabIndex = 0;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.ErrorImage = null;
+            this.pictureBox1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo_noreflection;
+            this.pictureBox1.InitialImage = global::WindowPlugins.GUITVSeries.Properties.Resources.tv_series_logo_noreflection;
+            this.pictureBox1.Location = new System.Drawing.Point(23, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(353, 141);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.UseWaitCursor = true;
             // 
             // About
             // 
