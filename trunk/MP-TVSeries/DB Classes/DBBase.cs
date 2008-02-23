@@ -104,6 +104,7 @@ namespace WindowPlugins.GUITVSeries
 
         static public implicit operator long(DBValue value)
         {
+            if (null == value) return 0;
             try { return Convert.ToInt64(value.value); }
             catch (System.FormatException) { return 0; }
         }
@@ -115,6 +116,7 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         static public implicit operator double(DBValue value)
         {
+            if (null == value) return 0;
             try { return Convert.ToDouble(value.value, provider); }
             catch (System.FormatException) { return 0; }
         }

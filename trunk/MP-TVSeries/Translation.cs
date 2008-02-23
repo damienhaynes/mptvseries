@@ -98,6 +98,9 @@ namespace WindowPlugins.GUITVSeries
         public static string OK = "OK";
         public static string Cancel = "Cancel";
         public static string Ignore = "Ignore";
+        public static string RateSeries = "Rate this Series";
+        public static string RateEpisode = "Rate this Episode";
+        public static string ResetRating = "Reset Rating";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";

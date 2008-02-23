@@ -64,6 +64,12 @@ namespace WindowPlugins.GUITVSeries
             Work(nSeriesID, -1, -1, 0, firstAired);
         }
 
+        public GetEpisodes(string seriesID)
+        {
+            int s = Int32.Parse(seriesID);
+            doWork(s);
+        }
+
         public void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
@@ -109,6 +115,47 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+        }
+
+        public void doWork(int nSeriesID)
+        {
+            XmlNodeList nodeList = null;
+            string choosenOrdering;
+
+            DBSeries localSeries = DBSeries.Get(nSeriesID, false);
+            if (localSeries != null)
+                choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
+            else
+                choosenOrdering = "Aired";
+
+            nodeList = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
+
+            if (nodeList != null)
+            {
+                foreach (XmlNode itemNode in nodeList)
+                {
+                    foreach (XmlNode episodeNode in itemNode)
+                    {
+                        if (episodeNode.Name == "Episode")
+                        {
+                            DBOnlineEpisode episode = new DBOnlineEpisode();
+                            foreach (XmlNode propertyNode in episodeNode.ChildNodes)
+                            {
+                                if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                                    episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                                else
+                                {
+                                    // we don't know that field, add it to the series table
+                                    episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                                    episode[propertyNode.Name] = propertyNode.InnerText;
+                                }
+                            }
+                            listEpisodes.Add(episode);
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
