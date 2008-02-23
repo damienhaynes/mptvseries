@@ -150,13 +150,14 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 int endPos = index;
                 for (int j = index; j < expression.Length; j++)
                 {
-                    if (offset == 0 && expression[j] == ')') // yahoo
+                    char c = expression[j];
+                    if (offset == 0 && c == ')') // yahoo
                     {
                         endPos = j;
                         break;
                     }
-                    else if (expression[j] == '(') offset++;
-                    else if (expression[j] == ')') offset--;
+                    else if (c == '(') offset++;
+                    else if (c == ')') offset--;
                 }
                 if (endPos != index)
                 {

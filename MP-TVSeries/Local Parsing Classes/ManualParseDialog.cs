@@ -178,9 +178,9 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             // update detailed online data for new stuff
             OnlineParsing onlineParser = new OnlineParsing(ConfigurationForm.GetInstance());
-            onlineParser.UpdateSeries(true);
-            onlineParser.UpdateBanners(true);
-            onlineParser.UpdateEpisodes(true);
+            //onlineParser.UpdateSeries(true);
+            //onlineParser.UpdateBanners(true);
+            //onlineParser.UpdateEpisodes(true);
             
             return true;
         }

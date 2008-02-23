@@ -199,39 +199,11 @@
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>686, 14</value>
   </metadata>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1007, 14</value>
-  </metadata>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>291, 14</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
-        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
-        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
-        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
-        xtkWAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
-        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
-        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
-        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
-        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
-        mAY8AAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
     <value>Enable this option to use the TV Series found online when only one exact match was found.
 In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -253,6 +225,32 @@ what video and audio codecs the epsiode is encoded in etc...
 
 A Logo package must be installed to display logos succesfully in Media Portal</value>
   </data>
+  <data name="checkBox_altImage.ToolTip" xml:space="preserve">
+    <value>Enables the image loading routine as was used in older Versions.
+Try this if only if you find that images (such as banners) do not load or dissapear inside Mediaportal. May be slower under certain conditions and has no effect in the Configuration.</value>
+  </data>
+  <data name="textBox_foromID.ToolTip" xml:space="preserve">
+    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste 
+the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
+  </data>
+  <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
+    <value>Regular expression that is going to extract data from the details page of a specific torrent.
+The plugin is only looking for one group:
+&lt;filecount&gt; is the number of files in the torrent. Only torrents with one file will be taken into account</value>
+  </data>
+  <data name="textBox_TorrentSearchRegex.ToolTip" xml:space="preserve">
+    <value>Regular expression that is going to extract data from the search results.
+Various group names are mandatory:
+
+&lt;name&gt; is the name of the torrent file
+&lt;link&gt; is the url of the torrent file, used to download (should be relative to the search website address)
+&lt;id&gt; is the id of the torrent file, that is used to then go in the details and find out how many files there are in the release (the plugin filters out all multi part torrents; extracting files from a RAR is inpractical)
+&lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
+&lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
+  </data>
+  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1007, 14</value>
+  </metadata>
   <data name="comboBox_seasonFormat.ToolTip" xml:space="preserve">
     <value>Select the format to display the season listing in. Graphical will display the banners downloaded from online.
 Choose text if you dont want to display the downloaded banners but still have control over what is displayed</value>
@@ -357,28 +355,30 @@ You can right click on this textbox to bring up a menu of available fields from 
 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
-  <data name="checkBox_altImage.ToolTip" xml:space="preserve">
-    <value>Enables the image loading routine as was used in older Versions.
-Try this if only if you find that images (such as banners) do not load or dissapear inside Mediaportal. May be slower under certain conditions and has no effect in the Configuration.</value>
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>291, 14</value>
+  </metadata>
+  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
+        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
+        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
+        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
+        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
+        xtkWAAAAAElFTkSuQmCC
+</value>
   </data>
-  <data name="textBox_foromID.ToolTip" xml:space="preserve">
-    <value>Your forom ID. When you register on this site, go to "rubriques" then to "votre compte", and copy/paste 
-the string ID from the auto-identification URL provided there (starts after c= and stops before the last &amp;)</value>
-  </data>
-  <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
-    <value>Regular expression that is going to extract data from the details page of a specific torrent.
-The plugin is only looking for one group:
-&lt;filecount&gt; is the number of files in the torrent. Only torrents with one file will be taken into account</value>
-  </data>
-  <data name="textBox_TorrentSearchRegex.ToolTip" xml:space="preserve">
-    <value>Regular expression that is going to extract data from the search results.
-Various group names are mandatory:
-
-&lt;name&gt; is the name of the torrent file
-&lt;link&gt; is the url of the torrent file, used to download (should be relative to the search website address)
-&lt;id&gt; is the id of the torrent file, that is used to then go in the details and find out how many files there are in the release (the plugin filters out all multi part torrents; extracting files from a RAR is inpractical)
-&lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
-&lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
+  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+wAA
+        CvsBy58dkAAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
+        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
+        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
+        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
+        mAY8AAAAAElFTkSuQmCC
+</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>44</value>

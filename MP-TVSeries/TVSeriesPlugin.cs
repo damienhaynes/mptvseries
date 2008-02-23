@@ -48,7 +48,6 @@ namespace MediaPortal.GUI.Video
             m_stepSelections.Add(new string[] { null });
             // disable that dynamic skin adjustment....skinners should have the power to position the elements whereever with the plugin inerveining
             if (DBOption.GetOptions(DBOption.cViewAutoHeight)) DBOption.SetOptions(DBOption.cViewAutoHeight, false);
-            if (DBOption.GetOptions(DBOption.cMainMirror) == null) DBOption.SetOptions(DBOption.cMainMirror, "http://www.thetvdb.com/interfaces"); // this is the default main mirrors
         }
         #region ISetupForm Members
 
@@ -924,7 +923,7 @@ namespace MediaPortal.GUI.Video
             actionPlayRandom,
             optionsOnlyShowLocal,
             optionsPreventSpoilers,
-            actionRecheckMI
+            actionRecheckMI,
         }
 
         enum eContextMenus
@@ -932,6 +931,39 @@ namespace MediaPortal.GUI.Video
             download = 100,
             action,
             options,
+            rate
+        }
+
+        internal static void showRatingsDialog(DBTable item)
+        {
+            if (item == null) return;
+            MPTVSeriesLog.Write("asking to rate");
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+  
+            dlg.Reset();
+            GUIListItem pItem = null;
+
+            Listlevel level = item is DBEpisode ? Listlevel.Episode : Listlevel.Series;
+
+            dlg.SetHeading((level == Listlevel.Episode ? Translation.RateEpisode : Translation.RateSeries) + ": " + item.ToString());
+
+            pItem = new GUIListItem(Translation.ResetRating);
+            dlg.Add(pItem);
+            pItem.ItemId = 0;
+
+            for (int i = 1; i < 11; i++)
+            {
+                pItem = new GUIListItem(i.ToString());
+                dlg.Add(pItem);
+                pItem.ItemId = i;
+            }
+
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId == -1 || dlg.SelectedId > 10) return;// cancelled
+
+            item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
+            item.Commit();            
+
         }
 
         protected override void OnShowContextMenu()
@@ -1006,9 +1038,17 @@ namespace MediaPortal.GUI.Video
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
+
+                            pItem = new GUIListItem(Translation.RateEpisode);
+                            dlg.Add(pItem);
+                            pItem.ItemId = (int)eContextMenus.rate;
                         }
                         else if (this.listLevel != Listlevel.Group)
                         {
+                            pItem = new GUIListItem(Translation.RateSeries);
+                            dlg.Add(pItem);
+                            pItem.ItemId = (int)eContextMenus.rate;
+
                             pItem = new GUIListItem(Translation.Mark_all_as_watched);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionMarkAllWatched;
@@ -1147,6 +1187,23 @@ namespace MediaPortal.GUI.Video
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
+                                if (dlg.SelectedId != -1)
+                                    bExitMenu = true;
+                            }
+                            break;
+                        case (int)eContextMenus.rate:
+                            {
+                                switch (listLevel)
+                                {
+                                    case Listlevel.Episode:
+                                        showRatingsDialog(m_SelectedEpisode);
+                                        break;
+                                    case Listlevel.Series:
+                                    case Listlevel.Season:
+                                        showRatingsDialog(m_SelectedSeries);
+                                        break;
+                                }
+                                                                
                                 if (dlg.SelectedId != -1)
                                     bExitMenu = true;
                             }
@@ -1527,7 +1584,7 @@ namespace MediaPortal.GUI.Video
                     case (int)eContextItems.optionsPreventSpoilers:
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
                         LoadFacade();
-                        break;
+                        break;                    
                 }
             }
             catch (Exception ex)

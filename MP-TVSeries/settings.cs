@@ -31,6 +31,8 @@ namespace WindowPlugins.GUITVSeries
 {
     sealed class Settings
     {
+        public const bool newAPI = true;
+
         public enum Path
         {
             log,

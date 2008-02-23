@@ -36,10 +36,13 @@ using System.Windows.Forms;
 using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
+using WindowPlugins.GUITVSeries.Configuration;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
+
+// TODO: replace all checkboxes that are used to save options with a dboptioncheckbox!!!
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -253,6 +256,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
 
             this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+
+            txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
         }
 
         void Panel1_SizeChanged(object sender, EventArgs e)
@@ -2802,14 +2807,14 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int sel = 0;
+            string sel = "en";
             foreach (Language lang in onlineLanguages)
                 if (lang.language == (string)comboOnlineLang.SelectedItem)
                 {
-                    sel = lang.id;
+                    sel = lang.abbreviation;
                     break;
                 }
-            if (sel != 0 && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
+            if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
                 DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
@@ -3094,11 +3099,12 @@ namespace WindowPlugins.GUITVSeries
             if (onlineLanguages.Count != 0) return;
             // get the online languages from the interface
             onlineLanguages.AddRange(new GetLanguages().languages);
-            int selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
+            string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
             foreach (Language lang in onlineLanguages)
             {
                 comboOnlineLang.Items.Add(lang.language);
-                if (lang.id == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
             }
         }
 
@@ -3107,6 +3113,11 @@ namespace WindowPlugins.GUITVSeries
             DBView.ClearAll();
             DBView.fillDefaults();
             LoadViews();
+        }
+
+        private void txtUserID_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cOnlineUserID, txtUserID.Text);
         }
 
     }

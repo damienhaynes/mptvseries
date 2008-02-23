@@ -73,7 +73,7 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\..\MP2\xbmc\bin\Release\ICSharpCode.SharpZipLib.DLL</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -141,6 +141,9 @@
     <Compile Include="Configuration\ManualEpisodeManagementPane.Designer.cs">
       <DependentUpon>ManualEpisodeManagementPane.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\DBOptionCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBTorrent.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="Local Parsing Classes\ManualParseDialog.Designer.cs">
       <DependentUpon>ManualParseDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Local Parsing Classes\Watcher.cs" />
     <Compile Include="localLogos.cs" />
     <Compile Include="LogWriter.cs" />
     <Compile Include="DB Classes\DBBase.cs" />
@@ -178,10 +182,17 @@
     <Compile Include="Local Parsing Classes\ParserFilename.cs" />
     <Compile Include="MathParser.cs" />
     <Compile Include="MediaInfoDLL.cs" />
+    <Compile Include="Online Parsing Classes\APIKey.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>APIKey.resx</DependentUpon>
+    </Compile>
     <Compile Include="Online Parsing Classes\GetBanner.cs" />
     <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetLanguages.cs" />
     <Compile Include="Online Parsing Classes\GetSeries.cs" />
+    <Compile Include="Online Parsing Classes\GetUpdates.cs" />
+    <Compile Include="Online Parsing Classes\OnlineAPI.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
     <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
     <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
@@ -242,6 +253,11 @@
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ManualParseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>APIKey.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>

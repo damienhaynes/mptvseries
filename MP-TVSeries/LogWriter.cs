@@ -28,6 +28,7 @@ namespace WindowPlugins.GUITVSeries
 {
     public class MPTVSeriesLog // can't call it Log because MP's own Log is called that
     {
+        const bool OmmitKey = true;
         public enum LogLevel
         {
             Normal,
@@ -174,6 +175,7 @@ namespace WindowPlugins.GUITVSeries
                             m_LogStream = File.AppendText(m_filename);
                         else
                             m_LogStream = File.CreateText(m_filename);
+                        if(OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey)) entry = entry.Replace(DBOnlineMirror.cApiKey, "789379adbid793");
                         if (singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
                         else m_LogStream.Write(DateTime.Now + " - \n" + entry);
                         m_LogStream.Flush();

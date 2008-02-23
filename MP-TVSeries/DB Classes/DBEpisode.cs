@@ -62,6 +62,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cAirsAfterSeason = "airsafter_season";
 
+        public const String cRating = "Rating";
+        public const String cMyRating = "myRating";
+
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
@@ -173,6 +176,33 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID])[DBOnlineSeries.cPrettyName] + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
+            }
+        }
+
+        public override DBValue  this[string fieldName]
+        {
+            get 
+            { 
+	             return base[fieldName];
+            }
+            set 
+            { 
+                switch(fieldName)
+                {
+                    case cMyRating:
+                        if (!Helper.String.IsNullOrEmpty(value) && value != base[fieldName])
+                        {
+                            int rating = -1;
+                            if(Int32.TryParse(value, out rating))
+                            {
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.episode, base[cID], rating);
+                            }
+                        }
+                        goto default;
+                    default:
+	                    base[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -679,11 +709,10 @@ namespace WindowPlugins.GUITVSeries
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
                                 return;
                             }
-                            break;
-
+                            break;                        
 
                         default:
-                            if (m_onlineEpisode.m_fields.ContainsKey(fieldName))
+                            if (m_onlineEpisode.m_fields.ContainsKey(fieldName) || fieldName == DBOnlineEpisode.cMyRating)
                             {
                                 m_onlineEpisode[fieldName] = value;
                                 return;

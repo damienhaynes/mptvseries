@@ -132,6 +132,11 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cAltImgLoading = "altImageLoading";
 
+        public const String cNewAPIUpgradeDone = "newAPIUpgradeDone";
+        public const String cUpdateTimeStamp = "UpdateTimeStamp";
+        public const String cOnlineUserID = "onlineUserID";
+        public const String cAskToRate = "askToRate";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()
@@ -303,6 +308,13 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cDownloadMonitor_RenameFiles) == null)
                     SetOptions(cDownloadMonitor_RenameFiles, 0); //do not rename by default
+
+                // this is the default main mirrors
+                if (GetOptions(DBOption.cMainMirror) == null || GetOptions(DBOption.cMainMirror) == "http://www.thetvdb.com/interfaces") 
+                    DBOption.SetOptions(DBOption.cMainMirror, "http://www.thetvdb.com");
+
+                if (GetOptions(cNewAPIUpgradeDone) == null)
+                    SetOptions(cNewAPIUpgradeDone, 0); //do not rename by default
                 
             }
             catch (Exception ex)

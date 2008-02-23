@@ -51,45 +51,30 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
-        public UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp)
+        public UpdateSeries(List<String> sSeriesIDs)
         {
-            Work(sSeriesIDs, nUpdateSeriesTimeStamp, null);
+            foreach(string id in sSeriesIDs)
+                Work(id);
         }
 
-        public UpdateSeries(String sSeriesIDs, long nUpdateSeriesTimeStamp, string lang)
+        void Work(String sSeriesID)
         {
-            Work(sSeriesIDs, nUpdateSeriesTimeStamp, lang);
-        }
-        
-        void Work(String sSeriesIDs, long nUpdateSeriesTimeStamp, string lang)
-        {
-            if (sSeriesIDs.Length > 0)
+            if (sSeriesID.Length > 0)
             {
-                XmlNodeList nodeList = null;
-                nodeList = ZsoriParser.UpdateSeries(sSeriesIDs, lang, nUpdateSeriesTimeStamp);
+                XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
 
                 if (nodeList != null)
                 {
                     foreach (XmlNode itemNode in nodeList)
                     {
-                        // first return item SHOULD ALWAYS be the sync time (hope so at least!)
-                        if (itemNode.ChildNodes[0].Name == "SyncTime")
+                        foreach (XmlNode seriesNode in itemNode)
                         {
-                            m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
-                        }
-                        else
-                        {
-                            DBOnlineSeries series = new DBOnlineSeries();
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                            // first return item SHOULD ALWAYS be the series
+                            if (seriesNode.Name == "Series")
                             {
-                                if (propertyNode.Name == "IncorrectID")
-                                {
-                                    // alert! drop this series, the ID doesn't match anything anymore for some reason
-                                    listIncorrectIDs.Add(series[DBOnlineSeries.cID]);
-                                    series = null;
-                                    break;
-                                }
-                                else
+                                DBOnlineSeries series = new DBOnlineSeries();
+                                //foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                                foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
                                         series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
@@ -100,9 +85,8 @@ namespace WindowPlugins.GUITVSeries
                                         series[propertyNode.Name] = propertyNode.InnerText;
                                     }
                                 }
+                                if (series != null) listSeries.Add(series);
                             }
-                            if (series != null)
-                                listSeries.Add(series);
                         }
                     }
                 }

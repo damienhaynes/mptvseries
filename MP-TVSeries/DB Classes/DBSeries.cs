@@ -69,6 +69,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTaggedToDownload = "taggedToDownload";
 
+        public const String cRating = "Rating";
+        public const String cMyRating = "myRating";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -205,8 +208,8 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // we need to get it
                                 MPTVSeriesLog.Write("Retrieving original Series Name...");
-                                UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage);
-                                if (origParser.Results.Count == 1)
+                                UpdateSeries origParser = null; //= new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage); // doesn't work anymore
+                                if (origParser != null && origParser.Results.Count == 1)
                                 {
                                     base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
                                     Commit(); // save for next time
@@ -223,6 +226,25 @@ namespace WindowPlugins.GUITVSeries
                         }
                     default:
                         return base[fieldName];
+                }
+            }
+            set
+            {
+                switch (fieldName)
+                {
+                    case cMyRating:
+                        if (!Helper.String.IsNullOrEmpty(value) && value != base[fieldName])
+                        {
+                            int rating = -1;
+                            if (Int32.TryParse(value, out rating))
+                            {
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.series, base[cID], rating);
+                            }
+                        }
+                        goto default;
+                    default:
+                        base[fieldName] = value;
+                        break;
                 }
             }
         }

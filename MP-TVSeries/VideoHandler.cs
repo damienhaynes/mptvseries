@@ -232,12 +232,11 @@ namespace WindowPlugins.GUITVSeries
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
                     {
-                        MarkEpisodeAsWatched(m_currentEpisode);
+                        PlaybackOperationEnded(true);
                     }
-                    m_currentEpisode.Commit();
+                    else PlaybackOperationEnded(false);
                     #endregion
-
-                    PlaybackOperationEnded();
+                    
                 }
                 catch (Exception e)
                 {
@@ -254,10 +253,7 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     m_currentEpisode[DBEpisode.cStopTime] = 0;
-                    MarkEpisodeAsWatched(m_currentEpisode);
-                    m_currentEpisode.Commit();
-
-                    PlaybackOperationEnded();
+                    PlaybackOperationEnded(true);
                 }
                 catch (Exception e)
                 {
@@ -285,8 +281,17 @@ namespace WindowPlugins.GUITVSeries
                     m_currentEpisode[DBEpisode.cFilename] == filename);
         }
 
-        void PlaybackOperationEnded()
+        void PlaybackOperationEnded(bool countAsWatched)
         {
+            if (countAsWatched)
+            {
+                MarkEpisodeAsWatched(m_currentEpisode);
+                // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
+                if(Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) && DBOption.GetOptions(DBOption.cAskToRate))
+                {
+                    //TVSeriesPlugin.showRatingsDialog(m_currentEpisode);
+                } else  m_currentEpisode.Commit(); // we have to commit the watchedflag here - the ratingsdialog does it for us in the other case
+            }
             m_currentEpisode = null; // reset, we are done with it
             SetGUIProperties(true); // clear GUI Properties
         }

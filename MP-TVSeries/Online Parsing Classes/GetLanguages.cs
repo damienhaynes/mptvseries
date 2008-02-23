@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public string language = string.Empty;
         public int id = default(int);
+        public string abbreviation = string.Empty;
     }
     public class GetLanguages
     {
@@ -39,7 +40,9 @@ namespace WindowPlugins.GUITVSeries
 
         public GetLanguages()
         {
-            XmlNodeList nodeList = ZsoriParser.GetLanguages();
+            XmlNodeList nodeList;
+            if (Settings.newAPI) nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages();
+            else nodeList = ZsoriParser.GetLanguages();
             if (nodeList != null)
             {
                 Language lang = null;
@@ -49,7 +52,9 @@ namespace WindowPlugins.GUITVSeries
                     foreach (XmlNode node in itemNode)
                     {
                         if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
-                        if (node.Name == "language") lang.language = node.InnerText;
+                        if (node.Name == "language") lang.language = node.InnerText; //TODO: disable for new api
+                        if (node.Name == "name") lang.language = node.InnerText;
+                        if (node.Name == "abbreviation") lang.abbreviation = node.InnerText;
                     }
                     if (lang.id != default(int) && lang.language.Length > 0) languages.Add(lang);
                 }
