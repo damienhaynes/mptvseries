@@ -101,6 +101,9 @@ namespace WindowPlugins.GUITVSeries
         public static string RateSeries = "Rate this Series";
         public static string RateEpisode = "Rate this Episode";
         public static string ResetRating = "Reset Rating";
+        public static string DontAskToRate = "Don't ask me to rate again";
+        public static string RatingStar = "Star";
+        public static string RatingStars = "Stars";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";

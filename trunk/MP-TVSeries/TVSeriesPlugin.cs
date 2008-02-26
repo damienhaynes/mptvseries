@@ -180,6 +180,7 @@ namespace MediaPortal.GUI.Video
         private int logosHeight = 100;
         private int logosWidth = 250;
         private Control m_localControlForInvoke;
+        private DBEpisode ask2Rate = null;
 
         #region Skin Variables
 
@@ -312,7 +313,13 @@ namespace MediaPortal.GUI.Video
             // timer check every seconds
             m_timerDelegate = new TimerCallback(Clock);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
+            m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
             return Load(xmlSkin);
+        }
+
+        void m_VideoHandler_RateRequestOccured(DBEpisode episode)
+        {
+            ask2Rate = episode;
         }
 
         void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
@@ -415,7 +422,7 @@ namespace MediaPortal.GUI.Video
 
         void bgLoadFacade()*/
         void LoadFacade()
-        {
+        {            
             MPTVSeriesLog.Write("Begin LoadFacade");
             try
             {
@@ -806,6 +813,12 @@ namespace MediaPortal.GUI.Video
                         OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                     }
                 }
+                if (ask2Rate != null)
+                {
+                    showRatingsDialog(ask2Rate, true);
+                    ask2Rate = null;
+                    LoadFacade();
+                }                
                 GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
             }
 
@@ -934,7 +947,7 @@ namespace MediaPortal.GUI.Video
             rate
         }
 
-        internal static void showRatingsDialog(DBTable item)
+        internal static void showRatingsDialog(DBTable item, bool auto)
         {
             if (item == null) return;
             MPTVSeriesLog.Write("asking to rate");
@@ -951,18 +964,32 @@ namespace MediaPortal.GUI.Video
             dlg.Add(pItem);
             pItem.ItemId = 0;
 
-            for (int i = 1; i < 11; i++)
+            pItem = new GUIListItem("1 " + Translation.RatingStar);
+            dlg.Add(pItem);
+            pItem.ItemId = 1;
+
+            for (int i = 2; i < 11; i++)
             {
-                pItem = new GUIListItem(i.ToString());
+                pItem = new GUIListItem(i.ToString() + " " + Translation.RatingStars);
                 dlg.Add(pItem);
                 pItem.ItemId = i;
             }
 
-            dlg.DoModal(GUIWindowManager.ActiveWindow);
-            if (dlg.SelectedId == -1 || dlg.SelectedId > 10) return;// cancelled
+            if (auto)
+            {
+                pItem = new GUIListItem(Translation.DontAskToRate);
+                dlg.Add(pItem);
+                pItem.ItemId = 11;
+            }
 
-            item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
-            item.Commit();            
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return;// cancelled
+            if (dlg.SelectedId == 11 && auto) DBOption.SetOptions(DBOption.cAskToRate, false);
+            else
+            {
+                item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
+                item.Commit();
+            }
 
         }
 
@@ -1196,18 +1223,18 @@ namespace MediaPortal.GUI.Video
                                 switch (listLevel)
                                 {
                                     case Listlevel.Episode:
-                                        showRatingsDialog(m_SelectedEpisode);
+                                        showRatingsDialog(m_SelectedEpisode, false);
                                         break;
                                     case Listlevel.Series:
                                     case Listlevel.Season:
-                                        showRatingsDialog(m_SelectedSeries);
+                                        showRatingsDialog(m_SelectedSeries, false);
                                         break;
                                 }
                                                                 
                                 if (dlg.SelectedId != -1)
                                     bExitMenu = true;
-                            }
-                            break;
+                                return;
+                            }                            
 
                         default:
                             bExitMenu = true;
@@ -1940,7 +1967,7 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);                        
                         break;
                 }
             }

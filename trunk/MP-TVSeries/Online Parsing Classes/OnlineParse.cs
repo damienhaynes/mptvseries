@@ -1008,7 +1008,7 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < episodesInDB.Count; i++)
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
                 {
-                    episodesUpdated.RemoveAt(i);
+                    episodesInDB.RemoveAt(i);
                     i--;
                 }
 
