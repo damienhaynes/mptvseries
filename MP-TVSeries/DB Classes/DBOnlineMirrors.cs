@@ -68,7 +68,7 @@ namespace WindowPlugins.GUITVSeries
             // make sure the table is created on first run
             DBOnlineMirror dummy = new DBOnlineMirror();
 
-            cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("APIKey");
+            cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("Key");
         }
 
         private DBOnlineMirror()

@@ -42,6 +42,8 @@ namespace WindowPlugins.GUITVSeries
         static PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
+        public delegate void rateRequest(DBEpisode episode);
+        public event rateRequest RateRequestOccured;
         #endregion
 
         #region Constructor
@@ -54,6 +56,7 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
             w.DoWork += new System.ComponentModel.DoWorkEventHandler(w_DoWork);
         }
+
         #endregion
 
         #region Public Methods
@@ -283,14 +286,17 @@ namespace WindowPlugins.GUITVSeries
 
         void PlaybackOperationEnded(bool countAsWatched)
         {
-            if (countAsWatched)
+            if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
-                MarkEpisodeAsWatched(m_currentEpisode);
+                MPTVSeriesLog.Write("This episode counts as watched");
+                if(countAsWatched) MarkEpisodeAsWatched(m_currentEpisode);
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
-                if(Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) && DBOption.GetOptions(DBOption.cAskToRate))
+                if ((Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
-                    //TVSeriesPlugin.showRatingsDialog(m_currentEpisode);
-                } else  m_currentEpisode.Commit(); // we have to commit the watchedflag here - the ratingsdialog does it for us in the other case
+                    MPTVSeriesLog.Write("Episode not rated yet.");
+                    if(RateRequestOccured != null)
+                        RateRequestOccured.Invoke(m_currentEpisode);
+                } MPTVSeriesLog.Write("Episode already rated or option not set.");
             }
             m_currentEpisode = null; // reset, we are done with it
             SetGUIProperties(true); // clear GUI Properties
