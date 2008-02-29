@@ -74,13 +74,25 @@ namespace WindowPlugins.GUITVSeries.MathParser
             addFunction("Abs", delegate(double number) { return Math.Abs(number); });
             addFunction("Log10", delegate(double number) { return Math.Log10(number); });
 
-            addFunction("PrettyBytes", delegate(double number, out int pow)
+            addFunction("PrettyBytes1024", delegate(double number, out int pow)
             {
                 double result = number;
                 pow = 0;
                 while (result > 1024)
                 {
                     result /= 1024;
+                    pow++;
+                }
+                return result;
+            });
+
+            addFunction("PrettyBytes1000", delegate(double number, out int pow)
+            {
+                double result = number;
+                pow = 0;
+                while (result > 1000)
+                {
+                    result /= 1000;
                     pow++;
                 }
                 return result;
@@ -323,7 +335,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
             string[] parameters = input.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
             string[] options = parameters[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             subLog("MathParser: StrinOptions -> prev Result was set to " + prevResult.ToString());
-            if (options.Length >= prevResult) return double.Parse(parameters[0], provider).ToString(provider) + options[prevResult];
+            if (options.Length >= prevResult) return double.Parse(parameters[0], provider).ToString() + options[prevResult];
             return string.Empty;
 
         }

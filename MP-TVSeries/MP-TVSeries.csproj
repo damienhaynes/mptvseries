@@ -105,6 +105,12 @@
     <Compile Include="Configuration\ExpressionBuilder.designer.cs">
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\FormattingConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\FormattingConfiguration.Designer.cs">
+      <DependentUpon>FormattingConfiguration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\GUIConfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +150,7 @@
     <Compile Include="Configuration\DBOptionCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DB Classes\DBFormatting.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBTorrent.cs" />
@@ -226,6 +233,9 @@
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\FormattingConfiguration.resx">
+      <DependentUpon>FormattingConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\GUIConfiguration.resx">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -285,8 +295,8 @@
     <None Include="img\tv_series_logo_noreflection.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Online Parsing Classes\User Controls\" />
     <Folder Include="Properties\DataSources\" />
-    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

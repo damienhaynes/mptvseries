@@ -147,5 +147,76 @@ namespace WindowPlugins.GUITVSeries.Configuration
             enableControls(false);
             enableControls(true);
         }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.IO.StreamWriter w = null;
+            try
+            {
+                saveFileDialog1.AddExtension = true;
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    w = new System.IO.StreamWriter(saveFileDialog1.FileName);
+                    foreach (object o in list.Items)
+                    {
+                        DBFormatting dbf = o as DBFormatting;
+                        w.WriteLine(string.Format("<Enabled>{0}<Format>{1}<FormatAs>{2}", dbf[DBFormatting.cEnabled], dbf[DBFormatting.cReplace], dbf[DBFormatting.cWith]));
+                    }
+                    w.Flush();
+                    MessageBox.Show(list.Items.Count.ToString() + " Formatting Rules Exported!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error in trying to Export User Formatting Rules: " + ex.Message);
+            }
+            finally
+            {
+                if (w != null) w.Close();
+            }
+        }
+
+        private void lnkImport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.IO.StreamReader w = null;
+            try
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    w = new System.IO.StreamReader(openFileDialog1.FileName);
+                    List<DBFormatting> imports = new List<DBFormatting>();
+                    string line;
+                    string[] splits = new string[] { "<Enabled>", "<Format>", "<FormatAs>" };
+                    while((line = w.ReadLine()) != null)
+                    {
+                        string[] properties = line.Split(splits, StringSplitOptions.RemoveEmptyEntries);
+                        if (properties.Length == 3)
+                        {
+                            DBFormatting dbf = new DBFormatting();
+                            dbf[DBFormatting.cEnabled] = properties[0];
+                            dbf[DBFormatting.cReplace] = properties[1];
+                            dbf[DBFormatting.cWith] = properties[2];
+                            imports.Add(dbf);
+                            // now for add each one to the list
+                            saveToDBAndReload(dbf, true);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to Import: " + line);
+                        }
+                    }
+
+                    MessageBox.Show(imports.Count.ToString() + " Formatting Rules Imported!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error in trying to Export User Formatting Rules: " + ex.Message);
+            }
+            finally
+            {
+                if (w != null) w.Close();
+            }
+        }
     }
 }
