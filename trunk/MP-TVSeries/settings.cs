@@ -57,11 +57,11 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Vars
-        static Assembly _entryAssembly = Assembly.GetEntryAssembly();
-        static bool _isConfig = System.IO.Path.GetFileNameWithoutExtension(EntryAssembly.Location).Equals("configuration", StringComparison.InvariantCultureIgnoreCase);        
-        static Version _version = Assembly.GetCallingAssembly().GetName().Version;
-        static DateTime _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
-        static string _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
+        static Assembly _entryAssembly = null;
+        static bool _isConfig;
+        static Version _version = null;
+        static DateTime _buildDate;
+        static string _userAgent = null;
         #endregion
 
         #region Constructors
@@ -69,7 +69,17 @@ namespace WindowPlugins.GUITVSeries
 
         static Settings()
         {
-            apppath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            try
+            {
+                apppath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+
+                _entryAssembly = Assembly.GetEntryAssembly();
+                _isConfig = System.IO.Path.GetFileNameWithoutExtension(EntryAssembly.Location).Equals("configuration", StringComparison.InvariantCultureIgnoreCase);
+                _version = Assembly.GetCallingAssembly().GetName().Version;
+                _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
+                _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
+            }
+            catch (Exception) { }
 
             // AB: can override DB path, stored in the registry
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("Software\\MPTVSeries");
