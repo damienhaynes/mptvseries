@@ -49,6 +49,7 @@ namespace WindowPlugins.GUITVSeries
         static string epIdentifier = String.Format("{0}{1}{2}", openTag, Episode, typeFieldSeperator);
         static string seasonIdentifier = String.Format("{0}{1}{2}", openTag, Season, typeFieldSeperator);
         static string seriesIdentifier = String.Format("{0}{1}{2}", openTag, Series, typeFieldSeperator);
+        static List<DBFormatting> userFormatting = null;
         #endregion
 
         #region Static Regex Objects
@@ -114,6 +115,15 @@ namespace WindowPlugins.GUITVSeries
 
             // want to ensure these show as is
             nonFormattingFields.Add("<Episode.EpisodeFilename>");
+
+            DBFormatting[] all = DBFormatting.GetAll(false);
+            if (all != null)
+            {
+                userFormatting = new List<DBFormatting>(all);
+            }
+            else userFormatting = new List<DBFormatting>();
+
+            MPTVSeriesLog.Write("User Formatting: Found and loaded " + userFormatting.Count.ToString() + " Formatting Rules");
         }
         #endregion
 
@@ -123,8 +133,16 @@ namespace WindowPlugins.GUITVSeries
             return resolveDynString(what, item, true);
         }
 
-        public static string resolveDynString(string what, DBTable item, bool splitFields)
+        public static string resolveDynString(string what, DBTable item, bool applyUserFormatting)
         {
+            return resolveDynString(what, item, true, applyUserFormatting);
+        }
+
+        public static string resolveDynString(string what, DBTable item, bool splitFields, bool applyUserFormatting)
+        {
+            // apply userFormatting on the field's itself
+            if (applyUserFormatting) performUserFormattingReplacement(ref what);
+
             Level level = levelOfItem(item);
             string value = what;
             List<Level> whatLevels = getLevel(what);
@@ -161,11 +179,37 @@ namespace WindowPlugins.GUITVSeries
             value = doFormatting(value, what, item);
 
             value = MathParser.mathParser.TryParse(value);
+
+            // apply userFormatting on the field's result
+            if (applyUserFormatting)
+            {
+                bool replacementOccured = performUserFormattingReplacement(ref value);
+                // because the replacement itself might be dynamic again, we resolve the result again
+                if(replacementOccured) value = resolveDynString(value, item, splitFields, applyUserFormatting);
+            }
+
             return value;
         }
         #endregion
 
         #region Static Private Implementation Methods
+
+        static bool performUserFormattingReplacement(ref string input)
+        {
+            bool atLeastOneFound = false;
+            if (userFormatting == null) return atLeastOneFound;
+            foreach (DBFormatting dbf in userFormatting)
+            {
+                string toReplace = dbf[DBFormatting.cReplace];
+                if (input.Contains(toReplace))
+                {
+                    atLeastOneFound = true;
+                    input = input.Replace(toReplace, dbf[DBFormatting.cWith]);
+                }
+            }
+            return atLeastOneFound;
+        }
+
         static List<Level> getLevel(string what)
         {
             List<Level> levels = new List<Level>();

@@ -67,10 +67,10 @@ namespace WindowPlugins.GUITVSeries
         #region Constructor
         static MPTVSeriesLog()
         {
-            #if TEST
-            m_filename =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            m_filename += @"\MP-TVSeries.log";
-            #endif
+            //#if TEST
+            //m_filename =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            //m_filename += @"\MP-TVSeries.log";
+            //#endif
 
             // let's rename the old one to .bak just like MP does
             try
@@ -86,9 +86,16 @@ namespace WindowPlugins.GUITVSeries
             {
                 Write("Problem backing up Log file: " + e.Message);
             }
-            m_LogStream = File.CreateText(m_filename);
-            m_LogStream.Close();
-            m_LogStream.Dispose();
+            try
+            {
+                m_LogStream = File.CreateText(m_filename);
+                m_LogStream.Close();
+                m_LogStream.Dispose();
+            }
+            catch (Exception)
+            {
+                // oopps, can't create file
+            }
 
             int level = 0;
             int.TryParse(DBOption.GetOptions("logLevel"), out level);
@@ -167,30 +174,34 @@ namespace WindowPlugins.GUITVSeries
         {
             if ((int)level <= (int)selectedLogLevel)
             {
-                lock (m_LogStream)
+                if (m_LogStream != null)
                 {
-                    try
+                    lock (m_LogStream)
                     {
-                        if (File.Exists(m_filename))
-                            m_LogStream = File.AppendText(m_filename);
-                        else
-                            m_LogStream = File.CreateText(m_filename);
-                        if(OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey)) entry = entry.Replace(DBOnlineMirror.cApiKey, "789379adbid793");
-                        if (singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
-                        else m_LogStream.Write(DateTime.Now + " - \n" + entry);
-                        m_LogStream.Flush();
+                        try
+                        {
+                            if (File.Exists(m_filename))
+                                m_LogStream = File.AppendText(m_filename);
+                            else
+                                m_LogStream = File.CreateText(m_filename);
+                            if (OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey)) entry = entry.Replace(DBOnlineMirror.cApiKey, "789379adbid793");
+                            if (singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
+                            else m_LogStream.Write(DateTime.Now + " - \n" + entry);
+                            m_LogStream.Flush();
 
-                        m_LogStream.Close();
-                        m_LogStream.Dispose();
-                        if (level != LogLevel.Debug) Log_Write(entry);
-                    }
-                    catch (Exception ex)
-                    {
-                        // well we can't write...maybe no file acces or something....and we can't even log the error
-                        Log_Write(entry);
-                        Log_Write(ex.Message);
+                            m_LogStream.Close();
+                            m_LogStream.Dispose();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            // well we can't write...maybe no file acces or something....and we can't even log the error
+                            Log_Write(entry);
+                            Log_Write(ex.Message);
+                        }
                     }
                 }
+                if (level != LogLevel.Debug) Log_Write(entry);
             }
         }
 

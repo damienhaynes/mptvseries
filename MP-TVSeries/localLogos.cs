@@ -442,7 +442,7 @@ namespace WindowPlugins.GUITVSeries
                         case Level.Season: item = tmpSeason; break;
                         case Level.Series: item = tmpSeries; break;
                     }
-                    value = FieldGetter.resolveDynString(what, item);
+                    value = FieldGetter.resolveDynString(what, item, false);
             }
              
             return true;
