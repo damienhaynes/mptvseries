@@ -37,5 +37,25 @@ namespace WindowPlugins.GUITVSeries
             locationBrowser5.setUpFolder("Languages:", Settings.GetPath(Settings.Path.lang));
         }
 
+        private void linkForum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/");
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://www.thetvdb.com");
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://sourceforge.net/projects/mp-tvseries/");
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://wiki.team-mediaportal.com/Extensions-Plugins/MP-TVSeries");
+        }
+
     }
 }

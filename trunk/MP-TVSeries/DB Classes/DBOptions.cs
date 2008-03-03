@@ -58,8 +58,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";
         public const String cPreferedBannerType = "PreferedBannerType";
 
-        public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp";
-        public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp";
+        public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp"; // not used anymore
+        public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp"; // not used anymore
 
         public const String cLocalScanLastTime = "LocalScanLastTime";
         public const String cUpdateScanLastTime = "UpdateScanLastTime";
@@ -116,7 +116,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
-        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
+        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp"; // not used anymore
 
         public const String cUsesNewPathFormat = "usesNewPathFormat";
 
@@ -133,9 +133,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAltImgLoading = "altImageLoading";
 
         public const String cNewAPIUpgradeDone = "newAPIUpgradeDone";
-        public const String cUpdateTimeStamp = "UpdateTimeStamp";
+        public const String cUpdateTimeStamp = "UpdateTimeStamp"; // new one and only timestamp
         public const String cOnlineUserID = "onlineUserID";
         public const String cAskToRate = "askToRate";
+        public const String cswitchViewsFast = "switchViewsFast";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 

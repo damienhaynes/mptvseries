@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries
         static string epIdentifier = String.Format("{0}{1}{2}", openTag, Episode, typeFieldSeperator);
         static string seasonIdentifier = String.Format("{0}{1}{2}", openTag, Season, typeFieldSeperator);
         static string seriesIdentifier = String.Format("{0}{1}{2}", openTag, Series, typeFieldSeperator);
-        static List<DBFormatting> userFormatting = null;
+        public static List<DBFormatting> userFormatting = null;
         #endregion
 
         #region Static Regex Objects

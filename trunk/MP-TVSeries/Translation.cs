@@ -104,6 +104,8 @@ namespace WindowPlugins.GUITVSeries
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
         public static string RatingStars = "Stars";
+        public static string ChangeView = "Change View";
+        public static string ChangeViewFast = "Immediatly Change Views";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";

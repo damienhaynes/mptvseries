@@ -195,7 +195,7 @@ namespace WindowPlugins.GUITVSeries
                             int rating = -1;
                             if(Int32.TryParse(value, out rating))
                             {
-                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.episode, base[cID], rating);
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.RatingType.episode, base[cID], rating);
                             }
                         }
                         goto default;
@@ -474,6 +474,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
+                return true;
                 if (Helper.String.IsNullOrEmpty(this["localPlaytime"])// ||
                 //    this["VideoCodec"] == "" ||
                 //    this["VideoBitrate"] == "" ||

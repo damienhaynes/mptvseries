@@ -32,7 +32,8 @@ namespace WindowPlugins.GUITVSeries
         public enum LogLevel
         {
             Normal,
-            Debug
+            Debug,
+            DebugSQL
         }
 
         #region Vars

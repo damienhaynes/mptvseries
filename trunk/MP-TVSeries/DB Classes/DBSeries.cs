@@ -238,7 +238,7 @@ namespace WindowPlugins.GUITVSeries
                             int rating = -1;
                             if (Int32.TryParse(value, out rating))
                             {
-                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.series, base[cID], rating);
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.RatingType.series, base[cID], rating);
                             }
                         }
                         goto default;

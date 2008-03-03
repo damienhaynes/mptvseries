@@ -1061,9 +1061,9 @@ namespace WindowPlugins.GUITVSeries
             SQLite.NET.SQLiteResultSet result;
             try
             {
-                MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
                 result = m_db.Execute(sCommand);
-                MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);
                 return result;
             }
             catch (Exception ex)

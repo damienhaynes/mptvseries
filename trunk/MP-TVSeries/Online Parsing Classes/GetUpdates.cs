@@ -7,7 +7,6 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
     class GetUpdates
     {
-
         long timestamp;
         List<DBValue> series = null;
         List<DBValue> episodes = null;
@@ -21,30 +20,47 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         public List<DBValue> UpdatedEpisodes
         { get { return episodes; } }
 
-        public GetUpdates(OnlineAPI.UpdateType type)
+        public GetUpdates(OnlineAPI.UpdateType type, double minTimestampToConsider)
         {
-            long lastUpdatetime = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
-            XmlNodeList nodelist = OnlineAPI.Updates(lastUpdatetime, type);
-            if (type > OnlineAPI.UpdateType.none) series = new List<DBValue>();
-            if (type > OnlineAPI.UpdateType.series) episodes = new List<DBValue>(); 
+            XmlNodeList nodelist = OnlineAPI.Updates(type);
+            series = new List<DBValue>();
+            episodes = new List<DBValue>();
+            long maxTimeStamp = -1;
             if (nodelist != null)
             {
                 foreach (XmlNode node in nodelist)
                 {
-                    switch (node.Name)
+                    string entryType = node.Name;
+                    string id = string.Empty;
+                    long timeStamp = 0;
+                    foreach (XmlNode propertyNode in node.ChildNodes)
                     {
-                        case "Time":
-                            timestamp = long.Parse(node.InnerText);
-                            break;
-                        case "Series":
-                            series.Add(node.InnerText);
-                            break;
-                        case "Episode":
-                            episodes.Add(node.InnerText);
-                            break;
+                        switch (propertyNode.Name)
+                        {
+                            case "id":
+                                id = propertyNode.InnerText;
+                                break;
+                            case "time":
+                                long.TryParse(propertyNode.InnerText, out timeStamp);                                   
+                                break;
+                        }
                     }
+                    if (timeStamp >= minTimestampToConsider && !Helper.String.IsNullOrEmpty(id))
+                    {
+                        switch (entryType)
+                        {
+                            case "Series":
+                                series.Add(id);
+                                break;
+                            case "Episode":
+                                episodes.Add(id);
+                                break;
+                        }
+                        if (maxTimeStamp < timeStamp) maxTimeStamp = timeStamp; // should be changed to timestamp returned from server and not maxTimestamp in updates
+                    }                    
                 }
             }
+            this.timestamp = maxTimeStamp;
         }
     }
 }

@@ -11,10 +11,29 @@ namespace WindowPlugins.GUITVSeries.Configuration
     public partial class FormattingConfiguration : UserControl
     {
         DBFormatting selected = null;
+        DBSeries series = null;
+        DBSeason season = null;
+        DBEpisode ep = null;
+
         public FormattingConfiguration()
         {
             InitializeComponent();
             LoadFromDB();
+        }
+
+        public DBSeries Series
+        {
+            set { series = value; }
+        }
+
+        public DBSeason Season
+        {
+            set { season = value; }
+        }
+
+        public DBEpisode Episode
+        {
+            set { ep = value; }
         }
 
         public void LoadFromDB()
@@ -216,6 +235,31 @@ namespace WindowPlugins.GUITVSeries.Configuration
             finally
             {
                 if (w != null) w.Close();
+            }
+        }
+
+        private void textReplace_TextChanged(object sender, EventArgs e)
+        {
+            Evaluate();
+        }
+
+        private void txtWith_TextChanged(object sender, EventArgs e)
+        {
+            Evaluate();
+        }
+
+        private void Evaluate()
+        {
+            if (series == null && season == null && ep == null)
+                this.textBox1.Text = "Make sure you select an item in the details Tree";
+            else if (txtWith.Text == string.Empty || textReplace.Text == string.Empty)
+                this.textBox1.Text = "The result of your Formatting Rule will appear here...";
+            else
+            {
+                DBFormatting current = this.fromInput();
+                FieldGetter.userFormatting.Add(current);
+                this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, ep, true, true);
+                FieldGetter.userFormatting.Remove(current);
             }
         }
     }
