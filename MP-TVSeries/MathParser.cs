@@ -146,7 +146,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 double? res = Parse(with, out stringResult);
                 if (res != null) expression = expression.Replace(replace, res.Value.ToString());
                 else if (stringResult != null) expression = expression.Replace(replace, stringResult);
-                else expression = expression.Replace(replace, with);
+                else expression = expression.Replace(replace, string.Empty); // return "" and not its input //expression = expression.Replace(replace, with);
             }
             return expression;
         }

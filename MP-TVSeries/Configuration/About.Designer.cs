@@ -33,7 +33,10 @@
             this.lblVersion = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkForum = new System.Windows.Forms.LinkLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lblEpisodes = new System.Windows.Forms.Label();
             this.lblSeasons = new System.Windows.Forms.Label();
@@ -97,23 +100,60 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.linkLabel3);
+            this.groupBox2.Controls.Add(this.linkLabel2);
             this.groupBox2.Controls.Add(this.linkLabel1);
-            this.groupBox2.Location = new System.Drawing.Point(23, 256);
+            this.groupBox2.Controls.Add(this.linkForum);
+            this.groupBox2.Location = new System.Drawing.Point(23, 254);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(353, 81);
+            this.groupBox2.Size = new System.Drawing.Size(353, 84);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Help";
             // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(9, 65);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(68, 13);
+            this.linkLabel3.TabIndex = 3;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Wiki/Manual";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(9, 49);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(125, 13);
+            this.linkLabel2.TabIndex = 2;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "SourceForge Project Site";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(9, 28);
+            this.linkLabel1.Location = new System.Drawing.Point(9, 32);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(259, 13);
-            this.linkLabel1.TabIndex = 0;
+            this.linkLabel1.Size = new System.Drawing.Size(78, 13);
+            this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Todo: Add links to forum, SF, SVN versions, and Wiki";
+            this.linkLabel1.Text = "TheTVDB.com";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // linkForum
+            // 
+            this.linkForum.AutoSize = true;
+            this.linkForum.Location = new System.Drawing.Point(9, 16);
+            this.linkForum.Name = "linkForum";
+            this.linkForum.Size = new System.Drawing.Size(36, 13);
+            this.linkForum.TabIndex = 0;
+            this.linkForum.TabStop = true;
+            this.linkForum.Text = "Forum";
+            this.linkForum.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkForum_LinkClicked);
             // 
             // groupBox3
             // 
@@ -270,7 +310,6 @@
         private System.Windows.Forms.Label lblBuild;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label lblEpisodes;
         private System.Windows.Forms.Label lblSeasons;
         private System.Windows.Forms.Label lblSeries;
@@ -280,5 +319,9 @@
         private LocationBrowser locationBrowser3;
         private LocationBrowser locationBrowser2;
         private LocationBrowser locationBrowser1;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkForum;
     }
 }

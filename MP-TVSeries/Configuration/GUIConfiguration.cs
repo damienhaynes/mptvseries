@@ -188,7 +188,6 @@ namespace WindowPlugins.GUITVSeries
 
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
 
-            checkBox_AutoHeight.Checked = DBOption.GetOptions(DBOption.cViewAutoHeight);
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);
             comboBox_seriesFormat.Items.Add("Text");
             comboBox_seriesFormat.Items.Add("Graphical");
@@ -1121,7 +1120,11 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                    }
+                        // let configs now what was selected (for samples)
+                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                        this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+                        this.formattingConfiguration1.Episode = episode;
+                    }                    
                     break;
 
                 #endregion
@@ -1186,6 +1189,10 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
+                        // let configs now what was selected (for samples)
+                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
+                        this.formattingConfiguration1.Season = season;
+                        this.formattingConfiguration1.Episode = null;
                     }
                     break;
                 #endregion
@@ -1257,6 +1264,10 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
+                        // let configs now what was selected (for samples)
+                        this.formattingConfiguration1.Series = series;
+                        this.formattingConfiguration1.Season = null;
+                        this.formattingConfiguration1.Episode = null;
                     }
                     break;
 
@@ -1911,12 +1922,8 @@ namespace WindowPlugins.GUITVSeries
         {
             if (this.comboBox_debuglevel.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
             else if (this.comboBox_debuglevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
+            else if (this.comboBox_debuglevel.SelectedIndex == 2) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
             else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-        }
-
-        private void checkBox_AutoHeight_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cViewAutoHeight, checkBox_AutoHeight.Checked);
         }
 
         private void comboBox_seasonFormat_SelectedIndexChanged(object sender, EventArgs e)
@@ -2818,6 +2825,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
                 DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+                DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 ZsoriParser.SelLanguageAsString = string.Empty; // to overcome caching
                 System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
@@ -2829,7 +2837,8 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
-
+            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+            
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
 

@@ -936,6 +936,7 @@ namespace MediaPortal.GUI.Video
             actionPlayRandom,
             optionsOnlyShowLocal,
             optionsPreventSpoilers,
+            optionsFastViewSwitch,
             actionRecheckMI,
         }
 
@@ -944,7 +945,8 @@ namespace MediaPortal.GUI.Video
             download = 100,
             action,
             options,
-            rate
+            rate,
+            switchView
         }
 
         internal static void showRatingsDialog(DBTable item, bool auto)
@@ -992,6 +994,34 @@ namespace MediaPortal.GUI.Video
             }
 
         }
+
+        internal bool showViewSwitchDialog()
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            dlg.Reset();
+            dlg.SetHeading(Translation.ChangeView);
+
+            int counter = 0;
+            int preSelect = 0;
+            foreach (logicalView view in m_allViews)
+            {
+                GUIListItem pItem = new GUIListItem(view.prettyName);
+                if (view.Equals(this.m_CurrLView))
+                    preSelect = counter;
+                dlg.Add(pItem);
+                pItem.ItemId = counter++;
+            }
+
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId >= 0 && !m_allViews[dlg.SelectedId].Equals(m_CurrLView))
+            {
+                switchView(m_allViews[dlg.SelectedId]);
+                LoadFacade();
+                return true;
+            }
+            return false;
+        }
+
 
         protected override void OnShowContextMenu()
         {
@@ -1125,6 +1155,10 @@ namespace MediaPortal.GUI.Video
                     }
                     else dlg.SetHeading(m_CurrLView.Name);
 
+                    pItem = new GUIListItem(Translation.ChangeView + " >>");
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)eContextMenus.switchView;
+
                     if (listLevel != Listlevel.Group)
                     {
                         pItem = new GUIListItem(Translation.Actions + " >>");
@@ -1213,9 +1247,20 @@ namespace MediaPortal.GUI.Video
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
+                                pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? "on" : "off") + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;
+
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                                 if (dlg.SelectedId != -1)
                                     bExitMenu = true;
+                            }
+                            break;
+                        case (int)eContextMenus.switchView:
+                            {
+                                dlg.Reset();
+                                if (showViewSwitchDialog())
+                                    return;
                             }
                             break;
                         case (int)eContextMenus.rate:
@@ -1611,7 +1656,11 @@ namespace MediaPortal.GUI.Video
                     case (int)eContextItems.optionsPreventSpoilers:
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
                         LoadFacade();
-                        break;                    
+                        break;
+                    case (int)eContextItems.optionsFastViewSwitch:
+                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
+                        LoadFacade();
+                        break;     
                 }
             }
             catch (Exception ex)
@@ -1801,15 +1850,23 @@ namespace MediaPortal.GUI.Video
                         base.OnAction(action);
                         if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
                         {
-                            switchView(-1);
-                            LoadFacade();
+                            if (DBOption.GetOptions(DBOption.cswitchViewsFast))
+                            {
+                                switchView(-1);
+                                LoadFacade();
+                            }
+                            else showViewSwitchDialog();
                         }
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                     }
                     else
                     {
-                        switchView(-1);
-                        LoadFacade();
+                        if (DBOption.GetOptions(DBOption.cswitchViewsFast))
+                        {
+                            switchView(-1);
+                            LoadFacade();
+                        }
+                        else showViewSwitchDialog();
                     }
 
                     break;
@@ -1820,19 +1877,28 @@ namespace MediaPortal.GUI.Video
                         base.OnAction(action);
                         if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
                         {
-                            switchView(1);
-                            LoadFacade();
-                            //m_Facade.sele
-                            OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
-                            OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
-                            //GUIControl.FocusItemControl(this.GetID, m_Facade.GetID, m_Facade.SelectedListItemIndex);
+                            if (DBOption.GetOptions(DBOption.cswitchViewsFast))
+                            {
+                                switchView(1);
+                                LoadFacade();
+                                OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
+                                OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
+                            }
+                            else showViewSwitchDialog();
+                            
+                            
+                            
                         }
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                     }
                     else
                     {
-                        switchView(1);
-                        LoadFacade();
+                        if (DBOption.GetOptions(DBOption.cswitchViewsFast))
+                        {
+                            switchView(1);
+                            LoadFacade();
+                        }
+                        else showViewSwitchDialog();
                     }
                     break;
 
@@ -2365,7 +2431,7 @@ namespace MediaPortal.GUI.Video
 
                         if (dlgOK == null)
                             return ReturnCode.Cancel;
-                        dlgOK.Reset(); //breaking for users of older MP versions?
+                        //dlgOK.Reset(); //breaking for users of older MP versions?
                         dlgOK.SetHeading(descriptor.m_sTitle);
                         dlgOK.SetLine(1, descriptor.m_sLabel);
                         dlgOK.DoModal(GUIWindowManager.ActiveWindow);

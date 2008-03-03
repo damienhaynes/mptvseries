@@ -300,16 +300,7 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
             {
                 int counter = 0;
-                // let's get the time we last updated from the local options
-                long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
-                long curServerTimeStamp = default(long);
-
-                // if we do updates too, let's get the current server-timestamp
-                if (m_params.m_bUpdateScan)
-                {
-                    Online_Parsing_Classes.GetUpdates gu = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.none);
-                    curServerTimeStamp = gu.OnlineTimeStamp;
-                }
+                
                 m_bReparseNeeded = true;
                 while (m_bReparseNeeded && counter < 4) // limit the max number of loops
                 {
@@ -319,34 +310,47 @@ namespace WindowPlugins.GUITVSeries
                     GetSeries();
 
                     // 2) Download metadata for them
-                    UpdateSeries(true); // todo: ask orderoption
+                    UpdateSeries(true, null); // todo: ask orderoption
 
-                    if (m_params.m_bUpdateScan)
-                    {
-                        worker.ReportProgress(45);
-                        // 3) now do an regular update (refresh, with timestamp) on all the series
-                        UpdateSeries(false);
-                    }
-                    else
-                    {
-                        worker.ReportProgress(50);
-                    }
-
-                    // 5) match up and get Metadata for the new episodes
-                    GetEpisodes();
-                                                        
-
-                    if (m_params.m_bUpdateScan)
-                    {
-                        // 6) now refresh existing episodes
-                        UpdateEpisodes();
-                    }
-
-                    // lets save the updateTimestamp
-                    if(curServerTimeStamp > 0)
-                        DBOption.SetOptions(DBOption.cUpdateTimeStamp, curServerTimeStamp);
+                    // 3) identifies new episodes
+                    GetEpisodes();                                                         
                     
                     counter++;
+                }
+
+                // if we do updates too, let's get the current timestamp
+                if (m_params.m_bUpdateScan)
+                {
+                    // let's get the time we last updated from the local options
+                    long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
+                    double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                    double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
+
+                    if (lastUpdateTimeStamp != 0)
+                    {
+                        Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
+                        if (sinceLastUpdate < 3600 * 24)
+                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
+                        else if (sinceLastUpdate < 3600 * 24 * 7)
+                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
+                        else if (sinceLastUpdate < 3600 * 24 * 30)
+                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
+
+                        Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType, curTimeStamp - 3600);
+
+                        // update series
+                        UpdateSeries(false, GU.UpdatedSeries);
+
+                        // update episodes
+                        UpdateEpisodes(GU.UpdatedEpisodes);
+
+                        // update banners
+                        //UpdateBanners(false, Guid);
+
+                        // lets save the updateTimestamp
+                        if (GU.OnlineTimeStamp > 0)
+                            DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
+                    }
                 }
 
                 // we really only need to do this once
@@ -790,7 +794,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateSeries(bool bUpdateNewSeries)
+        public void UpdateSeries(bool bUpdateNewSeries, List<DBValue> seriesUpdated)
         {
             // now retrieve the info about the series
             SQLCondition condition = new SQLCondition();
@@ -814,9 +818,6 @@ namespace WindowPlugins.GUITVSeries
 
             if (!bUpdateNewSeries && SeriesList.Count > 0)
             {
-                // let's get the list of updates since lasttime
-                Online_Parsing_Classes.GetUpdates updates = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.series);
-                List<DBValue> seriesUpdated = updates.UpdatedSeries;
 
                 // let's check which of these we have any interest in
                 for (int i = 0; i < SeriesList.Count; i++)
@@ -988,14 +989,8 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateEpisodes()
+        public void UpdateEpisodes(List<DBValue> episodesUpdated)
         {
-
-            // let's get the list of updates since lasttime
-            Online_Parsing_Classes.GetUpdates updates = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.episode);
-
-            List<DBValue> episodesUpdated = updates.UpdatedEpisodes;
-
             // let's check which series/episodes we have locally
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
             cond.AddOrderItem(DBEpisode.Q(DBEpisode.cSeriesID), SQLCondition.orderType.Ascending);
@@ -1065,7 +1060,8 @@ namespace WindowPlugins.GUITVSeries
                                 try
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(completePath));
-                                    webClient.DownloadFile(DBOnlineMirror.Banners + "/banners/" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl], completePath);
+                                    string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
+                                    webClient.DownloadFile(url, completePath);
                                 }
                                 catch (System.Net.WebException)
                                 {
@@ -1286,7 +1282,7 @@ namespace WindowPlugins.GUITVSeries
                                         break;
                                 }
                             }
-
+                            localEpisode[DBOnlineEpisode.cOnlineDataImported] = 1;
                             MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified");
                             localEpisode.Commit();
                             break;

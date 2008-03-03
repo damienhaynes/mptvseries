@@ -30,7 +30,7 @@
         {
             this.lblDescr = new System.Windows.Forms.Label();
             this.txtLocation = new System.Windows.Forms.TextBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // lblDescr
@@ -52,23 +52,24 @@
             this.txtLocation.Size = new System.Drawing.Size(226, 20);
             this.txtLocation.TabIndex = 1;
             // 
-            // btnBrowse
+            // linkLabel1
             // 
-            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(340, 1);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(52, 23);
-            this.btnBrowse.TabIndex = 2;
-            this.btnBrowse.Text = "...";
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(340, 6);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(41, 13);
+            this.linkLabel1.TabIndex = 2;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "show...";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // LocationBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.btnBrowse);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.txtLocation);
             this.Controls.Add(this.lblDescr);
             this.Name = "LocationBrowser";
@@ -82,6 +83,6 @@
 
         private System.Windows.Forms.Label lblDescr;
         private System.Windows.Forms.TextBox txtLocation;
-        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

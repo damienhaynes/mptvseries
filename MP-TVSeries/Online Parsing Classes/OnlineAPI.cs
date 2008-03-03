@@ -16,7 +16,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             public const string Languages = "languages";
             public const string GetSeries = @"GetSeries.php?seriesname={0}&language={1}";
             public const string FullSeriesUpdate = @"series/{0}/all/{1}";
-            public const string Updates = "Updates.php?type={0}&time={1}";
+            public const string Updates = "updates/updates_{0}";
             public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
         }
 
@@ -29,10 +29,16 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         public enum UpdateType
         {            
-            none = 0,
-            series = 1,
-            episode = 2,
+            day = 0,
+            week = 1,
+            month = 2,
             all = 3,
+        }
+
+        public enum RatingType
+        {
+            series = 0,
+            episode = 1,
         }
 
         static Dictionary<int, Dictionary<string, XmlDocument>> zipCache = new Dictionary<int, Dictionary<string, XmlDocument>>();
@@ -82,7 +88,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             return getFromCache(series, SelLanguageAsString + ".xml");           
         }
 
-        static public bool SubmitRating(UpdateType type, string itemId, int rating)
+        static public bool SubmitRating(RatingType type, string itemId, int rating)
         {
             string account = DBOption.GetOptions(DBOption.cOnlineUserID);
             if (Helper.String.IsNullOrEmpty(account))
@@ -90,7 +96,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
                 return false;
             }
-            if (itemId == "0" || rating < 0 || rating > 10 || type == UpdateType.all || type == UpdateType.none)
+            if (itemId == "0" || rating < 0 || rating > 10)
             {
                 MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
                 return false;
@@ -107,9 +113,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         /// <param name="lastTime"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        static public XmlNodeList Updates(long lastTime, UpdateType type)
+        static public XmlNodeList Updates(UpdateType type)
         {
-            return Generic(string.Format(apiURIs.Updates, Enum.GetName(typeof(UpdateType), type), lastTime), true, false, Format.NoExtension);
+            string typeName = Enum.GetName(typeof(UpdateType), type);
+            return Generic(string.Format(apiURIs.Updates, typeName), true, true, Format.Zip, "updates_" + typeName, -1);
         }
 
         static public XmlNodeList UpdateEpisodes(int seriesID)
@@ -199,7 +206,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
                             return root.ChildNodes;
                         }
-                        else MPTVSeriesLog.Write("Decompression returned null");
+                        else MPTVSeriesLog.Write("Decompression returned null or not the requested entry");
                     }
                     
                 }

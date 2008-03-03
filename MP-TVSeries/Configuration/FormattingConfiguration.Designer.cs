@@ -30,6 +30,8 @@
         {
             this.list = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.lnkImport = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button2 = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -38,10 +40,10 @@
             this.checkEnabled = new System.Windows.Forms.CheckBox();
             this.txtWith = new System.Windows.Forms.TextBox();
             this.textReplace = new System.Windows.Forms.TextBox();
-            this.lnkImport = new System.Windows.Forms.LinkLabel();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +60,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.linkLabel3);
             this.groupBox1.Controls.Add(this.lnkImport);
             this.groupBox1.Controls.Add(this.linkLabel1);
@@ -72,10 +76,32 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(541, 239);
+            this.groupBox1.Size = new System.Drawing.Size(541, 280);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output Formatting Rules:";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(282, 123);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(46, 13);
+            this.linkLabel3.TabIndex = 10;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Export...";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
+            // lnkImport
+            // 
+            this.lnkImport.AutoSize = true;
+            this.lnkImport.Location = new System.Drawing.Point(231, 123);
+            this.lnkImport.Name = "lnkImport";
+            this.lnkImport.Size = new System.Drawing.Size(45, 13);
+            this.lnkImport.TabIndex = 9;
+            this.lnkImport.TabStop = true;
+            this.lnkImport.Text = "Import...";
+            this.lnkImport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkImport_LinkClicked);
             // 
             // linkLabel1
             // 
@@ -147,6 +173,7 @@
             this.txtWith.Name = "txtWith";
             this.txtWith.Size = new System.Drawing.Size(529, 20);
             this.txtWith.TabIndex = 2;
+            this.txtWith.TextChanged += new System.EventHandler(this.txtWith_TextChanged);
             // 
             // textReplace
             // 
@@ -156,32 +183,30 @@
             this.textReplace.Name = "textReplace";
             this.textReplace.Size = new System.Drawing.Size(529, 20);
             this.textReplace.TabIndex = 1;
-            // 
-            // lnkImport
-            // 
-            this.lnkImport.AutoSize = true;
-            this.lnkImport.Location = new System.Drawing.Point(231, 123);
-            this.lnkImport.Name = "lnkImport";
-            this.lnkImport.Size = new System.Drawing.Size(45, 13);
-            this.lnkImport.TabIndex = 9;
-            this.lnkImport.TabStop = true;
-            this.lnkImport.Text = "Import...";
-            this.lnkImport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkImport_LinkClicked);
-            // 
-            // linkLabel3
-            // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(282, 123);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(46, 13);
-            this.linkLabel3.TabIndex = 10;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "Export...";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            this.textReplace.TextChanged += new System.EventHandler(this.textReplace_TextChanged);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 235);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Result:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(6, 254);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(529, 20);
+            this.textBox1.TabIndex = 12;
             // 
             // FormattingConfiguration
             // 
@@ -189,7 +214,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "FormattingConfiguration";
-            this.Size = new System.Drawing.Size(541, 239);
+            this.Size = new System.Drawing.Size(541, 280);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -212,5 +237,7 @@
         private System.Windows.Forms.LinkLabel lnkImport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label3;
     }
 }

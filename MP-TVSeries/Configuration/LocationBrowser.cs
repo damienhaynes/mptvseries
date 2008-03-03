@@ -32,7 +32,14 @@ namespace WindowPlugins.GUITVSeries
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(folderToBrowse);
+            
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (System.IO.Directory.Exists(folderToBrowse))
+                System.Diagnostics.Process.Start(folderToBrowse);
+            else MessageBox.Show("The directory/file does not exist.");
         }
     }
 }
