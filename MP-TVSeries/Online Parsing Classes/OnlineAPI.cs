@@ -42,6 +42,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
 
         static Dictionary<int, Dictionary<string, XmlDocument>> zipCache = new Dictionary<int, Dictionary<string, XmlDocument>>();
+        static public void ClearBuffer()
+        {
+            zipCache = new Dictionary<int,Dictionary<string,XmlDocument>>();
+        }
 
         # region Language
         static string selLang = string.Empty;

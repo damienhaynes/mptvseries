@@ -52,6 +52,7 @@ namespace WindowPlugins.GUITVSeries
         private static String s_sCurrentBanner = String.Empty;
         private static String s_sCurrentZip = String.Empty;
         private static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+        private static List<DBOnlineMirror> memoryMirrors = new List<DBOnlineMirror>();
 
         /// <summary>
         /// if you compile yourself get you're own key or it will have to be disabled!
@@ -110,6 +111,7 @@ namespace WindowPlugins.GUITVSeries
             if (Settings.newAPI && !DBOption.GetOptions(DBOption.cNewAPIUpgradeDone)) // upgrade
             {
                 String sqlDel = "drop table " + cTableName;
+                DBTVSeries.Execute(sqlDel);
             }
 
             if (Helper.String.IsNullOrEmpty(cApiKey))
@@ -121,7 +123,7 @@ namespace WindowPlugins.GUITVSeries
             // TODO: improve mirrorhandling
             List<DBOnlineMirror> mirrorList = Get();
             bool startEmpty = false;
-            if (mirrorList.Count == 0)
+            if (null == mirrorList || mirrorList.Count == 0)
             {
                 // no mirrors yet - refresh using "seed"
                 LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror));
@@ -222,7 +224,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 count++;
-                mirror.Commit();
+                if (Settings.newAPI) memoryMirrors.Add(mirror);
+                else mirror.Commit();
             }
             MPTVSeriesLog.Write("Received " + count.ToString() + " mirrors from " + sServer);
             return true;
@@ -292,6 +295,7 @@ namespace WindowPlugins.GUITVSeries
 
         private static List<DBOnlineMirror> Get()
         {
+            return memoryMirrors; // don't need it anymore
             String sqlQuery = "select * from " + cTableName + " order by " + cID;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBOnlineMirror> outList = new List<DBOnlineMirror>();
