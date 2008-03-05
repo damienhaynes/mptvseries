@@ -336,7 +336,7 @@ namespace WindowPlugins.GUITVSeries
                         else if (sinceLastUpdate < 3600 * 24 * 30)
                             uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
 
-                        Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType, curTimeStamp - 3600);
+                        Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType, curTimeStamp - 3600); // doesn't hurt to give ourselves a little room
 
                         // update series
                         UpdateSeries(false, GU.UpdatedSeries);
@@ -345,7 +345,7 @@ namespace WindowPlugins.GUITVSeries
                         UpdateEpisodes(GU.UpdatedEpisodes);
 
                         // update banners
-                        //UpdateBanners(false, Guid);
+                        UpdateBanners(false, GU.seriesBanners);
 
                         // lets save the updateTimestamp
                         if (GU.OnlineTimeStamp > 0)
@@ -357,14 +357,11 @@ namespace WindowPlugins.GUITVSeries
                 // update new series for banners
 
                 // sorry, didn't quite get it done yet
-                UpdateBanners(true);
-                //if (m_params.m_bUpdateScan)
-                //{
-                //    // refresh existing banners
-                //    UpdateBanners(false);
-                //}
+                UpdateBanners(true, null);
+
 
                 UpdateEpisodeThumbNails();
+                Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             }
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
@@ -961,7 +958,7 @@ namespace WindowPlugins.GUITVSeries
                         // look for the episodes for that series, and compare / update the values
                         matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                     }
-                    else if (m_bFullSeriesRetrieval)
+                    if (m_bFullSeriesRetrieval)
                     {
                         // add all online episodes in the local db
                         foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
@@ -1081,7 +1078,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        public void UpdateBanners(bool bUpdateNewSeries)
+        public void UpdateBanners(bool bUpdateNewSeries, List<seriesBannersMap> preSeriesBanners)
         {
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( > 0)
@@ -1134,14 +1131,17 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                //GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], (bUpdateNewSeries | bMissingBanners) ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp], series[DBOnlineSeries.cPrettyName]);
-                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);
-                // end disable for new way
-
+                GetBanner bannerParser = null;
+                if (bUpdateNewSeries)
+                {
+                    //GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], (bUpdateNewSeries | bMissingBanners) ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp], series[DBOnlineSeries.cPrettyName]);
+                    bannerParser = new GetBanner((string)series[DBSeries.cID]);
+                    // end disable for new way
+                }
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
 
-                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
+                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);
                 if (seriesBanners != null)  // oops!
                 {
                     bool hasOwnLang = false;
@@ -1161,7 +1161,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // prefer graphical
-                        if (bannerSeries.sBannerLang == ZsoriParser.SelLanguageAsString)
+                        if (bannerSeries.sBannerLang == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
                         {
                             if (bannerSeries.bGraphical)
                                 sLastGraphicalBanner = bannerSeries.sBannerFileName;
@@ -1227,16 +1227,17 @@ namespace WindowPlugins.GUITVSeries
                     if (!bUpdateNewSeries)
                     {
                         // disable for new way
-                        series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
+                        //series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
                         series.Commit();
                     }
-                    if (!bUpdateNewSeries) DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, bannerParser.ServerTimeStamp);
+                    //if (!bUpdateNewSeries) DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, bannerParser.ServerTimeStamp);
                 }
             }
         }
 
         private static void matchOnlineToLocalEpisodes(DBSeries series, List<DBEpisode> episodesList, GetEpisodes episodesParser)
         {
+            if (episodesList == null || episodesList.Count == 0) return;
             foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
             {
                 foreach (DBEpisode localEpisode in episodesList)

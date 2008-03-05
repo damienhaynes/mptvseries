@@ -67,9 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Dialogs, Version=0.2.3.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\plugins\windows\Dialogs.dll</HintPath>
+      <HintPath>..\..\..\MP2\xbmc\bin\Release\Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
@@ -295,8 +295,8 @@
     <None Include="img\tv_series_logo_noreflection.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Online Parsing Classes\User Controls\" />
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
