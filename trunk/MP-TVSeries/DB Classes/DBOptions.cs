@@ -315,7 +315,11 @@ namespace WindowPlugins.GUITVSeries
                     DBOption.SetOptions(DBOption.cMainMirror, "http://www.thetvdb.com");
 
                 if (GetOptions(cNewAPIUpgradeDone) == null)
-                    SetOptions(cNewAPIUpgradeDone, 0); //do not rename by default
+                    SetOptions(cNewAPIUpgradeDone, 0);
+
+                int oldLangOptionSet;
+                if (GetOptions(cOnlineLanguage) == null || int.TryParse(GetOptions(cOnlineLanguage), out oldLangOptionSet))
+                    SetOptions(cOnlineLanguage, "en"); // old api used index for onlinelang, new one two letters
                 
             }
             catch (Exception ex)

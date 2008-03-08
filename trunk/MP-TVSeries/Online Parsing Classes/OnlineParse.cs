@@ -326,8 +326,8 @@ namespace WindowPlugins.GUITVSeries
                     double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
 
-                    if (lastUpdateTimeStamp != 0)
-                    {
+                    //if (lastUpdateTimeStamp != 0)
+                    //{
                         Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
                         if (sinceLastUpdate < 3600 * 24)
                             uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
@@ -350,7 +350,7 @@ namespace WindowPlugins.GUITVSeries
                         // lets save the updateTimestamp
                         if (GU.OnlineTimeStamp > 0)
                             DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
-                    }
+                    //}
                 }
 
                 // we really only need to do this once
@@ -636,44 +636,7 @@ namespace WindowPlugins.GUITVSeries
                     setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(setcondition);
 
-                    int nSeriesID = series[DBSeries.cID];
-
-                    // Support different Episode orders (dvd/aired/absolute, etc)
-                    try {
-                        series[DBOnlineSeries.cEpisodeOrders] = UserChosenSeries[DBOnlineSeries.cEpisodeOrders];
-                        List<string> episodeOrders = new List<string>(UserChosenSeries[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-                        if (episodeOrders.Count > 1) {
-                            MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", UserChosenSeries.ToString(), episodeOrders.Count));
-                            // let the user choose
-                            string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
-                                              "Note that your file numbering must match the option you choose here." + Environment.NewLine +
-                                              "Choose the default \"Aired\" option unless you have a specific reason not to!";
-
-                            List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                            foreach (string orderOption in episodeOrders)
-                                Choices.Add(new Feedback.CItem(orderOption, helpText, orderOption));
-
-                            Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
-                            descriptor.m_sTitle = "Multiple ordering Options detected";
-                            descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
-                            descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
-                            descriptor.m_sListLabel = "Please choose the desired Option:";
-                            descriptor.m_List = Choices;
-                            descriptor.m_useRadioToSelect = true;
-                            descriptor.m_allowAlter = false;
-
-                            Feedback.CItem selectedOrdering = null;
-                            Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
-                            if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK) {
-                                series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
-                            }
-                        }
-
-                    }
-                    catch (Exception) {
-
-                    }
-                    // End support for ordering
+                    int nSeriesID = series[DBSeries.cID];                    
 
                     series.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
                     series.Commit();
@@ -714,7 +677,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
                     {
-                        if (!Helper.String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
+                        if (!m_bNoExactMatch && !Helper.String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
                            (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase)))
                         {
                             MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
@@ -791,6 +754,48 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public void determineOrderOption(DBSeries series)
+        {
+            try
+            {
+                List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+                if (episodeOrders.Count > 1)
+                {
+                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count));
+                    // let the user choose
+                    string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
+                                      "Note that your file numbering must match the option you choose here." + Environment.NewLine +
+                                      "Choose the default \"Aired\" option unless you have a specific reason not to!";
+
+                    List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                    foreach (string orderOption in episodeOrders)
+                        Choices.Add(new Feedback.CItem(orderOption, helpText, orderOption));
+
+                    Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
+                    descriptor.m_sTitle = "Multiple ordering Options detected";
+                    descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
+                    descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
+                    descriptor.m_sListLabel = "Please choose the desired Option:";
+                    descriptor.m_List = Choices;
+                    descriptor.m_useRadioToSelect = true;
+                    descriptor.m_allowAlter = false;
+
+                    Feedback.CItem selectedOrdering = null;
+                    Feedback.ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
+                    if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK)
+                    {
+                        series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+            // End support for ordering
+        }
+
         public void UpdateSeries(bool bUpdateNewSeries, List<DBValue> seriesUpdated)
         {
             // now retrieve the info about the series
@@ -861,50 +866,31 @@ namespace WindowPlugins.GUITVSeries
                                     case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
                                     case DBOnlineSeries.cHasLocalFiles:
                                     case DBOnlineSeries.cHasLocalFilesTemp:
-                                    case DBOnlineSeries.cIsFavourite:
-                                    case DBOnlineSeries.cEpisodeOrders:
+                                    case DBOnlineSeries.cIsFavourite:                                    
                                     case DBOnlineSeries.cChoseEpisodeOrder:
 
                                     case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
                                     case DBOnlineSeries.cCurrentBannerFileName:
                                     case DBOnlineSeries.cMyRating:
                                         break;
-
+                                    case DBOnlineSeries.cEpisodeOrders:
+                                        if(bUpdateNewSeries) goto default;
+                                        break;
                                     default:
                                         localSeries.AddColumn(key, new DBField(DBField.cTypeString));
                                         localSeries[key] = updatedSeries[key];
                                         break;
                                 }
                             }
+
+                            // diff. order options
+                            if (bUpdateNewSeries) determineOrderOption(localSeries);                            
+
                             // data import completed; set to 2 (data up to date)
                             localSeries[DBOnlineSeries.cOnlineDataImported] = 2;
 
                             if (localSeries[DBOnlineSeries.cHasLocalFilesTemp])
                                 localSeries[DBOnlineSeries.cHasLocalFiles] = 1;
-                            localSeries.Commit();
-                            //                        SeriesList.Remove(localSeries);
-                        }
-                    }
-                }
-
-                // now process incorrect IDs if any
-                foreach (int nIncorrectID in UpdateSeriesParser.BadIds)
-                {
-                    m_bDataUpdated = true;
-                    if (worker.CancellationPending)
-                        return;
-
-                    m_bReparseNeeded = true;
-                    // find the corresponding series in our list
-                    foreach (DBSeries localSeries in SeriesList)
-                    {
-                        if (localSeries[DBSeries.cID] == nIncorrectID)
-                        {
-                            MPTVSeriesLog.Write("Incorrect SeriesID found! ID=" + nIncorrectID + " for local series '" + localSeries[DBSeries.cParsedName] + "'");
-                            m_bDataUpdated = true;
-                            // reset the seriesID of this series
-                            localSeries[DBSeries.cID] = 0;
-                            localSeries[DBOnlineSeries.cOnlineDataImported] = 0;
                             localSeries.Commit();
                             //                        SeriesList.Remove(localSeries);
                         }
@@ -941,14 +927,14 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBSeries series in seriesList)
             {
                 List<DBEpisode> episodesList = null;
-                if (!m_bFullSeriesRetrieval)
-                {
+                //if (!m_bFullSeriesRetrieval)
+                //{
                     // lets get the list of unidentified series
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
                     episodesList = DBEpisode.Get(conditions, false);
-                }
+                //}
                 if (m_bFullSeriesRetrieval || episodesList.Count > 0)
                 {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
@@ -961,24 +947,64 @@ namespace WindowPlugins.GUITVSeries
                     if (m_bFullSeriesRetrieval)
                     {
                         // add all online episodes in the local db
+                        System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
+                        provider.NumberDecimalSeparator = ".";
                         foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
                         {
-                            // season if not there yet
-                            DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
-                            season[DBSeason.cHasEpisodes] = true;
-                            DBSeason existing = DBSeason.getRaw(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
-                            if (existing != null)
+                            // only add episodes that have seaon/ep set in dvd-ordering mode
+                            float onlineEp = -1;
+                            float.TryParse(onlineEpisode["DVD_episodenumber"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp);
+                            float onlineSeason = -1;
+                            float.TryParse(onlineEpisode["DVD_season"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeason);
+                            if (series[DBOnlineSeries.cChoseEpisodeOrder] == "DVD")
                             {
-                                season[DBSeason.cHasLocalFiles] = existing[DBSeason.cHasLocalFilesTemp];
-                                season[DBSeason.cHasLocalFilesTemp] = existing[DBSeason.cHasLocalFilesTemp];
+                                onlineEpisode[DBOnlineEpisode.cSeasonIndex] = onlineSeason;
+                                onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = onlineEp;
                             }
-                            season.Commit();
 
-                            DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
-                            newOnlineEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
-                            if (newOnlineEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
-                                newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                            newOnlineEpisode.Commit();
+                            if (series[DBOnlineSeries.cChoseEpisodeOrder] == "DVD" && (onlineEp == -1 || onlineSeason == -1)) ;
+                            else
+                            {
+                                // season if not there yet
+                                DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                                season[DBSeason.cHasEpisodes] = true;
+                                DBSeason existing = DBSeason.getRaw(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
+                                if (existing != null)
+                                {
+                                    season[DBSeason.cHasLocalFiles] = existing[DBSeason.cHasLocalFilesTemp];
+                                    season[DBSeason.cHasLocalFilesTemp] = existing[DBSeason.cHasLocalFilesTemp];
+                                }
+                                season.Commit();
+
+                                DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
+                                newOnlineEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
+                                if (newOnlineEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
+                                    newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                foreach (String key in onlineEpisode.FieldNames)
+                                {
+                                    switch (key)
+                                    {
+                                        case DBOnlineEpisode.cCompositeID:
+                                        case DBEpisode.cSeriesID:
+                                        case DBOnlineEpisode.cWatched:
+                                        case DBOnlineEpisode.cDownloadPending:
+                                        case DBOnlineEpisode.cDownloadExpectedNames:
+                                        case DBOnlineEpisode.cMyRating:
+                                            // do nothing here, those information are local only
+                                            break;
+
+                                        case DBOnlineEpisode.cSeasonIndex:
+                                        case DBOnlineEpisode.cEpisodeIndex:
+                                            break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
+
+                                        default:
+                                            newOnlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
+                                            newOnlineEpisode[key] = onlineEpisode[key];
+                                            break;
+                                    }
+                                }
+                                newOnlineEpisode.Commit();
+                            }
                         }
                     }
                     else MPTVSeriesLog.Write("None of these episodes could be identified (Possible reasons: Wrong filename/OnlineDatabase does not have these episodes)");
@@ -1235,19 +1261,69 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private static bool matchOnlineToLocalEpisode(DBSeries series, DBEpisode localEpisode, DBOnlineEpisode onlineEpisode)
+        {
+            switch ((string)series[DBOnlineSeries.cChoseEpisodeOrder])
+            {
+                case "":
+                case "Aired":
+                    return ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
+                            ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex] ||
+                            (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]));
+                case "DVD":
+                    System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
+                    provider.NumberDecimalSeparator = ".";
+                    int localSeason = (int)localEpisode[DBEpisode.cSeasonIndex];
+                    float onlineSeasonTemp;
+                    int onlineSeason = -1; 
+                    if( float.TryParse(onlineEpisode["DVD_season"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
+                        onlineSeason = (int)onlineSeasonTemp;
+                    int localEp = (int)localEpisode[DBEpisode.cEpisodeIndex];
+                    int localEp2 = (int)localEpisode[DBEpisode.cEpisodeIndex2];
+                    if (Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])) localEp2 = -1;
+                    float onlineEp = -1;
+                    if (onlineSeason != -1 && float.TryParse(onlineEpisode["DVD_episodenumber"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
+                    {
+                        if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) &&
+                            (localSeason == onlineSeason && (localEp == onlineEp || localEp2 == -1 ? false : localEp2 == onlineEp)))
+                        {
+                            // overwrite onlineEps season/ep #
+                            onlineEpisode[DBOnlineEpisode.cSeasonIndex] = (int)localEpisode[DBEpisode.cSeasonIndex];
+                            if (localEp == onlineEp)
+                                onlineEpisode[DBEpisode.cEpisodeIndex] = localEp;
+                            else
+                                onlineEpisode[DBEpisode.cEpisodeIndex] = localEp2;
+                            return true;
+                        }
+                    } break;
+                //case "Absolute":
+                //    if ( !Helper.String.IsNullOrEmpty(onlineEpisode["absolute_number"]) &&
+                //        ( (int)localEpisode[DBEpisode.cSeasonIndex] == 1 &&
+                //        ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode["absolute_number"] ||
+                //        (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode["absolute_number"])))
+                //    {
+                //        // overwrite onlineEps season/ep #
+                //        onlineEpisode[DBOnlineEpisode.cSeasonIndex] = (int)localEpisode[DBEpisode.cSeasonIndex];
+                //        if ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode["absolute_number"])
+                //            onlineEpisode[DBEpisode.cEpisodeIndex] = (int)localEpisode[DBEpisode.cEpisodeIndex];
+                //        else
+                //            onlineEpisode[DBEpisode.cEpisodeIndex] = (int)localEpisode[DBEpisode.cEpisodeIndex2];
+                //        return true;
+                //    } break;
+            }
+            return false;
+        }
+
         private static void matchOnlineToLocalEpisodes(DBSeries series, List<DBEpisode> episodesList, GetEpisodes episodesParser)
         {
             if (episodesList == null || episodesList.Count == 0) return;
-            foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
+            foreach (DBEpisode localEpisode in episodesList)
             {
-                foreach (DBEpisode localEpisode in episodesList)
-                {
+                foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
+                {                
                     if ((int)localEpisode[DBEpisode.cSeriesID] == (int)onlineEpisode[DBOnlineEpisode.cSeriesID])
                     {
-                        if (((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
-                            (int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]) ||
-                            ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
-                            (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]))
+                        if (matchOnlineToLocalEpisode(series, localEpisode, onlineEpisode))
                         {
                             // season update for online data
                             DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);

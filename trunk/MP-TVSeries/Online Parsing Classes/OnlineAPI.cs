@@ -14,7 +14,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
             public const string Mirrors = "mirrors";
             public const string Languages = "languages";
-            public const string GetSeries = @"GetSeries.php?seriesname={0}&language={1}";
+            public const string GetSeries = @"GetSeries.php?seriesname={0}&language=all";
             public const string FullSeriesUpdate = @"series/{0}/all/{1}";
             public const string Updates = "updates/updates_{0}";
             public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
@@ -56,8 +56,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 if (selLang.Length == 0)
                 {
-                    int lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
-                    if (lang != 0) selLang = lang.ToString();
+                    string lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
+                    if (!Helper.String.IsNullOrEmpty(lang)) selLang = lang;
                     else selLang = "en"; // use english
                 }
                 return selLang;
@@ -79,8 +79,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         static public XmlNodeList GetSeries(String sSeriesName)
         {
             return Generic(string.Format(apiURIs.GetSeries,
-                                           sSeriesName.Replace(' ', '+'),
-                                           SelLanguageAsString), true, false, Format.NoExtension);
+                                           sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
         }
 
         static public XmlNodeList UpdateSeries(String sSeriesID)
@@ -216,7 +215,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 }
                 else
                 {
-                    StreamReader reader = new StreamReader(data, System.Text.Encoding.Default, true);
+                    StreamReader reader = new StreamReader(data);
                     String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
                     data.Close();
                     reader.Close();
@@ -291,7 +290,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 MPTVSeriesLog.Write("Decompressing Entry: " + currEntry.Name);
                 XmlDocument d = new XmlDocument();
                 while ((bytes = zis.Read(data, 0, data.Length)) > 0)
-                    b.Append(new ASCIIEncoding().GetString(data, 0, bytes));
+                    b.Append(new UTF8Encoding().GetString(data, 0, bytes));
                 MPTVSeriesLog.Write("Decompression done, now loading as XML...");    
                 d.LoadXml(b.ToString());
                 b = new StringBuilder();

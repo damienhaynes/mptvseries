@@ -2827,7 +2827,7 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
-                ZsoriParser.SelLanguageAsString = string.Empty; // to overcome caching
+                Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
                 System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
         }

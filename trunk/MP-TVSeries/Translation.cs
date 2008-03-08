@@ -101,6 +101,7 @@ namespace WindowPlugins.GUITVSeries
         public static string RateSeries = "Rate this Series";
         public static string RateEpisode = "Rate this Episode";
         public static string ResetRating = "Reset Rating";
+        public static string AskToRate = "Ask me to rate unrated episodes";
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
         public static string RatingStars = "Stars";
