@@ -132,6 +132,7 @@ namespace MediaPortal.GUI.Video
         private int m_CurrViewStep = 0;
         private List<string[]> m_stepSelections = new List<string[]>();
         private string[] m_stepSelection = null;
+        private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
         private bool foromWorking = false;
@@ -439,6 +440,7 @@ namespace MediaPortal.GUI.Video
                     this.m_Facade.ThumbnailView.Clear();
                 bool bEmpty = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                setCurPositionLabel();
                 switch (this.listLevel)
                 {
                     #region Group
@@ -936,6 +938,7 @@ namespace MediaPortal.GUI.Video
             actionPlayRandom,
             optionsOnlyShowLocal,
             optionsPreventSpoilers,
+            optionsAskToRate,
             optionsFastViewSwitch,
             actionRecheckMI,
         }
@@ -1246,6 +1249,10 @@ namespace MediaPortal.GUI.Video
                                 pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? "on" : "off") + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
+
+                                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? "on" : "off") + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsAskToRate;
 
                                 pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? "on" : "off") + ")");
                                 dlg.Add(pItem);
@@ -1659,8 +1666,10 @@ namespace MediaPortal.GUI.Video
                         break;
                     case (int)eContextItems.optionsFastViewSwitch:
                         DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
-                        LoadFacade();
-                        break;     
+                        break;
+                    case (int)eContextItems.optionsAskToRate:
+                        DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
+                        break;    
                 }
             }
             catch (Exception ex)
@@ -1737,11 +1746,19 @@ namespace MediaPortal.GUI.Video
             if (Helper.String.IsNullOrEmpty(viewName)) viewName = Translation.All;
             switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
         }
+        void setCurPositionLabel()
+        {
+            string prettyCurrPosition = m_CurrLView.prettyName;
+            foreach (string subPos in m_stepSelectionPretty)
+                if (!Helper.String.IsNullOrEmpty(subPos))
+                    prettyCurrPosition += " -> " + subPos;
+            setGUIProperty(guiProperty.CurrentView, prettyCurrPosition);
+        }
         void setViewLabels()
         {
             try
             {
-                setGUIProperty(guiProperty.CurrentView, m_CurrLView.prettyName);
+                setCurPositionLabel();
                 if (m_allViews.Count > 1)
                 {
                     setGUIProperty(guiProperty.NextView, Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).prettyName);
@@ -1763,10 +1780,7 @@ namespace MediaPortal.GUI.Video
         {
             if (view == null) view = m_allViews[0]; // view was removed or something
             MPTVSeriesLog.Write("Switching logical view to " + view.Name);
-            m_CurrLView = view;
-
-            // set the skin labels
-            setViewLabels();
+            m_CurrLView = view;            
 
             if (fanartSet) loadFanart(null);
 
@@ -1775,6 +1789,10 @@ namespace MediaPortal.GUI.Video
             m_stepSelections = new List<string[]>();
             m_stepSelections.Add(new string[] { null });
             setNewListLevelOfCurrView(0);
+
+            // set the skin labels
+            m_stepSelectionPretty.Clear();
+            setViewLabels();
 
             DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
         }
@@ -1832,6 +1850,7 @@ namespace MediaPortal.GUI.Video
                     else
                     {
                         m_stepSelections.RemoveAt(m_CurrViewStep);
+                        m_stepSelectionPretty.RemoveAt(m_stepSelectionPretty.Count - 1);
                         m_CurrViewStep--;
                         setNewListLevelOfCurrView(m_CurrViewStep);
                         m_back_up_select_this = m_stepSelection;
@@ -2001,6 +2020,7 @@ namespace MediaPortal.GUI.Video
                         setNewListLevelOfCurrView(m_CurrViewStep);
                         m_stepSelection = new string[] { this.m_Facade.SelectedListItem.Label };
                         m_stepSelections.Add(m_stepSelection);
+                        m_stepSelectionPretty.Add(this.m_Facade.SelectedListItem.Label);
                         MPTVSeriesLog.Write("Selected: ", this.m_Facade.SelectedListItem.Label, MPTVSeriesLog.LogLevel.Normal);
                         LoadFacade();
                         this.m_Facade.Focus = true;
@@ -2011,6 +2031,7 @@ namespace MediaPortal.GUI.Video
                         this.m_SelectedSeries = (DBSeries)this.m_Facade.SelectedListItem.TVTag;
                         m_stepSelection = new string[] { m_SelectedSeries[DBSeries.cID].ToString() };
                         m_stepSelections.Add(m_stepSelection);
+                        m_stepSelectionPretty.Add(this.m_SelectedSeries.ToString());
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Normal);
                         MPTVSeriesLog.Write("Fanart: Series selected");
                         this.loadFanart(m_SelectedSeries);
@@ -2024,6 +2045,7 @@ namespace MediaPortal.GUI.Video
                         this.m_SelectedSeason = (DBSeason)this.m_Facade.SelectedListItem.TVTag;
                         m_stepSelection = new string[] { m_SelectedSeason[DBSeason.cSeriesID].ToString(), m_SelectedSeason[DBSeason.cIndex].ToString() };
                         m_stepSelections.Add(m_stepSelection);
+                        m_stepSelectionPretty.Add(m_SelectedSeason[DBSeason.cIndex] == 0 ? Translation.specials : Translation.Season + " " + m_SelectedSeason[DBSeason.cIndex]);
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Normal);
                         this.LoadFacade();
                         MPTVSeriesLog.Write("Fanart: Season selected");

@@ -67,12 +67,14 @@ namespace WindowPlugins.GUITVSeries
                 {
                     foreach (XmlNode itemNode in nodeList)
                     {
+                        bool hasDVDOrdering = false;
+                        bool hasAbsoluteOrdering = false;
+                        DBOnlineSeries series = new DBOnlineSeries();
                         foreach (XmlNode seriesNode in itemNode)
                         {
                             // first return item SHOULD ALWAYS be the series
-                            if (seriesNode.Name == "Series")
-                            {
-                                DBOnlineSeries series = new DBOnlineSeries();
+                            if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
+                            {                                
                                 //foreach (XmlNode propertyNode in itemNode.ChildNodes)
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
@@ -87,6 +89,29 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 if (series != null) listSeries.Add(series);
                             }
+                            else if(!hasDVDOrdering || !hasAbsoluteOrdering || seriesNode.Name.Equals("Episode", StringComparison.InvariantCultureIgnoreCase))
+                            {                                
+                                foreach (XmlNode propertyNode in seriesNode.ChildNodes)
+                                {
+                                    switch (propertyNode.Name)
+                                    {
+                                        case "DVD_episodenumber":
+                                        case "DVD_season":
+                                            if(!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
+                                            break;
+                                        case "absolute_number":
+                                            if (!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        if ((hasAbsoluteOrdering || hasDVDOrdering))
+                        {
+                            string ordering = series[DBOnlineSeries.cEpisodeOrders] == string.Empty ? "Aired|" : (string)series[DBOnlineSeries.cEpisodeOrders];
+                            if (hasAbsoluteOrdering) ordering += "Absolute|";
+                            if (hasDVDOrdering) ordering += "DVD";
+                            series[DBOnlineSeries.cEpisodeOrders] = ordering;
                         }
                     }
                 }
