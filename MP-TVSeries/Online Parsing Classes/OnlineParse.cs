@@ -693,8 +693,11 @@ namespace WindowPlugins.GUITVSeries
                 // 3) Skip and never ask for this series again
 
                 List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                Dictionary<int, string> uniqueSeriesIds = new Dictionary<int, string>();
                 foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
-                    Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "No further Description available", onlineSeries));
+                {
+                   Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "SeriesID: " + onlineSeries[DBOnlineSeries.cID], onlineSeries));
+                }
 
                 if (Choices.Count == 0)
                     Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));

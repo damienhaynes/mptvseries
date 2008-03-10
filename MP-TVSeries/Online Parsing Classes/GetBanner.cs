@@ -346,7 +346,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 foreach (BannerSeries bannerSeries in map.seriesBanners)
                 {
-                    if (bannerLang == bannerSeries.sBannerLang)
+                    if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         String sBannerSeriesName = bannerSeries.sSeriesName;
                         String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
@@ -356,7 +356,7 @@ namespace WindowPlugins.GUITVSeries
                             sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                         }
                         // mark the filename with the language
-                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
+                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerSeries.sBannerLang + "-" + sOnlineBannerPath;
                         // check if banner is already there (don't download twice)
                         if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
                         {
@@ -377,7 +377,7 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (BannerSeason bannerSeason in map.seasonBanners)
                 {
-                    if (bannerLang == bannerSeason.sBannerLang)
+                    if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
                         String sBannerSeriesName = bannerSeason.sSeriesName;
                         String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
@@ -386,7 +386,7 @@ namespace WindowPlugins.GUITVSeries
                             sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
                             sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
                         }
-                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerLang + "-" + sOnlineBannerPath;
+                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerSeason.sBannerLang + "-" + sOnlineBannerPath;
                         if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
                         {
                             WebClient webClient = new WebClient();
