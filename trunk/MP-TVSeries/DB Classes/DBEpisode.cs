@@ -474,7 +474,6 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return true;
                 if (Helper.String.IsNullOrEmpty(this["localPlaytime"])// ||
                 //    this["VideoCodec"] == "" ||
                 //    this["VideoBitrate"] == "" ||
