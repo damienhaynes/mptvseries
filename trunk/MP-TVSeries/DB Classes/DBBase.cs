@@ -557,7 +557,8 @@ namespace WindowPlugins.GUITVSeries
                                     builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
                                     break;
                             }
-                            fieldsNeedingUpdating++;                            
+                            fieldsNeedingUpdating++;
+                            fieldPair.Value.WasChanged = false;
                         }
                     }
                     if (fieldsNeedingUpdating > 0)
