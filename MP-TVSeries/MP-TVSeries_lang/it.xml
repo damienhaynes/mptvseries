@@ -34,7 +34,6 @@
 	<string Field="Confirm" Original="Confirm">Confermare</string>
 	<string Field="Completed" Original="Completed">Completato</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Nessun sottotitolo disponibile</string>
-	<string Field="Subtitles_download_complete" Original="Subtitles download complete">Recupero sottotitoli ultimato</string>
 	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Salta / Non chiedere più</string>
 	<string Field="no_results_found" Original="no results found!">Nessun risultato trovato</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Nascosto per evitare le spoilerate * *</string>
@@ -59,31 +58,13 @@
 	<string Field="Unwatched" Original="Unwatched">Non visti</string>
 	<string Field="Favourites" Original="Favourites">Preferiti</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Aggiornare le informazioni multimediali di un contenuto locale</string>
-	<string Field="OK" Original="OK">OK</string>
-	<string Field="Cancel" Original="Cancel">Cancella</string>
-	<string Field="Ignore" Original="Ignore">Ignora</string>
-	<!-- Feedback.ChooseFromSelectionDescriptor -->
-	<string Field="CFS_Choose_Item" Original="Choose item">Seleziona l'elemento</string>
-	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Seleziona l'elemento corretto:</string>
-	<string Field="CFS_Search_Again" Original="Search Again">Cerca nuovamente</string>
-	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Seleziona il sottotitolo corretto</string>
-	<string Field="CFS_Subtitle_Episode" Original="Episode:">Episodio:</string>
-	<string Field="CFS_Matching_Subtitles" Original="Matching subtitles">Sottotitoli disponibili</string>
-	<string Field="CFS_Local_Series" Original="Local series">Serie scaricate in locale</string>
-	<string Field="CFS_Available_Series" Original="Available Series">Serie disponibili</string>
-	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles Version">Seleziona la versione dei sottitoli corretti</string>
-	<string Field="CFS_Select_Version" Original="Version:">Versione:</string>
-	<string Field="CFS_Choose_Correct_Episode" Original="Choose correct Episode">Seleziona l&quot;episodio corretto</string>
-	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Numero di episodio scaricato in locale:</string>
-	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Lista episodi disponibili:</string>
-	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Scegli in sito per la ricerca:</string>
-	<string Field="CFS_List_Search_Site" Original="List of search sites:">Lista dei siti per le ricerche disponibili:</string>
-	<string Field="CFS_Found_Torrents" Original="Found torrents:">Torrent trovati:</string>
-	<string Field="CFS_Looking_For" Original="Looking for:">Ricerca:</string>
-	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season:">Seleziona la stagione corretta</string>
-	<string Field="CFS_Local_Season_Index" Original="Local Episiode index:">Numero di stagione scaricata:</string>
-	<string Field="CFS_Available_Seasons" Original="Available seasons list:">Lista delle stagioni disponibili:</string>
-	<!-- Feedback.ChooseYesNoDescriptor -->
-	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle file replace">Sovrascrittura del file di sottititoli</string>
-	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Trovato un file di sottititoli: lo vuoi sovrascrivere?</string>
+	<string Field="RateSeries" Original="Rate this Series">Vota la serie</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Vota l'episodio</string>
+	<string Field="ResetRating" Original="Reset Rating">Reset dei Voti</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Chiedi il voto per un episodio senza voto</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">Non chiedermi più i voti</string>
+	<string Field="RatingStar" Original="Star">Stella</string>
+	<string Field="RatingStars" Original="Stars">Stelle</string>
+	<string Field="ChangeView" Original="Change View">Cambia visuale</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Cambia immediatamente le visuali</string>
 </strings>

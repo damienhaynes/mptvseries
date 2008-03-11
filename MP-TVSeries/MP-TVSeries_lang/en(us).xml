@@ -34,7 +34,6 @@
 	<string Field="Confirm" Original="Confirm">Confirm</string>
 	<string Field="Completed" Original="Completed">Completed</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">No subtitles found</string>
-	<string Field="Subtitles_download_complete" Original="Subtitles download complete">Subtitles download complete</string>
 	<string Field="skip_Never_ask_again" Original="skip / Never ask again">skip / Never ask again</string>
 	<string Field="no_results_found" Original="no results found!">no results found!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Hidden to prevent spoilers *</string>
@@ -59,33 +58,13 @@
 	<string Field="Unwatched" Original="Unwatched">Unwatched</string>
 	<string Field="Favourites" Original="Favourites">Favourites</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Update Mediainfo of local file(s)</string>
-	<string Field="OK" Original="OK">OK</string>
-	<string Field="Cancel" Original="Cancel">Cancel</string>
-	<string Field="Ignore" Original="Ignore">Ignore</string>
-	<!-- Feedback.ChooseFromSelectionDescriptor -->
-	<string Field="CFS_Choose_Item" Original="Choose item">Choose item</string>
-	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Select matching item:</string>
-	<string Field="CFS_Search_Again" Original="Search Again">Search Again</string>
-	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Select Matching Subtitle File</string>
-	<string Field="CFS_Subtitle_Episode" Original="Episode:">Episode:</string>
-	<string Field="CFS_Matching_Subtitles" Original="Matching subtitles">Matching subtitles</string>
-	<string Field="CFS_Local_Series" Original="Local series">Local series</string>
-	<string Field="CFS_Available_Series" Original="Available Series">Available Series</string>
-	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles Version">Select desired subtitles Version</string>
-	<string Field="CFS_Select_Version" Original="Version:">Version:</string>
-	<string Field="CFS_Choose_Correct_Episode" Original="Choose correct Episode">Choose correct Episode</string>
-	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Local Episiode index:</string>
-	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Available Episode list:</string>
-	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Choose search site:</string>
-	<string Field="CFS_List_Search_Site" Original="List of search sites:">List of search sites:</string>
-	<string Field="CFS_Found_Torrents" Original="Found torrents:">Found torrents:</string>
-	<string Field="CFS_Looking_For" Original="Looking for:">Looking for:</string>
-	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season:">Choose correct season</string>
-	<string Field="CFS_Local_Season_Index" Original="Local Episiode index:">Local Season index:</string>
-	<string Field="CFS_Available_Seasons" Original="Available seasons list:">Available seasons list:</string>
-	<!-- Feedback.ChooseYesNoDescriptor -->
-	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle file replace">Subtitle file replace</string>
-	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Old subtitle File present: overwrite?</string>
-	
-	 
+	<string Field="RateSeries" Original="Rate this Series">Rate this Series</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Rate this Episode</string>
+	<string Field="ResetRating" Original="Reset Rating">Reset Rating</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Ask me to rate unrated episodes</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">Don't ask me to rate again</string>
+	<string Field="RatingStar" Original="Star">Star</string>
+	<string Field="RatingStars" Original="Stars">Stars</string>
+	<string Field="ChangeView" Original="Change View">Change View</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediatly Change Views</string>
 </strings>
