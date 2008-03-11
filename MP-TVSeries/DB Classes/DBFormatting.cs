@@ -122,7 +122,8 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Error in DBFormatting.Get (" + ex.Message + ").");
                 }
             }
-            for (int i = 0; i < cache.Length; i++) yield return cache[i];
+            if(cache != null)
+                for (int i = 0; i < cache.Length; i++) yield return cache[i];
 
         }
 
