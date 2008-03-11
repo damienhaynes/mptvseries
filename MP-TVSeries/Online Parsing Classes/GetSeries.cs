@@ -57,9 +57,7 @@ namespace WindowPlugins.GUITVSeries
 
         public GetSeries(String sSeriesName)
         {
-            XmlNodeList nodeList;
-            if (Settings.newAPI) nodeList = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName);
-            else nodeList = ZsoriParser.GetSeries(sSeriesName);
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName);
             nameToMatch = sSeriesName;
             if (nodeList != null)
             {
@@ -72,10 +70,6 @@ namespace WindowPlugins.GUITVSeries
                         if (propertyNode.Name == "seriesid") // work around SeriesID inconsistancy
                         {
                             series[DBOnlineSeries.cID] = propertyNode.InnerText;
-                        }
-                        else if (propertyNode.Name == "translation") // work around inconsistancy (translation = prettyname for all intents and purposes)
-                        {
-                            series[DBOnlineSeries.cPrettyName] = propertyNode.InnerText;
                         }
                         else if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
                             series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;

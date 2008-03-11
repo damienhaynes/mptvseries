@@ -40,9 +40,7 @@ namespace WindowPlugins.GUITVSeries
 
         public GetLanguages()
         {
-            XmlNodeList nodeList;
-            if (Settings.newAPI) nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages();
-            else nodeList = ZsoriParser.GetLanguages();
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages();
             if (nodeList != null)
             {
                 Language lang = null;

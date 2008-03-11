@@ -54,8 +54,6 @@ namespace WindowPlugins.GUITVSeries
         private OnlineParsing m_parser = null;
         private DateTime m_timingStart = new DateTime();
 
-        private MenuItem manuallyAddEpisodeMI;
-
         private DBSeries m_SeriesReference = new DBSeries(true);
         private DBSeason m_SeasonReference = new DBSeason();
         private DBEpisode m_EpisodeReference = new DBEpisode(true);

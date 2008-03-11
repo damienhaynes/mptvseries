@@ -49,7 +49,6 @@ namespace WindowPlugins.GUITVSeries
         static string epIdentifier = String.Format("{0}{1}{2}", openTag, Episode, typeFieldSeperator);
         static string seasonIdentifier = String.Format("{0}{1}{2}", openTag, Season, typeFieldSeperator);
         static string seriesIdentifier = String.Format("{0}{1}{2}", openTag, Series, typeFieldSeperator);
-        public static List<DBFormatting> userFormatting = null;
         #endregion
 
         #region Static Regex Objects
@@ -115,15 +114,7 @@ namespace WindowPlugins.GUITVSeries
 
             // want to ensure these show as is
             nonFormattingFields.Add("<Episode.EpisodeFilename>");
-
-            DBFormatting[] all = DBFormatting.GetAll(false);
-            if (all != null)
-            {
-                userFormatting = new List<DBFormatting>(all);
-            }
-            else userFormatting = new List<DBFormatting>();
-
-            MPTVSeriesLog.Write("User Formatting: Found and loaded " + userFormatting.Count.ToString() + " Formatting Rules");
+            
         }
         #endregion
 
@@ -197,8 +188,7 @@ namespace WindowPlugins.GUITVSeries
         static bool performUserFormattingReplacement(ref string input)
         {
             bool atLeastOneFound = false;
-            if (userFormatting == null) return atLeastOneFound;
-            foreach (DBFormatting dbf in userFormatting)
+            foreach (DBFormatting dbf in DBFormatting.GetAll())
             {
                 string toReplace = dbf[DBFormatting.cReplace];
                 if (input.Contains(toReplace))

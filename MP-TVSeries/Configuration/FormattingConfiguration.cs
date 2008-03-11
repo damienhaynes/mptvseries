@@ -43,7 +43,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             enableControls(false);
         }
 
-        void addToList(DBFormatting[] rules)
+        void addToList(IEnumerable<DBFormatting> rules)
         {
             list.Items.Clear();
             if (rules != null)
@@ -257,9 +257,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
             else
             {
                 DBFormatting current = this.fromInput();
-                FieldGetter.userFormatting.Add(current);
+                DBFormatting.cache = new DBFormatting[] { current };
                 this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, ep, true, true);
-                FieldGetter.userFormatting.Remove(current);
+                DBFormatting.cache = null;
             }
         }
     }

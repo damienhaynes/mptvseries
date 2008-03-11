@@ -828,6 +828,7 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
+            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
         }
 
         protected override void OnPageLoad()
@@ -2567,9 +2568,18 @@ namespace MediaPortal.GUI.Video
             if (item is DBEpisode && pre == "Episode")
             {
                 pushFieldToSkin(item, pre, DBEpisode.cFileSize);
+                _allFieldsForSkin[pre].Add(DBEpisode.cFileSize);
                 pushFieldToSkin(item, pre, DBEpisode.cPrettyPlaytime);
+                _allFieldsForSkin[pre].Add(DBEpisode.cPrettyPlaytime);
                 pushFieldToSkin(item, pre, DBEpisode.cFilenameWOPath);
+                _allFieldsForSkin[pre].Add(DBEpisode.cFilenameWOPath);
             }
+
+            // and user defined ones in formatting rules (not yet)
+            //foreach (DBFormatting dbf in DBFormatting.GetAll())
+            //{
+                
+            //}
         }
         private void pushFieldToSkin(DBTable item, string pre, string field)
         {

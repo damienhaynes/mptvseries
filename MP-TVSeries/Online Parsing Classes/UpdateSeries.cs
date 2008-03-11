@@ -78,7 +78,11 @@ namespace WindowPlugins.GUITVSeries
                                 //foreach (XmlNode propertyNode in itemNode.ChildNodes)
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
-                                    if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                                    if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
+                                    {
+                                        series["language"] = propertyNode.InnerText;
+                                    }
+                                    else if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
                                         series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                                     else
                                     {

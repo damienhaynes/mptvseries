@@ -463,8 +463,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                List<String> outList = new List<String>();
-                // some ordering: I want some fields to come up first
+                List<String> outList = new List<String>();                
                 foreach (KeyValuePair<string, DBField> pair in m_fields)
                 {
                     if (outList.IndexOf(pair.Key) == -1)

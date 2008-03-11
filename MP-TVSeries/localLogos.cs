@@ -389,9 +389,11 @@ namespace WindowPlugins.GUITVSeries
                 result.Add(getCleanAbsolutePath(dynfilename));
                 return result;
             }
+            #pragma warning disable 0642
             else if ((dnyStart = dynfilename.IndexOf("<Episode.")) > -1) ;
             else if ((dnyStart = dynfilename.IndexOf("<Series.")) > -1) ;
             else if ((dnyStart = dynfilename.IndexOf("<Season.")) > -1) ;
+            #pragma warning restore 0642
             else
             {
                 // no '<' but none of the recognized? that is a wrong entry
