@@ -31,7 +31,7 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class DBOnlineMirror : DBTable
+    class DBOnlineMirror
     {
         private enum TypeMask
         {
@@ -47,6 +47,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cBanners = "Banners";
         public const String cMirrorpath = "mirrorpath";
         public const String cTypeMask = "Typemask";
+
+        Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
 
         private static String s_sCurrentInterface = String.Empty;
         private static String s_sCurrentBanner = String.Empty;
@@ -66,35 +68,41 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("banners", cBanners);
             s_OnlineToFieldMap.Add("typemask", cTypeMask);
 
-            // make sure the table is created on first run
-            DBOnlineMirror dummy = new DBOnlineMirror();
-
             cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("Key");
         }
 
         private DBOnlineMirror()
-            : base(cTableName)
-        {
-            InitColumns();
-            InitValues();
-        }
+        { }
 
-        private DBOnlineMirror(int nID)
-            : base(cTableName)
+        public virtual DBValue this[String fieldName]
         {
-            InitColumns();
-            if (!ReadPrimary(nID))
+            get
             {
-                InitValues();
+                if (m_fields.ContainsKey(fieldName))
+                    return m_fields[fieldName].Value;
+                else
+                    return String.Empty;
             }
-        }
-
-        private void InitColumns()
-        {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBField.cTypeInt, true));
-            //AddColumn(cBanners, new DBField(DBField.cTypeString));
-            //AddColumn(cInterface, new DBField(DBField.cTypeString));
+            set
+            {
+                try
+                {
+                    if (m_fields.ContainsKey(fieldName))
+                    {
+                        if (m_fields[fieldName].Type == DBField.cTypeInt)
+                            m_fields[fieldName].Value = (long)value;
+                        else
+                            m_fields[fieldName].Value = value;
+                    }
+                    else
+                    {
+                        m_fields.Add(fieldName, new DBField(DBField.cTypeString));
+                        this[fieldName] = value;
+                    }
+                }
+                catch (SystemException)
+                { }
+            }
         }
 
         private static void checkMirrorCapable(List<DBOnlineMirror> mirrorList, TypeMask mask)
@@ -108,9 +116,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static void Init()
         {
-            if (Settings.newAPI && !DBOption.GetOptions(DBOption.cNewAPIUpgradeDone)) // upgrade
+            if (!DBOption.GetOptions(DBOption.cNewAPIUpgradeDone)) // upgrade
             {
-                String sqlDel = "drop table " + cTableName;
+                String sqlDel = "drop table if exists " + cTableName;
                 DBTVSeries.Execute(sqlDel);
             }
 
@@ -120,90 +128,32 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
-            // TODO: improve mirrorhandling
-            List<DBOnlineMirror> mirrorList = Get();
-            bool startEmpty = false;
-            if (null == mirrorList || mirrorList.Count == 0)
-            {
-                // no mirrors yet - refresh using "seed"
-                LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror));
-                mirrorList = Get();
-                startEmpty = true;
-            }
+            // no mirrors yet - refresh using "seed"
+            if(!LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror)))
+                MPTVSeriesLog.Write("Warnign: No mirrors received, nothing will be downloaded!");
 
-            if (Settings.newAPI)
-            {
-                List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(mirrorList);
-                List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(mirrorList);
-                List<DBOnlineMirror> bannerMirrors = new List<DBOnlineMirror>(mirrorList);
+            List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(memoryMirrors);
+            List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(memoryMirrors);
+            List<DBOnlineMirror> bannerMirrors = new List<DBOnlineMirror>(memoryMirrors);
 
-                // seperate them by which one can do what
-                checkMirrorCapable(xmlMirrors, TypeMask.XML);
-                checkMirrorCapable(zipMirrors, TypeMask.Zip);
-                checkMirrorCapable(bannerMirrors, TypeMask.Banners);
+            // seperate them by which one can do what
+            checkMirrorCapable(xmlMirrors, TypeMask.XML);
+            checkMirrorCapable(zipMirrors, TypeMask.Zip);
+            checkMirrorCapable(bannerMirrors, TypeMask.Banners);
 
-                // select a random one for each of them
-                Random r = new Random();
-                if(xmlMirrors.Count > 0)
-                    s_sCurrentInterface = xmlMirrors[r.Next(0, xmlMirrors.Count - 1)][cMirrorpath];
-                if (zipMirrors.Count > 0)
-                    s_sCurrentZip = zipMirrors[r.Next(0, zipMirrors.Count - 1)][cMirrorpath] + "/";
-                if (bannerMirrors.Count > 0)
-                    s_sCurrentBanner = bannerMirrors[r.Next(0, bannerMirrors.Count - 1)][cMirrorpath] + "/banners/";
-
-            }
-            else
-            {
-                // choose first interface as what's returned by the server is already randomized
-                for (int index = 0; index < mirrorList.Count; index++)
-                {
-                    // use the mirror to check for valid output
-                    if (LoadMirrorList(mirrorList[index][cInterface]))
-                    {
-                        // valid data, let's use that one
-                        s_sCurrentInterface = mirrorList[index][cInterface];
-                        s_sCurrentBanner = mirrorList[index][cBanners];
-                        return;
-                    }
-                    else
-                    {
-                        // its no good, delete it from our cache
-                        SQLCondition cond = new SQLCondition();
-                        cond.Add(new DBOnlineMirror(), DBOnlineMirror.cInterface, mirrorList[index][cInterface], SQLConditionType.Equal);
-                        DBOnlineMirror.Clear(new DBOnlineMirror(), cond);
-                    }
-                }
-                if (startEmpty)
-                {
-                    // ok, we requeried the manual main mirror, and none of its reported mirrors were any good
-                    // last option is to use it directly (the main mirror itself must be good or this code would not be reached, and it must not have reported itself as a mirror)
-
-                    s_sCurrentInterface = DBOption.GetOptions(DBOption.cMainMirror);
-                    s_sCurrentBanner = "none"; // no banner mirror though! not string.empty to prevent re-init everytime
-                    MPTVSeriesLog.Write("Could not connect to any mirrors, using Main Mirror direclty as backup! (no banners will be downloaded!)");
-                }
-                else
-                {
-                    // oops, if we are here no mirror in our list was good, try main mirror (perhaps it was changed and thus isnt in this list yet)
-                    // note: this only queries the manually entered main servers and asks it for a list of mirrors, this list may or may not contain this main mirror
-                    if (LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror)))
-                    {
-                        // and test again (we delete all from the db so recursion should be save)
-                        Init();
-                    }
-                    else
-                    {
-                        MPTVSeriesLog.Write("Could not connect to any mirrors, please check your internet connection!");
-                    }
-                }
-            }
+            // select a random one for each of them
+            Random r = new Random();
+            if(xmlMirrors.Count > 0)
+                s_sCurrentInterface = xmlMirrors[r.Next(0, xmlMirrors.Count - 1)][cMirrorpath];
+            if (zipMirrors.Count > 0)
+                s_sCurrentZip = zipMirrors[r.Next(0, zipMirrors.Count - 1)][cMirrorpath] + "/";
+            if (bannerMirrors.Count > 0)
+                s_sCurrentBanner = bannerMirrors[r.Next(0, bannerMirrors.Count - 1)][cMirrorpath] + "/banners/";
         }
 
         private static bool LoadMirrorList(String sServer)
         {
-            XmlNodeList nodeList;
-            if (Settings.newAPI) nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));
-            else nodeList = ZsoriParser.GetMirrors(sServer);
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));
             if (nodeList == null)
                 return false;
             int count = 0;
@@ -218,14 +168,11 @@ namespace WindowPlugins.GUITVSeries
                         mirror[s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                     else
                     {
-                        // we don't know that field, add it to the series table
-                        mirror.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
                         mirror[propertyNode.Name] = propertyNode.InnerText;
                     }
                 }
                 count++;
-                if (Settings.newAPI) memoryMirrors.Add(mirror);
-                else mirror.Commit();
+                memoryMirrors.Add(mirror);
             }
             MPTVSeriesLog.Write("Received " + count.ToString() + " mirrors from " + sServer);
             return true;
@@ -241,14 +188,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (Helper.String.IsNullOrEmpty(s_sCurrentInterface))
-                {
-                    Init();
-                }
-
-                if (Settings.newAPI) return appendAPI(s_sCurrentInterface, true);
-                else return s_sCurrentInterface;
-
+                initIfNullOrEmpty(s_sCurrentInterface);
+                return appendAPI(s_sCurrentInterface, true);
             }
         }
 
@@ -256,14 +197,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                if (Helper.String.IsNullOrEmpty(s_sCurrentInterface))
-                {
-                    Init();
-                }
-
-                if (Settings.newAPI) return appendAPI(s_sCurrentInterface, false);
-                else return s_sCurrentInterface;
-
+                initIfNullOrEmpty(s_sCurrentInterface);
+                return appendAPI(s_sCurrentInterface, false);
             }
         }
 
@@ -271,11 +206,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (Helper.String.IsNullOrEmpty(s_sCurrentBanner))
-                {
-                    Init();
-                }
-
+                initIfNullOrEmpty(s_sCurrentBanner);
                 return s_sCurrentBanner;
             }
         }
@@ -284,31 +215,14 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (Helper.String.IsNullOrEmpty(s_sCurrentZip))
-                {
-                    Init();
-                }
-
+                initIfNullOrEmpty(s_sCurrentZip);
                 return appendAPI(s_sCurrentZip, true);
             }
         }
 
-        private static List<DBOnlineMirror> Get()
+        static void initIfNullOrEmpty(string value)
         {
-            return memoryMirrors; // don't need it anymore
-            String sqlQuery = "select * from " + cTableName + " order by " + cID;
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-            List<DBOnlineMirror> outList = new List<DBOnlineMirror>();
-            if (results.Rows.Count > 0)
-            {
-                for (int index = 0; index < results.Rows.Count; index++)
-                {
-                    DBOnlineMirror mirror = new DBOnlineMirror();
-                    mirror.Read(ref results, index);
-                    outList.Add(mirror);
-                }
-            }
-            return outList;
+            if (Helper.String.IsNullOrEmpty(value)) Init();
         }
     }
 }

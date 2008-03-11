@@ -80,43 +80,50 @@ namespace WindowPlugins.GUITVSeries
             Clear(this[cIndex]);
         }
 
-        public static DBFormatting[] GetAll()
+        public static DBFormatting[] cache = null; // public for config
+
+        public static IEnumerable<DBFormatting> GetAll()
         {
-            return GetAll(true);
+            foreach (DBFormatting dbf in GetAll(true))
+                yield return dbf;
         }
 
-        public static DBFormatting[] GetAll(bool includeDisabled)
+        public static IEnumerable<DBFormatting> GetAll(bool includeDisabled)
         {
-            try
+            if (cache == null)
             {
-                // make sure the table is created - create a dummy object
-                DBFormatting dummy = new DBFormatting();
-
-                // retrieve all fields in the table
-                String sqlQuery = "select * from " + cTableName;
-                if (!includeDisabled)
+                try
                 {
-                    sqlQuery += " where " + cEnabled + " = 1";
-                }
-                sqlQuery += " order by " + cIndex;
+                    // make sure the table is created - create a dummy object
+                    DBFormatting dummy = new DBFormatting();
 
-                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-                if (results.Rows.Count > 0)
-                {
-                    DBFormatting[] formattingRules = new DBFormatting[results.Rows.Count];
-                    for (int index = 0; index < results.Rows.Count; index++)
+                    // retrieve all fields in the table
+                    String sqlQuery = "select * from " + cTableName;
+                    if (!includeDisabled)
                     {
-                        formattingRules[index] = new DBFormatting();
-                        formattingRules[index].Read(ref results, index);
+                        sqlQuery += " where " + cEnabled + " = 1";
                     }
-                    return formattingRules;
+                    sqlQuery += " order by " + cIndex;
+
+                    SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+                    if (results.Rows.Count > 0)
+                    {
+                        cache = new DBFormatting[results.Rows.Count];
+                        for (int index = 0; index < results.Rows.Count; index++)
+                        {
+                            cache[index] = new DBFormatting();
+                            cache[index].Read(ref results, index);                            
+                        }
+                    }
+                    MPTVSeriesLog.Write("Found and loaded " + results.Rows.Count + " User Formatting Rules");
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Error in DBFormatting.Get (" + ex.Message + ").");
                 }
             }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("Error in DBFormatting.Get (" + ex.Message + ").");
-            }
-            return null;
+            for (int i = 0; i < cache.Length; i++) yield return cache[i];
+
         }
 
         public override string ToString()

@@ -300,7 +300,6 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
             {
                 int counter = 0;
-                
                 m_bReparseNeeded = true;
                 while (m_bReparseNeeded && counter < 4) // limit the max number of loops
                 {
@@ -355,8 +354,6 @@ namespace WindowPlugins.GUITVSeries
 
                 // we really only need to do this once
                 // update new series for banners
-
-                // sorry, didn't quite get it done yet
                 UpdateBanners(true, null);
 
 
@@ -693,10 +690,20 @@ namespace WindowPlugins.GUITVSeries
                 // 3) Skip and never ask for this series again
 
                 List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                Dictionary<int, string> uniqueSeriesIds = new Dictionary<int, string>();
-                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results)
+                Dictionary<int, DBOnlineSeries> uniqueSeriesIds = new Dictionary<int, DBOnlineSeries>();
+                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) // make them unique (each seriesID) - if possible in users lang
                 {
-                   Choices.Add(new Feedback.CItem(onlineSeries[DBOnlineSeries.cPrettyName], "SeriesID: " + onlineSeries[DBOnlineSeries.cID], onlineSeries));
+                    if (!uniqueSeriesIds.ContainsKey(onlineSeries[DBOnlineSeries.cID]))
+                        uniqueSeriesIds.Add(onlineSeries[DBOnlineSeries.cID], onlineSeries);
+                    else if (onlineSeries["language"] == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
+                        uniqueSeriesIds[onlineSeries[DBOnlineSeries.cID]] = onlineSeries;
+                }
+                foreach (KeyValuePair<int, DBOnlineSeries> onlineSeries in uniqueSeriesIds)
+                {
+                   Choices.Add(new Feedback.CItem(onlineSeries.Value[DBOnlineSeries.cPrettyName], 
+                       "SeriesID: " + onlineSeries.Value[DBOnlineSeries.cID] + Environment.NewLine +
+                       onlineSeries.Value[DBOnlineSeries.cSummary], 
+                       onlineSeries.Value));
                 }
 
                 if (Choices.Count == 0)
@@ -835,15 +842,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (SeriesList.Count > 0)
             {
-
-                String sSeriesIDs = null;
-                List<string> SeriesIDs = null;
-
-                SeriesIDs = generateIDListOfString(SeriesList, DBSeries.cID);
-
                 MPTVSeriesLog.Write(string.Format("{0} metadata of {1} Series", (bUpdateNewSeries ? "Retrieving" : "Looking for updated"), SeriesList.Count));
 
-                UpdateSeries UpdateSeriesParser = new UpdateSeries(SeriesIDs);
+                UpdateSeries UpdateSeriesParser = new UpdateSeries(generateIDListOfString(SeriesList, DBSeries.cID));
 
                 if (UpdateSeriesParser.Results.Count == 0)
                     MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewSeries ? "metadata" : "updates")));
@@ -922,7 +923,6 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
-            int nIndex = 0;
 
             if (m_bFullSeriesRetrieval && m_params.m_bUpdateScan)
                 MPTVSeriesLog.Write("Mode: Get all Episodes of Series");
@@ -965,8 +965,7 @@ namespace WindowPlugins.GUITVSeries
                                 onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = onlineEp;
                             }
 
-                            if (series[DBOnlineSeries.cChoseEpisodeOrder] == "DVD" && (onlineEp == -1 || onlineSeason == -1)) ;
-                            else
+                            if (!(series[DBOnlineSeries.cChoseEpisodeOrder] == "DVD" && (onlineEp == -1 || onlineSeason == -1)))
                             {
                                 // season if not there yet
                                 DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
@@ -1238,7 +1237,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
      
-                        if (bannerSeason.sBannerLang == ZsoriParser.SelLanguageAsString)
+                        if (bannerSeason.sBannerLang == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
                         {
                             lastSeasonBanner = bannerSeason.sBannerFileName;
                             hasOwnLang = true;

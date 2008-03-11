@@ -188,6 +188,8 @@ namespace WindowPlugins.GUITVSeries
         private bool m_primaryKey;
         private DBValue m_value;
 
+        private bool wasChanged = false;
+
         public DBField(cType type)
         {
             m_type = type;
@@ -222,6 +224,12 @@ namespace WindowPlugins.GUITVSeries
             // save DB friendly string (doubling singlequotes
             get { return this.m_value; }
             set { this.m_value = value; }
+        }
+
+        public bool WasChanged
+        {
+            get { return wasChanged; }
+            set { wasChanged = value; }
         }
     };
 
@@ -397,11 +405,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_fields.ContainsKey(fieldName))
                     {
-                        if (m_fields[fieldName].Type == DBField.cTypeInt)
-                            m_fields[fieldName].Value = (long)value;
-                        else
-                            m_fields[fieldName].Value = value;
-                        m_CommitNeeded = true;
+                        if (m_fields[fieldName].Value != value)
+                        {
+                            if (m_fields[fieldName].Type == DBField.cTypeInt)
+                                m_fields[fieldName].Value = (long)value;
+                            else
+                                m_fields[fieldName].Value = value;
+                            m_fields[fieldName].WasChanged = true;
+                            m_CommitNeeded = true;                            
+                        }
                     }
                     else
                     {
@@ -526,9 +538,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // already exists, update
                     builder.Append("update ").Append(m_tableName).Append(" set ");
+                    int fieldsNeedingUpdating = 0;
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
-                        if (!fieldPair.Value.Primary)
+                        if (!fieldPair.Value.Primary && fieldPair.Value.WasChanged)
                         {
                             builder.Append(fieldPair.Key).Append(" = ");
                             switch (fieldPair.Value.Type)
@@ -544,12 +557,14 @@ namespace WindowPlugins.GUITVSeries
                                     builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
                                     break;
                             }
-                            
+                            fieldsNeedingUpdating++;                            
                         }
                     }
-
-                    sqlQuery = builder.ToString().Substring(0, builder.Length - 1) + sWhere;
-                    DBTVSeries.Execute(sqlQuery);
+                    if (fieldsNeedingUpdating > 0)
+                    {
+                        sqlQuery = builder.ToString().Substring(0, builder.Length - 1) + sWhere;
+                        DBTVSeries.Execute(sqlQuery);
+                    }
                 }
                 else
                 {

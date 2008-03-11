@@ -241,7 +241,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         static Stream RetrieveData(String sUrl)
         {
-            MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug);
             if (sUrl == null || sUrl.Length < 1 || sUrl[0] == '/')
             {
                 // this happens if no active mirror is set
@@ -274,27 +274,27 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
             return null;
         }
-
+        
+        static UTF8Encoding enc = new UTF8Encoding();
         static Dictionary<string, XmlDocument> DecompressZipToXmls(Stream s)
         {
-            MPTVSeriesLog.Write("Decompressing Stream...");
+            MPTVSeriesLog.Write("Decompressing Stream...", MPTVSeriesLog.LogLevel.Debug);
             int bytes = 2048;
             byte[] data = new byte[2048];
             Dictionary<string, XmlDocument> docsInZip = new Dictionary<string, XmlDocument>();            
             ZipInputStream zis = new ZipInputStream(s);
             ZipEntry currEntry = null;
             StringBuilder b = new StringBuilder();
-
             while ((currEntry = zis.GetNextEntry()) != null)
             {
-                MPTVSeriesLog.Write("Decompressing Entry: " + currEntry.Name);
+                MPTVSeriesLog.Write("Decompressing Entry: ",  currEntry.Name, MPTVSeriesLog.LogLevel.Debug);
                 XmlDocument d = new XmlDocument();
                 while ((bytes = zis.Read(data, 0, data.Length)) > 0)
-                    b.Append(new UTF8Encoding().GetString(data, 0, bytes));
-                MPTVSeriesLog.Write("Decompression done, now loading as XML...");    
+                    b.Append(enc.GetString(data, 0, bytes));
+                MPTVSeriesLog.Write("Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug);    
                 d.LoadXml(b.ToString());
-                b = new StringBuilder();
-                MPTVSeriesLog.Write("Loaded as valid XML");
+                b.Remove(0, b.Length);
+                MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
                 docsInZip.Add(currEntry.Name, d);
             }
             return docsInZip;
