@@ -66,6 +66,7 @@ namespace WindowPlugins.GUITVSeries
         public static void ClearAll()
         {
             String sqlQuery = "delete from " + cTableName;
+            cache = null;
             DBTVSeries.Execute(sqlQuery);
         }
 
@@ -73,11 +74,13 @@ namespace WindowPlugins.GUITVSeries
         {
             DBFormatting dummy = new DBFormatting(Index);
             Clear(dummy, new SQLCondition(dummy, DBFormatting.cIndex, Index, SQLConditionType.Equal));
+            cache = null;
         }
 
         public void Delete()
         {
             Clear(this[cIndex]);
+            cache = null;
         }
 
         public static DBFormatting[] cache = null; // public for config
