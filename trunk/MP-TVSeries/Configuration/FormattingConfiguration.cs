@@ -132,7 +132,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         if (s != null)
                         {
                             s[DBFormatting.cIndex] = i;
-                            s.Commit();
+                            DBFormatting re = new DBFormatting(i);
+                            re[DBFormatting.cEnabled] = s[DBFormatting.cEnabled];
+                            re[DBFormatting.cReplace] = s[DBFormatting.cReplace];
+                            re[DBFormatting.cWith] = s[DBFormatting.cWith];
+                            re.Commit();
                         }
                     }
                     rule[DBFormatting.cIndex] = list.Items.Count;
