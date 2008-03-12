@@ -90,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static IEnumerable<DBFormatting> GetAll(bool includeDisabled)
         {
-            if (cache == null)
+            if (cache == null || Settings.isConfig)
             {
                 try
                 {
@@ -116,6 +116,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                     MPTVSeriesLog.Write("Found and loaded " + results.Rows.Count + " User Formatting Rules");
+                    if (results.Rows.Count == 0) cache = new DBFormatting[0];
+                    
                 }
                 catch (Exception ex)
                 {
