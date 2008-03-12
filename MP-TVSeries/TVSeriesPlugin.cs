@@ -315,6 +315,7 @@ namespace MediaPortal.GUI.Video
             m_timerDelegate = new TimerCallback(Clock);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
             m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
+            analyseSkinForWantedFields(xmlSkin);
             return Load(xmlSkin);
         }
 
@@ -441,6 +442,20 @@ namespace MediaPortal.GUI.Video
                 bool bEmpty = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Normal);
                 setCurPositionLabel();
+                // always clear all fields
+                switch (this.listLevel)
+                {
+                    case Listlevel.Series:
+                    case Listlevel.Group:                        
+                        clearFieldsForskin("Season");
+                        clearFieldsForskin("Series");
+                        goto case Listlevel.Episode;
+                    case Listlevel.Season:                        
+                    case Listlevel.Episode:
+                        clearFieldsForskin("Episode");
+                        break;
+                    
+                }
                 switch (this.listLevel)
                 {
                     #region Group
@@ -828,7 +843,6 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
-            perfana.logMeasure(MPTVSeriesLog.LogLevel.Normal);
         }
 
         protected override void OnPageLoad()
@@ -854,6 +868,10 @@ namespace MediaPortal.GUI.Video
             clearGUIProperty(guiProperty.CurrentView);
             clearGUIProperty(guiProperty.NextView);
             clearGUIProperty(guiProperty.LastView);
+            
+            clearFieldsForskin("Episode");
+            clearFieldsForskin("Season");
+            clearFieldsForskin("Series");
 
             if (m_CurrLView == null)
             {
@@ -917,7 +935,7 @@ namespace MediaPortal.GUI.Video
 
         void clearGUIProperty(string which)
         {
-            setGUIProperty(which, string.Empty);
+            setGUIProperty(which, "\0"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
 
         enum eContextItems
@@ -2056,7 +2074,7 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);                        
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode, this);                        
                         break;
                 }
             }
@@ -2219,10 +2237,6 @@ namespace MediaPortal.GUI.Video
             clearGUIProperty(guiProperty.SeriesBanner);
             clearGUIProperty(guiProperty.SeasonBanner);
 
-            clearFieldsForskin("Episode");
-            clearFieldsForskin("Season");
-            clearFieldsForskin("Series");
-
         }
 
         private void Series_OnItemSelected(GUIListItem item)
@@ -2245,10 +2259,6 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
-            pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
-
-            clearFieldsForskin("Episode");
-            clearFieldsForskin("Season");
 
         }
 
@@ -2280,7 +2290,6 @@ namespace MediaPortal.GUI.Video
             }
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
-            clearFieldsForskin("Episode");
         }
         private void Episode_OnItemSelected(GUIListItem item)
         {
@@ -2311,7 +2320,7 @@ namespace MediaPortal.GUI.Video
                 {
                     setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
                     pushFieldsToSkin(m_SelectedSeries, "Series");
-                    pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
+                    //pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
                 }
                 else clearGUIProperty(guiProperty.SeriesBanner);
 
@@ -2324,8 +2333,7 @@ namespace MediaPortal.GUI.Video
 
                 m_bUpdateBanner = false;
             }
-            pushFieldsToSkin(m_SelectedEpisode, "Episode");
-            pushFieldsToSkin(m_SelectedEpisode.onlineEpisode, "Episode");            
+            pushFieldsToSkin(m_SelectedEpisode, "Episode");          
         }
 
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
@@ -2353,7 +2361,7 @@ namespace MediaPortal.GUI.Video
         {
             try
             {
-                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
                 m_selected = null;
                 if (dlg == null)
                     return ReturnCode.Cancel;
@@ -2503,7 +2511,7 @@ namespace MediaPortal.GUI.Video
 
             // removed the if statement here to mimic functionality when an episode is selected
             // via the regular UI, since watched flag is now set after viewing (is this right?)
-            m_VideoHandler.ResumeOrPlay(selectedEpisode);
+            m_VideoHandler.ResumeOrPlay(selectedEpisode, this);
         }
 
         private void setProcessAnimationStatus(bool enable)
@@ -2547,39 +2555,17 @@ namespace MediaPortal.GUI.Video
 
         Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
         private void pushFieldsToSkin(DBTable item, string pre)
-        {
+        {            
             if (item == null) return;
-            List<string> l = null;
-            foreach (KeyValuePair<string, DBField> kv in item.m_fields)
+            List<string> fieldsRequestedForPre = null;
+            if (_allFieldsForSkin.ContainsKey(pre))
             {
-
-                if (l == null && _allFieldsForSkin.ContainsKey(pre)) l = _allFieldsForSkin[pre];
-                else if (l == null)
+                fieldsRequestedForPre = _allFieldsForSkin[pre];
+                for (int i = 0; i < fieldsRequestedForPre.Count; i++)
                 {
-                    l = new List<string>();
-                    _allFieldsForSkin.Add(pre, l);
+                    pushFieldToSkin(item, pre, fieldsRequestedForPre[i]);
                 }
-                if (l != null && !l.Contains(kv.Key)) l.Add(kv.Key);
-
-                pushFieldToSkin(item, pre, kv.Key);
             }
-
-            // lets also push the virtual fields
-            if (item is DBEpisode && pre == "Episode")
-            {
-                pushFieldToSkin(item, pre, DBEpisode.cFileSize);
-                _allFieldsForSkin[pre].Add(DBEpisode.cFileSize);
-                pushFieldToSkin(item, pre, DBEpisode.cPrettyPlaytime);
-                _allFieldsForSkin[pre].Add(DBEpisode.cPrettyPlaytime);
-                pushFieldToSkin(item, pre, DBEpisode.cFilenameWOPath);
-                _allFieldsForSkin[pre].Add(DBEpisode.cFilenameWOPath);
-            }
-
-            // and user defined ones in formatting rules (not yet)
-            //foreach (DBFormatting dbf in DBFormatting.GetAll())
-            //{
-                
-            //}
         }
         private void pushFieldToSkin(DBTable item, string pre, string field)
         {
@@ -2590,15 +2576,44 @@ namespace MediaPortal.GUI.Video
             if (_allFieldsForSkin.ContainsKey(pre))
             {
                 List<string> fields = _allFieldsForSkin[pre];
-                foreach (string field in fields)
-                    clearGUIProperty(field);
+                for (int i = 0; i < fields.Count; i++)
+                    clearGUIProperty(pre + "." + fields[i]);                   
             }
-            // lets also clear the virtual fields
-            if (pre == "Episode")
+        }
+        
+        private void analyseSkinForWantedFields(string skinfile)
+        {
+            string content = string.Empty;
+            using (System.IO.StreamReader r = new System.IO.StreamReader(skinfile))
             {
-                clearGUIProperty(DBEpisode.cFileSize);
-                clearGUIProperty(DBEpisode.cPrettyPlaytime);
-                clearGUIProperty(DBEpisode.cFilenameWOPath);
+                content = r.ReadToEnd();
+            }
+            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(@"#TVSeries\..+?(?=[\s<])");
+            System.Text.RegularExpressions.MatchCollection matches = reg.Matches(content);
+            MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Normal);
+            for (int i = 0; i < matches.Count; i++)
+            {
+                string pre = string.Empty;
+                string remove = string.Empty;                
+                if(matches[i].Value.Contains((remove = "#TVSeries.Episode.")))
+                    pre = "Episode";
+                else if(matches[i].Value.Contains((remove = "#TVSeries.Season.")))
+                    pre = "Season";
+                else if(matches[i].Value.Contains((remove = "#TVSeries.Series.")))
+                    pre = "Series";
+                string value = matches[i].Value.Trim().Replace(remove, string.Empty);
+                if (pre.Length > 0)
+                {
+                    MPTVSeriesLog.Write(matches[i].Value);
+                    if (_allFieldsForSkin.ContainsKey(pre))
+                        _allFieldsForSkin[pre].Add(value);
+                    else
+                    {
+                        List<string> v = new List<string>();
+                        v.Add(value);
+                        _allFieldsForSkin.Add(pre, v);
+                    }
+                }
             }
         }
 

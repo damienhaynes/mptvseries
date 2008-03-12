@@ -60,7 +60,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Public Methods
-        public bool ResumeOrPlay(DBEpisode episode)
+        public bool ResumeOrPlay(DBEpisode episode, TVSeriesPlugin sender)
         {
             try
             {
@@ -105,20 +105,22 @@ namespace WindowPlugins.GUITVSeries
                 #region Ask user to Resume
                 if (timeMovieStopped > 0)
                 {
-                    GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                    if (null == dlgYesNo)
-                        return false;
-                    dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
-                    dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
-                    dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
-                    dlgYesNo.SetDefaultToYes(true);
-                    dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                    if (!dlgYesNo.IsConfirmed) // reset resume data in DB
-                    {
-                        timeMovieStopped = 0;
-                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-                        m_currentEpisode.Commit();
-                    }
+                    //GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                    //sender.YesNoOkDialog(new WindowPlugins.GUITVSeries.Feedback.ChooseFromYesNoDescriptor());
+                    //if (null != dlgYesNo)
+                    //{
+                    //    dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
+                    //    dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
+                    //    dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
+                    //    dlgYesNo.SetDefaultToYes(true);
+                    //    dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+                    //    if (!dlgYesNo.IsConfirmed) // reset resume data in DB
+                    //    {
+                    //        timeMovieStopped = 0;
+                    //        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                    //        m_currentEpisode.Commit();
+                    //    }
+                    //}
                 }
                 #endregion
 
@@ -229,15 +231,19 @@ namespace WindowPlugins.GUITVSeries
                 LogPlayBackOp("stopped", filename);
                 try
                 {
-                    #region Set Resume Point or Watched
-                    m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                    #region Set Resume Point or Watched                    
                     double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
-                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter/100) 
+                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
                         PlaybackOperationEnded(true);
                     }
-                    else PlaybackOperationEnded(false);
+                    else
+                    {
+                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                        m_currentEpisode.Commit();
+                        PlaybackOperationEnded(false);                        
+                    }
                     #endregion
                     
                 }
@@ -296,10 +302,9 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Episode not rated yet.");
                     if(RateRequestOccured != null)
                         RateRequestOccured.Invoke(m_currentEpisode);
-                } MPTVSeriesLog.Write("Episode already rated or option not set.");
+                } else MPTVSeriesLog.Write("Episode already rated or option not set.");
             }
-            m_currentEpisode = null; // reset, we are done with it
-            SetGUIProperties(true); // clear GUI Properties
+            SetGUIProperties(true); // clear GUI Properties          
         }
 
         void LogPlayBackOp(string OperationType, string filename)
