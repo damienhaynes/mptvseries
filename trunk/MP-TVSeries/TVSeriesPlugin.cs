@@ -424,7 +424,7 @@ namespace MediaPortal.GUI.Video
 
         void bgLoadFacade()*/
         void LoadFacade()
-        {            
+        {      
             MPTVSeriesLog.Write("Begin LoadFacade");
             try
             {
@@ -456,6 +456,7 @@ namespace MediaPortal.GUI.Video
                         break;
                     
                 }
+                setNewListLevelOfCurrView(m_CurrViewStep);
                 switch (this.listLevel)
                 {
                     #region Group
@@ -463,8 +464,9 @@ namespace MediaPortal.GUI.Video
                         {
                             ImageAllocator.FlushAll();
                             // these are groups of certain categories, eg. Genres
-                            // always list mode
-                            setFacadeMode(GUIFacadeControl.ViewMode.List);
+
+                            bool graphical = DBOption.GetOptions(DBOption.cGraphicalGroupView);
+                            setFacadeMode(graphical ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List);
                             int selectedIndex = -1;
                             // view handling
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
@@ -478,8 +480,11 @@ namespace MediaPortal.GUI.Video
                                 item.IsRemote = true;
                                 item.IsDownloading = true;
 
-                                // also display fist logo in list directly
-                                item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
+                                if (graphical || DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                {
+                                    // also display fist logo in list directly
+                                    item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
+                                }
 
                                 this.m_Facade.Add(item);
 
@@ -588,10 +593,6 @@ namespace MediaPortal.GUI.Video
                             if (selectedIndex != -1)
                             {
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
-
-                                //System.Reflection.FieldInfo fi =
-                                //this.m_Facade.ThumbnailView.GetType().GetField("iItem", System.Reflection.BindingFlags.NonPublic);
-                                //fi.SetValue(this.m_Facade.ThumbnailView, selectedIndex);
                             }
                         }
                         break;
@@ -783,8 +784,11 @@ namespace MediaPortal.GUI.Video
                                             selectedIndex = count;
                                     }
 
-                                    // first returned logo should also show up here in list view directly
-                                    item.IconImage = localLogos.getFirstEpLogo(episode);
+                                    if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                    {
+                                        // first returned logo should also show up here in list view directly
+                                        item.IconImage = localLogos.getFirstEpLogo(episode);
+                                    }
                                     this.m_Facade.Add(item);
                                 }
                                 catch (Exception ex)
@@ -935,7 +939,7 @@ namespace MediaPortal.GUI.Video
 
         void clearGUIProperty(string which)
         {
-            setGUIProperty(which, "\0"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+            setGUIProperty(which, "-"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
 
         enum eContextItems
@@ -1043,7 +1047,6 @@ namespace MediaPortal.GUI.Video
             }
             return false;
         }
-
 
         protected override void OnShowContextMenu()
         {
@@ -2555,9 +2558,10 @@ namespace MediaPortal.GUI.Video
 
         Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
         private void pushFieldsToSkin(DBTable item, string pre)
-        {            
+        {                   
             if (item == null) return;
             List<string> fieldsRequestedForPre = null;
+
             if (_allFieldsForSkin.ContainsKey(pre))
             {
                 fieldsRequestedForPre = _allFieldsForSkin[pre];
@@ -2565,11 +2569,13 @@ namespace MediaPortal.GUI.Video
                 {
                     pushFieldToSkin(item, pre, fieldsRequestedForPre[i]);
                 }
-            }
+            }          
+            
         }
         private void pushFieldToSkin(DBTable item, string pre, string field)
         {
-            setGUIProperty(pre + "." + field, FieldGetter.resolveDynString(string.Format("<{0}.{1}>", pre, field), item));
+            string t = pre + "." + field;
+            setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
         }
         private void clearFieldsForskin(string pre)
         {

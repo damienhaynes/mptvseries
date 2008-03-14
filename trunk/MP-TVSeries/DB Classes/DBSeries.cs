@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -275,7 +274,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
 
         private DBOnlineSeries m_onlineSeries = null;
-        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors" });
+        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
 

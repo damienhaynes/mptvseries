@@ -78,6 +78,8 @@ namespace WindowPlugins.GUITVSeries
             this.btnCopy = new System.Windows.Forms.Button();
             this.toolTipLogos = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipLogos2 = new System.Windows.Forms.ToolTip(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -88,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.browse.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.browse.Location = new System.Drawing.Point(245, 27);
+            this.browse.Location = new System.Drawing.Point(281, 27);
             this.browse.Name = "browse";
             this.browse.Size = new System.Drawing.Size(75, 23);
             this.browse.TabIndex = 2;
@@ -104,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox1.Location = new System.Drawing.Point(15, 29);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(224, 20);
+            this.textBox1.Size = new System.Drawing.Size(260, 20);
             this.textBox1.TabIndex = 1;
             this.toolTipLogos2.SetToolTip(this.textBox1, "This contains the filename of the logo that the rule will load if condition is sa" +
                     "tisfied.\r\nWhen a dynamic rule is applied, enter in the dynamic filename after th" +
@@ -118,7 +120,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond1_what.Location = new System.Drawing.Point(75, 55);
             this.cond1_what.Multiline = false;
             this.cond1_what.Name = "cond1_what";
-            this.cond1_what.Size = new System.Drawing.Size(164, 20);
+            this.cond1_what.Size = new System.Drawing.Size(200, 20);
             this.cond1_what.TabIndex = 4;
             this.cond1_what.Text = "";
             this.toolTipLogos2.SetToolTip(this.cond1_what, "Enter in the L.H.S of the expression to be evaluated.\r\nYou can right click on thi" +
@@ -139,7 +141,7 @@ namespace WindowPlugins.GUITVSeries
             "<=",
             "contains",
             "!contains"});
-            this.cond1_type.Location = new System.Drawing.Point(245, 55);
+            this.cond1_type.Location = new System.Drawing.Point(281, 55);
             this.cond1_type.Name = "cond1_type";
             this.cond1_type.Size = new System.Drawing.Size(75, 21);
             this.cond1_type.TabIndex = 5;
@@ -148,7 +150,7 @@ namespace WindowPlugins.GUITVSeries
             // cond1_cond
             // 
             this.cond1_cond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cond1_cond.Location = new System.Drawing.Point(326, 55);
+            this.cond1_cond.Location = new System.Drawing.Point(362, 55);
             this.cond1_cond.Name = "cond1_cond";
             this.cond1_cond.Size = new System.Drawing.Size(130, 20);
             this.cond1_cond.TabIndex = 6;
@@ -168,7 +170,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.cond2_cond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cond2_cond.Enabled = false;
-            this.cond2_cond.Location = new System.Drawing.Point(326, 82);
+            this.cond2_cond.Location = new System.Drawing.Point(362, 82);
             this.cond2_cond.Name = "cond2_cond";
             this.cond2_cond.Size = new System.Drawing.Size(130, 20);
             this.cond2_cond.TabIndex = 11;
@@ -189,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
             "<=",
             "contains",
             "!contains"});
-            this.cond2_type.Location = new System.Drawing.Point(245, 82);
+            this.cond2_type.Location = new System.Drawing.Point(281, 82);
             this.cond2_type.Name = "cond2_type";
             this.cond2_type.Size = new System.Drawing.Size(75, 21);
             this.cond2_type.TabIndex = 10;
@@ -202,7 +204,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond2_what.Location = new System.Drawing.Point(75, 82);
             this.cond2_what.Multiline = false;
             this.cond2_what.Name = "cond2_what";
-            this.cond2_what.Size = new System.Drawing.Size(164, 20);
+            this.cond2_what.Size = new System.Drawing.Size(200, 20);
             this.cond2_what.TabIndex = 9;
             this.cond2_what.Text = "";
             this.cond2_what.TextChanged += new System.EventHandler(this.cond2_what_TextChanged);
@@ -238,7 +240,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.cond3_cond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cond3_cond.Enabled = false;
-            this.cond3_cond.Location = new System.Drawing.Point(326, 108);
+            this.cond3_cond.Location = new System.Drawing.Point(362, 108);
             this.cond3_cond.Name = "cond3_cond";
             this.cond3_cond.Size = new System.Drawing.Size(130, 20);
             this.cond3_cond.TabIndex = 15;
@@ -258,7 +260,7 @@ namespace WindowPlugins.GUITVSeries
             "<=",
             "contains",
             "!contains"});
-            this.cond3_type.Location = new System.Drawing.Point(245, 108);
+            this.cond3_type.Location = new System.Drawing.Point(281, 108);
             this.cond3_type.Name = "cond3_type";
             this.cond3_type.Size = new System.Drawing.Size(75, 21);
             this.cond3_type.TabIndex = 14;
@@ -271,7 +273,7 @@ namespace WindowPlugins.GUITVSeries
             this.cond3_what.Location = new System.Drawing.Point(75, 108);
             this.cond3_what.Multiline = false;
             this.cond3_what.Name = "cond3_what";
-            this.cond3_what.Size = new System.Drawing.Size(164, 20);
+            this.cond3_what.Size = new System.Drawing.Size(200, 20);
             this.cond3_what.TabIndex = 13;
             this.cond3_what.Text = "";
             this.cond3_what.TextChanged += new System.EventHandler(this.cond3_what_TextChanged);
@@ -279,7 +281,7 @@ namespace WindowPlugins.GUITVSeries
             // save
             // 
             this.save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.save.Location = new System.Drawing.Point(381, 135);
+            this.save.Location = new System.Drawing.Point(417, 165);
             this.save.Name = "save";
             this.save.Size = new System.Drawing.Size(75, 23);
             this.save.TabIndex = 19;
@@ -293,7 +295,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(300, 135);
+            this.btnCancel.Location = new System.Drawing.Point(336, 165);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 18;
@@ -315,7 +317,7 @@ namespace WindowPlugins.GUITVSeries
             // btnDynFilename
             // 
             this.btnDynFilename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDynFilename.Location = new System.Drawing.Point(326, 27);
+            this.btnDynFilename.Location = new System.Drawing.Point(362, 27);
             this.btnDynFilename.Name = "btnDynFilename";
             this.btnDynFilename.Size = new System.Drawing.Size(130, 23);
             this.btnDynFilename.TabIndex = 3;
@@ -331,7 +333,7 @@ namespace WindowPlugins.GUITVSeries
             // btnPaste
             // 
             this.btnPaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPaste.Location = new System.Drawing.Point(93, 134);
+            this.btnPaste.Location = new System.Drawing.Point(93, 164);
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(75, 23);
             this.btnPaste.TabIndex = 17;
@@ -343,7 +345,7 @@ namespace WindowPlugins.GUITVSeries
             // btnCopy
             // 
             this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCopy.Location = new System.Drawing.Point(12, 134);
+            this.btnCopy.Location = new System.Drawing.Point(12, 164);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
             this.btnCopy.TabIndex = 16;
@@ -367,13 +369,41 @@ namespace WindowPlugins.GUITVSeries
             this.toolTipLogos2.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTipLogos2.ToolTipTitle = "Logo Configuration Help";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 141);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 13);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "Display:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Wherever possible",
+            "Only in Series Listing",
+            "Only in Season Listing",
+            "Only in Episode Listing",
+            "Only in Grouped Listing"});
+            this.comboBox1.Location = new System.Drawing.Point(75, 137);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(200, 21);
+            this.comboBox1.TabIndex = 21;
+            this.toolTipLogos.SetToolTip(this.comboBox1, "if you wish to display it in more than 1 mode (for instance series/season), but n" +
+                    "ot all possible listmodes, duplicate the rule until you get the desired result");
+            // 
             // logoConfigurator
             // 
             this.AcceptButton = this.save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(472, 169);
+            this.ClientSize = new System.Drawing.Size(508, 191);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnPaste);
             this.Controls.Add(this.btnDynFilename);
@@ -395,7 +425,7 @@ namespace WindowPlugins.GUITVSeries
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.browse);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.MaximumSize = new System.Drawing.Size(1920, 195);
+            this.MaximumSize = new System.Drawing.Size(1920, 225);
             this.MinimumSize = new System.Drawing.Size(458, 195);
             this.Name = "logoConfigurator";
             this.Text = "Logo Configuration";
@@ -431,5 +461,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.ToolTip toolTipLogos;
         private System.Windows.Forms.ToolTip toolTipLogos2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

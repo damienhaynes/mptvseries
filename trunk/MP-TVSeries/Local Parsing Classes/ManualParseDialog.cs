@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
                 }
 
                 // retrieve and store the rsults
-                GetEpisodes episodeGrabber = new GetEpisodes(selectedSeriesID);
+                GetEpisodes episodeGrabber = new GetEpisodes(selectedSeriesID.ToString());//new GetEpisodes(selectedSeriesID);
                 episodeList = episodeGrabber.Results;
                 episodeCache.Add(series, episodeList);
             }

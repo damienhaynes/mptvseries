@@ -55,6 +55,11 @@ namespace WindowPlugins.GUITVSeries
         static string lastResult = string.Empty;
         static bool lastWasCached = false;
 
+        public static string RestrictionSeriesList = "<Restrict:Series>";
+        public static string RestrictionSeasonList = "<Restrict:Season>";
+        public static string RestrictionEpisodeList = "<Restrict:Episode>";
+        public static string RestrictionGroupList = "<Restrict:Group>";
+
         enum Level
         {
             Series,
@@ -101,7 +106,8 @@ namespace WindowPlugins.GUITVSeries
                     List<Level> levels = new List<Level>();
                     if (isRelevant(entries[i], Level.Series)) levels.Add(Level.Series);
                     if (isRelevant(entries[i], Level.Season)) levels.Add(Level.Season);
-                    levels.Add(Level.Episode); // Episodes always relevant I think
+                    if (isRelevant(entries[i], Level.Episode)) levels.Add(Level.Episode);
+                    //if (isRelevant(entries[i], Level.Group)) levels.Add(Level.Group);
                     entriesValidForInfo.Add(i, levels);
 
                     splitConditions.Add(i, new List<string>(Regex.Split(entries[i], localLogos.condSplit)));
@@ -233,7 +239,7 @@ namespace WindowPlugins.GUITVSeries
                             List<string> filenames = Helper.filterExistingFiles(getDynamicFileName(conditions[0], level));
 
                             // check if the condition is met
-                            // each image may only exist once
+                            // each image may only exist once                            
                             if (filenames.Count > 0 && !logosForBuilding.Contains(conditions[0]) && condIsTrue(conditions, entries[i], level))
                             {
                                 if (firstOnly)
@@ -244,7 +250,6 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
-
                     }
                     catch (Exception ex)
                     {
@@ -340,29 +345,29 @@ namespace WindowPlugins.GUITVSeries
         {
             bool[] results = new bool[]{false, false, false};
             bool cancel = false;
-            for (int i = 0; i < 3; i++)
-            {
-                MPTVSeriesLog.Write("Testing Loop:" + i.ToString(), MPTVSeriesLog.LogLevel.Debug);
-                string what = conditions[i * 4 + 1];
-                string compare = conditions[i * 4 + 3];
+            for (int i = 0, j=0; i < 3; i++, j=i<<2)
+            {                
+                MPTVSeriesLog.Write("Testing Loop:", i, MPTVSeriesLog.LogLevel.Debug);
+                string what = conditions[j + 1];
+                string compare = conditions[j + 3];
                 if (!getFieldValues(what, out what, level)) return false;
                 if (!getFieldValues(compare, out compare, level)) return false;
 
                 results[i] = Condition.evaluate(what,
-                                 conditions[i * 4 + 2],
+                                 conditions[j + 2],
                                  compare, out cancel, provider);
 
-                MPTVSeriesLog.Write("Test Result: " + results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Test Result: ", results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
                 if (cancel) return true; // the first empty condition (what + value = empty) means no other conds can follow, we exit
 
                 if (i < 2)
                 {
-                    if (!results[i] && conditions[i * 4 + 4] == "AND") // result is false and next link is and -> everything is wrong
+                    if (!results[i] && conditions[j + 4] == "AND") // result is false and next link is and -> everything is wrong
                     {
                         MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = AND and current result was FALSE", MPTVSeriesLog.LogLevel.Debug);
                         return false;
                     }
-                    if (results[i] && conditions[i * 4 + 4] == "OR") // everything has to be true
+                    if (results[i] && conditions[j + 4] == "OR") // everything has to be true
                     {
                         MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = OR and current result was TRUE", MPTVSeriesLog.LogLevel.Debug);
                         return true;
@@ -452,7 +457,18 @@ namespace WindowPlugins.GUITVSeries
 
         static bool isRelevant(string field, Level level)
         {
-            if (level == Level.Series && field.Contains("<Season.")) return false;
+            if(field.Contains("<Restrict:"))
+            {
+                Level restrLevel = Level.Series;
+                if (field.Contains(RestrictionSeriesList)) restrLevel = Level.Series;
+                else if (field.Contains(RestrictionSeasonList)) restrLevel = Level.Season;
+                else if (field.Contains(RestrictionEpisodeList)) restrLevel = Level.Episode;
+                else if (field.Contains(RestrictionGroupList)) restrLevel = Level.Group;
+
+                if (level != restrLevel) return false;
+            }
+
+            if (level == Level.Series && (field.Contains("<Season."))) return false;
             if ((level == Level.Series || level == Level.Season) && field.Contains("<Episode.")) return false;
             if (level == Level.Group)
             {

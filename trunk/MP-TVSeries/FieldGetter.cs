@@ -131,7 +131,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static string resolveDynString(string what, DBTable item, bool splitFields, bool applyUserFormatting)
         {
-            // apply userFormatting on the field's itself
+             // apply userFormatting on the field's itself
             if (applyUserFormatting) performUserFormattingReplacement(ref what);
 
             Level level = levelOfItem(item);
@@ -164,9 +164,11 @@ namespace WindowPlugins.GUITVSeries
                 DBOnlineSeries o = item as DBOnlineSeries;
                 if (o == null) value = replaceSeriesTags(item as DBSeries, value);
                 else value = replaceSeriesTags(item[DBSeries.cID], value);
+            }            
+            if (nonFormattingFields.Contains(what))
+            {
+                return value;
             }
-
-            if (nonFormattingFields.Contains(what)) return value;
             value = doFormatting(value, what, item);
 
             value = MathParser.mathParser.TryParse(value);
@@ -178,7 +180,6 @@ namespace WindowPlugins.GUITVSeries
                 // because the replacement itself might be dynamic again, we resolve the result again
                 if(replacementOccured) value = resolveDynString(value, item, splitFields, applyUserFormatting);
             }
-
             return value;
         }
         #endregion
@@ -253,14 +254,14 @@ namespace WindowPlugins.GUITVSeries
         }
 
         static string getValuesOfType(DBTable item, string what, Regex matchRegex, string Identifier)
-        {
+        {          
             string value = what;
             foreach (Match m in matchRegex.Matches(what))
-            {
-                string result = item[m.Value];
+            {                
+                string result = item[m.Value];                
                 if (_splitFields) result = result.Trim('|').Replace("|", ", ");
                 value = value.Replace(Identifier + m.Value + ">", result);
-            }
+            }            
             return value;
         }
 

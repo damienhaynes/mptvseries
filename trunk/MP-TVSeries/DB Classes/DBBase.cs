@@ -658,7 +658,7 @@ namespace WindowPlugins.GUITVSeries
         protected static string getRandomBanner(List<string> BannerList)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
-            string langIdentifier = "-lang" + ZsoriParser.SelLanguageAsString + "-";
+            string langIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
 
             // random banners are prefered in the following order
             // 1) own lang + graphical

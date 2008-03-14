@@ -79,18 +79,19 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
-        private long m_nServerTimeStamp = 0;
+        //private long m_nServerTimeStamp = 0;
         public List<seriesBannersMap> seriesBanners = new List<seriesBannersMap>();
 
         static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
         String localizedSeriesName = string.Empty;
-        static bool getBlankBanners = false;
-        public long ServerTimeStamp
-        {
-            get { return m_nServerTimeStamp; }
-        }
+        //static bool getBlankBanners = false;
+        //public long ServerTimeStamp
+        //{
+        //    get { return m_nServerTimeStamp; }
+        //}
 
-
+        #region old stuff - safe to remove
+        /*
         /// <summary>
         /// This constructor automatically get's relevant seasons
         /// </summary>
@@ -109,88 +110,8 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!Settings.isConfig)
                 getBlankBanners = DBOption.GetOptions(DBOption.cGetBlankBanners);
-        }
-
-        public GetBanner(string seriesID)
-        {
-            doWork(seriesID);
-        }
-
-        private void doWork(string seriesID)
-        {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID));
-            List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
-            List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
-            seriesBannersMap map = new seriesBannersMap();
-            if (nodeList != null)
-            {                
-                foreach (XmlNode topNode in nodeList)
-                {
-                    foreach (XmlNode itemNode in topNode.ChildNodes)
-                    {
-                        if(itemNode.Name == "Banner")
-                        {
-                            BannerSeason bs = new BannerSeason();
-                            BannerSeries b = new BannerSeries();
-                            bool isSeries = false;
-                            bool isGood = true;
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                            {
-                                switch (propertyNode.Name)
-                                {
-                                    case "BannerPath":
-                                        bs.sOnlineBannerPath = propertyNode.InnerText;
-                                        b.sOnlineBannerPath = propertyNode.InnerText;
-                                        break;
-                                    case "BannerType":
-                                        if (propertyNode.InnerText.Equals("series", StringComparison.CurrentCultureIgnoreCase))
-                                            isSeries = true;
-                                        break;
-                                    case "BannerType2":
-                                        if (isSeries)
-                                        {
-                                            if (propertyNode.InnerText.Equals("graphical", StringComparison.CurrentCultureIgnoreCase))
-                                                b.bGraphical = true;                                            
-                                        }
-                                        else
-                                        {
-                                            if (!propertyNode.InnerText.Equals("season", StringComparison.CurrentCultureIgnoreCase))
-                                                 isGood = false;
-                                        }
-                                        break;
-                                    case "Language":
-                                        bs.sBannerLang = propertyNode.InnerText;
-                                        b.sBannerLang = propertyNode.InnerText;
-                                        break;
-                                    case "Season":
-                                        bs.sSeason = propertyNode.InnerText;
-                                        break;
-                                }
-                            }
-                            b.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
-                            bs.sSeriesName = b.sSeriesName;
-                            if (isSeries)
-                                m_bannerSeriesList.Add(b);
-                            else if(isGood)
-                                m_bannerSeasonList.Add(bs);
-                        }
-                    }
-                }
-                map.seasonBanners = m_bannerSeasonList;
-                map.seriesBanners = m_bannerSeriesList;
-                // series already in?
-                if (seriesBanners.Contains(map))
-                {
-                    seriesBannersMap seriesMap = seriesBanners[seriesBanners.IndexOf(map)];
-                    seriesMap.seasonBanners.AddRange(map.seasonBanners);
-                    seriesMap.seriesBanners.AddRange(map.seriesBanners);
-                }
-                else seriesBanners.Add(map);
-                DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);
-
-            }
-        }
-
+        } 
+                 /*
         private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload)
         {
             work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, null), SeasonsToDownload, false, ZsoriParser.SelLanguageAsString);
@@ -336,6 +257,88 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 DownloadBanners(bannerLang);
+            }
+        }
+        */
+        #endregion
+
+        public GetBanner(string seriesID)
+        {
+            doWork(seriesID);
+        }
+
+        private void doWork(string seriesID)
+        {
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID));
+            List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
+            List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
+            seriesBannersMap map = new seriesBannersMap();
+            if (nodeList != null)
+            {                
+                foreach (XmlNode topNode in nodeList)
+                {
+                    foreach (XmlNode itemNode in topNode.ChildNodes)
+                    {
+                        if(itemNode.Name == "Banner")
+                        {
+                            BannerSeason bs = new BannerSeason();
+                            BannerSeries b = new BannerSeries();
+                            bool isSeries = false;
+                            bool isGood = true;
+                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                            {
+                                switch (propertyNode.Name)
+                                {
+                                    case "BannerPath":
+                                        bs.sOnlineBannerPath = propertyNode.InnerText;
+                                        b.sOnlineBannerPath = propertyNode.InnerText;
+                                        break;
+                                    case "BannerType":
+                                        if (propertyNode.InnerText.Equals("series", StringComparison.CurrentCultureIgnoreCase))
+                                            isSeries = true;
+                                        break;
+                                    case "BannerType2":
+                                        if (isSeries)
+                                        {
+                                            if (propertyNode.InnerText.Equals("graphical", StringComparison.CurrentCultureIgnoreCase))
+                                                b.bGraphical = true;                                            
+                                        }
+                                        else
+                                        {
+                                            if (!propertyNode.InnerText.Equals("season", StringComparison.CurrentCultureIgnoreCase))
+                                                 isGood = false;
+                                        }
+                                        break;
+                                    case "Language":
+                                        bs.sBannerLang = propertyNode.InnerText;
+                                        b.sBannerLang = propertyNode.InnerText;
+                                        break;
+                                    case "Season":
+                                        bs.sSeason = propertyNode.InnerText;
+                                        break;
+                                }
+                            }
+                            b.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+                            bs.sSeriesName = b.sSeriesName;
+                            if (isSeries)
+                                m_bannerSeriesList.Add(b);
+                            else if(isGood)
+                                m_bannerSeasonList.Add(bs);
+                        }
+                    }
+                }
+                map.seasonBanners = m_bannerSeasonList;
+                map.seriesBanners = m_bannerSeriesList;
+                // series already in?
+                if (seriesBanners.Contains(map))
+                {
+                    seriesBannersMap seriesMap = seriesBanners[seriesBanners.IndexOf(map)];
+                    seriesMap.seasonBanners.AddRange(map.seasonBanners);
+                    seriesMap.seriesBanners.AddRange(map.seriesBanners);
+                }
+                else seriesBanners.Add(map);
+                DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);
+
             }
         }
 
