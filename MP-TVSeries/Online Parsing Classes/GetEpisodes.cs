@@ -32,25 +32,28 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetEpisodes
     {
-        private long m_nServerTimeStamp = 0;
+        //private long m_nServerTimeStamp = 0;
         private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
 
-        public long ServerTimeStamp
-        {
-            get { return m_nServerTimeStamp; }
-        }
+        //public long ServerTimeStamp
+        //{
+        //    get { return m_nServerTimeStamp; }
+        //}
 
         public List<DBOnlineEpisode> Results
         {
             get { return listEpisodes; }
         }
 
+        #region old stuff - safe to remove
+        /*
         public GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp)
         {
             Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp, default(DateTime));
         }
 
-        public GetEpisodes(int nSeriesID) {
+        public GetEpisodes(int nSeriesID)
+        {
             Work(nSeriesID, -1, -1, 0, default(DateTime));
         }
 
@@ -64,17 +67,11 @@ namespace WindowPlugins.GUITVSeries
             Work(nSeriesID, -1, -1, 0, firstAired);
         }
 
-        public GetEpisodes(string seriesID)
-        {
-            int s = Int32.Parse(seriesID);
-            doWork(s);
-        }
-
         public void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
         {
             XmlNodeList nodeList = null;
             string choosenOrdering;
-            
+
             DBSeries localSeries = DBSeries.Get(nSeriesID, false);
             if (localSeries != null)
                 choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
@@ -115,18 +112,25 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }
+        }*/
+#endregion
 
-        public void doWork(int nSeriesID)
+        public GetEpisodes(string seriesID)
         {
+            int s = Int32.Parse(seriesID);
+            doWork(s);
+        }        
+        
+        public void doWork(int nSeriesID)
+        {            
             XmlNodeList nodeList = null;
-            string choosenOrdering;
+            //string choosenOrdering;
 
-            DBSeries localSeries = DBSeries.Get(nSeriesID, false);
-            if (localSeries != null)
-                choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
-            else
-                choosenOrdering = "Aired";
+            //DBSeries localSeries = DBSeries.Get(nSeriesID, false);
+            //if (localSeries != null)
+            //    choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
+            //else
+            //    choosenOrdering = "Aired";
 
             nodeList = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
 

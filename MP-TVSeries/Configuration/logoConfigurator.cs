@@ -67,6 +67,8 @@ namespace WindowPlugins.GUITVSeries
 
             this._12_link.SelectedIndex = 0;
             this._23_link.SelectedIndex = 0;
+
+            this.comboBox1.SelectedIndex = 0;
         }
 
 
@@ -102,6 +104,12 @@ namespace WindowPlugins.GUITVSeries
                 if (textBox1.Text.Contains(">") && textBox1.Text.Contains("<"))
                     textBox1.ReadOnly = false;
                 // dyn filename quick check
+
+                if (entry.Contains(localLogos.RestrictionSeriesList)) this.comboBox1.SelectedIndex = 1;
+                else if (entry.Contains(localLogos.RestrictionSeasonList)) this.comboBox1.SelectedIndex = 2;
+                else if (entry.Contains(localLogos.RestrictionEpisodeList)) this.comboBox1.SelectedIndex = 3;
+                else if (entry.Contains(localLogos.RestrictionGroupList)) this.comboBox1.SelectedIndex = 4;
+                else this.comboBox1.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -167,7 +175,8 @@ namespace WindowPlugins.GUITVSeries
                             + this._23_link.SelectedItem.ToString() + localLogos.condSplit
                             + this.cond3_what.Text + localLogos.condSplit
                             + this.cond3_type.SelectedItem.ToString() + localLogos.condSplit
-                            + this.cond3_cond.Text + localLogos.condSplit;
+                            + this.cond3_cond.Text + localLogos.condSplit
+                            + this.getRestriction();
             }
             else return null;
         }
@@ -248,6 +257,28 @@ namespace WindowPlugins.GUITVSeries
             if (this.textBox1.Enabled)
             {
             }
+        }
+
+        private string getRestriction()
+        {
+            string restriction = string.Empty;
+            switch (this.comboBox1.SelectedIndex)
+            {
+                case 1:
+                    restriction = localLogos.RestrictionSeriesList;
+                    break;
+                case 2:
+                    restriction = localLogos.RestrictionSeasonList;
+                    break;
+                case 3:
+                    restriction = localLogos.RestrictionEpisodeList;
+                    break;
+                case 4:
+                    restriction = localLogos.RestrictionGroupList;
+                    break;
+
+            }
+            return restriction;
         }
 
         private void button2_Click(object sender, EventArgs e)

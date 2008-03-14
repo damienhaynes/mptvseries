@@ -138,6 +138,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAskToRate = "askToRate";
         public const String cswitchViewsFast = "switchViewsFast";
 
+        public const String cAppendFirstLogoToList = "appendFirstLogoToList";
+        public const String cGraphicalGroupView = "graphicalGroupView";
+        
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()
@@ -320,7 +324,13 @@ namespace WindowPlugins.GUITVSeries
                 int oldLangOptionSet;
                 if (GetOptions(cOnlineLanguage) == null || int.TryParse(GetOptions(cOnlineLanguage), out oldLangOptionSet))
                     SetOptions(cOnlineLanguage, "en"); // old api used index for onlinelang, new one two letters
-                
+
+                if (GetOptions(cAppendFirstLogoToList) == null)
+                    SetOptions(cAppendFirstLogoToList, 0); //default no (most skins don't seem to use this)
+
+                if (GetOptions(cGraphicalGroupView) == null)
+                    SetOptions(cGraphicalGroupView, 1); //default yes (should work on all skins)
+                                
             }
             catch (Exception ex)
             {

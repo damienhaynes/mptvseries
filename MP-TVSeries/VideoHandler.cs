@@ -105,6 +105,7 @@ namespace WindowPlugins.GUITVSeries
                 #region Ask user to Resume
                 if (timeMovieStopped > 0)
                 {
+                    MPTVSeriesLog.Write("Asking user to resume..." + Utils.SecondsToHMSString(timeMovieStopped));
                     //GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                     //sender.YesNoOkDialog(new WindowPlugins.GUITVSeries.Feedback.ChooseFromYesNoDescriptor());
                     //if (null != dlgYesNo)
@@ -120,7 +121,29 @@ namespace WindowPlugins.GUITVSeries
                     //        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                     //        m_currentEpisode.Commit();
                     //    }
-                    //}
+                    //}                    
+                    IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                    dlg.Reset();
+                    dlg.SetHeading(GUILocalizeStrings.Get(900));
+                    GUIListItem pItem = null;
+
+                    pItem = new GUIListItem(Translation.Yes + " (" + Utils.SecondsToHMSString(timeMovieStopped) + ")");
+                    dlg.Add(pItem);
+                    pItem.ItemId = 0;
+
+                    pItem = new GUIListItem(Translation.No);
+                    dlg.Add(pItem);
+                    pItem.ItemId = 1;
+
+                    dlg.DoModal(GUIWindowManager.ActiveWindow);
+
+                    if (dlg.SelectedId == 1) // reset resume data in DB
+                    {
+                        timeMovieStopped = 0;
+                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                        m_currentEpisode.Commit();
+                        MPTVSeriesLog.Write("User selected to start from beginning...");
+                    } else MPTVSeriesLog.Write("User selected resume from last time...");
                 }
                 #endregion
 
