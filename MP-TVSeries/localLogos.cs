@@ -197,9 +197,9 @@ namespace WindowPlugins.GUITVSeries
             if (!Settings.isConfig && res != null && res.Length > 0 && res[0] != '[')
             {
                 if (tmpEp != null && tmpEp.Image == res)
-                    return ImageAllocator.GetOtherImage(res, new Size(imgWidth, imgHeight), false);
-                else 
-                    return ImageAllocator.GetOtherImage(res, new Size(imgWidth, imgHeight), true);
+                    return ImageAllocator.GetOtherImage(res, new Size(), false); // don't resize by allocator
+                else
+                    return ImageAllocator.GetOtherImage(res, new Size(), true); // don't resize by allocator
 
             }
             else return res; // we build the memimage already
@@ -283,7 +283,7 @@ namespace WindowPlugins.GUITVSeries
                         return tmpFile;
                     }
                     else
-                        return ImageAllocator.GetOtherImage(b, tmpFile, new Size(imgWidth, imgHeight), true);
+                        return ImageAllocator.GetOtherImage(b, tmpFile, new Size(), true); // don't resize in allocator
                 }
                 else return string.Empty;
             }
@@ -310,7 +310,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
-                     single = Image.FromFile(logosForBuilding[i]);
+                    single = ImageAllocator.LoadImageFastFromFile(logosForBuilding[i]);
                 }
                 catch (Exception)
                 {

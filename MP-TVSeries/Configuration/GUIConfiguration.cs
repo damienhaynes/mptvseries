@@ -255,6 +255,10 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
 
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
+
+            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
+            qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
+            qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
         }
 
         void Panel1_SizeChanged(object sender, EventArgs e)
@@ -1156,7 +1160,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
-                                this.pictureBox_Series.Image = Image.FromFile(season.Banner);
+                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(season.Banner); //Image.FromFile(season.Banner);
                             }
                             catch (Exception)
                             {
@@ -1215,7 +1219,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
-                                this.pictureBox_Series.Image = Image.FromFile(series.Banner);
+                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(series.Banner); // Image.FromFile(series.Banner);
                             }
                             catch (System.Exception)
                             {
@@ -1426,7 +1430,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                            this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath)); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {
@@ -1442,7 +1446,7 @@ namespace WindowPlugins.GUITVSeries
                             season.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                            this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath)); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {
@@ -1461,7 +1465,7 @@ namespace WindowPlugins.GUITVSeries
                         //    series.Banner = ((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath;
                         try
                         {
-                            this.pictureBox_Series.Image = Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                            this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath)); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
                         }
                         catch (Exception)
                         {
@@ -3125,6 +3129,21 @@ namespace WindowPlugins.GUITVSeries
         private void txtUserID_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cOnlineUserID, txtUserID.Text);
+        }
+
+        private void qualitySeries_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cQualitySeriesBanners, (int)qualitySeries.Value);
+        }
+
+        private void qualitySeason_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cQualitySeasonBanners, (int)qualitySeason.Value);
+        }
+
+        private void qualityEpisode_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
         }
 
     }

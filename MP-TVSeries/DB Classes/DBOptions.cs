@@ -140,6 +140,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cAppendFirstLogoToList = "appendFirstLogoToList";
         public const String cGraphicalGroupView = "graphicalGroupView";
+
+        public const String cQualitySeriesBanners = "QualitySeriesBanners";
+        public const String cQualitySeasonBanners = "QualitySeasonBanners";
+        public const String cQualityEpisodeImages = "QualityEpisodeImages";
         
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
@@ -330,6 +334,15 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cGraphicalGroupView) == null)
                     SetOptions(cGraphicalGroupView, 1); //default yes (should work on all skins)
+
+                if (GetOptions(cQualitySeriesBanners) == null)
+                    SetOptions(cQualitySeriesBanners, 75);
+
+                if (GetOptions(cQualitySeasonBanners) == null)
+                    SetOptions(cQualitySeasonBanners, 75);
+
+                if (GetOptions(cQualityEpisodeImages) == null)
+                    SetOptions(cQualityEpisodeImages, 100);
                                 
             }
             catch (Exception ex)
