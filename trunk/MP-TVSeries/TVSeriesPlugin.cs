@@ -847,6 +847,7 @@ namespace MediaPortal.GUI.Video
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
+            perfana.stopLogReset();
         }
 
         protected override void OnPageLoad()
@@ -2303,7 +2304,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
             if (!localLogos.appendEpImage)
-                setGUIProperty(guiProperty.EpisodeImage, episode.Image);
+                setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(episode));
             else
                 clearGUIProperty(guiProperty.EpisodeImage);
 

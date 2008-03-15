@@ -28,6 +28,8 @@ using System.Text;
 using MediaPortal.Util;
 using MediaPortal.GUI.Library;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -38,8 +40,9 @@ namespace WindowPlugins.GUITVSeries
         static List<String> s_SeasonsImageList = new List<string>();
         static List<String> s_OtherPersistentImageList = new List<string>();
         static List<String> s_OtherDiscardableImageList = new List<string>();
-        static Size reqSeriesBannerSize = new Size(758, 140);
-        static Size reqSeasonBannerSize = new Size(400, 578);
+        static Size reqSeriesBannerSize = new Size(758 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100, 140 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100);
+        static Size reqSeasonBannerSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100);        
+        static float reqEpisodeImagePercentage = (float)(DBOption.GetOptions(DBOption.cQualityEpisodeImages)) / 100f;
 
         static ImageAllocator()
         {
@@ -75,8 +78,8 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;
-                return buildMemoryImage(new System.Drawing.Bitmap(sFileName), sFileName, size);
+                if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;                
+                return buildMemoryImage(LoadImageFastFromFile(sFileName), sFileName, size);
             }
             catch (Exception e)
             {
@@ -92,15 +95,15 @@ namespace WindowPlugins.GUITVSeries
         /// <param name="image">The System.Drawing.Bitmap to be loaded</param>
         /// <param name="identifier">A unique identifier for the image so it can be retrieved later on</param>
         /// <returns>memory identifier</returns>
-        public static string buildMemoryImage(System.Drawing.Bitmap image, string identifier, System.Drawing.Size size)
+        public static string buildMemoryImage(Image image, string identifier, System.Drawing.Size size)
         {
             string name = "[TVSeries:" + identifier + "]";
             try
             {
-                if (GUITextureManager.LoadFromMemory(null, name, 0, 0, 0) == 0)
-                {
-                    GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
-                }
+                // we don't have to try first, if name already exists mp will not do anything with the image
+                if(size.Height > 0) //resize
+                    GUITextureManager.LoadFromMemory(new Bitmap(image, size), name, 0, size.Width, size.Height);
+                else GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
             }
             catch (Exception)
             {
@@ -198,6 +201,16 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
+        public static String GetEpisodeImage(DBEpisode episode)
+        {
+            if (Helper.String.IsNullOrEmpty(episode.Image)) return string.Empty;
+
+            Image i = LoadImageFastFromFile(episode.Image);
+            Size epSize = new Size((int)(i.Width * reqEpisodeImagePercentage), (int)(i.Height * reqEpisodeImagePercentage));
+            return GetOtherImage(new Bitmap(i), episode.Image, epSize, false); 
+        }
+
+
         public static String GetOtherImage(string sFileName, System.Drawing.Size size, bool bPersistent)
         {
             String sTextureName;
@@ -241,5 +254,29 @@ namespace WindowPlugins.GUITVSeries
                 Flush(s_OtherPersistentImageList);
         }
 
+        #region FastBitmapLoading From File
+        [DllImport("gdiplus.dll", CharSet = CharSet.Unicode)]
+        private static extern int GdipLoadImageFromFile(string filename, out IntPtr image);
+        private static Type imageType = typeof(System.Drawing.Bitmap);
+
+        /// <summary>
+        /// Loads an Image from a File by invoking GDI Plus instead of using build-in .NET methods, or falls back to Image.FromFile
+        /// Can perform up to 10x faster
+        /// </summary>
+        /// <param name="filename">The filename to load</param>
+        /// <returns>A .NET Image object</returns>
+        public static Image LoadImageFastFromFile(string filename)
+        {            
+            IntPtr loadingImage = IntPtr.Zero;
+            Image i = null;
+            // We are not using ICM at all, fudge that, this should be FAAAAAST!
+            if (GdipLoadImageFromFile(filename, out loadingImage) != 0)
+            {
+                MPTVSeriesLog.Write("ImageLoadFast threw an error");
+                i = Image.FromFile(filename);
+            } else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { loadingImage });
+            return i;
+        }
+        #endregion
     }
 }

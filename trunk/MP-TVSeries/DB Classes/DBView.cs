@@ -155,7 +155,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "4";
                 view[cTransToken] = "Channels";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"group:<Series.Network><;><;><;>15" +
+                view[cViewConfig] = @"group:<Series.Network><;><;><;>" +
                                     "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
@@ -167,7 +167,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cSort] = "5";
                 view[cTransToken] = "Genres";
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"group:<Series.Genre><;><;><;>15" +
+                view[cViewConfig] = @"group:<Series.Genre><;><;><;>" +
                                     "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
