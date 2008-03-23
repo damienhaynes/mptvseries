@@ -78,14 +78,21 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;                
-                return buildMemoryImage(LoadImageFastFromFile(sFileName), sFileName, size);
+                if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;
+                string ident = buildIdentifier(sFileName);
+                if(GUITextureManager.LoadFromMemory(null, ident, 0, size.Width, size.Height) > 0) return ident;
+                else return buildMemoryImage(LoadImageFastFromFile(sFileName), ident, size, false);
             }
             catch (Exception e)
             {
                 MPTVSeriesLog.Write("Unable to add to MP's Graphics memory: " + sFileName + " Error: " + e.Message);
                 return string.Empty;
             }
+        }
+
+        static string buildIdentifier(string name)
+        {
+           return "[TVSeries:" + name + "]";
         }
 
         /// <summary>
@@ -95,9 +102,9 @@ namespace WindowPlugins.GUITVSeries
         /// <param name="image">The System.Drawing.Bitmap to be loaded</param>
         /// <param name="identifier">A unique identifier for the image so it can be retrieved later on</param>
         /// <returns>memory identifier</returns>
-        public static string buildMemoryImage(Image image, string identifier, System.Drawing.Size size)
+        public static string buildMemoryImage(Image image, string identifier, System.Drawing.Size size, bool buildIdentifier)
         {
-            string name = "[TVSeries:" + identifier + "]";
+            string name = buildIdentifier ? "[TVSeries:" + identifier + "]" : identifier;
             try
             {
                 // we don't have to try first, if name already exists mp will not do anything with the image
@@ -173,7 +180,7 @@ namespace WindowPlugins.GUITVSeries
                 //return string.Empty;
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize);
+                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
             }
             if(sTextureName.Length > 0) s_SeriesImageList.Add(sTextureName);
             return sTextureName;
@@ -193,7 +200,7 @@ namespace WindowPlugins.GUITVSeries
                 // no image, use text, create our own
                 string text = (season[DBSeason.cIndex] == 0) ? Translation.specials : Translation.Season + season[DBSeason.cIndex];
                 string ident = season[DBSeason.cSeriesID] + "S" + season[DBSeason.cIndex];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeasonBannerSize, text), ident, reqSeasonBannerSize);
+                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeasonBannerSize, text), ident, reqSeasonBannerSize, true);
             }
             else return string.Empty;
 
@@ -204,10 +211,9 @@ namespace WindowPlugins.GUITVSeries
         public static String GetEpisodeImage(DBEpisode episode)
         {
             if (Helper.String.IsNullOrEmpty(episode.Image)) return string.Empty;
-
             Image i = LoadImageFastFromFile(episode.Image);
             Size epSize = new Size((int)(i.Width * reqEpisodeImagePercentage), (int)(i.Height * reqEpisodeImagePercentage));
-            return GetOtherImage(new Bitmap(i), episode.Image, epSize, false); 
+            return GetOtherImage(i, episode.Image, epSize, false); 
         }
 
 
@@ -222,10 +228,10 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
-        public static String GetOtherImage(Bitmap b, string sFileName, System.Drawing.Size size, bool bPersistent)
+        public static String GetOtherImage(Image i, string sFileName, System.Drawing.Size size, bool bPersistent)
         {
             String sTextureName;
-            sTextureName = buildMemoryImage(b, sFileName, size);
+            sTextureName = buildMemoryImage(i, sFileName, size, true);
             if (bPersistent)
                 s_OtherPersistentImageList.Add(sTextureName);
             else
@@ -269,12 +275,23 @@ namespace WindowPlugins.GUITVSeries
         {            
             IntPtr loadingImage = IntPtr.Zero;
             Image i = null;
-            // We are not using ICM at all, fudge that, this should be FAAAAAST!
-            if (GdipLoadImageFromFile(filename, out loadingImage) != 0)
+            try
             {
-                MPTVSeriesLog.Write("ImageLoadFast threw an error");
-                i = Image.FromFile(filename);
-            } else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { loadingImage });
+                // We are not using ICM at all, fudge that, this should be FAAAAAST!
+                if (GdipLoadImageFromFile(filename, out loadingImage) != 0)
+                {
+                    MPTVSeriesLog.Write("ImageLoadFast threw an error");
+                    i = Image.FromFile(filename);
+                }
+                else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { loadingImage });
+
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("ImageLoading threw an error: " + filename + " - " + e.Message);
+                // this probably means the image is bad
+                return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            }
             return i;
         }
         #endregion

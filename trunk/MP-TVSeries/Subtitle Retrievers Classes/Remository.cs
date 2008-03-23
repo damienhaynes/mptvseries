@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.ComponentModel;
 using ICSharpCode.SharpZipLib.Zip;
-
+#if inclDownloaders
 namespace WindowPlugins.GUITVSeries.Subtitles
 {
   class Remository
@@ -668,5 +668,5 @@ namespace WindowPlugins.GUITVSeries.Subtitles
     }
   };
 }
-
+#endif
 

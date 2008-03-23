@@ -76,32 +76,41 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
     }
 
 
-    public class MediaInfo
+    public class MediaInfo : IDisposable
     {
         //Import of DLL functions. DO NOT USE until you know what you do (MediaInfo DLL do NOT use CoTaskMemAlloc to allocate memory)  
         [DllImport("MediaInfo.dll")]
-        public static extern IntPtr MediaInfo_New();
+        static extern IntPtr MediaInfo_New();
         [DllImport("MediaInfo.dll")]
-        public static extern void MediaInfo_Delete(IntPtr Handle);
+        static extern void MediaInfo_Delete(IntPtr Handle);
         [DllImport("MediaInfo.dll")]
-        public static extern int MediaInfo_Open(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string FileName);
+        static extern int MediaInfo_Open(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string FileName);
         [DllImport("MediaInfo.dll")]
-        public static extern void MediaInfo_Close(IntPtr Handle);
+        static extern void MediaInfo_Close(IntPtr Handle);
+        //[DllImport("MediaInfo.dll")]
+        //static extern IntPtr MediaInfo_Inform(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] uint Reserved);
+        //[DllImport("MediaInfo.dll")]
+        //static extern IntPtr MediaInfo_GetI(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, uint StreamNumber, uint Parameter, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfInfo);
         [DllImport("MediaInfo.dll")]
-        public static extern IntPtr MediaInfo_Inform(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] uint Reserved);
-        [DllImport("MediaInfo.dll")]
-        public static extern IntPtr MediaInfo_GetI(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, uint StreamNumber, uint Parameter, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfInfo);
-        [DllImport("MediaInfo.dll")]
-        public static extern IntPtr MediaInfo_Get(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, uint StreamNumber, [MarshalAs(UnmanagedType.LPWStr)] string Parameter, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfInfo, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfSearch);
-        [DllImport("MediaInfo.dll")]
-        public static extern IntPtr MediaInfo_Option(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string Option, [MarshalAs(UnmanagedType.LPWStr)] string Value);
-        [DllImport("MediaInfo.dll")]
-        public static extern int MediaInfo_State_Get(IntPtr Handle);
-        [DllImport("MediaInfo.dll")]
-        public static extern int MediaInfo_Count_Get(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, int StreamNumber);
+        static extern IntPtr MediaInfo_Get(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, uint StreamNumber, [MarshalAs(UnmanagedType.LPWStr)] string Parameter, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfInfo, [MarshalAs(UnmanagedType.U4)] InfoKind KindOfSearch);
+        //[DllImport("MediaInfo.dll")]
+        //static extern IntPtr MediaInfo_Option(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string Option, [MarshalAs(UnmanagedType.LPWStr)] string Value);
+        //[DllImport("MediaInfo.dll")]
+        //static extern int MediaInfo_State_Get(IntPtr Handle);
+        //[DllImport("MediaInfo.dll")]
+        //static extern int MediaInfo_Count_Get(IntPtr Handle, [MarshalAs(UnmanagedType.U4)] StreamKind StreamKind, int StreamNumber);
 
-        //MediaInfo class
-        public MediaInfo() 
+        IntPtr Handle;
+
+        static MediaInfo _instance;
+        public static MediaInfo GetInstance()
+        {
+            if (_instance == null)
+                return _instance = new MediaInfo();
+            else return _instance;
+        }
+
+        private MediaInfo() 
         {
             try
             {
@@ -116,30 +125,31 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         {
             try
             {
+                if (Handle == IntPtr.Zero) return;
                 MediaInfo_Delete(Handle);
+                Handle = IntPtr.Zero;
             }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("Error deleting the MediaInfo Object: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
             } 
         }
-        public int Open(String FileName) { return MediaInfo_Open(Handle, FileName); }
-        public void Close() { MediaInfo_Close(Handle); }
-        public String Inform() { return Marshal.PtrToStringUni(MediaInfo_Inform(Handle, 0)); }
-        public String Get(StreamKind StreamKind, uint StreamNumber, String Parameter, InfoKind KindOfInfo, InfoKind KindOfSearch) { return Marshal.PtrToStringUni(MediaInfo_Get(Handle, StreamKind, StreamNumber, Parameter, KindOfInfo, KindOfSearch)); }
-        public String Get(StreamKind StreamKind, uint StreamNumber, uint Parameter, InfoKind KindOfInfo) { return Marshal.PtrToStringUni(MediaInfo_GetI(Handle, StreamKind, StreamNumber, Parameter, KindOfInfo)); }
-        public String Option(String Option, String Value) { return Marshal.PtrToStringUni(MediaInfo_Option(Handle, Option, Value)); }
-        public int State_Get() { return MediaInfo_State_Get(Handle); }
-        public int Count_Get(StreamKind StreamKind, int StreamNumber) { return MediaInfo_Count_Get(Handle, StreamKind, StreamNumber); }
-        private IntPtr Handle;
+                
+        //String Inform() { return Marshal.PtrToStringUni(MediaInfo_Inform(Handle, 0)); }
+        String Get(StreamKind StreamKind, uint StreamNumber, String Parameter, InfoKind KindOfInfo, InfoKind KindOfSearch) { return Marshal.PtrToStringUni(MediaInfo_Get(Handle, StreamKind, StreamNumber, Parameter, KindOfInfo, KindOfSearch)); }
+        //String Get(StreamKind StreamKind, uint StreamNumber, uint Parameter, InfoKind KindOfInfo) { return Marshal.PtrToStringUni(MediaInfo_GetI(Handle, StreamKind, StreamNumber, Parameter, KindOfInfo)); }
+        //String Option(String Option, String Value) { return Marshal.PtrToStringUni(MediaInfo_Option(Handle, Option, Value)); }
+        //int State_Get() { return MediaInfo_State_Get(Handle); }
+        //int Count_Get(StreamKind StreamKind, int StreamNumber) { return MediaInfo_Count_Get(Handle, StreamKind, StreamNumber); }
 
-        //Default values, if you know how to set default values in C#, say me
         public String Get(StreamKind StreamKind, uint StreamNumber, String Parameter, InfoKind KindOfInfo) { return Get(StreamKind, StreamNumber, Parameter, KindOfInfo, InfoKind.Name); }
         public String Get(StreamKind StreamKind, uint StreamNumber, String Parameter) { return Get(StreamKind, StreamNumber, Parameter, InfoKind.Text, InfoKind.Name); }
-        public String Get(StreamKind StreamKind, uint StreamNumber, uint Parameter) { return Get(StreamKind, StreamNumber, Parameter, InfoKind.Text); }
-        public String Option(String Option_) { return Option(Option_, ""); }
-        public int Count_Get(StreamKind StreamKind) { return Count_Get(StreamKind, -1); }
+        //public String Get(StreamKind StreamKind, uint StreamNumber, uint Parameter) { return Get(StreamKind, StreamNumber, Parameter, InfoKind.Text); }
+        //public String Option(String Option_) { return Option(Option_, ""); }
+        //public int Count_Get(StreamKind StreamKind) { return Count_Get(StreamKind, -1); }
 
+        public int Open(String FileName) { return MediaInfo_Open(Handle, FileName); }
+        public void Close() { MediaInfo_Close(Handle); }
         public string getVidCodec() { return this.Get(StreamKind.Video, 0, "Codec"); }
         public string getVidBitrate(){ return this.Get(StreamKind.Video, 0, "BitRate"); }
         public string getWidth() { return this.Get(StreamKind.Video, 0, "Width"); }
@@ -153,6 +163,17 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string getNoChannels() { return getNoChannels(0); }
         public string getNoChannels(int stream) { return this.Get(StreamKind.Audio, (uint)stream, "Channel(s)"); }
 
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (Handle == IntPtr.Zero) return;
+            MediaInfo_Delete(Handle);
+            Handle = IntPtr.Zero;
+        }
+
+        #endregion
     }
 
-} //NameSpace
+}

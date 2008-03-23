@@ -10,4 +10,9 @@
     <StartProgram>h:\MP2\xbmc\bin\Release\configuration.exe</StartProgram>
     <StartWorkingDirectory>h:\MP2\xbmc\bin\Release\</StartWorkingDirectory>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInclDownloaders|AnyCPU' ">
+    <StartProgram>h:\MP2\xbmc\bin\Release\configuration.exe</StartProgram>
+    <StartWorkingDirectory>h:\MP2\xbmc\bin\Release\</StartWorkingDirectory>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>
