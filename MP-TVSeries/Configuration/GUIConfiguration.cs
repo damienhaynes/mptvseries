@@ -96,8 +96,9 @@ namespace WindowPlugins.GUITVSeries
                 this.Size = s;
             }
             this.Resize += new EventHandler(ConfigurationForm_Resize);
-
+#if inclDownloaders
             Download.Monitor.Start(this);
+#endif
             panel_manualEpisodeManagement.SetOwner(this);
 
             load = new loadingDisplay();
@@ -1813,7 +1814,7 @@ namespace WindowPlugins.GUITVSeries
                 subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
                 subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
                 subMenuItem.DropDown = subMenu;
-                List<String> fieldList = m_SeriesReference.FieldNames;
+                List<String> fieldList = (List<String>) m_SeriesReference.FieldNames;
                 fieldList.Remove(DBOnlineSeries.cHasLocalFiles);
                 fieldList.Remove(DBOnlineSeries.cHasLocalFilesTemp);
                 fieldList.Remove(DBOnlineSeries.cBannerFileNames);
@@ -1850,7 +1851,7 @@ namespace WindowPlugins.GUITVSeries
                 subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
                 subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
                 subMenuItem.DropDown = subMenu;
-                List<String> fieldList = m_SeasonReference.FieldNames;
+                List<String> fieldList = (List<String>)m_SeasonReference.FieldNames;
                 fieldList.Remove(DBSeason.cHasLocalFiles);
                 fieldList.Remove(DBSeason.cHasLocalFilesTemp);
                 fieldList.Remove(DBSeason.cHasEpisodes);
@@ -1881,7 +1882,7 @@ namespace WindowPlugins.GUITVSeries
                 subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
                 subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_SeriesFields_ItemClicked);
                 subMenuItem.DropDown = subMenu;
-                List<String> fieldList = m_EpisodeReference.FieldNames;
+                List<String> fieldList = (List<String>)m_EpisodeReference.FieldNames;
                 fieldList.Remove(DBEpisode.cImportProcessed);
                 fieldList.Remove(DBOnlineEpisode.cOnlineDataImported);
                 fieldList.Remove(DBOnlineEpisode.cHidden);
@@ -2010,7 +2011,7 @@ namespace WindowPlugins.GUITVSeries
                     break;
 
                 case "subtitle":
-                    GetSubtitles(clickedNode);
+                    //GetSubtitles(clickedNode);
                     break;
 
                 case "torrent":
@@ -2025,6 +2026,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void TorrentFile(TreeNode node)
         {
+#if inclDownloaders
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2042,10 +2044,12 @@ namespace WindowPlugins.GUITVSeries
                     Load.Search(episode);
                     break;
             }
+#endif
         }
 
         public void NewzFile(TreeNode node)
         {
+#if inclDownloaders
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2063,6 +2067,7 @@ namespace WindowPlugins.GUITVSeries
                     Load.Search(episode);
                     break;
             }
+#endif
         }
 
         void TorrentLoad_LoadCompleted(bool bOK)
@@ -2192,35 +2197,35 @@ namespace WindowPlugins.GUITVSeries
             return true;
         }
 
-        private void GetSubtitles(TreeNode node)
-        {
-            switch (node.Name)
-            {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
-                    break;
+        //private void GetSubtitles(TreeNode node)
+        //{
+        //    switch (node.Name)
+        //    {
+        //        case DBSeries.cTableName:
+        //            DBSeries series = (DBSeries)node.Tag;
+        //            break;
 
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    break;
+        //        case DBSeason.cTableName:
+        //            DBSeason season = (DBSeason)node.Tag;
+        //            break;
 
-                case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
-                    if (checkBox_foromEnable.Checked)
-                    {
-                        Subtitles.Forom forom = new Subtitles.Forom(this);
-                        forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                        forom.GetSubs(episode);
-                    }
-                    if (checkBox_remositoryEnable.Checked)
-                    {
-                        Subtitles.Remository remository = new Subtitles.Remository(this);
-                        remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-                        remository.GetSubs(episode);
-                    }
-                    break;
-            }
-        }
+        //        case DBEpisode.cTableName:
+        //            DBEpisode episode = (DBEpisode)node.Tag;
+        //            if (checkBox_foromEnable.Checked)
+        //            {
+        //                Subtitles.Forom forom = new Subtitles.Forom(this);
+        //                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+        //                forom.GetSubs(episode);
+        //            }
+        //            if (checkBox_remositoryEnable.Checked)
+        //            {
+        //                Subtitles.Remository remository = new Subtitles.Remository(this);
+        //                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+        //                remository.GetSubs(episode);
+        //            }
+        //            break;
+        //    }
+        //}
 
         void forom_SubtitleRetrievalCompleted(bool bFound)
         {
@@ -3050,8 +3055,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void buildExpr_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ExpressionBuilder expBldForm = new ExpressionBuilder();
-            expBldForm.ShowDialog();
+            //ExpressionBuilder expBldForm = new ExpressionBuilder();
+            //expBldForm.ShowDialog();
             //-- ToDo: add result to datagridview
         }
 

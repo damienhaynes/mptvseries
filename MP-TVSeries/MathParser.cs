@@ -30,7 +30,7 @@ using System.Globalization;
 namespace WindowPlugins.GUITVSeries.MathParser
 {
     // "Eval(Round(PrettyBytes(3400+53555)*100)/100-> Bytes| KiloBytes| MegaBytes| GigaBytes)"
-    sealed class mathParser
+    static internal class mathParser
     {
         const string floatNumberRegex = @"[+|-]?[0-9]+\.?[0-9]*";
         const string evalFormat = @"Eval(";
@@ -52,6 +52,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
         static Regex singleOp = new Regex(@"(?<no1>" + floatNumberRegex + @")(?<type>[-|+|*|/|%|^])(?<no2>" + floatNumberRegex + ")", RegexOptions.Compiled);
 
         static int prevResult = -1;
+        static Dictionary<string, string> cache = new Dictionary<string, string>();
 
         static public List<mathFunction> SupportedFunctions
         {
@@ -123,14 +124,14 @@ namespace WindowPlugins.GUITVSeries.MathParser
             mathFunction m = null;
             m = function == null ? new mathFunction(format, functionWRes) : new mathFunction(format, function);
             functions.Add(m);
-            subLog(string.Format("Added MathFunction: {0}double value)", m.form));
+            MPTVSeriesLog.Write("Added MathFunction: ", m.form, MPTVSeriesLog.LogLevel.Debug);
         }
 
         public static void addConstant(string format, mathConstant.functionDel function)
         {
             mathConstant m = new mathConstant(format, function);
             constants.Add(m);
-            subLog(string.Format("Added MathConstant: {0} -> {1}", m.form, m.Value));
+            MPTVSeriesLog.Write("Added MathConstant: ", m.form, MPTVSeriesLog.LogLevel.Debug);
         }
 
         /// <summary>
@@ -158,9 +159,11 @@ namespace WindowPlugins.GUITVSeries.MathParser
         /// <returns>returns the result of the mathematical expression, or null if it cannot be evaluated</returns>
         public static double? Parse(string expression, out string stringResult)
         {
-            subLog("Mathparser: Trying " + expression);
+            MPTVSeriesLog.Write("Mathparser: Trying ", expression, MPTVSeriesLog.LogLevel.Debug);
             double? result = null;
             stringResult = null;
+            if (cache.TryGetValue(expression, out stringResult))
+                return null;
             try
             {
                 StringBuilder builder = new StringBuilder(expression);
@@ -171,12 +174,22 @@ namespace WindowPlugins.GUITVSeries.MathParser
             }
             catch (Exception e)
             {
-                subLog("Mathparser: Critical Error " + e.Message);
+                MPTVSeriesLog.Write("Mathparser: Critical Error ", e.Message, MPTVSeriesLog.LogLevel.Normal);
             }
             if (null != result)
+            {
                 MPTVSeriesLog.Write(String.Format("Mathparser: Total Result: {0} = {1}", expression, result.ToString()));
+                lock (cache)
+                    if (!cache.ContainsKey(expression)) // another thread might have added it in the meantime
+                        cache.Add(expression, result.ToString());
+            }
             else if (stringResult != null)
-                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result as String: {0} = {1}", expression, result.ToString()));
+            {
+                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result as String: {0} = {1}", expression, stringResult));
+                lock (cache)
+                    if (!cache.ContainsKey(expression)) // another thread might have added it in the meantime
+                        cache.Add(expression, stringResult);
+            }
             return result;
         }
 
@@ -225,17 +238,17 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 string replaceWith;
                 if (parenthesisFinder(expression, functions[i].form, out toReplace, out replaceWith))
                 {
-                    subLog("Processing now: " + replaceWith);
+                    MPTVSeriesLog.Write("Processing now: ", replaceWith, MPTVSeriesLog.LogLevel.Debug);
 
                     double? subresult = breakdDown(replaceWith, out stringResult);
 
-                    subLog("Subresult: " + (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)));
+                    MPTVSeriesLog.Write("Subresult: ", (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)), MPTVSeriesLog.LogLevel.Debug);
 
                     if (subresult == null) return null; // can't process it
                     double funcRes = functions[i].Perform((double)subresult);
                     if (functions[i].setsResult) prevResult = functions[i].Result;
 
-                    subLog("Function: " + functions[i].form + subresult + ") = " + funcRes.ToString(provider));
+                    MPTVSeriesLog.Write(string.Format("Function: {0}{1}) = {2}", functions[i].form, subresult, funcRes.ToString(provider)), MPTVSeriesLog.LogLevel.Debug);                     
                     if (Double.IsNaN(funcRes)) return null; // function not possible
                     expression = expression.Replace(toReplace, funcRes.ToString(provider));
                     i--; //because each function may exist more than once per "level" we have to try again
@@ -263,7 +276,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
             while ((m = operations.Match(expression)).Value.Length > 0)
             {
                 decimal? atomRes = atomicOperation(m.Value);
-                subLog("Atomic operation: " + m.Value + " = " + (atomRes == null ? "unable" : atomRes.ToString()));
+                MPTVSeriesLog.Write("Atomic operation: ", m.Value + " = " + (atomRes == null ? "unable" : atomRes.ToString()), MPTVSeriesLog.LogLevel.Debug);
                 if (atomRes == null) return false; // unsovlable
                 expression = expression.Replace(m.Value,
                                                (atomRes.Value >= 0 ? provider.PositiveSign : provider.NegativeSign)
@@ -325,16 +338,11 @@ namespace WindowPlugins.GUITVSeries.MathParser
             return a;
         }
 
-        public static void subLog(string entry)
-        {
-            MPTVSeriesLog.Write(entry, MPTVSeriesLog.LogLevel.Debug);
-        }
-
         static string stringOption(string input)
         {
             string[] parameters = input.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
             string[] options = parameters[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            subLog("MathParser: StrinOptions -> prev Result was set to " + prevResult.ToString());
+            MPTVSeriesLog.Write("MathParser: StringOptions -> prev Result was set to ", prevResult.ToString(), MPTVSeriesLog.LogLevel.Debug);
             if (options.Length >= prevResult) return double.Parse(parameters[0], provider).ToString() + options[prevResult];
             return string.Empty;
 

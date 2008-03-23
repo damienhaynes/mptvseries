@@ -175,7 +175,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID])[DBOnlineSeries.cPrettyName] + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
+                return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]).ToString() + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
             }
         }
 
@@ -274,7 +274,6 @@ namespace WindowPlugins.GUITVSeries
         public List<string> cachedLogoResults = null;
         public string cachedFirstLogo = null;
 
-        static MediaInfoLib.MediaInfo MI;
         const int maxMIAttempts = 6;
 
         static DBEpisode()
@@ -337,16 +336,6 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBVersion);
-            // create the dll interop for getting MediaInfo
-            try
-            {
-               MI = new MediaInfoLib.MediaInfo();
-            }
-            catch(Exception ex)
-            {
-                // if it fails, most likely the dll is not in the correct folder
-                MPTVSeriesLog.Write("Failed to create MediaInfo Object: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
-            }
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -498,6 +487,7 @@ namespace WindowPlugins.GUITVSeries
 
         public bool readMediaInfoOfLocal()
         {
+            MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
             if (null == MI) return false; // MediaInfo Object could not be created
             if(System.IO.File.Exists(this[DBEpisode.cFilename]))
             {
@@ -526,7 +516,7 @@ namespace WindowPlugins.GUITVSeries
                         this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
                     }
                     else failed = true;
-                    MI.Close();
+                    //MI.Close();
 
                     if (failed)
                     {
@@ -613,7 +603,7 @@ namespace WindowPlugins.GUITVSeries
             get { return m_onlineEpisode; }
         }
 
-        public override List<String> FieldNames
+        public override ICollection<String> FieldNames
         {
             get
             {
@@ -813,7 +803,7 @@ namespace WindowPlugins.GUITVSeries
                     DBEpisode episode = new DBEpisode();
                     episode.Read(ref results, index);
                     episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(ref results, index);
+                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
                     outList.Add(episode);
                 }
             }
@@ -961,9 +951,9 @@ namespace WindowPlugins.GUITVSeries
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
+                    episode.Read(results.Rows[index], results.ColumnIndices);
                     episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(ref results, index);
+                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
                     outList.Add(episode);
                 }
             }

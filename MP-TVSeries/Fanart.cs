@@ -161,20 +161,23 @@ namespace WindowPlugins.GUITVSeries
 
         void getFanart()
         {
-            MPTVSeriesLog.Write("Fanart: checking for ", _seriesID, MPTVSeriesLog.LogLevel.Debug);
-            try
+            if(System.IO.Directory.Exists(Settings.GetPath(Settings.Path.fanart)))
             {
-                string filter = _seasonMode
-                              ? string.Format(seasonFanArtFilenameFormat, _seriesID, _seasonIndex)
-                              : string.Format(seriesFanArtFilenameFormat, _seriesID);
-                _fanArts = new List<string>();
-                _fanArts.AddRange(System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), filter, System.IO.SearchOption.AllDirectories));
-                if (!_seasonMode) removeSeasonFromSeries();
-                MPTVSeriesLog.Write("Fanart: found ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("An error occured looking for fanart: " + ex.Message);
+                MPTVSeriesLog.Write("Fanart: checking for ", _seriesID, MPTVSeriesLog.LogLevel.Debug);
+                try
+                {
+                    string filter = _seasonMode
+                                  ? string.Format(seasonFanArtFilenameFormat, _seriesID, _seasonIndex)
+                                  : string.Format(seriesFanArtFilenameFormat, _seriesID);
+                    _fanArts = new List<string>();
+                    _fanArts.AddRange(System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), filter, System.IO.SearchOption.AllDirectories));
+                    if (!_seasonMode) removeSeasonFromSeries();
+                    MPTVSeriesLog.Write("Fanart: found ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("An error occured looking for fanart: " + ex.Message);
+                }
             }
         }
 

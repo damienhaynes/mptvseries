@@ -32,7 +32,7 @@ namespace WindowPlugins.GUITVSeries
     class Helper
     {
         #region String Methods
-        public class String
+        public static class String
         {
             /// <summary>
             /// Fix for the buggy MS implementation
@@ -64,7 +64,7 @@ namespace WindowPlugins.GUITVSeries
                 result.Add(input[i]);
             return result;
         }
-
+        /*
         public static List<T> getFilteredList<T, P>(List<T> inputList, string PropertyName, P ValueOfProperty)
         {
             List<T> resultList = new List<T>();
@@ -75,7 +75,7 @@ namespace WindowPlugins.GUITVSeries
             }
             return resultList;
         }
-
+        */
         public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
         {
             // takes care of "looping"
@@ -139,7 +139,9 @@ namespace WindowPlugins.GUITVSeries
             return results;
         }
 
+        
         # region compareAndAdaptList
+        /*
         // needed for compareAndAdaptList because we cant pass parameters into predicates??
         class classify<t>
         {
@@ -181,6 +183,7 @@ namespace WindowPlugins.GUITVSeries
             addOperationOnRemovedItemsDelegate<t> onRemove = delegate(t item) { return true; };
             return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOp, onRemove, inverse);
         }
+         */
         #endregion
         #endregion
 

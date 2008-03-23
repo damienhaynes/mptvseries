@@ -1,3 +1,4 @@
+/*
 namespace WindowPlugins.GUITVSeries
 {
     partial class ExpressionBuilder
@@ -190,3 +191,4 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button btnCancel;
     }
 }
+*/

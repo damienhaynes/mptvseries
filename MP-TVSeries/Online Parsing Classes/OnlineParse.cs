@@ -324,38 +324,31 @@ namespace WindowPlugins.GUITVSeries
                     long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
                     double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
+                    
+                    Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
+                    if (sinceLastUpdate < 3600 * 24)
+                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
+                    else if (sinceLastUpdate < 3600 * 24 * 7)
+                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
+                    else if (sinceLastUpdate < 3600 * 24 * 30)
+                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
 
-                    //if (lastUpdateTimeStamp != 0)
-                    //{
-                        Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
-                        if (sinceLastUpdate < 3600 * 24)
-                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
-                        else if (sinceLastUpdate < 3600 * 24 * 7)
-                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
-                        else if (sinceLastUpdate < 3600 * 24 * 30)
-                            uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
+                    Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
 
-                        Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType, curTimeStamp - 3600); // doesn't hurt to give ourselves a little room
+                    // update series
+                    UpdateSeries(false, GU.UpdatedSeries);
 
-                        // update series
-                        UpdateSeries(false, GU.UpdatedSeries);
+                    // update episodes
+                    UpdateEpisodes(GU.UpdatedEpisodes);
 
-                        // update episodes
-                        UpdateEpisodes(GU.UpdatedEpisodes);
+                    // update banners
+                    //UpdateBanners(false, GU.UpdatedSeries);
 
-                        // update banners
-                        UpdateBanners(false, GU.seriesBanners);
-
-                        // lets save the updateTimestamp
-                        if (GU.OnlineTimeStamp > 0)
-                            DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
-                    //}
+                    // lets save the updateTimestamp
+                    if (GU.OnlineTimeStamp > 0)
+                        DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
                 }
-
-                // we really only need to do this once
-                // update new series for banners
-                UpdateBanners(true, null);
-
+                UpdateBanners(true, null);// update new series for banners                             
 
                 UpdateEpisodeThumbNails();
                 Online_Parsing_Classes.OnlineAPI.ClearBuffer();
@@ -373,7 +366,7 @@ namespace WindowPlugins.GUITVSeries
         ///  - DBSeries.cHasLocalFilesTemp to true
         /// </summary>
         /// <param name="filenames"></param>
-        void UpdateStatus(List<string> filenames)
+        static void UpdateStatus(List<string> filenames)
         {
             if (filenames.Count == 0) return;
             SQLCondition cond = new SQLCondition();
@@ -576,18 +569,18 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(bigLogMessage("Identifying Unknown Series Online"));
 
             SQLCondition condition = null;
-            if (m_params.m_bUpdateScan)
-            {
-                // mark existing online data as "old", needs a refresh
-                condition = new SQLCondition();
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);
-                DBTable.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, condition);
+            //if (m_params.m_bUpdateScan)
+            //{
+            //    // mark existing online data as "old", needs a refresh
+            //    condition = new SQLCondition();
+            //    condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);
+            //    DBTable.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, condition);
 
-                // mark existing banners as "old", needs a refresh too
-                condition = new SQLCondition();
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 2, SQLConditionType.Equal);
-                DBTable.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 1, condition);
-            }
+            //    // mark existing banners as "old", needs a refresh too
+            //    condition = new SQLCondition();
+            //    condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 2, SQLConditionType.Equal);
+            //    DBTable.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 1, condition);
+            //}
 
             condition = new SQLCondition();
             // all series that don't have an onlineID ( < 0) and not marked as ignored
@@ -1053,7 +1046,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(bigLogMessage("Checking for EpisodeThumbnails..."));
                 // get a list of all the episodes with thumbnailUrl
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, string.Empty, SQLConditionType.NotEqual);
                 condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
                 List<DBEpisode> episodes = DBEpisode.Get(condition);
                 DBSeries tmpSeries = null; 
@@ -1069,7 +1062,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
                             {
-                                tmpSeries = DBSeries.Get(episode[DBOnlineEpisode.cSeriesID], false);
+                                tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                             }
                             string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
                             foreach (char c in System.IO.Path.GetInvalidFileNameChars()) seriesFolder = seriesFolder.Replace(c, '_');
@@ -1078,7 +1071,6 @@ namespace WindowPlugins.GUITVSeries
 
                             if (!File.Exists(completePath))
                             {
-                                DBSeries s = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                                 MPTVSeriesLog.Write(string.Format("New EpisodeImage found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
@@ -1106,6 +1098,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
+        //TODO: rewrite banners uptade, now gets List<DBValue> of seriesIDs that have new banners
         public void UpdateBanners(bool bUpdateNewSeries, List<seriesBannersMap> preSeriesBanners)
         {
             SQLCondition condition = new SQLCondition();
@@ -1116,13 +1109,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for banners for series without any banners"));
                 // and that never had data imported from the online DB
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 0, SQLConditionType.Equal);
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
             }
             else
             {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for new banners"));                
                 // and that already had data imported from the online DB
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannersDownloaded, 1, SQLConditionType.Equal);
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
             }
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
@@ -1138,33 +1131,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (worker.CancellationPending)
                     return;
-
-                worker.ReportProgress(50 + (bUpdateNewSeries ? 0 : 10) + (10 * nIndex / seriesList.Count));
                 nIndex++;
-
-                // disable for new way
-                if (bUpdateNewSeries)
-                    MPTVSeriesLog.Write("Downloading banners for \"" + series.ToString() + "\"");
-                else
-                    MPTVSeriesLog.Write("Refreshing banners for \"" + series.ToString() +"\"");
-
-                // check if the files are still there - if not, redownload
-                bool bMissingBanners = false;
-                foreach (String filename in series.BannerList)
-                {
-                    if (!System.IO.File.Exists(filename)) 
-                    {
-                        bMissingBanners = true;
-                        break;
-                    }
-                }
+                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " banners for \"" + series.ToString() + "\"");
 
                 GetBanner bannerParser = null;
                 if (bUpdateNewSeries)
-                {
-                    //GetBanner bannerParser = new GetBanner((int)series[DBSeries.cID], (bUpdateNewSeries | bMissingBanners) ? 0 : (long)series[DBOnlineSeries.cUpdateBannersTimeStamp], series[DBOnlineSeries.cPrettyName]);
+                {                    
                     bannerParser = new GetBanner((string)series[DBSeries.cID]);
-                    // end disable for new way
                 }
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
@@ -1216,7 +1189,7 @@ namespace WindowPlugins.GUITVSeries
                             series[DBOnlineSeries.cCurrentBannerFileName] = sLastTextBanner;
                     }
 
-                    series[DBOnlineSeries.cBannersDownloaded] = 2;
+                    //series[DBOnlineSeries.cBannersDownloaded] = 2;
                     series.Commit();
                     string lastSeasonBanner = string.Empty;
                     hasOwnLang = false;
@@ -1252,12 +1225,12 @@ namespace WindowPlugins.GUITVSeries
                         season.Commit();
                     }
                     
-                    if (!bUpdateNewSeries)
-                    {
-                        // disable for new way
-                        //series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
-                        series.Commit();
-                    }
+                    //if (!bUpdateNewSeries)
+                    //{
+                    //    // disable for new way
+                    //    //series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
+                    //    series.Commit();
+                    //}
                     //if (!bUpdateNewSeries) DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, bannerParser.ServerTimeStamp);
                 }
             }
@@ -1371,7 +1344,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
-
+        /*
         static string generateIDList<T>(List<T> entities, string fieldname) where T:DBTable
         {
             // generate a comma separated list of all the ids
@@ -1387,7 +1360,7 @@ namespace WindowPlugins.GUITVSeries
             }
             return sSeriesIDs;
         }
-
+        */
         static List<string> generateIDListOfString<T>(List<T> entities, string fieldname) where T : DBTable
         {
             // generate a comma separated list of all the ids
@@ -1398,12 +1371,12 @@ namespace WindowPlugins.GUITVSeries
             return sSeriesIDs;
         }
 
-        string bigLogMessage(string msg)
+        static string bigLogMessage(string msg)
         {
             return string.Format("***************     {0}     ***************", msg);
         }
 
-        string prettyStars(int lenght)
+        static string prettyStars(int lenght)
         {
             StringBuilder b = new StringBuilder(lenght);
             for (int i = 0; i < lenght; i++) b.Append('*');

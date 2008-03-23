@@ -458,7 +458,7 @@ namespace WindowPlugins.GUITVSeries
             base[cID] = nSeriesID;
         }
 
-        public override List<String> FieldNames
+        public override ICollection<String> FieldNames
         {
             get
             {

@@ -46,11 +46,24 @@ namespace WindowPlugins.GUITVSeries
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return this == obj as DBValue;
         }
 
+        // override object.GetHashCode
         public override int GetHashCode()
         {
+            // TODO: write your implementation of GetHashCode() here
             return base.GetHashCode();
         }
 
@@ -168,6 +181,7 @@ namespace WindowPlugins.GUITVSeries
                     return true;
             } return first.value != second.value;
         }
+        
     };
 
     // field class - used to hold information
@@ -262,9 +276,8 @@ namespace WindowPlugins.GUITVSeries
             Dictionary<string, DBFieldType> cachedForTable;
             m_tableName = tableName;
             //m_fields = new Dictionary<string, DBField>();
-            if (fields.ContainsKey(tableName)) // good, cached, this happens 99% of the time
+            if (fields.TryGetValue(tableName, out cachedForTable)) // good, cached, this happens 99% of the time
             {
-                cachedForTable = fields[tableName];
                 foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
                     if (!m_fields.ContainsKey(entry.Key))
                         m_fields.Add(entry.Key, new DBField(entry.Value));
@@ -394,24 +407,25 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                if (m_fields.ContainsKey(fieldName))
-                    return m_fields[fieldName].Value;
-                else
-                    return String.Empty;
+                DBField result;
+                if (!m_fields.TryGetValue(fieldName, out result)) return string.Empty;
+                return result.Value;
+                
             }
             set
             {
                 try
                 {
-                    if (m_fields.ContainsKey(fieldName))
+                    DBField result;
+                    if (m_fields.TryGetValue(fieldName, out result))
                     {
-                        if (m_fields[fieldName].Value != value)
+                        if (result.Value != value)
                         {
-                            if (m_fields[fieldName].Type == DBField.cTypeInt)
-                                m_fields[fieldName].Value = (long)value;
+                            if (result.Type == DBField.cTypeInt)
+                                result.Value = (long)value;
                             else
-                                m_fields[fieldName].Value = value;
-                            m_fields[fieldName].WasChanged = true;
+                                result.Value = value;
+                            result.WasChanged = true;
                             m_CommitNeeded = true;                            
                         }
                     }
@@ -428,7 +442,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public virtual List<String> FieldNames
+        public virtual ICollection<String> FieldNames
         {
             get
             {
@@ -447,27 +461,35 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public bool Read(ref SQLiteResultSet records, int index)
-        {
+        {            
             if (records.Rows.Count > 0 || records.Rows.Count < index)
             {
                 SQLiteResultSet.Row row = records.Rows[index];
-                string res = null;
-                int iCol = 0;
-                foreach (KeyValuePair<string, DBField> field in m_fields)
-                {
-                    if (records.ColumnIndices.ContainsKey(field.Key))
-                    {
-                        iCol = (int)records.ColumnIndices[field.Key];
-                        res = row.fields[iCol];
-                        field.Value.Value = res == null ? string.Empty : res;
-                    }
-                    else // I don't get this? tablename.field ???
-                        field.Value.Value = DatabaseUtility.Get(records, index, m_tableName + "." + field.Key);
-                }
-                m_CommitNeeded = false;
-                return true;
+                return Read(row, records.ColumnIndices);
             }
             return false;
+        }
+
+        public bool Read(SQLiteResultSet.Row row, System.Collections.Hashtable ColumnIndices)
+        {
+            if (row == null || row.fields.Count == 0) return false;
+            string res = null;
+            int iCol = 0;
+            foreach (KeyValuePair<string, DBField> field in m_fields)
+            {
+                object o = null;
+                if (((o = ColumnIndices[field.Key]) != null) || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null))
+                {
+                    iCol = (int)o;
+                    res = row.fields[iCol];
+                    field.Value.Value = res == null ? string.Empty : res;
+                }
+                else 
+                    // we have a column in mfields that is not in the database result (or null), as such it is to be empty
+                    field.Value.Value = string.Empty;
+            }
+            m_CommitNeeded = false;
+            return true;
         }
 
         public String PrimaryKey()

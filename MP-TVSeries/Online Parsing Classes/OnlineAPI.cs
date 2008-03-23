@@ -8,7 +8,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
-    class OnlineAPI
+    static class OnlineAPI
     {
         private static class apiURIs
         {

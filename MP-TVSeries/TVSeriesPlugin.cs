@@ -33,11 +33,13 @@ using MediaPortal.Playlists;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
 using System.Collections.Generic;
-using WindowPlugins.GUITVSeries.Subtitles;
 using WindowPlugins.GUITVSeries.Feedback;
+#if inclDownloaders
 using Download = WindowPlugins.GUITVSeries.Download;
 using Torrent = WindowPlugins.GUITVSeries.Torrent;
 using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
+using WindowPlugins.GUITVSeries.Subtitles;
+#endif
 
 namespace MediaPortal.GUI.Video
 {
@@ -135,13 +137,14 @@ namespace MediaPortal.GUI.Video
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
+#if inclDownloaders        
         private bool foromWorking = false;
         private bool remositoryWorking = false;
-        private bool torrentWorking = false;
-        private bool m_bUpdateBanner = false;
+        private bool torrentWorking = false;        
         private string foromEnable = "0";
         private string remositoryEnable = "0";
-
+#endif
+        private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
         private OnlineParsing m_parserUpdater = null;
@@ -254,8 +257,9 @@ namespace MediaPortal.GUI.Video
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
-
+#if inclDownloaders
             Download.Monitor.Start(this);
+#endif
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
@@ -273,13 +277,13 @@ namespace MediaPortal.GUI.Video
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
-
+#if inclDownloaders
             //init enable flags
             if (DBOption.GetOptions(DBOption.cSubs_Forom_Enable) != null)
                 foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
             if (DBOption.GetOptions(DBOption.cSubs_Remository_Enable) != null)
                 remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
-
+#endif
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
             m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
@@ -1171,13 +1175,14 @@ namespace MediaPortal.GUI.Video
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionToggleFavorite;
                         }
-
+#if inclDownloaders
                         if (this.listLevel == Listlevel.Episode)
                         {
                             pItem = new GUIListItem(Translation.Download + " >>");
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextMenus.download;
                         }
+#endif
                     }
                     else dlg.SetHeading(m_CurrLView.Name);
 
@@ -1199,6 +1204,7 @@ namespace MediaPortal.GUI.Video
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
                     switch (dlg.SelectedId)
                     {
+#if inclDownloaders
                         case (int)eContextMenus.download:
                             {
                                 dlg.Reset();
@@ -1223,7 +1229,7 @@ namespace MediaPortal.GUI.Video
                                     bExitMenu = true;
                             }
                             break;
-
+#endif
                         case (int)eContextMenus.action:
                             {
                                 dlg.Reset();
@@ -1423,7 +1429,7 @@ namespace MediaPortal.GUI.Video
                             m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.LocalScanNoExactMatch, null));
                         }
                         break;
-
+#if inclDownloaders
                     case (int)eContextItems.downloadSubtitle:
                         {
                             if (selectedEpisode != null)
@@ -1444,13 +1450,12 @@ namespace MediaPortal.GUI.Video
                                     remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
                                     remository.GetSubs(selectedEpisode);
                                 }
-
                             }
                         }
                         break;
 
                     case (int)eContextItems.downloadviaTorrent:
-                        {
+                    {
                             if (selectedEpisode != null)
                             {
                                 Torrent.Load torrentLoad = new Torrent.Load(this);
@@ -1474,7 +1479,7 @@ namespace MediaPortal.GUI.Video
                             }
                         }
                         break;
-
+#endif
                     case (int)eContextItems.actionHide:
                         {
                             // hide - we can only hide things for now, no unhide
@@ -1701,7 +1706,7 @@ namespace MediaPortal.GUI.Video
             }
 
         }
-
+#if inclDownloaders
         void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
             if (m_ImportAnimation != null)
@@ -1756,7 +1761,7 @@ namespace MediaPortal.GUI.Video
             setProcessAnimationStatus(false);
             torrentWorking = false;
         }
-
+#endif
         List<string> sviews = new List<string>();
 
         void switchView(int offset) //else previous
@@ -2116,8 +2121,12 @@ namespace MediaPortal.GUI.Video
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
+#if inclDownloaders
                     else if (!foromWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
+#else
+                    else setProcessAnimationStatus(false);
+#endif
                 }
             }
             base.Process();
@@ -2304,7 +2313,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
             if (!localLogos.appendEpImage)
-                setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(episode));
+                setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(m_SelectedEpisode));
             else
                 clearGUIProperty(guiProperty.EpisodeImage);
 
