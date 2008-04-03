@@ -60,7 +60,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Public Methods
-        public bool ResumeOrPlay(DBEpisode episode, TVSeriesPlugin sender)
+        public bool ResumeOrPlay(DBEpisode episode)
         {
             try
             {
@@ -106,44 +106,24 @@ namespace WindowPlugins.GUITVSeries
                 if (timeMovieStopped > 0)
                 {
                     MPTVSeriesLog.Write("Asking user to resume..." + Utils.SecondsToHMSString(timeMovieStopped));
-                    //GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                    //sender.YesNoOkDialog(new WindowPlugins.GUITVSeries.Feedback.ChooseFromYesNoDescriptor());
-                    //if (null != dlgYesNo)
-                    //{
-                    //    dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
-                    //    dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
-                    //    dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
-                    //    dlgYesNo.SetDefaultToYes(true);
-                    //    dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                    //    if (!dlgYesNo.IsConfirmed) // reset resume data in DB
-                    //    {
-                    //        timeMovieStopped = 0;
-                    //        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-                    //        m_currentEpisode.Commit();
-                    //    }
-                    //}                    
-                    IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-                    dlg.Reset();
-                    dlg.SetHeading(GUILocalizeStrings.Get(900));
-                    GUIListItem pItem = null;
-
-                    pItem = new GUIListItem(Translation.Yes + " (" + Utils.SecondsToHMSString(timeMovieStopped) + ")");
-                    dlg.Add(pItem);
-                    pItem.ItemId = 0;
-
-                    pItem = new GUIListItem(Translation.No);
-                    dlg.Add(pItem);
-                    pItem.ItemId = 1;
-
-                    dlg.DoModal(GUIWindowManager.ActiveWindow);
-
-                    if (dlg.SelectedId == 1) // reset resume data in DB
+                    GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                    
+                    if (null != dlgYesNo)
                     {
-                        timeMovieStopped = 0;
-                        m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
-                        m_currentEpisode.Commit();
-                        MPTVSeriesLog.Write("User selected to start from beginning...");
-                    } else MPTVSeriesLog.Write("User selected resume from last time...");
+                        dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
+                        dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
+                        dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
+                        dlgYesNo.SetDefaultToYes(true);
+                        dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+                        if (!dlgYesNo.IsConfirmed) // reset resume data in DB
+                        {
+                            timeMovieStopped = 0;
+                            m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                            m_currentEpisode.Commit();
+                            MPTVSeriesLog.Write("User selected to start from beginning...");
+                        }
+                        else MPTVSeriesLog.Write("User selected resume from last time...");
+                    }                    
                 }
                 #endregion
 
@@ -182,6 +162,7 @@ namespace WindowPlugins.GUITVSeries
             DBSeries series = null;
             if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
 
+            if (m_currentEpisode == null) return;
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));

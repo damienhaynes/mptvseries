@@ -478,7 +478,9 @@ namespace WindowPlugins.GUITVSeries
             foreach (KeyValuePair<string, DBField> field in m_fields)
             {
                 object o = null;
-                if (((o = ColumnIndices[field.Key]) != null) || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null))
+                if (((o = ColumnIndices[field.Key]) != null) 
+                    || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null) 
+                    || ((o = ColumnIndices[m_tableName + field.Key]) != null)) // because of order bug in sqlite
                 {
                     iCol = (int)o;
                     res = row.fields[iCol];
