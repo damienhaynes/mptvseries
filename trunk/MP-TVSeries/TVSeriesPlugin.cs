@@ -538,6 +538,7 @@ namespace MediaPortal.GUI.Video
                             // view handling
                             List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            
                             foreach (DBSeries series in seriesList)
                             {
                                 try
@@ -593,7 +594,7 @@ namespace MediaPortal.GUI.Video
                                     MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
                                 }
                                 count++;
-                            }
+                            }                            
                             if (selectedIndex != -1)
                             {
                                 this.m_Facade.SelectedListItemIndex = selectedIndex;
@@ -878,9 +879,9 @@ namespace MediaPortal.GUI.Video
             clearGUIProperty(guiProperty.NextView);
             clearGUIProperty(guiProperty.LastView);
             
-            clearFieldsForskin("Episode");
-            clearFieldsForskin("Season");
-            clearFieldsForskin("Series");
+            //clearFieldsForskin("Episode");
+            //clearFieldsForskin("Season");
+            //clearFieldsForskin("Series");
 
             if (m_CurrLView == null)
             {
@@ -1311,7 +1312,7 @@ namespace MediaPortal.GUI.Video
                                         showRatingsDialog(m_SelectedSeries, false);
                                         break;
                                 }
-                                                                
+                                LoadFacade();                                
                                 if (dlg.SelectedId != -1)
                                     bExitMenu = true;
                                 return;
@@ -2083,7 +2084,7 @@ namespace MediaPortal.GUI.Video
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode, this);                        
+                        m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);                        
                         break;
                 }
             }
@@ -2524,7 +2525,7 @@ namespace MediaPortal.GUI.Video
 
             // removed the if statement here to mimic functionality when an episode is selected
             // via the regular UI, since watched flag is now set after viewing (is this right?)
-            m_VideoHandler.ResumeOrPlay(selectedEpisode, this);
+            m_VideoHandler.ResumeOrPlay(selectedEpisode);
         }
 
         private void setProcessAnimationStatus(bool enable)

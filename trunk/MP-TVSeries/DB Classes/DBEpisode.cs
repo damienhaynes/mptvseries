@@ -894,8 +894,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
-                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordecolsplit + " ");
-                orderBy = " order by " + ordecolsplit + (orderBy.Contains(" desc ") ? " desc " : " asc ");
+                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+                orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
             sqlQuery = sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)

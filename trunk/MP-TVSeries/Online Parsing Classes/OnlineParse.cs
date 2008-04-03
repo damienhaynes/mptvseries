@@ -332,7 +332,7 @@ namespace WindowPlugins.GUITVSeries
                         uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
                     else if (sinceLastUpdate < 3600 * 24 * 30)
                         uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
-
+                    //uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
                     Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
 
                     // update series
@@ -342,7 +342,7 @@ namespace WindowPlugins.GUITVSeries
                     UpdateEpisodes(GU.UpdatedEpisodes);
 
                     // update banners
-                    //UpdateBanners(false, GU.UpdatedSeries);
+                    UpdateBanners(false, GU.UpdatedSeries);
 
                     // lets save the updateTimestamp
                     if (GU.OnlineTimeStamp > 0)
@@ -982,6 +982,7 @@ namespace WindowPlugins.GUITVSeries
                                         case DBOnlineEpisode.cCompositeID:
                                         case DBEpisode.cSeriesID:
                                         case DBOnlineEpisode.cWatched:
+                                        case DBOnlineEpisode.cHidden:
                                         case DBOnlineEpisode.cDownloadPending:
                                         case DBOnlineEpisode.cDownloadExpectedNames:
                                         case DBOnlineEpisode.cMyRating:
@@ -1020,10 +1021,7 @@ namespace WindowPlugins.GUITVSeries
             // let's check which of these we have any interest in
             for (int i = 0; i < episodesInDB.Count; i++)
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
-                {
-                    episodesInDB.RemoveAt(i);
-                    i--;
-                }
+                    episodesInDB.RemoveAt(i--);
 
             // let's updated those we are interested in
             // for the remaining ones get the <lang>.xml
@@ -1098,8 +1096,8 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        //TODO: rewrite banners uptade, now gets List<DBValue> of seriesIDs that have new banners
-        public void UpdateBanners(bool bUpdateNewSeries, List<seriesBannersMap> preSeriesBanners)
+
+        public void UpdateBanners(bool bUpdateNewSeries, List<DBValue> updatedSeries)
         {
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( > 0)
@@ -1110,6 +1108,9 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(bigLogMessage("Checking for banners for series without any banners"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
+                condition.nextIsOr = true;
+                condition.AddCustom(" exists (select * from season where seriesID = online_series.id and bannerfilenames != '')");
+                condition.nextIsOr = false;
             }
             else
             {
@@ -1119,6 +1120,17 @@ namespace WindowPlugins.GUITVSeries
             }
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
+            if (!bUpdateNewSeries && seriesList.Count > 0)
+            {
+                // let's check which of these we have any interest in
+                for (int i = 0; i < seriesList.Count; i++)
+                    if (!updatedSeries.Contains(seriesList[i][DBSeries.cID]))
+                    {
+                        seriesList.RemoveAt(i--);
+                    }
+            }
+
+
             int nIndex = 0;
             if (seriesList.Count == 0)
             {
@@ -1135,14 +1147,15 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " banners for \"" + series.ToString() + "\"");
 
                 GetBanner bannerParser = null;
-                if (bUpdateNewSeries)
-                {                    
+                //if (bUpdateNewSeries)
+                //{                    
                     bannerParser = new GetBanner((string)series[DBSeries.cID]);
-                }
+                //}
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
 
-                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);
+                //seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);
+                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
                 if (seriesBanners != null)  // oops!
                 {
                     bool hasOwnLang = false;
@@ -1300,6 +1313,9 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (matchOnlineToLocalEpisode(series, localEpisode, onlineEpisode))
                         {
+                            //if (localEpisode[DBEpisode.cSeriesID] == 73545 && localEpisode[DBEpisode.cSeasonIndex] == 0 && localEpisode[DBEpisode.cEpisodeIndex] == 5)
+                            //    MPTVSeriesLog.Write(localEpisode.ToString() + " hidden flag: " + localEpisode[DBOnlineEpisode.cHidden].ToString());
+
                             // season update for online data
                             DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
                             season[DBSeason.cHasEpisodes] = true;
@@ -1318,6 +1334,7 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cCompositeID:
                                     case DBEpisode.cSeriesID:
                                     case DBOnlineEpisode.cWatched:
+                                    case DBOnlineEpisode.cHidden:
                                     case DBOnlineEpisode.cDownloadPending:
                                     case DBOnlineEpisode.cDownloadExpectedNames:
                                     case DBOnlineEpisode.cMyRating:

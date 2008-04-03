@@ -26,28 +26,29 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             XmlNodeList nodelist = OnlineAPI.Updates(type);
             series = new List<DBValue>();
             episodes = new List<DBValue>();
-            long maxTimeStamp = -1;
             if (nodelist != null)
             {
                 foreach (XmlNode node in nodelist)
                 {
                     string entryType = node.Name;
-                    //string id = string.Empty;
-                    //BannerSeries bs = new BannerSeries();
-                    //BannerSeason bse = new BannerSeason();
-                    long timeStamp = 0;
-
-                    switch (entryType)
+                    string id = string.Empty;
+                    for (int i = 0; i < node.ChildNodes.Count; i++)
+                        if (node.ChildNodes[i].Name.Equals("id", StringComparison.InvariantCultureIgnoreCase))
+                        { id = node.ChildNodes[i].InnerText; break; }
+                    if (id.Length > 0)
                     {
-                        case "Episode":
-                            this.episodes.Add(node.InnerText);
-                            break;
-                        case "Series":
-                            this.series.Add(node.InnerText);
-                            break;
-                        case "Time":
-                            long.TryParse(node.InnerText, out this.timestamp);
-                            break;
+                        switch (entryType)
+                        {
+                            case "Episode":
+                                this.episodes.Add(id);
+                                break;
+                            case "Series":
+                                this.series.Add(id);
+                                break;
+                            case "Time":
+                                long.TryParse(node.InnerText, out this.timestamp);
+                                break;
+                        }
                     }
                 }
             }

@@ -117,8 +117,9 @@ namespace WindowPlugins.GUITVSeries
 
         public GetEpisodes(string seriesID)
         {
-            int s = Int32.Parse(seriesID);
-            doWork(s);
+            int s = 0;
+            if(Int32.TryParse(seriesID, out s) && s > 0)
+                doWork(s);
         }        
         
         public void doWork(int nSeriesID)

@@ -104,7 +104,7 @@ namespace WindowPlugins.GUITVSeries
         /// <returns>memory identifier</returns>
         public static string buildMemoryImage(Image image, string identifier, System.Drawing.Size size, bool buildIdentifier)
         {
-            string name = buildIdentifier ? "[TVSeries:" + identifier + "]" : identifier;
+            string name = buildIdentifier ? ImageAllocator.buildIdentifier(identifier) : identifier;
             try
             {
                 // we don't have to try first, if name already exists mp will not do anything with the image
