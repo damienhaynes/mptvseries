@@ -29,8 +29,8 @@ namespace WindowPlugins.GUITVSeries
     class Fanart
     {
         #region config Constants
-        const string seriesFanArtFilenameFormat = "*{0}*.png";
-        const string seasonFanArtFilenameFormat = "*{0}S{1}*.png";
+        const string seriesFanArtFilenameFormat = "*{0}*.*";
+        const string seasonFanArtFilenameFormat = "*{0}S{1}*.*";
         const string lightIdentifier = "_light_";
         #endregion
 
