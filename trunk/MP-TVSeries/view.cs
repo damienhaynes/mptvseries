@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
             return ep[DBEpisode.cSeasonIndex] == 0
                    ? ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty
                      ? 9999 + ep[DBOnlineEpisode.cEpisodeIndex]
-                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.5 + ((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100
+                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100f)
                    : ((int)ep[DBEpisode.cEpisodeIndex]);
         }
 
