@@ -859,7 +859,7 @@ namespace MediaPortal.GUI.Video
         {
             if (m_Facade == null) // wrong skin file
             {
-                GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                GUIDialogOK dlg = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                 dlg.Reset();
                 dlg.SetHeading(Translation.wrongSkin);
                 dlg.DoModal(GetID);
