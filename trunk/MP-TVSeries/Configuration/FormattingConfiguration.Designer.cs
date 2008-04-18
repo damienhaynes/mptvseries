@@ -206,11 +206,11 @@
             // 
             // saveFileDialog1
             // 
-            this.saveFileDialog1.Filter = "Format Rules|*.formatRules|All Files|*.*";
+            this.saveFileDialog1.Filter = "Format Rules (*.formatRules)|*.formatRules|All Files (*.*)|*.*";
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Format Rules|*.formatRules|All Files|*.*";
+            this.openFileDialog1.Filter = "Format Rules (*.formatRules)|*.formatRules|All Files (*.*)|*.*";
             // 
             // FormattingConfiguration
             // 
