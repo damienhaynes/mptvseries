@@ -106,7 +106,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<string> getFieldNameListFromList<T>(string FieldNameToGet, List<T> elements) where T : DBTable
         {
-            MPTVSeriesLog.Write(elements.Count.ToString());
+            MPTVSeriesLog.Write("Elements found: " + elements.Count.ToString());
             List<string> results = new List<string>();
             foreach (T elem in elements)
             {

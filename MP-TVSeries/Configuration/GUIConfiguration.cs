@@ -421,7 +421,7 @@ namespace WindowPlugins.GUITVSeries
             DBImportPath[] importPathes = DBImportPath.GetAll();
 
             dataGridView_ImportPathes.Rows.Clear();
-
+            
             if (importPathes != null && importPathes.Length > 0)
             {
                 dataGridView_ImportPathes.Rows.Add(importPathes.Length);
@@ -638,16 +638,14 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #endregion
-
+        
         #region Import Handling
         private void dataGridView_ImportPathes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             DBImportPath importPath = new DBImportPath();
             importPath[DBImportPath.cIndex] = e.RowIndex.ToString();
             foreach (DataGridViewCell cell in dataGridView_ImportPathes.Rows[e.RowIndex].Cells)
-            {
-                //if (cell.Value == null)
-                // causes importpath adding to be buggy (Inker) return;
+            {   
                 if (cell.Value != null)
                 {
                     if (cell.ValueType == typeof(Boolean))
@@ -658,26 +656,94 @@ namespace WindowPlugins.GUITVSeries
             }
             importPath.Commit();
         }
-
+        
         private void dataGridView_ImportPathes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
-            {
-                if (dataGridView_ImportPathes.NewRowIndex == e.RowIndex)
+            // Note: Clicking on checkboxes does not trigger the _CellValueChanged event
+                         
+            if (e.RowIndex < 0)
+                return;
+            
+            DataGridViewCell cell = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            
+            // Allow user to delete the row when disabling the 'enabled' checkbox
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cEnabled].Index)
+            {   
+                // check if cell belongs to newly added row
+                if (cell.Value != null)
                 {
-                    dataGridView_ImportPathes.Rows.Add();
+                    string sEnabled = cell.Value.ToString();
+                    if (sEnabled == "True")
+                    {
+                        // Set value so that when checkbox is re-enabled prompt to delete will not show
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = false;
+                        // Prompt to delete the selected 'Import Path'
+                        if (MessageBox.Show("Do you want to remove this Import Path?", "Import Paths", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);                        
+                    }
+                    else 
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                }
+                else
+                {
+                    // Set default values of cells for new rows
+                    // we do this so if user keeps adding empty rows, it wont throw an exception when removed
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
+            }
 
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cRemovable].Index)
+            {
+                if (cell.Value != null)
+                {
+                    string sEnabled = cell.Value.ToString();
+                    if (sEnabled == "True")
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                                         
+                    else
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                }
+                else
+                {
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
+                }
+            }
+
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
+            {
+                // Determine if user clicked on the last row, (manually add new row)
+                // When user click on a checkbox column, it automatically creates new rows
+                bool bNewRow = false;
+                if (dataGridView_ImportPathes.NewRowIndex == e.RowIndex)
+                {
+                    // Add new row
+                    dataGridView_ImportPathes.Rows.Add();
+                    // set default values for cells
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    bNewRow = true;
+                }       
+
+                // If Path is defined, set path to default in folder browser dialog
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     folderBrowserDialog1.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                
+                // Open Folder Browser Dialog
                 DialogResult result = this.folderBrowserDialog1.ShowDialog();
                 if (result.ToString() == "Cancel")
+                {
+                    // Delete this row if user didnt select a path
+                    if (bNewRow)
+                        dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     return;
-
+                }
+                // Set Path value in cell
                 dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = folderBrowserDialog1.SelectedPath;
             }
+
         }
 
         private void SaveAllImportPathes()
@@ -699,6 +765,11 @@ namespace WindowPlugins.GUITVSeries
                     importPath.Commit();
                 }
             }
+        }
+
+        private void dataGridView_ImportPathes_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            SaveAllImportPathes();
         }
 
         private void dataGridView_ImportPathes_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
@@ -2890,11 +2961,6 @@ namespace WindowPlugins.GUITVSeries
             viewChanged();
         }
 
-        private void splitContainerImportSettings_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void txtMainMirror_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cMainMirror, txtMainMirror.Text);
@@ -3150,6 +3216,8 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
         }
+
+
 
     }
 

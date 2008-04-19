@@ -57,7 +57,7 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             if (!ReadPrimary(ID.ToString()))
-                InitValues();
+                InitValues(-1,"");
         }
 
         private void InitColumns()
