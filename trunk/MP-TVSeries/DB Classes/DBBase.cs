@@ -390,6 +390,27 @@ namespace WindowPlugins.GUITVSeries
                 {
                     switch (fieldPair.Value.Type)
                     {
+                        case DBField.cTypeInt:                            
+                            fieldPair.Value.Value = 0;
+                            break;
+
+                        case DBField.cTypeString:
+                            fieldPair.Value.Value = "";
+                            break;
+                    }
+                }
+            }
+            m_CommitNeeded = true;
+        }
+
+        public virtual void InitValues(Int32 iValue, String sValue)
+        {
+            foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+            {
+                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
+                {
+                    switch (fieldPair.Value.Type)
+                    {
                         case DBField.cTypeInt:
                             fieldPair.Value.Value = 0;
                             break;

@@ -130,7 +130,7 @@ namespace WindowPlugins.GUITVSeries
 
             // no mirrors yet - refresh using "seed"
             if(!LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror)))
-                MPTVSeriesLog.Write("Warnign: No mirrors received, nothing will be downloaded!");
+                MPTVSeriesLog.Write("Warning: No mirrors received, nothing will be downloaded!");
 
             List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(memoryMirrors);
             List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(memoryMirrors);
