@@ -178,6 +178,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cFullSeriesRetrieval) == null)
                     SetOptions(cFullSeriesRetrieval, false);
 
+                if (GetOptions(cGetEpisodeSnapshots) == null)
+                    SetOptions(cGetEpisodeSnapshots, true);
+
                 if (GetOptions(cAutoChooseSeries) == null)
                     SetOptions(cAutoChooseSeries, false);
 
