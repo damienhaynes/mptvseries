@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries
             : base(cTableName)
         {
             InitColumns();
-            InitValues();
+            InitValues(-1,"");
         }
 
         public DBImportPath(long ID)

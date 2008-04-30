@@ -124,7 +124,7 @@ namespace WindowPlugins.GUITVSeries
             : base(cTableName)
         {
             InitColumns();
-            InitValues();
+            InitValues(-1,"");
         }
 
         public DBReplacements(long ID)
@@ -132,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             if (!ReadPrimary(ID.ToString()))
-                InitValues();
+                InitValues(-1,"");
         }
 
         private void InitColumns()
