@@ -470,6 +470,7 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewTextBoxColumn columnExpression = new DataGridViewTextBoxColumn();
                 columnExpression.Name = DBExpression.cExpression;
                 columnExpression.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                columnExpression.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Expressions.Columns.Add(columnExpression);
             }
             dataGridView_Expressions.Rows.Clear();
@@ -523,12 +524,14 @@ namespace WindowPlugins.GUITVSeries
                 columnToReplace.Name = DBReplacements.cToReplace;
                 columnToReplace.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cToReplace);
                 columnToReplace.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                columnToReplace.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnToReplace);
 
                 DataGridViewTextBoxColumn columnWith = new DataGridViewTextBoxColumn();
                 columnWith.Name = DBReplacements.cWith;
                 columnWith.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cWith);
                 columnWith.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                columnWith.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnWith);
             }
             dataGridView_Replace.Rows.Clear();
@@ -668,7 +671,7 @@ namespace WindowPlugins.GUITVSeries
             
             // Allow user to delete the row when disabling the 'enabled' checkbox
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cEnabled].Index)
-            {   
+            {
                 // check if cell belongs to newly added row
                 if (cell.Value != null)
                 {
@@ -768,7 +771,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void dataGridView_ImportPathes_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
+        {        
             SaveAllImportPathes();
         }
 
@@ -838,7 +841,6 @@ namespace WindowPlugins.GUITVSeries
                 expressionGoingDown.Commit();
                 LoadExpressions();
                 dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow - 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
-
             }
         }
 
@@ -881,14 +883,21 @@ namespace WindowPlugins.GUITVSeries
             // need to save back all the rows
             DBReplacements.ClearAll();
 
-            foreach (DataGridViewRow row in dataGridView_Expressions.Rows)
+            foreach (DataGridViewRow row in dataGridView_Replace.Rows)
             {
-                if (row.Index != dataGridView_Expressions.NewRowIndex)
+                if (row.Index != dataGridView_Replace.NewRowIndex)
                 {
                     DBReplacements replacement = new DBReplacements();
                     replacement[DBReplacements.cIndex] = row.Index.ToString();
                     foreach (DataGridViewCell cell in row.Cells)
-                        replacement[cell.OwningColumn.Name] = (String)cell.Value;
+                    {
+                        if (cell.Value == null)
+                            return;
+                        if (cell.ValueType.Name == "Boolean")
+                            replacement[cell.OwningColumn.Name] = (Boolean)cell.Value;
+                        else
+                            replacement[cell.OwningColumn.Name] = (String)cell.Value;
+                    }              
                     replacement.Commit();
                 }
             }

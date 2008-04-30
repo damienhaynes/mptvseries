@@ -412,11 +412,11 @@ namespace WindowPlugins.GUITVSeries
                     switch (fieldPair.Value.Type)
                     {
                         case DBField.cTypeInt:
-                            fieldPair.Value.Value = 0;
+                            fieldPair.Value.Value = iValue;
                             break;
 
                         case DBField.cTypeString:
-                            fieldPair.Value.Value = "";
+                            fieldPair.Value.Value = sValue;
                             break;
                     }
                 }
