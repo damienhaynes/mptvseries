@@ -318,8 +318,14 @@ namespace WindowPlugins.GUITVSeries
                                         break;
                                 }
                             }
-                            b.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+
+                            try
+                            {
+                                b.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+                            }
+                            catch { return; }
                             bs.sSeriesName = b.sSeriesName;
+
                             if (isSeries)
                                 m_bannerSeriesList.Add(b);
                             else if(isGood)

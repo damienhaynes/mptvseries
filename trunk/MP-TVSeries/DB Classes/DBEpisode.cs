@@ -42,7 +42,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSeasonIndex = "SeasonIndex";         // season index
         public const String cEpisodeIndex = "EpisodeIndex";       // episode index
         public const String cEpisodeName = "EpisodeName";         // episode name
-        public const String cWatched = "Watched";          // tag to know if episode has been watched already (overrides the local file's tag)
+        public const String cWatched = "Watched";                 // tag to know if episode has been watched already (overrides the local file's tag)
         public const String cEpisodeSummary = "Summary";
         public const String cFirstAired = "FirstAired";
         public const String cOnlineDataImported = "OnlineDataImported";
@@ -90,6 +90,9 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
+            
+            DBTVSeries.CreateDBIndices("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)","online_episodes",true);
+ 
         }
 
         public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
@@ -351,6 +354,10 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
+    
+            DBTVSeries.CreateDBIndices("create index if not exists epComp1 ON local_episodes(CompositeID ASC)","local_episodes",false);
+            DBTVSeries.CreateDBIndices("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)","local_episodes", true);
+
         }
 
         public DBEpisode(bool bCreateEmptyOnline)
