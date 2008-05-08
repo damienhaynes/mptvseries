@@ -75,7 +75,6 @@ namespace WindowPlugins.GUITVSeries
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
 
-
         static DBOnlineSeries()
         {
             s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
@@ -380,6 +379,8 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
+               
+            DBTVSeries.CreateDBIndices("create index if not exists seriesIDLocal on local_series(ID ASC)","local_series",true);
         }
 
         public DBSeries(bool bCreateEmptyOnline)
