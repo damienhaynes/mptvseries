@@ -27,6 +27,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
+using MediaPortal.Dialogs;
+using MediaPortal.GUI.Library;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -315,6 +317,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes();                                                         
                     
                     counter++;
+
                 }
 
                 // if we do updates too, let's get the current timestamp
@@ -651,7 +654,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
-                
+
             }
         }
 
@@ -677,10 +680,11 @@ namespace WindowPlugins.GUITVSeries
                 }
                 MPTVSeriesLog.Write(string.Format("Found {0} possible matches for \"{1}\"", GetSeriesParser.Results.Count, nameToSearch));
 
-                // User has three choices:
+                // User has four choices:
                 // 1) Pick a series from the list
                 // 2) Simply skip
                 // 3) Skip and never ask for this series again
+                // 4) Manually Search
 
                 List<Feedback.CItem> Choices = new List<Feedback.CItem>();
                 Dictionary<int, DBOnlineSeries> uniqueSeriesIds = new Dictionary<int, DBOnlineSeries>();
@@ -708,9 +712,9 @@ namespace WindowPlugins.GUITVSeries
                 descriptor.m_sItemToMatch = nameToSearch;
                 descriptor.m_sListLabel = "Choose the correct series from this list:";
                 descriptor.m_List = Choices;
-                descriptor.m_sbtnCancelLabel = "Skip this time";
-                descriptor.m_sbtnIgnoreLabel = "Skip/Never ask again";
-
+                descriptor.m_sbtnCancelLabel = "&Skip";
+                descriptor.m_sbtnIgnoreLabel = "Skip &Always";
+                
                 bool bKeepTrying = true;
                 while (bKeepTrying)
                 {
@@ -733,6 +737,28 @@ namespace WindowPlugins.GUITVSeries
 
                         case Feedback.ReturnCode.OK:
                             DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
+
+                            // Show the Virtual Keyboard to manual enter in name to search
+                            // For use with-in Media Portal only, config already allow you to re-enter search.
+                            /*if (selectedSeries == null && !Settings.isConfig)
+                            {                                
+                                VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);                                
+                                if (null == keyboard)
+                                    return null;
+                                keyboard.Reset();
+                                keyboard.Text = nameToSearch;                          
+                                keyboard.DoModal(GUIWindowManager.ActiveWindow);
+                                
+                                // TODO
+                                if (keyboard.IsConfirmed)
+                                {
+                                    nameToSearch = keyboard.Text;
+                                    bKeepTrying = false;
+                                }
+                                else
+                                    return null;
+                            }*/
+
                             if (nameToSearch != Selected.m_sName || selectedSeries == null)
                             {
                                 nameToSearch = Selected.m_sName;
@@ -754,7 +780,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 if (!bKeepTrying) MPTVSeriesLog.Write("User typed a new Search term: \"" + nameToSearch + "\"");
-            }
+            }            
         }
 
         public void determineOrderOption(DBSeries series)
