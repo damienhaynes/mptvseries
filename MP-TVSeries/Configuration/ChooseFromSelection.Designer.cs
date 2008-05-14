@@ -111,11 +111,11 @@ namespace WindowPlugins.GUITVSeries
             this.button_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_OK.AutoSize = true;
             this.button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button_OK.Location = new System.Drawing.Point(15, 259);
+            this.button_OK.Location = new System.Drawing.Point(15, 258);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
-            this.button_OK.TabIndex = 5;
-            this.button_OK.Text = "OK";
+            this.button_OK.TabIndex = 11;
+            this.button_OK.Text = "&OK";
             this.button_OK.UseVisualStyleBackColor = true;
             // 
             // button_Cancel
@@ -123,11 +123,11 @@ namespace WindowPlugins.GUITVSeries
             this.button_Cancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.button_Cancel.AutoSize = true;
             this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_Cancel.Location = new System.Drawing.Point(174, 259);
+            this.button_Cancel.Location = new System.Drawing.Point(265, 259);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(75, 23);
-            this.button_Cancel.TabIndex = 6;
-            this.button_Cancel.Text = "Cancel";
+            this.button_Cancel.TabIndex = 12;
+            this.button_Cancel.Text = "&Cancel";
             this.button_Cancel.UseVisualStyleBackColor = true;
             // 
             // button_Ignore
@@ -138,8 +138,8 @@ namespace WindowPlugins.GUITVSeries
             this.button_Ignore.Location = new System.Drawing.Point(346, 259);
             this.button_Ignore.Name = "button_Ignore";
             this.button_Ignore.Size = new System.Drawing.Size(75, 23);
-            this.button_Ignore.TabIndex = 7;
-            this.button_Ignore.Text = "Ignore";
+            this.button_Ignore.TabIndex = 13;
+            this.button_Ignore.Text = "&Ignore";
             this.button_Ignore.UseVisualStyleBackColor = true;
             // 
             // textbox_Description
@@ -152,15 +152,16 @@ namespace WindowPlugins.GUITVSeries
             this.textbox_Description.ReadOnly = true;
             this.textbox_Description.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textbox_Description.Size = new System.Drawing.Size(406, 86);
-            this.textbox_Description.TabIndex = 4;
+            this.textbox_Description.TabIndex = 10;
+            this.textbox_Description.TabStop = false;
             // 
             // radOption1
             // 
             this.radOption1.AutoSize = true;
-            this.radOption1.Location = new System.Drawing.Point(37, 61);
+            this.radOption1.Location = new System.Drawing.Point(33, 65);
             this.radOption1.Name = "radOption1";
             this.radOption1.Size = new System.Drawing.Size(77, 17);
-            this.radOption1.TabIndex = 8;
+            this.radOption1.TabIndex = 4;
             this.radOption1.TabStop = true;
             this.radOption1.Text = "radOption1";
             this.radOption1.UseVisualStyleBackColor = true;
@@ -169,10 +170,10 @@ namespace WindowPlugins.GUITVSeries
             // radOption2
             // 
             this.radOption2.AutoSize = true;
-            this.radOption2.Location = new System.Drawing.Point(37, 78);
+            this.radOption2.Location = new System.Drawing.Point(33, 89);
             this.radOption2.Name = "radOption2";
             this.radOption2.Size = new System.Drawing.Size(77, 17);
-            this.radOption2.TabIndex = 9;
+            this.radOption2.TabIndex = 5;
             this.radOption2.TabStop = true;
             this.radOption2.Text = "radOption2";
             this.radOption2.UseVisualStyleBackColor = true;
@@ -181,10 +182,10 @@ namespace WindowPlugins.GUITVSeries
             // radOption4
             // 
             this.radOption4.AutoSize = true;
-            this.radOption4.Location = new System.Drawing.Point(37, 112);
+            this.radOption4.Location = new System.Drawing.Point(33, 137);
             this.radOption4.Name = "radOption4";
             this.radOption4.Size = new System.Drawing.Size(77, 17);
-            this.radOption4.TabIndex = 11;
+            this.radOption4.TabIndex = 7;
             this.radOption4.TabStop = true;
             this.radOption4.Text = "radOption4";
             this.radOption4.UseVisualStyleBackColor = true;
@@ -193,10 +194,10 @@ namespace WindowPlugins.GUITVSeries
             // radOption3
             // 
             this.radOption3.AutoSize = true;
-            this.radOption3.Location = new System.Drawing.Point(37, 95);
+            this.radOption3.Location = new System.Drawing.Point(33, 113);
             this.radOption3.Name = "radOption3";
             this.radOption3.Size = new System.Drawing.Size(77, 17);
-            this.radOption3.TabIndex = 10;
+            this.radOption3.TabIndex = 6;
             this.radOption3.TabStop = true;
             this.radOption3.Text = "radOption3";
             this.radOption3.UseVisualStyleBackColor = true;
@@ -205,10 +206,10 @@ namespace WindowPlugins.GUITVSeries
             // radOption6
             // 
             this.radOption6.AutoSize = true;
-            this.radOption6.Location = new System.Drawing.Point(37, 145);
+            this.radOption6.Location = new System.Drawing.Point(132, 89);
             this.radOption6.Name = "radOption6";
             this.radOption6.Size = new System.Drawing.Size(77, 17);
-            this.radOption6.TabIndex = 13;
+            this.radOption6.TabIndex = 9;
             this.radOption6.TabStop = true;
             this.radOption6.Text = "radOption6";
             this.radOption6.UseVisualStyleBackColor = true;
@@ -217,10 +218,10 @@ namespace WindowPlugins.GUITVSeries
             // radOption5
             // 
             this.radOption5.AutoSize = true;
-            this.radOption5.Location = new System.Drawing.Point(37, 128);
+            this.radOption5.Location = new System.Drawing.Point(132, 65);
             this.radOption5.Name = "radOption5";
             this.radOption5.Size = new System.Drawing.Size(77, 17);
-            this.radOption5.TabIndex = 12;
+            this.radOption5.TabIndex = 8;
             this.radOption5.TabStop = true;
             this.radOption5.Text = "radOption5";
             this.radOption5.UseVisualStyleBackColor = true;
