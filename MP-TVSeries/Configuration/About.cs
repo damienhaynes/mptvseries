@@ -17,7 +17,9 @@ namespace WindowPlugins.GUITVSeries
 
         public void setUpMPInfo(string version, DateTime buildDate)
         {
-            this.lblVersion.Text += " " + version;
+            string[] ver = version.Split(new char[] { '.' });           
+
+            this.lblVersion.Text += " " + string.Format("v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2));
             this.lblBuild.Text += " " + buildDate + " GMT";            
         }
 

@@ -174,7 +174,7 @@ namespace WindowPlugins.GUITVSeries
                 count++;
                 memoryMirrors.Add(mirror);
             }
-            MPTVSeriesLog.Write("Received " + count.ToString() + " mirrors from " + sServer);
+            MPTVSeriesLog.Write("Received " + count.ToString() + " mirror site(s) from " + sServer);
             return true;
         }
 

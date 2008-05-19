@@ -49,9 +49,9 @@ namespace WindowPlugins.GUITVSeries
             int prev = 0;
             foreach (String path in listFolders)
             {
-                MPTVSeriesLog.Write("Searching for all supported videos files within " + path + " and it's subfolders.");
+                MPTVSeriesLog.Write("Searching for all supported videos files within " + path + " and it's subfolders");
                 filesInFolder(path, ref outList, path.Length);
-                MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files.");
+                MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files");
                 prev = outList.Count;
             }
             return outList;

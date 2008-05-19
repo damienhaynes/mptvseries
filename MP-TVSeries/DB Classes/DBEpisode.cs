@@ -535,7 +535,7 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
 
                     }
-                    else MPTVSeriesLog.Write("Succesfully read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                    else MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
                     Commit();
                     
@@ -543,7 +543,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write("Error reading Mediainfo ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                    MPTVSeriesLog.Write("Error reading MediaInfo: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
                 }
                 
             }

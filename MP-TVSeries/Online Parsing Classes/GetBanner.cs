@@ -35,6 +35,7 @@ namespace WindowPlugins.GUITVSeries
     class BannerSeries
     {
         public bool bGraphical = false;
+        public bool bHighestRated = false;
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
@@ -45,6 +46,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public int nIndex = 0;
         public bool bIsNeeded = false;
+        public bool bHighestRated = false;
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
@@ -277,8 +279,13 @@ namespace WindowPlugins.GUITVSeries
             {                
                 foreach (XmlNode topNode in nodeList)
                 {
+                    bool bHighestRatedSeriesIsSet = false;
+                    bool bHighestRatedSeasonIsSet = false;
+                    string sCurrentSeason = string.Empty;
+                    string[] sPreviousSeasons = { "" };
+
                     foreach (XmlNode itemNode in topNode.ChildNodes)
-                    {
+                    {                        
                         if(itemNode.Name == "Banner")
                         {
                             BannerSeason bs = new BannerSeason();
@@ -301,11 +308,19 @@ namespace WindowPlugins.GUITVSeries
                                         if (isSeries)
                                         {
                                             if (propertyNode.InnerText.Equals("graphical", StringComparison.CurrentCultureIgnoreCase))
-                                                b.bGraphical = true;                                            
+                                            {
+                                                // The first Banner is the Highest Rated Banner                                                
+                                                if (!bHighestRatedSeriesIsSet)
+                                                {
+                                                    bHighestRatedSeriesIsSet = true;
+                                                    b.bHighestRated = true;
+                                                }
+                                                b.bGraphical = true;
+                                            }                                            
                                         }
                                         else
                                         {
-                                            if (!propertyNode.InnerText.Equals("season", StringComparison.CurrentCultureIgnoreCase))
+                                            if (!propertyNode.InnerText.Equals("season", StringComparison.CurrentCultureIgnoreCase))                                            
                                                  isGood = false;
                                         }
                                         break;
@@ -314,9 +329,32 @@ namespace WindowPlugins.GUITVSeries
                                         b.sBannerLang = propertyNode.InnerText;
                                         break;
                                     case "Season":
-                                        bs.sSeason = propertyNode.InnerText;
+                                        sCurrentSeason = propertyNode.InnerText;
+                                        bs.sSeason = sCurrentSeason;
+                                        
+                                        // Each season can have a highest rated banner
+                                        // Search through all previous season banners                                        
+                                        bHighestRatedSeasonIsSet = false;
+                                        for (int i = 0; i < sPreviousSeasons.Length; i++)
+                                        {   
+                                            // If season has already been identified as highest rated
+                                            // then set flag
+                                            if (sPreviousSeasons[i].Equals(sCurrentSeason))
+                                            {
+                                                bHighestRatedSeasonIsSet = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!bHighestRatedSeasonIsSet)
+                                        {
+                                            bHighestRatedSeasonIsSet = true;
+                                            bs.bHighestRated = true;
+                                            Array.Resize(ref sPreviousSeasons, sPreviousSeasons.Length + 1);
+                                            sPreviousSeasons[sPreviousSeasons.Length - 1] = sCurrentSeason;                                            
+                                        }                                                                                                                        
                                         break;
-                                }
+                                }                                
                             }
 
                             try
@@ -330,7 +368,7 @@ namespace WindowPlugins.GUITVSeries
                                 m_bannerSeriesList.Add(b);
                             else if(isGood)
                                 m_bannerSeasonList.Add(bs);
-                        }
+                        }                        
                     }
                 }
                 map.seasonBanners = m_bannerSeasonList;
