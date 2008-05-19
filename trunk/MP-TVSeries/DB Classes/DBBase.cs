@@ -1104,11 +1104,11 @@ namespace WindowPlugins.GUITVSeries
                 //m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
                 //m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
                 
-                MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'.");
+                MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'");
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ").");
+                MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ")");
             }
         }
         #endregion

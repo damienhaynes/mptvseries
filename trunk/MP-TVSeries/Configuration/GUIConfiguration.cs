@@ -1042,7 +1042,7 @@ namespace WindowPlugins.GUITVSeries
             columnEpisodeTitle.Text = "Episode Title";
             listView_ParsingResults.Columns.Add(columnEpisodeTitle);
 
-            MPTVSeriesLog.Write("Parsing test beginning, getting all files...");
+            MPTVSeriesLog.Write("Starting Parsing test, getting all files");
 
             LocalParse runner = new LocalParse();
             runner.LocalParseProgress += new LocalParse.LocalParseProgressHandler(TestParsing_LocalParseProgress);

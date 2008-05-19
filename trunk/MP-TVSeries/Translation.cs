@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -44,32 +45,32 @@ namespace WindowPlugins.GUITVSeries
         public static string Seasons = "Seasons";
         public static string Episode = "Episode";
         public static string Episodes = "Episodes";
-        public static string Toggle_watched_flag = "Toggle watched flag";
+        public static string Toggle_watched_flag = "Toggle Watched";
         public static string Retrieve_Subtitle = "Retrieve Subtitle";
         public static string Load_via_Torrent = "Load via Torrent";
-        public static string Mark_all_as_watched = "Mark all as watched";
-        public static string Mark_all_as_unwatched = "Mark all as unwatched";
+        public static string Mark_all_as_watched = "Mark all as Watched";
+        public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";
         public static string Delete = "Delete";
-        public static string Remove_series_from_Favourites = "Remove series from Favourites";
-        public static string Add_series_to_Favourites = "Add series to Favourites";
+        public static string Remove_series_from_Favourites = "Remove from Favourites";
+        public static string Add_series_to_Favourites = "Add to Favourites";
         public static string Force_Local_Scan = "Force Local Scan ";
         public static string Force_Online_Refresh = "Force Online Refresh ";
         public static string In_Progress_with_Barracks = "(In Progress)";
-        public static string Only_show_episodes_with_a_local_file = "Only show episodes with a local file";
-        public static string Hide_summary_on_unwatched = "Hide the episode's summary on unwatched episodes";
+        public static string Only_show_episodes_with_a_local_file = "Only Show Local Episodes";
+        public static string Hide_summary_on_unwatched = "Hide Spoilers";
         public static string on = "on";
         public static string off = "off";
         public static string Play_Random_Episode = "Play Random Episode";
         public static string Play_Random_First_Unwatched_Episode = "Play Random First Unwatched Episode";
-        public static string Delete_that_series = "Delete that series?";
-        public static string Delete_that_season = "Delete that season?";
-        public static string Delete_that_episode = "Delete that episode?";
+        public static string Delete_that_series = "Delete this series?";
+        public static string Delete_that_season = "Delete this season?";
+        public static string Delete_that_episode = "Delete this episode?";
         public static string Confirm = "Confirm";
         public static string Completed = "Completed";
         public static string No_subtitles_found = "No subtitles found";
         public static string Subtitles_download_complete = "Subtitles Download Complete";
-        public static string skip_Never_ask_again = "skip / Never ask again";
+        public static string skip_Never_ask_again = "Skip / Never ask again";
         public static string no_results_found = "no results found!";
         public static string _Hidden_to_prevent_spoilers_ = " * Hidden to prevent spoilers *";
         public static string Yes = "Yes";
@@ -93,7 +94,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Channels = "Channels";
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
-        public static string updateMI = "Update Mediainfo of local file(s)";
+        public static string updateMI = "Update Media Info";
         public static string insertDisk = "Please insert Disk";
         public static string OK = "OK";
         public static string Cancel = "Cancel";
@@ -106,7 +107,7 @@ namespace WindowPlugins.GUITVSeries
         public static string RatingStar = "Star";
         public static string RatingStars = "Stars";
         public static string ChangeView = "Change View";
-        public static string ChangeViewFast = "Immediatly Change Views";
+        public static string ChangeViewFast = "Immediately Change Views";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
@@ -119,7 +120,7 @@ namespace WindowPlugins.GUITVSeries
         public static string CFS_Available_Series = "Available Series";
         public static string CFS_Select_Correct_Subtitle_Version = "Select desired subtitles version";
         public static string CFS_Select_Version = "Version:";
-        public static string CFS_Choose_Correct_Episode = "Choose Corret Episode";
+        public static string CFS_Choose_Correct_Episode = "Choose Correct Episode";
         public static string CFS_Local_Episode_Index = "Local Episiode index:";
         public static string CFS_Available_Episode_List = "Available Episode list:";
         public static string CFS_Choose_Search_Site = "Choose search site:";
@@ -141,7 +142,7 @@ namespace WindowPlugins.GUITVSeries
             string lang = DBOption.GetOptions(DBOption.cLanguage);
             if (lang.Length == 0)
             {
-                MPTVSeriesLog.Write("No Translation selected, using fall back English");
+                MPTVSeriesLog.Write("No Translation selected, falling back to English");
                 lang = "en(us)";
                 DBOption.SetOptions(DBOption.cLanguage, lang);
             }
@@ -209,6 +210,10 @@ namespace WindowPlugins.GUITVSeries
         {
             List<string> langs = new List<string>();
             path = Settings.GetPath(Settings.Path.lang);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
             foreach (string file in System.IO.Directory.GetFiles(path, "*.xml"))
             {
                 langs.Add(System.IO.Path.GetFileNameWithoutExtension(file));

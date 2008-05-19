@@ -64,7 +64,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                MPTVSeriesLog.Write("Attempting to play: ", episode[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Attempting to play: ", episode[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
                 // don't have this file !
                 if (episode[DBEpisode.cFilename].ToString().Length == 0)
                     return false;
@@ -105,7 +105,7 @@ namespace WindowPlugins.GUITVSeries
                 #region Ask user to Resume
                 if (timeMovieStopped > 0)
                 {
-                    MPTVSeriesLog.Write("Asking user to resume..." + Utils.SecondsToHMSString(timeMovieStopped));
+                    MPTVSeriesLog.Write("Asking user to resume episode from: " + Utils.SecondsToHMSString(timeMovieStopped));
                     GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                     
                     if (null != dlgYesNo)
@@ -120,9 +120,9 @@ namespace WindowPlugins.GUITVSeries
                             timeMovieStopped = 0;
                             m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                             m_currentEpisode.Commit();
-                            MPTVSeriesLog.Write("User selected to start from beginning...");
+                            MPTVSeriesLog.Write("User selected to start episode from beginning",MPTVSeriesLog.LogLevel.Debug);
                         }
-                        else MPTVSeriesLog.Write("User selected resume from last time...");
+                        else MPTVSeriesLog.Write("User selected to resume episode",MPTVSeriesLog.LogLevel.Debug);
                     }                    
                 }
                 #endregion
@@ -303,10 +303,10 @@ namespace WindowPlugins.GUITVSeries
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
                 if ((Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
-                    MPTVSeriesLog.Write("Episode not rated yet.");
+                    MPTVSeriesLog.Write("Episode not rated yet");
                     if(RateRequestOccured != null)
                         RateRequestOccured.Invoke(m_currentEpisode);
-                } else MPTVSeriesLog.Write("Episode already rated or option not set.");
+                } else MPTVSeriesLog.Write("Episode has already been rated or option not set");
             }
             SetGUIProperties(true); // clear GUI Properties          
         }

@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
         }
         public static List<parseResult> Parse(List<PathPair> files, bool includeFailed)
         {
-            MPTVSeriesLog.Write(string.Format("Local Filename Parsing starting, processing {0} files...", files.Count.ToString()));
+            MPTVSeriesLog.Write(string.Format("Starting Local Filename Parsing, processing {0} files", files.Count.ToString()));
             List<parseResult> results = new List<parseResult>();
             parseResult progressReporter;
             int nFailed = 0;
@@ -105,7 +105,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception)
                 {
-                    MPTVSeriesLog.Write("Warning: Could not add VolumenLabel/IsOnRemovable Property to episode - are you using these as a capture group?");
+                    MPTVSeriesLog.Write("Warning: Could not add Volume Label/Removable Property to episode - are you using these as a capture group?");
                 }
 
                 item = new ListViewItem(file.m_sMatch_FileName);
@@ -126,13 +126,13 @@ namespace WindowPlugins.GUITVSeries
                             nFailed++;
                             progressReporter.failedAirDate = true;
                             progressReporter.success = false;
-                            progressReporter.exception = "Airdate not valid";
+                            progressReporter.exception = "Air Date is not valid";
                         }
                     }
                     else
                     {
                         progressReporter.success = false;
-                        progressReporter.exception = "Parsing failed for " + file;
+                        progressReporter.exception = "Parsing failed for: " + file;
 
                         nFailed++;
                     }
@@ -147,7 +147,7 @@ namespace WindowPlugins.GUITVSeries
                         nFailed++;
                         progressReporter.failedSeason = true;
                         progressReporter.success = false;
-                        progressReporter.exception += "Season not numerical ";
+                        progressReporter.exception += "Season is not numerical ";
                     }
                     try { Convert.ToInt32(parser.Matches[DBEpisode.cEpisodeIndex]); }
                     catch (System.FormatException)
@@ -155,7 +155,7 @@ namespace WindowPlugins.GUITVSeries
                         nFailed++;
                         progressReporter.failedEpisode = true;
                         progressReporter.success = false;
-                        progressReporter.exception += "Episode not numerical ";
+                        progressReporter.exception += "Episode is not numerical ";
                     }
                 }
 
@@ -165,7 +165,7 @@ namespace WindowPlugins.GUITVSeries
                 if(includeFailed ||progressReporter.success)
                     results.Add(progressReporter);
             }
-            MPTVSeriesLog.Write("ParseLocal finished..");
+            MPTVSeriesLog.Write("Finished Local Filename Parsing");
             return results;
         }
 

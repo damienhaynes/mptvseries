@@ -178,14 +178,14 @@ namespace WindowPlugins.GUITVSeries.MathParser
             }
             if (null != result)
             {
-                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result: {0} = {1}", expression, result.ToString()));
+                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result: {0} = {1}", expression, result.ToString()), MPTVSeriesLog.LogLevel.Debug);
                 lock (cache)
                     if (!cache.ContainsKey(expression)) // another thread might have added it in the meantime
                         cache.Add(expression, result.ToString());
             }
             else if (stringResult != null)
             {
-                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result as String: {0} = {1}", expression, stringResult));
+                MPTVSeriesLog.Write(String.Format("Mathparser: Total Result as String: {0} = {1}", expression, stringResult), MPTVSeriesLog.LogLevel.Debug);
                 lock (cache)
                     if (!cache.ContainsKey(expression)) // another thread might have added it in the meantime
                         cache.Add(expression, stringResult);
@@ -319,7 +319,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
                     return no1 % no2;
                 case atomicOperationType.pow:
                     //return Math.Pow((double)no1, no2);
-                default: MPTVSeriesLog.Write("MathParser: Unknown operand: " + m.Groups["type"].Value);
+                default: MPTVSeriesLog.Write("MathParser: Unknown operand: " + m.Groups["type"].Value, MPTVSeriesLog.LogLevel.Debug);
                     break;
             }
 

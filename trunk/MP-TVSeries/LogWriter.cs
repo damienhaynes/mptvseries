@@ -102,8 +102,10 @@ namespace WindowPlugins.GUITVSeries
             int.TryParse(DBOption.GetOptions("logLevel"), out level);
             selectedLogLevel = (LogLevel)level;
             pauseAutoWriteDB = true;
-            Write("MPTVSeries Version: " + Settings.Version);
-            Write("MPTVSeries BuildDate: " + Settings.BuildDate);
+
+            string[] ver = Settings.Version.ToString().Split(new char[] { '.' });            
+            Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
+            Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
 

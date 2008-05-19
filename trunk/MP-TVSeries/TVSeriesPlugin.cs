@@ -393,7 +393,7 @@ namespace MediaPortal.GUI.Video
             {
                 if (mode == GUIFacadeControl.ViewMode.AlbumView)
                 {
-                    MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons");
+                    MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons",MPTVSeriesLog.LogLevel.Debug);
                     this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
                 }
                 this.dummyThumbnailGraphicalMode.Visible = mode == GUIFacadeControl.ViewMode.AlbumView; // so you can trigger animations
@@ -429,7 +429,7 @@ namespace MediaPortal.GUI.Video
         void bgLoadFacade()*/
         void LoadFacade()
         {      
-            MPTVSeriesLog.Write("Begin LoadFacade");
+            MPTVSeriesLog.Write("Begin LoadFacade",MPTVSeriesLog.LogLevel.Debug);
             try
             {
                 if (m_nInitialIconXOffset == 0)
@@ -444,7 +444,7 @@ namespace MediaPortal.GUI.Video
                 if (this.m_Facade.ThumbnailView != null)
                     this.m_Facade.ThumbnailView.Clear();
                 bool bEmpty = true;
-                MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 setCurPositionLabel();
                 // always clear all fields
                 switch (this.listLevel)
@@ -537,7 +537,7 @@ namespace MediaPortal.GUI.Video
                             }
                             // view handling
                             List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeries: ", seriesList.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
                             
                             foreach (DBSeries series in seriesList)
                             {
@@ -631,7 +631,7 @@ namespace MediaPortal.GUI.Video
 
                             // view handling
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopSeason: ", seasons.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} seasons", seasons.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
                             bool canBeSkipped = seasons.Count == 1;
                             foreach (DBSeason season in seasons)
                             {
@@ -716,7 +716,7 @@ namespace MediaPortal.GUI.Video
                             bool bFindNext = false;
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write("LoadFacade: BeginDisplayLoopEp: ", episodesToDisplay.Count.ToString(), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} episodes", episodesToDisplay.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
                             GUIListItem item = null;
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
@@ -809,7 +809,7 @@ namespace MediaPortal.GUI.Video
                             }
 
                         }
-                        MPTVSeriesLog.Write("LoadFacade: Finish");
+                        MPTVSeriesLog.Write("LoadFacade: Finish",MPTVSeriesLog.LogLevel.Debug);
                         break;
                     #endregion
                 }
@@ -1368,8 +1368,8 @@ namespace MediaPortal.GUI.Video
 
                             selectedSeries.Banner = selectedSeries.BannerList[nCurrent];
                             selectedSeries.Commit();
-                            LoadFacade();
-                        }
+                            LoadFacade();                          
+                        }                                                
                         break;
 
                         case (int)eContextItems.cycleSeasonBanner:
@@ -1808,7 +1808,7 @@ namespace MediaPortal.GUI.Video
         void switchView(logicalView view)
         {
             if (view == null) view = m_allViews[0]; // view was removed or something
-            MPTVSeriesLog.Write("Switching logical view to " + view.Name);
+            MPTVSeriesLog.Write("Switching view to " + view.Name);
             m_CurrLView = view;            
 
             if (fanartSet) loadFanart(null);
@@ -1848,7 +1848,7 @@ namespace MediaPortal.GUI.Video
                     if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
                     break;
             }
-            MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString());
+            MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(),MPTVSeriesLog.LogLevel.Debug);
         }
 
         void resetListLevelDummies()
@@ -2009,7 +2009,7 @@ namespace MediaPortal.GUI.Video
                         }
                         if (f != null && f.Found)
                         {
-                            MPTVSeriesLog.Write("Fanart: found, loading: ", f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write("Fanart found, loading: ", f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
                             FanartBackground.SetFileName(f.RandomFanartAsTexture);
                             //FanartBackground.Visible = true;
                             if (this.dummyIsLightFanartLoaded != null)
@@ -2029,7 +2029,7 @@ namespace MediaPortal.GUI.Video
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Fanart: Problem encountered: " + ex.Message, MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Failed to load Fanart: " + ex.Message, MPTVSeriesLog.LogLevel.Normal);
                 return false;
             }
         }
@@ -2050,7 +2050,7 @@ namespace MediaPortal.GUI.Video
                         m_stepSelection = new string[] { this.m_Facade.SelectedListItem.Label };
                         m_stepSelections.Add(m_stepSelection);
                         m_stepSelectionPretty.Add(this.m_Facade.SelectedListItem.Label);
-                        MPTVSeriesLog.Write("Selected: ", this.m_Facade.SelectedListItem.Label, MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Selected: ", this.m_Facade.SelectedListItem.Label, MPTVSeriesLog.LogLevel.Debug);
                         LoadFacade();
                         this.m_Facade.Focus = true;
                         break;
@@ -2061,8 +2061,8 @@ namespace MediaPortal.GUI.Video
                         m_stepSelection = new string[] { m_SelectedSeries[DBSeries.cID].ToString() };
                         m_stepSelections.Add(m_stepSelection);
                         m_stepSelectionPretty.Add(this.m_SelectedSeries.ToString());
-                        MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Normal);
-                        MPTVSeriesLog.Write("Fanart: Series selected");
+                        MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("Fanart: Series selected",MPTVSeriesLog.LogLevel.Debug);
                         this.loadFanart(m_SelectedSeries);
                         this.LoadFacade();
                         this.m_Facade.Focus = true;
@@ -2075,15 +2075,15 @@ namespace MediaPortal.GUI.Video
                         m_stepSelection = new string[] { m_SelectedSeason[DBSeason.cSeriesID].ToString(), m_SelectedSeason[DBSeason.cIndex].ToString() };
                         m_stepSelections.Add(m_stepSelection);
                         m_stepSelectionPretty.Add(m_SelectedSeason[DBSeason.cIndex] == 0 ? Translation.specials : Translation.Season + " " + m_SelectedSeason[DBSeason.cIndex]);
-                        MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Debug);
                         this.LoadFacade();
-                        MPTVSeriesLog.Write("Fanart: Season selected");
+                        MPTVSeriesLog.Write("Fanart: Season selected",MPTVSeriesLog.LogLevel.Debug);
                         this.loadFanart(m_SelectedSeason);
                         this.m_Facade.Focus = true;
                         break;
                     case Listlevel.Episode:
                         this.m_SelectedEpisode = (DBEpisode)this.m_Facade.SelectedListItem.TVTag;
-                        MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
                         m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);                        
                         break;
                 }
@@ -2521,7 +2521,7 @@ namespace MediaPortal.GUI.Video
             List<DBEpisode> episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep, m_stepSelection);
             DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count)];
 
-            MPTVSeriesLog.Write("Randomly Selected: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("Selected Random Episode: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
             // removed the if statement here to mimic functionality when an episode is selected
             // via the regular UI, since watched flag is now set after viewing (is this right?)

@@ -451,7 +451,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             UpdateStatus(updateStatusEps);
-            MPTVSeriesLog.Write(parsedFiles.Count.ToString() + " local files found that sucessfully parsed and are not already in Database, now adding/upading Database");
+            MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
             List<DBSeason> relatedSeasons = new List<DBSeason>();
@@ -568,7 +568,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void GetSeries()
-        {
+        {                
+
             MPTVSeriesLog.Write(bigLogMessage("Identifying Unknown Series Online"));
 
             SQLCondition condition = null;
@@ -593,9 +594,9 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
             if(seriesList.Count > 0)
-                MPTVSeriesLog.Write(string.Format("Found {0} Unknown Series, attempting to identify them now...", seriesList.Count));
+                MPTVSeriesLog.Write(string.Format("Found {0} unknown Series, attempting to identify them now", seriesList.Count));
             else
-                MPTVSeriesLog.Write("All Series are already identified.");
+                MPTVSeriesLog.Write("All Series are already identified");
 
             foreach (DBSeries series in seriesList) {
                 if (worker.CancellationPending)
@@ -660,7 +661,7 @@ namespace WindowPlugins.GUITVSeries
 
         public DBOnlineSeries SearchForSeries(string seriesName) {
             string nameToSearch = seriesName;
-            
+                                                
             while (true) {
                 // query online db for possible matches
                 GetSeries GetSeriesParser = new GetSeries(nameToSearch);
@@ -737,7 +738,7 @@ namespace WindowPlugins.GUITVSeries
 
                         case Feedback.ReturnCode.OK:
                             DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-
+          
                             // Show the Virtual Keyboard to manual enter in name to search
                             // For use with-in Media Portal only, config already allow you to re-enter search.
                             /*if (selectedSeries == null && !Settings.isConfig)
@@ -766,7 +767,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                             else
                             {
-                                MPTVSeriesLog.Write(string.Format("User matched \"{0}\" to \"{1}\" (SeriesID: {2})", nameToSearch, selectedSeries.ToString(), selectedSeries[DBOnlineSeries.cID]));
+                                MPTVSeriesLog.Write(string.Format("\"{0}\" was manually matched to \"{1}\" (SeriesID: {2})", nameToSearch, selectedSeries.ToString(), selectedSeries[DBOnlineSeries.cID]));
                                 return selectedSeries;
                             }
                             break;
@@ -779,7 +780,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
                     }
                 }
-                if (!bKeepTrying) MPTVSeriesLog.Write("User typed a new Search term: \"" + nameToSearch + "\"");
+                if (!bKeepTrying) MPTVSeriesLog.Write("User typed a new Search term: \"" + nameToSearch + "\"",MPTVSeriesLog.LogLevel.Debug);
             }            
         }
 
@@ -790,7 +791,7 @@ namespace WindowPlugins.GUITVSeries
                 List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
                 if (episodeOrders.Count > 1)
                 {
-                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count));
+                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count),MPTVSeriesLog.LogLevel.Debug);
                     // let the user choose
                     string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
                                       "Note that your file numbering must match the option you choose here." + Environment.NewLine +
@@ -814,8 +815,11 @@ namespace WindowPlugins.GUITVSeries
                     if (result == WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK)
                     {
                         series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
+                        MPTVSeriesLog.Write(string.Format("{0} order option chosen for series \"{1}\"", (string)selectedOrdering.m_Tag, series.ToString()), MPTVSeriesLog.LogLevel.Normal);
                     }
                 }
+                else
+                    MPTVSeriesLog.Write(string.Format("Aired order option chosen for series \"{0}\"", series.ToString()), MPTVSeriesLog.LogLevel.Normal);
 
             }
             catch (Exception)
@@ -920,7 +924,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            else MPTVSeriesLog.Write("Nothing to do...");
+            else MPTVSeriesLog.Write("Nothing to do");
         }
 
         public void GetEpisodes()
@@ -962,7 +966,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
                     if (episodesParser.Results.Count > 0)
                     {
-                        MPTVSeriesLog.Write(string.Format("Found {0} Episodes for \"{1}\", matching them up with local Episodes now", episodesParser.Results.Count, series.ToString()));
+                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\", matching them up with local episodes now", episodesParser.Results.Count, series.ToString()));
                         // look for the episodes for that series, and compare / update the values
                         matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                     }
@@ -1067,7 +1071,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true)
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for EpisodeThumbnails..."));
+                MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"));
                 // get a list of all the episodes with thumbnailUrl
                 SQLCondition condition = new SQLCondition();
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, string.Empty, SQLConditionType.NotEqual);
@@ -1095,7 +1099,7 @@ namespace WindowPlugins.GUITVSeries
 
                             if (!File.Exists(completePath))
                             {
-                                MPTVSeriesLog.Write(string.Format("New EpisodeImage found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
+                                MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
                                 try
@@ -1131,7 +1135,7 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries)
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for banners for series without any banners"));
+                MPTVSeriesLog.Write(bigLogMessage("Checking banners for series without any banners"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
                 condition.nextIsOr = true;
@@ -1179,8 +1183,9 @@ namespace WindowPlugins.GUITVSeries
                 //}
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
+                String sHighestRatedSeriesBanner = String.Empty;
 
-                //seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);
+                //seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);                
                 seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
                 if (seriesBanners != null)  // oops!
                 {
@@ -1200,17 +1205,21 @@ namespace WindowPlugins.GUITVSeries
                                 series[DBOnlineSeries.cBannerFileNames] += "|" + bannerSeries.sBannerFileName;
                             }
                         }
-                        // prefer graphical
+                        // Prefer the highest rated, localized, graphical banner
                         if (bannerSeries.sBannerLang == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
                         {
                             if (bannerSeries.bGraphical)
+                            {
+                                if (bannerSeries.bHighestRated)
+                                    sHighestRatedSeriesBanner = bannerSeries.sBannerFileName;                                
                                 sLastGraphicalBanner = bannerSeries.sBannerFileName;
+                            }
                             else
                                 sLastTextBanner = bannerSeries.sBannerFileName;
                             hasOwnLang = true;
                         }
                         else if(!hasOwnLang)
-                        {
+                        {                            
                             if (bannerSeries.bGraphical)
                                 sLastGraphicalBanner = bannerSeries.sBannerFileName;
                             else
@@ -1218,22 +1227,28 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
 
+                    // Don't override user selection of banner
                     if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Trim().Length == 0)
                     {
-                        // use the last banner as the current one (if any graphical found)
-                        // otherwise use the first available
-                        if (sLastGraphicalBanner.Length > 0)
+                        // Use highest rated banner if one found                                                                  
+                        if (sHighestRatedSeriesBanner.Length > 0)
+                            series[DBOnlineSeries.cCurrentBannerFileName] = sHighestRatedSeriesBanner;
+                        // Use the last banner as the current one (if any graphical found)
+                        else if(sLastGraphicalBanner.Length > 0)
                             series[DBOnlineSeries.cCurrentBannerFileName] = sLastGraphicalBanner;
-                        else
+                        else // otherwise use the first available 
                             series[DBOnlineSeries.cCurrentBannerFileName] = sLastTextBanner;
                     }
 
                     //series[DBOnlineSeries.cBannersDownloaded] = 2;
                     series.Commit();
-                    string lastSeasonBanner = string.Empty;
+                    
                     hasOwnLang = false;
                     foreach (BannerSeason bannerSeason in seriesBanners.seasonBanners)
                     {
+                        string lastSeasonBanner = string.Empty;
+                        string sHighestRatedSeasonBanner = String.Empty;
+
                         DBSeason season = new DBSeason(series[DBSeries.cID], Int32.Parse(bannerSeason.sSeason));
                         if (season[DBSeason.cBannerFileNames].ToString().IndexOf(bannerSeason.sBannerFileName) == -1)
                         {
@@ -1251,6 +1266,8 @@ namespace WindowPlugins.GUITVSeries
      
                         if (bannerSeason.sBannerLang == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
                         {
+                            if (bannerSeason.bHighestRated)
+                                sHighestRatedSeasonBanner = bannerSeason.sBannerFileName;
                             lastSeasonBanner = bannerSeason.sBannerFileName;
                             hasOwnLang = true;
                         }
@@ -1258,9 +1275,17 @@ namespace WindowPlugins.GUITVSeries
                         {
                             lastSeasonBanner = bannerSeason.sBannerFileName;
                         }
-                        // use the last banner as the current one
+                        
+                        // Prefer highest rated banner as current                        
                         if (season[DBSeason.cCurrentBannerFileName].ToString().Trim().Length == 0)
-                            season[DBSeason.cCurrentBannerFileName] = lastSeasonBanner;
+                        {
+                            if (sHighestRatedSeasonBanner.Length > 0)
+                            {
+                                season[DBSeason.cCurrentBannerFileName] = sHighestRatedSeasonBanner;
+                            }
+                            else
+                                season[DBSeason.cCurrentBannerFileName] = lastSeasonBanner;
+                        }
                         season.Commit();
                     }
                     

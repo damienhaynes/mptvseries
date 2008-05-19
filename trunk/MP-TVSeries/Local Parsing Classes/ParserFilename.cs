@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries
             bool error = false;
             try
             {
-                MPTVSeriesLog.Write("Compiling Regex...");
+                MPTVSeriesLog.Write("Compiling Parsing Expressions");
                 sExpressions.Clear();
                 regularExpressions.Clear();
                 replacements.Clear();
@@ -108,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
-                MPTVSeriesLog.Write("Compiled Regex sucessfuly, " + sExpressions.Count.ToString() + " valid Expressions found");
+                MPTVSeriesLog.Write("Finished Compiling Parsing Expressions, found " + sExpressions.Count.ToString() + " valid expressions");
             }
             catch (Exception ex)
             {
