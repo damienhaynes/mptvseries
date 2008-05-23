@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if(!isValid(fromInput()))
             {
-                MessageBox.Show("You need to fill out at least the Search Rule");
+                MessageBox.Show("You need to create at least one Formatting Rule first!");
                 return;
             }
             if (selected == null)
@@ -186,7 +186,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         w.WriteLine(string.Format("<Enabled>{0}<Format>{1}<FormatAs>{2}", dbf[DBFormatting.cEnabled], dbf[DBFormatting.cReplace], dbf[DBFormatting.cWith]));
                     }
                     w.Flush();
-                    MessageBox.Show(list.Items.Count.ToString() + " Formatting Rules Exported!");
+                    MPTVSeriesLog.Write(list.Items.Count.ToString() + " Formatting Rules Exported",MPTVSeriesLog.LogLevel.Normal);
                 }
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         }
                     }
 
-                    MessageBox.Show(imports.Count.ToString() + " Formatting Rules Imported!");
+                    MPTVSeriesLog.Write(imports.Count.ToString() + " Formatting Rules Imported",MPTVSeriesLog.LogLevel.Normal);
                 }
             }
             catch (Exception ex)
@@ -264,6 +264,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 DBFormatting.cache = new DBFormatting[] { current };
                 this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, ep, true, true);
                 DBFormatting.cache = null;
+            }
+        }
+
+        private void btnFRDeleteAll_Click(object sender, EventArgs e)
+        {
+            if (list.Items.Count > 0)
+            {
+                if (MessageBox.Show("Are you sure you want to delete all Formatting Rules?", "Confirm", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+                
+                DBFormatting.ClearAll();
+                list.Items.Clear();
+                enableControls(false);
             }
         }
     }

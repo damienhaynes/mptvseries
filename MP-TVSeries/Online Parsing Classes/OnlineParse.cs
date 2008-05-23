@@ -789,9 +789,9 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-                if (episodeOrders.Count > 1)
+                if (episodeOrders.Count > 1 && (DBOption.GetOptions(DBOption.cAutoChooseOrder) == 0))
                 {
-                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count),MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count), MPTVSeriesLog.LogLevel.Debug);
                     // let the user choose
                     string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
                                       "Note that your file numbering must match the option you choose here." + Environment.NewLine +
@@ -819,7 +819,11 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 else
+                {
+                    if (series[DBOnlineSeries.cEpisodeOrders] != "")                    
+                        series[DBOnlineSeries.cChoseEpisodeOrder] = "Aired";                                            
                     MPTVSeriesLog.Write(string.Format("Aired order option chosen for series \"{0}\"", series.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                }
 
             }
             catch (Exception)

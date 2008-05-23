@@ -118,7 +118,7 @@ namespace WindowPlugins.GUITVSeries
                             cache[index].Read(ref results, index);                            
                         }
                     }
-                    MPTVSeriesLog.Write("Found and loaded " + results.Rows.Count + " User Formatting Rules");
+                    MPTVSeriesLog.Write("Found and loaded " + results.Rows.Count + " User Formatting Rules",MPTVSeriesLog.LogLevel.Debug);
                     if (results.Rows.Count == 0) cache = new DBFormatting[0];
                     
                 }

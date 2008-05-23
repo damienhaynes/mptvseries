@@ -50,6 +50,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
+        public const String cAutoChooseOrder = "AutoChooseOrder";
         public const String cLocalDataOverride = "LocalDataOverride";
         public const String cAutoScanLocalFiles = "AutoScanLocalFiles";
         public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
@@ -183,6 +184,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cAutoChooseSeries) == null)
                     SetOptions(cAutoChooseSeries, false);
+                
+                if (GetOptions(cAutoChooseOrder) == null)
+                    SetOptions(cAutoChooseOrder, false);
 
                 if (GetOptions(cLocalDataOverride) == null)
                     SetOptions(cLocalDataOverride, true);

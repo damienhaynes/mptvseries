@@ -631,7 +631,7 @@ namespace MediaPortal.GUI.Video
 
                             // view handling
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write(string.Format("Displaying {0} seasons", seasons.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(),m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             bool canBeSkipped = seasons.Count == 1;
                             foreach (DBSeason season in seasons)
                             {
@@ -696,13 +696,13 @@ namespace MediaPortal.GUI.Video
                             // if there is only one season to display, skip directly to the episodes list
                             if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
                             {
-                                MPTVSeriesLog.Write("Skipping season display");
+                                MPTVSeriesLog.Write("Skipping season display",MPTVSeriesLog.LogLevel.Debug);
                                 OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
                             }
                             else if (seasons.Count == 1)
                             {
                                 // we're back from the ep list, go up one hierarchy more (depending on view, most likly series)
-                                MPTVSeriesLog.Write("Skipping season display");
+                                MPTVSeriesLog.Write("Skipping season display",MPTVSeriesLog.LogLevel.Debug);
                                 OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                             }
                         }
@@ -716,7 +716,7 @@ namespace MediaPortal.GUI.Video
                             bool bFindNext = false;
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write(string.Format("Displaying {0} episodes", episodesToDisplay.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             GUIListItem item = null;
                             foreach (DBEpisode episode in episodesToDisplay)
                             {

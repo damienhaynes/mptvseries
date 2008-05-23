@@ -1099,7 +1099,7 @@ namespace WindowPlugins.GUITVSeries
                 m_db.Execute("PRAGMA temp_store = MEMORY;");
 
                 // Indicies are now created when the tables exists
-                //m_db.CreateDBIndices("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
+                //m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
                 //m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
                 //m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
                 //m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
