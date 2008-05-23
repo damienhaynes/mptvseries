@@ -163,6 +163,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
+            checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);
             checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
@@ -3075,7 +3076,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (string logoRule in localLogos.getFromDB())
                     w.WriteLine(logoRule);
                 w.Close();
-                MessageBox.Show("Logos succesfully exported!");
+                MPTVSeriesLog.Write(String.Format("{0} Logos succesfully exported",lstLogos.Items.Count));
             }
         }
 
@@ -3101,7 +3102,7 @@ namespace WindowPlugins.GUITVSeries
                 lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
                 r.Close();
 
-                MessageBox.Show("Logos sucessfully imported");
+                MPTVSeriesLog.Write(string.Format("{0} Logos sucessfully imported",lstLogos.Items.Count));
             }
         }
 
@@ -3226,8 +3227,23 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
         }
 
+        private void btnLogoDeleteAll_Click(object sender, EventArgs e)
+        {
+            if (lstLogos.Items.Count > 0)
+            {
+                if (MessageBox.Show("Are you sure you want to delete all Logo Rules?", "Confirm", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
 
+                List<string> entries = new List<string>();
+                localLogos.saveToDB(entries);
+                lstLogos.Items.Clear();
+            }
+        }
 
+        private void checkBox_AutoChooseOrder_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoChooseOrder, checkBox_AutoChooseOrder.Checked);
+        }      
     }
 
     public class BannerComboItem

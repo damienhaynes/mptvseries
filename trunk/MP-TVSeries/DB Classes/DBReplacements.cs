@@ -80,6 +80,13 @@ namespace WindowPlugins.GUITVSeries
                             replacement[DBReplacements.cToReplace] = "-<space>";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
+                                                        
+                            /*replacement[DBReplacements.cIndex] = "3";
+                            replacement[DBReplacements.cBefore] = "0";
+                            replacement[DBReplacements.cToReplace] = "<space>s<space>";
+                            replacement[DBReplacements.cWith] = @"'s<space>";
+                            replacement.Commit();*/
+
                             // to avoid being parsed as second episode 20/80
                             replacement[DBReplacements.cIndex] = "3";
                             replacement[DBReplacements.cBefore] = "1";

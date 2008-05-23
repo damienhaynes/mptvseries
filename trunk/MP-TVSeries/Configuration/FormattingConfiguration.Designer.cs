@@ -44,6 +44,7 @@
             this.textReplace = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnFRDeleteAll = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,6 +61,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnFRDeleteAll);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.linkLabel3);
@@ -89,7 +91,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(529, 20);
-            this.textBox1.TabIndex = 12;
+            this.textBox1.TabIndex = 13;
             // 
             // label3
             // 
@@ -97,16 +99,16 @@
             this.label3.Location = new System.Drawing.Point(7, 235);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
-            this.label3.TabIndex = 11;
+            this.label3.TabIndex = 12;
             this.label3.Text = "Result:";
             // 
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(282, 123);
+            this.linkLabel3.Location = new System.Drawing.Point(145, 123);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(46, 13);
-            this.linkLabel3.TabIndex = 10;
+            this.linkLabel3.TabIndex = 3;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "Export...";
             this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
@@ -114,22 +116,21 @@
             // lnkImport
             // 
             this.lnkImport.AutoSize = true;
-            this.lnkImport.Location = new System.Drawing.Point(231, 123);
+            this.lnkImport.Location = new System.Drawing.Point(94, 123);
             this.lnkImport.Name = "lnkImport";
             this.lnkImport.Size = new System.Drawing.Size(45, 13);
-            this.lnkImport.TabIndex = 9;
+            this.lnkImport.TabIndex = 2;
             this.lnkImport.TabStop = true;
             this.lnkImport.Text = "Import...";
             this.lnkImport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkImport_LinkClicked);
             // 
             // linkLabel1
             // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(335, 123);
+            this.linkLabel1.Location = new System.Drawing.Point(197, 123);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(38, 13);
-            this.linkLabel1.TabIndex = 8;
+            this.linkLabel1.TabIndex = 4;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "New...";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
@@ -140,7 +141,7 @@
             this.button2.Location = new System.Drawing.Point(379, 118);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
+            this.button2.TabIndex = 6;
             this.button2.Text = "Delete";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -151,7 +152,7 @@
             this.btnAdd.Location = new System.Drawing.Point(460, 118);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 6;
+            this.btnAdd.TabIndex = 7;
             this.btnAdd.Text = "Save";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
@@ -162,7 +163,7 @@
             this.label2.Location = new System.Drawing.Point(6, 192);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(102, 13);
-            this.label2.TabIndex = 5;
+            this.label2.TabIndex = 10;
             this.label2.Text = "in the following way:";
             // 
             // label1
@@ -171,7 +172,7 @@
             this.label1.Location = new System.Drawing.Point(6, 146);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 4;
+            this.label1.TabIndex = 8;
             this.label1.Text = "Format:";
             // 
             // checkEnabled
@@ -180,7 +181,7 @@
             this.checkEnabled.Location = new System.Drawing.Point(6, 122);
             this.checkEnabled.Name = "checkEnabled";
             this.checkEnabled.Size = new System.Drawing.Size(65, 17);
-            this.checkEnabled.TabIndex = 3;
+            this.checkEnabled.TabIndex = 1;
             this.checkEnabled.Text = "Enabled";
             this.checkEnabled.UseVisualStyleBackColor = true;
             // 
@@ -191,7 +192,7 @@
             this.txtWith.Location = new System.Drawing.Point(6, 210);
             this.txtWith.Name = "txtWith";
             this.txtWith.Size = new System.Drawing.Size(529, 20);
-            this.txtWith.TabIndex = 2;
+            this.txtWith.TabIndex = 11;
             this.txtWith.TextChanged += new System.EventHandler(this.txtWith_TextChanged);
             // 
             // textReplace
@@ -201,7 +202,7 @@
             this.textReplace.Location = new System.Drawing.Point(6, 164);
             this.textReplace.Name = "textReplace";
             this.textReplace.Size = new System.Drawing.Size(529, 20);
-            this.textReplace.TabIndex = 1;
+            this.textReplace.TabIndex = 9;
             this.textReplace.TextChanged += new System.EventHandler(this.textReplace_TextChanged);
             // 
             // saveFileDialog1
@@ -211,6 +212,17 @@
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "Format Rules (*.formatRules)|*.formatRules|All Files (*.*)|*.*";
+            // 
+            // btnFRDeleteAll
+            // 
+            this.btnFRDeleteAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFRDeleteAll.Location = new System.Drawing.Point(298, 118);
+            this.btnFRDeleteAll.Name = "btnFRDeleteAll";
+            this.btnFRDeleteAll.Size = new System.Drawing.Size(75, 23);
+            this.btnFRDeleteAll.TabIndex = 5;
+            this.btnFRDeleteAll.Text = "Delete All";
+            this.btnFRDeleteAll.UseVisualStyleBackColor = true;
+            this.btnFRDeleteAll.Click += new System.EventHandler(this.btnFRDeleteAll_Click);
             // 
             // FormattingConfiguration
             // 
@@ -243,5 +255,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnFRDeleteAll;
     }
 }
