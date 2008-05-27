@@ -68,11 +68,9 @@ namespace WindowPlugins.GUITVSeries
         #region Constructor
         static MPTVSeriesLog()
         {
-            //#if TEST
-            //m_filename =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            //m_filename += @"\MP-TVSeries.log";
-            //#endif
-
+            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
+                return;
+ 
             // let's rename the old one to .bak just like MP does
             try
             {
@@ -102,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
             int.TryParse(DBOption.GetOptions("logLevel"), out level);
             selectedLogLevel = (LogLevel)level;
             pauseAutoWriteDB = true;
-
+            
             string[] ver = Settings.Version.ToString().Split(new char[] { '.' });            
             Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
             Write("MP-TVSeries Build Date: " + Settings.BuildDate);

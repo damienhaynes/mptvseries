@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
-            this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+            //this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString(); //this is now in the about screen
 
             // set height/width
             int height = DBOption.GetOptions("configSizeHeight");

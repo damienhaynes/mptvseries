@@ -1073,7 +1073,7 @@ namespace WindowPlugins.GUITVSeries
     // holds the SQLLite object and the log object.
     public class DBTVSeries
     {
-        #region private & init stuff
+        #region private & init stuff        
         private static SQLiteClient m_db = null;
         private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
 
@@ -1083,6 +1083,9 @@ namespace WindowPlugins.GUITVSeries
 
         private static void InitDB()
         {
+            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
+                return;
+
             String databaseFile = string.Empty;
 
             databaseFile = Settings.GetPath(Settings.Path.database);
