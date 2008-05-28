@@ -984,7 +984,7 @@ namespace MediaPortal.GUI.Video
         internal static void showRatingsDialog(DBTable item, bool auto)
         {
             if (item == null) return;
-            MPTVSeriesLog.Write("asking to rate");
+            MPTVSeriesLog.Write("Asking to rate",MPTVSeriesLog.LogLevel.Debug);
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
   
             dlg.Reset();
@@ -1020,8 +1020,11 @@ namespace MediaPortal.GUI.Video
             if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return;// cancelled
             if (dlg.SelectedId == 11 && auto) DBOption.SetOptions(DBOption.cAskToRate, false);
             else
-            {
+            {                
                 item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
+                // Set the all user rating if not already set                
+                if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
+                    item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = dlg.SelectedId;
                 item.Commit();
             }
 
@@ -1306,10 +1309,12 @@ namespace MediaPortal.GUI.Video
                                 {
                                     case Listlevel.Episode:
                                         showRatingsDialog(m_SelectedEpisode, false);
+                                        MPTVSeriesLog.Write(string.Format("Setting rating of {0} to: {1}/10", m_SelectedEpisode, m_SelectedEpisode[DBOnlineEpisode.cMyRating]));
                                         break;
                                     case Listlevel.Series:
                                     case Listlevel.Season:
                                         showRatingsDialog(m_SelectedSeries, false);
+                                        MPTVSeriesLog.Write(string.Format("Setting rating of {0} to: {1}/10", m_SelectedSeries, m_SelectedSeries[DBOnlineSeries.cMyRating]));
                                         break;
                                 }
                                 LoadFacade();                                
@@ -1488,16 +1493,18 @@ namespace MediaPortal.GUI.Video
                             {
                                 case Listlevel.Series:
                                     selectedSeries[DBSeries.cHidden] = true;
+                                    MPTVSeriesLog.Write(string.Format("Hiding episode {0} from view", m_SelectedSeries));
                                     selectedSeries.Commit();
                                     break;
 
                                 case Listlevel.Season:
-                                    selectedSeason[DBSeason.cHidden] = true;
+                                    selectedSeason[DBSeason.cHidden] = true;                                    
                                     selectedSeason.Commit();
                                     break;
 
                                 case Listlevel.Episode:
                                     selectedEpisode[DBOnlineEpisode.cHidden] = true;
+                                    MPTVSeriesLog.Write(string.Format("Hiding series {0} from view", m_SelectedEpisode));
                                     selectedEpisode.Commit();
                                     break;
                             }

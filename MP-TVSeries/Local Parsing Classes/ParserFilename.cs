@@ -104,7 +104,7 @@ namespace WindowPlugins.GUITVSeries
                         catch (Exception e)
                         {
                             // wrong regex
-                            MPTVSeriesLog.Write("Cannot use the follow Expression: " + e.Message);
+                            MPTVSeriesLog.Write("Cannot use the following Expression: " + e.Message);
                         }
                     }
                 }
