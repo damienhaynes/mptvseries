@@ -253,17 +253,36 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         private void Evaluate()
-        {
-            if (series == null && season == null && ep == null)
-                this.textBox1.Text = "Make sure you select an item in the details Tree";
-            else if (txtWith.Text == string.Empty || textReplace.Text == string.Empty)
+        {        
+            this.textBox1.Text = "Make sure you select an item in the Details Tree";
+
+            if (txtWith.Text == string.Empty || textReplace.Text == string.Empty)
                 this.textBox1.Text = "The result of your Formatting Rule will appear here...";
             else
             {
                 DBFormatting current = this.fromInput();
                 DBFormatting.cache = new DBFormatting[] { current };
-                this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, ep, true, true);
-                DBFormatting.cache = null;
+
+                if (txtWith.Text.IndexOf("<Episode", 0) >= 0)
+                {
+                    if (ep == null) return;
+                    this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, ep, true, true);
+                }
+                else if (txtWith.Text.IndexOf("<Season", 0) >= 0)
+                {
+                    if (season == null) return;
+                    this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, season, true, true);
+                }
+                else
+                {
+                    if (txtWith.Text.IndexOf("<Series", 0) >= 0)
+                    {
+                        if (series == null) return;
+                        this.textBox1.Text = FieldGetter.resolveDynString(this.textReplace.Text, series, true, true);
+                    }
+                }
+
+                DBFormatting.cache = null;                
             }
         }
 
