@@ -105,7 +105,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 return false;
             }
             // ok we're good
-            MPTVSeriesLog.Write(string.Format("Submitting Rating of {2} for {0} {1}", type.ToString(), itemId, rating));
+            MPTVSeriesLog.Write(string.Format("Submitting Rating of {2} for {0} {1}", type.ToString(), itemId, rating),MPTVSeriesLog.LogLevel.Debug);
             Generic(string.Format(apiURIs.SubmitRating, account, type.ToString(), itemId, rating), true, false, Format.NoExtension);            
             return true;
         }

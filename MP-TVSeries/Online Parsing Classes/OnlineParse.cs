@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
     class OnlineParsing
     {
         public BackgroundWorker worker = new BackgroundWorker();
-        Feedback.Interface m_feedback = null;
+        Feedback.IFeedback m_feedback = null;
 
         bool m_bDataUpdated = false;
         bool m_bFullSeriesRetrieval = false;
@@ -83,7 +83,7 @@ namespace WindowPlugins.GUITVSeries
         public event OnlineParsingProgressHandler OnlineParsingProgress;
         public event OnlineParsingCompletedHandler OnlineParsingCompleted;
 
-        public OnlineParsing(Feedback.Interface feedback)
+        public OnlineParsing(Feedback.IFeedback feedback)
         {
             m_feedback = feedback;
             worker.WorkerReportsProgress = true;
@@ -705,7 +705,11 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (Choices.Count == 0)
-                    Choices.Add(new Feedback.CItem("No Match Found, try to enter another name for the show", String.Empty, null));
+                {
+                    Choices.Add(new Feedback.CItem("No Match Found, Enter Manual Search...", String.Empty, null));
+                }
+                else
+                    if (!Settings.isConfig) Choices.Add(new Feedback.CItem("Manual Search...", String.Empty, null));
 
                 Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
                 descriptor.m_sTitle = "Unable to find matching series";
@@ -738,29 +742,25 @@ namespace WindowPlugins.GUITVSeries
 
                         case Feedback.ReturnCode.OK:
                             DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
-          
-                            // Show the Virtual Keyboard to manual enter in name to search
-                            // For use with-in Media Portal only, config already allow you to re-enter search.
-                            /*if (selectedSeries == null && !Settings.isConfig)
-                            {                                
-                                VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);                                
-                                if (null == keyboard)
-                                    return null;
-                                keyboard.Reset();
-                                keyboard.Text = nameToSearch;                          
-                                keyboard.DoModal(GUIWindowManager.ActiveWindow);
-                                
-                                // TODO
-                                if (keyboard.IsConfirmed)
+                            
+                            // Show the Virtual Keyboard to manual enter in name to search                            
+                            if (selectedSeries == null && !Settings.isConfig)
+                            {
+                                Feedback.GetStringFromUserDescriptor GetStringDesc = new Feedback.GetStringFromUserDescriptor();
+                                GetStringDesc.m_sText = nameToSearch;
+
+                                if (m_feedback.GetStringFromUser(GetStringDesc, out nameToSearch) == Feedback.ReturnCode.OK)
                                 {
-                                    nameToSearch = keyboard.Text;
+                                    // Search again using manually entered name
                                     bKeepTrying = false;
                                 }
                                 else
+                                {
+                                    MPTVSeriesLog.Write("User cancelled Series Selection");
                                     return null;
-                            }*/
-
-                            if (nameToSearch != Selected.m_sName || selectedSeries == null)
+                                }
+                            }
+                            else if (nameToSearch != Selected.m_sName || selectedSeries == null)
                             {
                                 nameToSearch = Selected.m_sName;
                                 bKeepTrying = false;

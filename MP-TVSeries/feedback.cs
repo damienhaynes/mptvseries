@@ -45,7 +45,7 @@ namespace WindowPlugins.GUITVSeries.Feedback
         {
             return m_sName;
         }
-    };
+    }
 
     public class ChooseFromSelectionDescriptor
     {
@@ -63,7 +63,7 @@ namespace WindowPlugins.GUITVSeries.Feedback
 
         public bool m_useRadioToSelect = false;                            // just looks nicer for instance for OrderOption, ignored inside MP
         public bool m_allowAlter = true;                                   // if true user will be able to alter what was searched for 
-    };
+    }
 
     public class ChooseFromYesNoDescriptor
     {
@@ -71,6 +71,11 @@ namespace WindowPlugins.GUITVSeries.Feedback
         public String m_sLabel = Translation.CFS_Looking_For;              // label of the thing to mat
         public DialogButtons m_dialogButtons = DialogButtons.OK;
         public ReturnCode m_dialogDefaultButton = ReturnCode.OK;
+    }
+
+    public class GetStringFromUserDescriptor
+    {
+        public String m_sText = string.Empty;
     }
 
     public enum DialogButtons
@@ -89,9 +94,10 @@ namespace WindowPlugins.GUITVSeries.Feedback
         Ignore,
         NotReady
     }
-    public interface Interface
+    public interface IFeedback
     {
         ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected);
         ReturnCode YesNoOkDialog(ChooseFromYesNoDescriptor descriptor);
+        ReturnCode GetStringFromUser(GetStringFromUserDescriptor descriptor, out String input);
     }
 }
