@@ -25,9 +25,9 @@ namespace WindowPlugins.GUITVSeries
 
         public void setUpLocalInfo(int series, int seasons, int episodes)
         {
-            this.lblSeries.Text += " " + series.ToString();
-            this.lblSeasons.Text += " " + seasons.ToString();
-            this.lblEpisodes.Text += " " + episodes.ToString();
+            this.lblSeries.Text = "Series: " + series.ToString();
+            this.lblSeasons.Text = "Seasons: " + seasons.ToString();
+            this.lblEpisodes.Text = "Episodes: " + episodes.ToString();
         }
 
         public void setUpPaths()

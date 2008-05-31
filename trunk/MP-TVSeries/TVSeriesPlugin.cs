@@ -43,7 +43,7 @@ using WindowPlugins.GUITVSeries.Subtitles;
 
 namespace MediaPortal.GUI.Video
 {
-    public class TVSeriesPlugin : GUIWindow, ISetupForm, Interface
+    public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback
     {
         public TVSeriesPlugin()
         {
@@ -630,9 +630,9 @@ namespace MediaPortal.GUI.Video
                             }
 
                             // view handling
-                            List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-                            MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(),m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
+                            List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);                            
                             bool canBeSkipped = seasons.Count == 1;
+                            if (!canBeSkipped) MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             foreach (DBSeason season in seasons)
                             {
                                 try
@@ -2515,6 +2515,61 @@ namespace MediaPortal.GUI.Video
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("The YesNoOkDialog Method has generated an error: " + ex.Message);
+                return ReturnCode.Cancel;
+            }
+            finally
+            {
+                this.m_Facade.Focus = true;
+            }
+        }
+
+        private delegate ReturnCode GetStringFromUserDelegate(GetStringFromUserDescriptor descriptor);
+        private string m_sUserInput;
+        public ReturnCode GetStringFromUser(GetStringFromUserDescriptor descriptor, out String input)
+        {
+            if (this.m_Facade == null)
+            {
+                input = string.Empty;
+                return ReturnCode.NotReady;
+            }
+
+            ReturnCode returnCode;
+            if (m_localControlForInvoke.InvokeRequired)
+            {
+                returnCode = (ReturnCode)m_localControlForInvoke.Invoke(new GetStringFromUserDelegate(GetStringFromUserSync), new Object[] { descriptor });
+            }
+            else
+                returnCode = GetStringFromUserSync(descriptor);
+            input = m_sUserInput;
+
+            return returnCode;
+        }
+
+        public ReturnCode GetStringFromUserSync(GetStringFromUserDescriptor descriptor)
+        {
+            try
+            {
+                m_sUserInput = String.Empty;
+                VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
+                if (null == keyboard)
+                    return ReturnCode.Cancel; ;
+
+                keyboard.Reset();
+                keyboard.Text = descriptor.m_sText;                
+                keyboard.DoModal(GUIWindowManager.ActiveWindow);
+
+                if (keyboard.IsConfirmed)
+                {
+                    m_sUserInput = keyboard.Text;
+                    return ReturnCode.OK;
+                }
+                else
+                    return ReturnCode.Cancel;
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("The GetStringFromUser Method has generated an error: " + ex.Message);
+                m_sUserInput = String.Empty;
                 return ReturnCode.Cancel;
             }
             finally

@@ -46,7 +46,7 @@ using System.Diagnostics;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public partial class ConfigurationForm : Form, Feedback.Interface
+    public partial class ConfigurationForm : Form, Feedback.IFeedback
     {
         private List<Control> m_paneListSettings = new List<Control>();
         private List<Panel> m_paneListExtra = new List<Panel>();
@@ -2271,6 +2271,12 @@ namespace WindowPlugins.GUITVSeries
             return retValue;
         }
 
+        private delegate ReturnCode GetStringFromUserDelegate(GetStringFromUserDescriptor descriptor);
+        public ReturnCode GetStringFromUser(GetStringFromUserDescriptor descriptor, out string input)
+        {
+            input = string.Empty;
+            return ReturnCode.Ignore;
+        }
 
         public bool NoneFound()
         {
