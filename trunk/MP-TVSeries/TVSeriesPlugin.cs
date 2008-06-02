@@ -1348,16 +1348,16 @@ namespace MediaPortal.GUI.Video
                                     {
                                         episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                         episode.Commit();
-                                        DBSeason.UpdateUnWached(episode);
-                                        DBSeries.UpdateUnWached(episode);
+                                        DBSeason.UpdateUnWatched(episode);
+                                        DBSeries.UpdateUnWatched(episode);
                                     }
                                 }
                                 else
                                 {
                                     selectedEpisode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                     selectedEpisode.Commit();
-                                    DBSeason.UpdateUnWached(selectedEpisode);
-                                    DBSeries.UpdateUnWached(selectedEpisode);
+                                    DBSeason.UpdateUnWatched(selectedEpisode);
+                                    DBSeries.UpdateUnWatched(selectedEpisode);
                                 }
                                 LoadFacade();
                             }

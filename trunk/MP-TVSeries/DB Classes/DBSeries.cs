@@ -796,7 +796,7 @@ namespace WindowPlugins.GUITVSeries
             return this[DBSeries.cParsedName];
         }
 
-        public static void UpdateUnWached(DBEpisode episode)
+        public static void UpdateUnWatched(DBEpisode episode)
         {
             DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
             DBEpisode FirstUnwatchedEpisode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
