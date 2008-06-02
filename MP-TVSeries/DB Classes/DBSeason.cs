@@ -448,7 +448,7 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
-        public static void UpdateUnWached(DBEpisode episode)
+        public static void UpdateUnWatched(DBEpisode episode)
         {
             DBSeason season = new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
             DBEpisode FirstUnwatchedEpisode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);

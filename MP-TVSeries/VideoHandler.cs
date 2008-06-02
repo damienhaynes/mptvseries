@@ -171,10 +171,17 @@ namespace WindowPlugins.GUITVSeries
 
         void MarkEpisodeAsWatched(DBEpisode episode)
         {
-            episode[DBOnlineEpisode.cWatched] = 1;
-            episode.Commit();
-            DBSeason.UpdateUnWached(episode);
-            DBSeries.UpdateUnWached(episode);
+            // Could be a double episode, so mark both as watched
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+            foreach (DBEpisode ep in episodes)
+            {
+                ep[DBOnlineEpisode.cWatched] = 1;
+                ep.Commit();
+                DBSeason.UpdateUnWatched(ep);
+                DBSeries.UpdateUnWatched(ep);
+            }
         }
 
         /// <summary>
