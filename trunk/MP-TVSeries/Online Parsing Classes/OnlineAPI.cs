@@ -110,12 +110,6 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             return true;
         }
 
-        /// <summary>
-        /// Warning: Limited to the 1000 most recently updated entries
-        /// </summary>
-        /// <param name="lastTime"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
         static public XmlNodeList Updates(UpdateType type)
         {
             string typeName = Enum.GetName(typeof(UpdateType), type);
@@ -133,6 +127,25 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         static public XmlNodeList getBannerList(int seriesID)
         {
             return getFromCache(seriesID, "banners.xml");
+        }
+
+        static public bool DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
+        {
+            WebClient webClient = new WebClient();
+            string fullLocalPath = Helper.cleanLocalPath(Helper.PathCombine(Settings.GetPath(localPath), localFilename));
+            string fullURL = DBOnlineMirror.Banners + "/" + onlineFilename;
+            webClient.Headers.Add("user-agent", Settings.UserAgent);
+            try
+            {
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
+                webClient.DownloadFile(fullURL, fullLocalPath);
+                return true;
+            }
+            catch (WebException)
+            {
+                MPTVSeriesLog.Write("Banner download failed (" + fullURL + ") to " + fullLocalPath);
+                return false;
+            }
         }
 
         static XmlNodeList getFromCache(int seriesID, string elemName)

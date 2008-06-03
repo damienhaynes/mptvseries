@@ -268,6 +268,16 @@ namespace WindowPlugins.GUITVSeries
             if (path2.Length > 0 && (path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
             return System.IO.Path.Combine(path1, path2);
         }
+
+        const char invalidCharReplacement = '_';
+        public static string cleanLocalPath(string path)
+        {
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+            {
+                path = path.Replace(c, invalidCharReplacement);                
+            }
+            return path;
+        }
         #endregion
     }
 
