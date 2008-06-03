@@ -395,30 +395,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
-                        String sBannerSeriesName = bannerSeries.sSeriesName;
-                        String sOnlineBannerPath = bannerSeries.sOnlineBannerPath;
-                        foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-                        {
-                            sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
-                            sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
-                        }
                         // mark the filename with the language
-                        bannerSeries.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerSeries.sBannerLang + "-" + sOnlineBannerPath;
-                        // check if banner is already there (don't download twice)
-                        if (!File.Exists(sBannersBasePath + bannerSeries.sBannerFileName))
-                        {
-                            WebClient webClient = new WebClient();
-                            webClient.Headers.Add("user-agent", Settings.UserAgent);
-                            try
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeries.sBannerFileName));
-                                webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeries.sOnlineBannerPath, sBannersBasePath + bannerSeries.sBannerFileName);
-                            }
-                            catch (WebException)
-                            {
-                                MPTVSeriesLog.Write("Banner download failed (" + bannerSeries.sOnlineBannerPath + ")");
-                            }
-                        }
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath);
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
+
                     }
                 }
 
@@ -426,31 +406,93 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
-                        String sBannerSeriesName = bannerSeason.sSeriesName;
-                        String sOnlineBannerPath = bannerSeason.sOnlineBannerPath;
-                        foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                        bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath);
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
+
+                    }
+                }
+            }
+        }
+    }
+
+    class GetFanart
+    {
+        List<DBFanart> _fanart = new List<DBFanart>();
+        public List<DBFanart> Fanart { get { return _fanart; } }
+        
+        public GetFanart(int SeriesID)
+        {
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID);
+            if (nodeList != null)
+            {
+                foreach (XmlNode topNode in nodeList)
+                {
+                    foreach (XmlNode itemNode in topNode.ChildNodes)
+                    {                        
+                        if (itemNode.Name == "Banner")
                         {
-                            sBannerSeriesName = sBannerSeriesName.Replace(c, '_');
-                            sOnlineBannerPath = sOnlineBannerPath.Replace(c, '_');
-                        }
-                        bannerSeason.sBannerFileName = sBannerSeriesName + @"\-lang" + bannerSeason.sBannerLang + "-" + sOnlineBannerPath;
-                        if (!File.Exists(sBannersBasePath + bannerSeason.sBannerFileName))
-                        {
-                            WebClient webClient = new WebClient();
-                            webClient.Headers.Add("user-agent", Settings.UserAgent);
-                            try
+                            bool isFanart = false;
+                            DBFanart dbf = new DBFanart();
+                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
                             {
-                                Directory.CreateDirectory(Path.GetDirectoryName(sBannersBasePath + bannerSeason.sBannerFileName));
-                                webClient.DownloadFile(DBOnlineMirror.Banners + "/" + bannerSeason.sOnlineBannerPath, sBannersBasePath + bannerSeason.sBannerFileName);
+                                try
+                                {
+                                    dbf[propertyNode.Name] = propertyNode.InnerText;
+                                }
+                                catch (Exception ex)
+                                { MPTVSeriesLog.Write("Error adding Fanart Property to DBEntry: " + propertyNode.Name + " - " + ex.Message); }
+
+                                if (propertyNode.Name == "BannerType"
+                                    && propertyNode.InnerText.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))
+                                    isFanart = true;
                             }
-                            catch (WebException)
+                            if (isFanart)
                             {
-                                MPTVSeriesLog.Write("Banner download failed (" + bannerSeason.sOnlineBannerPath + ")");
+                                dbf[DBFanart.cSeriesID] = SeriesID;
+                                _fanart.Add(dbf);
                             }
                         }
                     }
                 }
             }
         }
+
+        public static bool DownloadFanart(DBFanart fanart)
+        {
+            if (fanart != null && !fanart.isAvailableLocally)
+            {
+                string filename;
+                return download(fanart[DBFanart.cBannerPath], out filename);
+            }
+            return false;
+        }
+
+        public static string GetThumbnail(DBFanart fanart)
+        {
+            if (fanart != null)
+            {
+                string filename;
+                if (!fanart.isAvailableLocally)
+                {
+                    string onlinePath = fanart[DBFanart.cThumbnailPath];
+                    download(fanart[DBFanart.cThumbnailPath], out filename);
+                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
+                }
+                else
+                {
+                    filename = fanart.FullLocalPath;
+                }
+                return ImageAllocator.buildMemoryImageFromFile(filename, new System.Drawing.Size(300, 168));
+            }
+            return string.Empty;
+        }
+
+        static bool download(string onlinePath, out string filename)
+        {
+            filename = onlinePath.Replace("/", @"\");
+            return Online_Parsing_Classes.OnlineAPI.DownloadBanner(onlinePath, Settings.Path.fanart, filename);
+        }
     }
+
+    
 }

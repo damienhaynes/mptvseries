@@ -145,6 +145,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cQualitySeriesBanners = "QualitySeriesBanners";
         public const String cQualitySeasonBanners = "QualitySeasonBanners";
         public const String cQualityEpisodeImages = "QualityEpisodeImages";
+
+        public const String cFanartRandom = "FanartRandom";
         
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
@@ -350,6 +352,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
+
+                if (GetOptions(cFanartRandom) == null)
+                    SetOptions(cFanartRandom, false);
                                 
             }
             catch (Exception ex)

@@ -970,6 +970,7 @@ namespace MediaPortal.GUI.Video
             optionsAskToRate,
             optionsFastViewSwitch,
             actionRecheckMI,
+            showFanartChooser
         }
 
         enum eContextMenus
@@ -1147,6 +1148,13 @@ namespace MediaPortal.GUI.Video
                             pItem = new GUIListItem(Translation.Mark_all_as_unwatched);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionMarkAllUnwatched;
+
+                            if (m_SelectedSeries != null && FanartBackground != null) // only if skins supports it
+                            {
+                                pItem = new GUIListItem(Translation.FanArt);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.showFanartChooser;
+                            }
                         }
 
                         if (this.listLevel == Listlevel.Series)
@@ -1247,6 +1255,10 @@ namespace MediaPortal.GUI.Video
                                     pItem = new GUIListItem(Translation.Delete);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionDelete;
+
+                                    pItem = new GUIListItem(Translation.updateMI);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionRecheckMI;
 
                                     pItem = new GUIListItem(Translation.updateMI);
                                     dlg.Add(pItem);
@@ -1705,7 +1717,10 @@ namespace MediaPortal.GUI.Video
                         break;
                     case (int)eContextItems.optionsAskToRate:
                         DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
-                        break;    
+                        break;
+                    case (int)eContextItems.showFanartChooser:
+                        ShowFanartChooser();
+                        break; 
                 }
             }
             catch (Exception ex)
@@ -2016,8 +2031,8 @@ namespace MediaPortal.GUI.Video
                         }
                         if (f != null && f.Found)
                         {
-                            MPTVSeriesLog.Write("Fanart found, loading: ", f.RandomFanart, MPTVSeriesLog.LogLevel.Normal);
-                            FanartBackground.SetFileName(f.RandomFanartAsTexture);
+                            MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Normal);
+                            FanartBackground.SetFileName(f.FanartAsTexture);
                             //FanartBackground.Visible = true;
                             if (this.dummyIsLightFanartLoaded != null)
                                 this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
@@ -2311,6 +2326,7 @@ namespace MediaPortal.GUI.Video
             }
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
+
         }
         private void Episode_OnItemSelected(GUIListItem item)
         {
@@ -2694,6 +2710,12 @@ namespace MediaPortal.GUI.Video
                     }
                 }
             }
+        }
+
+        public void ShowFanartChooser()
+        {
+            // lets show the other xml
+
         }
 
         ~TVSeriesPlugin()

@@ -108,6 +108,11 @@ namespace WindowPlugins.GUITVSeries
         public static string RatingStars = "Stars";
         public static string ChangeView = "Change View";
         public static string ChangeViewFast = "Immediately Change Views";
+        public static string FanArt = "Fanart";
+        public static string FanListAll = "List all Fanart for this Series";
+        public static string FanArtGetAndUse = "Download Fanart and Use";
+        public static string FanArtUse = "Use Fanart";
+        public static string FanArtDelete = "Delete Fanart";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
