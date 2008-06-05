@@ -48,7 +48,6 @@ namespace WindowPlugins.GUITVSeries
         List<string> _fanArts = null;
         string _randomPick = null;
         string _textureName = null;
-        List<DBFanart> _dbfanart = null;
         DBFanart _dbchosenfanart = null;
         #endregion
 
@@ -57,6 +56,35 @@ namespace WindowPlugins.GUITVSeries
         public int SeasonIndex { get { return _seasonIndex; } }
         public bool Found { get { return _fanArts != null && _fanArts.Count > 0; } }
         public bool SeasonMode { get { return _seasonMode; } }
+        public bool HasColorInfo
+        {
+            get 
+            {
+                return _dbchosenfanart != null && _dbchosenfanart.HasColorInfo;
+            }
+        }
+        public System.Drawing.Color[] Colors
+        {
+            get
+            {
+                if (HasColorInfo)
+                {
+                    System.Drawing.Color[] colors = new System.Drawing.Color[3];
+                    for (int i = 0; i < 3;)
+                        colors[i] = _dbchosenfanart.GetColor(++i);
+                    return colors;
+                }
+                else return null;
+            }
+        }
+
+        public static string RGBColorToHex(System.Drawing.Color color)
+        {
+            // without alpha
+            return String.Format("{0:x}", color.R) +
+                   String.Format("{0:x}", color.G) +
+                   String.Format("{0:x}", color.B);
+        }
         #endregion
 
         #region Private Constructors
@@ -115,7 +143,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (_randomPick != null) return _randomPick;
                     else if (_fanArts == null || _fanArts.Count == 0) _randomPick = string.Empty;
-                    else if (_dbfanart != null && DBFanart.GetAll(SeriesID, true).Count > 0) 
+                    else if (DBFanart.GetAll(SeriesID, true) != null && DBFanart.GetAll(SeriesID, true).Count > 0) 
                     {
                         _randomPick = DBFanart.GetAll(SeriesID, true)[fanartRandom.Next(0, DBFanart.GetAll(SeriesID, true).Count)].FullLocalPath; // from db take precedence (not ideal)
                     }
@@ -125,7 +153,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // see if we have a chosen one in the db
-                    if (_dbfanart != null)
+                    if (DBFanart.GetAll(SeriesID, true) != null)
                     {
                         foreach (DBFanart f in DBFanart.GetAll(SeriesID, true))
                             if (f.Chosen)
@@ -134,8 +162,8 @@ namespace WindowPlugins.GUITVSeries
                                 break;
                             }
                         if (_dbchosenfanart == null) // we have some in db but none chosen, we choose the first
-                            _dbchosenfanart = _dbfanart[0];
-                        return _dbchosenfanart[DBFanart.cLocalPath];
+                            _dbchosenfanart = DBFanart.GetAll(SeriesID, true)[0];
+                        return _dbchosenfanart.FullLocalPath;
                     }
                     else
                     {
@@ -152,7 +180,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                string _textureName_temp = ImageAllocator.buildMemoryImageFromFile(FanartFilename, requiredSize);
+                string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
                 if (_textureName != _textureName_temp)
                 {
                     FlushTexture(); // flush the old one
@@ -203,6 +231,7 @@ namespace WindowPlugins.GUITVSeries
                     _fanArts = new List<string>();
                     _fanArts.AddRange(System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), filter, System.IO.SearchOption.AllDirectories));
                     if (!_seasonMode) removeSeasonFromSeries();
+                    removeFromFanart("_cache"); // thumbnails online
                     MPTVSeriesLog.Write("Fanart: found ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 }
                 catch (Exception ex)
@@ -214,11 +243,16 @@ namespace WindowPlugins.GUITVSeries
 
         void removeSeasonFromSeries()
         {
-            if(_fanArts == null) return;
             string seasonFormat = SeriesID.ToString() + 'S';
+            removeFromFanart(seasonFormat);
+        }
+
+        void removeFromFanart(string needle)
+        {
+            if (_fanArts == null) return;
             for (int i = 0; i < _fanArts.Count; i++)
             {
-                if (_fanArts[i].Contains(seasonFormat))
+                if (_fanArts[i].Contains(needle))
                 {
                     _fanArts.Remove(_fanArts[i]);
                     i--;

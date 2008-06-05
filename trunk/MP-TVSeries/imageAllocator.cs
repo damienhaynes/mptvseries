@@ -219,22 +219,20 @@ namespace WindowPlugins.GUITVSeries
 
         public static String GetOtherImage(string sFileName, System.Drawing.Size size, bool bPersistent)
         {
-            String sTextureName;
-            sTextureName = buildMemoryImageFromFile(sFileName, size);
-            if (bPersistent)
-                s_OtherPersistentImageList.Add(sTextureName);
-            else
-                s_OtherDiscardableImageList.Add(sTextureName);
-            return sTextureName;
+            return GetOtherImage(null, sFileName, size, bPersistent);
         }
 
         public static String GetOtherImage(Image i, string sFileName, System.Drawing.Size size, bool bPersistent)
         {
             String sTextureName;
-            sTextureName = buildMemoryImage(i, sFileName, size, true);
+            if(i != null) sTextureName = buildMemoryImage(i, sFileName, size, true);
+            else sTextureName = buildMemoryImageFromFile(sFileName, size);
             if (bPersistent)
-                s_OtherPersistentImageList.Add(sTextureName);
-            else
+            {
+                if (!s_OtherPersistentImageList.Contains(sTextureName))
+                    s_OtherPersistentImageList.Add(sTextureName);
+            }
+            else if (!s_OtherDiscardableImageList.Contains(sTextureName))
                 s_OtherDiscardableImageList.Add(sTextureName);
             return sTextureName;
         }

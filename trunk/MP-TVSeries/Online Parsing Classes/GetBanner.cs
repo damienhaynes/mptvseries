@@ -462,7 +462,10 @@ namespace WindowPlugins.GUITVSeries
             if (fanart != null && !fanart.isAvailableLocally)
             {
                 string filename;
-                return download(fanart[DBFanart.cBannerPath], out filename);
+                bool sucess = download(fanart[DBFanart.cBannerPath], out filename);
+                fanart[DBFanart.cLocalPath] = filename.Replace(Settings.GetPath(Settings.Path.fanart), string.Empty);
+                fanart.Commit();
+                return sucess;
             }
             return false;
         }
@@ -472,17 +475,11 @@ namespace WindowPlugins.GUITVSeries
             if (fanart != null)
             {
                 string filename;
-                if (!fanart.isAvailableLocally)
-                {
-                    string onlinePath = fanart[DBFanart.cThumbnailPath];
-                    download(fanart[DBFanart.cThumbnailPath], out filename);
-                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
-                }
-                else
-                {
-                    filename = fanart.FullLocalPath;
-                }
-                return ImageAllocator.buildMemoryImageFromFile(filename, new System.Drawing.Size(300, 168));
+                string onlinePath = fanart[DBFanart.cThumbnailPath];
+                download(fanart[DBFanart.cThumbnailPath], out filename);
+                filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
+
+                return ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
             }
             return string.Empty;
         }

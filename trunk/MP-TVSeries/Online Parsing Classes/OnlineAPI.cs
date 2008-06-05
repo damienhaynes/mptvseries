@@ -138,7 +138,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
-                webClient.DownloadFile(fullURL, fullLocalPath);
+                if (!System.IO.File.Exists(fullLocalPath) // only if the file doesn't exist
+                    || ImageAllocator.LoadImageFastFromFile(fullLocalPath) == null) // or the file is damaged
+                {
+                    webClient.DownloadFile(fullURL, fullLocalPath);
+                }
                 return true;
             }
             catch (WebException)

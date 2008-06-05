@@ -32,7 +32,6 @@ using MediaPortal.Playlists;
 using MediaPortal.Video.Database;
 using WindowPlugins.GUITVSeries;
 
-using MediaPortal.GUI.Video;
 
 namespace WindowPlugins.GUITVSeries
 {

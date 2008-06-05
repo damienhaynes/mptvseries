@@ -113,6 +113,12 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtGetAndUse = "Download Fanart and Use";
         public static string FanArtUse = "Use Fanart";
         public static string FanArtDelete = "Delete Fanart";
+        public static string FanDownloadingStatus = "Downloading {0} Fanart...";
+        public static string FanArtLocal = "Available locally";
+        public static string FanArtOnline = "Available for downloading";
+        public static string FanArtOnlineLoading = "loading {0} of {1} Fanart...";
+        public static string FanArtRandom = "Display random Fanart";
+        public static string FanArtNoneFound = "No Fanart could be found";
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
