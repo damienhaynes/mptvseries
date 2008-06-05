@@ -41,7 +41,7 @@ using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using WindowPlugins.GUITVSeries.Subtitles;
 #endif
 
-namespace MediaPortal.GUI.Video
+namespace WindowPlugins.GUITVSeries
 {
     public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback
     {
@@ -230,6 +230,9 @@ namespace MediaPortal.GUI.Video
 
         [SkinControlAttribute(1240)]
         protected GUILabelControl dummyIsGroups = null;
+
+        [SkinControlAttribute(1241)]
+        protected GUILabelControl dummyIsFanartColorAvailable = null;
 
         #endregion
 
@@ -897,6 +900,18 @@ namespace MediaPortal.GUI.Video
             }
             else setViewLabels();
             if (!fanartSet) loadFanart(null); // init dummy labels
+            if (fanartReinitNeeded) // reload fanart because we came back from the chooser
+            {
+                switch (listLevel)
+                {
+                    case Listlevel.Season:
+                        loadFanart(m_SelectedSeries);
+                        break;
+                    case Listlevel.Episode:
+                        loadFanart(m_SelectedSeason);
+                        break;
+                }
+            }
             LoadFacade();
             m_Facade.Focus = true;
             setProcessAnimationStatus(m_parserUpdaterWorking);
@@ -933,7 +948,7 @@ namespace MediaPortal.GUI.Video
             setGUIProperty(which.ToString(), value);
         }
 
-        void setGUIProperty(string which, string value)
+        public static void setGUIProperty(string which, string value)
         {
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which, value);
         }
@@ -969,6 +984,7 @@ namespace MediaPortal.GUI.Video
             optionsPreventSpoilers,
             optionsAskToRate,
             optionsFastViewSwitch,
+            optionsFanartRandom,
             actionRecheckMI,
             showFanartChooser
         }
@@ -1149,7 +1165,8 @@ namespace MediaPortal.GUI.Video
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionMarkAllUnwatched;
 
-                            if (m_SelectedSeries != null && FanartBackground != null) // only if skins supports it
+                            if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
+                                m_SelectedSeries[DBOnlineSeries.cID] > 0)
                             {
                                 pItem = new GUIListItem(Translation.FanArt);
                                 dlg.Add(pItem);
@@ -1302,6 +1319,10 @@ namespace MediaPortal.GUI.Video
                                 pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? "on" : "off") + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;
+
+                                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? "on" : "off") + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsFanartRandom;
 
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                                 if (dlg.SelectedId != -1)
@@ -1719,7 +1740,10 @@ namespace MediaPortal.GUI.Video
                         DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
                         break;
                     case (int)eContextItems.showFanartChooser:
-                        ShowFanartChooser();
+                        ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
+                        break;
+                    case (int)eContextItems.optionsFanartRandom:
+                        DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
                         break; 
                 }
             }
@@ -1729,6 +1753,7 @@ namespace MediaPortal.GUI.Video
             }
 
         }
+
 #if inclDownloaders
         void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
@@ -1980,11 +2005,13 @@ namespace MediaPortal.GUI.Video
 
 
         bool fanartSet = false;
+        bool fanartReinitNeeded = false; // after coming back from the other xml
         Fanart currSeriesFanart = null;
         bool loadFanart(DBTable item)
         {
             try
             {
+                fanartReinitNeeded = false;
                 if (FanartBackground == null) fanartSet = false;
                 else
                 {
@@ -2002,6 +2029,14 @@ namespace MediaPortal.GUI.Video
                             this.dummyIsLightFanartLoaded.Visible = false;
                         if (this.dummyIsDarkFanartLoaded != null)
                             this.dummyIsDarkFanartLoaded.Visible = false;
+
+                        if (this.dummyIsFanartColorAvailable != null)
+                            this.dummyIsFanartColorAvailable.Visible = false;
+
+                        setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
+                        setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
+                        setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
+
                         fanartSet = false;
                     }
                     else
@@ -2034,10 +2069,29 @@ namespace MediaPortal.GUI.Video
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Normal);
                             FanartBackground.SetFileName(f.FanartAsTexture);
                             //FanartBackground.Visible = true;
-                            if (this.dummyIsLightFanartLoaded != null)
-                                this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
-                            if (this.dummyIsDarkFanartLoaded != null)
-                                this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+
+                            // I don't think we can support these anymore with dbfanart now
+                            //if (this.dummyIsLightFanartLoaded != null)
+                            //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
+                            //if (this.dummyIsDarkFanartLoaded != null)
+                            //    this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+
+                            if (f.HasColorInfo)
+                            {
+                                System.Drawing.Color[] fanartColors = f.Colors;
+                                setGUIProperty("FanArt.Colors.LightAccent", Fanart.RGBColorToHex(fanartColors[0]));
+                                setGUIProperty("FanArt.Colors.DarkAccent", Fanart.RGBColorToHex(fanartColors[1]));
+                                setGUIProperty("FanArt.Colors.Neutral Midtone", Fanart.RGBColorToHex(fanartColors[2]));
+                            }
+                            else
+                            {
+                                setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
+                                setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
+                                setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
+                            }
+                            if (this.dummyIsFanartColorAvailable != null)
+                                this.dummyIsFanartColorAvailable.Visible = f.HasColorInfo;
+
                             fanartSet = true;
 
                         }
@@ -2712,10 +2766,28 @@ namespace MediaPortal.GUI.Video
             }
         }
 
-        public void ShowFanartChooser()
+        FanartChooser fc = null;
+        public void ShowFanartChooser(int seriesID)
         {
+            MPTVSeriesLog.Write("Switching to Fanartchooser Window");
             // lets show the other xml
 
+            if (fc == null)
+            {
+                fc = new FanartChooser();
+                GUIWindow fcwindow = (GUIWindow)fc;
+                GUIWindowManager.Add(ref fcwindow);
+                fc.Init();
+            }
+            fc.SeriesID = seriesID;
+            if(listLevel == Listlevel.Season || listLevel == Listlevel.Episode)
+                fc.setPageTitle(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
+            else fc.setPageTitle(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");                     
+            GUIWindowManager.ActivateWindow(fc.GetID, false);   
+         
+            // causes Fanart Refresh on return
+            fanartReinitNeeded = true;
+            currSeriesFanart = null;
         }
 
         ~TVSeriesPlugin()
