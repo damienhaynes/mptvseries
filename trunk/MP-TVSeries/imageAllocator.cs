@@ -108,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 // we don't have to try first, if name already exists mp will not do anything with the image
-                if(size.Height > 0) //resize
+                if (size.Height > 0 && (size.Height != image.Size.Height || size.Width != image.Size.Width)) //resize
                     GUITextureManager.LoadFromMemory(new Bitmap(image, size), name, 0, size.Width, size.Height);
                 else GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
             }
@@ -182,7 +182,7 @@ namespace WindowPlugins.GUITVSeries
                 string ident = "series_" + series[DBSeries.cID];
                 sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
             }
-            if(sTextureName.Length > 0) s_SeriesImageList.Add(sTextureName);
+            if(sTextureName.Length > 0 && !s_SeriesImageList.Contains(sTextureName)) s_SeriesImageList.Add(sTextureName);            
             return sTextureName;
         }
 

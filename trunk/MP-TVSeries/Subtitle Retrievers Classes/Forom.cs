@@ -42,7 +42,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         String m_sID = String.Empty;
         DBEpisode m_dbEpisode = null;
         bool m_bSubtitleRetrieved = false;
-        Feedback.Interface m_feedback = null;
+        Feedback.IFeedback m_feedback = null;
 
         public delegate void SubtitleRetrievalCompletedHandler(bool bFound);
         /// <summary>
@@ -50,7 +50,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         /// </summary>
         public event SubtitleRetrievalCompletedHandler SubtitleRetrievalCompleted;
 
-        public Forom(Feedback.Interface feedback)
+        public Forom(Feedback.IFeedback feedback)
         {
             m_sBaseUrl = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             m_sID = DBOption.GetOptions(DBOption.cSubs_Forom_ID);

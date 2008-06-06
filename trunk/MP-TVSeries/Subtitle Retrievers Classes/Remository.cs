@@ -44,7 +44,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
     String m_sPassword = String.Empty;
     DBEpisode m_dbEpisode = null;
     bool m_bSubtitleRetrieved = false;
-    Feedback.Interface m_feedback = null;
+    Feedback.IFeedback m_feedback = null;
 
     private String RegExp = String.Empty;
     private String RegExpEpisode = String.Empty;
@@ -66,11 +66,11 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
     #region Constructors
 
-    public Remository(Feedback.Interface feedback)
+    public Remository(Feedback.IFeedback feedback)
     {
       init(feedback);
     }
-    private void init(Feedback.Interface feedback)
+    private void init(Feedback.IFeedback feedback)
     {
       m_sBaseUrl = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
       m_iMainIdx = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
