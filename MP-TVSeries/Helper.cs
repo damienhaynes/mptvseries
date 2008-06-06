@@ -272,12 +272,12 @@ namespace WindowPlugins.GUITVSeries
         const char invalidCharReplacement = '_';
         public static string cleanLocalPath(string path)
         {
-            foreach (char c in System.IO.Path.GetInvalidPathChars())
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
             {
                 path = path.Replace(c, invalidCharReplacement);                
             }
             return path;
-        }
+        }       
         #endregion
     }
 

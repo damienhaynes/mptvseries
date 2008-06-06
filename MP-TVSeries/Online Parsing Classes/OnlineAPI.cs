@@ -132,11 +132,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         static public bool DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
         {
             WebClient webClient = new WebClient();
-            string fullLocalPath = Helper.cleanLocalPath(Helper.PathCombine(Settings.GetPath(localPath), localFilename));
+            string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
             string fullURL = DBOnlineMirror.Banners + "/" + onlineFilename;
             webClient.Headers.Add("user-agent", Settings.UserAgent);
             try
-            {
+            {                
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
                 if (!System.IO.File.Exists(fullLocalPath) // only if the file doesn't exist
                     || ImageAllocator.LoadImageFastFromFile(fullLocalPath) == null) // or the file is damaged
