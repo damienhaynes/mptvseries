@@ -395,8 +395,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
-                        // mark the filename with the language
-                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath);
+                        // mark the filename with the language                        
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
                         Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
 
                     }
@@ -406,7 +406,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
-                        bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath);
+                        bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName) + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath;
                         Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
 
                     }
