@@ -141,11 +141,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {
+                    List<DBFanart> _faInDB = null;
                     if (_randomPick != null) return _randomPick;
                     else if (_fanArts == null || _fanArts.Count == 0) _randomPick = string.Empty;
-                    else if (DBFanart.GetAll(SeriesID, true) != null && DBFanart.GetAll(SeriesID, true).Count > 0) 
+                    else if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0) 
                     {
-                        _randomPick = DBFanart.GetAll(SeriesID, true)[fanartRandom.Next(0, DBFanart.GetAll(SeriesID, true).Count)].FullLocalPath; // from db take precedence (not ideal)
+
+                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath; // from db take precedence (not ideal)
                     }
                     else _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
                     return _randomPick;
@@ -153,16 +155,17 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // see if we have a chosen one in the db
-                    if (DBFanart.GetAll(SeriesID, true) != null)
+                    List<DBFanart> _faInDB = DBFanart.GetAll(SeriesID, true);
+                    if (_faInDB != null && _faInDB.Count > 0)
                     {
-                        foreach (DBFanart f in DBFanart.GetAll(SeriesID, true))
+                        foreach (DBFanart f in _faInDB)
                             if (f.Chosen)
                             {
                                 _dbchosenfanart = f;
                                 break;
                             }
                         if (_dbchosenfanart == null) // we have some in db but none chosen, we choose the first
-                            _dbchosenfanart = DBFanart.GetAll(SeriesID, true)[0];
+                            _dbchosenfanart = _faInDB[0];
                         return _dbchosenfanart.FullLocalPath;
                     }
                     else

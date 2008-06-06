@@ -182,7 +182,6 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                bool isAvailable = false;
                 if(Helper.String.IsNullOrEmpty(this[DBFanart.cLocalPath])) return false;
                 if(System.IO.File.Exists(Settings.GetPath(Settings.Path.fanart) + @"\" + this[DBFanart.cLocalPath])) return true;
                 this[DBFanart.cLocalPath] = string.Empty; // file in path doesn't exist

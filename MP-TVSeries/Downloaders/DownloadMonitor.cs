@@ -85,15 +85,15 @@ namespace WindowPlugins.GUITVSeries.Download
 
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
-        Interface m_feedback = null;
+        Feedback.IFeedback m_feedback = null;
 
-        public static void Start(Interface feedback)
+        public static void Start(Feedback.IFeedback feedback)
         {
             if (s_Monitor == null)
                 s_Monitor = new Monitor(feedback);
         }
 
-        public Monitor(Interface feedback)
+        public Monitor(Feedback.IFeedback feedback)
         {
             m_feedback = feedback;
             List<String> watchedFolders = new List<String>();

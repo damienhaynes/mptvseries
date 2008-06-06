@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
         DBTorrentSearch m_Search = null;
         DBEpisode m_dbEpisode = null;
         public BackgroundWorker worker = null;
-        Feedback.Interface m_feedback = null;
+        Feedback.IFeedback m_feedback = null;
         bool m_bSuccess = false;
 
         public delegate void LoadCompletedHandler(bool bOK);
@@ -47,7 +47,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
         /// </summary>
         public event LoadCompletedHandler LoadCompleted;
 
-        public Load(Feedback.Interface feedback)
+        public Load(Feedback.IFeedback feedback)
         {
             m_feedback = feedback;
             worker = new BackgroundWorker();

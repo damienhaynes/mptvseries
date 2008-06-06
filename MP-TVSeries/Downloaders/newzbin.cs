@@ -39,7 +39,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
         DBNewzbin m_Search = null;
         DBEpisode m_dbEpisode = null;
         public BackgroundWorker worker = null;
-        Feedback.Interface m_feedback = null;
+        Feedback.IFeedback m_feedback = null;
         bool m_bSuccess = false;
         String m_msgOut = String.Empty;
 
@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
         /// </summary>
         public event LoadCompletedHandler LoadCompleted;
 
-        public Load(Feedback.Interface feedback)
+        public Load(Feedback.IFeedback feedback)
         {
             m_feedback = feedback;
             worker = new BackgroundWorker();
