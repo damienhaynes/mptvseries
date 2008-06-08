@@ -139,10 +139,9 @@ namespace WindowPlugins.GUITVSeries
         private string[] m_back_up_select_this = null;
 #if inclDownloaders        
         private bool foromWorking = false;
+    private bool seriessubWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;        
-        private string foromEnable = "0";
-        private string remositoryEnable = "0";
 #endif
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
@@ -280,13 +279,7 @@ namespace WindowPlugins.GUITVSeries
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
-#if inclDownloaders
-            //init enable flags
-            if (DBOption.GetOptions(DBOption.cSubs_Forom_Enable) != null)
-                foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
-            if (DBOption.GetOptions(DBOption.cSubs_Remository_Enable) != null)
-                remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
-#endif
+
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
             m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
@@ -1281,14 +1274,6 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionToggleFavorite;
                         }
-#if inclDownloaders
-                        if (this.listLevel == Listlevel.Episode)
-                        {
-                            pItem = new GUIListItem(Translation.Download + " >>");
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextMenus.download;
-                        }
-#endif
                     }
                     else dlg.SetHeading(m_CurrLView.Name);
 
@@ -1307,6 +1292,19 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.options;
 
+          if (listLevel != Listlevel.Group)
+          {
+#if inclDownloaders
+            if (this.listLevel == Listlevel.Episode)
+            {
+              pItem = new GUIListItem(Translation.Download + " >>");
+              dlg.Add(pItem);
+              pItem.ItemId = (int)eContextMenus.download;
+            }
+#endif
+          }
+
+
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
                     switch (dlg.SelectedId)
                     {
@@ -1315,7 +1313,10 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Download);
-                                if (foromEnable == "1" || remositoryEnable == "1")
+                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+                if (foromEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
@@ -1548,19 +1549,91 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 DBEpisode episode = (DBEpisode)currentitem.TVTag;
                                 setProcessAnimationStatus(true);
-                                if (Convert.ToInt32(foromEnable) == 1)
+
+                List<CItem> Choices = new List<CItem>();
+                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+
+                if (foromEnable)
+                  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                if (seriesSubEnable)
+                  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
+                if (remositoryEnable)
+                  Choices.Add(new CItem("Remository", "Remository", "Remository"));
+
+                CItem selected = null;
+                switch (Choices.Count)
                                 {
-                                    foromWorking = true;
-                                    Forom forom = new Forom(this);
-                                    forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                    forom.GetSubs(selectedEpisode);
+                  case 0:
+                    // none enable, do nothing
+                    break;
+
+                  case 1:
+                    // only one enabled, don't bother showing the dialog
+                    selected = Choices[0];
+                    break;
+
+                  default:
+                    // more than 1 choice, show a feedback dialog
+                    ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+                    descriptor.m_sTitle = "Get subtitles from?";
+                    descriptor.m_sListLabel = "Enabled subtitle sites:";
+                    descriptor.m_List = Choices;
+                    descriptor.m_sbtnIgnoreLabel = String.Empty;
+
+                    bool bReady = false;
+                    while (!bReady)
+                    {
+                      ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+                      switch (resultFeedback)
+                      {
+                        case ReturnCode.NotReady:
+                          {
+                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                            Thread.Sleep(5000);
+                          }
+                          break;
+
+                        case ReturnCode.OK:
+                          {
+                            bReady = true;
+                          }
+                          break;
+
+                        default:
+                          {
+                            // exit too if cancelled
+                            bReady = true;
+                          }
+                          break;
+                      }
+                    }
+                    break;
                                 }
-                                if (Convert.ToInt32(remositoryEnable) == 1)
+
+                if (selected != null)
                                 {
-                                    remositoryWorking = true;
+                  switch ((String)selected.m_Tag)
+                  {
+                    case "Forom":
+                      Forom forom = new Forom(this);
+                      forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                      forom.GetSubs(episode);
+                      break;
+
+                    case "Series Subs":
+                      SeriesSubs seriesSubs = new SeriesSubs(this);
+                      seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
+                      seriesSubs.GetSubs(episode);
+                      break;
+
+                    case "Remository":
                                     Remository remository = new Remository(this);
                                     remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-                                    remository.GetSubs(selectedEpisode);
+                      remository.GetSubs(episode);
+                      break;
+                  }
                                 }
                             }
                         }
@@ -1858,6 +1931,23 @@ namespace WindowPlugins.GUITVSeries
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
         }
+
+    void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
+    {
+      setProcessAnimationStatus(false);
+      seriessubWorking = false;
+      if (bFound)
+      {
+        LoadFacade();
+      }
+      else
+      {
+        GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+        dlgOK.SetHeading(Translation.Completed);
+        dlgOK.SetLine(1, Translation.No_subtitles_found);
+        dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+      }
+    }
 
         void remository_SubtitleRetrievalCompleted(bool bFound)
         {
@@ -2272,7 +2362,7 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
 #if inclDownloaders
-                    else if (!foromWorking && !torrentWorking && !remositoryWorking)
+          else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
 #else
                     else setProcessAnimationStatus(false);

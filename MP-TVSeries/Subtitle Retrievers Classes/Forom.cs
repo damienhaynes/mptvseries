@@ -90,8 +90,8 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
                 DBOnlineSeries series = new DBOnlineSeries(m_dbEpisode[DBEpisode.cSeriesID]);
                 DBSeason season = new DBSeason(m_dbEpisode[DBEpisode.cSeriesID], m_dbEpisode[DBEpisode.cSeasonIndex]);
-                ForomEpisode episode = new ForomEpisode(series[DBOnlineSeries.cOriginalName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
-                SeasonMatchResult finalSeasonResult = null;
+                ForomSubtitleEpisode episode = new ForomSubtitleEpisode(series[DBOnlineSeries.cOriginalName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
+                ForomSeasonMatchResult finalSeasonResult = null;
 
                 String sLal = String.Empty;
                 String sLocalSeriesName = episode.m_sSeriesName;
@@ -125,10 +125,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     String RegExp = String.Format("<td class=\"menu1\">(?:&nbsp;)*([^<]*?)</td>.*?href=\\\"([^\"]*?indexb[^\"]*?{0}[^\"]*?)\\\"", m_sID);
                     Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                     MatchCollection matches = Engine.Matches(sPage);
-                    List<SeasonMatchResult> sortedMatchList = new List<SeasonMatchResult>();
+                    List<ForomSeasonMatchResult> sortedMatchList = new List<ForomSeasonMatchResult>();
                     foreach (Match match in matches)
                     {
-                        SeasonMatchResult result = new SeasonMatchResult(match.Groups[1].Value, match.Groups[2].Value);
+                        ForomSeasonMatchResult result = new ForomSeasonMatchResult(match.Groups[1].Value, match.Groups[2].Value);
                         // first pass, don't take in account a possible season number in the name
                         result.ComputeDistance(episode);
                         sortedMatchList.Add(result);
@@ -136,11 +136,11 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
                     sortedMatchList.Sort();
 
-                    List<SeasonMatchResult> exactMatches = new List<SeasonMatchResult>();
+                    List<ForomSeasonMatchResult> exactMatches = new List<ForomSeasonMatchResult>();
                     if (sortedMatchList.Count > 0)
                     {
                         MPTVSeriesLog.Write(String.Format("Found {0} series/season entries in the page", sortedMatchList.Count));
-                        foreach (SeasonMatchResult result in sortedMatchList)
+                        foreach (ForomSeasonMatchResult result in sortedMatchList)
                         {
                             if (result.nDistance == 0)
                                 exactMatches.Add(result);
@@ -153,7 +153,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         MPTVSeriesLog.Write(String.Format("Found {0} exact matches in the page", exactMatches.Count));
                         if (exactMatches.Count > 0)
                         {
-                            foreach (SeasonMatchResult result in exactMatches)
+                            foreach (ForomSeasonMatchResult result in exactMatches)
                             {
                                 if (episode.m_nSeasonIndex >= result.nSeasonMin && episode.m_nSeasonIndex <= result.nSeasonMax)
                                 {
@@ -169,7 +169,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             MPTVSeriesLog.Write("Choosing the series/season from a list");
                             // show the user the list and ask for the right one
                             List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                            foreach (SeasonMatchResult match in sortedMatchList)
+                            foreach (ForomSeasonMatchResult match in sortedMatchList)
                             {
                                 if (match.nSeasonMin == match.nSeasonMax)
                                     Choices.Add(new Feedback.CItem(match.sSubName + " season " + match.nSeasonMin, String.Empty, match));
@@ -187,7 +187,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                             Feedback.CItem Selected = null;
                             if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
                             {
-                                finalSeasonResult = Selected.m_Tag as SeasonMatchResult;
+                                finalSeasonResult = Selected.m_Tag as ForomSeasonMatchResult;
                             }
                             bOver = true;
                         }
@@ -195,13 +195,15 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                 }
                 else
                 {
-                    MPTVSeriesLog.Write(String.Format("Error, empty parameter (Lal={0} & ID={1})", sLal, m_sID));
+                    String error = String.Format("Error, empty parameter (Lal={0} & ID={1})", sLal, m_sID);
+                    MPTVSeriesLog.Write(error);
+                    throw new Exception(error);
                 }
 
                 // now, retrieve the subtitle for this episode (try VF first, then VO if no VF found)
                 if (finalSeasonResult != null)
                 {
-                    List<EpisodeMatchResult> matchList = new List<EpisodeMatchResult>();
+                    List<ForomEpisodeMatchResult> matchList = new List<ForomEpisodeMatchResult>();
                     String sLang = String.Empty; // VF
                     do
                     {
@@ -227,14 +229,14 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                         }
                         foreach (Match match in matches)
                         {
-                            EpisodeMatchResult result = new EpisodeMatchResult(match.Groups["name"].Value, match.Groups["link"].Value);
+                            ForomEpisodeMatchResult result = new ForomEpisodeMatchResult(match.Groups["name"].Value, match.Groups["link"].Value);
                             // match season index & episode index
                             if (result.m_nSeasonIndex == episode.m_nSeasonIndex && result.m_nEpisodeIndex == episode.m_nEpisodeIndex)
                             {
                                 MPTVSeriesLog.Write(String.Format("Found a matching episode ({0})", result.m_sName));
                                 result.ComputeDistance(episode);
                                 bool bFound = false;
-                                foreach (EpisodeMatchResult matchFind in matchList)
+                                foreach (ForomEpisodeMatchResult matchFind in matchList)
                                     if (matchFind.m_sName == result.m_sName)
                                     {
                                         bFound = true;
@@ -254,10 +256,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
                     MPTVSeriesLog.Write(String.Format("{0} matching subtitles Found", matchList.Count));
 
-                    List<EpisodeMatchResult> sortedMatchList = new List<EpisodeMatchResult>();
+                    List<ForomEpisodeMatchResult> sortedMatchList = new List<ForomEpisodeMatchResult>();
 
                     // process rars or zips if any
-                    foreach (EpisodeMatchResult result in matchList)
+                    foreach (ForomEpisodeMatchResult result in matchList)
                     {
                         String RegExp = @".*\.(.*)";
                         Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
@@ -276,7 +278,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 {
                                     if (unrar.Extract(file, System.IO.Path.GetTempPath()))
                                     {
-                                        EpisodeMatchResult extractedFile = new EpisodeMatchResult(file, "file://" + System.IO.Path.GetTempPath() + file);
+                                        ForomEpisodeMatchResult extractedFile = new ForomEpisodeMatchResult(file, "file://" + System.IO.Path.GetTempPath() + file);
                                         extractedFile.ComputeDistance(episode);
                                         sortedMatchList.Add(extractedFile);
                                     }
@@ -323,7 +325,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                                     }
                                                 }
                                             }
-                                            EpisodeMatchResult extractedFile = new EpisodeMatchResult(fileName, "file://" + System.IO.Path.GetTempPath() + theEntry.Name);
+                                            ForomEpisodeMatchResult extractedFile = new ForomEpisodeMatchResult(fileName, "file://" + System.IO.Path.GetTempPath() + theEntry.Name);
                                             extractedFile.ComputeDistance(episode);
                                             sortedMatchList.Add(extractedFile);
                                         }
@@ -340,10 +342,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     if (sortedMatchList.Count != 0)
                     {
                         // we need at least some matches
-                        EpisodeMatchResult finalEpisodeResult = null;
+                        ForomEpisodeMatchResult finalEpisodeResult = null;
                         // now, sort & take the first one as our best result
                         List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                        foreach (EpisodeMatchResult result in sortedMatchList)
+                        foreach (ForomEpisodeMatchResult result in sortedMatchList)
                         {
                             // arbitrary value - assume it's the right sub 
                             if (result.m_nDistance < 6)
@@ -374,7 +376,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                                 Feedback.CItem Selected = null;
                                 if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
                                 {
-                                    finalEpisodeResult = Selected.m_Tag as EpisodeMatchResult;
+                                    finalEpisodeResult = Selected.m_Tag as ForomEpisodeMatchResult;
                                 }
                             }
                         }
@@ -405,7 +407,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     }
 
                     // cleanup temp files 
-                    foreach (EpisodeMatchResult result in matchList)
+                    foreach (ForomEpisodeMatchResult result in matchList)
                     {
                         String RegExp = @".*\.(.*)";
                         Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
@@ -471,14 +473,14 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         }
     }
 
-    public class SubtitleEpisode
+    public class ForomSubtitleEpisode
     {
         public String m_sSeriesName = String.Empty;
         public String m_sFileName = String.Empty;
         public int m_nSeasonIndex = 0;
         public int m_nEpisodeIndex = 0;
 
-      public SubtitleEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
+      public ForomSubtitleEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
         {
             m_sSeriesName = sSeriesName.ToLower();
             m_sFileName = sFileName;
@@ -487,17 +489,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         }
     };
 
-    class ForomEpisode: SubtitleEpisode 
-    {
-
-      public ForomEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
-        :
-        base(sSeriesName, sFileName, nSeasonIndex, nEpisodeIndex)
-      {
-      }
-    };
-
-    class EpisodeMatchResult : IComparable<EpisodeMatchResult>
+    class ForomEpisodeMatchResult : IComparable<ForomEpisodeMatchResult>
     {
         public String m_sName = String.Empty;
         public String m_sLink = String.Empty;
@@ -507,7 +499,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         // for sorting
         public int m_nDistance = 0xFFFF;
 
-        public EpisodeMatchResult(String sName, String sLink)
+        public ForomEpisodeMatchResult(String sName, String sLink)
         {
             m_sName = sName;
             m_sLink = sLink;
@@ -523,18 +515,18 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             }
         }
 
-        public int CompareTo(EpisodeMatchResult other)
+        public int CompareTo(ForomEpisodeMatchResult other)
         {
             return m_nDistance.CompareTo(other.m_nDistance);
         }
 
-        public void ComputeDistance(SubtitleEpisode episode)
+        public void ComputeDistance(ForomSubtitleEpisode episode)
         {
             m_nDistance = MediaPortal.Util.Levenshtein.Match(m_sName, episode.m_sSeriesName);
         }
     };
 
-    class SeasonMatchResult : IComparable<SeasonMatchResult>
+    class ForomSeasonMatchResult : IComparable<ForomSeasonMatchResult>
     {
         public String sSubFullName = String.Empty;
         public String sSubName = String.Empty;
@@ -547,12 +539,12 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         // for sorting
         public int nDistance = 0xFFFF;
 
-        public int CompareTo(SeasonMatchResult other)
+        public int CompareTo(ForomSeasonMatchResult other)
         {
             return nDistance.CompareTo(other.nDistance);
         }
 
-        public SeasonMatchResult(String sName, String sLink)
+        public ForomSeasonMatchResult(String sName, String sLink)
         {
             sSubFullName = sName.ToLower();
             sSubName = sSubFullName;
@@ -590,7 +582,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             }
         }
 
-        public void ComputeDistance(SubtitleEpisode episode)
+        public void ComputeDistance(ForomSubtitleEpisode episode)
         {
             nDistance = MediaPortal.Util.Levenshtein.Match(sSubName, episode.m_sSeriesName);
         }

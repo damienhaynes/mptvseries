@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
-using MediaPortal.GUI.Video;
+using WindowPlugins.GUITVSeries;
 
 namespace Test_MP_TVSeries
 {
@@ -17,7 +17,7 @@ namespace Test_MP_TVSeries
     {
         public Form1()
         {
-            MediaPortal.GUI.Video.TVSeriesPlugin plugin = new MediaPortal.GUI.Video.TVSeriesPlugin();
+          WindowPlugins.GUITVSeries.TVSeriesPlugin plugin = new WindowPlugins.GUITVSeries.TVSeriesPlugin();
             
             plugin.ShowPlugin();
         }

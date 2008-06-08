@@ -30,6 +30,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.IO;
+using System.Threading;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
@@ -121,15 +122,15 @@ namespace WindowPlugins.GUITVSeries
             this.Refresh();
         }
 
-        void Monitor_m_NeedUserSelectionEvent(WindowPlugins.GUITVSeries.Feedback.ChooseFromSelectionDescriptor descriptor)
-        {
-            Feedback.CItem Selected = null;
-            if (ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
-            {
-                //                 episodeBestMatch = Selected.m_Tag as DBEpisode;
-                //                 seriesBestMatch = new DBOnlineSeries(episodeBestMatch[DBEpisode.cSeriesID]);
-            }
-        }
+//         void Monitor_m_NeedUserSelectionEvent(WindowPlugins.GUITVSeries.Feedback.ChooseFromSelectionDescriptor descriptor)
+//         {
+//             Feedback.CItem Selected = null;
+//             if (ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
+//             {
+//                 //                 episodeBestMatch = Selected.m_Tag as DBEpisode;
+//                 //                 seriesBestMatch = new DBOnlineSeries(episodeBestMatch[DBEpisode.cSeriesID]);
+//             }
+//         }
 
 
         #region Init
@@ -274,6 +275,7 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
             m_paneListExtra.Add(panel_forom);
+            m_paneListExtra.Add(panel_seriessubs);
             m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
@@ -281,6 +283,9 @@ namespace WindowPlugins.GUITVSeries
             treeView_Extra.Nodes.Add(nodeRoot);
             nodeChild = new TreeNode(panel_forom.Tag.ToString());
             nodeChild.Name = panel_forom.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+            nodeChild = new TreeNode(panel_seriessubs.Tag.ToString());
+            nodeChild.Name = panel_seriessubs.Name;
             nodeRoot.Nodes.Add(nodeChild);
             nodeChild = new TreeNode(panel_remository.Tag.ToString());
             nodeChild.Name = panel_remository.Name;
@@ -317,6 +322,10 @@ namespace WindowPlugins.GUITVSeries
             checkBox_foromEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
             textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
             textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
+
+            checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
+            
             checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
             textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
             textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
@@ -2043,6 +2052,11 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSubs_Forom_BaseURL, textBox_foromBaseURL.Text);
         }
 
+		private void textBox_seriessubsBaseURL_TextChanged(object sender, EventArgs e)
+		{
+		  DBOption.SetOptions(DBOption.cSubs_SeriesSubs_BaseURL, textBox_seriessubsBaseURL.Text);
+		}
+
         private void log_window_changed()
         {
             this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
@@ -2284,35 +2298,109 @@ namespace WindowPlugins.GUITVSeries
             return true;
         }
 
-        //private void GetSubtitles(TreeNode node)
-        //{
-        //    switch (node.Name)
-        //    {
-        //        case DBSeries.cTableName:
-        //            DBSeries series = (DBSeries)node.Tag;
-        //            break;
+        private void GetSubtitles(TreeNode node)
+        {
+            switch (node.Name)
+            {
+                case DBSeries.cTableName:
+                    DBSeries series = (DBSeries)node.Tag;
+                    break;
 
-        //        case DBSeason.cTableName:
-        //            DBSeason season = (DBSeason)node.Tag;
-        //            break;
+                case DBSeason.cTableName:
+                    DBSeason season = (DBSeason)node.Tag;
+                    break;
 
-        //        case DBEpisode.cTableName:
-        //            DBEpisode episode = (DBEpisode)node.Tag;
-        //            if (checkBox_foromEnable.Checked)
-        //            {
-        //                Subtitles.Forom forom = new Subtitles.Forom(this);
-        //                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-        //                forom.GetSubs(episode);
-        //            }
-        //            if (checkBox_remositoryEnable.Checked)
-        //            {
-        //                Subtitles.Remository remository = new Subtitles.Remository(this);
-        //                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-        //                remository.GetSubs(episode);
-        //            }
-        //            break;
-        //    }
-        //}
+                case DBEpisode.cTableName:
+                    DBEpisode episode = (DBEpisode)node.Tag;
+
+                    List<CItem> Choices = new List<CItem>();
+                    if (checkBox_foromEnable.Checked)
+					  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                    if (checkBox_seriessubsEnable.Checked)
+					  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
+                    if (checkBox_remositoryEnable.Checked)
+					  Choices.Add(new CItem("Remository", "Remository", "Remository"));
+
+                    CItem selected = null;
+                    switch (Choices.Count)
+                    {
+                        case 0:
+                            // none enable, do nothing
+                            break;
+
+                        case 1:
+                            // only one enabled, don't bother showing the dialog
+                            selected = Choices[0];
+                            break;
+
+                        default:
+                            // more than 1 choice, show a feedback dialog
+                            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+                            descriptor.m_sTitle = "Get subtitles from?";
+                            descriptor.m_sListLabel = "Enabled subtitle sites:";
+                            descriptor.m_List = Choices;
+                            descriptor.m_sbtnIgnoreLabel = String.Empty;
+                            
+                            bool bReady = false;
+                            while (!bReady)
+                            {
+                                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+                                switch (resultFeedback)
+                                {
+                                    case ReturnCode.NotReady:
+                                        {
+                                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                                            Thread.Sleep(5000);
+                                        }
+                                        break;
+
+                                    case ReturnCode.OK:
+                                        {
+                                            bReady = true;
+                                        }
+                                        break;
+
+                                    default:
+                                        {
+                                            // exit too if cancelled
+                                            bReady = true;
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+
+                    if (selected != null)
+                    {
+                        switch ((String)selected.m_Tag)
+                        {
+                            case "Forom":
+                                Subtitles.Forom forom = new Subtitles.Forom(this);
+                                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                                forom.GetSubs(episode);
+                                break;
+
+                            case "Series Subs":
+								Subtitles.SeriesSubs seriesSubs = new Subtitles.SeriesSubs(this);
+								seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
+								seriesSubs.GetSubs(episode);
+								break;
+
+                            case "Remository":
+                                Subtitles.Remository remository = new Subtitles.Remository(this);
+                                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                remository.GetSubs(episode);
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+		void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
+		{
+		}
 
         void forom_SubtitleRetrievalCompleted(bool bFound)
         {
@@ -3181,6 +3269,11 @@ namespace WindowPlugins.GUITVSeries
         private void checkbox_foromEnable_checkedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubs_Forom_Enable, checkBox_foromEnable.Checked);
+        }
+
+        private void checkBox_seriessubEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_SeriesSubs_Enable, checkBox_seriessubsEnable.Checked);
         }
 
         private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
