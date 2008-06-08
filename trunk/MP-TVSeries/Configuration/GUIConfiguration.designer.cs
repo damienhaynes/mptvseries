@@ -146,6 +146,7 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentDetailsUrl = new System.Windows.Forms.TextBox();
             this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+		  this.textBox_seriessubsBaseURL = new System.Windows.Forms.TextBox();
             this.checkBox_AutoChooseOrder = new System.Windows.Forms.CheckBox();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.comboBox_seasonFormat = new System.Windows.Forms.ComboBox();
@@ -336,6 +337,9 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
+		  this.panel_seriessubs = new System.Windows.Forms.Panel();
+		  this.label61 = new System.Windows.Forms.Label();
+		  this.checkBox_seriessubsEnable = new System.Windows.Forms.CheckBox();
             this.panel_forom = new System.Windows.Forms.Panel();
             this.checkBox_foromEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -413,6 +417,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.SuspendLayout();
             this.panel_newsroot.SuspendLayout();
             this.panel_torrentroot.SuspendLayout();
+		  this.panel_seriessubs.SuspendLayout();
             this.panel_forom.SuspendLayout();
             this.panel_remository.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
@@ -1267,6 +1272,18 @@ namespace WindowPlugins.GUITVSeries
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+		  // textBox_seriessubsBaseURL
+		  // 
+		  this.textBox_seriessubsBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+					  | System.Windows.Forms.AnchorStyles.Right)));
+		  this.textBox_seriessubsBaseURL.Location = new System.Drawing.Point(147, 3);
+		  this.textBox_seriessubsBaseURL.Name = "textBox_seriessubsBaseURL";
+		  this.textBox_seriessubsBaseURL.Size = new System.Drawing.Size(68, 20);
+		  this.textBox_seriessubsBaseURL.TabIndex = 6;
+		  this.toolTip_Help.SetToolTip(this.textBox_seriessubsBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
+				  ", you\'re on your own :)");
+		  this.textBox_seriessubsBaseURL.TextChanged += new System.EventHandler(this.textBox_seriessubsBaseURL_TextChanged);
+		  // 
             // checkBox_AutoChooseOrder
             // 
             this.checkBox_AutoChooseOrder.AutoSize = true;
@@ -3288,6 +3305,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_newsroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
+		  this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_seriessubs);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
@@ -3722,6 +3740,37 @@ namespace WindowPlugins.GUITVSeries
             this.panel_subtitleroot.TabIndex = 0;
             this.panel_subtitleroot.Tag = "Subtitles";
             // 
+		  // panel_seriessubs
+		  // 
+		  this.panel_seriessubs.Controls.Add(this.label61);
+		  this.panel_seriessubs.Controls.Add(this.textBox_seriessubsBaseURL);
+		  this.panel_seriessubs.Controls.Add(this.checkBox_seriessubsEnable);
+		  this.panel_seriessubs.Location = new System.Drawing.Point(30, 80);
+		  this.panel_seriessubs.Name = "panel_seriessubs";
+		  this.panel_seriessubs.Size = new System.Drawing.Size(226, 44);
+		  this.panel_seriessubs.TabIndex = 1;
+		  this.panel_seriessubs.Tag = "SeriesSubs Subtitles";
+		  // 
+		  // label61
+		  // 
+		  this.label61.Location = new System.Drawing.Point(4, 6);
+		  this.label61.Name = "label61";
+		  this.label61.Size = new System.Drawing.Size(138, 18);
+		  this.label61.TabIndex = 5;
+		  this.label61.Text = "SeriesSub Base &URL:";
+		  this.label61.TextAlign = System.Drawing.ContentAlignment.TopRight;
+		  // 
+		  // checkBox_seriessubsEnable
+		  // 
+		  this.checkBox_seriessubsEnable.AutoSize = true;
+		  this.checkBox_seriessubsEnable.Location = new System.Drawing.Point(7, 24);
+		  this.checkBox_seriessubsEnable.Name = "checkBox_seriessubsEnable";
+		  this.checkBox_seriessubsEnable.Size = new System.Drawing.Size(58, 17);
+		  this.checkBox_seriessubsEnable.TabIndex = 4;
+		  this.checkBox_seriessubsEnable.Text = "enable";
+		  this.checkBox_seriessubsEnable.UseVisualStyleBackColor = true;
+		  this.checkBox_seriessubsEnable.CheckedChanged += new System.EventHandler(this.checkBox_seriessubEnable_CheckedChanged);
+		  // 
             // panel_forom
             // 
             this.panel_forom.Controls.Add(this.checkBox_foromEnable);
@@ -4061,6 +4110,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.PerformLayout();
             this.panel_torrentroot.ResumeLayout(false);
             this.panel_torrentroot.PerformLayout();
+		  this.panel_seriessubs.ResumeLayout(false);
+		  this.panel_seriessubs.PerformLayout();
             this.panel_forom.ResumeLayout(false);
             this.panel_forom.PerformLayout();
             this.panel_remository.ResumeLayout(false);
@@ -4345,8 +4396,8 @@ namespace WindowPlugins.GUITVSeries
         private About aboutScreen;
         private System.Windows.Forms.TextBox txtUserID;
         private System.Windows.Forms.Label label54;
-        private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
-        private WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration formattingConfiguration1;
+		private WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration formattingConfiguration1;
+		private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionImmediatlySwitchViews;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionappendFirstLogoToList;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptiongraphicalGroupView;
@@ -4362,5 +4413,9 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label56;
         private System.Windows.Forms.Button btnLogoDeleteAll;
         private System.Windows.Forms.CheckBox checkBox_AutoChooseOrder;
+        private System.Windows.Forms.Panel panel_seriessubs;
+        private System.Windows.Forms.CheckBox checkBox_seriessubsEnable;
+		private System.Windows.Forms.Label label61;
+		private System.Windows.Forms.TextBox textBox_seriessubsBaseURL;
     }
 }

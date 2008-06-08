@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         DBOnlineSeries series = new DBOnlineSeries(m_dbEpisode[DBEpisode.cSeriesID]);
         DBSeason season = new DBSeason(m_dbEpisode[DBEpisode.cSeriesID], m_dbEpisode[DBEpisode.cSeasonIndex]);
-        RemositoryEpisode episode = new RemositoryEpisode(series[DBOnlineSeries.cOriginalName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
+        RemositorySubtitleEpisode episode = new RemositorySubtitleEpisode(series[DBOnlineSeries.cOriginalName], m_dbEpisode[DBEpisode.cFilename], m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
        
         //login handling: get session cookie and add to WebClient headers in order to user autenticated session
         String sLocalSeriesName = episode.m_sSeriesName;
@@ -328,20 +328,20 @@ namespace WindowPlugins.GUITVSeries.Subtitles
     }
 
 
-    private int matchSeries(String sPage,WebClient client, RemositoryEpisode episode)
+    private int matchSeries(String sPage,WebClient client, RemositorySubtitleEpisode episode)
     {
       MatchCollection matches = Engine.Matches(sPage);
       matches = Engine.Matches(sPage);
       int retValue = 0;
 
-      List<SeriesMatchResult> sortedMatchList = new List<SeriesMatchResult>();
-      List<SeriesMatchResult> exactMatches = new List<SeriesMatchResult>();
+      List<RemositorySeriesMatchResult> sortedMatchList = new List<RemositorySeriesMatchResult>();
+      List<RemositorySeriesMatchResult> exactMatches = new List<RemositorySeriesMatchResult>();
       Feedback.CItem selectedSeries = null;
 
       //load matches in sortedMatchList
       foreach (Match match in matches)
       {
-        SeriesMatchResult result = new SeriesMatchResult(match.Groups[3].Value.ToLower(), match.Groups[2].Value);
+        RemositorySeriesMatchResult result = new RemositorySeriesMatchResult(match.Groups[3].Value.ToLower(), match.Groups[2].Value);
         result.ComputeDistance(episode);
         sortedMatchList.Add(result);
       }
@@ -353,7 +353,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
       {
         MPTVSeriesLog.Write(String.Format("Found {0} series/season entries in the page", sortedMatchList.Count));
         //check if there are exact matches
-        foreach (SeriesMatchResult result in sortedMatchList)
+        foreach (RemositorySeriesMatchResult result in sortedMatchList)
         {
           if (result.nDistance == 1)
             exactMatches.Add(result);
@@ -371,7 +371,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         {
           List<Feedback.CItem> Choices = new List<Feedback.CItem>();
 
-          foreach (SeriesMatchResult match in exactMatches)
+          foreach (RemositorySeriesMatchResult match in exactMatches)
           {
             Choices.Add(new Feedback.CItem(match.sSubFullName, String.Empty, match.sIdx));
           }
@@ -397,7 +397,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
           MPTVSeriesLog.Write("Choosing the series/season from a list");
           // show the user the list and ask for the right one
           List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-          foreach (SeriesMatchResult match in sortedMatchList)
+          foreach (RemositorySeriesMatchResult match in sortedMatchList)
           {
             Choices.Add(new Feedback.CItem(match.sSubFullName.Trim(), String.Empty, match.sIdx));
           }
@@ -420,7 +420,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
       return retValue;
     }
 
-    private int matchSeason(String sPage, WebClient client, RemositoryEpisode episode)
+    private int matchSeason(String sPage, WebClient client, RemositorySubtitleEpisode episode)
     {
       int retValue = 0;
       MatchCollection matches = Engine.Matches(sPage);
@@ -459,7 +459,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
       return retValue;
     }
 
-    private int matchEpisode(String sPage,WebClient client, RemositoryEpisode episode)
+    private int matchEpisode(String sPage,WebClient client, RemositorySubtitleEpisode episode)
     {
       int retValue = 0;
       //Find other file version
@@ -563,10 +563,14 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
   }
 
-  class RemositoryEpisode: SubtitleEpisode
+  public class RemositorySubtitleEpisode
   {
-    public RemositoryEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
-    : base(sSeriesName,sFileName,nSeasonIndex,nEpisodeIndex)
+      public String m_sSeriesName = String.Empty;
+      public String m_sFileName = String.Empty;
+      public int m_nSeasonIndex = 0;
+      public int m_nEpisodeIndex = 0;
+      
+      public RemositorySubtitleEpisode(String sSeriesName, String sFileName, int nSeasonIndex, int nEpisodeIndex)
     {
       m_sSeriesName = sSeriesName.ToLower();
       m_sFileName = sFileName;
@@ -643,7 +647,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
     }
   }
 
-  public class SeriesMatchResult : IComparable<SeriesMatchResult>
+  public class RemositorySeriesMatchResult : IComparable<RemositorySeriesMatchResult>
   {
     public String sSubFullName = String.Empty;
     public String sIdx = String.Empty;
@@ -651,18 +655,18 @@ namespace WindowPlugins.GUITVSeries.Subtitles
     // for sorting
     public int nDistance = 0xFFFF;
 
-    public int CompareTo(SeriesMatchResult other)
+    public int CompareTo(RemositorySeriesMatchResult other)
     {
       return nDistance.CompareTo(other.nDistance);
     }
 
-    public SeriesMatchResult(String sName, String sIndex)
+    public RemositorySeriesMatchResult(String sName, String sIndex)
     {
       sSubFullName = sName.ToLower();
       sIdx = sIndex;
     }
 
-    public void ComputeDistance(SubtitleEpisode episode)
+    public void ComputeDistance(RemositorySubtitleEpisode episode)
     {
       nDistance = MediaPortal.Util.Levenshtein.Match(sSubFullName, episode.m_sSeriesName.ToLower());
     }
