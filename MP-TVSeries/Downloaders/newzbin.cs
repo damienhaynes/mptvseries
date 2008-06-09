@@ -70,12 +70,20 @@ namespace WindowPlugins.GUITVSeries.Newzbin
         public bool Search(DBEpisode dbEpisode)
         {
             m_Search = DBNewzbin.Get()[0];
-            if (m_Search[DBNewzbin.cSearchUrl].ToString().Length > 0 && System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath)))
+            if (m_Search[DBNewzbin.cSearchUrl].ToString().Length > 0)
             {
+              if (System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath)))
+              {
                 m_dbEpisode = dbEpisode;
                 worker.RunWorkerAsync();
                 return true;
+              }
+              else
+                MPTVSeriesLog.Write("No path for the NZB file handler (newsleecher or other)");
             }
+            else
+              MPTVSeriesLog.Write("Newzbin search URL is empty!");
+
             return false;
         }
 
@@ -222,7 +230,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
             try
             {
                 DBOnlineSeries series = new DBOnlineSeries(m_dbEpisode[DBEpisode.cSeriesID]);
-                String sSeries = series[DBOnlineSeries.cSortName];
+                String sSeries = series[DBOnlineSeries.cPrettyName];
                 // remove anything between parenthesis
                 String RegExp = "(\\([^)]*\\))";
                 Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
