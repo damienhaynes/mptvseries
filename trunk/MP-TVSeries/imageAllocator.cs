@@ -80,7 +80,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;
                 string ident = buildIdentifier(sFileName);
-                if(GUITextureManager.LoadFromMemory(null, ident, 0, size.Width, size.Height) > 0) return ident;
+                if (GUITextureManager.LoadFromMemory(null, ident, 0, size.Width, size.Height) > 0) return ident;
                 else return buildMemoryImage(LoadImageFastFromFile(sFileName), ident, size, false);
             }
             catch (Exception e)
@@ -92,7 +92,7 @@ namespace WindowPlugins.GUITVSeries
 
         static string buildIdentifier(string name)
         {
-           return "[TVSeries:" + name + "]";
+            return "[TVSeries:" + name + "]";
         }
 
         /// <summary>

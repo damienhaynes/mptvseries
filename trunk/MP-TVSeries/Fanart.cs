@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class Fanart
+    class Fanart : IDisposable
     {
         #region config Constants
         const string seriesFanArtFilenameFormat = "*{0}*.*";
@@ -49,6 +49,12 @@ namespace WindowPlugins.GUITVSeries
         string _randomPick = null;
         string _textureName = null;
         DBFanart _dbchosenfanart = null;
+        #endregion
+
+        #region BackGroundAllocation
+        System.ComponentModel.BackgroundWorker bgAllocator = new System.ComponentModel.BackgroundWorker();
+        public delegate void TextureAllocatedDel(Fanart fanart);
+        public event TextureAllocatedDel TextureAllocated;
         #endregion
 
         #region Properties
@@ -92,6 +98,7 @@ namespace WindowPlugins.GUITVSeries
         {
             _seriesID = seriesID;
             _seasonMode = false;
+            setUpBGAllocator();
             getFanart();
         }
 
@@ -100,6 +107,7 @@ namespace WindowPlugins.GUITVSeries
             _seriesID = seriesID;
             _seasonIndex = seasonIndex;
             _seasonMode = true;
+            setUpBGAllocator();
             getFanart();
         }
         #endregion
@@ -181,21 +189,22 @@ namespace WindowPlugins.GUITVSeries
 
         public string FanartAsTexture
         {
-            get 
+            get
             {
-                string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
-                if (_textureName != _textureName_temp)
-                {
-                    FlushTexture(); // flush the old one
-                    _textureName = _textureName_temp;
-                }
                 return _textureName;
             }
+        }
+
+        public void AsynAllocFanartAsTexture()
+        {
+            if(!bgAllocator.IsBusy)
+                bgAllocator.RunWorkerAsync(FanartFilename);                        
         }
 
         public void FlushTexture()
         {
             if (_textureName != null) ImageAllocator.Flush(_textureName);
+            _textureName = null;
         }
 
         public bool RandomPickIsLight
@@ -262,6 +271,41 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+
+        void setUpBGAllocator()
+        {
+            this.bgAllocator.DoWork += new System.ComponentModel.DoWorkEventHandler(bgAllocator_DoWork);
+            this.bgAllocator.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgAllocator_RunWorkerCompleted);
+        }
+
+        void bgAllocator_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            if (TextureAllocated != null)
+                TextureAllocated(this);
+        }
+
+        void bgAllocator_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            string _textureName_temp = ImageAllocator.GetOtherImage(e.Argument as String, requiredSize, false);
+            if (_textureName == null) _textureName = _textureName_temp;
+            lock (_textureName)
+            {
+                if (_textureName != _textureName_temp)
+                {
+                    FlushTexture(); // flush the old one
+                    _textureName = _textureName_temp;
+                }
+            }
+        }
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            FlushTexture();
+        }
+
         #endregion
     }
 }

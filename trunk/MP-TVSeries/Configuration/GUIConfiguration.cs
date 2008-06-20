@@ -2292,11 +2292,14 @@ namespace WindowPlugins.GUITVSeries
             return ReturnCode.Ignore;
         }
 
+        #if inclDownloaders
         public bool NoneFound()
         {
             MessageBox.Show("No subtitles were found for this file", "error");
             return true;
         }
+
+
 
         private void GetSubtitles(TreeNode node)
         {
@@ -2409,7 +2412,7 @@ namespace WindowPlugins.GUITVSeries
         void remository_SubtitleRetrievalCompleted(bool bFound)
         {
         }
-
+#endif
         private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;
