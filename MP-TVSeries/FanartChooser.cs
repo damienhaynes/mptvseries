@@ -63,9 +63,12 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void downloadingWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (m_Facade != null) m_Facade.Clear();
-            loadingWorker.RunWorkerAsync(SeriesID);
+        {            
+            if (!loadingWorker.IsBusy)
+            {
+                if (m_Facade != null) m_Facade.Clear();
+                loadingWorker.RunWorkerAsync(SeriesID);
+            }
         }
 
         static void downloadingWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
