@@ -30,6 +30,7 @@ using MediaPortal.GUI.Library;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using aclib.Performance;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -106,11 +107,15 @@ namespace WindowPlugins.GUITVSeries
         {
             string name = buildIdentifier ? ImageAllocator.buildIdentifier(identifier) : identifier;
             try
-            {
+            {                
                 // we don't have to try first, if name already exists mp will not do anything with the image
                 if (size.Height > 0 && (size.Height != image.Size.Height || size.Width != image.Size.Width)) //resize
-                    GUITextureManager.LoadFromMemory(new Bitmap(image, size), name, 0, size.Width, size.Height);
-                else GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
+                {                    
+                    image = Resize(image, size);                                        
+                }
+                PerfWatcher.GetNamedWatch("add to TextureManager").Start();
+                GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
+                PerfWatcher.GetNamedWatch("add to TextureManager").Stop();
             }
             catch (Exception)
             {
@@ -270,7 +275,8 @@ namespace WindowPlugins.GUITVSeries
         /// <param name="filename">The filename to load</param>
         /// <returns>A .NET Image object</returns>
         public static Image LoadImageFastFromFile(string filename)
-        {            
+        {
+            PerfWatcher.GetNamedWatch("Img Loading").Start();
             IntPtr loadingImage = IntPtr.Zero;
             Image i = null;
             try
@@ -288,10 +294,50 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("ImageLoading threw an error: " + filename + " - " + e.Message);
                 // this probably means the image is bad
+                PerfWatcher.GetNamedWatch("Img Loading").Stop();
                 return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
             }
+            PerfWatcher.GetNamedWatch("Img Loading").Stop();
             return i;
         }
         #endregion
+
+        public static Bitmap Resize(Image img, Size size)
+        {
+            Bitmap bmp = null;
+
+            // this should be tons faster by using simple nearestneighbour (about 3x in my testapp)
+            // but for some reason when run in here its about 2x slower than a simple new Bitmap()
+            // ???????
+
+            //if (size.Height % 16 != 0)
+            //    size.Height += 16 - size.Height % 16;
+            //if (size.Width % 16 != 0)
+            //    size.Width += 16 - size.Width % 16;
+            //MPTVSeriesLog.Write(size.Width + "x" + size.Height);
+
+            //PerfWatcher.GetNamedWatch("NN ImgScaling").Start();
+            ////create a new Bitmap the size of the new image
+            //bmp = new Bitmap(size.Width, size.Height);
+            ////create a new graphic from the Bitmap
+            //Graphics graphic = Graphics.FromImage((Image)bmp);
+            //graphic.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            //graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            //graphic.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.AssumeLinear;
+            ////draw the newly resized image
+            //PerfWatcher.GetNamedWatch("NN ImgScaling draw").Start();
+            //graphic.DrawImage(img, 0, 0, size.Width, size.Height);
+            //PerfWatcher.GetNamedWatch("NN ImgScaling draw").Stop();
+            ////dispose and free up the resources
+            //graphic.Dispose();
+
+            //PerfWatcher.GetNamedWatch("NN ImgScaling").Stop();
+            aclib.Performance.PerfWatcher.GetNamedWatch("ImgScaling").Start();
+            bmp = new Bitmap(img, size);
+            //bmp = (Bitmap)img.GetThumbnailImage(size.Width, size.Height, null, IntPtr.Zero);
+            //bmp = (Bitmap)img;
+            aclib.Performance.PerfWatcher.GetNamedWatch("ImgScaling").Stop();
+            return bmp;
+        }
     }
 }

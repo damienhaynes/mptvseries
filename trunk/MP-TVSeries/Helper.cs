@@ -139,7 +139,7 @@ namespace WindowPlugins.GUITVSeries
             return results;
         }
 
-        public delegate void ForEachOperation<T>(ref T element, int currIndex);
+        public delegate void ForEachOperation<T>(T element, int currIndex);
         /// <summary>
         /// Performs an operation for each element in the list, by starting with a specific index and working its way around it (eg: n, n+1, n-1, n+2, n-2, ...)
         /// </summary>
@@ -163,13 +163,13 @@ namespace WindowPlugins.GUITVSeries
                     if (lower >= 0)                                      // are lower elems left?
                     {
                         item = elements[lower];
-                        operation(ref item, lower);
+                        operation(item, lower);
                         elements[lower] = item;
                     }
                     if (upper < elements.Count)                          // are higher elems left?
                     {
                         item = elements[upper];
-                        operation(ref item, upper);
+                        operation(item, upper);
                         elements[upper] = item;
                     }
                 }
@@ -317,49 +317,6 @@ namespace WindowPlugins.GUITVSeries
             return path;
         }       
         #endregion
-    }
-
-    /// <summary>
-    /// Class can be used to measure Performance (each time between Start() and Stop()
-    /// Provides Microsecond Accuracy
-    /// </summary>
-    class perfana
-    {
-        static Stopwatch timer = new Stopwatch();
-        static int noStarted = 0;
-        public static void Start()
-        {
-            noStarted++;
-            timer.Start();
-        }
-
-        public static void Stop()
-        {
-            timer.Stop();
-        }
-
-        public static void logMeasure(MPTVSeriesLog.LogLevel level)
-        {
-            if (noStarted == 0) return; // never started, nothing to report
-            decimal micro = timer.Elapsed.Ticks / 10M;
-            MPTVSeriesLog.Write(string.Format("Code Measurement:  {0} us {1} ms total, {2} us/{3} ms/run (Counter: {4})", micro, timer.ElapsedMilliseconds, (micro / noStarted).ToString("00.00"), (timer.ElapsedMilliseconds / noStarted).ToString("00.00"), noStarted), level);
-        }
-
-        public static void Reset()
-        {
-            timer.Reset();
-            noStarted = 0;
-        }
-        public static void stopLogReset()
-        {
-            stopLogReset(MPTVSeriesLog.LogLevel.Normal);
-        }
-        public static void stopLogReset(MPTVSeriesLog.LogLevel level)
-        {
-            Stop();
-            logMeasure(level);
-            Reset();
-        }
     }
 }
 
