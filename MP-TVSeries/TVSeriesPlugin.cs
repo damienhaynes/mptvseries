@@ -40,6 +40,7 @@ using Torrent = WindowPlugins.GUITVSeries.Torrent;
 using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using WindowPlugins.GUITVSeries.Subtitles;
 #endif
+using aclib.Performance;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -382,18 +383,22 @@ namespace WindowPlugins.GUITVSeries
         {                        
             if (this.dummyThumbnailGraphicalMode == null || mode == GUIFacadeControl.ViewMode.List)
             {
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
                 this.m_Facade.View = mode;
                 if (this.dummyThumbnailGraphicalMode != null)
                     dummyThumbnailGraphicalMode.Visible = false;
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Stop();
             }
             else
             {
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
                 if (mode == GUIFacadeControl.ViewMode.AlbumView)
                 {
                     MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons",MPTVSeriesLog.LogLevel.Debug);
                     this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
                 }
                 this.dummyThumbnailGraphicalMode.Visible = mode == GUIFacadeControl.ViewMode.AlbumView; // so you can trigger animations
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();
             }
             if (dummyFacadeListMode != null)
                 this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
@@ -421,6 +426,7 @@ namespace WindowPlugins.GUITVSeries
                         bg.CancelAsync();
                     return;
                 }
+                aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Start();
                 prepareLoadFacade();
                 bg.RunWorkerAsync();
             }
@@ -486,6 +492,7 @@ namespace WindowPlugins.GUITVSeries
         void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             if (bg.CancellationPending) return;
+            PerfWatcher.GetNamedWatch("FacadeLoading changed").Start();
             BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
             if (arg == null || arg.Type == BackGroundLoadingArgumentType.None) return;
 
@@ -494,6 +501,7 @@ namespace WindowPlugins.GUITVSeries
                 case BackGroundLoadingArgumentType.FullElement:
                 case BackGroundLoadingArgumentType.ElementForDelayedImgLoading:
                     {
+                        PerfWatcher.GetNamedWatch("FacadeLoading addElem").Start();
                         GUIListItem gli = arg.Argument as GUIListItem;
                         //MPTVSeriesLog.Write("Element to Display: " + arg.IndexArgument.ToString());
                         if (m_Facade != null && gli != null)
@@ -509,16 +517,19 @@ namespace WindowPlugins.GUITVSeries
                                 itemsForDelayedImgLoading.Add(gli);
                             }
                         }
+                        PerfWatcher.GetNamedWatch("FacadeLoading addElem").Stop();
                     }
                     break;
                 case BackGroundLoadingArgumentType.DelayedImgLoading:
                 {
+                    PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Start();
                     //MPTVSeriesLog.Write("delayed Img: " + arg.IndexArgument.ToString());
                     if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
                     {
                         string image = arg.Argument as string;
                         itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
                     }
+                    PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
                 } break;
                 case BackGroundLoadingArgumentType.ElementSelection:
                 {
@@ -542,10 +553,17 @@ namespace WindowPlugins.GUITVSeries
                     SkipSeasonCode = SkipSeasonCodes.SkipSeasonUp;
                     break;
             }
+            PerfWatcher.GetNamedWatch("FacadeLoading changed").Stop();
         }
 
         void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Stop();
+            foreach(aclib.Performance.Watch w in aclib.Performance.PerfWatcher.InstantiatedWatches)
+            {
+                MPTVSeriesLog.Write(w.Info);
+                w.Reset();
+            }
             if (e.Cancelled)
             {
                 MPTVSeriesLog.Write("in facadedone - detected cancel - performing delayed userclick");
@@ -602,17 +620,16 @@ namespace WindowPlugins.GUITVSeries
                 OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
             }
             SkipSeasonCode = SkipSeasonCodes.none;
-            skipSeasonIfOne_DirectionDown = true;
-
+            skipSeasonIfOne_DirectionDown = true;            
         }
 
         void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
         {            
             facadeLoaded = false; // reset
-            
+            PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Start();
             //using (WaitCursor c = new WaitCursor()) // should we show a waitcursor?
                 bgLoadFacade();
-            
+                PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Stop();
             MPTVSeriesLog.Write("bgLoadFacade done");
             if (bg.CancellationPending)
                 e.Cancel = true;                          
@@ -623,12 +640,13 @@ namespace WindowPlugins.GUITVSeries
         {            
             MPTVSeriesLog.Write("Begin LoadFacade",MPTVSeriesLog.LogLevel.Debug);            
             try
-            {                
+            {
                 GUIListItem item = null;
                 int selectedIndex = -1;
                 int count = 0;
                 bool delayedImageLoading = false;
                 List<DBSeries> seriesList = null;
+                PerfWatcher.GetNamedWatch("FacadeLoading getting/reporting items").Start();
                 switch (this.listLevel)
                 {
                     #region Group
@@ -978,26 +996,48 @@ namespace WindowPlugins.GUITVSeries
                 
                 #endregion
 
+                PerfWatcher.GetNamedWatch("FacadeLoading getting/reporting items").Stop();
+
                 #region DelayedImageLoading
                 if (delayedImageLoading && seriesList != null)
                 {
+                    PerfWatcher.GetNamedWatch("FacadeLoading BG Thread - Del. Img Loading").Start();
+                    // This is a perfect oportunity to use all cores on the machine
+                    // we queue each image up to be loaded, resize and put them into memory in parallel
+                    // on my dual core dev. machine this saves about 40%, but it heavily depends on the no. of images
+                    // and img sizes the user has selected in config
+                    int done = 0;                   // we need to know later when all threads are done
+                    ThreadPool.SetMinThreads(8, 8); // seems to default to 2 (avail. cores?)
                     try
                     {
-                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(ref DBSeries series, int currIndex)
+                        // we know which one was selected, lets be smart and try to first load those around it
+                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex)
                         {
                             if (!bg.CancellationPending)
                             {
-                                string img = ImageAllocator.GetSeriesBanner(series);
-                                //if (Helper.String.IsNullOrEmpty(img))
-                                //    item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
-                                //else item.IconImage = item.IconImageBig = img;
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, currIndex, img);
+                                // now foreach series, queue up the banner loading in the threadpool
+                                ThreadPool.QueueUserWorkItem(delegate(object state)
+                                {
+                                    string img = ImageAllocator.GetSeriesBanner(series);
+                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, currIndex, img);
+                                    Interlocked.Increment(ref done);
+                                });
                             }
+                            else done++;
                         });
+                        
                     }
-                    catch (Exception exs) { MPTVSeriesLog.Write("Delayed Exception: " + exs.Message); }
-                }
+                    catch (Exception exs) { MPTVSeriesLog.Write("Delayed ImgLoad Exception: " + exs.Message); }
+                    
+                    // we now need to wait until all are done, because we are already on a different thread
+                    // and the workitems themselves call our bg worker's progresschanged method to display the imgs
+                    // on the gui's thread, and if we exit to early we cannot do that
+                    while (done < seriesList.Count) // let's hope we don't get an exception in a background thread or we will never finish
+                        Thread.Sleep(15);           // this no. can use some tweaking
+                    PerfWatcher.GetNamedWatch("FacadeLoading BG Thread - Del. Img Loading").Stop();
+                }                                
                 #endregion
+                
             }
 
             catch (Exception e)
@@ -2435,7 +2475,7 @@ namespace WindowPlugins.GUITVSeries
                         if (m_SelectedEpisode == null) return;
                         MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
                         m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);                        
-                        break;
+                        break;                        
                 }
             }
             base.OnClicked(controlId, control, actionType);

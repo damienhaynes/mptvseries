@@ -45,9 +45,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;inclDownloaders</DefineConstants>
+    <DefineConstants>TRACE;inclDownloaders</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -247,6 +247,7 @@
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
     <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
     <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
+    <Compile Include="PerfWatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -369,6 +370,6 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "D:\Dev\Own\Mediaportal SVN\xbmc\bin\Debug\plugins\windows\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "H:\MP2\xbmc\bin\Release\plugins\windows" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
