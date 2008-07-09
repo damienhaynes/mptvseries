@@ -850,7 +850,7 @@ namespace WindowPlugins.GUITVSeries
                                     else
                                     {
                                         // since onseasonselected won't be triggered automatically, we have to force it
-                                        //Season_OnItemSelected(item);
+                                        Season_OnItemSelected(item);
                                         selectedIndex = 0;
                                     }
                                     
