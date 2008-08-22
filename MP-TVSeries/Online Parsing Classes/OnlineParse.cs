@@ -1189,6 +1189,53 @@ namespace WindowPlugins.GUITVSeries
                 String sLastGraphicalBanner = String.Empty;
                 String sHighestRatedSeriesBanner = String.Empty;
 
+                // Cleanup available Banners to choose from                
+                string sBanners = series[DBOnlineSeries.cBannerFileNames].ToString();
+                String[] split = sBanners.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                string sAvailableBanners = "";
+                foreach (String filename in split)
+                {
+                    if (DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                    {
+                        // Only make posters available
+                        if (filename.Contains("posters"))
+                        {
+                            if (sAvailableBanners.Trim().Length == 0)
+                            {
+                                sAvailableBanners += filename;
+                            }
+                            else
+                                sAvailableBanners += "|" + filename;
+                        }
+                    }
+                    else
+                    {
+                        if (!filename.Contains("posters"))
+                        {
+                            if (sAvailableBanners.Trim().Length == 0)
+                            {
+                                sAvailableBanners += filename;
+                            }
+                            else
+                                sAvailableBanners += "|" + filename;
+                        }
+                    }                      
+                }
+                series[DBOnlineSeries.cBannerFileNames] = sAvailableBanners;
+
+                // Remove currently selected Banner/Poster if of not correct type
+                if (DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                {
+                    if (!series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("poster"))
+                        series[DBOnlineSeries.cCurrentBannerFileName] = "";
+                }
+                else
+                {
+                    if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("poster"))
+                        series[DBOnlineSeries.cCurrentBannerFileName] = "";
+                }
+
                 //seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);                
                 seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
                 if (seriesBanners != null)  // oops!

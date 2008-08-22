@@ -41,6 +41,7 @@ namespace WindowPlugins.GUITVSeries
         static List<String> s_SeasonsImageList = new List<string>();
         static List<String> s_OtherPersistentImageList = new List<string>();
         static List<String> s_OtherDiscardableImageList = new List<string>();
+        static Size reqSeriesPosterSize = new Size(680 * DBOption.GetOptions(DBOption.cQualitySeriesPosters) / 100, 1000 * DBOption.GetOptions(DBOption.cQualitySeriesPosters) / 100);
         static Size reqSeriesBannerSize = new Size(758 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100, 140 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100);
         static Size reqSeasonBannerSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100);        
         static float reqEpisodeImagePercentage = (float)(DBOption.GetOptions(DBOption.cQualityEpisodeImages)) / 100f;
@@ -171,21 +172,42 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         public static Size SetSeasonBannerSize { set { reqSeasonBannerSize = value; } get { return reqSeasonBannerSize; } }
 
+        /// <summary>
+        /// Sets or gets the default Series poster size with which banners will be loaded into memory
+        /// </summary>
+        public static Size SetSeriesPosterSize { set { reqSeriesPosterSize = value; } get { return reqSeriesPosterSize; } }
+
         public static String GetSeriesBanner(DBSeries series)
         {
             String sFileName = series.Banner;
             String sTextureName;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
             {
-                if (DBOption.GetOptions(DBOption.cAltImgLoading)) sTextureName = sFileName; // bypass memoryimagebuilder
-                else sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
+                if (DBOption.GetOptions(DBOption.cAltImgLoading))
+                {
+                    // bypass memoryimagebuilder
+                    sTextureName = sFileName;
+                }
+                else if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                {
+                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
+                }
+                else
+                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);
             }
             else
             {
                 //return string.Empty;
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
+                
+                if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))                                
+                {
+                    sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
+                }
+                else
+                    sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesPosterSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesPosterSize, true);
+
             }
             if(sTextureName.Length > 0 && !s_SeriesImageList.Contains(sTextureName)) s_SeriesImageList.Add(sTextureName);            
             return sTextureName;

@@ -36,6 +36,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public bool bGraphical = false;
         public bool bHighestRated = false;
+        public bool bPoster = false;
         public String sSeriesName = String.Empty;
         public String sOnlineBannerPath = String.Empty;
         public String sBannerFileName = String.Empty;
@@ -275,6 +276,16 @@ namespace WindowPlugins.GUITVSeries
             List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
             List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
             seriesBannersMap map = new seriesBannersMap();
+
+            string sSeriesBannerType = "Graphical";
+            bool bGetSeriesPoster = false;
+
+            if (DBOption.GetOptions(DBOption.cGetSeriesPosters))
+            {
+                bGetSeriesPoster = true;
+                sSeriesBannerType = "680x1000";
+            }
+        
             if (nodeList != null)
             {                
                 foreach (XmlNode topNode in nodeList)
@@ -301,13 +312,21 @@ namespace WindowPlugins.GUITVSeries
                                         b.sOnlineBannerPath = propertyNode.InnerText;
                                         break;
                                     case "BannerType":
-                                        if (propertyNode.InnerText.Equals("series", StringComparison.CurrentCultureIgnoreCase))
-                                            isSeries = true;
+                                        if (!bGetSeriesPoster)
+                                        {
+                                            if (propertyNode.InnerText.Equals("series", StringComparison.CurrentCultureIgnoreCase))
+                                                isSeries = true;
+                                        }
+                                        else
+                                        {
+                                            if (propertyNode.InnerText.Equals("poster", StringComparison.CurrentCultureIgnoreCase))
+                                                isSeries = true;
+                                        }                                            
                                         break;
                                     case "BannerType2":
                                         if (isSeries)
                                         {
-                                            if (propertyNode.InnerText.Equals("graphical", StringComparison.CurrentCultureIgnoreCase))
+                                            if (propertyNode.InnerText.Equals(sSeriesBannerType, StringComparison.CurrentCultureIgnoreCase))
                                             {
                                                 // The first Banner is the Highest Rated Banner                                                
                                                 if (!bHighestRatedSeriesIsSet)
@@ -316,7 +335,9 @@ namespace WindowPlugins.GUITVSeries
                                                     b.bHighestRated = true;
                                                 }
                                                 b.bGraphical = true;
-                                            }                                            
+                                            }
+                                            //if (propertyNode.InnerText.Equals("680x1000", StringComparison.CurrentCultureIgnoreCase))
+                                            //    b.bPoster = true;
                                         }
                                         else
                                         {
@@ -396,7 +417,7 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;                        
                         Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
 
                     }

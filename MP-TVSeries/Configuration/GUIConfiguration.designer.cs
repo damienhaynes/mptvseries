@@ -112,6 +112,9 @@ namespace WindowPlugins.GUITVSeries
             this.button_TestReparse = new System.Windows.Forms.Button();
             this.button_Start = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.qualityPoster = new System.Windows.Forms.NumericUpDown();
+            this.label62 = new System.Windows.Forms.Label();
             this.label59 = new System.Windows.Forms.Label();
             this.label60 = new System.Windows.Forms.Label();
             this.qualitySeason = new System.Windows.Forms.NumericUpDown();
@@ -146,8 +149,9 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentDetailsUrl = new System.Windows.Forms.TextBox();
             this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-		  this.textBox_seriessubsBaseURL = new System.Windows.Forms.TextBox();
+            this.textBox_seriessubsBaseURL = new System.Windows.Forms.TextBox();
             this.checkBox_AutoChooseOrder = new System.Windows.Forms.CheckBox();
+            this.chkDownloadSeriesPoster = new System.Windows.Forms.CheckBox();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.comboBox_seasonFormat = new System.Windows.Forms.ComboBox();
             this.richTextBox_seasonFormat_Col3 = new System.Windows.Forms.RichTextBox();
@@ -337,9 +341,9 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
-		  this.panel_seriessubs = new System.Windows.Forms.Panel();
-		  this.label61 = new System.Windows.Forms.Label();
-		  this.checkBox_seriessubsEnable = new System.Windows.Forms.CheckBox();
+            this.panel_seriessubs = new System.Windows.Forms.Panel();
+            this.label61 = new System.Windows.Forms.Label();
+            this.checkBox_seriessubsEnable = new System.Windows.Forms.CheckBox();
             this.panel_forom = new System.Windows.Forms.Panel();
             this.checkBox_foromEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -367,6 +371,7 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.qualityPoster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualitySeason)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualityEpisode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualitySeries)).BeginInit();
@@ -417,7 +422,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.SuspendLayout();
             this.panel_newsroot.SuspendLayout();
             this.panel_torrentroot.SuspendLayout();
-		  this.panel_seriessubs.SuspendLayout();
+            this.panel_seriessubs.SuspendLayout();
             this.panel_forom.SuspendLayout();
             this.panel_remository.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
@@ -644,10 +649,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // txtUserID
             // 
-            this.txtUserID.Location = new System.Drawing.Point(150, 231);
+            this.txtUserID.Location = new System.Drawing.Point(149, 258);
             this.txtUserID.Name = "txtUserID";
             this.txtUserID.Size = new System.Drawing.Size(189, 20);
-            this.txtUserID.TabIndex = 12;
+            this.txtUserID.TabIndex = 13;
             this.toolTip_Help.SetToolTip(this.txtUserID, "Enter you\'re theTVDB Account Identifier here (Note: this is NOT you\'re username)");
             this.txtUserID.TextChanged += new System.EventHandler(this.txtUserID_TextChanged);
             // 
@@ -677,10 +682,10 @@ namespace WindowPlugins.GUITVSeries
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(161, 311);
+            this.linkExWatched.Location = new System.Drawing.Point(160, 338);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
-            this.linkExWatched.TabIndex = 18;
+            this.linkExWatched.TabIndex = 19;
             this.linkExWatched.TabStop = true;
             this.linkExWatched.Text = "Export Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkExWatched, "Export the \'Watched\' Status of all episodes to file");
@@ -699,10 +704,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkFileDeletion
             // 
-            this.checkFileDeletion.Location = new System.Drawing.Point(4, 212);
+            this.checkFileDeletion.Location = new System.Drawing.Point(3, 239);
             this.checkFileDeletion.Name = "checkFileDeletion";
             this.checkFileDeletion.Size = new System.Drawing.Size(417, 17);
-            this.checkFileDeletion.TabIndex = 10;
+            this.checkFileDeletion.TabIndex = 11;
             this.checkFileDeletion.Text = "Delete &physical file(s) when deleting database entries";
             this.toolTip_Help.SetToolTip(this.checkFileDeletion, "Enable this option to allow the plug-in to physically remove file(s) when deleted" +
                     " from with-in Media Portal");
@@ -712,10 +717,10 @@ namespace WindowPlugins.GUITVSeries
             // linkDelUpdateTime
             // 
             this.linkDelUpdateTime.AutoSize = true;
-            this.linkDelUpdateTime.Location = new System.Drawing.Point(161, 293);
+            this.linkDelUpdateTime.Location = new System.Drawing.Point(160, 320);
             this.linkDelUpdateTime.Name = "linkDelUpdateTime";
             this.linkDelUpdateTime.Size = new System.Drawing.Size(128, 13);
-            this.linkDelUpdateTime.TabIndex = 16;
+            this.linkDelUpdateTime.TabIndex = 17;
             this.linkDelUpdateTime.TabStop = true;
             this.linkDelUpdateTime.Text = "Clear Update Timestamps";
             this.toolTip_Help.SetToolTip(this.linkDelUpdateTime, "Click here to reset Timestamps for the last date-time data for series was updated" +
@@ -727,10 +732,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboOnlineLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboOnlineLang.FormattingEnabled = true;
-            this.comboOnlineLang.Location = new System.Drawing.Point(87, 257);
+            this.comboOnlineLang.Location = new System.Drawing.Point(86, 284);
             this.comboOnlineLang.Name = "comboOnlineLang";
             this.comboOnlineLang.Size = new System.Drawing.Size(121, 21);
-            this.comboOnlineLang.TabIndex = 14;
+            this.comboOnlineLang.TabIndex = 15;
             this.toolTip_Help.SetToolTip(this.comboOnlineLang, "Select the language to download TV Series information in, defaults to English");
             this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
             this.comboOnlineLang.DropDown += new System.EventHandler(this.comboOnlineLang_DropDown);
@@ -738,10 +743,10 @@ namespace WindowPlugins.GUITVSeries
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(4, 311);
+            this.linkImpWatched.Location = new System.Drawing.Point(3, 338);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
-            this.linkImpWatched.TabIndex = 17;
+            this.linkImpWatched.TabIndex = 18;
             this.linkImpWatched.TabStop = true;
             this.linkImpWatched.Text = "Import Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkImpWatched, "Import the \'Watched\' Status of all episodes from file");
@@ -749,10 +754,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_doFolderWatch
             // 
-            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(4, 190);
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(3, 217);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(417, 17);
-            this.checkBox_doFolderWatch.TabIndex = 9;
+            this.checkBox_doFolderWatch.TabIndex = 10;
             this.checkBox_doFolderWatch.Text = "&Watch my import folders for changes automatically";
             this.toolTip_Help.SetToolTip(this.checkBox_doFolderWatch, "Enable this option to allow the plug-in to monitor import folders for new, delete" +
                     "d and modified TV Series and update the database accordingly.\r\nThis option only " +
@@ -763,10 +768,10 @@ namespace WindowPlugins.GUITVSeries
             // linkMediaInfoUpdate
             // 
             this.linkMediaInfoUpdate.AutoSize = true;
-            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(4, 293);
+            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(3, 320);
             this.linkMediaInfoUpdate.Name = "linkMediaInfoUpdate";
             this.linkMediaInfoUpdate.Size = new System.Drawing.Size(95, 13);
-            this.linkMediaInfoUpdate.TabIndex = 15;
+            this.linkMediaInfoUpdate.TabIndex = 16;
             this.linkMediaInfoUpdate.TabStop = true;
             this.linkMediaInfoUpdate.Text = "Update Media Info";
             this.toolTip_Help.SetToolTip(this.linkMediaInfoUpdate, "Click here to force the plug-in to read the media information for local files aga" +
@@ -849,6 +854,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.label63);
+            this.groupBox5.Controls.Add(this.qualityPoster);
+            this.groupBox5.Controls.Add(this.label62);
             this.groupBox5.Controls.Add(this.label59);
             this.groupBox5.Controls.Add(this.label60);
             this.groupBox5.Controls.Add(this.qualitySeason);
@@ -867,6 +875,42 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.groupBox5, "Determines the Resolution in % of the originals Images. This is a quality/perform" +
                     "ance tradeoff, you should enter the minimum you can tolerate as it can produce s" +
                     "ubstantial performance gains.");
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(336, 38);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(15, 13);
+            this.label63.TabIndex = 11;
+            this.label63.Text = "%";
+            // 
+            // qualityPoster
+            // 
+            this.qualityPoster.Location = new System.Drawing.Point(290, 38);
+            this.qualityPoster.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.qualityPoster.Name = "qualityPoster";
+            this.qualityPoster.Size = new System.Drawing.Size(40, 20);
+            this.qualityPoster.TabIndex = 10;
+            this.qualityPoster.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.qualityPoster.ValueChanged += new System.EventHandler(this.qualityPoster_ValueChanged);
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(207, 43);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(77, 13);
+            this.label62.TabIndex = 9;
+            this.label62.Text = "Series Posters:";
             // 
             // label59
             // 
@@ -1272,18 +1316,18 @@ namespace WindowPlugins.GUITVSeries
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-		  // textBox_seriessubsBaseURL
-		  // 
-		  this.textBox_seriessubsBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-					  | System.Windows.Forms.AnchorStyles.Right)));
-		  this.textBox_seriessubsBaseURL.Location = new System.Drawing.Point(147, 3);
-		  this.textBox_seriessubsBaseURL.Name = "textBox_seriessubsBaseURL";
-		  this.textBox_seriessubsBaseURL.Size = new System.Drawing.Size(68, 20);
-		  this.textBox_seriessubsBaseURL.TabIndex = 6;
-		  this.toolTip_Help.SetToolTip(this.textBox_seriessubsBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
-				  ", you\'re on your own :)");
-		  this.textBox_seriessubsBaseURL.TextChanged += new System.EventHandler(this.textBox_seriessubsBaseURL_TextChanged);
-		  // 
+            // textBox_seriessubsBaseURL
+            // 
+            this.textBox_seriessubsBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_seriessubsBaseURL.Location = new System.Drawing.Point(147, 3);
+            this.textBox_seriessubsBaseURL.Name = "textBox_seriessubsBaseURL";
+            this.textBox_seriessubsBaseURL.Size = new System.Drawing.Size(68, 20);
+            this.textBox_seriessubsBaseURL.TabIndex = 6;
+            this.toolTip_Help.SetToolTip(this.textBox_seriessubsBaseURL, "Base URL for the Forom website. Normally you don\'t need to change that; if you do" +
+                    ", you\'re on your own :)");
+            this.textBox_seriessubsBaseURL.TextChanged += new System.EventHandler(this.textBox_seriessubsBaseURL_TextChanged);
+            // 
             // checkBox_AutoChooseOrder
             // 
             this.checkBox_AutoChooseOrder.AutoSize = true;
@@ -1296,6 +1340,18 @@ namespace WindowPlugins.GUITVSeries
                     "ound online e.g. DVD or Absolute");
             this.checkBox_AutoChooseOrder.UseVisualStyleBackColor = true;
             this.checkBox_AutoChooseOrder.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseOrder_CheckedChanged);
+            // 
+            // chkDownloadSeriesPoster
+            // 
+            this.chkDownloadSeriesPoster.AutoSize = true;
+            this.chkDownloadSeriesPoster.Location = new System.Drawing.Point(4, 192);
+            this.chkDownloadSeriesPoster.Name = "chkDownloadSeriesPoster";
+            this.chkDownloadSeriesPoster.Size = new System.Drawing.Size(235, 17);
+            this.chkDownloadSeriesPoster.TabIndex = 9;
+            this.chkDownloadSeriesPoster.Text = "Download Series Posters instead of Ba&nners";
+            this.toolTip_Help.SetToolTip(this.chkDownloadSeriesPoster, "Enable to download series posters instead of wide banners");
+            this.chkDownloadSeriesPoster.UseVisualStyleBackColor = true;
+            this.chkDownloadSeriesPoster.CheckedChanged += new System.EventHandler(this.chkDownloadSeriesPoster_CheckedChanged);
             // 
             // toolTip_InfoHelp
             // 
@@ -2052,6 +2108,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
+            this.panel_OnlineData.Controls.Add(this.chkDownloadSeriesPoster);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoChooseOrder);
             this.panel_OnlineData.Controls.Add(this.txtUserID);
             this.panel_OnlineData.Controls.Add(this.label54);
@@ -2083,29 +2140,29 @@ namespace WindowPlugins.GUITVSeries
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(6, 234);
+            this.label54.Location = new System.Drawing.Point(5, 261);
             this.label54.Name = "label54";
             this.label54.Size = new System.Drawing.Size(138, 13);
-            this.label54.TabIndex = 11;
+            this.label54.TabIndex = 12;
             this.label54.Text = "TheTVDB.com Account-ID:";
             // 
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(4, 339);
+            this.label37.Location = new System.Drawing.Point(3, 366);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(109, 13);
-            this.label37.TabIndex = 19;
+            this.label37.TabIndex = 20;
             this.label37.Text = "Prefered banner type:";
             this.label37.Visible = false;
             // 
             // comboBox_preferedBannerType
             // 
             this.comboBox_preferedBannerType.FormattingEnabled = true;
-            this.comboBox_preferedBannerType.Location = new System.Drawing.Point(119, 336);
+            this.comboBox_preferedBannerType.Location = new System.Drawing.Point(118, 363);
             this.comboBox_preferedBannerType.Name = "comboBox_preferedBannerType";
             this.comboBox_preferedBannerType.Size = new System.Drawing.Size(121, 21);
-            this.comboBox_preferedBannerType.TabIndex = 20;
+            this.comboBox_preferedBannerType.TabIndex = 21;
             this.comboBox_preferedBannerType.Visible = false;
             this.comboBox_preferedBannerType.SelectedIndexChanged += new System.EventHandler(this.comboBox_preferedBannerType_SelectedIndexChanged);
             // 
@@ -2121,20 +2178,20 @@ namespace WindowPlugins.GUITVSeries
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(20, 255);
+            this.label26.Location = new System.Drawing.Point(19, 282);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(58, 13);
-            this.label26.TabIndex = 13;
+            this.label26.TabIndex = 14;
             this.label26.Text = "&Language:";
             // 
             // checkBox_LocalDataOverride
             // 
             this.checkBox_LocalDataOverride.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(6, 358);
+            this.checkBox_LocalDataOverride.Location = new System.Drawing.Point(5, 385);
             this.checkBox_LocalDataOverride.Name = "checkBox_LocalDataOverride";
             this.checkBox_LocalDataOverride.Size = new System.Drawing.Size(415, 17);
-            this.checkBox_LocalDataOverride.TabIndex = 21;
+            this.checkBox_LocalDataOverride.TabIndex = 22;
             this.checkBox_LocalDataOverride.Text = "Online data should override data from file parsing (series name, episode name)";
             this.checkBox_LocalDataOverride.UseVisualStyleBackColor = true;
             this.checkBox_LocalDataOverride.Visible = false;
@@ -3305,7 +3362,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_newsroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentroot);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_subtitleroot);
-		  this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_seriessubs);
+            this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_seriessubs);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_forom);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_remository);
             this.splitContainer_treeextra.Panel2.Controls.Add(this.panel_torrentsearch);
@@ -3740,37 +3797,37 @@ namespace WindowPlugins.GUITVSeries
             this.panel_subtitleroot.TabIndex = 0;
             this.panel_subtitleroot.Tag = "Subtitles";
             // 
-		  // panel_seriessubs
-		  // 
-		  this.panel_seriessubs.Controls.Add(this.label61);
-		  this.panel_seriessubs.Controls.Add(this.textBox_seriessubsBaseURL);
-		  this.panel_seriessubs.Controls.Add(this.checkBox_seriessubsEnable);
-		  this.panel_seriessubs.Location = new System.Drawing.Point(30, 80);
-		  this.panel_seriessubs.Name = "panel_seriessubs";
-		  this.panel_seriessubs.Size = new System.Drawing.Size(226, 44);
-		  this.panel_seriessubs.TabIndex = 1;
-		  this.panel_seriessubs.Tag = "SeriesSubs Subtitles";
-		  // 
-		  // label61
-		  // 
-		  this.label61.Location = new System.Drawing.Point(4, 6);
-		  this.label61.Name = "label61";
-		  this.label61.Size = new System.Drawing.Size(138, 18);
-		  this.label61.TabIndex = 5;
-		  this.label61.Text = "SeriesSub Base &URL:";
-		  this.label61.TextAlign = System.Drawing.ContentAlignment.TopRight;
-		  // 
-		  // checkBox_seriessubsEnable
-		  // 
-		  this.checkBox_seriessubsEnable.AutoSize = true;
-		  this.checkBox_seriessubsEnable.Location = new System.Drawing.Point(7, 24);
-		  this.checkBox_seriessubsEnable.Name = "checkBox_seriessubsEnable";
-		  this.checkBox_seriessubsEnable.Size = new System.Drawing.Size(58, 17);
-		  this.checkBox_seriessubsEnable.TabIndex = 4;
-		  this.checkBox_seriessubsEnable.Text = "enable";
-		  this.checkBox_seriessubsEnable.UseVisualStyleBackColor = true;
-		  this.checkBox_seriessubsEnable.CheckedChanged += new System.EventHandler(this.checkBox_seriessubEnable_CheckedChanged);
-		  // 
+            // panel_seriessubs
+            // 
+            this.panel_seriessubs.Controls.Add(this.label61);
+            this.panel_seriessubs.Controls.Add(this.textBox_seriessubsBaseURL);
+            this.panel_seriessubs.Controls.Add(this.checkBox_seriessubsEnable);
+            this.panel_seriessubs.Location = new System.Drawing.Point(30, 80);
+            this.panel_seriessubs.Name = "panel_seriessubs";
+            this.panel_seriessubs.Size = new System.Drawing.Size(226, 44);
+            this.panel_seriessubs.TabIndex = 1;
+            this.panel_seriessubs.Tag = "SeriesSubs Subtitles";
+            // 
+            // label61
+            // 
+            this.label61.Location = new System.Drawing.Point(4, 6);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(138, 18);
+            this.label61.TabIndex = 5;
+            this.label61.Text = "SeriesSub Base &URL:";
+            this.label61.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // checkBox_seriessubsEnable
+            // 
+            this.checkBox_seriessubsEnable.AutoSize = true;
+            this.checkBox_seriessubsEnable.Location = new System.Drawing.Point(7, 24);
+            this.checkBox_seriessubsEnable.Name = "checkBox_seriessubsEnable";
+            this.checkBox_seriessubsEnable.Size = new System.Drawing.Size(58, 17);
+            this.checkBox_seriessubsEnable.TabIndex = 4;
+            this.checkBox_seriessubsEnable.Text = "enable";
+            this.checkBox_seriessubsEnable.UseVisualStyleBackColor = true;
+            this.checkBox_seriessubsEnable.CheckedChanged += new System.EventHandler(this.checkBox_seriessubEnable_CheckedChanged);
+            // 
             // panel_forom
             // 
             this.panel_forom.Controls.Add(this.checkBox_foromEnable);
@@ -4044,6 +4101,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.qualityPoster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualitySeason)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualityEpisode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qualitySeries)).EndInit();
@@ -4110,8 +4168,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.PerformLayout();
             this.panel_torrentroot.ResumeLayout(false);
             this.panel_torrentroot.PerformLayout();
-		  this.panel_seriessubs.ResumeLayout(false);
-		  this.panel_seriessubs.PerformLayout();
+            this.panel_seriessubs.ResumeLayout(false);
+            this.panel_seriessubs.PerformLayout();
             this.panel_forom.ResumeLayout(false);
             this.panel_forom.PerformLayout();
             this.panel_remository.ResumeLayout(false);
@@ -4417,5 +4475,9 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_seriessubsEnable;
 		private System.Windows.Forms.Label label61;
 		private System.Windows.Forms.TextBox textBox_seriessubsBaseURL;
+        private System.Windows.Forms.CheckBox chkDownloadSeriesPoster;
+        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.NumericUpDown qualityPoster;
+        private System.Windows.Forms.Label label62;
     }
 }
