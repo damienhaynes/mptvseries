@@ -169,6 +169,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
+            chkDownloadSeriesPoster.Checked = DBOption.GetOptions(DBOption.cGetSeriesPosters);
 
             comboBox_preferedBannerType.Items.Add("Text");
             comboBox_preferedBannerType.Items.Add("Graphical");
@@ -259,7 +260,8 @@ namespace WindowPlugins.GUITVSeries
 
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
 
-            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
+            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);     
+            qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);            
             qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
             qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
         }
@@ -3333,6 +3335,11 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
         }
+        
+        private void qualityPoster_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cQualitySeriesPosters, (int)qualityPoster.Value);
+        } 
 
         private void btnLogoDeleteAll_Click(object sender, EventArgs e)
         {
@@ -3350,7 +3357,13 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_AutoChooseOrder_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAutoChooseOrder, checkBox_AutoChooseOrder.Checked);
-        }      
+        }
+
+        private void chkDownloadSeriesPoster_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cGetSeriesPosters, chkDownloadSeriesPoster.Checked);
+        }
+
     }
 
     public class BannerComboItem

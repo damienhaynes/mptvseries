@@ -148,9 +148,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cQualitySeriesBanners = "QualitySeriesBanners";
         public const String cQualitySeasonBanners = "QualitySeasonBanners";
         public const String cQualityEpisodeImages = "QualityEpisodeImages";
+        public const String cQualitySeriesPosters = "QualityPosterImages";
 
-        public const String cFanartRandom = "FanartRandom";
-        
+        public const String cGetSeriesPosters = "getSeriesPosters";
+
+        public const String cFanartRandom = "FanartRandom";        
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -362,11 +364,17 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cQualitySeriesBanners) == null)
                     SetOptions(cQualitySeriesBanners, 75);
 
+                if (GetOptions(cQualitySeriesPosters) == null)
+                    SetOptions(cQualitySeriesPosters, 75);
+
                 if (GetOptions(cQualitySeasonBanners) == null)
                     SetOptions(cQualitySeasonBanners, 75);
 
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
+
+                if (GetOptions(cGetSeriesPosters) == null)
+                    SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
 
                 if (GetOptions(cFanartRandom) == null)
                     SetOptions(cFanartRandom, false);

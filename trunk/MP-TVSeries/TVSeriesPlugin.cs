@@ -234,6 +234,9 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(1241)]
         protected GUILabelControl dummyIsFanartColorAvailable = null;
 
+        //[SkinControlAttribute(1242)]
+        //protected GUILabelControl dummyIsSeriesPosters;
+
         #endregion
 
         enum Listlevel
@@ -2173,6 +2176,7 @@ namespace WindowPlugins.GUITVSeries
         void setNewListLevelOfCurrView(int step)
         {
             resetListLevelDummies();
+
             switch (m_CurrLView.gettypeOfStep(step))
             {
                 case logicalViewStep.type.group:
@@ -2181,7 +2185,7 @@ namespace WindowPlugins.GUITVSeries
                     break;
                 case logicalViewStep.type.series:
                     listLevel = Listlevel.Series;
-                    if (dummyIsSeries != null) dummyIsSeries.Visible = true;
+                    if (dummyIsSeries != null) dummyIsSeries.Visible = true;              
                     break;
                 case logicalViewStep.type.season:
                     listLevel = Listlevel.Season;
@@ -2196,8 +2200,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void resetListLevelDummies()
-        {
-            if(dummyIsSeries != null) dummyIsSeries.Visible = false;
+        {           
+            if (dummyIsSeries != null) dummyIsSeries.Visible = false;
             if (dummyIsSeasons != null) dummyIsSeasons.Visible = false;
             if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = false;
             if (dummyIsGroups != null) dummyIsGroups.Visible = false;
