@@ -234,8 +234,8 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(1241)]
         protected GUILabelControl dummyIsFanartColorAvailable = null;
 
-        //[SkinControlAttribute(1242)]
-        //protected GUILabelControl dummyIsSeriesPosters;
+        [SkinControlAttribute(1242)]
+        protected GUILabelControl dummyIsSeriesPosters = null;
 
         #endregion
 
@@ -384,9 +384,6 @@ namespace WindowPlugins.GUITVSeries
         // this is expensive to do if changing mode......450 ms ???
         void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {                        
-            if (this.m_Facade == null)
-                return;
-
             if (this.dummyThumbnailGraphicalMode == null || mode == GUIFacadeControl.ViewMode.List)
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
@@ -558,11 +555,6 @@ namespace WindowPlugins.GUITVSeries
                 case BackGroundLoadingArgumentType.SkipSeasonUp:
                     SkipSeasonCode = SkipSeasonCodes.SkipSeasonUp;
                     break;
-
-                case BackGroundLoadingArgumentType.SetFacadeMode:
-                    GUIFacadeControl.ViewMode viewMode = (GUIFacadeControl.ViewMode)arg.Argument;
-                    setFacadeMode(viewMode);
-                    break;
             }
             PerfWatcher.GetNamedWatch("FacadeLoading changed").Stop();
         }
@@ -667,7 +659,7 @@ namespace WindowPlugins.GUITVSeries
                             // these are groups of certain categories, eg. Genres
 
                             bool graphical = DBOption.GetOptions(DBOption.cGraphicalGroupView);
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, graphical ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List);
+                            setFacadeMode(graphical ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List);
                             // view handling
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
@@ -716,7 +708,7 @@ namespace WindowPlugins.GUITVSeries
                             if (nSeriesDisplayMode == 1)
                             {
                                 // graphical
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.AlbumView);
+                                setFacadeMode(GUIFacadeControl.ViewMode.AlbumView);
                                 // assume 758 x 140 for all banners
                                 //Size sizeImage = new Size();
 
@@ -731,7 +723,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 // text as usual
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
+                                setFacadeMode(GUIFacadeControl.ViewMode.List);
                             }
                             
                             if (bg.CancellationPending) return;                            
@@ -900,7 +892,7 @@ namespace WindowPlugins.GUITVSeries
                     case Listlevel.Episode:
                         {
                             bool bFindNext = false;
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
+                            setFacadeMode(GUIFacadeControl.ViewMode.List);
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
@@ -2183,6 +2175,7 @@ namespace WindowPlugins.GUITVSeries
 
         void setNewListLevelOfCurrView(int step)
         {
+            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = DBOption.GetOptions(DBOption.cGetSeriesPosters);
             resetListLevelDummies();
 
             switch (m_CurrLView.gettypeOfStep(step))
@@ -2193,7 +2186,7 @@ namespace WindowPlugins.GUITVSeries
                     break;
                 case logicalViewStep.type.series:
                     listLevel = Listlevel.Series;
-                    if (dummyIsSeries != null) dummyIsSeries.Visible = true;              
+                    if (dummyIsSeries != null) dummyIsSeries.Visible = true;                    
                     break;
                 case logicalViewStep.type.season:
                     listLevel = Listlevel.Season;
@@ -3143,8 +3136,7 @@ namespace WindowPlugins.GUITVSeries
         DelayedImgInit,
         ElementSelection,
         SkipSeasonDown,
-        SkipSeasonUp,
-        SetFacadeMode
+        SkipSeasonUp
     }
 
     class BackgroundFacadeLoadingArgument
