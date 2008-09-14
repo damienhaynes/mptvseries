@@ -1,4 +1,5 @@
 #summary General information about the plug-in.
+#labels Featured
 
 == About MP-TVSeries Plug-in ==
 
