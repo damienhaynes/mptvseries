@@ -1,0 +1,29 @@
+#summary Screen shots of the latest version.
+#labels Featured
+
+= Screen shots =
+
+All of the following screen shots are taken of the *???* release of MP-TVSeries using the *???* skin. All pieces of promotional movie artwork are copyrighted by their respective owners. 
+
+== Media Portal UI ==
+
+=== List View ===
+_Displays available TV Series that can be viewed._ 
+
+http://img273.imageshack.us/img273/8929/mptv1tb6.jpg 
+
+=== Season View ===
+_Displays available seasons for a selected TV Series._
+
+http://img169.imageshack.us/img169/6838/mptv2pl4.jpg
+
+=== Episode View ===
+_Displays available episodes for a select season of a TV Series._
+
+http://img169.imageshack.us/img169/5093/mptv3no1.jpg
+
+== Configurations ==
+
+http://img297.imageshack.us/img297/1690/tv1gz2.jpg
+
+http://img297.imageshack.us/img297/6716/tv2be2.jpg
