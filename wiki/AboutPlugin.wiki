@@ -1,0 +1,20 @@
+#summary General information about the plug-in.
+
+== About MP-TVSeries Plug-in ==
+
+MP-TVSeries is a popular TV Series plug-in for [http://www.team-mediaportal.com MediaPortal], a open-source media center application. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries will scan your hard drive (including networked) for video files, analyse them by their path structures and then, if determined to be a TV Episode, go online and retrieve information about them. You can then browse, manage and play your episodes from inside MP in a nice graphical layout.
+
+The information it retrieves is coming from [http://www.thetvdb.com TheTVDB.com] which allows any user to add and update information. The plug-in will automatically update any information so should for instance a series description change, this will automatically update for you. Please go there and support zsori (author and admin) by adding data and uploading banners. Remember, without this database (and the mirrors people are kindly providing) none of this would be possible. All fields available there are/will be supported. 
+
+== Screen Shots ==
+[Screenshots#List_View http://img273.imageshack.us/img273/8929/mptv1tb6.jpg] [Screenshots#Season_View http://img169.imageshack.us/img169/6838/mptv2pl4.jpg] [Screenshots#Episode_View http://img169.imageshack.us/img169/5093/mptv3no1.jpg]
+
+== Staying Informed ==
+
+A [http://forum.team-mediaportal.com/my-tvseries-162 sub-forum] is located on the MediaPortal website. For up-to-date information and community support please use this forum.  
+
+== Getting Involved ==
+
+If you are interesting in contributing to this project, please send a email to one/both of the Project owners and they can talk about how you can help out. Feel free to post bugs and feature request. If you think a log file is relevant, please make sure you attach it to your post.
