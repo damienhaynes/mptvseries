@@ -9,9 +9,6 @@ The MP-TVSeries will scan your hard drive (including networked) for video files,
 
 The information it retrieves is coming from [http://www.thetvdb.com TheTVDB.com] which allows any user to add and update information. The plug-in will automatically update any information so should for instance a series description change, this will automatically update for you. Please go there and support zsori (author and admin) by adding data and uploading banners. Remember, without this database (and the mirrors people are kindly providing) none of this would be possible. All fields available there are/will be supported. 
 
-== Screen Shots ==
-[http://code.google.com/p/mptvseries/wiki/Screenshots#List_View http://img273.imageshack.us/img273/8929/mptv1tb6.jpg][http://code.google.com/p/mptvseries/wiki/Screenshots#Season_View http://img169.imageshack.us/img169/6838/mptv2pl4.jpg][http://code.google.com/p/mptvseries/wiki/Screenshots#Episode_View http://img169.imageshack.us/img169/5093/mptv3no1.jpg]
-
 == Staying Informed ==
 
 A [http://forum.team-mediaportal.com/my-tvseries-162 sub-forum] is located on the MediaPortal website. For up-to-date information and community support please use this forum.  
