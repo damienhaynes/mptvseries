@@ -141,7 +141,7 @@
             this.linkLabel1.Size = new System.Drawing.Size(78, 13);
             this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "TheTVDB.com";
+            this.linkLabel1.Text = "Online TV Database";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // linkForum

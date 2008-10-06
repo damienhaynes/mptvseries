@@ -345,8 +345,8 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cDownloadMonitor_RenameFiles, 0); //do not rename by default
 
                 // this is the default main mirrors
-                if (GetOptions(DBOption.cMainMirror) == null || GetOptions(DBOption.cMainMirror) == "http://www.thetvdb.com/interfaces") 
-                    DBOption.SetOptions(DBOption.cMainMirror, "http://www.thetvdb.com");
+                if (GetOptions(DBOption.cMainMirror) == null || GetOptions(DBOption.cMainMirror) == "http://thetvdb.com/interfaces")
+                    DBOption.SetOptions(DBOption.cMainMirror, "http://thetvdb.com");
 
                 if (GetOptions(cNewAPIUpgradeDone) == null)
                     SetOptions(cNewAPIUpgradeDone, 0);
