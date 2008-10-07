@@ -1357,6 +1357,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 case "":
                 case "Aired":
+                    
                     return ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
                             ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex] ||
                             (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]));
@@ -1368,25 +1369,92 @@ namespace WindowPlugins.GUITVSeries
                     int onlineSeason = -1; 
                     if( float.TryParse(onlineEpisode["DVD_season"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
                         onlineSeason = (int)onlineSeasonTemp;
+                    
                     int localEp = (int)localEpisode[DBEpisode.cEpisodeIndex];
                     int localEp2 = (int)localEpisode[DBEpisode.cEpisodeIndex2];
-                    if (Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])) localEp2 = -1;
+                    
+                    if (Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])) localEp2 = 0;
                     float onlineEp = -1;
+                    
+                    
                     if (onlineSeason != -1 && float.TryParse(onlineEpisode["DVD_episodenumber"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
                     {
-                        if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) &&
-                            (localSeason == onlineSeason && (localEp == onlineEp || localEp2 == -1 ? false : localEp2 == onlineEp)))
+                        //MPTVSeriesLog.Write(string.Format("Series {0} , localEp {1} localEp2 {2} onlineEp {3}", onlineSeason, localEp, localEp2, onlineEp));
+                        /*if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) &&
+                            (localSeason == onlineSeason && ((int)localEp == (int)onlineEp || (int)localEp2 == -1 ? false : (int)localEp2 == (int)onlineEp)))
+                        */
+                        
+                        //if(localEp == (int)onlineEp)
+                        string localstring;
+                        double localcomp;
+                        localstring = (localEp.ToString() + "." + localEp2.ToString());
+                        localcomp = Convert.ToDouble(localstring);
+                        if(!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_episodenumber"]) && (localSeason == onlineSeason && (localcomp ==  onlineEp || localEp == (int) onlineEp)))
                         {
+                            /*check that the vital parts exist DVD_season and DVD_episodenumber, then check to see if we have a match either for the full
+                             possible online format of X.Y via the use of localcomp and some string combinations, or through the default style of X.0 
+                             via integer comparison*/
                             // overwrite onlineEps season/ep #
                             onlineEpisode[DBOnlineEpisode.cSeasonIndex] = (int)localEpisode[DBEpisode.cSeasonIndex];
-                            if (localEp == onlineEp)
+                            if (localcomp == onlineEp)
+                            {
+                                MPTVSeriesLog.Write(string.Format("Episode {0} matched to episode {1}", localEp, onlineEp), MPTVSeriesLog.LogLevel.Debug );
+                                onlineEpisode[DBEpisode.cEpisodeIndex] = localcomp;
+                            }
+                            else if (localEp == (int)onlineEp)
+                            {
                                 onlineEpisode[DBEpisode.cEpisodeIndex] = localEp;
-                            else
-                                onlineEpisode[DBEpisode.cEpisodeIndex] = localEp2;
+                            }
                             return true;
                         }
+                        else
+                        {
+                                MPTVSeriesLog.Write(string.Format("File does not match current parse Series: {0} Episode: {1} : Online Episode: {2}", localSeason, localcomp, onlineEp), MPTVSeriesLog.LogLevel.Debug);
+                              return false;
+                        }
+                        
                     } break;
-                //case "Absolute":
+                case "Absolute":
+                                   
+                    System.Globalization.NumberFormatInfo provided = new System.Globalization.NumberFormatInfo();
+                    float onlineabs = -1;
+                    float onlineabsTemp;
+                    if (float.TryParse(onlineEpisode["absolute_number"], System.Globalization.NumberStyles.AllowDecimalPoint, provided, out onlineabsTemp))
+                        onlineabs = onlineabsTemp;
+                    MPTVSeriesLog.Write(string.Format("Absolute number: {0}", onlineabs), MPTVSeriesLog.LogLevel.Debug);
+                    if(onlineabs !=-1)
+                    {
+                        double localabs= -1;
+                        if ((int)localEpisode[DBEpisode.cSeasonIndex] == 0)
+                        {
+                            /*Now we have to figure out whether we are at ep 100 or more*/
+                            localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
+                        }
+                        else if((int)localEpisode[DBEpisode.cSeasonIndex] >=1 && (int)localEpisode[DBEpisode.cEpisodeIndex] < 10 /*&& Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/)
+                        {/* Any episode X0[0-9] should be combined in this manner */
+                            localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + "0" + localEpisode[DBEpisode.cEpisodeIndex].ToString());
+                        }
+                        else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] >= 10 /*&& Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/)
+                        {/* All other episodes should fall into this category */
+                            localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
+                        }
+                        
+                        float.TryParse(onlineEpisode["absolute_number"], System.Globalization.NumberStyles.AllowDecimalPoint, provided, out onlineabs);
+                        if(localabs == onlineabs)
+                        {
+                            localEpisode[DBEpisode.cSeasonIndex] = 1;
+                            localEpisode[DBEpisode.cEpisodeIndex] = (int)onlineabs;
+                            
+                            MPTVSeriesLog.Write(string.Format("Matched Absolute Ep {0} to local ep {1}x{2}", onlineabs, series, localEpisode ), MPTVSeriesLog.LogLevel.Debug);
+                            return true;
+                        }
+                        else
+                        {
+                            MPTVSeriesLog.Write(string.Format("Failed to Match local ep {1}x{2} to Absolute ep {0}", onlineabs, series, localEpisode ), MPTVSeriesLog.LogLevel.Debug);
+                            return false;
+                        }*/
+                    } break;
+                
                 //    if ( !Helper.String.IsNullOrEmpty(onlineEpisode["absolute_number"]) &&
                 //        ( (int)localEpisode[DBEpisode.cSeasonIndex] == 1 &&
                 //        ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode["absolute_number"] ||
