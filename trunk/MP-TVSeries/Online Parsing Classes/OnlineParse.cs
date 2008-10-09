@@ -1452,22 +1452,8 @@ namespace WindowPlugins.GUITVSeries
                         {
                             MPTVSeriesLog.Write(string.Format("Failed to Match local ep {1}x{2} to Absolute ep {0}", onlineabs, series, localEpisode ), MPTVSeriesLog.LogLevel.Debug);
                             return false;
-                        }*/
-                    } break;
-                
-                //    if ( !Helper.String.IsNullOrEmpty(onlineEpisode["absolute_number"]) &&
-                //        ( (int)localEpisode[DBEpisode.cSeasonIndex] == 1 &&
-                //        ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode["absolute_number"] ||
-                //        (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode["absolute_number"])))
-                //    {
-                //        // overwrite onlineEps season/ep #
-                //        onlineEpisode[DBOnlineEpisode.cSeasonIndex] = (int)localEpisode[DBEpisode.cSeasonIndex];
-                //        if ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode["absolute_number"])
-                //            onlineEpisode[DBEpisode.cEpisodeIndex] = (int)localEpisode[DBEpisode.cEpisodeIndex];
-                //        else
-                //            onlineEpisode[DBEpisode.cEpisodeIndex] = (int)localEpisode[DBEpisode.cEpisodeIndex2];
-                //        return true;
-                //    } break;
+                        }
+                   } break;                              
             }
             return false;
         }
