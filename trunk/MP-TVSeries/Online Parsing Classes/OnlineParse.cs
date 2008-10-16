@@ -1356,11 +1356,18 @@ namespace WindowPlugins.GUITVSeries
             switch ((string)series[DBOnlineSeries.cChoseEpisodeOrder])
             {
                 case "":
-                case "Aired":
-                    
+                case "Aired":                    
+                    int iEpIndex2 = 0;
+                    if ((int)localEpisode[DBEpisode.cEpisodeIndex2] == 0)
+                    {
+                        // Don't want to match local episodes with no EpisodeIndex2 with an online episode index of zero
+                        iEpIndex2 = -1;
+                    }
+
                     return ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
                             ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex] ||
-                            (int)localEpisode[DBEpisode.cEpisodeIndex2] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]));
+                            iEpIndex2 == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]));
+
                 case "DVD":
                     System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
                     provider.NumberDecimalSeparator = ".";
