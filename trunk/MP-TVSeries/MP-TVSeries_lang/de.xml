@@ -10,7 +10,7 @@
 	<string Field="Seasons" Original="Seasons">Staffeln</string>
 	<string Field="Episode" Original="Episode">Folge</string>
 	<string Field="Episodes" Original="Episodes">Folgen</string>
-	<string Field="Toggle_watched_flag" Original="Toggle watched flag">bereits gesehen ein/aus</string>
+	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Bereits gesehen</string>
 	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Untertitel laden</string>
 	<string Field="Load_via_Torrent" Original="Load via Torrent">Als Torrent laden</string>
 	<string Field="Mark_all_as_watched" Original="Mark all as watched">Alle als bereits gesehen markieren</string>
@@ -45,7 +45,6 @@
 	<string Field="wrongSkin" Original="Wrong Skin file">Falsche Skin Datei!</string>
 	<string Field="special" Original="Special">Special</string>
 	<string Field="specials" Original="Specials">Specials</string>
-	<string Field="Original" Original="Original">Original</string>
 	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du bist dabei {0} Datei(en) von der Festplatte zu löschen.\nMöchtest du wirklich fortfahren?"</string>
 	<string Field="Force_Online_Match" Original="Force Online Match">Onlineabgleich erzwingen</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Über NewsLeecher laden</string>
@@ -58,8 +57,14 @@
 	<string Field="Channels" Original="Channels">Sender</string>
 	<string Field="Unwatched" Original="Unwatched">Ungesehen</string>
 	<string Field="Favourites" Original="Favourites">Favoriten</string>
-	<string Field="RateEpisode" Original="Rate this Episode">Bewerte diese Episode</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">Tausche Banner</string>
-	<string Field="ChangeView" Original="Change View">Ändere Ansicht</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Mediainformationen der lokalen Dateien</string>
+	<string Field="RateSeries" Original="Rate this Series">Bewerte diese Serie</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Bewerte diese Episode</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Erinnerung, nicht bewertete Episoden zu bewerten</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">Nicht mehr an Bewertung erinnern</string>
+	<string Field="RatingStar" Original="Star">Stern</string>
+	<string Field="RatingStars" Original="Stars">Sterne</string>
+	<string Field="ChangeView" Original="Change View">Ändere Ansicht</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Ansicht sofort verändern</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Wechsle Banner</string>
 </strings>
