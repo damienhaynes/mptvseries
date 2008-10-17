@@ -58,5 +58,8 @@
 	<string Field="Channels" Original="Channels">Sender</string>
 	<string Field="Unwatched" Original="Unwatched">Ungesehen</string>
 	<string Field="Favourites" Original="Favourites">Favoriten</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Bewerte diese Episode</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Tausche Banner</string>
+	<string Field="ChangeView" Original="Change View">Ändere Ansicht</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Mediainformationen der lokalen Dateien</string>
 </strings>
