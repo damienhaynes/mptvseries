@@ -67,4 +67,5 @@
 	<string Field="RatingStars" Original="Stars">Stars</string>
 	<string Field="ChangeView" Original="Change View">Change View</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Cycle Banner</string>
 </strings>
