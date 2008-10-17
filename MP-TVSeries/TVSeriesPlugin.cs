@@ -1528,19 +1528,19 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
 
-                                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? "on" : "off") + ")");
+                                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
-                                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? "on" : "off") + ")");
+                                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsAskToRate;
 
-                                pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? "on" : "off") + ")");
+                                pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;
 
-                                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? "on" : "off") + ")");
+                                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsFanartRandom;
 

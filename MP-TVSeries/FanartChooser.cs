@@ -225,7 +225,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? "on" : "off") + ")");
+                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
                 dlg.Add(pItem);
                 pItem.ItemId = (int)menuAction.optionRandom;
 
