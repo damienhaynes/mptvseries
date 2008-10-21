@@ -572,7 +572,7 @@ namespace WindowPlugins.GUITVSeries
             aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Stop();
             foreach (aclib.Performance.Watch w in aclib.Performance.PerfWatcher.InstantiatedWatches)
             {
-                MPTVSeriesLog.Write(w.Info);
+                MPTVSeriesLog.Write(w.Info,MPTVSeriesLog.LogLevel.Debug);
                 w.Reset();
             }
             if (e.Cancelled)
