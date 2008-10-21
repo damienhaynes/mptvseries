@@ -335,7 +335,7 @@ namespace WindowPlugins.GUITVSeries
                         uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
                     else if (sinceLastUpdate < 3600 * 24 * 30)
                         uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
-                    //uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
+                    
                     Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
 
                     // update series
@@ -1078,7 +1078,8 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"));
                 // get a list of all the episodes with thumbnailUrl
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, string.Empty, SQLConditionType.NotEqual);
+                //condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, string.Empty, SQLConditionType.NotEqual);
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, ".jpg", SQLConditionType.Like);
                 condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
                 List<DBEpisode> episodes = DBEpisode.Get(condition);
                 DBSeries tmpSeries = null; 
@@ -1110,11 +1111,18 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(completePath));
                                     string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
+                                    // Determine if a thumbnail
+                                    if (!url.Contains(".jpg"))
+                                    {
+                                        MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
+                                        episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
+                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
+                                    }
                                     webClient.DownloadFile(url, completePath);
                                 }
                                 catch (System.Net.WebException)
                                 {
-                                    MPTVSeriesLog.Write("Banner download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl] + ")");
+                                    MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl] + ")");
                                 }
                             }
                         }
