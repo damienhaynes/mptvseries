@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) -->
+<!-- Spanish (ES) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
+<!-- Traducido por Roberto Batres "pildo" pildogc@gmail.com -->
 
 <strings>
-	<string Field="Series" Original="Series">Series</string>
+	<string Field="Series" Original="Series">Serie</string>
 	<string Field="Series_Plural" Original="Series (Plr)">Series</string> <!-- plural -->
 	<string Field="Season" Original="Season">Temporada</string>
 	<string Field="Seasons" Original="Seasons">Temporadas</string>
 	<string Field="Episode" Original="Episode">Episodio</string>
 	<string Field="Episodes" Original="Episodes">Episodios</string>
 	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Marcar como visto</string>
-	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Recuperar subtitulo</string>
-	<string Field="Load_via_Torrent" Original="Load via Torrent">Cargar de Torrent</string>
+	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Recuperar subtítulos</string>
+	<string Field="Load_via_Torrent" Original="Load via Torrent">Cargar vía Torrent</string>
 	<string Field="Mark_all_as_watched" Original="Mark all as watched">Marcar todo como visto</string>
 	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Marcar todo como no visto</string>
 	<string Field="Hide" Original="Hide">Ocultar</string>
 	<string Field="Delete" Original="Delete">Borrar</string>
 	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Quitar serie de favoritos</string>
-	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Añadir series a favoritos</string>
-	<string Field="Force_Local_Scan" Original="Force Local Scan ">Forzar escaneado local</string>
-	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forzar actualización en línea</string>
+	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Añadir serie a favoritos</string>
+	<string Field="Force_Local_Scan" Original="Force Local Scan ">Forzar escaneo local</string>
+	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forzar actualización online </string>
 	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(En progreso)</string>
-	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Sólo mostrar episodios con un archivo local</string>
-	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar resumen en episodios no vistos</string>
-	<string Field="on" Original="on">encendido</string>
-	<string Field="off" Original="off">apagado</string>
-	<string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir episodio al azar</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir el primer episodio no visto al azar</string>
-	<string Field="Delete_that_series" Original="Delete that series?">¿Borrar la serie?</string>
-	<string Field="Delete_that_season" Original="Delete that season?">¿Borrar la temporada</string>
-	<string Field="Delete_that_episode" Original="Delete that episode?">¿Borrar el episodio?</string>
+	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Mostrar sólo episodios con archivo local</string>
+	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar resumen de los episodios no vistos</string>
+	<string Field="on" Original="on">on</string>
+	<string Field="off" Original="off">off</string>
+	<string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir episodio aleatorio</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir el primer episodio no visto aleatoriamente</string>
+	<string Field="Delete_that_series" Original="Delete that series?">¿Borrar esta serie?</string>
+	<string Field="Delete_that_season" Original="Delete that season?">¿Borrar esta temporada?</string>
+	<string Field="Delete_that_episode" Original="Delete that episode?">¿Borrar este episodio?</string>
 	<string Field="Confirm" Original="Confirm">Confirmar</string>
 	<string Field="Completed" Original="Completed">Completado</string>
-	<string Field="No_subtitles_found" Original="No subtitles found">No se encontraron subtitulos</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">omitir / No volver a preguntar</string>
-	<string Field="no_results_found" Original="no results found!">¡no se encontraron resultados!</string>
-	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Oculto para prevenir 'spoilers' *</string>
+	<string Field="No_subtitles_found" Original="No subtitles found">No se encontraron subtítulos</string>
+	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Omitir / No volver a preguntar</string>
+	<string Field="no_results_found" Original="no results found!">¡no se han encontrado resultados!</string>
+	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Oculto para no adelantar información *</string>
 	<string Field="Yes" Original="Yes">Si</string>
 	<string Field="No" Original="No">No</string>
 	<string Field="Error" Original="#Error">#Error</string>
 	<string Field="No_items" Original="No items!">¡Sin elementos!</string>
 	<string Field="Unknown" Original="Unknown">Desconocido</string>
-	<string Field="wrongSkin" Original="Wrong Skin file">Archivo de piel no válido</string>
+	<string Field="wrongSkin" Original="Wrong Skin file">Archivo de skin erróneo</string>
 	<string Field="special" Original="Special">Especial</string>
 	<string Field="specials" Original="Specials">Especiales</string>
-	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Estas a punto de borrar permanentemente {0} archivo(s).\n¿Deseas continuar?"</string>
-	<string Field="Force_Online_Match" Original="Force Online Match">Forzar coincidencia en línea</string>
-	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Cargar de NewsLeecher</string>
+	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Estás a punto de borrar permanentemente {0} archivo(s).\n¿Deseas continuar?"</string>
+	<string Field="Force_Online_Match" Original="Force Online Match">Forzar coincidencia inline</string>
+	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Cargar vía NewsLeecher</string>
 	<string Field="Download" Original="Download">Descargar</string>
 	<string Field="Actions" Original="Actions">Acciones</string>
 	<string Field="Options" Original="Options">Opciones</string>
@@ -57,5 +58,15 @@
 	<string Field="Channels" Original="Channels">Canales</string>
 	<string Field="Unwatched" Original="Unwatched">No visto</string>
 	<string Field="Favourites" Original="Favourites">Favoritos</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Actualizar Mediainfo de archivo(s) locales</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Actualizar Media Info de los archivos locales</string>
+	<string Field="RateSeries" Original="Rate this Series">Valorar esta serie</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Valorar este episodio</string>
+	<string Field="ResetRating" Original="Reset Rating">Borrar valoración</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Preguntame si deseo valorar episodios</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">No preguntar por valoración de nuevo</string>
+	<string Field="RatingStar" Original="Star">Estrella</string>
+	<string Field="RatingStars" Original="Stars">Estrellas</string>
+	<string Field="ChangeView" Original="Change View">Cambiar vista</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Cambiar vista inmediatamente</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Rotar banner</string>
 </strings>
