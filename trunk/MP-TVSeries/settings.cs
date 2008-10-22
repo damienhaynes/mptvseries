@@ -77,7 +77,7 @@ namespace WindowPlugins.GUITVSeries
                 _isConfig = !System.IO.Path.GetFileNameWithoutExtension(EntryAssembly.Location).Equals("mediaportal", StringComparison.InvariantCultureIgnoreCase);
                 _version = Assembly.GetCallingAssembly().GetName().Version;
                 _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
-                _userAgent = string.Format("MP TVSeries Plugin {0} {1}", isConfig ? "Configuration Utility" : string.Empty, Version);
+                _userAgent = string.Format("MPTVSeries{0}/{1}", isConfig ? "Config" : string.Empty, Version);
             }
             catch (Exception) { }
 
