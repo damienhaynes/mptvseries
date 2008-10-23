@@ -974,6 +974,9 @@ namespace WindowPlugins.GUITVSeries
                         // look for the episodes for that series, and compare / update the values
                         matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                     }
+                    else
+                        MPTVSeriesLog.Write(string.Format("No episodes could be identified online for {0}, check that the online database has these episodes", series.ToString()));
+
                     if (m_bFullSeriesRetrieval)
                     {
                         // add all online episodes in the local db
@@ -1036,8 +1039,7 @@ namespace WindowPlugins.GUITVSeries
                                 newOnlineEpisode.Commit();
                             }
                         }
-                    }
-                    else MPTVSeriesLog.Write("None of these episodes could be identified (Possible reasons: Wrong filename/OnlineDatabase does not have these episodes)");
+                    }                    
                 }
             }
         }
@@ -1476,17 +1478,16 @@ namespace WindowPlugins.GUITVSeries
         private static void matchOnlineToLocalEpisodes(DBSeries series, List<DBEpisode> episodesList, GetEpisodes episodesParser)
         {
             if (episodesList == null || episodesList.Count == 0) return;
+        
             foreach (DBEpisode localEpisode in episodesList)
             {
+                bool bMatchFound = false;
                 foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results)
                 {                
                     if ((int)localEpisode[DBEpisode.cSeriesID] == (int)onlineEpisode[DBOnlineEpisode.cSeriesID])
                     {
                         if (matchOnlineToLocalEpisode(series, localEpisode, onlineEpisode))
-                        {
-                            //if (localEpisode[DBEpisode.cSeriesID] == 73545 && localEpisode[DBEpisode.cSeasonIndex] == 0 && localEpisode[DBEpisode.cEpisodeIndex] == 5)
-                            //    MPTVSeriesLog.Write(localEpisode.ToString() + " hidden flag: " + localEpisode[DBOnlineEpisode.cHidden].ToString());
-
+                        {                       
                             // season update for online data
                             DBSeason season = new DBSeason(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex]);
                             season[DBSeason.cHasEpisodes] = true;
@@ -1525,12 +1526,14 @@ namespace WindowPlugins.GUITVSeries
                             localEpisode[DBOnlineEpisode.cOnlineDataImported] = 1;
                             MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified");
                             localEpisode.Commit();
+                            bMatchFound = true;
                             break;
                         }
-
                     }
                 }
-            }
+                if (!bMatchFound)
+                    MPTVSeriesLog.Write(localEpisode[DBEpisode.cFilename].ToString() + " could not be matched online, check that the online database has this episode.");
+            }            
         }
         /*
         static string generateIDList<T>(List<T> entities, string fieldname) where T:DBTable
