@@ -68,4 +68,37 @@
 	<string Field="ChangeView" Original="Change View">Change View</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>
 	<string Field="Cycle_Banner" Original="Cycle Banner">Cycle Banner</string>
+	<string Field="FanArt" Original="Fanart">Fanart</string>
+	<string Field="FanListAll" Original="List all Fanart for this Series">List all Fanart for this Series</string>
+	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Download Fanart and Use</string>
+	<string Field="FanArtUse" Original="Use Fanart">Use Fanart</string>
+	<string Field="FanArtDelete" Original="Delete Fanart">Delete Fanart</string>
+	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Downloading {0} Fanart...</string>
+	<string Field="FanArtLocal" Original="Available locally">Available locally</string>
+	<string Field="FanArtOnline" Original="Available for downloading">Available for downloading</string>
+	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">loading {0} of {1} Fanart...</string>
+	<string Field="FanArtRandom" Original="Display random Fanart">Display random Fanart</string>
+	<string Field="FanArtNoneFound" Original="No Fanart could be found">No Fanart could be found</string>
+	<string Field="CFS_Choose_Item" Original="Choose item">Choose item</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Select matching item:</string>
+	<string Field="CFS_Search_Again" Original="Search again">Search again</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Select Matching Subtitle File</string>
+	<string Field="CFS_Subtitle_Episode" Original="Choose item">Episode:</string>
+	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">Matching Subtitles</string>
+	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Choose Correct Series</string>
+	<string Field="CFS_Available_Series" Original="Available Series">Available Series</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Select desired subtitles version</string>
+	<string Field="CFS_Select_Version" Original="Version:">Version:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Choose Correct Episode</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Local Episiode index:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Available Episode list:</string>
+	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Choose search site:</string>
+	<string Field="CFS_List_Search_Site" Original="List of search sites:">List of search sites:</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">Found torrents:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">Looking for:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Choose correct season</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Local Season index:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Available Seasons list:</string>
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Subtitle File Replace</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Old subtitle File present: overwrite?</string>
 </strings>
