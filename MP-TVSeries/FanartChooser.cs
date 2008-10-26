@@ -58,13 +58,12 @@ namespace WindowPlugins.GUITVSeries
             downloadingWorker.DoWork += new DoWorkEventHandler(downloadingWorker_DoWork);
             downloadingWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(downloadingWorker_RunWorkerCompleted);
             
-
             setDownloadStatus();
         }
 
         void downloadingWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {            
-            if (!loadingWorker.IsBusy)
+        {
+            if (loadingWorker != null && !loadingWorker.IsBusy)
             {
                 if (m_Facade != null) m_Facade.Clear();
                 loadingWorker.RunWorkerAsync(SeriesID);
