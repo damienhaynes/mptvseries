@@ -33,11 +33,12 @@ namespace WindowPlugins.GUITVSeries
 {
     class DBOnlineMirror
     {
+        [Flags]
         private enum TypeMask
         {
-            XML = 1,
-            Banners = 2,
-            Zip = 4
+            XML = 0x0001,
+            Banners = 0x0002,
+            Zip = 0x0004
         }
 
         public const String cTableName = "OnlineMirrors";
@@ -109,9 +110,14 @@ namespace WindowPlugins.GUITVSeries
         {
             for (int i = 0; i < mirrorList.Count; i++)
             {
-                if (mirrorList[i][cTypeMask] == null || (int)mirrorList[i][cTypeMask] < (int)mask)
+                if (mirrorList[i][cTypeMask] == null || !ContainsTypeMask((TypeMask)(int)mirrorList[i][cTypeMask], mask))                              
                     mirrorList.RemoveAt(i--);
             }
+        }
+
+        private static bool ContainsTypeMask(TypeMask combined, TypeMask checkagainst)
+        {
+            return ((combined & checkagainst) == checkagainst);
         }
 
         public static void Init()
