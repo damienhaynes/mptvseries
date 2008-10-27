@@ -144,11 +144,11 @@ namespace WindowPlugins.GUITVSeries
             // select a random one for each of them
             Random r = new Random();
             if(xmlMirrors.Count > 0)
-                s_sCurrentInterface = xmlMirrors[r.Next(0, xmlMirrors.Count - 1)][cMirrorpath];
+                s_sCurrentInterface = xmlMirrors[r.Next(xmlMirrors.Count)][cMirrorpath];
             if (zipMirrors.Count > 0)
-                s_sCurrentZip = zipMirrors[r.Next(0, zipMirrors.Count - 1)][cMirrorpath] + "/";
+                s_sCurrentZip = zipMirrors[r.Next(zipMirrors.Count)][cMirrorpath] + "/";
             if (bannerMirrors.Count > 0)
-                s_sCurrentBanner = bannerMirrors[r.Next(0, bannerMirrors.Count - 1)][cMirrorpath] + "/banners/";
+                s_sCurrentBanner = bannerMirrors[r.Next(bannerMirrors.Count)][cMirrorpath] + "/banners/";
         }
 
         private static bool LoadMirrorList(String sServer)
