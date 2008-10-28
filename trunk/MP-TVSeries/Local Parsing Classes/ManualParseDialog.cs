@@ -148,7 +148,8 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             episode[DBEpisode.cEpisodeIndex] = episodeNum; 
             episode.onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = episodeNum;
             episode.onlineEpisode[DBOnlineEpisode.cSeasonIndex] = seasonNum;
-            episode[DBOnlineEpisode.cID] = onlineEp[DBOnlineEpisode.cID];
+            //episode[DBOnlineEpisode.cID] = onlineEp[DBOnlineEpisode.cID];
+            episode[DBOnlineEpisode.cID] = 0; //Force it to update on next scan
             if (episode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                 episode[DBOnlineEpisode.cEpisodeName] = onlineEp[DBOnlineEpisode.cEpisodeName];
             episode.Commit();
@@ -280,7 +281,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             if (checkingForSeries)
                 return;
-
+            
             checkingForSeries = true;
 
             DBOnlineSeries selectedSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
