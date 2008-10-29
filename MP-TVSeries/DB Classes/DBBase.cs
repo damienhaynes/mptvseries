@@ -747,7 +747,7 @@ namespace WindowPlugins.GUITVSeries
                 if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
                 else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
                 else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                else if(engG.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+                else if(eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
                 else return string.Empty;
                 }
 
