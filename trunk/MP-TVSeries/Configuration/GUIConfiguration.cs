@@ -374,7 +374,7 @@ namespace WindowPlugins.GUITVSeries
             availViews = logicalView.getAll(true); //include disabled
             _availViews.Items.Clear();
             foreach (logicalView view in availViews)
-                _availViews.Items.Add(view.prettyName);
+                _availViews.Items.Add(view.Name);
         }
 
         private void LoadTorrentSearches()
