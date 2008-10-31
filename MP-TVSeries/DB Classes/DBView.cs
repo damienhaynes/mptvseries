@@ -32,7 +32,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBView : DBTable
     {
         public const String cTableName = "Views";
-        public const int cDBVersion = 2;
+        public const int cDBVersion = 3;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -181,23 +181,53 @@ namespace WindowPlugins.GUITVSeries
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
                 view.Commit();
+
+                view = new DBView();
+                view[cIndex] = "6";
+                view[cEnabled] = "1";
+                view[cSort] = "7";
+                view[cTransToken] = "RecentlyAdded";
+                view[cPrettyName] = "";
+                view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
+                view.Commit();
+
             }
 
             int nCurrentDBVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBViewsVersion) != nCurrentDBVersion)
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBViewsVersion);
+
+            while (nUpgradeDBVersion != nCurrentDBVersion)
+            {
                 // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBViewsVersion))
+                switch (nUpgradeDBVersion)
                 {
+                    case 1:
+                        //Uupgrade to version 2; 'Latest' view doesn't show anything from the future, and shows only from the last 30 days
+                        DBView view = new DBView(5);
+                        view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
+                        view.Commit();
+                        nUpgradeDBVersion++;
+                        break;
+
+                    case 2:
+                        // Upgrade to version 3, new view 'Recently Added'
+                        view = new DBView();
+                        view[cIndex] = "6";
+                        view[cEnabled] = "1";
+                        view[cSort] = "7";
+                        view[cTransToken] = "RecentlyAdded";
+                        view[cPrettyName] = "";
+                        view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
+                        view.Commit();
+                        nUpgradeDBVersion++;
+                        break;
+
                     default:
-                        {
-                            // upgrade to version 2; latest view doesn't show anything from the future, and shows only from the last 30 days
-                            DBView view = new DBView(5);
-                            view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
-                            view.Commit();
-                            DBOption.SetOptions(DBOption.cDBViewsVersion, nCurrentDBVersion);
-                        }
+                        nUpgradeDBVersion = nCurrentDBVersion;
                         break;
                 }
+            }
+            DBOption.SetOptions(DBOption.cDBViewsVersion, nCurrentDBVersion);
         }
     }
 }

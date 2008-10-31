@@ -119,6 +119,8 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtOnlineLoading = "loading {0} of {1} Fanart...";
         public static string FanArtRandom = "Display random Fanart";
         public static string FanArtNoneFound = "No Fanart could be found";
+        public static string RecentlyAdded = "Recently Added";
+
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
