@@ -264,6 +264,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cIsOnRemovable = "Removable";
         public const String cVolumeLabel = "VolumeLabel";
 
+        public const String cFileDateCreated = "FileDateCreated";
+        public const String cFileDateAdded = "FileDateAdded";
+
         private DBOnlineEpisode m_onlineEpisode = null;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -436,6 +439,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cVideoWidth, new DBField(DBField.cTypeInt));
             base.AddColumn(cVideoHeight, new DBField(DBField.cTypeInt));
 
+            base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
+            base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));
+
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
                 if (!s_fields.ContainsKey(pair.Key))
@@ -494,11 +500,13 @@ namespace WindowPlugins.GUITVSeries
 
         public bool readMediaInfoOfLocal()
         {
+            // Get File Date Added/Created
+            GetFileTimeStamps();
+
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
             if (null == MI) return false; // MediaInfo Object could not be created
             if(System.IO.File.Exists(this[DBEpisode.cFilename]))
             {
-                
                 try
                 {
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
@@ -549,6 +557,16 @@ namespace WindowPlugins.GUITVSeries
             }
             return false;
 
+        }
+
+        private void GetFileTimeStamps()
+        {
+            if (System.IO.File.Exists(this[DBEpisode.cFilename]))
+            {
+                this["FileDateAdded"] = DateTime.Now.ToString("yyyy-MM-dd");
+                this["FileDateCreated"] = System.IO.File.GetCreationTime(this[DBEpisode.cFilename]).ToString("yyyy-MM-dd");
+                Commit();
+            }
         }
 
         public bool checkHasSubtitles()
