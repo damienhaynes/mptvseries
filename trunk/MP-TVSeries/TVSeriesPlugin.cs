@@ -738,6 +738,9 @@ namespace WindowPlugins.GUITVSeries
                             if (bg.CancellationPending) return;
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
+                            if (seriesList.Count == 0)
+                                bFacadeEmpty = true;
+
                             MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
                             foreach (DBSeries series in seriesList)
                             {
@@ -905,6 +908,10 @@ namespace WindowPlugins.GUITVSeries
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
+
+                            if (episodesToDisplay.Count == 0)
+                                bFacadeEmpty = true;
+
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
                                 try
