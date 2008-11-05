@@ -1343,8 +1343,13 @@ namespace WindowPlugins.GUITVSeries
                             lastSeasonBanner = bannerSeason.sBannerFileName;
                         }
                         
-                        // Prefer highest rated banner as current                        
-                        if (season[DBSeason.cCurrentBannerFileName].ToString().Trim().Length == 0)
+                        
+                        // Check if Currently set season banner exists, its possible that the file path has changed.
+                        bool bBannerExists = File.Exists(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), 
+                                                         season[DBSeason.cCurrentBannerFileName].ToString()));
+
+                        // Prefer highest rated banner as current
+                        if (season[DBSeason.cCurrentBannerFileName].ToString().Trim().Length == 0 || !bBannerExists)
                         {
                             if (sHighestRatedSeasonBanner.Length > 0)
                             {
