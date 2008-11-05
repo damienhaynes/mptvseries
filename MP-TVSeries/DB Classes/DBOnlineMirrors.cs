@@ -61,6 +61,7 @@ namespace WindowPlugins.GUITVSeries
         /// if you compile yourself get you're own key or it will have to be disabled!
         /// </summary>
         public static string cApiKey = string.Empty;
+        public static bool m_bNoMirrors = true;
 
         static DBOnlineMirror()
         {
@@ -135,8 +136,27 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // no mirrors yet - refresh using "seed"
-            if(!LoadMirrorList(DBOption.GetOptions(DBOption.cMainMirror)))
-                MPTVSeriesLog.Write("Warning: No mirrors received, nothing will be downloaded!");
+            m_bNoMirrors = false;
+            string sMirror = DBOption.GetOptions(DBOption.cMainMirror);
+            if (!LoadMirrorList(sMirror))
+            {
+                m_bNoMirrors = true;
+                // Try again using the Hardcoded mirror
+                if (!sMirror.Equals(DBOption.m_sMainMirror))
+                {
+                    MPTVSeriesLog.Write("Attempting to download Mirrors from default location");
+                    if (LoadMirrorList(DBOption.m_sMainMirror))
+                    {   
+                        DBOption.SetOptions(DBOption.cMainMirror, DBOption.m_sMainMirror);
+                        m_bNoMirrors = false;
+                    }
+                }
+                if (m_bNoMirrors)
+                {
+                    MPTVSeriesLog.Write("Warning: No mirrors received, nothing will be downloaded!");
+                    return;
+                }
+            }            
 
             List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(memoryMirrors);
             List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(memoryMirrors);
@@ -186,7 +206,7 @@ namespace WindowPlugins.GUITVSeries
 
         static string appendAPI(string path, bool appendKey)
         {
-            return string.Format("{0}/api/{1}", path, appendKey ? (cApiKey + "/") : string.Empty);
+            return string.Format("{0}api/{1}", (path.EndsWith("/") ? path : (path + "/")), (appendKey ? (cApiKey + "/") : string.Empty));
         }
 
 

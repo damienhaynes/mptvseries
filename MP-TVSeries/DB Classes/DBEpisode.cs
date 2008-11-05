@@ -535,7 +535,7 @@ namespace WindowPlugins.GUITVSeries
 
                     if (failed)
                     {
-                        MPTVSeriesLog.Write("Problem parsing ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Problem parsing Media Info for: ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
                         int retry = maxMIAttempts - (noAttempts * -1);
                         if(retry > 0)
                             MPTVSeriesLog.Write("This file will be retried: ", retry.ToString() + " times", MPTVSeriesLog.LogLevel.Normal);

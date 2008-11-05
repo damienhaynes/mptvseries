@@ -101,4 +101,9 @@
 	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Available Seasons list:</string>
 	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Subtitle File Replace</string>
 	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Old subtitle File present: overwrite?</string>
+	<string Field="RecentlyAdded" Original="Recently Added">Recently Added</string>
+	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB Error</string>
+	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
+	<string Field="TVDB_INFO_ACCOUNTID" Original="Account Identifier is not set, enter your theTVDB.com account ID in Configuration">Account Identifier is not set, enter your theTVDB.com account ID in Configuration</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="theTVDB.com is currently unavailable, try again later">theTVDB.com is currently unavailable, try again later</string>
 </strings>

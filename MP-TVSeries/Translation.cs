@@ -146,6 +146,12 @@ namespace WindowPlugins.GUITVSeries
         // ChooseYesNoDescriptor
         public static string CYN_Subtitle_File_Replace = "Subtitle File Replace";
         public static string CYN_Old_Subtitle_Replace = "Old subtitle File present: overwrite?";
+        
+        // TVDB Errors/Messages
+        public static string TVDB_ERROR_TITLE = "theTVDB Error";
+        public static string TVDB_INFO_TITLE = "theTVDB";
+        public static string TVDB_INFO_ACCOUNTID = "Account Identifier is not set, enter your theTVDB.com account ID in Configuration";
+        public static string TVDB_ERROR_UNAVAILABLE = "theTVDB.com is currently unavailable, try again later";      
 
         #endregion
 
