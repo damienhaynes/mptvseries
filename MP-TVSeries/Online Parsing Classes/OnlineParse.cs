@@ -303,7 +303,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Try again, possibly resuming from standby and network interface is not available yet
             if (DBOnlineMirror.m_bNoMirrors)
-            {//TODO, wait a configurable time perhaps? }
+            {/*TODO, wait a configurable time perhaps?*/ }
 
             // now on with online parsing            
             if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && !DBOnlineMirror.m_bNoMirrors)
