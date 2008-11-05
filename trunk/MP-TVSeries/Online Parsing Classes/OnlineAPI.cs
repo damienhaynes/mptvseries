@@ -4,6 +4,8 @@ using System.Text;
 using System.Xml;
 using System.Net;
 using System.IO;
+using MediaPortal.GUI.Library;
+using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
@@ -96,6 +98,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             string account = DBOption.GetOptions(DBOption.cOnlineUserID);
             if (Helper.String.IsNullOrEmpty(account))
             {
+                GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
+                dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID);
+                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
                 MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
                 return false;
             }
@@ -103,6 +109,20 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
                 return false;
+            }
+            if (DBOnlineMirror.m_bNoMirrors)
+            {
+                // Server maybe available now.
+                DBOnlineMirror.Init();
+                if (DBOnlineMirror.m_bNoMirrors)
+                {
+                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                    dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
+                    dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                    MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
+                    return false;
+                }
             }
             // ok we're good
             MPTVSeriesLog.Write(string.Format("Submitting Rating of {2} for {0} {1}", type.ToString(), itemId, rating),MPTVSeriesLog.LogLevel.Debug);
@@ -133,7 +153,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
             WebClient webClient = new WebClient();
             string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
-            string fullURL = DBOnlineMirror.Banners + "/" + onlineFilename;
+            string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
             webClient.Headers.Add("user-agent", Settings.UserAgent);
             try
             {                

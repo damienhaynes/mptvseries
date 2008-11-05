@@ -95,7 +95,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write("Failed to delete file: " + FullLocalPath);
+                    MPTVSeriesLog.Write("Failed to delete file: " + FullLocalPath + " (" + ex.Message + ")");
                 }
             }
             Clear(this[cIndex]);

@@ -297,9 +297,16 @@ namespace WindowPlugins.GUITVSeries
                     } 
                     break;
             }
+            
+            // Re-Initialize Mirrors in case they have changed or are down
+            DBOnlineMirror.Init();
 
-            // now on with online parsing
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+            // Try again, possibly resuming from standby and network interface is not available yet
+            if (DBOnlineMirror.m_bNoMirrors)
+            {//TODO, wait a configurable time perhaps? }
+
+            // now on with online parsing            
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && !DBOnlineMirror.m_bNoMirrors)
             {
                 int counter = 0;
                 m_bReparseNeeded = true;
@@ -957,14 +964,13 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBSeries series in seriesList)
             {
                 List<DBEpisode> episodesList = null;
-                //if (!m_bFullSeriesRetrieval)
-                //{
-                    // lets get the list of unidentified series
-                    SQLCondition conditions = new SQLCondition();
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
-                    episodesList = DBEpisode.Get(conditions, false);
-                //}
+                
+                // lets get the list of unidentified series
+                SQLCondition conditions = new SQLCondition();
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);                    
+                episodesList = DBEpisode.Get(conditions, false);
+            
                 if (m_bFullSeriesRetrieval || episodesList.Count > 0)
                 {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);

@@ -1448,12 +1448,12 @@ namespace WindowPlugins.GUITVSeries
                     if (listLevel != Listlevel.Group)
                     {
 #if inclDownloaders
-            if (this.listLevel == Listlevel.Episode)
-            {
-              pItem = new GUIListItem(Translation.Download + " >>");
-              dlg.Add(pItem);
-              pItem.ItemId = (int)eContextMenus.download;
-            }
+                        if (this.listLevel == Listlevel.Episode)
+                        {
+                          pItem = new GUIListItem(Translation.Download + " >>");
+                          dlg.Add(pItem);
+                          pItem.ItemId = (int)eContextMenus.download;
+                        }
 #endif
                     }
 
@@ -1466,10 +1466,10 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Download);
-                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
-                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
-                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
-                if (foromEnable || seriesSubEnable || remositoryEnable)
+                                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+                                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+                                if (foromEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
@@ -1703,90 +1703,90 @@ namespace WindowPlugins.GUITVSeries
                                 DBEpisode episode = (DBEpisode)currentitem.TVTag;
                                 setProcessAnimationStatus(true);
 
-                List<CItem> Choices = new List<CItem>();
-                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
-                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
-                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+                                List<CItem> Choices = new List<CItem>();
+                                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+                                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
 
-                if (foromEnable)
-                  Choices.Add(new CItem("Forom", "Forom", "Forom"));
-                if (seriesSubEnable)
-                  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
-                if (remositoryEnable)
-                  Choices.Add(new CItem("Remository", "Remository", "Remository"));
+                                if (foromEnable)
+                                  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                                if (seriesSubEnable)
+                                  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
+                                if (remositoryEnable)
+                                  Choices.Add(new CItem("Remository", "Remository", "Remository"));
 
-                CItem selected = null;
-                switch (Choices.Count)
+                                CItem selected = null;
+                                switch (Choices.Count)
                                 {
-                  case 0:
-                    // none enable, do nothing
-                    break;
+                                  case 0:
+                                    // none enable, do nothing
+                                    break;
 
-                  case 1:
-                    // only one enabled, don't bother showing the dialog
-                    selected = Choices[0];
-                    break;
+                                  case 1:
+                                    // only one enabled, don't bother showing the dialog
+                                    selected = Choices[0];
+                                    break;
 
-                  default:
-                    // more than 1 choice, show a feedback dialog
-                    ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-                    descriptor.m_sTitle = "Get subtitles from?";
-                    descriptor.m_sListLabel = "Enabled subtitle sites:";
-                    descriptor.m_List = Choices;
-                    descriptor.m_sbtnIgnoreLabel = String.Empty;
+                                  default:
+                                    // more than 1 choice, show a feedback dialog
+                                    ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+                                    descriptor.m_sTitle = "Get subtitles from?";
+                                    descriptor.m_sListLabel = "Enabled subtitle sites:";
+                                    descriptor.m_List = Choices;
+                                    descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-                    bool bReady = false;
-                    while (!bReady)
-                    {
-                      ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-                      switch (resultFeedback)
-                      {
-                        case ReturnCode.NotReady:
-                          {
-                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-                            Thread.Sleep(5000);
-                          }
-                          break;
+                                    bool bReady = false;
+                                    while (!bReady)
+                                    {
+                                      ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+                                      switch (resultFeedback)
+                                      {
+                                        case ReturnCode.NotReady:
+                                          {
+                                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                                            Thread.Sleep(5000);
+                                          }
+                                          break;
 
-                        case ReturnCode.OK:
-                          {
-                            bReady = true;
-                          }
-                          break;
+                                        case ReturnCode.OK:
+                                          {
+                                            bReady = true;
+                                          }
+                                          break;
 
-                        default:
-                          {
-                            // exit too if cancelled
-                            bReady = true;
-                          }
-                          break;
-                      }
-                    }
-                    break;
+                                        default:
+                                          {
+                                            // exit too if cancelled
+                                            bReady = true;
+                                          }
+                                          break;
+                                      }
+                                    }
+                                    break;
                                 }
 
-                if (selected != null)
-                                {
-                  switch ((String)selected.m_Tag)
-                  {
-                    case "Forom":
-                      Forom forom = new Forom(this);
-                      forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                      forom.GetSubs(episode);
-                      break;
+                                if (selected != null)
+                                                {
+                                  switch ((String)selected.m_Tag)
+                                  {
+                                    case "Forom":
+                                      Forom forom = new Forom(this);
+                                      forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
+                                      forom.GetSubs(episode);
+                                      break;
 
-                    case "Series Subs":
-                      SeriesSubs seriesSubs = new SeriesSubs(this);
-                      seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
-                      seriesSubs.GetSubs(episode);
-                      break;
+                                    case "Series Subs":
+                                      SeriesSubs seriesSubs = new SeriesSubs(this);
+                                      seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
+                                      seriesSubs.GetSubs(episode);
+                                      break;
 
-                    case "Remository":
-                                    Remository remository = new Remository(this);
-                                    remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-                      remository.GetSubs(episode);
-                      break;
-                  }
+                                    case "Remository":
+                                                    Remository remository = new Remository(this);
+                                                    remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                      remository.GetSubs(episode);
+                                      break;
+                                  }
                                 }
                             }
                         }
@@ -2085,22 +2085,22 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-    void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
-    {
-      setProcessAnimationStatus(false);
-      seriessubWorking = false;
-      if (bFound)
-      {
-        LoadFacade();
-      }
-      else
-      {
-        GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-        dlgOK.SetHeading(Translation.Completed);
-        dlgOK.SetLine(1, Translation.No_subtitles_found);
-        dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-      }
-    }
+        void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
+        {
+          setProcessAnimationStatus(false);
+          seriessubWorking = false;
+          if (bFound)
+          {
+            LoadFacade();
+          }
+          else
+          {
+            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+            dlgOK.SetHeading(Translation.Completed);
+            dlgOK.SetLine(1, Translation.No_subtitles_found);
+            dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+          }
+        }
 
         void remository_SubtitleRetrievalCompleted(bool bFound)
         {
@@ -2534,7 +2534,7 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
 #if inclDownloaders
-          else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
+                    else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
 #else
                     else setProcessAnimationStatus(false);
@@ -3109,7 +3109,22 @@ namespace WindowPlugins.GUITVSeries
         FanartChooser fc = null;
         public void ShowFanartChooser(int seriesID)
         {
-            MPTVSeriesLog.Write("Switching to Fanartchooser Window");
+            if (DBOnlineMirror.m_bNoMirrors)
+            {
+                // Server maybe available now.
+                DBOnlineMirror.Init();
+                if (DBOnlineMirror.m_bNoMirrors)
+                {
+                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                    dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
+                    dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                    MPTVSeriesLog.Write("Cannot Display Fanart Chooser, the online database is unavailable");
+                    return;
+                }
+            }
+
+            MPTVSeriesLog.Write("Switching to Fanart Chooser Window");
             // lets show the other xml
 
             if (fc == null)
@@ -3121,8 +3136,8 @@ namespace WindowPlugins.GUITVSeries
             }
             fc.SeriesID = seriesID;
             if (listLevel == Listlevel.Season || listLevel == Listlevel.Episode)
-                fc.setPageTitle(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
-            else fc.setPageTitle(MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");
+                fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
+            else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");
             GUIWindowManager.ActivateWindow(fc.GetID, false);
 
             // causes Fanart Refresh on return
