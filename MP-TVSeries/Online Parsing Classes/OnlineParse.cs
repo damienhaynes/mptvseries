@@ -74,6 +74,10 @@ namespace WindowPlugins.GUITVSeries
         bool m_bNoExactMatch = false;
         CParsingParameters m_params = null;
 
+        int RETRY_INTERVAL = 1000;
+        int RETRY_MULTIPLIER = 2;
+        int MAX_TIMEOUT = 120000;
+
         public delegate void OnlineParsingProgressHandler(int nProgress);
         public delegate void OnlineParsingCompletedHandler(bool bDataUpdated);
 
@@ -139,14 +143,34 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
+        {            
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-
+            
             m_params = e.Argument as CParsingParameters;
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             m_bNoExactMatch = false;
             worker.ReportProgress(0);
-            string initialMsg = string.Empty; ;
+            string initialMsg = string.Empty;
+
+            // Re-Initialize Mirrors in case they have changed or are down
+            DBOnlineMirror.Init();
+
+            // Try again, possibly resuming from standby and network interface is not available yet           
+            int iSleepInterval = RETRY_INTERVAL;
+            while (!DBOnlineMirror.IsMirrorsAvailable && (TVSeriesPlugin.IsResumeFromStandby || !TVSeriesPlugin.IsNetworkAvailable))
+            {
+                if (iSleepInterval > MAX_TIMEOUT)
+                {
+                    MPTVSeriesLog.Write("Aborting connection retries, maximum timeout has expired");
+                    break;
+                }
+                MPTVSeriesLog.Write(string.Format("Retrying connection to mirror in {0} seconds", iSleepInterval / 1000));
+                Thread.Sleep(iSleepInterval);
+                DBOnlineMirror.Init();
+                iSleepInterval *= RETRY_MULTIPLIER;
+            }
+            TVSeriesPlugin.IsResumeFromStandby = false;           
+
             switch (m_params.m_action)
             {
                 case ParsingAction.List_Remove:
@@ -297,16 +321,9 @@ namespace WindowPlugins.GUITVSeries
                     } 
                     break;
             }
-            
-            // Re-Initialize Mirrors in case they have changed or are down
-            DBOnlineMirror.Init();
-
-            // Try again, possibly resuming from standby and network interface is not available yet
-            if (DBOnlineMirror.m_bNoMirrors)
-            {/*TODO, wait a configurable time perhaps?*/ }
 
             // now on with online parsing            
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && !DBOnlineMirror.m_bNoMirrors)
+            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable)
             {
                 int counter = 0;
                 m_bReparseNeeded = true;

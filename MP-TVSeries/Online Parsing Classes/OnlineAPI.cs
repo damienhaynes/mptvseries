@@ -20,6 +20,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             public const string FullSeriesUpdate = @"series/{0}/all/{1}";
             public const string Updates = "updates/updates_{0}";
             public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
+            public const string GetRatingsForUser = "GetRatingsForUser.php?apikey={0}&accountid={1}[&seriesid={2}]";
         }
 
         private enum Format
@@ -110,11 +111,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
                 return false;
             }
-            if (DBOnlineMirror.m_bNoMirrors)
+            if (!DBOnlineMirror.IsMirrorsAvailable)
             {
                 // Server maybe available now.
                 DBOnlineMirror.Init();
-                if (DBOnlineMirror.m_bNoMirrors)
+                if (!DBOnlineMirror.IsMirrorsAvailable)
                 {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);

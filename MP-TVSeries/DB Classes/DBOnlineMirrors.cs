@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries
         /// if you compile yourself get you're own key or it will have to be disabled!
         /// </summary>
         public static string cApiKey = string.Empty;
-        public static bool m_bNoMirrors = true;
+        private static bool m_bMirrorsAvaiable = false;
 
         static DBOnlineMirror()
         {
@@ -136,27 +136,30 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // no mirrors yet - refresh using "seed"
-            m_bNoMirrors = false;
+            IsMirrorsAvailable = true;
             string sMirror = DBOption.GetOptions(DBOption.cMainMirror);
             if (!LoadMirrorList(sMirror))
             {
-                m_bNoMirrors = true;
+                IsMirrorsAvailable = false;
                 // Try again using the Hardcoded mirror
                 if (!sMirror.Equals(DBOption.m_sMainMirror))
                 {
-                    MPTVSeriesLog.Write("Attempting to download Mirrors from default location");
+                    MPTVSeriesLog.Write("Attempting to retrieve Mirrors from default location");
                     if (LoadMirrorList(DBOption.m_sMainMirror))
                     {   
                         DBOption.SetOptions(DBOption.cMainMirror, DBOption.m_sMainMirror);
-                        m_bNoMirrors = false;
+                        IsMirrorsAvailable = true;
                     }
                 }
-                if (m_bNoMirrors)
+                if (!IsMirrorsAvailable)
                 {
                     MPTVSeriesLog.Write("Warning: No mirrors received, nothing will be downloaded!");
                     return;
                 }
-            }            
+            }      
+             
+            //This is now handled server-side using mod_rewrite and round-robin DNS,
+            //so the mirrors file is somewhat deprecated.
 
             List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(memoryMirrors);
             List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(memoryMirrors);
@@ -177,6 +180,12 @@ namespace WindowPlugins.GUITVSeries
                 s_sCurrentBanner = bannerMirrors[r.Next(bannerMirrors.Count)][cMirrorpath] + "/banners/";
         }
 
+        public static bool IsMirrorsAvailable
+        {
+            get { return m_bMirrorsAvaiable; }
+            set { m_bMirrorsAvaiable = value; }
+        }
+          
         private static bool LoadMirrorList(String sServer)
         {
             XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));

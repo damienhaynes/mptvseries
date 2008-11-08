@@ -45,7 +45,7 @@ using aclib.Performance;
 namespace WindowPlugins.GUITVSeries
 {
     public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback
-    {
+    {               
         public TVSeriesPlugin()
         {
             m_stepSelections.Add(new string[] { null });
@@ -124,6 +124,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #endregion
+        
 
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
@@ -140,7 +141,7 @@ namespace WindowPlugins.GUITVSeries
         private string[] m_back_up_select_this = null;
 #if inclDownloaders        
         private bool foromWorking = false;
-    private bool seriessubWorking = false;
+        private bool seriessubWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;        
 #endif
@@ -185,6 +186,8 @@ namespace WindowPlugins.GUITVSeries
         private int logosWidth = 250;
         private Control m_localControlForInvoke;
         private DBEpisode ask2Rate = null;
+        private static bool m_bResumeFromStandby = false;
+        private static bool m_bIsNetworkAvailable = true;
 
         #region Skin Variables
 
@@ -272,11 +275,13 @@ namespace WindowPlugins.GUITVSeries
 
             if (DBOption.GetOptions("doFolderWatch"))
             {
+                System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
+
                 setUpFolderWatches();
 
                 // always do a local scan when starting up the app - later on the watcher will monitor changes
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-                Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+                Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);                
             }
             else
             {
@@ -332,6 +337,9 @@ namespace WindowPlugins.GUITVSeries
         {
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
+                MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
+                IsResumeFromStandby = true;
+
                 // event is only registered if watch folder option is ticked, so no need to check again here
                 // we have to reregister the folder watches
                 setUpFolderWatches();
@@ -339,6 +347,36 @@ namespace WindowPlugins.GUITVSeries
                 // lets do a full folder scan since we might have network shares which could have been updated
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
             }
+            else if (e.Mode == Microsoft.Win32.PowerModes.Suspend)
+            {
+                MPTVSeriesLog.Write("MP-TVSeries is entering standby");
+            }
+        }
+
+        public static bool IsResumeFromStandby
+        {
+            get { return m_bResumeFromStandby; }
+            set { m_bResumeFromStandby = value; }
+        }
+
+        void NetworkAvailabilityChanged(object sender, System.Net.NetworkInformation.NetworkAvailabilityEventArgs e)
+        {
+            if (e.IsAvailable)
+            {
+                MPTVSeriesLog.Write("MP-TVSeries is connected to the network");
+                IsNetworkAvailable = true;
+            }
+            else 
+            { 
+                MPTVSeriesLog.Write("MP-TVSeries is disconnected from the network");
+                IsNetworkAvailable = false;
+            }
+        }
+
+        public static bool IsNetworkAvailable
+        {
+            get { return m_bIsNetworkAvailable; }
+            set { m_bIsNetworkAvailable = value; }
         }
 
         void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
@@ -542,7 +580,7 @@ namespace WindowPlugins.GUITVSeries
                         // thread told us which element it'd like to select
                         // however the user might have already started moving around
                         // if that is the case, we don't select anything
-                        MPTVSeriesLog.Write("Element Selection: " + arg.IndexArgument.ToString());
+                        MPTVSeriesLog.Write("Element Selection: " + arg.IndexArgument.ToString(),MPTVSeriesLog.LogLevel.Debug);
                         if (this.m_Facade != null && this.m_Facade.SelectedListItemIndex < 1)
                         {
                             this.m_Facade.Focus = true;
@@ -585,7 +623,7 @@ namespace WindowPlugins.GUITVSeries
                 // even if the user selects somethign else while we wait for cancellation due to it being a different listlevel)                                
                 return;
             }
-            MPTVSeriesLog.Write("in facadedone");
+            MPTVSeriesLog.Write("in facadedone",MPTVSeriesLog.LogLevel.Debug);
             facadeLoaded = true;
             //GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
             m_Facade.Focus = true;
@@ -642,7 +680,7 @@ namespace WindowPlugins.GUITVSeries
             //using (WaitCursor c = new WaitCursor()) // should we show a waitcursor?
             bgLoadFacade();
             PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Stop();
-            MPTVSeriesLog.Write("bgLoadFacade done");
+            MPTVSeriesLog.Write("bgLoadFacade done", MPTVSeriesLog.LogLevel.Debug);
             if (bg.CancellationPending)
                 e.Cancel = true;
 
@@ -2335,7 +2373,7 @@ namespace WindowPlugins.GUITVSeries
                     //FanartBackground.Visible = false;
                     if (item == null)
                     {
-                        MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
                         currSeriesFanart = null;
                         //FanartBackground.Visible = false;
                         FanartBackground.SetFileName(string.Empty);
@@ -3109,11 +3147,11 @@ namespace WindowPlugins.GUITVSeries
         FanartChooser fc = null;
         public void ShowFanartChooser(int seriesID)
         {
-            if (DBOnlineMirror.m_bNoMirrors)
+            if (!DBOnlineMirror.IsMirrorsAvailable)
             {
                 // Server maybe available now.
                 DBOnlineMirror.Init();
-                if (DBOnlineMirror.m_bNoMirrors)
+                if (!DBOnlineMirror.IsMirrorsAvailable)
                 {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
