@@ -104,6 +104,8 @@
 	<string Field="RecentlyAdded" Original="Recently Added">Recently Added</string>
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB Error</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
-	<string Field="TVDB_INFO_ACCOUNTID" Original="Account Identifier is not set, enter your theTVDB.com account ID in Configuration">Account Identifier is not set, enter your theTVDB.com account ID in Configuration</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="theTVDB.com is currently unavailable, try again later">theTVDB.com is currently unavailable, try again later</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Account Identifier is not set</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Enter your online account ID in Configuration</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com is currently unavailable, try again later</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Network connection is unavailable, check connection and try again</string>
 </strings>

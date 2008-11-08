@@ -101,7 +101,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                 dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
-                dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID);
+                dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
+                dlgOK.SetLine(2, Translation.TVDB_INFO_ACCOUNTID_2);
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
                 MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
                 return false;
@@ -119,7 +120,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-                    dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+                    if (!TVSeriesPlugin.IsNetworkAvailable)
+                    {
+                        dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE);                        
+                    }
+                    else
+                        dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);
                     MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
                     return false;

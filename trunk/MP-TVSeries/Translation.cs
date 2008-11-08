@@ -148,10 +148,12 @@ namespace WindowPlugins.GUITVSeries
         public static string CYN_Old_Subtitle_Replace = "Old subtitle File present: overwrite?";
         
         // TVDB Errors/Messages
-        public static string TVDB_ERROR_TITLE = "theTVDB Error";
-        public static string TVDB_INFO_TITLE = "theTVDB";
-        public static string TVDB_INFO_ACCOUNTID = "Account Identifier is not set, enter your theTVDB.com account ID in Configuration";
-        public static string TVDB_ERROR_UNAVAILABLE = "theTVDB.com is currently unavailable, try again later";      
+        public static string TVDB_ERROR_TITLE = "Online TV Database Error";
+        public static string TVDB_INFO_TITLE = "Online TV Database";
+        public static string TVDB_INFO_ACCOUNTID_1 = "Account Identifier is not set";
+        public static string TVDB_INFO_ACCOUNTID_2 = "Enter your online account ID in Configuration";
+        public static string TVDB_ERROR_UNAVAILABLE = "TheTVDB.com is currently unavailable, try again later";
+        public static string NETWORK_ERROR_UNAVAILABLE = "Network connection is unavailable, check connection and try again";
 
         #endregion
 
@@ -165,7 +167,7 @@ namespace WindowPlugins.GUITVSeries
                 lang = "en(us)";
                 DBOption.SetOptions(DBOption.cLanguage, lang);
             }
-            //path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Plugins\Windows\MP-TVSeries_lang\";
+            
             path = Settings.GetPath(Settings.Path.lang);
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
