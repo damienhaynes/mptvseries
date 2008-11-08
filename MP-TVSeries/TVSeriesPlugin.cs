@@ -369,6 +369,7 @@ namespace WindowPlugins.GUITVSeries
             else 
             { 
                 MPTVSeriesLog.Write("MP-TVSeries is disconnected from the network");
+                DBOnlineMirror.IsMirrorsAvailable = false; // Force to recheck later
                 IsNetworkAvailable = false;
             }
         }
@@ -3155,9 +3156,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-                    dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+                    if (!TVSeriesPlugin.IsNetworkAvailable)
+                    {
+                        dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE);
+                    }
+                    else
+                        dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+                    
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-                    MPTVSeriesLog.Write("Cannot Display Fanart Chooser, the online database is unavailable");
+                    MPTVSeriesLog.Write("Cannot Display Fanart Chooser, the online database is unavailable or network is unavailable.");
                     return;
                 }
             }
