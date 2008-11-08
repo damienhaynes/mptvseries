@@ -41,7 +41,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
         private bool checkingForSeries = false;
 
-        private const string SERIES_HELP_MESSAGE = "For an unlisted series, type series name here...";
+        private const string SERIES_HELP_MESSAGE = "For an unlisted series, type series name here and press <ENTER>";
 
         // launches the dialog with no default information specified
         public ManualParseDialog() : this (string.Empty) {
@@ -378,12 +378,12 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
                 setFile(openFileDialog.FileName);
                 updateOKButton();
             }
-        }
+        }    
 
         private void seriesComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             populateSeasonList();
             populateEpisodeList();
-            updateOKButton();
+            updateOKButton();       
         }
 
         private void seriesComboBox_TextChanged(object sender, EventArgs e) {
@@ -395,7 +395,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
         private void seriesComboBox_LostFocus(object sender, EventArgs e) {
             updateSeriesHelpMessage();
-            checkForNewSeries();
+            //checkForNewSeries();
         }
 
         private void seriesComboBox_GotFocus(object sender, EventArgs e) {
@@ -435,6 +435,15 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         private void cancelButton_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void seriesComboBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r') //ENTER PRESSED
+            {
+                updateSeriesHelpMessage();
+                checkForNewSeries();
+            }
         }
 
     }
