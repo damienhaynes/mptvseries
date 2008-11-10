@@ -439,16 +439,24 @@ namespace WindowPlugins.GUITVSeries
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
                 if (mode == GUIFacadeControl.ViewMode.AlbumView)
                 {
-                    MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
-                    this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                    if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                    {
+                        MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
+                        this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                    }
+                    else
+                    {
+                        MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
+                        this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                    }
                 }
                 this.dummyThumbnailGraphicalMode.Visible = mode == GUIFacadeControl.ViewMode.AlbumView; // so you can trigger animations
-                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();                
             }
             if (dummyFacadeListMode != null)
                 this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
         }
-
+        
         bool facadeLoaded = false;
         System.ComponentModel.BackgroundWorker bg = null;
         void LoadFacade()
@@ -627,8 +635,11 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("in facadedone",MPTVSeriesLog.LogLevel.Debug);
             facadeLoaded = true;
             //GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
-            m_Facade.Focus = true;
+            if (m_Facade == null)
+                return;
 
+            m_Facade.Focus = true;
+            
             if (bFacadeEmpty)
             {
                 if (m_CurrViewStep == 0)
@@ -667,7 +678,6 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (!skipSeasonIfOne_DirectionDown && SkipSeasonCode == SkipSeasonCodes.SkipSeasonUp)
             {
-
                 OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
             }
             SkipSeasonCode = SkipSeasonCodes.none;
@@ -2307,11 +2317,11 @@ namespace WindowPlugins.GUITVSeries
                                 switchView(-1);
                                 LoadFacade();
                             }
-                            else showViewSwitchDialog();
+                            //else showViewSwitchDialog();
                         }
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                     }
-                    else
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.List)
                     {
                         if (DBOption.GetOptions(DBOption.cswitchViewsFast))
                         {
@@ -2319,6 +2329,10 @@ namespace WindowPlugins.GUITVSeries
                             LoadFacade();
                         }
                         else showViewSwitchDialog();
+                    }
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                    {
+                        base.OnAction(action);
                     }
 
                     break;
@@ -2336,14 +2350,11 @@ namespace WindowPlugins.GUITVSeries
                                 OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
                                 OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
                             }
-                            else showViewSwitchDialog();
-
-
-
+                            //else showViewSwitchDialog();
                         }
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                     }
-                    else
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.List)
                     {
                         if (DBOption.GetOptions(DBOption.cswitchViewsFast))
                         {
@@ -2352,6 +2363,11 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else showViewSwitchDialog();
                     }
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                    {
+                        base.OnAction(action);
+                    }
+
                     break;
 
                 default:
