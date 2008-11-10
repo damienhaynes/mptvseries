@@ -439,7 +439,7 @@ namespace WindowPlugins.GUITVSeries
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
                 if (mode == GUIFacadeControl.ViewMode.AlbumView)
                 {
-                    if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                    if (!DBOption.GetOptions(DBOption.cGetSeriesPosters) || !(this.listLevel == Listlevel.Series))
                     {
                         MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
                         this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
@@ -497,12 +497,14 @@ namespace WindowPlugins.GUITVSeries
                     m_nInitialItemHeight = m_Facade.AlbumListView.ItemHeight;
 
                 this.m_Facade.ListView.Clear();
-                //this.m_Facade_List.ListView.Clear();
-
-
                 this.m_Facade.AlbumListView.Clear();
+                
                 if (this.m_Facade.ThumbnailView != null)
                     this.m_Facade.ThumbnailView.Clear();
+
+                //if (this.m_Facade.FilmstripView != null)
+                    //this.m_Facade.FilmstripView.Clear();
+
                 if (m_Facade != null) m_Facade.Focus = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 setCurPositionLabel();
@@ -809,12 +811,11 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeriesCol2, series));
                                         item.Label2 = FieldGetter.resolveDynString(m_sFormatSeriesCol3, series);
-                                        item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);
+                                        item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);                                        
                                     }
                                     item.TVTag = series;
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
                                     item.IsDownloading = series[DBOnlineSeries.cUnwatchedItems] != 0;
-
 
                                     if (this.m_SelectedSeries != null)
                                     {
@@ -2615,7 +2616,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public override bool OnMessage(GUIMessage message)
-        {
+        {            
             switch (message.Message)
             {
                 case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
@@ -2741,7 +2742,6 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
-
         }
 
         private void Season_OnItemSelected(GUIListItem item)
