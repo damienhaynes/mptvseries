@@ -830,13 +830,13 @@ namespace WindowPlugins.GUITVSeries
                                         if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
                                         {
                                             selectedIndex = count;
-                                            item.Selected = true;
+                                            //item.Selected = true;
                                         }
                                     }
                                     if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
                                     {
                                         selectedIndex = count;
-                                        item.Selected = true;
+                                        //item.Selected = true;
                                     }
                                     if (bg.CancellationPending) return;
                                     else
@@ -2729,7 +2729,7 @@ namespace WindowPlugins.GUITVSeries
             DBSeries series = item.TVTag as DBSeries;
             if (series == null) return;
 
-            item.Selected = true;
+            //item.Selected = true;
             m_SelectedSeries = series;
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
