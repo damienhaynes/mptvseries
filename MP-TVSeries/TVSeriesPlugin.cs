@@ -531,6 +531,21 @@ namespace WindowPlugins.GUITVSeries
 
                 }
                 setNewListLevelOfCurrView(m_CurrViewStep);
+
+                switch (this.listLevel)
+                {
+                  case Listlevel.Season:
+                    loadFanart(m_SelectedSeries);
+                    break;
+                  case Listlevel.Episode:
+                    loadFanart(m_SelectedSeason);
+                    break;
+
+                  default:
+                    loadFanart(null);
+                    break;
+                }
+
             }
             catch (Exception ex)
             {
@@ -548,9 +563,16 @@ namespace WindowPlugins.GUITVSeries
         List<GUIListItem> itemsForDelayedImgLoading = null;
         void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (bg.CancellationPending) return;
+          BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
+          MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
+
+          if (bg.CancellationPending)
+          {
+            MPTVSeriesLog.Write("bg_ProgressChanged cancelled", MPTVSeriesLog.LogLevel.Debug);
+            return;
+          }
+
             PerfWatcher.GetNamedWatch("FacadeLoading changed").Start();
-            BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
             if (arg == null || arg.Type == BackGroundLoadingArgumentType.None) return;
 
             switch (arg.Type)
@@ -657,6 +679,11 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(w.Info,MPTVSeriesLog.LogLevel.Debug);
                 w.Reset();
             }
+
+            // ZF - seems to be crashing because of facade being null sometimes, before getting inside the plugin
+            if (m_Facade == null)
+                return;
+
             if (e.Cancelled)
             {
                 MPTVSeriesLog.Write("in facadedone - detected cancel - performing delayed userclick");
@@ -1235,19 +1262,7 @@ namespace WindowPlugins.GUITVSeries
                 else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
             else setViewLabels();
-            if (!fanartSet) loadFanart(null); // init dummy labels
-            if (fanartReinitNeeded) // reload fanart because we came back from the chooser
-            {
-                switch (listLevel)
-                {
-                    case Listlevel.Season:
-                        loadFanart(m_SelectedSeries);
-                        break;
-                    case Listlevel.Episode:
-                        loadFanart(m_SelectedSeason);
-                        break;
-                }
-            }
+//            if (!fanartSet) loadFanart(null); // init dummy labels
             LoadFacade();
             m_Facade.Focus = true;
             setProcessAnimationStatus(m_parserUpdaterWorking);
@@ -1278,6 +1293,16 @@ namespace WindowPlugins.GUITVSeries
             SeasonBanner,
             EpisodeImage,
             Logos,
+        }
+
+        string getGUIProperty(guiProperty which)
+        {
+          return getGUIProperty(which.ToString());
+        }
+
+        public static string getGUIProperty(string which)
+        {
+          return MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + which);
         }
 
         void setGUIProperty(guiProperty which, string value)
@@ -2369,8 +2394,8 @@ namespace WindowPlugins.GUITVSeries
                         m_stepSelection = m_stepSelections[m_CurrViewStep];
                         skipSeasonIfOne_DirectionDown = false; // otherwise the user cant get back out
                         LoadFacade();
-                        if (this.listLevel == Listlevel.Series) loadFanart(null);
-                        else if (this.listLevel == Listlevel.Season) loadFanart(m_SelectedSeries);
+//                         if (this.listLevel == Listlevel.Series) loadFanart(null);
+//                         else if (this.listLevel == Listlevel.Season) loadFanart(m_SelectedSeries);
                         //skipSeasonIfOne_DirectionDown = true;
                     }
                     break;
@@ -2457,9 +2482,9 @@ namespace WindowPlugins.GUITVSeries
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
                         currSeriesFanart = null;
-                        //FanartBackground.Visible = false;
-                        FanartBackground.SetFileName(string.Empty);
                         Fanart.FlushTextures();
+                        FanartBackground.Visible = false;
+                        FanartBackground.SetFileName(string.Empty);
                         if (this.dummyIsFanartLoaded != null)
                             this.dummyIsFanartLoaded.Visible = false;
                         if (this.dummyIsLightFanartLoaded != null)
@@ -2506,8 +2531,8 @@ namespace WindowPlugins.GUITVSeries
                             //if (f != currSeriesFanart)
                             //FanartBackground.Visible = false;
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Normal);
-                            f.TextureAllocated += new Fanart.TextureAllocatedDel(fanart_TextureAllocated);
-                            f.AsynAllocFanartAsTexture();
+                            FanartBackground.SetFileName(f.FanartAsTexture);
+                            FanartBackground.Visible = true;
 
                             //FanartBackground.Visible = true;
 
@@ -2551,15 +2576,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void fanart_TextureAllocated(Fanart fanart)
-        {
-            if (fanartSet)
-            {
-                FanartBackground.SetFileName(fanart.FanartAsTexture);
-                FanartBackground.Visible = true;
-            }
-        }
-
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
@@ -2591,7 +2607,6 @@ namespace WindowPlugins.GUITVSeries
                         m_stepSelectionPretty.Add(this.m_SelectedSeries.ToString());
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Debug);
                         MPTVSeriesLog.Write("Fanart: Series selected", MPTVSeriesLog.LogLevel.Debug);
-                        this.loadFanart(m_SelectedSeries);
                         this.LoadFacade();
                         this.m_Facade.Focus = true;
 
@@ -2608,7 +2623,6 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Debug);
                         this.LoadFacade();
                         MPTVSeriesLog.Write("Fanart: Season selected", MPTVSeriesLog.LogLevel.Debug);
-                        this.loadFanart(m_SelectedSeason);
                         this.m_Facade.Focus = true;
                         break;
                     case Listlevel.Episode:
@@ -3267,8 +3281,8 @@ namespace WindowPlugins.GUITVSeries
             GUIWindowManager.ActivateWindow(fc.GetID, false);
 
             // causes Fanart Refresh on return
-            fanartReinitNeeded = true;
-            currSeriesFanart = null;
+//             fanartReinitNeeded = true;
+//             currSeriesFanart = null;
         }
 
         ~TVSeriesPlugin()

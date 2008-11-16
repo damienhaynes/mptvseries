@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -37,7 +38,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #region Vars
-        static private LogLevel _selectedLogLevel = LogLevel.Normal;
+        static private LogLevel _selectedLogLevel = LogLevel.Debug;
         static String m_filename = Settings.GetPath(Settings.Path.log);
         static StreamWriter m_LogStream;
         static System.Windows.Forms.ListBox m_ListLog;
@@ -186,10 +187,10 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 m_LogStream = File.CreateText(m_filename);
                             if (OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey)) entry = entry.Replace(DBOnlineMirror.cApiKey, "789379adbid793");
-                            if (singleLine) m_LogStream.WriteLine(DateTime.Now + " - " + entry);
-                            else m_LogStream.Write(DateTime.Now + " - \n" + entry);
+                            String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+                            if (singleLine) m_LogStream.WriteLine(sPrefix + entry);
+                            else m_LogStream.Write(sPrefix + "\n" + entry);
                             m_LogStream.Flush();
-
                             m_LogStream.Close();
                             m_LogStream.Dispose();
 
@@ -199,6 +200,8 @@ namespace WindowPlugins.GUITVSeries
                             // well we can't write...maybe no file acces or something....and we can't even log the error
                             Log_Write(entry);
                             Log_Write(ex.Message);
+                            m_LogStream.Close();
+                            m_LogStream.Dispose();
                         }
                     }
                 }
