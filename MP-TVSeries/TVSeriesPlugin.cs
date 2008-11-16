@@ -189,6 +189,8 @@ namespace WindowPlugins.GUITVSeries
         private static bool m_bResumeFromStandby = false;
         private static bool m_bIsNetworkAvailable = true;
 
+        private static bool m_bQuickSelect = false;
+
         #region Skin Variables
 
         [SkinControlAttribute(50)]
@@ -502,8 +504,8 @@ namespace WindowPlugins.GUITVSeries
                 if (this.m_Facade.ThumbnailView != null)
                     this.m_Facade.ThumbnailView.Clear();
 
-                //if (this.m_Facade.FilmstripView != null)
-                    //this.m_Facade.FilmstripView.Clear();
+                if (this.m_Facade.FilmstripView != null)
+                    this.m_Facade.FilmstripView.Clear();
 
                 if (m_Facade != null) m_Facade.Focus = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
@@ -558,6 +560,9 @@ namespace WindowPlugins.GUITVSeries
                     {
                         PerfWatcher.GetNamedWatch("FacadeLoading addElem").Start();
                         GUIListItem gli = arg.Argument as GUIListItem;
+                        // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
+                        if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                            gli.OnItemSelected+=new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
                         //MPTVSeriesLog.Write("Element to Display: " + arg.IndexArgument.ToString());
                         if (m_Facade != null && gli != null)
                         {
@@ -568,7 +573,8 @@ namespace WindowPlugins.GUITVSeries
                             m_Facade.Add(gli);
                             if (arg.Type == BackGroundLoadingArgumentType.ElementForDelayedImgLoading)
                             {
-                                if (itemsForDelayedImgLoading == null) itemsForDelayedImgLoading = new List<GUIListItem>();
+                                if (itemsForDelayedImgLoading == null) 
+                                    itemsForDelayedImgLoading = new List<GUIListItem>();
                                 itemsForDelayedImgLoading.Add(gli);
                             }
                         }
@@ -594,8 +600,35 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Element Selection: " + arg.IndexArgument.ToString(),MPTVSeriesLog.LogLevel.Debug);
                         if (this.m_Facade != null && this.m_Facade.SelectedListItemIndex < 1)
                         {
-                            this.m_Facade.Focus = true;
+                            this.m_Facade.Focus = true;                            
                             this.m_Facade.SelectedListItemIndex = arg.IndexArgument;
+                            // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
+                            // Navigate to selected using OnAction instead 
+                            if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                            {                               
+                                List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+                                if (arg.IndexArgument > 0)
+                                {
+                                    m_bQuickSelect = true;
+                                    for (int i = m_Facade.SelectedListItemIndex; i < seriesList.Count - 1; i++)
+                                    {
+                                        if (i == arg.IndexArgument)
+                                            break;
+                                        // Now push fields to skin
+                                        if (i == (arg.IndexArgument - 1))
+                                            m_bQuickSelect = false;
+
+                                        OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                                    }
+                                    m_bQuickSelect = false;
+                                }
+                                else
+                                {
+                                    GUIListItem selected = new GUIListItem();
+                                    selected.TVTag = seriesList[0];
+                                    Series_OnItemSelected(selected);
+                                }
+                            }                                
                         }
                     } break;
                 case BackGroundLoadingArgumentType.DelayedImgInit:
@@ -750,11 +783,11 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
                     #region Series
                     case Listlevel.Series:
-                        {
+                        {                                                 
+                            // reinit the itemsList                       
                             delayedImageLoading = true;
-                            // reinit the itemsList
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgInit, 0, null);
-
+                      
                             if (DBOption.GetOptions(DBOption.cRandomBanner)) ImageAllocator.FlushAll();
                             else
                             {
@@ -792,7 +825,7 @@ namespace WindowPlugins.GUITVSeries
                             if (seriesList.Count == 0)
                                 bFacadeEmpty = true;
 
-                            MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Debug);
                             foreach (DBSeries series in seriesList)
                             {
                                 if (bg.CancellationPending) return;
@@ -801,11 +834,16 @@ namespace WindowPlugins.GUITVSeries
                                     item = null;
                                     if (nSeriesDisplayMode == 1)
                                     {
-                                        item = new GUIListItem();
-                                        //string img = ImageAllocator.GetSeriesBanner(series);                                        
-                                        //if (Helper.String.IsNullOrEmpty(img))
-                                        //    item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
-                                        //else item.IconImage = item.IconImageBig = img;                                        
+                                        // Graphical Mode
+                                        item = new GUIListItem();                                       
+                                                                
+                                        /*string img = ImageAllocator.GetSeriesBanner(series);
+                                        if (Helper.String.IsNullOrEmpty(img))
+                                        {
+                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
+                                        }
+                                        else
+                                            item.IconImage = item.IconImageBig = img;*/                             
                                     }
                                     else
                                     {
@@ -840,8 +878,8 @@ namespace WindowPlugins.GUITVSeries
                                     }
                                     if (bg.CancellationPending) return;
                                     else
-                                    {
-                                        ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, count, item);
+                                    {                              
+                                        ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, count, item);                                
                                     }
 
                                 }
@@ -1078,7 +1116,7 @@ namespace WindowPlugins.GUITVSeries
                     int done = 0;                   // we need to know later when all threads are done
                     ThreadPool.SetMinThreads(8, 8); // seems to default to 2 (avail. cores?)
                     try
-                    {
+                    {                                            
                         // we know which one was selected, lets be smart and try to first load those around it
                         Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex)
                         {
@@ -1128,6 +1166,33 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        // triggered when a selection change was made on the facade
+        private void onFacadeItemSelected(GUIListItem item, GUIControl parent)
+        {
+            // if this is not a message from the facade, exit
+            if (parent != m_Facade && parent != m_Facade.FilmstripView &&
+                parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
+                return;
+
+            switch (this.listLevel)
+            {
+                case Listlevel.Group:
+                    Group_OnItemSelected(m_Facade.SelectedListItem);
+                    break;
+                case Listlevel.Series:
+                    Series_OnItemSelected(m_Facade.SelectedListItem);
+                    break;
+
+                case Listlevel.Season:
+                    Season_OnItemSelected(m_Facade.SelectedListItem);
+                    break;
+
+                case Listlevel.Episode:
+                    Episode_OnItemSelected(m_Facade.SelectedListItem);
+                    break;
+            }
+        }
+
         protected override void OnPageLoad()
         {
             if (m_Facade == null) // wrong skin file
@@ -1149,6 +1214,7 @@ namespace WindowPlugins.GUITVSeries
             clearGUIProperty(guiProperty.Description);
 
             clearGUIProperty(guiProperty.CurrentView);
+            clearGUIProperty(guiProperty.SimpleCurrentView);
             clearGUIProperty(guiProperty.NextView);
             clearGUIProperty(guiProperty.LastView);
 
@@ -1205,6 +1271,7 @@ namespace WindowPlugins.GUITVSeries
             Subtitle,
             Description,
             CurrentView,
+            SimpleCurrentView,
             NextView,
             LastView,
             SeriesBanner,
@@ -1593,9 +1660,9 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsAskToRate;
 
-                                pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
+                                /*pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;
+                                pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;*/
 
                                 pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
@@ -2195,6 +2262,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!Helper.String.IsNullOrEmpty(subPos))
                     prettyCurrPosition += " -> " + subPos;
             setGUIProperty(guiProperty.CurrentView, prettyCurrPosition);
+            setGUIProperty(guiProperty.SimpleCurrentView, m_CurrLView.prettyName);
         }
         void setViewLabels()
         {
@@ -2274,7 +2342,7 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsGroups != null) dummyIsGroups.Visible = false;
         }
 
-        int thumbnail_last_selected = 0;
+        //int thumbnail_last_selected = 0;
         public override void OnAction(Action action)
         {
             switch (action.wID)
@@ -2307,7 +2375,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     break;
                 case Action.ActionType.ACTION_MOVE_LEFT:
-                    if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
+                    /*if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
                     {
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                         base.OnAction(action);
@@ -2331,14 +2399,12 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else showViewSwitchDialog();
                     }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
-                    {
-                        base.OnAction(action);
-                    }
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)*/
+                        base.OnAction(action);                   
 
                     break;
                 case Action.ActionType.ACTION_MOVE_RIGHT:
-                    if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
+                    /*if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
                     {
                         thumbnail_last_selected = m_Facade.SelectedListItemIndex;
                         base.OnAction(action);
@@ -2364,10 +2430,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else showViewSwitchDialog();
                     }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
-                    {
-                        base.OnAction(action);
-                    }
+                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)*/
+                        base.OnAction(action);                                            
 
                     break;
 
@@ -2717,11 +2781,12 @@ namespace WindowPlugins.GUITVSeries
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeriesBanner);
             clearGUIProperty(guiProperty.SeasonBanner);
-
         }
 
         private void Series_OnItemSelected(GUIListItem item)
-        {
+        {           
+            if (m_bQuickSelect) return;
+
             m_SelectedSeason = null;
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null || !(item.TVTag is DBSeries))

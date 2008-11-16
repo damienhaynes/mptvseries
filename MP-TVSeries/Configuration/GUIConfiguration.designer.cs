@@ -3263,6 +3263,7 @@ namespace WindowPlugins.GUITVSeries
             // optionImmediatlySwitchViews
             // 
             this.optionImmediatlySwitchViews.AutoSize = true;
+            this.optionImmediatlySwitchViews.Enabled = false;
             this.optionImmediatlySwitchViews.Location = new System.Drawing.Point(5, 39);
             this.optionImmediatlySwitchViews.Name = "optionImmediatlySwitchViews";
             this.optionImmediatlySwitchViews.Option = "switchViewsFast";
