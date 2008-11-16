@@ -367,7 +367,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cQualitySeriesBanners, 75);
 
                 if (GetOptions(cQualitySeriesPosters) == null)
-                    SetOptions(cQualitySeriesPosters, 75);
+                    SetOptions(cQualitySeriesPosters, 50);
 
                 if (GetOptions(cQualitySeasonBanners) == null)
                     SetOptions(cQualitySeasonBanners, 75);
