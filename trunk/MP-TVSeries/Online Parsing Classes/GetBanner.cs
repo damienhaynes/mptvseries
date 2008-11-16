@@ -82,188 +82,10 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
-        //private long m_nServerTimeStamp = 0;
         public List<seriesBannersMap> seriesBanners = new List<seriesBannersMap>();
 
         static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
         String localizedSeriesName = string.Empty;
-        //static bool getBlankBanners = false;
-        //public long ServerTimeStamp
-        //{
-        //    get { return m_nServerTimeStamp; }
-        //}
-
-        #region old stuff - safe to remove
-        /*
-        /// <summary>
-        /// This constructor automatically get's relevant seasons
-        /// </summary>
-        /// <param name="nSeriesID"></param>
-        /// <param name="nUpdateBannersTimeStamp"></param>
-        public GetBanner(int nSeriesID, long nUpdateBannersTimeStamp, string localSeriesName)
-        {
-            localizedSeriesName = localSeriesName;
-            List<int> relevantSeasons = new List<int>();
-            foreach(DBSeason season in DBSeason.Get(nSeriesID))
-                relevantSeasons.Add(season[DBSeason.cIndex]);
-            work(nSeriesID, nUpdateBannersTimeStamp, relevantSeasons);
-        }
-
-        static GetBanner()
-        {
-            if (!Settings.isConfig)
-                getBlankBanners = DBOption.GetOptions(DBOption.cGetBlankBanners);
-        } 
-                 /*
-        private void work(int nSeriesID, long nUpdateBannersTimeStamp, List<int> SeasonsToDownload)
-        {
-            work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, null), SeasonsToDownload, false, ZsoriParser.SelLanguageAsString);
-            // also always get the english ones
-            if(ZsoriParser.SelLanguageAsString != "7")
-                work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, "7"), SeasonsToDownload, false, "7");
-            // also get blank banners?
-            if(getBlankBanners || (Settings.isConfig && DBOption.GetOptions(DBOption.cGetBlankBanners)))
-                work(ZsoriParser.GetBanners(nSeriesID, nUpdateBannersTimeStamp, "blank"), SeasonsToDownload, false, "blank");
-
-        }
-
-        private void work(XmlNodeList nodeList, List<int> SeasonsToDownload, bool allSeasons, string bannerLang)
-        {
-            if (nodeList != null)
-            {
-                foreach (XmlNode itemNode in nodeList)
-                {
-                    // first return item SHOULD ALWAYS be the sync time (hope so at least!)
-                    if (itemNode.ChildNodes[0].Name == "SyncTime")
-                    {
-                        m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
-                    }
-                    else
-                    {
-                        String sType = String.Empty;
-                        //string seriesID = String.Empty;
-                        seriesBannersMap map = new seriesBannersMap();
-                        List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
-                        List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
-                        foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                        {
-                            if (propertyNode.Name == "Type")
-                            {
-                                sType = propertyNode.InnerText;
-                                if (map.seriesID.Length > 0)
-                                    break;
-                            }
-                            else if (propertyNode.Name == "SeriesID")
-                            {
-                                map.seriesID = propertyNode.InnerText;
-                                if (sType.Length > 0)
-                                    break;
-                            }
-                        }
-
-                        switch (sType)
-                        {
-                            case "series":
-                                BannerSeries bannerSeries = new BannerSeries();
-                                foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                                {
-                                    switch (propertyNode.Name)
-                                    {
-                                        //case "SeriesName":
-                                        //    bannerSeries.sSeriesName = propertyNode.InnerText;
-                                        //    break;
-
-                                        case "BannerType":
-                                            switch (propertyNode.InnerText)
-                                            {
-                                                case "text":
-                                                    bannerSeries.bGraphical = false;
-                                                    break;
-                                                case "graphical":
-                                                    bannerSeries.bGraphical = true;
-                                                    break;
-                                                default:
-                                                    // everything else we don't really like
-                                                    bannerSeries.bGraphical = false;
-                                                    break;
-                                            }
-                                            break;
-
-                                        case "BannerPath":
-                                            {
-                                                bannerSeries.sOnlineBannerPath = propertyNode.InnerText;
-                                            }
-                                            break;
-                                    }
-                                }
-                                bannerSeries.sSeriesName = localizedSeriesName;
-                                bannerSeries.sBannerLang = bannerLang;
-                                m_bannerSeriesList.Add(bannerSeries);
-                                break;
-
-                            case "season":
-                                if (!allSeasons && SeasonsToDownload.Count == 0) break;
-                                BannerSeason bannerSeason = new BannerSeason();
-                                foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                                {
-                                    switch (propertyNode.Name)
-                                    {
-                                        //case "SeriesName":
-                                        //    bannerSeason.sSeriesName = propertyNode.InnerText;
-                                        //    break;
-
-                                        case "Season":
-                                            bannerSeason.nIndex = Convert.ToInt32(propertyNode.InnerText);
-                                            break;
-
-                                        case "BannerType":
-                                            switch (propertyNode.InnerText)
-                                            {
-                                                case "season":
-                                                    // only season type we support
-                                                    bannerSeason.bIsNeeded = true;
-                                                    break;
-
-                                                default:
-                                                    bannerSeason.bIsNeeded = false;
-                                                    // ignore unknown types
-                                                    break;
-                                            }
-                                            break;
-
-                                        case "BannerPath":
-                                            {
-                                                bannerSeason.sOnlineBannerPath = propertyNode.InnerText;
-                                            }
-                                            break;
-                                    }
-                                }
-                                if (bannerSeason.bIsNeeded && (allSeasons || (null != SeasonsToDownload && SeasonsToDownload.Contains(bannerSeason.nIndex))))
-                                {
-                                    bannerSeason.sSeriesName = localizedSeriesName;
-                                    bannerSeason.sBannerLang = bannerLang;
-                                    m_bannerSeasonList.Add(bannerSeason);
-                                }
-                                break;
-                        }
-                        map.seasonBanners = m_bannerSeasonList;
-                        map.seriesBanners = m_bannerSeriesList;
-                        // series already in?
-                        if(seriesBanners.Contains(map))
-                        {
-                           seriesBannersMap seriesMap =  seriesBanners[seriesBanners.IndexOf(map)];
-                           seriesMap.seasonBanners.AddRange(map.seasonBanners);
-                           seriesMap.seriesBanners.AddRange(map.seriesBanners);
-                        }
-                        else seriesBanners.Add(map);
-                    }
-                }
-
-                DownloadBanners(bannerLang);
-            }
-        }
-        */
-        #endregion
 
         public GetBanner(string seriesID)
         {
@@ -417,9 +239,10 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;                        
-                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
-
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
+                        string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeries.sBannerFileName;
+                        int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeries.sBannerFileName);
+                        while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
 
@@ -428,8 +251,9 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
                         bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName) + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath;
-                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
-
+                        string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeason.sBannerFileName;
+                        int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
+                        while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
             }
@@ -476,39 +300,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }
-
-        public static bool DownloadFanart(DBFanart fanart)
-        {
-            if (fanart != null && !fanart.isAvailableLocally)
-            {
-                string filename;
-                bool sucess = download(fanart[DBFanart.cBannerPath], out filename);
-                fanart[DBFanart.cLocalPath] = filename.Replace(Settings.GetPath(Settings.Path.fanart), string.Empty);
-                fanart.Commit();
-                return sucess;
-            }
-            return false;
-        }
-
-        public static string GetThumbnail(DBFanart fanart)
-        {
-            if (fanart != null)
-            {
-                string filename;
-                string onlinePath = fanart[DBFanart.cThumbnailPath];
-                download(fanart[DBFanart.cThumbnailPath], out filename);
-                filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
-
-                return ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
-            }
-            return string.Empty;
-        }
-
-        static bool download(string onlinePath, out string filename)
-        {
-            filename = onlinePath.Replace("/", @"\");
-            return Online_Parsing_Classes.OnlineAPI.DownloadBanner(onlinePath, Settings.Path.fanart, filename);
         }
     }
 
