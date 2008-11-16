@@ -1,9 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartAction>Program</StartAction>
-    <StartProgram>D:\Dev\Own\Mediaportal SVN\xbmc\bin\Debug\MediaPortal.exe</StartProgram>
+    <StartProgram>c:\Dev\Own\Mediaportal SVN\xbmc\bin\Debug\MediaPortal.exe</StartProgram>
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <StartWorkingDirectory/>
+    <StartWorkingDirectory />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartAction>Program</StartAction>
@@ -14,5 +14,8 @@
     <StartProgram>h:\MP2\xbmc\bin\Release\configuration.exe</StartProgram>
     <StartWorkingDirectory>h:\MP2\xbmc\bin\Release\</StartWorkingDirectory>
     <StartAction>Program</StartAction>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>%25MP_XBMX_BIN%25\;D:\Dev\Own\Mediaportal SVN\xbmc\bin\Debug\Plugins\windows\</ReferencePath>
   </PropertyGroup>
 </Project>

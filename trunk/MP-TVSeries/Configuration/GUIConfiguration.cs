@@ -2111,7 +2111,7 @@ namespace WindowPlugins.GUITVSeries
                 case "delete":
                     DeleteNode(clickedNode);
                     break;
-#if inclDownloaders
+
                 case "subtitle":
                     GetSubtitles(clickedNode);
                     break;
@@ -2123,7 +2123,6 @@ namespace WindowPlugins.GUITVSeries
                 case "newzbin":
                     NewzFile(clickedNode);
                     break;
-#endif
             }
         }
 
@@ -2449,14 +2448,9 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
-                    contextMenuStrip_DetailsTree.Items[2].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[3].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[4].Enabled = false;
-#if inclDownloaders
                     contextMenuStrip_DetailsTree.Items[2].Enabled = true;
                     contextMenuStrip_DetailsTree.Items[3].Enabled = true;
                     contextMenuStrip_DetailsTree.Items[4].Enabled = true;
-#endif
                     break;
             }
             if (bHidden)

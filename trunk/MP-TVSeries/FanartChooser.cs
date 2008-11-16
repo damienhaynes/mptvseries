@@ -87,8 +87,6 @@ namespace WindowPlugins.GUITVSeries
                 }
                 if (GetFanart.DownloadFanart(f))
                 {
-                    // was sucessfull, lets set it as the chosen one
-                    f.Chosen = true;
                     MPTVSeriesLog.Write("Sucessfully downloaded Fanart: " + f.FullLocalPath);
                     downloadingWorker.ReportProgress(0, f[DBFanart.cIndex]);
                 }
@@ -156,6 +154,17 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Empty);
             if (totalFanart == 0) TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", Translation.FanArtNoneFound);
             totalFanart = 0;
+
+          // ZF: load the selected facade so it's not black by default
+            if (m_Facade != null && m_Facade.SelectedListItem != null && m_Facade.SelectedListItem.TVTag != null)
+            {
+              DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
+              if (selectedFanart != null)
+              {
+                setFanartPreviewBackground(selectedFanart);
+              }
+            }
+
         }
 
         protected override void OnPageDestroy(int new_windowId)
@@ -164,7 +173,7 @@ namespace WindowPlugins.GUITVSeries
                 loadingWorker.CancelAsync();
             while (loadingWorker.IsBusy) ;
             loadingWorker = null;
-            ImageAllocator.FlushOthers(false);
+//            ImageAllocator.FlushOthers(false);
             base.OnPageDestroy(new_windowId);
         }
 
@@ -269,6 +278,8 @@ namespace WindowPlugins.GUITVSeries
                     m_Facade.Add(loadedItem);
                     // we use this to tell the gui how many fanart we are loading
                     TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, e.ProgressPercentage, totalFanart));
+                    if (m_Facade != null) this.m_Facade.Focus = true;
+
                 }
                 else if (e.ProgressPercentage > 0)
                 {
@@ -277,7 +288,6 @@ namespace WindowPlugins.GUITVSeries
                     totalFanart = e.ProgressPercentage;
                 }                
             }
-            if (m_Facade != null) this.m_Facade.Focus = true;
         }
 
 
@@ -304,22 +314,7 @@ namespace WindowPlugins.GUITVSeries
                             DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
                             if (selectedFanart != null)
                             {
-                                string fanartInfo = selectedFanart.isAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
-                                fanartInfo += Environment.NewLine;
-
-                                foreach (KeyValuePair<string, DBField> kv in selectedFanart.m_fields)
-                                {
-                                    if(kv.Key == "BannerType2") // resolution
-                                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartResolution", kv.Value.Value);
-                                    fanartInfo += kv.Key + ": " + kv.Value.Value + Environment.NewLine;
-                                }
-
-                                TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", fanartInfo);
-
-                                string preview = selectedFanart.isAvailableLocally ?
-                                    ImageAllocator.GetOtherImage(selectedFanart.FullLocalPath, default(System.Drawing.Size), false) :
-                                    m_Facade.SelectedListItem.IconImageBig;
-                                setFanartPreviewBackground(preview);
+                                setFanartPreviewBackground(selectedFanart);
                             }
                         }
                         return true;
@@ -341,6 +336,8 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // if we already have it, we simply set the chosen property (will itself "unchoose" all the others)
                         chosen.Chosen = true;
+                      // ZF: be sure to update the list of downloaded data in the cache - otherwise the selected fanart won't show up for new fanarts until restarted
+                        Fanart.RefreshFanart(SeriesID);
                         // now it probably makes sense to just get back to tvseries itself, nothing more for the user to do here really
                         GUIWindowManager.ShowPreviousWindow();
                     }
@@ -421,9 +418,24 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void setFanartPreviewBackground(string image)
+        void setFanartPreviewBackground(DBFanart fanart)
         {
-            TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", image);
+          string fanartInfo = fanart.isAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
+          fanartInfo += Environment.NewLine;
+
+          foreach (KeyValuePair<string, DBField> kv in fanart.m_fields)
+          {
+              if(kv.Key == "BannerType2") // resolution
+                  TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartResolution", kv.Value.Value);
+              fanartInfo += kv.Key + ": " + kv.Value.Value + Environment.NewLine;
+          }
+
+          TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", fanartInfo);
+
+          string preview = fanart.isAvailableLocally ?
+              ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
+              m_Facade.SelectedListItem.IconImageBig;
+          TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
         }
     }
 }

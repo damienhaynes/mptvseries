@@ -51,11 +51,11 @@ namespace WindowPlugins.GUITVSeries
         DBFanart _dbchosenfanart = null;
         #endregion
 
-        #region BackGroundAllocation
-        System.ComponentModel.BackgroundWorker bgAllocator = new System.ComponentModel.BackgroundWorker();
-        public delegate void TextureAllocatedDel(Fanart fanart);
-        public event TextureAllocatedDel TextureAllocated;
-        #endregion
+//         #region BackGroundAllocation
+//         System.ComponentModel.BackgroundWorker bgAllocator = new System.ComponentModel.BackgroundWorker();
+//         public delegate void TextureAllocatedDel(Fanart fanart);
+//         public event TextureAllocatedDel TextureAllocated;
+//         #endregion
 
         #region Properties
         public int SeriesID { get { return _seriesID; } }
@@ -98,7 +98,7 @@ namespace WindowPlugins.GUITVSeries
         {
             _seriesID = seriesID;
             _seasonMode = false;
-            setUpBGAllocator();
+//            setUpBGAllocator();
             getFanart();
         }
 
@@ -107,7 +107,7 @@ namespace WindowPlugins.GUITVSeries
             _seriesID = seriesID;
             _seasonIndex = seasonIndex;
             _seasonMode = true;
-            setUpBGAllocator();
+//            setUpBGAllocator();
             getFanart();
         }
         #endregion
@@ -128,6 +128,19 @@ namespace WindowPlugins.GUITVSeries
             }
             return f;
         }
+
+      public static bool RefreshFanart(int seriesID)
+      {
+        Fanart f = null;
+        if (fanartsCache.ContainsKey(seriesID))
+        {
+          f = fanartsCache[seriesID];
+          f.getFanart();
+          return true;
+        }
+        else
+          return false;
+      }
 
         public static void FlushTextures()
         {
@@ -191,15 +204,29 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return _textureName;
+              string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
+
+              if (_textureName == null)
+                _textureName = _textureName_temp;
+
+              lock (_textureName)
+              {
+                if (_textureName != _textureName_temp)
+                  {
+                      FlushTexture(); // flush the old one
+                      _textureName = _textureName_temp;
+                  }
+              }
+
+              return _textureName;
             }
         }
 
-        public void AsynAllocFanartAsTexture()
-        {
-            if(!bgAllocator.IsBusy)
-                bgAllocator.RunWorkerAsync(FanartFilename);                        
-        }
+//         public void AsynAllocFanartAsTexture()
+//         {
+//             if(!bgAllocator.IsBusy)
+//                 bgAllocator.RunWorkerAsync(FanartFilename);                        
+//         }
 
         public void FlushTexture()
         {
@@ -272,32 +299,32 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void setUpBGAllocator()
-        {
-            this.bgAllocator.DoWork += new System.ComponentModel.DoWorkEventHandler(bgAllocator_DoWork);
-            this.bgAllocator.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgAllocator_RunWorkerCompleted);
-        }
+//         void setUpBGAllocator()
+//         {
+//             this.bgAllocator.DoWork += new System.ComponentModel.DoWorkEventHandler(bgAllocator_DoWork);
+//             this.bgAllocator.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgAllocator_RunWorkerCompleted);
+//         }
 
-        void bgAllocator_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            if (TextureAllocated != null)
-                TextureAllocated(this);
-        }
-
-        void bgAllocator_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            string _textureName_temp = ImageAllocator.GetOtherImage(e.Argument as String, requiredSize, false);
-            if (_textureName == null) _textureName = _textureName_temp;
-            lock (_textureName)
-            {
-                if (_textureName != _textureName_temp)
-                {
-                    FlushTexture(); // flush the old one
-                    _textureName = _textureName_temp;
-                }
-            }
-        }
-        #endregion
+//         void bgAllocator_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+//         {
+//             if (TextureAllocated != null)
+//                 TextureAllocated(this);
+//         }
+// 
+//         void bgAllocator_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+//         {
+//             string _textureName_temp = ImageAllocator.GetOtherImage(e.Argument as String, requiredSize, false);
+//             if (_textureName == null) _textureName = _textureName_temp;
+//             lock (_textureName)
+//             {
+//                 if (_textureName != _textureName_temp)
+//                 {
+//                     FlushTexture(); // flush the old one
+//                     _textureName = _textureName_temp;
+//                 }
+//             }
+//         }
+         #endregion
 
         #region IDisposable Members
 

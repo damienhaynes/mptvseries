@@ -237,186 +237,204 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                 sSeries = Engine.Replace(sSeries, "").Trim();
 
                 List<NewzbinResult> sortedMatchList = new List<NewzbinResult>();
-                String sSearch = String.Format("{0} {1}x{2:D2}", sSeries, (int)m_dbEpisode[DBEpisode.cSeasonIndex], (int)m_dbEpisode[DBEpisode.cEpisodeIndex]);
-                sSearch = sSearch.Replace(' ', '+');
-                RegExp = "\\$search\\$";
-                Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                String sUrl = Engine.Replace(m_Search[DBNewzbin.cSearchUrl], sSearch);
-
-                String sPage = String.Empty;
-                bool bSuccess = false;
-                bool bRetry = false;
-                do
+                int nCount = 0;
+                while (nCount < 2)
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);
-                    request.CookieContainer = new CookieContainer();
-                    request.CookieContainer.Add(LoadCookies(m_Search));
-
-                    WebResponse response = request.GetResponse();
-                    Stream data = response.GetResponseStream();
-                    StreamReader reader = new StreamReader(data);
-                    sPage = reader.ReadToEnd();
-                    data.Close();
-                    reader.Close();
-                    response.Close();
-
-                    if (!IsLoggedIn(sPage))
+                    String sSearch = String.Empty;
+                    switch (nCount)
                     {
-                        if (!bRetry)
-                        {
-                            bRetry = true;
-                            DoLogin();
-                        }
-                        else
+                        case 0:
+                            // search by season / episode
+                            sSearch = String.Format("{0} {1}x{2:D2}", sSeries, (int)m_dbEpisode[DBEpisode.cSeasonIndex], (int)m_dbEpisode[DBEpisode.cEpisodeIndex]);
+                            break;
+
+                        case 1:
+                            // search just using the series name + episode desc - it helps for series like myth busters which have random season/episode numbering
+                            sSearch = String.Format("{0} {1}", sSeries, m_dbEpisode[DBEpisode.cEpisodeName]);
                             break;
                     }
-                    else
+                    nCount++;
+
+                    sSearch = sSearch.Replace(' ', '+');
+                    RegExp = "\\$search\\$";
+                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                    String sUrl = Engine.Replace(m_Search[DBNewzbin.cSearchUrl], sSearch);
+                    String sPage = String.Empty;
+                    bool bSuccess = false;
+                    bool bRetry = false;
+                    do
                     {
-                        bSuccess = true;
-                        break;
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);
+                        request.CookieContainer = new CookieContainer();
+                        request.CookieContainer.Add(LoadCookies(m_Search));
+
+                        WebResponse response = request.GetResponse();
+                        Stream data = response.GetResponseStream();
+                        StreamReader reader = new StreamReader(data);
+                        sPage = reader.ReadToEnd();
+                        data.Close();
+                        reader.Close();
+                        response.Close();
+
+                        if (!IsLoggedIn(sPage))
+                        {
+                            if (!bRetry)
+                            {
+                                bRetry = true;
+                                DoLogin();
+                            }
+                            else
+                                break;
+                        }
+                        else
+                        {
+                            bSuccess = true;
+                            break;
+                        }
+                    }
+                    while (true);
+
+                    if (bSuccess)
+                    {
+                        RegExp = m_Search[DBNewzbin.cSearchRegexReport];
+                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                        MatchCollection matches = Engine.Matches(sPage);
+                        foreach (Match match in matches)
+                        {
+                            sortedMatchList.Add(new NewzbinResult(m_Search, match));
+                        }
                     }
                 }
-                while (true);
 
-                if (bSuccess)
+
+                // show the user the list and ask for the right one
+                List<Feedback.CItem> Choices = new List<Feedback.CItem>();
+                foreach (NewzbinResult match in sortedMatchList)
                 {
-                    RegExp = m_Search[DBNewzbin.cSearchRegexReport];
-                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    MatchCollection matches = Engine.Matches(sPage);
-                    foreach (Match match in matches)
-                    {
-                        sortedMatchList.Add(new NewzbinResult(m_Search, match));
-                    }
-
-                    // show the user the list and ask for the right one
-                    List<Feedback.CItem> Choices = new List<Feedback.CItem>();
-                    foreach (NewzbinResult match in sortedMatchList)
-                    {
-                        String sName = match.m_sName;
-                        if (sName.Length > 20)
-                            sName = sName.Substring(0, 18) + "..";
-                        String sDesc = "Title: " + match.m_sName + "\r\nPost: " + match.m_sPost + "\r\nReport: " + match.m_sReport + "\r\nFormat: " + match.m_sFormat + "\r\nGroups: " + match.m_sGroup + "\r\nLanguage: " + match.m_sLanguage;
+                    String sName = match.m_sName;
+                    if (sName.Length > 20)
+                        sName = sName.Substring(0, 18) + "..";
+                    String sDesc = "Title: " + match.m_sName + "\r\nPost: " + match.m_sPost + "\r\nReport: " + match.m_sReport + "\r\nFormat: " + match.m_sFormat + "\r\nGroups: " + match.m_sGroup + "\r\nLanguage: " + match.m_sLanguage;
 //                         foreach (String s in match.m_sParsedArticleName)
 //                             sDesc += s + " / ";
-                        Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + (match.m_sLanguage.ToLower() != "english"?("/" + match.m_sLanguage):"") + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
-                    }
-                    Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
-                    descriptor.m_sTitle = "Found reports:";
-                    descriptor.m_sItemToMatchLabel = "Looking for:";
-                    descriptor.m_sItemToMatch = String.Format("{0} {1}x{2:D2}", sSeries, m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
-                    descriptor.m_sListLabel = "Found reports:";
-                    descriptor.m_List = Choices;
-                    descriptor.m_sbtnIgnoreLabel = String.Empty;
+                    Choices.Add(new Feedback.CItem(sName + " - " + match.m_sFormat + (match.m_sLanguage.ToLower() != "english"?("/" + match.m_sLanguage):"") + " (" + match.m_sSize + ") - " + match.m_sPost, sDesc, match));
+                }
+                Feedback.ChooseFromSelectionDescriptor descriptor = new Feedback.ChooseFromSelectionDescriptor();
+                descriptor.m_sTitle = "Found reports:";
+                descriptor.m_sItemToMatchLabel = "Looking for:";
+                descriptor.m_sItemToMatch = String.Format("{0} {1}x{2:D2}", sSeries, m_dbEpisode[DBEpisode.cSeasonIndex], m_dbEpisode[DBEpisode.cEpisodeIndex]);
+                descriptor.m_sListLabel = "Found reports:";
+                descriptor.m_List = Choices;
+                descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-                    Feedback.CItem Selected = null;
-                    if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK && Selected != null)
+                Feedback.CItem Selected = null;
+                if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK && Selected != null)
+                {
+                    NewzbinResult result = Selected.m_Tag as NewzbinResult;
+                    // download the NZB somewhere
+                    HttpWebRequest requestDownload = (HttpWebRequest)WebRequest.Create("http://v3.newzbin.com/dnzb/");
+
+                    requestDownload.Method = "POST";
+                    String sPostData = String.Format("username={0}&password={1}&reportid={2}", m_Search[DBNewzbin.cLogin], m_Search[DBNewzbin.cPassword], result.m_sID);
+
+                    ASCIIEncoding encoding = new ASCIIEncoding();
+                    byte[] bytePostData = encoding.GetBytes(sPostData);
+                    // Set the content type of the data being posted.
+                    requestDownload.ContentType = "application/x-www-form-urlencoded";
+                    // Set the content length of the string being posted.
+                    requestDownload.ContentLength = bytePostData.Length;
+                    //                    requestDownload.Headers.Add("Accept-Encoding", "gzip");
+                    //                    requestDownload.Accept = "text/plain";
+
+                    Stream newStream = requestDownload.GetRequestStream();
+                    newStream.Write(bytePostData, 0, bytePostData.Length);
+                    // Close the Stream object.
+                    newStream.Close();
+
+                    WebResponse responseDownload = null;
+                    try
                     {
-                        NewzbinResult result = Selected.m_Tag as NewzbinResult;
-                        // download the NZB somewhere
-                        HttpWebRequest requestDownload = (HttpWebRequest)WebRequest.Create("http://v3.newzbin.com/dnzb/");
+                        responseDownload = requestDownload.GetResponse();
+                    }
+                    catch (WebException exp)
+                    {
+                        m_msgOut = exp.Response.Headers.Get("X-DNZB-RCode") + ": " + exp.Response.Headers.Get("X-DNZB-RText");
+                    }
+                    if (responseDownload != null)
+                    {
+                        Stream receiveStream = responseDownload.GetResponseStream();
+                        // Pipes the stream to a higher level stream reader with the required encoding format. 
 
-                        requestDownload.Method = "POST";
-                        String sPostData = String.Format("username={0}&password={1}&reportid={2}", m_Search[DBNewzbin.cLogin], m_Search[DBNewzbin.cPassword], result.m_sID);
+                        String sOutputFile = responseDownload.Headers["X-DNZB-Name"];
+                        sOutputFile = sOutputFile.Replace(":", "");
+                        sOutputFile = sOutputFile.Replace("?", "");
+                        sOutputFile = sOutputFile.Replace("\\", "");
+                        sOutputFile = sOutputFile.Replace("*", "");
+                        sOutputFile = sOutputFile.Replace("<", "");
+                        sOutputFile = sOutputFile.Replace(">", "");
+                        sOutputFile = sOutputFile.Replace("|", "");
+                        sOutputFile = sOutputFile.Replace("/", "");
+                        // 
+                        sOutputFile = Path.Combine(System.IO.Path.GetTempPath(), sOutputFile + ".nzb");
+                        FileStream file = System.IO.File.Create(sOutputFile);
 
-                        ASCIIEncoding encoding = new ASCIIEncoding();
-                        byte[] bytePostData = encoding.GetBytes(sPostData);
-                        // Set the content type of the data being posted.
-                        requestDownload.ContentType = "application/x-www-form-urlencoded";
-                        // Set the content length of the string being posted.
-                        requestDownload.ContentLength = bytePostData.Length;
-                        //                    requestDownload.Headers.Add("Accept-Encoding", "gzip");
-                        //                    requestDownload.Accept = "text/plain";
-
-                        Stream newStream = requestDownload.GetRequestStream();
-                        newStream.Write(bytePostData, 0, bytePostData.Length);
-                        // Close the Stream object.
-                        newStream.Close();
-
-                        WebResponse responseDownload = null;
-                        try
+                        byte[] read = new byte[256];
+                        // Reads 256 bytes at a time.    
+                        int count = receiveStream.Read(read, 0, 256);
+                        while (count > 0)
                         {
-                            responseDownload = requestDownload.GetResponse();
+                            file.Write(read, 0, count);
+                            count = receiveStream.Read(read, 0, 256);
                         }
-                        catch (WebException exp)
+
+                        file.Close();
+                        responseDownload.Close();
+
+                        List<String> sParsedArticleName = new List<String>();
+                        // now, retrieve the article subject page, get on of the subject name & store
+                        // assume we don't need to login, given we were able to read the search url fine previously
+                        RegExp = "http://[^/]*/";
+                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+                        String sUrl = Engine.Match(m_Search[DBNewzbin.cSearchUrl]).Groups[0].Value + "browse/post/" + result.m_sID + "/";
+
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);
+                        request.CookieContainer = new CookieContainer();
+                        request.CookieContainer.Add(Load.LoadCookies(m_Search));
+
+                        WebResponse response = request.GetResponse();
+                        Stream data = response.GetResponseStream();
+                        StreamReader reader = new StreamReader(data);
+                        // isolate article name
+                        char[] sBlock = new char[1000];
+                        String sPage = String.Empty;
+                        while (reader.Read(sBlock, 0, 1000) != 0)
                         {
-                            m_msgOut = exp.Response.Headers.Get("X-DNZB-RCode") + ": " + exp.Response.Headers.Get("X-DNZB-RText");
-                        }
-                        if (responseDownload != null)
-                        {
-                            Stream receiveStream = responseDownload.GetResponseStream();
-                            // Pipes the stream to a higher level stream reader with the required encoding format. 
-
-                            String sOutputFile = responseDownload.Headers["X-DNZB-Name"];
-                            sOutputFile = sOutputFile.Replace(":", "");
-                            sOutputFile = sOutputFile.Replace("?", "");
-                            sOutputFile = sOutputFile.Replace("\\", "");
-                            sOutputFile = sOutputFile.Replace("*", "");
-                            sOutputFile = sOutputFile.Replace("<", "");
-                            sOutputFile = sOutputFile.Replace(">", "");
-                            sOutputFile = sOutputFile.Replace("|", "");
-                            sOutputFile = sOutputFile.Replace("/", "");
-                            // 
-                            sOutputFile = Path.Combine(System.IO.Path.GetTempPath(), sOutputFile + ".nzb");
-                            FileStream file = System.IO.File.Create(sOutputFile);
-
-                            byte[] read = new byte[256];
-                            // Reads 256 bytes at a time.    
-                            int count = receiveStream.Read(read, 0, 256);
-                            while (count > 0)
+                            String sTemp = new String(sBlock, 0, 1000);
+                            sPage += sTemp;
+                            RegExp = m_Search[DBNewzbin.cSearchRegexIsolateArticleName];
+                            Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match matchLocal = Engine.Match(sPage);
+                            if (matchLocal.Success)
                             {
-                                file.Write(read, 0, count);
-                                count = receiveStream.Read(read, 0, 256);
-                            }
-
-                            file.Close();
-                            responseDownload.Close();
-
-                            List<String> sParsedArticleName = new List<String>();
-                            // now, retrieve the article subject page, get on of the subject name & store
-                            // assume we don't need to login, given we were able to read the search url fine previously
-                            RegExp = "http://[^/]*/";
-                            Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
-                            sUrl = Engine.Match(m_Search[DBNewzbin.cSearchUrl]).Groups[0].Value + "browse/post/" + result.m_sID + "/";
-
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);
-                            request.CookieContainer = new CookieContainer();
-                            request.CookieContainer.Add(Load.LoadCookies(m_Search));
-
-                            WebResponse response = request.GetResponse();
-                            Stream data = response.GetResponseStream();
-                            StreamReader reader = new StreamReader(data);
-                            // isolate article name
-                            char[] sBlock = new char[1000];
-                            sPage = String.Empty;
-                            while (reader.Read(sBlock, 0, 1000) != 0)
-                            {
-                                String sTemp = new String(sBlock, 0, 1000);
-                                sPage += sTemp;
-                                RegExp = m_Search[DBNewzbin.cSearchRegexIsolateArticleName];
+                                String sArticleName = matchLocal.Groups[1].Value;
+                                // and now extract all the strings from it
+                                RegExp = m_Search[DBNewzbin.cSearchRegexParseArticleName];
                                 Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                                Match matchLocal = Engine.Match(sPage);
-                                if (matchLocal.Success)
+                                MatchCollection matches = Engine.Matches(sArticleName);
+                                foreach (Match matchIter in matches)
                                 {
-                                    String sArticleName = matchLocal.Groups[1].Value;
-                                    // and now extract all the strings from it
-                                    RegExp = m_Search[DBNewzbin.cSearchRegexParseArticleName];
-                                    Engine = new Regex(RegExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                                    matches = Engine.Matches(sArticleName);
-                                    foreach (Match matchIter in matches)
-                                    {
-                                        sParsedArticleName.Add(matchIter.Groups[1].Value);
-                                    }
-                                    break;
+                                    sParsedArticleName.Add(matchIter.Groups[1].Value);
                                 }
+                                break;
                             }
-                            data.Close();
-                            reader.Close();
-                            response.Close();
-
-                            Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
-                            System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
-                            m_bSuccess = true;
                         }
+                        data.Close();
+                        reader.Close();
+                        response.Close();
+
+                        Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
+                        System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+                        m_bSuccess = true;
                     }
                 }
             }

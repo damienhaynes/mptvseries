@@ -104,19 +104,15 @@
   <ItemGroup>
     <Reference Include="Core, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Core.dll</HintPath>
     </Reference>
     <Reference Include="Databases, Version=0.2.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=0.9.2.28461, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Dialogs, Version=0.9.2.42067, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\release\Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,7 +121,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="Utils, Version=2.1.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +365,6 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "H:\MP2\xbmc\bin\Release\plugins\windows" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "%25MP_XBMC_BIN%25\plugins\windows" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
