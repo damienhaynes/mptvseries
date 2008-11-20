@@ -239,10 +239,11 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
-                        string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeries.sBannerFileName;
-                        int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeries.sBannerFileName);
-                        while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;                        
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
+                        //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeries.sBannerFileName;                        
+                        //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeries.sBannerFileName);
+                        //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
 
@@ -251,9 +252,10 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
                         bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName) + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath;
-                        string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeason.sBannerFileName;
-                        int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
-                        while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
+                        //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeason.sBannerFileName;                        
+                        //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeason.sBannerFileName);
+                        //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
             }
