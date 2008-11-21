@@ -314,10 +314,11 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                MPTVSeriesLog.Write("ImageLoading threw an error: " + filename + " - " + e.Message);
                 // this probably means the image is bad
                 PerfWatcher.GetNamedWatch("Img Loading").Stop();
-                return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+                MPTVSeriesLog.Write("ImageLoading threw an error: " + filename + " - " + e.Message);
+                return null;
+                //return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
             }
             PerfWatcher.GetNamedWatch("Img Loading").Stop();
             return i;

@@ -439,7 +439,7 @@ namespace WindowPlugins.GUITVSeries
                         // ZF: Cancel, clean up pending download
                         bDownloadSuccess = false;
                         Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                        MPTVSeriesLog.Write("cancel thumbnail download: " + f.FullLocalPath);
+                        MPTVSeriesLog.Write("Cancel thumbnail download: " + filename);
                       }
                       System.Windows.Forms.Application.DoEvents();
                     }
