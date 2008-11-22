@@ -71,6 +71,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cRating = "Rating";
         public const String cMyRating = "myRating";
 
+        public const String cEpisodeCount = "EpisodeCount";
+        public const String cEpisodesUnWatched = "EpisodesUnWatched";
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -87,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cAirsDay, "Week Day Aired");
             s_FieldToDisplayNameMap.Add(cAirsTime, "Hour Aired");
             s_FieldToDisplayNameMap.Add(cSortName, "Sort (Original) Name");
-
+           
             s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
             s_OnlineToFieldMap.Add("Status", cStatus);
@@ -152,6 +155,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
             base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -264,7 +269,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 9;
+        public const int cDBVersion = 10;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -292,7 +297,11 @@ namespace WindowPlugins.GUITVSeries
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeriesVersion);
 
             while (nUpgradeDBVersion != nCurrentDBVersion)
-                // take care of the upgrade in the table
+            {
+                SQLCondition condEmpty = new SQLCondition();
+                List<DBSeries> AllSeries = Get(condEmpty);
+
+                // take care of the upgrade in the table    
                 switch (nUpgradeDBVersion)
                 {
                     case 1:
@@ -304,7 +313,7 @@ namespace WindowPlugins.GUITVSeries
                             DBTVSeries.Execute(sqlQuery);
                             nUpgradeDBVersion++;
                         }
-                        catch {}
+                        catch { }
                         break;
 
                     case 3:
@@ -341,9 +350,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 8:
-                        // create the unwatcheditem value by parsin the episodes
-                        SQLCondition condEmpty = new SQLCondition();
-                        List<DBSeries> AllSeries = Get(condEmpty);
+                        // create the unwatcheditem value by parsin the episodes                
                         foreach (DBSeries series in AllSeries)
                         {
                             DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
@@ -356,11 +363,26 @@ namespace WindowPlugins.GUITVSeries
                         nUpgradeDBVersion++;
                         break;
 
+                    case 9:
+                        // Set number of watched/unwatched episodes                                       
+                        foreach (DBSeries series in AllSeries)
+                        {                                                                                    
+                            int epsTotal = 0;
+                            int epsUnWatched = 0;
+                            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+                            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+                            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+                            series.Commit();
+                        }
+                        nUpgradeDBVersion++;
+                        break;
+
                     default:
                         // new DB, nothing special to do
                         nUpgradeDBVersion = nCurrentDBVersion;
                         break;
                 }
+            }
             DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBVersion);
         }
 
@@ -806,5 +828,30 @@ namespace WindowPlugins.GUITVSeries
                 series[DBOnlineSeries.cUnwatchedItems] = false;
             series.Commit();
         }
+
+        public static void UpdatedEpisodeCounts(DBSeries series)
+        {
+            int epsTotal = 0;
+            int epsUnWatched = 0;
+
+            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+            series.Commit();
+    
+            // Now Update for each season in series
+            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
+            foreach (DBSeason season in Seasons)
+            {
+                epsTotal = 0;
+                epsUnWatched = 0;
+             
+                DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+                season[DBSeason.cEpisodeCount] = epsTotal;
+                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+                season.Commit();
+            }
+        }
+
     }
 }
