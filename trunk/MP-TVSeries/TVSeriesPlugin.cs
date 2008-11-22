@@ -645,10 +645,13 @@ namespace WindowPlugins.GUITVSeries
                                     m_bQuickSelect = false;
                                 }
                                 else
-                                {
-                                    GUIListItem selected = new GUIListItem();
-                                    selected.TVTag = seriesList[0];
-                                    Series_OnItemSelected(selected);
+                                {                                    
+                                    if (seriesList.Count > 0)
+                                    {
+                                        GUIListItem selected = new GUIListItem();
+                                        selected.TVTag = seriesList[0];
+                                        Series_OnItemSelected(selected);
+                                    }
                                 }
                             }                                
                         }
