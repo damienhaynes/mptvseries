@@ -64,7 +64,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cRating = "Rating";
         public const String cMyRating = "myRating";
-
+        
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
 
@@ -281,6 +281,8 @@ namespace WindowPlugins.GUITVSeries
         public string cachedFirstLogo = null;
 
         const int maxMIAttempts = 6;
+
+        private static bool m_bUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
 
         static DBEpisode()
         {
@@ -811,7 +813,8 @@ namespace WindowPlugins.GUITVSeries
 
         public static void GetSeasonEpisodeCounts(DBSeason season, out int epsTotal, out int epsUnWatched)
         {
-            List<DBEpisode> eps = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true);
+            m_bUpdateEpisodeCount = true;
+            List<DBEpisode> eps = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true);            
             epsTotal = eps.Count;
             epsUnWatched = eps.Count;
             foreach (DBEpisode ep in eps)
@@ -823,6 +826,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
         {
+            m_bUpdateEpisodeCount = true;
             List<DBEpisode> eps = DBEpisode.Get(series, true);
             epsTotal = eps.Count;
             epsUnWatched = eps.Count;
@@ -864,13 +868,14 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if ((!Settings.isConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
-                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                if ((!Settings.isConfig || m_bUpdateEpisodeCount) || !DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
 
+                m_bUpdateEpisodeCount = false;
                 return conditions;
             }
         }
