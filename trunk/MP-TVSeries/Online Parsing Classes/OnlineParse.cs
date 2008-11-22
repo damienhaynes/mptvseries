@@ -339,7 +339,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // 3) identifies new episodes
                     GetEpisodes();                                                         
-                    
+                                                         
                     counter++;
 
                 }
@@ -380,6 +380,13 @@ namespace WindowPlugins.GUITVSeries
                 UpdateEpisodeThumbNails();
                 Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             }
+            
+            // Update Episode counts
+            SQLCondition condEmpty = new SQLCondition();
+            List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+            foreach (DBSeries series in AllSeries)
+                DBSeries.UpdatedEpisodeCounts(series);
+
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************          Completed          ***************************");
@@ -1147,13 +1154,13 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 catch (System.Net.WebException)
                                 {
-                                    MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailUrl] + ")");
+                                    MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailFilename] + ")");
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            MPTVSeriesLog.Write("There was a problem getting the episode image: " + ex.Message);
+                            MPTVSeriesLog.Write(string.Format("There was a problem getting the episode image: {0} ({1})", episode[DBOnlineEpisode.cEpisodeThumbnailFilename], ex.Message));
                         }
                         episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
                         episode.Commit();

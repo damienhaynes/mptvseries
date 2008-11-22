@@ -459,7 +459,7 @@ namespace WindowPlugins.GUITVSeries
                 this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
         }
         
-        bool facadeLoaded = false;
+        //bool facadeLoaded = false;
         System.ComponentModel.BackgroundWorker bg = null;
         void LoadFacade()
         {
@@ -695,7 +695,7 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
             MPTVSeriesLog.Write("in facadedone",MPTVSeriesLog.LogLevel.Debug);
-            facadeLoaded = true;
+            //facadeLoaded = true;
             //GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
             if (m_Facade == null)
                 return;
@@ -748,7 +748,7 @@ namespace WindowPlugins.GUITVSeries
 
         void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            facadeLoaded = false; // reset
+            //facadeLoaded = false; // reset
             PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Start();
             //using (WaitCursor c = new WaitCursor()) // should we show a waitcursor?
             bgLoadFacade();
@@ -898,11 +898,13 @@ namespace WindowPlugins.GUITVSeries
                                             //item.Selected = true;
                                         }
                                     }
+
                                     if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
                                     {
                                         selectedIndex = count;
                                         //item.Selected = true;
                                     }
+                                   
                                     if (bg.CancellationPending) return;
                                     else
                                     {                              
@@ -1761,6 +1763,8 @@ namespace WindowPlugins.GUITVSeries
                                     DBSeason.UpdateUnWatched(selectedEpisode);
                                     DBSeries.UpdateUnWatched(selectedEpisode);
                                 }
+                                // Update Episode Counts
+                                DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
                                 LoadFacade();
                             }
                         }
@@ -1974,14 +1978,16 @@ namespace WindowPlugins.GUITVSeries
                                 case Listlevel.Season:
                                     selectedSeason[DBSeason.cHidden] = true;
                                     selectedSeason.Commit();
+                                    DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                                     break;
 
                                 case Listlevel.Episode:
                                     selectedEpisode[DBOnlineEpisode.cHidden] = true;
                                     MPTVSeriesLog.Write(string.Format("Hiding series {0} from view", m_SelectedEpisode));
                                     selectedEpisode.Commit();
+                                    DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
                                     break;
-                            }
+                            }                                                        
                             LoadFacade();
                         }
                         break;
@@ -1989,19 +1995,22 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.actionMarkAllWatched:
                         // all watched
                         if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
-                        {
+                        {                            
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
                             m_SelectedSeries.Commit();
+                            // Updated Episode Counts
+                            DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
-                        {
+                        {                            
                             DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
                             m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
                             m_SelectedSeason.Commit();
+                            DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
                             cache.dump();
                         }
                         LoadFacade(); // refresh
@@ -2009,19 +2018,21 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.actionMarkAllUnwatched:
                         // all unwatched
                         if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
-                        {
+                        {                            
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
                             m_SelectedSeries.Commit();
+                            DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
-                        {
+                        {                            
                             DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
                             m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
                             m_SelectedSeason.Commit();
+                            DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
                             cache.dump();
                         }
                         LoadFacade(); // refresh
@@ -2112,16 +2123,9 @@ namespace WindowPlugins.GUITVSeries
                                         }
                                         break;
                                 }
-                                if (epsDeletion.Count > 0)// && DBOption.GetOptions(DBOption.cDeleteFile))
+                                if (epsDeletion.Count > 0)
                                 {
                                     // delete the actual files!!
-
-                                    //dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                                    //if (null == dlgYesNo) return;
-                                    //dlgYesNo.SetHeading(Translation.Confirm);
-                                    //dlgYesNo.SetLine(1, String.Format(Translation.delPhyiscalWarning, epsDeletion.Count));
-                                    //dlgYesNo.SetDefaultToYes(false);
-                                    //dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
                                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
                                     if (dlgYesNo.IsConfirmed)
                                     {
@@ -2167,6 +2171,11 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.optionsOnlyShowLocal:
                         DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
+                        // Update Episode counts...this is going to be expensive                        
+                        SQLCondition condEmpty = new SQLCondition();
+                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+                        foreach (DBSeries series in AllSeries)
+                            DBSeries.UpdatedEpisodeCounts(series);
                         LoadFacade();
                         break;
 

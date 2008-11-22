@@ -809,6 +809,30 @@ namespace WindowPlugins.GUITVSeries
             return GetFirstUnwatched(new SQLCondition());
         }
 
+        public static void GetSeasonEpisodeCounts(DBSeason season, out int epsTotal, out int epsUnWatched)
+        {
+            List<DBEpisode> eps = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true);
+            epsTotal = eps.Count;
+            epsUnWatched = eps.Count;
+            foreach (DBEpisode ep in eps)
+            {
+                if (ep[DBOnlineEpisode.cWatched])
+                    epsUnWatched--;
+            }
+        }
+
+        public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
+        {
+            List<DBEpisode> eps = DBEpisode.Get(series, true);
+            epsTotal = eps.Count;
+            epsUnWatched = eps.Count;
+            foreach (DBEpisode ep in eps)
+            {
+                if (ep[DBOnlineEpisode.cWatched])
+                    epsUnWatched--;
+            }
+        }
+
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
         {
             SQLWhat what = new SQLWhat(new DBEpisode());

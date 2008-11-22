@@ -39,7 +39,7 @@ namespace WindowPlugins.GUITVSeries
     {
         #region Vars
         static PlayListPlayer playlistPlayer;
-        DBEpisode m_currentEpisode;
+        DBEpisode m_currentEpisode;      
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
         public event rateRequest RateRequestOccured;
@@ -181,6 +181,10 @@ namespace WindowPlugins.GUITVSeries
                 DBSeason.UpdateUnWatched(ep);
                 DBSeries.UpdateUnWatched(ep);
             }
+            // Update Episode Counts
+            DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+            DBSeason.UpdatedEpisodeCounts(series, season);           
         }
 
         /// <summary>

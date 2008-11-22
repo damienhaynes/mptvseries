@@ -2306,8 +2306,6 @@ namespace WindowPlugins.GUITVSeries
             return true;
         }
 
-
-
         private void GetSubtitles(TreeNode node)
         {
             switch (node.Name)
