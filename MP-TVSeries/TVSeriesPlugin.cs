@@ -193,6 +193,9 @@ namespace WindowPlugins.GUITVSeries
 
         #region Skin Variables
 
+        [SkinControlAttribute(2)]
+        protected GUIButtonControl viewMenuButton = null;
+
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
 
@@ -2590,6 +2593,11 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
+            if (control == this.viewMenuButton)
+            {
+                showViewSwitchDialog();
+                return;
+            }
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
             {
@@ -2644,7 +2652,7 @@ namespace WindowPlugins.GUITVSeries
                         m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
                         break;
                 }
-            }
+            }           
             base.OnClicked(controlId, control, actionType);
         }
 
