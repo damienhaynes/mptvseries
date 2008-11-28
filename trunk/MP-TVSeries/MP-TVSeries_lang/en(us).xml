@@ -108,4 +108,5 @@
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Enter your online account ID in Configuration</string>
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com is currently unavailable, try again later</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Network connection is unavailable, check connection and try again</string>
+	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Show Fanart in Series View</string>
 </strings>
