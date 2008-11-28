@@ -285,6 +285,7 @@ namespace WindowPlugins.GUITVSeries
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkShowSeriesFanart = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -1130,7 +1131,7 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_Series_UseSortName
             // 
             this.checkBox_Series_UseSortName.AutoSize = true;
-            this.checkBox_Series_UseSortName.Location = new System.Drawing.Point(5, 104);
+            this.checkBox_Series_UseSortName.Location = new System.Drawing.Point(217, 106);
             this.checkBox_Series_UseSortName.Name = "checkBox_Series_UseSortName";
             this.checkBox_Series_UseSortName.Size = new System.Drawing.Size(304, 17);
             this.checkBox_Series_UseSortName.TabIndex = 11;
@@ -3164,6 +3165,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox2.Controls.Add(this.chkShowSeriesFanart);
             this.groupBox2.Controls.Add(this.comboBox_seriesFormat);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Main);
@@ -3182,6 +3184,17 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Series View Settings";
+            // 
+            // chkShowSeriesFanart
+            // 
+            this.chkShowSeriesFanart.AutoSize = true;
+            this.chkShowSeriesFanart.Location = new System.Drawing.Point(9, 106);
+            this.chkShowSeriesFanart.Name = "chkShowSeriesFanart";
+            this.chkShowSeriesFanart.Size = new System.Drawing.Size(154, 17);
+            this.chkShowSeriesFanart.TabIndex = 12;
+            this.chkShowSeriesFanart.Text = "Show Fanart in Series view";
+            this.chkShowSeriesFanart.UseVisualStyleBackColor = true;
+            this.chkShowSeriesFanart.CheckedChanged += new System.EventHandler(this.chkShowSeriesFanart_CheckedChanged);
             // 
             // label6
             // 
@@ -4480,5 +4493,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label63;
         private System.Windows.Forms.NumericUpDown qualityPoster;
         private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.CheckBox chkShowSeriesFanart;
     }
 }

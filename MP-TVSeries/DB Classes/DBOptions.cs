@@ -151,6 +151,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cQualitySeriesPosters = "QualityPosterImages";
 
         public const String cGetSeriesPosters = "getSeriesPosters";
+        public const String cShowSeriesFanart = "showSeriesFanart";
 
         public const String cFanartRandom = "FanartRandom";        
 
@@ -377,6 +378,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cGetSeriesPosters) == null)
                     SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
+
+                if (GetOptions(cShowSeriesFanart) == null)
+                    SetOptions(cShowSeriesFanart, false);
 
                 if (GetOptions(cFanartRandom) == null)
                     SetOptions(cFanartRandom, false);

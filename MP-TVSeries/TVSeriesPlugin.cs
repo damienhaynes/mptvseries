@@ -464,6 +464,8 @@ namespace WindowPlugins.GUITVSeries
         
         //bool facadeLoaded = false;
         System.ComponentModel.BackgroundWorker bg = null;
+        System.ComponentModel.BackgroundWorker bgFanartLoader = null;
+
         void LoadFacade()
         {
             if (bg == null)
@@ -474,6 +476,16 @@ namespace WindowPlugins.GUITVSeries
                 bg.WorkerReportsProgress = true;
                 bg.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(bg_ProgressChanged);
                 bg.WorkerSupportsCancellation = true;
+            }
+
+            if (bgFanartLoader == null)
+            {
+                bgFanartLoader = new System.ComponentModel.BackgroundWorker();
+                bgFanartLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(bgFanartLoader_DoWork);
+                //bgFanartLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgFanartLoader_Completed);
+                bgFanartLoader.WorkerReportsProgress = true;
+                //bgFanartLoader.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(bgFanartLoader_ProgressChanged);
+                bgFanartLoader.WorkerSupportsCancellation = true;
             }
 
             lock (bg)
@@ -537,16 +549,16 @@ namespace WindowPlugins.GUITVSeries
 
                 switch (this.listLevel)
                 {
-                  case Listlevel.Season:
-                    loadFanart(m_SelectedSeries);
-                    break;
-                  case Listlevel.Episode:
-                    loadFanart(m_SelectedSeason);
-                    break;
-
-                  default:
-                    loadFanart(null);
-                    break;
+                    //case Listlevel.Series:
+                    case Listlevel.Season:
+                        loadFanart(m_SelectedSeries);
+                        break;
+                    case Listlevel.Episode:
+                        loadFanart(m_SelectedSeason);
+                        break;
+                    default:
+                        loadFanart(null);
+                        break;
                 }
 
             }
@@ -764,6 +776,7 @@ namespace WindowPlugins.GUITVSeries
                 e.Cancel = true;
 
         }
+
         void bgLoadFacade()
         //void LoadFacade()
         {
@@ -1355,6 +1368,7 @@ namespace WindowPlugins.GUITVSeries
             optionsAskToRate,
             optionsFastViewSwitch,
             optionsFanartRandom,
+            optionsSeriesFanart,
             actionRecheckMI,
             showFanartChooser
         }
@@ -1516,16 +1530,22 @@ namespace WindowPlugins.GUITVSeries
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
-
-                            pItem = new GUIListItem(Translation.RateEpisode);
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextMenus.rate;
+                            
+                            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            {
+                                pItem = new GUIListItem(Translation.RateEpisode);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextMenus.rate;
+                            }
                         }
                         else if (this.listLevel != Listlevel.Group)
                         {
-                            pItem = new GUIListItem(Translation.RateSeries);
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextMenus.rate;
+                            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            {
+                                pItem = new GUIListItem(Translation.RateSeries);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextMenus.rate;
+                            }
 
                             pItem = new GUIListItem(Translation.Mark_all_as_watched);
                             dlg.Add(pItem);
@@ -1549,20 +1569,26 @@ namespace WindowPlugins.GUITVSeries
 
                         if (this.listLevel == Listlevel.Series)
                         {
-                            pItem = new GUIListItem(Translation.Cycle_Banner);
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
+                            if (selectedSeries.BannerList.Count > 1)
+                            {
+                                pItem = new GUIListItem(Translation.Cycle_Banner);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
 
-                            pItem = new GUIListItem(Translation.Force_Online_Match);
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextItems.forceSeriesQuery;
+                                pItem = new GUIListItem(Translation.Force_Online_Match);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.forceSeriesQuery;
+                            }
                         }
 
                         if (this.listLevel == Listlevel.Season || this.listLevel == Listlevel.Episode)
                         {
-                            pItem = new GUIListItem(Translation.Cycle_Banner);
-                            dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
+                            if (selectedSeason.BannerList.Count > 1)
+                            {
+                                pItem = new GUIListItem(Translation.Cycle_Banner);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
+                            }
                         }
 
                         if (listLevel != Listlevel.Group)
@@ -1579,7 +1605,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                     else dlg.SetHeading(m_CurrLView.Name);
-
+                    
                     pItem = new GUIListItem(Translation.ChangeView + " >>");
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
@@ -1595,18 +1621,26 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.options;
 
-                    if (listLevel != Listlevel.Group)
-                    {
 #if inclDownloaders
-                        if (this.listLevel == Listlevel.Episode)
-                        {
-                          pItem = new GUIListItem(Translation.Download + " >>");
-                          dlg.Add(pItem);
-                          pItem.ItemId = (int)eContextMenus.download;
-                        }
-#endif
-                    }
+                    bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                    bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+                    bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+                    bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
+                    bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
+                    if (foromEnable || seriesSubEnable || remositoryEnable || newsEnable || torrentsEnable)
+                    {
+                        if (listLevel != Listlevel.Group)
+                        {
+                            if (this.listLevel == Listlevel.Episode)
+                            {
+                                pItem = new GUIListItem(Translation.Download + " >>");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextMenus.download;
+                            }
+                        }
+                    }
+#endif
 
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
                     switch (dlg.SelectedId)
@@ -1616,9 +1650,8 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Download);
-                                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
-                                bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
-                                bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+                                
+                                
                                 if (foromEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
@@ -1626,13 +1659,19 @@ namespace WindowPlugins.GUITVSeries
                                     pItem.ItemId = (int)eContextItems.downloadSubtitle;
                                 }
 
-                                pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.downloadviaNewz;
+                                if (newsEnable)
+                                {
+                                    pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.downloadviaNewz;
+                                }
 
-                                pItem = new GUIListItem(Translation.Load_via_Torrent);
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.downloadviaTorrent;
+                                if (torrentsEnable)
+                                {
+                                    pItem = new GUIListItem(Translation.Load_via_Torrent);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.downloadviaTorrent;
+                                }
 
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                                 if (dlg.SelectedId != -1)
@@ -1679,7 +1718,7 @@ namespace WindowPlugins.GUITVSeries
                         case (int)eContextMenus.options:
                             {
                                 dlg.Reset();
-                                dlg.SetHeading(Translation.Actions);
+                                dlg.SetHeading(Translation.Options);
 
                                 pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
@@ -1689,17 +1728,27 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
-                                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsAskToRate;
+                                if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                                {
+                                    pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsAskToRate;
+                                }
 
                                 /*pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;*/
 
-                                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsFanartRandom;
+                                if (FanartBackground != null)
+                                {
+                                    pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsFanartRandom;
+
+                                    pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
+                                }
 
                                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                                 if (dlg.SelectedId != -1)
@@ -2201,6 +2250,18 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.optionsFanartRandom:
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
                         break;
+                    case (int)eContextItems.optionsSeriesFanart:
+                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
+                        if (this.listLevel == Listlevel.Series)
+                        {
+                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
+                            {
+                                Series_OnItemSelected(m_Facade.SelectedListItem);
+                            }
+                            else
+                                loadFanart(null);
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
@@ -2541,39 +2602,64 @@ namespace WindowPlugins.GUITVSeries
                             if (se != null)
                                 f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
                         }
+
                         if (f != null && f.Found)
                         {
                             //if (f != currSeriesFanart)
                             //FanartBackground.Visible = false;
-                            MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Normal);
-                            FanartBackground.SetFileName(f.FanartAsTexture);
-                            FanartBackground.Visible = true;
-
-                            //FanartBackground.Visible = true;
-
-                            // I don't think we can support these anymore with dbfanart now
-                            //if (this.dummyIsLightFanartLoaded != null)
-                            //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
-                            //if (this.dummyIsDarkFanartLoaded != null)
-                            //    this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
-
-                            if (f.HasColorInfo)
-                            {
-                                System.Drawing.Color[] fanartColors = f.Colors;
-                                setGUIProperty("FanArt.Colors.LightAccent", Fanart.RGBColorToHex(fanartColors[0]));
-                                setGUIProperty("FanArt.Colors.DarkAccent", Fanart.RGBColorToHex(fanartColors[1]));
-                                setGUIProperty("FanArt.Colors.Neutral Midtone", Fanart.RGBColorToHex(fanartColors[2]));
+                            MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
+                            string sFanartFile = f.FanartAsTexture;
+                            
+                            // Fanart in series view is loaded on a seperate thread
+                            if (bgFanartLoader.CancellationPending)
+                            {                                       
+                                while (f.SeriesID != this.m_SelectedSeries[DBSeries.cID])
+                                {                                       
+                                    f = Fanart.getFanart(this.m_SelectedSeries[DBSeries.cID]);
+                                    f.ForceNewPick();
+                                    
+                                    if (f != null)                                    
+                                        f.FlushTexture();
+                                    
+                                    currSeriesFanart = f;
+                                    sFanartFile = f.FanartAsTexture;
+                                    MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);                                    
+                                }
                             }
-                            else
+                            if (System.IO.File.Exists(f.FanartFilename))
                             {
-                                setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
-                                setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
-                                setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
-                            }
-                            if (this.dummyIsFanartColorAvailable != null)
-                                this.dummyIsFanartColorAvailable.Visible = f.HasColorInfo;
+                                FanartBackground.SetFileName(sFanartFile);
+                                FanartBackground.Visible = true;
 
-                            fanartSet = true;
+                                //FanartBackground.Visible = true;
+
+                                // I don't think we can support these anymore with dbfanart now
+                                //if (this.dummyIsLightFanartLoaded != null)
+                                //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
+                                //if (this.dummyIsDarkFanartLoaded != null)
+                                //    this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+
+                                if (f.HasColorInfo)
+                                {
+                                    System.Drawing.Color[] fanartColors = f.Colors;
+                                    setGUIProperty("FanArt.Colors.LightAccent", Fanart.RGBColorToHex(fanartColors[0]));
+                                    setGUIProperty("FanArt.Colors.DarkAccent", Fanart.RGBColorToHex(fanartColors[1]));
+                                    setGUIProperty("FanArt.Colors.Neutral Midtone", Fanart.RGBColorToHex(fanartColors[2]));
+                                }
+                                else
+                                {
+                                    setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
+                                    setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
+                                    setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
+                                }
+                                if (this.dummyIsFanartColorAvailable != null)
+                                    this.dummyIsFanartColorAvailable.Visible = f.HasColorInfo;
+
+                                fanartSet = true;
+
+                            }
+                            else                            
+                                loadFanart(null);
 
                         }
                         else if (f != null && !f.SeasonMode) loadFanart(null);
@@ -2590,6 +2676,22 @@ namespace WindowPlugins.GUITVSeries
                 return false;
             }
         }
+
+        private void bgFanartLoader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            if (bgFanartLoader.CancellationPending)
+                e.Cancel = true;
+            
+            loadFanart(m_SelectedSeries);
+        }
+
+        /*private void bgFanartLoader_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {           
+        }
+
+        private void bgFanartLoader_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {                     
+        }*/
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
@@ -2841,6 +2943,18 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
+
+            if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)
+            {
+                // Check if already loading fanart fom previous selection
+                if (bgFanartLoader.IsBusy)
+                {
+                    bgFanartLoader.CancelAsync();
+                    return;
+                }
+                bgFanartLoader.RunWorkerAsync();
+            }
+
         }
 
         private void Season_OnItemSelected(GUIListItem item)

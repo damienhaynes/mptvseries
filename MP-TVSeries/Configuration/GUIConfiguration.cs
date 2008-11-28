@@ -3362,6 +3362,11 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cGetSeriesPosters, chkDownloadSeriesPoster.Checked);
         }
 
+        private void chkShowSeriesFanart_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cShowSeriesFanart, chkShowSeriesFanart.Checked);
+        }
+
     }
 
     public class BannerComboItem
