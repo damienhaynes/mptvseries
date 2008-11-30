@@ -1531,7 +1531,7 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
                             
-                            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateEpisode);
                                 dlg.Add(pItem);
@@ -1540,7 +1540,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (this.listLevel != Listlevel.Group)
                         {
-                            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateSeries);
                                 dlg.Add(pItem);
@@ -1728,7 +1728,7 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
-                                if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                                 {
                                     pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
                                     dlg.Add(pItem);
