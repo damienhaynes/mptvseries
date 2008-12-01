@@ -1053,6 +1053,7 @@ namespace WindowPlugins.GUITVSeries
                                         case DBOnlineEpisode.cDownloadPending:
                                         case DBOnlineEpisode.cDownloadExpectedNames:
                                         case DBOnlineEpisode.cMyRating:
+                                        case DBOnlineEpisode.cEpisodeThumbnailFilename: 
                                             // do nothing here, those information are local only
                                             break;
 
