@@ -2550,16 +2550,16 @@ namespace WindowPlugins.GUITVSeries
         }
 
         bool fanartSet = false;
-        bool fanartReinitNeeded = false; // after coming back from the other xml
         Fanart currSeriesFanart = null;
         bool loadFanart(DBTable item)
         {
             try
             {
-                fanartReinitNeeded = false;
                 if (FanartBackground == null) fanartSet = false;
                 else
                 {
+                  FanartBackground.AllocResources();
+
                     //FanartBackground.Visible = false;
                     if (item == null)
                     {
@@ -2607,7 +2607,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             DBSeason se = item as DBSeason;
                             if (se != null)
-                                f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
+                              f = Fanart.getFanart(se[DBSeason.cSeriesID]);
+                          // ZF not working, not working, not working .... nothing about fanart works as expected! duh...
+                            //f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
 
                         }
 
@@ -3423,10 +3425,6 @@ namespace WindowPlugins.GUITVSeries
                 fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
             else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");
             GUIWindowManager.ActivateWindow(fc.GetID, false);
-
-            // causes Fanart Refresh on return
-//             fanartReinitNeeded = true;
-//             currSeriesFanart = null;
         }
 
         ~TVSeriesPlugin()

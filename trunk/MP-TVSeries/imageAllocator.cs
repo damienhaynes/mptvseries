@@ -189,9 +189,7 @@ namespace WindowPlugins.GUITVSeries
                     sTextureName = sFileName;
                 }
                 else if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))
-                {
                     sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
-                }
                 else
                     sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);
             }
@@ -219,8 +217,10 @@ namespace WindowPlugins.GUITVSeries
             String sTextureName;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
             {
-                if (DBOption.GetOptions(DBOption.cAltImgLoading)) sTextureName = sFileName; // bypass memoryimagebuilder
-                else sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
+                if (DBOption.GetOptions(DBOption.cAltImgLoading)) 
+                  sTextureName = sFileName; // bypass memoryimagebuilder
+                else 
+                  sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
             }
             else if (createIfNotExist)
             {
@@ -238,9 +238,13 @@ namespace WindowPlugins.GUITVSeries
         public static String GetEpisodeImage(DBEpisode episode)
         {
             if (Helper.String.IsNullOrEmpty(episode.Image)) return string.Empty;
-            Image i = LoadImageFastFromFile(episode.Image);
-            Size epSize = new Size((int)(i.Width * reqEpisodeImagePercentage), (int)(i.Height * reqEpisodeImagePercentage));
-            return GetOtherImage(i, episode.Image, epSize, false); 
+            if (episode.Image.Length > 0 && System.IO.File.Exists(episode.Image))
+              return episode.Image;
+            else
+              return String.Empty;
+//             Image i = LoadImageFastFromFile(episode.Image);
+//             Size epSize = new Size((int)(i.Width * reqEpisodeImagePercentage), (int)(i.Height * reqEpisodeImagePercentage));
+//             return GetOtherImage(i, episode.Image, epSize, false); 
         }
 
 

@@ -204,7 +204,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-              string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
+//              string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
+              string _textureName_temp = FanartFilename;
 
               if (_textureName == null)
                 _textureName = _textureName_temp;
@@ -230,7 +231,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void FlushTexture()
         {
-            if (_textureName != null) ImageAllocator.Flush(_textureName);
+//            if (_textureName != null) ImageAllocator.Flush(_textureName);
             _textureName = null;
         }
 
