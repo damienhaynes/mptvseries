@@ -2601,6 +2601,7 @@ namespace WindowPlugins.GUITVSeries
                             DBSeason se = item as DBSeason;
                             if (se != null)
                                 f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
+
                         }
 
                         if (f != null && f.Found)
@@ -2934,12 +2935,14 @@ namespace WindowPlugins.GUITVSeries
             m_SelectedSeries = series;
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
+            clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeriesTitle, series));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));
+            setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
+
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
