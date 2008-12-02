@@ -549,7 +549,14 @@ namespace WindowPlugins.GUITVSeries
 
                 switch (this.listLevel)
                 {
-                    //case Listlevel.Series:
+                    case Listlevel.Series:
+                        if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
+                        {
+                            loadFanart(m_SelectedSeries);
+                        }
+                        else
+                            loadFanart(null);                       
+                        break;                            
                     case Listlevel.Season:
                         loadFanart(m_SelectedSeries);
                         break;
@@ -657,7 +664,7 @@ namespace WindowPlugins.GUITVSeries
 
                                         OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
                                     }
-                                    m_bQuickSelect = false;
+                                    m_bQuickSelect = false;                                 
                                 }
                                 else
                                 {                                    
@@ -2946,7 +2953,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
-
+           
             if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)
             {
                 // Check if already loading fanart fom previous selection
