@@ -2619,7 +2619,8 @@ namespace WindowPlugins.GUITVSeries
                             //FanartBackground.Visible = false;
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
                             string sFanartFile = f.FanartAsTexture;
-                            
+                            FanartBackground.SetFileName(sFanartFile);
+
                             // Fanart in series view is loaded on a seperate thread
                             if (bgFanartLoader.CancellationPending)
                             {                                       
@@ -2634,6 +2635,7 @@ namespace WindowPlugins.GUITVSeries
                                     currSeriesFanart = f;
                                     sFanartFile = f.FanartAsTexture;
                                     MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);                                    
+                                    FanartBackground.SetFileName(sFanartFile);                                    
                                 }
                             }
                             if (System.IO.File.Exists(f.FanartFilename))
