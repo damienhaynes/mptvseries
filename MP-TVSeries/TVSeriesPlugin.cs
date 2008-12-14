@@ -41,6 +41,7 @@ using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using WindowPlugins.GUITVSeries.Subtitles;
 #endif
 using aclib.Performance;
+using Cornerstone.MP;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -51,6 +52,13 @@ namespace WindowPlugins.GUITVSeries
             m_stepSelections.Add(new string[] { null });
             // disable that dynamic skin adjustment....skinners should have the power to position the elements whereever with the plugin inerveining
             if (DBOption.GetOptions(DBOption.cViewAutoHeight)) DBOption.SetOptions(DBOption.cViewAutoHeight, false);
+
+            int artworkDelay = 250;
+
+            fanart = new ImageSwapper();
+            fanart.ImageResource.Delay = artworkDelay;
+            fanart.PropertyOne = "#TVSeries.Fanart";
+            fanart.PropertyTwo = "#TVSeries.Fanart2";
         }
         #region ISetupForm Members
 
@@ -124,8 +132,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #endregion
-        
 
+        private ImageSwapper fanart;
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
@@ -210,6 +218,12 @@ namespace WindowPlugins.GUITVSeries
 
         [SkinControlAttribute(524)]
         protected GUIImage FanartBackground = null;
+        
+        [SkinControlAttribute(525)]
+        protected GUIImage FanartBackground2 = null;
+
+        [SkinControlAttribute(526)]
+        protected GUIImage loadingImage = null;
 
         [SkinControlAttribute(1232)]
         protected GUILabelControl dummyIsFanartLoaded = null;
@@ -1291,6 +1305,11 @@ namespace WindowPlugins.GUITVSeries
             }
             else setViewLabels();
 //            if (!fanartSet) loadFanart(null); // init dummy labels
+            
+            fanart.GUIImageOne = FanartBackground;
+            fanart.GUIImageTwo = FanartBackground2;
+            fanart.LoadingImage = loadingImage;
+
             LoadFacade();
             m_Facade.Focus = true;
             setProcessAnimationStatus(m_parserUpdaterWorking);
@@ -2558,16 +2577,17 @@ namespace WindowPlugins.GUITVSeries
                 if (FanartBackground == null) fanartSet = false;
                 else
                 {
-                  FanartBackground.AllocResources();
+                  //FanartBackground.AllocResources();
 
                     //FanartBackground.Visible = false;
                     if (item == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
                         currSeriesFanart = null;
-                        Fanart.FlushTextures();
-                        FanartBackground.Visible = false;
-                        FanartBackground.SetFileName(string.Empty);
+                        //Fanart.FlushTextures();
+                        fanart.Active = false;
+                        //FanartBackground.Visible = false;
+                        //FanartBackground.SetFileName(string.Empty);                        
                         if (this.dummyIsFanartLoaded != null)
                             this.dummyIsFanartLoaded.Visible = false;
                         if (this.dummyIsLightFanartLoaded != null)
@@ -2596,7 +2616,7 @@ namespace WindowPlugins.GUITVSeries
                                 f.ForceNewPick(); // k, lets get more random then
                                 if (f != null)
                                 {
-                                    f.FlushTexture();
+                                    //f.FlushTexture();
                                 }
                             }
                             // else we came back from season, we want the same fanart again
@@ -2618,11 +2638,13 @@ namespace WindowPlugins.GUITVSeries
                             //if (f != currSeriesFanart)
                             //FanartBackground.Visible = false;
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
-                            string sFanartFile = f.FanartAsTexture;
-                            FanartBackground.SetFileName(sFanartFile);
+                            //string sFanartFile = f.FanartAsTexture;
+                            //FanartBackground.SetFileName(sFanartFile);
+                            fanart.Active = true;
+                            fanart.Filename = f.FanartFilename;
 
                             // Fanart in series view is loaded on a seperate thread
-                            if (bgFanartLoader.CancellationPending)
+                            /*if (bgFanartLoader.CancellationPending)
                             {                                       
                                 while (f.SeriesID != this.m_SelectedSeries[DBSeries.cID])
                                 {                                       
@@ -2630,20 +2652,18 @@ namespace WindowPlugins.GUITVSeries
                                     f.ForceNewPick();
                                     
                                     if (f != null)                                    
-                                        f.FlushTexture();
+                                        //f.FlushTexture();
                                     
                                     currSeriesFanart = f;
-                                    sFanartFile = f.FanartAsTexture;
+                                    //sFanartFile = f.FanartAsTexture;
                                     MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);                                    
-                                    FanartBackground.SetFileName(sFanartFile);                                    
+                                    //FanartBackground.SetFileName(sFanartFile);                                    
                                 }
-                            }
+                            }*/
                             if (System.IO.File.Exists(f.FanartFilename))
                             {
-                                FanartBackground.SetFileName(sFanartFile);
+                                //FanartBackground.SetFileName(sFanartFile);
                                 FanartBackground.Visible = true;
-
-                                //FanartBackground.Visible = true;
 
                                 // I don't think we can support these anymore with dbfanart now
                                 //if (this.dummyIsLightFanartLoaded != null)
@@ -2961,12 +2981,13 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)
             {
                 // Check if already loading fanart fom previous selection
-                if (bgFanartLoader.IsBusy)
+                /*if (bgFanartLoader.IsBusy)
                 {
                     bgFanartLoader.CancelAsync();
                     return;
                 }
-                bgFanartLoader.RunWorkerAsync();
+                bgFanartLoader.RunWorkerAsync();*/
+                loadFanart(m_SelectedSeries);
             }
 
         }
