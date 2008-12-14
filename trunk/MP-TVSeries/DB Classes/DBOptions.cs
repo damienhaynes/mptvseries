@@ -178,7 +178,6 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cDBSeriesLastLocalID) == null)
                     SetOptions(cDBSeriesLastLocalID, -1);
 
-
                 // update default values if not there already
                 if (GetOptions(cShowHiddenItems) == null)
                     SetOptions(cShowHiddenItems, false);
@@ -193,7 +192,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cGetEpisodeSnapshots, true);
 
                 if (GetOptions(cAutoChooseSeries) == null)
-                    SetOptions(cAutoChooseSeries, false);
+                    SetOptions(cAutoChooseSeries, true);
                 
                 if (GetOptions(cAutoChooseOrder) == null)
                     SetOptions(cAutoChooseOrder, false);
@@ -362,7 +361,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cAppendFirstLogoToList, 0); //default no (most skins don't seem to use this)
 
                 if (GetOptions(cGraphicalGroupView) == null)
-                    SetOptions(cGraphicalGroupView, 1); //default yes (should work on all skins)
+                    SetOptions(cGraphicalGroupView, 0); //default yes (should work on all skins)
 
                 if (GetOptions(cQualitySeriesBanners) == null)
                     SetOptions(cQualitySeriesBanners, 75);
