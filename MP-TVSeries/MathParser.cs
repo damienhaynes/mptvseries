@@ -75,6 +75,9 @@ namespace WindowPlugins.GUITVSeries.MathParser
             addFunction("Abs", delegate(double number) { return Math.Abs(number); });
             addFunction("Log10", delegate(double number) { return Math.Log10(number); });
 
+            addFunction("PrettyNumber10", delegate(string number) { return number.ToString().PadLeft(2, '0'); });
+            addFunction("PrettyNumber100", delegate(string number) { return number.ToString().PadLeft(3, '0'); });
+   
             addFunction("PrettyBytes1024", delegate(double number, out int pow)
             {
                 double result = number;
@@ -108,21 +111,33 @@ namespace WindowPlugins.GUITVSeries.MathParser
             atomics.Add(multDiv); // then * /
             atomics.Add(addSub); // and finally + -
         }
-
+        
         static void addFunction(string format, mathFunction.functionDel function)
         {
-            addFunction(format, function, null);
+            addFunction(format, function, null, null);
         }
 
         static void addFunction(string format, mathFunction.functionDelWithResult function)
         {
-            addFunction(format, null, function);
+            addFunction(format, null, function, null);
         }
 
-        static void addFunction(string format, mathFunction.functionDel function, mathFunction.functionDelWithResult functionWRes)
+        static void addFunction(string format, mathFunction.functionDelReturnsString function)
+        {
+            addFunction(format, null, null, function);
+        }
+
+        static void addFunction(string format, mathFunction.functionDel function, mathFunction.functionDelWithResult functionWRes, mathFunction.functionDelReturnsString functionString)
         {
             mathFunction m = null;
-            m = function == null ? new mathFunction(format, functionWRes) : new mathFunction(format, function);
+
+            if (function != null)
+                m = new mathFunction(format, function);
+            else if (functionWRes != null)
+                m = new mathFunction(format, functionWRes);
+            else
+                m = new mathFunction(format, functionString);
+
             functions.Add(m);
             MPTVSeriesLog.Write("Added MathFunction: ", m.form, MPTVSeriesLog.LogLevel.Debug);
         }
@@ -232,6 +247,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
             stringResult = null;
             // find parenthesis and apply the desired delegate on the result described in functions
             double result;
+            bool bParse = true;
             for (int i = 0; i < functions.Count; i++)
             {
                 string toReplace;
@@ -245,12 +261,25 @@ namespace WindowPlugins.GUITVSeries.MathParser
                     MPTVSeriesLog.Write("Subresult: ", (subresult == null ? " ERROR" : ((double)(subresult)).ToString(provider)), MPTVSeriesLog.LogLevel.Debug);
 
                     if (subresult == null) return null; // can't process it
-                    double funcRes = functions[i].Perform((double)subresult);
+
+                    string funcStrRes = "0";
+                    double funcRes = 0.0;
+
+                    if (functions[i].setsString)
+                    {
+                        int iResult = (int)subresult; //remove double conversion
+                        bParse = false;
+                        funcStrRes = functions[i].Perform(iResult.ToString()); 
+                    }
+                    else
+                    {
+                        funcRes = functions[i].Perform((double)subresult);
+                    }
                     if (functions[i].setsResult) prevResult = functions[i].Result;
 
-                    MPTVSeriesLog.Write(string.Format("Function: {0}{1}) = {2}", functions[i].form, subresult, funcRes.ToString(provider)), MPTVSeriesLog.LogLevel.Debug);                     
+                    MPTVSeriesLog.Write(string.Format("Function: {0}{1}) = {2}", functions[i].form, subresult, (functions[i].setsString ? funcStrRes : funcRes.ToString(provider))), MPTVSeriesLog.LogLevel.Debug);                     
                     if (Double.IsNaN(funcRes)) return null; // function not possible
-                    expression = expression.Replace(toReplace, funcRes.ToString(provider));
+                    expression = expression.Replace(toReplace, (functions[i].setsString ? funcStrRes : funcRes.ToString(provider)));
                     i--; //because each function may exist more than once per "level" we have to try again
                 }
 
@@ -259,13 +288,17 @@ namespace WindowPlugins.GUITVSeries.MathParser
             // now process atomic operations
             foreach (Regex reg in atomics)
                 if (!processAtomics(ref expression, reg)) return null;
+            
+            else if (prevResult > -1 && expression.Contains(optionFormat)) stringResult = stringOption(expression);
 
-            if (prevResult > -1 && expression.Contains(optionFormat)) stringResult = stringOption(expression);
-
-            if (!double.TryParse(expression, NumberStyles.Float, provider, out result)) return null;
-
-            // check if we have any options we have to use with the prevResult
-
+            // Dont Parse if a string           
+            if (!bParse)
+            {
+                stringResult = expression;
+                return null;
+            }           
+            
+            if (!double.TryParse(expression, NumberStyles.Float, provider, out result)) return null;                
 
             return result;
         }
@@ -371,17 +404,26 @@ namespace WindowPlugins.GUITVSeries.MathParser
     {
         public delegate double functionDel(double number);
         public delegate double functionDelWithResult(double number, out int Result);
+        public delegate string functionDelReturnsString(string number);
 
         public string form;
         public bool setsResult = false;
+        public bool setsString = false;
         public int Result = -1;
+
         functionDel _perform;
         functionDelWithResult _performWRes;
+        functionDelReturnsString _performString;
 
         public double Perform(double number)
         {
             if (setsResult) return _performWRes(number, out Result);
             else return _perform(number);
+        }
+
+        public string Perform(string number)
+        {
+            return _performString(number);
         }
 
         public mathFunction(string form, functionDel function)
@@ -394,6 +436,13 @@ namespace WindowPlugins.GUITVSeries.MathParser
         {
             _performWRes = function;
             setsResult = true;
+            init(form);
+        }
+
+        public mathFunction(string form, functionDelReturnsString function)
+        {
+            _performString = function;
+            setsString = true;
             init(form);
         }
 

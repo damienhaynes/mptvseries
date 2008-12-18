@@ -259,6 +259,12 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(1242)]
         protected GUILabelControl dummyIsSeriesPosters = null;
 
+        [SkinControlAttribute(1243)]
+        protected GUILabelControl dummyIsWatched = null;
+
+        [SkinControlAttribute(1244)]
+        protected GUILabelControl dummyIsAvailable = null;
+
         #endregion
 
         enum Listlevel
@@ -916,7 +922,12 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeriesCol2, series));
                                         item.Label2 = FieldGetter.resolveDynString(m_sFormatSeriesCol3, series);
-                                        item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);                                        
+                                        item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);
+
+                                        bool bWatched = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched])==0);
+                                        bool bAvailable = series[DBOnlineSeries.cHasLocalFiles];
+
+                                        LoadWatchedFlag(item, bWatched, bAvailable, true);                                        
                                     }
                                     item.TVTag = series;
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
@@ -986,16 +997,23 @@ namespace WindowPlugins.GUITVSeries
                                         else
                                         {
                                             item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
-                                            if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
+                                            //if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                                 // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
 
-                                                item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
+                                            item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
                                             item.Label3 = FieldGetter.resolveDynString(m_sFormatSeasonCol1, season);
-                                            if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+
+                                            bool bWatched = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
+                                            bool bAvailable = season[DBSeason.cHasLocalFiles];
+
+                                            if (!LoadWatchedFlag(item, bWatched, bAvailable, true))
                                             {
-                                                // if skins want to display the logo in the textual list, users need to set the option (expensive)
-                                                item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
-                                            }
+                                                if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                                {
+                                                    // if skins want to display the logo in the textual list, users need to set the option (expensive)
+                                                    item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
+                                                }
+                                            }                                                                                                                                    
                                         }
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
                                         item.IsDownloading = season[DBSeason.cUnwatchedItems] != 0;
@@ -1140,10 +1158,18 @@ namespace WindowPlugins.GUITVSeries
                                             selectedIndex = count;
                                     }
 
-                                    if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                    // show watched flag image if skin supports it
+                                    // this should take precedence over least used option for appending logo/ep thumb
+                                    bool bWatched = episode[DBOnlineEpisode.cWatched];
+                                    bool bAvailable = episode[DBEpisode.cFilename].ToString().Length > 0;
+
+                                    if (!LoadWatchedFlag(item, bWatched, bAvailable, false))
                                     {
-                                        // first returned logo should also show up here in list view directly
-                                        item.IconImage = localLogos.getFirstEpLogo(episode);
+                                        if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                        {
+                                            // first returned logo should also show up here in list view directly
+                                            item.IconImage = localLogos.getFirstEpLogo(episode);
+                                        }
                                     }
 
                                     if (bg.CancellationPending) return;
@@ -1220,6 +1246,59 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
+        }
+
+        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable, bool bMulitImage)
+        {
+            // Available (Files are Local) Images
+            string sWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_Watched.png";
+            string sUnWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatched.png";
+            
+            // Not Available (Files are not Local) Images
+            string sWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedNA.png";
+            string sUnWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedNA.png";
+
+            // Multi Image Flags
+            string sMultiFlagFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_MultiFlag.png";
+
+            if (bMulitImage)
+            {
+                if (!(System.IO.File.Exists(sMultiFlagFilename)))
+                    return false;
+                item.IconImage = sMultiFlagFilename;
+                return true;
+            }
+
+            // return if images dont exists
+            if (!(System.IO.File.Exists(sWatchedFilename) &&
+                  System.IO.File.Exists(sUnWatchedFilename) &&
+                  System.IO.File.Exists(sWatchedNAFilename) &&
+                  System.IO.File.Exists(sUnWatchedNAFilename)))
+                return false;
+
+            if (bWatched)
+            {
+                // Load watched flag image                                
+                if (!bAvailable)
+                {
+                    // Load alternative image
+                    item.IconImage = sWatchedNAFilename;
+                }
+                else
+                    item.IconImage = sWatchedFilename;
+            }
+            else
+            {
+                // Load un-watched flag image                
+                if (!bAvailable)
+                {
+                    // Load alternative image
+                    item.IconImage = sUnWatchedNAFilename;
+                }
+                else
+                    item.IconImage = sUnWatchedFilename;
+            }
+            return true;
         }
 
         void ReportFacadeLoadingProgress(BackGroundLoadingArgumentType type, int indexArgument, object state)
@@ -2964,6 +3043,11 @@ namespace WindowPlugins.GUITVSeries
 
             //item.Selected = true;
             m_SelectedSeries = series;
+                    
+            // set watched/unavailable flag
+            if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0);
+            if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
+
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
             clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
@@ -2997,9 +3081,15 @@ namespace WindowPlugins.GUITVSeries
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null)
                 return;
+            
             DBSeason season = item.TVTag as DBSeason;
             if (season == null) return;
+
             m_SelectedSeason = season;
+
+            // set watched/unavailable flag
+            if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
+            if (dummyIsAvailable != null) dummyIsAvailable.Visible = season[DBSeason.cHasLocalFiles];
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeasonTitle, season));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
@@ -3029,6 +3119,10 @@ namespace WindowPlugins.GUITVSeries
                 return;
             DBEpisode episode = item.TVTag as DBEpisode;
             if (episode == null) return;
+
+            // set watched/unavailable flag
+            if (dummyIsWatched != null) dummyIsWatched.Visible = episode[DBOnlineEpisode.cWatched];
+            if (dummyIsAvailable != null) dummyIsAvailable.Visible = episode[DBEpisode.cFilename].ToString().Length > 0;
 
             this.m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
