@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-#if inclDownloaders
 
 using System;
 using System.Collections.Generic;
@@ -509,4 +508,3 @@ namespace WindowPlugins.GUITVSeries.Subtitles
   };
 }
 
-#endif

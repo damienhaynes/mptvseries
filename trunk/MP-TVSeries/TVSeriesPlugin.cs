@@ -34,12 +34,10 @@ using WindowPlugins.GUITVSeries;
 using System.Threading;
 using System.Collections.Generic;
 using WindowPlugins.GUITVSeries.Feedback;
-#if inclDownloaders
 using Download = WindowPlugins.GUITVSeries.Download;
 using Torrent = WindowPlugins.GUITVSeries.Torrent;
 using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using WindowPlugins.GUITVSeries.Subtitles;
-#endif
 using aclib.Performance;
 using Cornerstone.MP;
 
@@ -147,12 +145,10 @@ namespace WindowPlugins.GUITVSeries
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
-#if inclDownloaders        
         private bool foromWorking = false;
         private bool seriessubWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;        
-#endif
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
@@ -291,9 +287,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
-#if inclDownloaders
             Download.Monitor.Start(this);
-#endif
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
@@ -1726,7 +1720,6 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.options;
 
-#if inclDownloaders
                     bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
                     bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
                     bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
@@ -1745,12 +1738,10 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                     }
-#endif
 
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
                     switch (dlg.SelectedId)
                     {
-#if inclDownloaders
                         case (int)eContextMenus.download:
                             {
                                 dlg.Reset();
@@ -1783,8 +1774,8 @@ namespace WindowPlugins.GUITVSeries
                                     bExitMenu = true;
                             }
                             break;
-#endif
-                        case (int)eContextMenus.action:
+
+                      case (int)eContextMenus.action:
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Actions);
@@ -2001,8 +1992,8 @@ namespace WindowPlugins.GUITVSeries
                             m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.LocalScanNoExactMatch, null));
                         }
                         break;
-#if inclDownloaders
-                    case (int)eContextItems.downloadSubtitle:
+
+                  case (int)eContextItems.downloadSubtitle:
                         {
                             if (selectedEpisode != null)
                             {
@@ -2123,8 +2114,8 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         break;
-#endif
-                    case (int)eContextItems.actionHide:
+
+                  case (int)eContextItems.actionHide:
                         {
                             // hide - we can only hide things for now, no unhide
                             switch (this.listLevel)
@@ -2376,7 +2367,6 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-#if inclDownloaders
         void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
             if (m_ImportAnimation != null)
@@ -2448,8 +2438,8 @@ namespace WindowPlugins.GUITVSeries
             setProcessAnimationStatus(false);
             torrentWorking = false;
         }
-#endif
-        List<string> sviews = new List<string>();
+
+      List<string> sviews = new List<string>();
 
         void switchView(int offset) //else previous
         {
@@ -2900,12 +2890,8 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
-#if inclDownloaders
                     else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
-#else
-                    else setProcessAnimationStatus(false);
-#endif
                 }
             }
             base.Process();

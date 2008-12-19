@@ -231,7 +231,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void FlushTexture()
         {
-//            if (_textureName != null) ImageAllocator.Flush(_textureName);
+            if (_textureName != null) ImageAllocator.Flush(_textureName);
             _textureName = null;
         }
 

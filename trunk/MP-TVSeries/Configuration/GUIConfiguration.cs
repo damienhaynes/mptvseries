@@ -97,9 +97,7 @@ namespace WindowPlugins.GUITVSeries
                 this.Size = s;
             }
             this.Resize += new EventHandler(ConfigurationForm_Resize);
-#if inclDownloaders
             Download.Monitor.Start(this);
-#endif
             panel_manualEpisodeManagement.SetOwner(this);
 
             load = new loadingDisplay();
@@ -251,9 +249,7 @@ namespace WindowPlugins.GUITVSeries
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
-#if inclDownloaders
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-#endif
             this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
 
             this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
@@ -292,7 +288,6 @@ namespace WindowPlugins.GUITVSeries
             nodeChild = new TreeNode(panel_remository.Tag.ToString());
             nodeChild.Name = panel_remository.Name;
             nodeRoot.Nodes.Add(nodeChild);
-#if inclDownloaders
             m_paneListExtra.Add(panel_torrentroot);
             m_paneListExtra.Add(panel_torrentsearch);
 
@@ -312,7 +307,6 @@ namespace WindowPlugins.GUITVSeries
             nodeChild = new TreeNode(panel_newssearch.Tag.ToString());
             nodeChild.Name = panel_newssearch.Name;
             nodeRoot.Nodes.Add(nodeChild);
-#endif
             foreach (Control pane in m_paneListExtra)
             {
                 pane.Dock = DockStyle.Fill;
@@ -334,11 +328,7 @@ namespace WindowPlugins.GUITVSeries
             textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
             textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
 
-#if inclDownloaders
             LoadTorrentSearches();
-#else
-            panel_torrentroot.Visible = false;
-#endif
 
             lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
 
@@ -364,9 +354,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboBox_debuglevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
-#if inclDownloaders
             LoadNewsSearches();
-#endif
         }
 
         private void LoadViews()
@@ -2128,7 +2116,6 @@ namespace WindowPlugins.GUITVSeries
 
         public void TorrentFile(TreeNode node)
         {
-#if inclDownloaders
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2146,12 +2133,10 @@ namespace WindowPlugins.GUITVSeries
                     Load.Search(episode);
                     break;
             }
-#endif
         }
 
         public void NewzFile(TreeNode node)
         {
-#if inclDownloaders
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2169,7 +2154,6 @@ namespace WindowPlugins.GUITVSeries
                     Load.Search(episode);
                     break;
             }
-#endif
         }
 
         void TorrentLoad_LoadCompleted(bool bOK)
@@ -2299,7 +2283,6 @@ namespace WindowPlugins.GUITVSeries
             return ReturnCode.Ignore;
         }
 
-        #if inclDownloaders
         public bool NoneFound()
         {
             MessageBox.Show("No subtitles were found for this file", "error");
@@ -2417,8 +2400,8 @@ namespace WindowPlugins.GUITVSeries
         void remository_SubtitleRetrievalCompleted(bool bFound)
         {
         }
-#endif
-        private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
+
+       private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;
             if (node == null)
