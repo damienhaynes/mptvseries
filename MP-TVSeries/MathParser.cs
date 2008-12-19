@@ -77,6 +77,8 @@ namespace WindowPlugins.GUITVSeries.MathParser
 
             addFunction("PrettyNumber10", delegate(string number) { return number.ToString().PadLeft(2, '0'); });
             addFunction("PrettyNumber100", delegate(string number) { return number.ToString().PadLeft(3, '0'); });
+            addFunction("PrettyNumber10S", delegate(string number) { return number.ToString().PadLeft(2, ' '); });
+            addFunction("PrettyNumber100S", delegate(string number) { return number.ToString().PadLeft(3, ' '); });
    
             addFunction("PrettyBytes1024", delegate(double number, out int pow)
             {
