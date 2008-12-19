@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-#if inclDownloaders
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -263,4 +262,3 @@ namespace WindowPlugins.GUITVSeries.Torrent
         }
     };
 }
-#endif

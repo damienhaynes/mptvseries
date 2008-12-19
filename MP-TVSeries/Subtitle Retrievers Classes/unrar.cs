@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-#if inclDownloaders
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -240,4 +239,3 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
-#endif
