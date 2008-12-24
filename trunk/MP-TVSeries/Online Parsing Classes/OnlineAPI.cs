@@ -389,10 +389,17 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         while ((bytes = zis.Read(data, 0, data.Length)) > 0)
           b.Append(enc.GetString(data, 0, bytes));
         MPTVSeriesLog.Write("Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug);
-        d.LoadXml(b.ToString());
-        b.Remove(0, b.Length);
-        MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
-        docsInZip.Add(currEntry.Name, d);
+        try
+        {
+            d.LoadXml(b.ToString());
+            MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
+            docsInZip.Add(currEntry.Name, d);
+        }
+        catch (XmlException e)
+        {
+            MPTVSeriesLog.Write("Failed to load XML: " + e.Message.ToString());
+        }
+        b.Remove(0, b.Length);                
       }
       return docsInZip;
     }
