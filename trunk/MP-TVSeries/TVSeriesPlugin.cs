@@ -473,7 +473,8 @@ namespace WindowPlugins.GUITVSeries
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();                
             }
             if (dummyFacadeListMode != null)
-                this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;
+                this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;            
+
         }
         
         //bool facadeLoaded = false;
@@ -2506,6 +2507,8 @@ namespace WindowPlugins.GUITVSeries
         void setNewListLevelOfCurrView(int step)
         {
             if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = DBOption.GetOptions(DBOption.cGetSeriesPosters);
+            dummyIsSeriesPosters.UpdateVisibility();
+
             resetListLevelDummies();
 
             switch (m_CurrLView.gettypeOfStep(step))
@@ -2513,23 +2516,27 @@ namespace WindowPlugins.GUITVSeries
                 case logicalViewStep.type.group:
                     listLevel = Listlevel.Group;
                     if (dummyIsGroups != null) dummyIsGroups.Visible = true;
+                    dummyIsGroups.UpdateVisibility();
                     break;
                 case logicalViewStep.type.series:
                     listLevel = Listlevel.Series;
                     if (dummyIsSeries != null) dummyIsSeries.Visible = true;
+                    dummyIsSeries.UpdateVisibility();
                     break;
                 case logicalViewStep.type.season:
                     listLevel = Listlevel.Season;
                     if (dummyIsSeasons != null) dummyIsSeasons.Visible = true;
+                    dummyIsSeasons.UpdateVisibility();
                     break;
                 case logicalViewStep.type.episode:
                     listLevel = Listlevel.Episode;
                     if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
+                    dummyIsEpisodes.UpdateVisibility();
                     break;
             }
-            MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
         }
-
+        
         void resetListLevelDummies()
         {
             if (dummyIsSeries != null) dummyIsSeries.Visible = false;
@@ -2629,7 +2636,7 @@ namespace WindowPlugins.GUITVSeries
                     else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)*/
                         base.OnAction(action);                                            
 
-                    break;
+                    break;                                
 
                 default:
                     base.OnAction(action);
@@ -2654,7 +2661,13 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
                         currSeriesFanart = null;
                         //Fanart.FlushTextures();
+
                         fanart.Active = false;
+
+                        //FanartBackground.Visible = false;
+                        //FanartBackground2.Visible = false;
+                        //loadingImage.Visible = false;
+
                         //FanartBackground.Visible = false;
                         //FanartBackground.SetFileName(string.Empty);                        
                         if (this.dummyIsFanartLoaded != null)
@@ -2732,7 +2745,9 @@ namespace WindowPlugins.GUITVSeries
                             if (System.IO.File.Exists(f.FanartFilename))
                             {
                                 //FanartBackground.SetFileName(sFanartFile);
-                                FanartBackground.Visible = true;
+                                //loadingImage.Visible = true;
+                                //FanartBackground.Visible = true;
+                                //FanartBackground2.Visible = true;
 
                                 // I don't think we can support these anymore with dbfanart now
                                 //if (this.dummyIsLightFanartLoaded != null)
@@ -2964,6 +2979,8 @@ namespace WindowPlugins.GUITVSeries
             m_SelectedEpisode = null;
             if (item == null) return;
 
+            setNewListLevelOfCurrView(m_CurrViewStep);
+
             // let's try to give the user a bit more information
             string groupedBy = m_CurrLView.groupedInfo(m_CurrViewStep);
             if (groupedBy.Contains("<Ser"))
@@ -3034,6 +3051,8 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0);
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
 
+            setNewListLevelOfCurrView(m_CurrViewStep);
+
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
             clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
@@ -3077,6 +3096,8 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = season[DBSeason.cHasLocalFiles];
 
+            setNewListLevelOfCurrView(m_CurrViewStep);
+
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeasonTitle, season));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
@@ -3109,6 +3130,8 @@ namespace WindowPlugins.GUITVSeries
             // set watched/unavailable flag
             if (dummyIsWatched != null) dummyIsWatched.Visible = episode[DBOnlineEpisode.cWatched];
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = episode[DBEpisode.cFilename].ToString().Length > 0;
+
+            setNewListLevelOfCurrView(m_CurrViewStep);
 
             this.m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
