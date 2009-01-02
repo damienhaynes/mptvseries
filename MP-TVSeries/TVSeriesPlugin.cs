@@ -40,6 +40,7 @@ using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using WindowPlugins.GUITVSeries.Subtitles;
 using aclib.Performance;
 using Cornerstone.MP;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -285,8 +286,7 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke.CreateControl();
             Translation.Init();
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
-            String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
-            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
+            
             Download.Monitor.Start(this);
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
@@ -307,6 +307,9 @@ namespace WindowPlugins.GUITVSeries
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
+
+            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
+            LoadSkinSettings(xmlSkinSettings);
 
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
@@ -343,6 +346,9 @@ namespace WindowPlugins.GUITVSeries
             m_timerDelegate = new TimerCallback(Clock);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
             m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
+
+            String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
+            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
             analyseSkinForWantedFields(xmlSkin);
             return Load(xmlSkin);
         }
@@ -3474,6 +3480,96 @@ namespace WindowPlugins.GUITVSeries
                 for (int i = 0; i < fields.Count; i++)
                     clearGUIProperty(pre + "." + fields[i]);
             }
+        }
+
+        public static void LoadSkinSettings(string skinSettings)
+        {
+            // Check if File Exist
+            if (!System.IO.File.Exists(skinSettings))
+                return;
+           
+            MPTVSeriesLog.Write("Loading Skin View Settings", MPTVSeriesLog.LogLevel.Normal);
+
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.Load(skinSettings);
+            }
+            catch (XmlException e)
+            {            
+                MPTVSeriesLog.Write("Cannot Load skin settings xml file: ", MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write(e.Message);               
+                return;
+            }
+            
+            XmlNode node = null;
+            XmlNode innerNode = null;
+            
+            // Read View Settings and Import into Database
+            node = doc.DocumentElement.SelectSingleNode("/settings/views");
+            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            {                
+                // Series View Settings
+                innerNode = node.SelectSingleNode("series/item1");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col1, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("series/item2");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col2, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("series/item3");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
+
+                // Season View Settings
+                innerNode = node.SelectSingleNode("season/item1");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col1, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("season/item2");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col2, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("season/item3");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col3, innerNode.InnerText.Trim());
+
+                // Episode View Settings
+                innerNode = node.SelectSingleNode("episode/item1");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col1, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("episode/item2");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col2, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("episode/item3");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col3, innerNode.InnerText.Trim());
+            }
+            
+            // Read Formatting Rules and Import into Database
+            node = doc.DocumentElement.SelectSingleNode("/settings/formatting");
+            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            {
+                DBFormatting.ClearAll();
+                long id = 0;
+                foreach (string rule in node.InnerText.Split('\n'))
+                {                    
+                    string[] seperators = new string[] { "<Enabled>", "<Format>", "<FormatAs>" };
+                    string[] properties = rule.Trim().Split(seperators, StringSplitOptions.RemoveEmptyEntries);
+                    if (properties.Length == 3)
+                    {
+                        DBFormatting dbf = new DBFormatting(id);
+                        dbf[DBFormatting.cEnabled] = properties[0];
+                        dbf[DBFormatting.cReplace] = properties[1];
+                        dbf[DBFormatting.cWith] = properties[2];
+                        
+                        dbf.Commit();
+                        id++;
+                    }                    
+                }
+            }
+
+            // Read Logo Rules and Import into Database
+            node = doc.DocumentElement.SelectSingleNode("/settings/logos");
+            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            {
+                DBOption.SetOptions("logoConfig", "");
+                List<string> logos = new List<string>();
+                foreach (string rule in node.InnerText.Split('\n'))
+                {
+                    logos.Add(rule.Trim());
+                }
+                localLogos.saveToDB(logos);
+            }
+
         }
 
         private void analyseSkinForWantedFields(string skinfile)
