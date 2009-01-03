@@ -3566,10 +3566,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
                     if (layout.ToLower() == "list")
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
 
                     if (layout.ToLower() == "bigicons")
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
                 }
 
                 innerNode = node.SelectSingleNode("season/item1");
