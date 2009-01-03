@@ -38,6 +38,7 @@ using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 using WindowPlugins.GUITVSeries.Configuration;
+using System.Xml;
 
 #if DEBUG
 using System.Diagnostics;
@@ -87,7 +88,7 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             //this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString(); //this is now in the about screen
-
+            
             // set height/width
             int height = DBOption.GetOptions("configSizeHeight");
             int width = DBOption.GetOptions("configSizeWidth");
@@ -133,7 +134,36 @@ namespace WindowPlugins.GUITVSeries
 
         #region Init
         private void InitSettingsTreeAndPanes()
-        {
+        {   
+            string skinSettings = null;
+            string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");            
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.Load(MediaPortalConfig);
+                // Get current skin file
+                XmlNodeList nodeList = doc.DocumentElement.SelectNodes("/profile/section");
+                foreach (XmlNode node in nodeList)
+                {
+                    if (node.Attributes.Item(0).Value == "skin")
+                    {
+                        XmlNodeList skinNodelist = node.ChildNodes;
+                        foreach (XmlNode skinNode in skinNodelist)
+                        {
+                            if (skinNode.Attributes.Item(0).Value == "name")
+                            {
+                                skinSettings = Path.Combine(Directory.GetCurrentDirectory(), "skin\\" + skinNode.InnerText + "\\TVSeries.SkinSettings.xml");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                TVSeriesPlugin.LoadSkinSettings(skinSettings);
+            }
+            catch { }
+
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
             this.comboBox_debuglevel.SelectedIndex = 0;
@@ -192,6 +222,7 @@ namespace WindowPlugins.GUITVSeries
             comboBox_seriesFormat.Items.Add("Text");
             comboBox_seriesFormat.Items.Add("Graphical");
             comboBox_seriesFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+            chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
