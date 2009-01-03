@@ -3504,12 +3504,55 @@ namespace WindowPlugins.GUITVSeries
             
             XmlNode node = null;
             XmlNode innerNode = null;
-            
+                        
+            string layout = null;
+            //string fanart = null;
+
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
             if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
-            {                
+            {
+                // Group View Settings
+                innerNode = node.SelectSingleNode("group");
+                if (innerNode != null)
+                {
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                    if (layout.ToLower() == "list")
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+
+                    if (layout.ToLower() == "bigicons")
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                }
+
                 // Series View Settings
+                innerNode = node.SelectSingleNode("series");
+                if (innerNode != null) 
+                {                    
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;                    
+                    switch (layout.ToLower())
+                    {
+                        case "listposters":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "0");
+                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "1");
+                            break;
+
+                        case "listbanners":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "0");
+                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "0");
+                            break;
+
+                        case "filmstrip":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "1");
+                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "1");
+                            break;
+
+                        case "widebanners":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "1");
+                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "0");
+                            break;
+                    }                      
+                }
+
                 innerNode = node.SelectSingleNode("series/item1");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col1, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("series/item2");
@@ -3518,6 +3561,17 @@ namespace WindowPlugins.GUITVSeries
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
 
                 // Season View Settings
+                innerNode = node.SelectSingleNode("season");
+                if (innerNode != null)
+                {
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                    if (layout.ToLower() == "list")
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+
+                    if (layout.ToLower() == "bigicons")
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                }
+
                 innerNode = node.SelectSingleNode("season/item1");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col1, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("season/item2");
