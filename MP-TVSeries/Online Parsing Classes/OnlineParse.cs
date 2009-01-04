@@ -932,7 +932,9 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineSeries.cChoseEpisodeOrder:
 
                                     case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
+                                    case DBOnlineSeries.cPosterFileNames:
                                     case DBOnlineSeries.cCurrentBannerFileName:
+                                    case DBOnlineSeries.cCurrentPosterFileName:
                                     case DBOnlineSeries.cMyRating:
                                         break;
                                     case DBOnlineSeries.cEpisodeOrders:
@@ -1180,18 +1182,21 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries)
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking banners for series without any banners"));
+                MPTVSeriesLog.Write(bigLogMessage("Checking for missing artwork"));
                 // and that never had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
+                condition.nextIsOr = true;
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.Equal);
                 condition.nextIsOr = true;
                 condition.AddCustom(" exists (select * from season where seriesID = online_series.id and bannerfilenames != '')");
                 condition.nextIsOr = false;
             }
             else
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for new banners"));                
+                MPTVSeriesLog.Write(bigLogMessage("Checking for new artwork"));                
                 // and that already had data imported from the online DB
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.NotEqual);
             }
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
@@ -1205,89 +1210,71 @@ namespace WindowPlugins.GUITVSeries
                     }
             }
 
-
             int nIndex = 0;
             if (seriesList.Count == 0)
             {
-                if (bUpdateNewSeries) MPTVSeriesLog.Write("All Series appear to have banners already");
+                if (bUpdateNewSeries) MPTVSeriesLog.Write("All Series appear to have artwork already");
                 else MPTVSeriesLog.Write("Nothing to do");
             }
-            else MPTVSeriesLog.Write("Looking for banners on " + seriesList.Count + " Series");
+            else MPTVSeriesLog.Write("Looking for artwork on " + seriesList.Count + " Series");
 
             foreach (DBSeries series in seriesList)
             {
                 if (worker.CancellationPending)
                     return;
                 nIndex++;
-                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " banners for \"" + series.ToString() + "\"");
+                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series.ToString() + "\"");
 
-                GetBanner bannerParser = null;
-                //if (bUpdateNewSeries)
-                //{                    
-                    bannerParser = new GetBanner((string)series[DBSeries.cID]);
-                //}
+                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);                
+        
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
+                String sLastPoster = String.Empty;
+
+                String sHighestRatedSeriesPoster = String.Empty;
                 String sHighestRatedSeriesBanner = String.Empty;
 
                 // Cleanup available Banners to choose from                
                 string sBanners = series[DBOnlineSeries.cBannerFileNames].ToString();
-                String[] split = sBanners.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                string sPosters = series[DBOnlineSeries.cPosterFileNames].ToString();
+
+                String[] splitBanners = sBanners.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                String[] splitPosters = sPosters.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                 string sAvailableBanners = "";
-                foreach (String filename in split)
-                {
-                    if (DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                string sAvailablePosters = "";
+                foreach (String filename in splitBanners)
+                {                                    
+                    if (sAvailableBanners.Trim().Length == 0)
                     {
-                        // Only make posters available
-                        if (filename.Contains("posters"))
-                        {
-                            if (sAvailableBanners.Trim().Length == 0)
-                            {
-                                sAvailableBanners += filename;
-                            }
-                            else
-                                sAvailableBanners += "|" + filename;
-                        }
+                        sAvailableBanners += filename;
                     }
                     else
-                    {
-                        if (!filename.Contains("posters"))
-                        {
-                            if (sAvailableBanners.Trim().Length == 0)
-                            {
-                                sAvailableBanners += filename;
-                            }
-                            else
-                                sAvailableBanners += "|" + filename;
-                        }
-                    }                      
+                        sAvailableBanners += "|" + filename;                      
                 }
                 series[DBOnlineSeries.cBannerFileNames] = sAvailableBanners;
 
-                // Remove currently selected Banner/Poster if of not correct type
-                if (DBOption.GetOptions(DBOption.cGetSeriesPosters))
+                foreach (String filename in splitPosters)
                 {
-                    if (!series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("poster"))
-                        series[DBOnlineSeries.cCurrentBannerFileName] = "";
+                    if (sAvailablePosters.Trim().Length == 0)
+                    {
+                        sAvailablePosters += filename;
+                    }
+                    else
+                        sAvailablePosters += "|" + filename;
                 }
-                else
-                {
-                    if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("poster"))
-                        series[DBOnlineSeries.cCurrentBannerFileName] = "";
-                }
+                series[DBOnlineSeries.cPosterFileNames] = sAvailablePosters;
 
-                //seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bUpdateNewSeries ? bannerParser.seriesBanners : preSeriesBanners);                
-                seriesBannersMap seriesBanners = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBanners);
-                if (seriesBanners != null)  // oops!
+                seriesBannersMap seriesArtwork = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBannersMap);
+                if (seriesArtwork != null)  // oops!
                 {
                     bool hasOwnLang = false;
-                    foreach (BannerSeries bannerSeries in seriesBanners.seriesBanners)
+                    foreach (BannerSeries bannerSeries in seriesArtwork.seriesBanners)
                     {
                         if (!series[DBOnlineSeries.cBannerFileNames].ToString().Contains(bannerSeries.sBannerFileName))
                         {
                             m_bDataUpdated = true;
-                            MPTVSeriesLog.Write("New banner found for \"" + series.ToString() + "\" : " + bannerSeries.sOnlineBannerPath);
+                            MPTVSeriesLog.Write("New series banner found for \"" + series.ToString() + "\" : " + bannerSeries.sOnlineBannerPath);
                             if (series[DBOnlineSeries.cBannerFileNames].ToString().Trim().Length == 0)
                             {
                                 series[DBOnlineSeries.cBannerFileNames] += bannerSeries.sBannerFileName;
@@ -1308,6 +1295,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                             else
                                 sLastTextBanner = bannerSeries.sBannerFileName;
+
                             hasOwnLang = true;
                         }
                         else if(!hasOwnLang)
@@ -1332,11 +1320,50 @@ namespace WindowPlugins.GUITVSeries
                             series[DBOnlineSeries.cCurrentBannerFileName] = sLastTextBanner;
                     }
 
-                    //series[DBOnlineSeries.cBannersDownloaded] = 2;
+                    foreach (PosterSeries posterSeries in seriesArtwork.seriesPosters)
+                    {
+                        if (!series[DBOnlineSeries.cPosterFileNames].ToString().Contains(posterSeries.sPosterFileName))
+                        {
+                            m_bDataUpdated = true;
+                            MPTVSeriesLog.Write("New series poster found for \"" + series.ToString() + "\" : " + posterSeries.sOnlinePosterPath);
+                            if (series[DBOnlineSeries.cPosterFileNames].ToString().Trim().Length == 0)
+                            {
+                                series[DBOnlineSeries.cPosterFileNames] += posterSeries.sPosterFileName;
+                            }
+                            else
+                            {
+                                series[DBOnlineSeries.cPosterFileNames] += "|" + posterSeries.sPosterFileName;
+                            }
+                        }
+                        // Prefer the highest rated localized poster
+                        // Jan 4th 09 - Currently theTVDB does not support localized posters but does have a field for language defined
+                        // Perhaps this will be added at a later date, handle this just incase
+                        if (posterSeries.sPosterLang == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
+                        {
+                            if (posterSeries.bHighestRated)
+                                sHighestRatedSeriesPoster = posterSeries.sPosterFileName;
+
+                            sLastPoster = posterSeries.sPosterFileName;                                                  
+                            hasOwnLang = true;
+                        }
+                        else if (!hasOwnLang)                        
+                            sLastPoster = posterSeries.sPosterFileName;                                                   
+                    }
+
+                    // Don't override user selection of poster
+                    if (series[DBOnlineSeries.cCurrentPosterFileName].ToString().Trim().Length == 0)
+                    {
+                        // Use highest rated poster if one found                                                                  
+                        if (sHighestRatedSeriesPoster.Length > 0)
+                            series[DBOnlineSeries.cCurrentPosterFileName] = sHighestRatedSeriesPoster;                        
+                        else
+                            series[DBOnlineSeries.cCurrentPosterFileName] = sLastPoster;
+                    }
+                    
                     series.Commit();
                     
                     hasOwnLang = false;
-                    foreach (BannerSeason bannerSeason in seriesBanners.seasonBanners)
+                    foreach (BannerSeason bannerSeason in seriesArtwork.seasonBanners)
                     {
                         string lastSeasonBanner = string.Empty;
                         string sHighestRatedSeasonBanner = String.Empty;
@@ -1352,7 +1379,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 season[DBSeason.cBannerFileNames] += "|" + bannerSeason.sBannerFileName;
-                                MPTVSeriesLog.Write("New banner found for \"" + series.ToString() + "\" Season " + season[DBSeason.cIndex] + ": " + bannerSeason.sOnlineBannerPath);
+                                MPTVSeriesLog.Write("New season banner found for \"" + series.ToString() + "\" Season " + season[DBSeason.cIndex] + ": " + bannerSeason.sOnlineBannerPath);
                             }
                         }
      
@@ -1366,8 +1393,7 @@ namespace WindowPlugins.GUITVSeries
                         else if(!hasOwnLang)
                         {
                             lastSeasonBanner = bannerSeason.sBannerFileName;
-                        }
-                        
+                        }                        
                         
                         // Check if Currently set season banner exists, its possible that the file path has changed.
                         bool bBannerExists = File.Exists(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), 
@@ -1384,15 +1410,7 @@ namespace WindowPlugins.GUITVSeries
                                 season[DBSeason.cCurrentBannerFileName] = lastSeasonBanner;
                         }
                         season.Commit();
-                    }
-                    
-                    //if (!bUpdateNewSeries)
-                    //{
-                    //    // disable for new way
-                    //    //series[DBOnlineSeries.cUpdateBannersTimeStamp] = bannerParser.ServerTimeStamp;
-                    //    series.Commit();
-                    //}
-                    //if (!bUpdateNewSeries) DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, bannerParser.ServerTimeStamp);
+                    }                   
                 }
             }
         }

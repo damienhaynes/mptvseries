@@ -451,12 +451,12 @@ namespace WindowPlugins.GUITVSeries
             if (this.m_Facade == null)
                 return;
 
-            if (this.dummyThumbnailGraphicalMode == null || mode == GUIFacadeControl.ViewMode.List)
+            if (mode == GUIFacadeControl.ViewMode.List)
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
                 this.m_Facade.View = mode;
-                if (this.dummyThumbnailGraphicalMode != null)
-                    dummyThumbnailGraphicalMode.Visible = false;
+                if (this.dummyThumbnailGraphicalMode != null) dummyThumbnailGraphicalMode.Visible = false;
+                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = true;
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Stop();
             }
             else
@@ -464,23 +464,30 @@ namespace WindowPlugins.GUITVSeries
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
                 if (mode == GUIFacadeControl.ViewMode.AlbumView)
                 {
-                    if (!DBOption.GetOptions(DBOption.cGetSeriesPosters) || !(this.listLevel == Listlevel.Series))
+                    switch (this.listLevel)
                     {
-                        MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
-                        this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
-                    }
-                    else
-                    {
-                        MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
-                        this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                        case (Listlevel.Series):
+                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
+                            {
+                                MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                            }
+                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners")
+                            {
+                                MPTVSeriesLog.Write("FacadeMode: Switching to WideBanners", MPTVSeriesLog.LogLevel.Debug);
+                                this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                            }
+                            break;
+                        case (Listlevel.Season):
+                            MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                            break;
                     }
                 }
-                this.dummyThumbnailGraphicalMode.Visible = mode == GUIFacadeControl.ViewMode.AlbumView; // so you can trigger animations
-                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();                
-            }
-            if (dummyFacadeListMode != null)
-                this.dummyFacadeListMode.Visible = this.m_Facade.View == GUIFacadeControl.ViewMode.List;            
-
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();
+                if (this.dummyThumbnailGraphicalMode != null) this.dummyThumbnailGraphicalMode.Visible = true;
+                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = false;                
+            }            
         }
         
         //bool facadeLoaded = false;
@@ -870,9 +877,9 @@ namespace WindowPlugins.GUITVSeries
                                 ImageAllocator.FlushSeasons();
                             }
 
-                            int nSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
 
-                            if (nSeriesDisplayMode == 1)
+                            if (!sSeriesDisplayMode.Contains("List"))
                             {
                                 // graphical
                                 ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.AlbumView);
@@ -906,7 +913,7 @@ namespace WindowPlugins.GUITVSeries
                                 try
                                 {
                                     item = null;
-                                    if (nSeriesDisplayMode == 1)
+                                    if (!sSeriesDisplayMode.Contains("List"))
                                     {
                                         // Graphical Mode
                                         item = new GUIListItem();                                       
@@ -2512,7 +2519,8 @@ namespace WindowPlugins.GUITVSeries
 
         void setNewListLevelOfCurrView(int step)
         {
-            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = DBOption.GetOptions(DBOption.cGetSeriesPosters);
+            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
+                                                                              DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
             dummyIsSeriesPosters.UpdateVisibility();
 
             resetListLevelDummies();
@@ -3532,23 +3540,23 @@ namespace WindowPlugins.GUITVSeries
                     switch (layout.ToLower())
                     {
                         case "listposters":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "0");
-                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "1");
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");                            
                             break;
 
                         case "listbanners":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "0");
-                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "0");
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");                            
                             break;
 
                         case "filmstrip":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "1");
-                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "1");
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");                            
                             break;
 
                         case "widebanners":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "1");
-                            DBOption.SetOptions(DBOption.cGetSeriesPosters, "0");
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");                            
+                            break;
+                        
+                        default:
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
                             break;
                     }                      
                 }

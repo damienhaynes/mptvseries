@@ -46,6 +46,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cActors = "Actors";
         public const String cBannerFileNames = "BannerFileNames";
         public const String cCurrentBannerFileName = "CurrentBannerFileName";
+        public const String cPosterFileNames = "PosterFileNames";
+        public const String cCurrentPosterFileName = "PosterBannerFileName";
         public const String cBannersDownloaded = "BannersDownloaded";
         public const String cHasLocalFiles = "HasLocalFiles";
         public const String cHasLocalFilesTemp = "HasLocalFiles_Temp";
@@ -74,6 +76,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
 
+        public const int cDBVersion = 2;
+
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
@@ -87,6 +91,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");
             s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
             s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
+            s_FieldToDisplayNameMap.Add(cPosterFileNames, "Poster FileName List");
+            s_FieldToDisplayNameMap.Add(cCurrentPosterFileName, "Current Poster FileName");
             s_FieldToDisplayNameMap.Add(cAirsDay, "Week Day Aired");
             s_FieldToDisplayNameMap.Add(cAirsTime, "Hour Aired");
             s_FieldToDisplayNameMap.Add(cSortName, "Sort (Original) Name");
@@ -102,6 +108,46 @@ namespace WindowPlugins.GUITVSeries
 
             // make sure the table is created on first run
             DBOnlineSeries dummy = new DBOnlineSeries();
+
+            int nCurrentDBVersion = cDBVersion;
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBOnlineSeriesVersion);
+
+            while (nUpgradeDBVersion != nCurrentDBVersion)
+            {                
+                List<DBOnlineSeries> AllSeries = getAllSeries();
+
+                // take care of the upgrade in the table    
+                switch (nUpgradeDBVersion)
+                {
+                    case 1:                        
+                        nUpgradeDBVersion++;
+                        break;
+
+                    default:                        
+                        if (AllSeries.Count > 0)
+                        {
+                            foreach (DBOnlineSeries series in AllSeries)
+                            {
+                                // Migrate old cBannerFileNames and cCurrentBannerFileName to cPosterFileNames and cCurrentPosterFileName
+                                // if were using posters previously
+                                if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("-posters"))
+                                {
+                                    series[DBOnlineSeries.cCurrentPosterFileName] = series[DBOnlineSeries.cCurrentBannerFileName];
+                                    series[DBOnlineSeries.cPosterFileNames] = series[DBOnlineSeries.cBannerFileNames];
+                                    // clear old ones
+                                    series[DBOnlineSeries.cCurrentBannerFileName] = string.Empty;
+                                    series[DBOnlineSeries.cBannerFileNames] = string.Empty;
+                                    series.Commit();
+                                }                                                                
+                            }
+                        }
+                        // new DB, nothing special to do
+                        nUpgradeDBVersion = nCurrentDBVersion;
+                        break;
+                }
+            }
+            DBOption.SetOptions(DBOption.cDBOnlineSeriesVersion, nCurrentDBVersion);
+
         }
 
         // returns a list of all series with nformation stored in the database. 
@@ -142,6 +188,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cGenre, new DBField(DBField.cTypeString));
             base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
             base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
+            base.AddColumn(cPosterFileNames, new DBField(DBField.cTypeString));
+            base.AddColumn(cCurrentPosterFileName, new DBField(DBField.cTypeString));
             base.AddColumn(cSummary, new DBField(DBField.cTypeString));
             base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
             base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
@@ -580,9 +628,7 @@ namespace WindowPlugins.GUITVSeries
                     if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
                     if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]))
                         return String.Empty;
-
-                    //if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
-                    //    return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName];
+                    
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
                         return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]);
                     else
@@ -601,6 +647,34 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public String Poster
+        {
+            get
+            {
+                if (m_onlineSeries != null)
+                {
+                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(PosterList);
+                    if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName]))
+                        return String.Empty;
+                    
+                    if (m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName])) == -1)
+                        return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName]);
+                    else
+                        return m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName];
+                }
+                else
+                    return String.Empty;
+            }
+            set
+            {
+                if (m_onlineSeries != null)
+                {
+                    value = value.Replace(Settings.GetPath(Settings.Path.banners), "");
+                    m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName] = value;
+                }
+            }
+        }
+
         public List<String> BannerList
         {
             get
@@ -615,10 +689,6 @@ namespace WindowPlugins.GUITVSeries
                     String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (String filename in split)
                     {
-                        //if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
-                        //    outList.Add(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\" + filename);
-                        //else
-                        //    outList.Add(filename);
                         outList.Add(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), filename));
                     }
                 }
@@ -638,6 +708,43 @@ namespace WindowPlugins.GUITVSeries
                             sIn += "," + value[i];
                     }
                     m_onlineSeries[DBOnlineSeries.cBannerFileNames] = sIn;
+                }
+            }
+        }
+        
+        public List<String> PosterList
+        {
+            get
+            {
+                List<String> outList = new List<string>();
+                if (m_onlineSeries != null)
+                {
+                    String sList = m_onlineSeries[DBOnlineSeries.cPosterFileNames];
+                    if (Helper.String.IsNullOrEmpty(sList))
+                        return outList;
+
+                    String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (String filename in split)
+                    {
+                        outList.Add(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), filename));
+                    }
+                }
+                return outList;
+            }
+            set
+            {
+                if (m_onlineSeries != null)
+                {
+                    String sIn = String.Empty;
+                    for (int i = 0; i < value.Count; i++)
+                    {
+                        value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
+                        if (Helper.String.IsNullOrEmpty(String.Empty))
+                            sIn += value[i];
+                        else
+                            sIn += "," + value[i];
+                    }
+                    m_onlineSeries[DBOnlineSeries.cPosterFileNames] = sIn;
                 }
             }
         }

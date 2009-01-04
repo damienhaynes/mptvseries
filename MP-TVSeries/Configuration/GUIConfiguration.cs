@@ -219,9 +219,11 @@ namespace WindowPlugins.GUITVSeries
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
 
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);
-            comboBox_seriesFormat.Items.Add("Text");
-            comboBox_seriesFormat.Items.Add("Graphical");
-            comboBox_seriesFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+            comboBox_seriesFormat.Items.Add("ListPosters");
+            comboBox_seriesFormat.Items.Add("ListBanners");
+            comboBox_seriesFormat.Items.Add("WideBanners");
+            comboBox_seriesFormat.Items.Add("Filmstrip");
+            comboBox_seriesFormat.Text = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
             chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Col1);
@@ -1165,6 +1167,12 @@ namespace WindowPlugins.GUITVSeries
                     this.pictureBox_Series.Image.Dispose();
                     this.pictureBox_Series.Image = null;
                 }
+                if (this.pictureBox_SeriesPoster.Image != null)
+                {
+                    this.pictureBox_SeriesPoster.Image.Dispose();
+                    this.pictureBox_SeriesPoster.Image = null;
+                }
+
             }
             catch { }
 
@@ -1184,19 +1192,9 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     {
                         DBEpisode episode = (DBEpisode)node.Tag;
-                        //// assume an episode is always in a season which is always in a series
-                        //DBSeries series = (DBSeries)node.Parent.Parent.Tag;
-                        //String filename = series.Banner;
-                        //if (filename.Length > 0)
-                        //    try
-                        //    {
-                        //        this.pictureBox_Series.Image = Image.FromFile(filename);
-                        //    }
-                        //    catch (Exception)
-                        //    {
-                        //    }
-
+                       
                         comboBox_BannerSelection.Items.Clear();
+                        comboBox_PosterSelection.Items.Clear();
 
                         // if we have logos add them to the list
                         string logos = localLogos.getLogos(ref episode, 200, 500, true);
@@ -1208,6 +1206,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else
                             comboBox_BannerSelection.Enabled = false;
+
+                        comboBox_PosterSelection.Enabled = false;
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in episode.FieldNames)
@@ -1257,6 +1257,8 @@ namespace WindowPlugins.GUITVSeries
                         DBSeason season = (DBSeason)node.Tag;
 
                         comboBox_BannerSelection.Items.Clear();
+                        comboBox_PosterSelection.Items.Clear();
+
                         // populate banner dropdown
                         foreach (String filename in season.BannerList)
                         {
@@ -1272,6 +1274,7 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         comboBox_BannerSelection.Enabled = true;
+                        comboBox_PosterSelection.Enabled = false;
 
                         if (season.Banner.Length > 0)
                         {
@@ -1324,7 +1327,9 @@ namespace WindowPlugins.GUITVSeries
                         DBSeries series = (DBSeries)node.Tag;
 
                         comboBox_BannerSelection.Items.Clear();
-                        // populate banner dropdown
+                        comboBox_PosterSelection.Items.Clear();
+
+                        // populate banner dropdown with available banners
                         foreach (String filename in series.BannerList)
                         {
                             BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
@@ -1332,23 +1337,53 @@ namespace WindowPlugins.GUITVSeries
                         }
                         comboBox_BannerSelection.Enabled = true;
 
+                        // populate poster dropdown with available posters
+                        foreach (String filename in series.PosterList)
+                        {
+                            BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
+                            comboBox_PosterSelection.Items.Add(newItem);
+                        }
+                        comboBox_PosterSelection.Enabled = true;
+
                         if (series.Banner.Length > 0)
                         {
                             try
                             {
-                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(series.Banner); // Image.FromFile(series.Banner);
+                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(series.Banner);                                
                             }
                             catch (System.Exception)
                             {
 
                             }
                             foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
+                            {
                                 if (comboItem.sFullPath == series.Banner)
                                 {
                                     comboBox_BannerSelection.SelectedItem = comboItem;
                                     break;
                                 }
+                            }
                         }
+                        if (series.Poster.Length > 0)
+                        {
+                            try
+                            {
+                                this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile(series.Banner);
+                            }
+                            catch (System.Exception)
+                            {
+
+                            }
+                            foreach (BannerComboItem comboItem in comboBox_PosterSelection.Items)
+                            {
+                                if (comboItem.sFullPath == series.Poster)
+                                {
+                                    comboBox_PosterSelection.SelectedItem = comboItem;
+                                    break;
+                                }
+                            }
+                        }
+
                         // if we have logos add them to the list
                         string logos = localLogos.getLogos(ref series, 200, 500);
                         if (logos.Length > 0)
@@ -1363,8 +1398,10 @@ namespace WindowPlugins.GUITVSeries
                             switch (key)
                             {
                                 case DBOnlineSeries.cBannerFileNames:
+                                case DBOnlineSeries.cPosterFileNames:
                                 case DBOnlineSeries.cBannersDownloaded:
                                 case DBOnlineSeries.cCurrentBannerFileName:
+                                case DBOnlineSeries.cCurrentPosterFileName:
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
@@ -1934,8 +1971,10 @@ namespace WindowPlugins.GUITVSeries
                 fieldList.Remove(DBOnlineSeries.cHasLocalFiles);
                 fieldList.Remove(DBOnlineSeries.cHasLocalFilesTemp);
                 fieldList.Remove(DBOnlineSeries.cBannerFileNames);
+                fieldList.Remove(DBOnlineSeries.cPosterFileNames);
                 fieldList.Remove(DBOnlineSeries.cBannersDownloaded);
                 fieldList.Remove(DBOnlineSeries.cCurrentBannerFileName);
+                fieldList.Remove(DBOnlineSeries.cCurrentPosterFileName);
                 fieldList.Remove(DBOnlineSeries.cOnlineDataImported);
                 fieldList.Remove(DBOnlineSeries.cGetEpisodesTimeStamp);
                 fieldList.Remove(DBOnlineSeries.cUpdateBannersTimeStamp);
@@ -2056,11 +2095,20 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboBox_seriesFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Series_ListFormat, comboBox_seriesFormat.SelectedIndex);
+            DBOption.SetOptions(DBOption.cView_Series_ListFormat, comboBox_seriesFormat.Text);
 
-            richTextBox_seriesFormat_Col1.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
-            richTextBox_seriesFormat_Col2.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
-            richTextBox_seriesFormat_Col3.Enabled = (comboBox_seriesFormat.SelectedIndex == 0);
+            if (comboBox_seriesFormat.Text.Contains("List"))
+            {
+                richTextBox_seriesFormat_Col1.Enabled = true;
+                richTextBox_seriesFormat_Col2.Enabled = true;
+                richTextBox_seriesFormat_Col3.Enabled = true;
+            }
+            else
+            {
+                richTextBox_seriesFormat_Col1.Enabled = false;
+                richTextBox_seriesFormat_Col2.Enabled = false;
+                richTextBox_seriesFormat_Col3.Enabled = false;
+            }
         }
 
         private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
@@ -3379,6 +3427,21 @@ namespace WindowPlugins.GUITVSeries
         private void chkShowSeriesFanart_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cShowSeriesFanart, chkShowSeriesFanart.Checked);
+        }
+
+        private void comboBox_PosterSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBSeries series = (DBSeries)treeView_Library.SelectedNode.Tag;
+     
+            series.Poster = ((BannerComboItem)comboBox_PosterSelection.SelectedItem).sFullPath;
+            try
+            {
+                this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_PosterSelection.SelectedItem).sFullPath)); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+            }
+            catch (Exception)
+            {
+            }
+            series.Commit();
         }
 
     }

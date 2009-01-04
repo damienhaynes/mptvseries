@@ -20,7 +20,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       public const string FullSeriesUpdate = @"series/{0}/all/{1}";
       public const string Updates = "updates/updates_{0}";
       public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
-      public const string GetRatingsForUser = "GetRatingsForUser.php?apikey={0}&accountid={1}[&seriesid={2}]";
+      public const string GetRatingsForUser = @"GetRatingsForUser.php?apikey={0}&accountid={1}&seriesid={2}";
     }
 
     private enum Format
@@ -86,6 +86,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     {
       return Generic(string.Format(apiURIs.GetSeries,
                                      sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
+    }
+
+    static public XmlNodeList GetUserRatings(String sSeriesName)
+    {
+        return Generic(apiURIs.GetRatingsForUser, Format.Xml);
     }
 
     static public XmlNodeList UpdateSeries(String sSeriesID)

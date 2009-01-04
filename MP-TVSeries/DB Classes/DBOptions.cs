@@ -37,6 +37,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cConfig_LogCollapsed = "Config_LogShown";
 
         public const String cDBSeriesVersion = "DBSeriesVersion";
+        public const String cDBOnlineSeriesVersion = "DBOnlineSeriesVersion";
         public const String cDBSeriesLastLocalID = "DBSeriesLasLocalID";
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
@@ -240,9 +241,27 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cViewAutoHeight, true);
 
                 if (GetOptions(cView_Series_ListFormat) == null)
-                    SetOptions(cView_Series_ListFormat, 1); // graphical by default
+                    SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default
+                else
+                {
+                    // Upgrade old cView_Series_ListFormat 
+                    if (GetOptions(cView_Series_ListFormat) == 0)
+                    {
+                        if (GetOptions(cGetSeriesPosters) == null || GetOptions(cGetSeriesPosters) == 0)
+                            SetOptions(cView_Series_ListFormat, "ListBanners");
+                        else
+                            SetOptions(cView_Series_ListFormat, "ListPosters");
+                    }
+                    else if (GetOptions(cView_Series_ListFormat) == 1)
+                    {
+                        if (GetOptions(cGetSeriesPosters) == null || GetOptions(cGetSeriesPosters) == 1)
+                            SetOptions(cView_Series_ListFormat, "WideBanners");
+                        else
+                            SetOptions(cView_Series_ListFormat, "Filmstrip");
+                    }
+                }
 
-               if (GetOptions(cView_Series_Col1) == null)
+                if (GetOptions(cView_Series_Col1) == null)
                     SetOptions(cView_Series_Col1, "");
 
                 if (GetOptions(cView_Series_Col2) == null)
@@ -375,8 +394,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
 
-                if (GetOptions(cGetSeriesPosters) == null)
-                    SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
+                //if (GetOptions(cGetSeriesPosters) == null)
+                //    SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
 
                 if (GetOptions(cShowSeriesFanart) == null)
                     SetOptions(cShowSeriesFanart, false);
