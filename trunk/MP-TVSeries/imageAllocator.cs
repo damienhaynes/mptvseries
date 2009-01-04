@@ -179,8 +179,17 @@ namespace WindowPlugins.GUITVSeries
 
         public static String GetSeriesBanner(DBSeries series)
         {
-            String sFileName = series.Banner;
+            String sFileName;
             String sTextureName;
+
+            bool IsPoster = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
+                             DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters");
+
+            if (IsPoster)
+                sFileName = series.Poster;
+            else           
+                sFileName = series.Banner;            
+
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
             {
                 if (DBOption.GetOptions(DBOption.cAltImgLoading))
@@ -188,18 +197,17 @@ namespace WindowPlugins.GUITVSeries
                     // bypass memoryimagebuilder
                     sTextureName = sFileName;
                 }
-                else if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))
-                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
-                else
+                else if (IsPoster)
                     sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);
+                else
+                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
             }
             else
-            {
-                //return string.Empty;
+            {                
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                
-                if (!DBOption.GetOptions(DBOption.cGetSeriesPosters))                                
+
+                if (!IsPoster)                                
                 {
                     sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
                 }
