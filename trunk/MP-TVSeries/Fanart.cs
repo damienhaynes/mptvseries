@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
 
         #region Static Vars
         static Dictionary<int, Fanart> fanartsCache = new Dictionary<int, Fanart>();
-        static System.Drawing.Size requiredSize = new System.Drawing.Size();
+        //static System.Drawing.Size requiredSize = new System.Drawing.Size();
         static Random fanartRandom = new Random();
         #endregion
 
