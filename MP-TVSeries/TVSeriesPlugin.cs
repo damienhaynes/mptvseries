@@ -1463,6 +1463,7 @@ namespace WindowPlugins.GUITVSeries
         {
             toggleWatched,
             cycleSeriesBanner,
+            cycleSeriesPoster,
             cycleSeasonBanner,
             forceSeriesQuery,
             downloadSubtitle,
@@ -1682,16 +1683,30 @@ namespace WindowPlugins.GUITVSeries
 
                         if (this.listLevel == Listlevel.Series)
                         {
-                            if (selectedSeries.BannerList.Count > 1)
+                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
+                                DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters")
                             {
-                                pItem = new GUIListItem(Translation.Cycle_Banner);
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
-
-                                pItem = new GUIListItem(Translation.Force_Online_Match);
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.forceSeriesQuery;
+                                if (selectedSeries.PosterList.Count > 1)
+                                {
+                                    pItem = new GUIListItem(Translation.Cycle_Banner);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.cycleSeriesPoster;
+                                }
                             }
+                            else
+                            {
+                                if (selectedSeries.BannerList.Count > 1)
+                                {
+                                    pItem = new GUIListItem(Translation.Cycle_Banner);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
+                                }
+                            }
+
+                            pItem = new GUIListItem(Translation.Force_Online_Match);
+                            dlg.Add(pItem);
+                            pItem.ItemId = (int)eContextItems.forceSeriesQuery;
+                        
                         }
 
                         if (this.listLevel == Listlevel.Season || this.listLevel == Listlevel.Episode)
@@ -1943,6 +1958,19 @@ namespace WindowPlugins.GUITVSeries
                                 nCurrent = 0;
 
                             selectedSeries.Banner = selectedSeries.BannerList[nCurrent];
+                            selectedSeries.Commit();
+                            LoadFacade();
+                        }
+                        break;
+
+                    case (int)eContextItems.cycleSeriesPoster:
+                        {
+                            int nCurrent = selectedSeries.PosterList.IndexOf(selectedSeries.Poster);
+                            nCurrent++;
+                            if (nCurrent >= selectedSeries.PosterList.Count)
+                                nCurrent = 0;
+
+                            selectedSeries.Poster = selectedSeries.PosterList[nCurrent];
                             selectedSeries.Commit();
                             LoadFacade();
                         }
@@ -2666,24 +2694,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (FanartBackground == null) fanartSet = false;
                 else
-                {
-                  //FanartBackground.AllocResources();
-
-                    //FanartBackground.Visible = false;
+                {                
                     if (item == null)
                     {
                         MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
-                        currSeriesFanart = null;
-                        //Fanart.FlushTextures();
-
+                        currSeriesFanart = null;                    
                         fanart.Active = false;
-
-                        //FanartBackground.Visible = false;
-                        //FanartBackground2.Visible = false;
-                        //loadingImage.Visible = false;
-
-                        //FanartBackground.Visible = false;
-                        //FanartBackground.SetFileName(string.Empty);                        
+                        
                         if (this.dummyIsFanartLoaded != null)
                             this.dummyIsFanartLoaded.Visible = false;
                         if (this.dummyIsLightFanartLoaded != null)
@@ -2731,38 +2748,13 @@ namespace WindowPlugins.GUITVSeries
 
                         if (f != null && f.Found)
                         {
-                            //if (f != currSeriesFanart)
-                            //FanartBackground.Visible = false;
+                          
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
-                            //string sFanartFile = f.FanartAsTexture;
-                            //FanartBackground.SetFileName(sFanartFile);
                             fanart.Active = true;
                             fanart.Filename = f.FanartFilename;
 
-                            // Fanart in series view is loaded on a seperate thread
-                            /*if (bgFanartLoader.CancellationPending)
-                            {                                       
-                                while (f.SeriesID != this.m_SelectedSeries[DBSeries.cID])
-                                {                                       
-                                    f = Fanart.getFanart(this.m_SelectedSeries[DBSeries.cID]);
-                                    f.ForceNewPick();
-                                    
-                                    if (f != null)                                    
-                                        //f.FlushTexture();
-                                    
-                                    currSeriesFanart = f;
-                                    //sFanartFile = f.FanartAsTexture;
-                                    MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);                                    
-                                    //FanartBackground.SetFileName(sFanartFile);                                    
-                                }
-                            }*/
                             if (System.IO.File.Exists(f.FanartFilename))
                             {
-                                //FanartBackground.SetFileName(sFanartFile);
-                                //loadingImage.Visible = true;
-                                //FanartBackground.Visible = true;
-                                //FanartBackground2.Visible = true;
-
                                 // I don't think we can support these anymore with dbfanart now
                                 //if (this.dummyIsLightFanartLoaded != null)
                                 //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
