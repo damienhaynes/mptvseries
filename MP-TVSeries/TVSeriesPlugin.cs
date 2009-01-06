@@ -1140,7 +1140,6 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
                                         {
-
                                             if (!episode[DBOnlineEpisode.cWatched])
                                             {
                                                 //-- video has not been watched so keep it selected
@@ -3597,7 +3596,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (string rule in node.InnerText.Split('\n'))
                 {                    
                     string[] seperators = new string[] { "<Enabled>", "<Format>", "<FormatAs>" };
-                    string[] properties = rule.Trim().Split(seperators, StringSplitOptions.RemoveEmptyEntries);
+                    string[] properties = rule.Trim('\r').Split(seperators, StringSplitOptions.RemoveEmptyEntries);
                     if (properties.Length == 3)
                     {
                         DBFormatting dbf = new DBFormatting(id);
@@ -3608,7 +3607,7 @@ namespace WindowPlugins.GUITVSeries
                         dbf.Commit();
                         id++;
                     }                    
-                }
+                }                
             }
 
             // Read Logo Rules and Import into Database
