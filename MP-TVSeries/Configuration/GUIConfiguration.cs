@@ -161,6 +161,8 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 TVSeriesPlugin.LoadSkinSettings(skinSettings);
+                // Reload formatting rules
+                formattingConfiguration1.LoadFromDB();
             }
             catch { }
 
@@ -197,7 +199,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
-            chkDownloadSeriesPoster.Checked = DBOption.GetOptions(DBOption.cGetSeriesPosters);
+            //chkDownloadSeriesPoster.Checked = DBOption.GetOptions(DBOption.cGetSeriesPosters);
 
             comboBox_preferedBannerType.Items.Add("Text");
             comboBox_preferedBannerType.Items.Add("Graphical");
@@ -3421,7 +3423,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void chkDownloadSeriesPoster_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cGetSeriesPosters, chkDownloadSeriesPoster.Checked);
+            //DBOption.SetOptions(DBOption.cGetSeriesPosters, chkDownloadSeriesPoster.Checked);
         }
 
         private void chkShowSeriesFanart_CheckedChanged(object sender, EventArgs e)
