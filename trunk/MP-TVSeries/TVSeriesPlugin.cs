@@ -2549,7 +2549,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
                                                                               DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
-            dummyIsSeriesPosters.UpdateVisibility();
+            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.UpdateVisibility();
 
             resetListLevelDummies();
 
@@ -2558,22 +2558,22 @@ namespace WindowPlugins.GUITVSeries
                 case logicalViewStep.type.group:
                     listLevel = Listlevel.Group;
                     if (dummyIsGroups != null) dummyIsGroups.Visible = true;
-                    dummyIsGroups.UpdateVisibility();
+                    if (dummyIsGroups != null) dummyIsGroups.UpdateVisibility();
                     break;
                 case logicalViewStep.type.series:
                     listLevel = Listlevel.Series;
                     if (dummyIsSeries != null) dummyIsSeries.Visible = true;
-                    dummyIsSeries.UpdateVisibility();
+                    if (dummyIsSeries != null) dummyIsSeries.UpdateVisibility();
                     break;
                 case logicalViewStep.type.season:
                     listLevel = Listlevel.Season;
                     if (dummyIsSeasons != null) dummyIsSeasons.Visible = true;
-                    dummyIsSeasons.UpdateVisibility();
+                    if (dummyIsSeasons != null) dummyIsSeasons.UpdateVisibility();
                     break;
                 case logicalViewStep.type.episode:
                     listLevel = Listlevel.Episode;
                     if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
-                    dummyIsEpisodes.UpdateVisibility();
+                    if (dummyIsEpisodes != null) dummyIsEpisodes.UpdateVisibility();
                     break;
             }
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
