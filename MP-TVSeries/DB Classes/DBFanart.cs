@@ -81,7 +81,7 @@ namespace WindowPlugins.GUITVSeries
         {
             DBFanart dummy = new DBFanart(Index);
             Clear(dummy, new SQLCondition(dummy, DBFanart.cIndex, Index, SQLConditionType.Equal));
-            cache = null;
+            cache.Remove(Index);
         }
 
         public void Delete()
@@ -98,8 +98,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Failed to delete file: " + FullLocalPath + " (" + ex.Message + ")");
                 }
             }
-            Clear(this[cIndex]);
-            cache = null;
+            Clear(this[cIndex]);         
         }
 
         public override bool Commit()
