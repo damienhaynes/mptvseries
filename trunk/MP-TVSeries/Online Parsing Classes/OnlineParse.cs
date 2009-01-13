@@ -1229,7 +1229,7 @@ namespace WindowPlugins.GUITVSeries
         
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
-                String sLastPoster = String.Empty;
+                String sLastPoster = String.Empty;                
 
                 String sHighestRatedSeriesPoster = String.Empty;
                 String sHighestRatedSeriesBanner = String.Empty;
@@ -1355,9 +1355,14 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // Use highest rated poster if one found                                                                  
                         if (sHighestRatedSeriesPoster.Length > 0)
-                            series[DBOnlineSeries.cCurrentPosterFileName] = sHighestRatedSeriesPoster;                        
+                            series[DBOnlineSeries.cCurrentPosterFileName] = sHighestRatedSeriesPoster;
                         else
-                            series[DBOnlineSeries.cCurrentPosterFileName] = sLastPoster;
+                        {
+                            if (sLastPoster.Length > 0)
+                                series[DBOnlineSeries.cCurrentPosterFileName] = sLastPoster;
+                            else
+                                series[DBOnlineSeries.cCurrentPosterFileName] = seriesArtwork.seriesPosters[0].sPosterFileName;
+                        }
                     }
                     
                     series.Commit();
