@@ -37,6 +37,8 @@ namespace Cornerstone.MP {
                 if (_active == value)
                     return;
 
+                _active = value;
+
                 Thread newThread = new Thread(new ThreadStart(activeWorker));
                 newThread.Name = "AsyncImageResource.activeWorker";
                 newThread.Start();
@@ -56,10 +58,9 @@ namespace Cornerstone.MP {
 
         private void activeWorker() {
             lock (loadingLock) {
-                if (!_active) {
+                if (_active) {
                     // load the resource
                     _identifier = loadResourceSafe(_filename);
-                    _active = true;
 
                     // notify any listeners a resource has been loaded
                     if (ImageLoadingComplete != null)
@@ -68,7 +69,6 @@ namespace Cornerstone.MP {
                 else {
                     unloadResource(_filename);
                     _identifier = null;
-                    _active = false;
                 }
             }
         }
@@ -91,10 +91,10 @@ namespace Cornerstone.MP {
 
         private void writeProperty() {
             if (_active && _property != null && _identifier != null)
-                GUIPropertyManager.SetProperty(_property, _identifier);
-            else
+                    GUIPropertyManager.SetProperty(_property, _identifier);
+                else
                 if (_property != null)
-                    GUIPropertyManager.SetProperty(_property, "-");
+                        GUIPropertyManager.SetProperty(_property, "-");
         }
 
 
@@ -153,12 +153,19 @@ namespace Cornerstone.MP {
                 string newFilename = (string)newFilenameObj;
                 if (newFilename != null && newFilename.Trim().Length == 0)
                     newFilename = null;
-                else
+                else if (newFilename != null)
                     newFilename = newFilename.Trim();
 
+                // if we are not active we should nto be assigning a filename
+                if (!Active) newFilename = null;
+
                 // if there is no change, quit
-                if (_filename != null && _filename.Equals(newFilename))
+                if (_filename != null && _filename.Equals(newFilename)) {
+                    if (ImageLoadingComplete != null)
+                        ImageLoadingComplete(this);
+
                     return;
+                }
 
                 string newIdentifier = loadResourceSafe(newFilename);
 

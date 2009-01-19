@@ -31,9 +31,16 @@ namespace Cornerstone.MP {
             set {
                 if (_active == value)
                     return;
-
+                
                 _active = value;
-                Filename = null;
+                _imageResource.Active = _active;
+
+                // if we are inactive be sure both properties are cleared
+                if (!Active) {
+                    //logger.Info("Clearing Properties");
+                    _imageResource.Property = _propertyTwo;
+                    _imageResource.Property = _propertyOne;
+                }
             }
         }
         private bool _active = true;
@@ -48,7 +55,10 @@ namespace Cornerstone.MP {
 
             set {
                 lock (loadingLock) {
-                    if ((value != null && value.Equals(_filename)) || _guiImageOne == null || !_active)
+                    if (!Active)
+                        value = null;
+
+                    if ((value != null && value.Equals(_filename)) || _guiImageOne == null)
                         return;
 
                     // if we have a second backdrop image object, alternate between the two

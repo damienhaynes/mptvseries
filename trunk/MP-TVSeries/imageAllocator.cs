@@ -250,9 +250,6 @@ namespace WindowPlugins.GUITVSeries
               return episode.Image;
             else
               return String.Empty;
-//             Image i = LoadImageFastFromFile(episode.Image);
-//             Size epSize = new Size((int)(i.Width * reqEpisodeImagePercentage), (int)(i.Height * reqEpisodeImagePercentage));
-//             return GetOtherImage(i, episode.Image, epSize, false); 
         }
 
 
@@ -311,17 +308,17 @@ namespace WindowPlugins.GUITVSeries
         public static Image LoadImageFastFromFile(string filename)
         {
             PerfWatcher.GetNamedWatch("Img Loading").Start();
-            IntPtr loadingImage = IntPtr.Zero;
+            IntPtr image = IntPtr.Zero;
             Image i = null;
             try
             {
                 // We are not using ICM at all, fudge that, this should be FAAAAAST!
-                if (GdipLoadImageFromFile(filename, out loadingImage) != 0)
+                if (GdipLoadImageFromFile(filename, out image) != 0)
                 {
                     MPTVSeriesLog.Write("ImageLoadFast threw an error");
                     i = Image.FromFile(filename);
                 }
-                else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { loadingImage });
+                else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { image });
 
             }
             catch (Exception e)
@@ -329,8 +326,7 @@ namespace WindowPlugins.GUITVSeries
                 // this probably means the image is bad
                 PerfWatcher.GetNamedWatch("Img Loading").Stop();
                 MPTVSeriesLog.Write("ImageLoading threw an error: " + filename + " - " + e.Message);
-                return null;
-                //return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+                return null;                
             }
             PerfWatcher.GetNamedWatch("Img Loading").Stop();
             return i;
