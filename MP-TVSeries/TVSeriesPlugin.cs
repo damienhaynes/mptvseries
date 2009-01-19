@@ -491,8 +491,7 @@ namespace WindowPlugins.GUITVSeries
         }
         
         //bool facadeLoaded = false;
-        System.ComponentModel.BackgroundWorker bg = null;
-        System.ComponentModel.BackgroundWorker bgFanartLoader = null;
+        System.ComponentModel.BackgroundWorker bg = null;        
 
         void LoadFacade()
         {
@@ -504,16 +503,6 @@ namespace WindowPlugins.GUITVSeries
                 bg.WorkerReportsProgress = true;
                 bg.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(bg_ProgressChanged);
                 bg.WorkerSupportsCancellation = true;
-            }
-
-            if (bgFanartLoader == null)
-            {
-                bgFanartLoader = new System.ComponentModel.BackgroundWorker();
-                bgFanartLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(bgFanartLoader_DoWork);
-                //bgFanartLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgFanartLoader_Completed);
-                bgFanartLoader.WorkerReportsProgress = true;
-                //bgFanartLoader.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(bgFanartLoader_ProgressChanged);
-                bgFanartLoader.WorkerSupportsCancellation = true;
             }
 
             lock (bg)
@@ -579,9 +568,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case Listlevel.Series:
                         if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
-                        {
                             loadFanart(m_SelectedSeries);
-                        }
                         else
                             loadFanart(null);                       
                         break;                            
@@ -635,13 +622,10 @@ namespace WindowPlugins.GUITVSeries
                         // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
                         if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                             gli.OnItemSelected+=new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
-                        //MPTVSeriesLog.Write("Element to Display: " + arg.IndexArgument.ToString());
+                        
                         if (m_Facade != null && gli != null)
                         {
-                            bFacadeEmpty = false;
-                            //if (m_Facade_List.Visible)
-                            //    m_Facade_List.Add(gli);
-                            //else 
+                            bFacadeEmpty = false;                        
                             m_Facade.Add(gli);
                             if (arg.Type == BackGroundLoadingArgumentType.ElementForDelayedImgLoading)
                             {
@@ -748,8 +732,7 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
             MPTVSeriesLog.Write("in facadedone",MPTVSeriesLog.LogLevel.Debug);
-            //facadeLoaded = true;
-            //GUIControl.FocusControl(m_Facade.GetID, m_Facade.ListView.GetID, GUIControl.Direction.Left);
+           
             if (m_Facade == null)
                 return;
 
@@ -1361,7 +1344,7 @@ namespace WindowPlugins.GUITVSeries
             }
             ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
-            // for some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
+            // For some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
             // the labels don't display, unless we somehow call them like so
             // (no, allocResources doesnt work!)
             clearGUIProperty(guiProperty.Subtitle);
@@ -1372,10 +1355,6 @@ namespace WindowPlugins.GUITVSeries
             clearGUIProperty(guiProperty.SimpleCurrentView);
             clearGUIProperty(guiProperty.NextView);
             clearGUIProperty(guiProperty.LastView);
-
-            //clearFieldsForskin("Episode");
-            //clearFieldsForskin("Season");
-            //clearFieldsForskin("Series");
 
             if (m_CurrLView == null)
             {
@@ -1389,8 +1368,8 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
             }
-            else setViewLabels();
-//            if (!fanartSet) loadFanart(null); // init dummy labels
+            else 
+                setViewLabels();
             
             fanart.GUIImageOne = FanartBackground;
             fanart.GUIImageTwo = FanartBackground2;
@@ -2749,6 +2728,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                           
                             MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
+                            
                             fanart.Active = true;
                             fanart.Filename = f.FanartFilename;
 
@@ -2797,22 +2777,6 @@ namespace WindowPlugins.GUITVSeries
                 return false;
             }
         }
-
-        private void bgFanartLoader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            if (bgFanartLoader.CancellationPending)
-                e.Cancel = true;
-            
-            loadFanart(m_SelectedSeries);
-        }
-
-        /*private void bgFanartLoader_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {           
-        }
-
-        private void bgFanartLoader_Completed(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {                     
-        }*/
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
@@ -3072,18 +3036,8 @@ namespace WindowPlugins.GUITVSeries
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
            
-            if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)
-            {
-                // Check if already loading fanart fom previous selection
-                /*if (bgFanartLoader.IsBusy)
-                {
-                    bgFanartLoader.CancelAsync();
-                    return;
-                }
-                bgFanartLoader.RunWorkerAsync();*/
+            if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)                        
                 loadFanart(m_SelectedSeries);
-            }
-
         }
 
         private void Season_OnItemSelected(GUIListItem item)
