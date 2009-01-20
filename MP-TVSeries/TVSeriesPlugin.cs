@@ -918,7 +918,7 @@ namespace WindowPlugins.GUITVSeries
                                         bool bWatched = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched])==0);
                                         bool bAvailable = series[DBOnlineSeries.cHasLocalFiles];
 
-                                        LoadWatchedFlag(item, bWatched, bAvailable, true);                                        
+                                        LoadWatchedFlag(item, bWatched, bAvailable);                                        
                                     }
                                     item.TVTag = series;
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
@@ -997,7 +997,7 @@ namespace WindowPlugins.GUITVSeries
                                             bool bWatched = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
                                             bool bAvailable = season[DBSeason.cHasLocalFiles];
 
-                                            if (!LoadWatchedFlag(item, bWatched, bAvailable, true))
+                                            if (!LoadWatchedFlag(item, bWatched, bAvailable))
                                             {
                                                 if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                                 {
@@ -1153,7 +1153,7 @@ namespace WindowPlugins.GUITVSeries
                                     bool bWatched = episode[DBOnlineEpisode.cWatched];
                                     bool bAvailable = episode[DBEpisode.cFilename].ToString().Length > 0;
 
-                                    if (!LoadWatchedFlag(item, bWatched, bAvailable, false))
+                                    if (!LoadWatchedFlag(item, bWatched, bAvailable))
                                     {
                                         if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                         {
@@ -1238,26 +1238,32 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable, bool bMulitImage)
-        {
+        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable)
+        {          
+            // Series & Season List Images
+            string sListFilename = string.Empty;
+            if (this.listLevel == Listlevel.Series)
+                sListFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_SeriesListIcon.png";
+            if (this.listLevel == Listlevel.Season)
+                sListFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_SeasonListIcon.png";
+
+            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
+            {
+                if (!(System.IO.File.Exists(sListFilename)))
+                    return false;
+                item.IconImage = sListFilename;
+                return true;
+            }
+
+            // Episode List Images
+
             // Available (Files are Local) Images
             string sWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_Watched.png";
             string sUnWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatched.png";
-            
+
             // Not Available (Files are not Local) Images
             string sWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedNA.png";
             string sUnWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedNA.png";
-
-            // Multi Image Flags
-            string sMultiFlagFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_MultiFlag.png";
-
-            if (bMulitImage)
-            {
-                if (!(System.IO.File.Exists(sMultiFlagFilename)))
-                    return false;
-                item.IconImage = sMultiFlagFilename;
-                return true;
-            }
 
             // return if images dont exists
             if (!(System.IO.File.Exists(sWatchedFilename) &&
