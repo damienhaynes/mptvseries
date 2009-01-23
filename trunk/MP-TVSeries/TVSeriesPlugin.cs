@@ -54,10 +54,10 @@ namespace WindowPlugins.GUITVSeries
 
             int artworkDelay = 250;
 
-            fanart = new ImageSwapper();
-            fanart.ImageResource.Delay = artworkDelay;
-            fanart.PropertyOne = "#TVSeries.Fanart";
-            fanart.PropertyTwo = "#TVSeries.Fanart2";
+            backdrop = new ImageSwapper();
+            backdrop.ImageResource.Delay = artworkDelay;
+            backdrop.PropertyOne = "#TVSeries.Fanart";
+            backdrop.PropertyTwo = "#TVSeries.Fanart2";
         }
         #region ISetupForm Members
 
@@ -132,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        private ImageSwapper fanart;
+        private ImageSwapper backdrop;
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
@@ -570,7 +570,7 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
                             loadFanart(m_SelectedSeries);
                         else
-                            loadFanart(null);                       
+                            DisableFanart();                       
                         break;                            
                     case Listlevel.Season:
                         loadFanart(m_SelectedSeries);
@@ -579,7 +579,7 @@ namespace WindowPlugins.GUITVSeries
                         loadFanart(m_SelectedSeason);
                         break;
                     default:
-                        loadFanart(null);
+                        DisableFanart();
                         break;
                 }
 
@@ -1376,10 +1376,10 @@ namespace WindowPlugins.GUITVSeries
             }
             else 
                 setViewLabels();
-            
-            fanart.GUIImageOne = FanartBackground;
-            fanart.GUIImageTwo = FanartBackground2;
-            fanart.LoadingImage = loadingImage;
+
+            backdrop.GUIImageOne = FanartBackground;
+            backdrop.GUIImageTwo = FanartBackground2;
+            backdrop.LoadingImage = loadingImage;
 
             LoadFacade();
             m_Facade.Focus = true;
@@ -2381,7 +2381,7 @@ namespace WindowPlugins.GUITVSeries
                                 Series_OnItemSelected(m_Facade.SelectedListItem);
                             }
                             else
-                                loadFanart(null);
+                                DisableFanart();
                         }
                         break;
                 }
@@ -2514,7 +2514,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Switching view to " + view.Name);
             m_CurrLView = view;
 
-            if (fanartSet) loadFanart(null);
+            if (fanartSet) DisableFanart();
 
             m_CurrViewStep = 0; // we always start out at step 0
             m_stepSelection = null;
@@ -2598,7 +2598,7 @@ namespace WindowPlugins.GUITVSeries
                         m_stepSelection = m_stepSelections[m_CurrViewStep];
                         skipSeasonIfOne_DirectionDown = false; // otherwise the user cant get back out
                         LoadFacade();
-//                         if (this.listLevel == Listlevel.Series) loadFanart(null);
+//                         if (this.listLevel == Listlevel.Series) DisableFanart();
 //                         else if (this.listLevel == Listlevel.Season) loadFanart(m_SelectedSeries);
                         //skipSeasonIfOne_DirectionDown = true;
                     }
@@ -2672,116 +2672,136 @@ namespace WindowPlugins.GUITVSeries
 
         bool fanartSet = false;
         Fanart currSeriesFanart = null;
+
         bool loadFanart(DBTable item)
         {
-            try
+            if (FanartBackground == null)
             {
-                if (FanartBackground == null) fanartSet = false;
-                else
-                {                
-                    if (item == null)
-                    {
-                        MPTVSeriesLog.Write("Fanart: resetting to normal", MPTVSeriesLog.LogLevel.Debug);
-                        currSeriesFanart = null;                    
-                        fanart.Active = false;
-                        
-                        if (this.dummyIsFanartLoaded != null)
-                            this.dummyIsFanartLoaded.Visible = false;
-                        if (this.dummyIsLightFanartLoaded != null)
-                            this.dummyIsLightFanartLoaded.Visible = false;
-                        if (this.dummyIsDarkFanartLoaded != null)
-                            this.dummyIsDarkFanartLoaded.Visible = false;
-
-                        if (this.dummyIsFanartColorAvailable != null)
-                            this.dummyIsFanartColorAvailable.Visible = false;
-
-                        setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
-                        setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
-                        setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
-
-                        fanartSet = false;
-                    }
-                    else
-                    {
-                        Fanart f = currSeriesFanart;
-                        DBSeries s = item as DBSeries;
-                        if (s != null)
-                        {
-                            if (f == null || f.SeriesID != s[DBSeries.cID])
-                            {
-                                f = Fanart.getFanart(s[DBSeries.cID]);
-                                f.ForceNewPick(); // k, lets get more random then
-                                if (f != null)
-                                {
-                                    //f.FlushTexture();
-                                }
-                            }
-                            // else we came back from season, we want the same fanart again
-
-                            currSeriesFanart = f;
-                        }
-                        else
-                        {
-                            DBSeason se = item as DBSeason;
-                            if (se != null)
-                              f = Fanart.getFanart(se[DBSeason.cSeriesID]);
-                          // ZF not working, not working, not working .... nothing about fanart works as expected! duh...
-                            //f = Fanart.getFanart(se[DBSeason.cSeriesID], se[DBSeason.cIndex]);
-
-                        }
-
-                        if (f != null && f.Found)
-                        {
-                          
-                            MPTVSeriesLog.Write("Fanart found, loading: ", f.FanartFilename, MPTVSeriesLog.LogLevel.Debug);
-                            
-                            fanart.Active = true;
-                            fanart.Filename = f.FanartFilename;
-
-                            if (System.IO.File.Exists(f.FanartFilename))
-                            {
-                                // I don't think we can support these anymore with dbfanart now
-                                //if (this.dummyIsLightFanartLoaded != null)
-                                //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
-                                //if (this.dummyIsDarkFanartLoaded != null)
-                                //    this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
-
-                                if (f.HasColorInfo)
-                                {
-                                    System.Drawing.Color[] fanartColors = f.Colors;
-                                    setGUIProperty("FanArt.Colors.LightAccent", Fanart.RGBColorToHex(fanartColors[0]));
-                                    setGUIProperty("FanArt.Colors.DarkAccent", Fanart.RGBColorToHex(fanartColors[1]));
-                                    setGUIProperty("FanArt.Colors.Neutral Midtone", Fanart.RGBColorToHex(fanartColors[2]));
-                                }
-                                else
-                                {
-                                    setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
-                                    setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
-                                    setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
-                                }
-                                if (this.dummyIsFanartColorAvailable != null)
-                                    this.dummyIsFanartColorAvailable.Visible = f.HasColorInfo;
-
-                                fanartSet = true;
-
-                            }
-                            else                            
-                                loadFanart(null);
-
-                        }
-                        else if (f != null && !f.SeasonMode) loadFanart(null);
-
-                    }
-                }
+                // Fanart not supported by skin, exit now
+                fanartSet = false;
                 if (this.dummyIsFanartLoaded != null)
-                    this.dummyIsFanartLoaded.Visible = fanartSet;
-                return fanartSet;
+                    this.dummyIsFanartLoaded.Visible = false;
+
+                return false;
+            }
+
+            try
+            {             
+                Fanart fanart = currSeriesFanart;
+                DBSeries series = item as DBSeries;
+
+                // Get a Fanart for selected series from Database
+                if (series != null)
+                {
+                    if (fanart == null || fanart.SeriesID != series[DBSeries.cID])
+                    {
+                        // Get a Fanart object for currently selected series
+                        fanart = Fanart.getFanart(series[DBSeries.cID]);
+                        // Reset Fanart Selection for next time
+                        fanart.ForceNewPick();
+                    }                    
+                }
+                else
+                {
+                    DBSeason season = item as DBSeason;
+                    if (season != null)
+                        fanart = Fanart.getFanart(season[DBSeason.cSeriesID]);
+                        // TODO: Test and Ensure Season Fanart still works
+                        //fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                }
+                currSeriesFanart = fanart;
+
+                if (fanart == null)
+                {
+                    // This shouldn't happen
+                    MPTVSeriesLog.Write(string.Format("Fanart unavailable for series: {0}", Helper.getCorrespondingSeries(fanart.SeriesID)));
+                    DisableFanart();
+                    return false;
+                }
+
+                // Activate Backdrop in Image Swapper                
+                if (!backdrop.Active) backdrop.Active = true;
+                
+                // Assign Fanart filename to Image Loader
+                if (fanart.Found)                
+                    MPTVSeriesLog.Write(string.Format("Fanart found for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), fanart.FanartFilename), MPTVSeriesLog.LogLevel.Debug);                    
+                else
+                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}: ", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
+                
+                // Will display fanart in backdrop or reset to default background
+                backdrop.Filename = fanart.FanartFilename;                    
+
+                // I don't think we can support these anymore with dbfanart now
+                //if (this.dummyIsLightFanartLoaded != null)
+                //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;
+                //if (this.dummyIsDarkFanartLoaded != null)
+                //    this.dummyIsDarkFanartLoaded.Visible = !f.RandomPickIsLight;
+
+                if (fanart.HasColorInfo)
+                {
+                    System.Drawing.Color[] fanartColors = fanart.Colors;
+                    setGUIProperty("FanArt.Colors.LightAccent", Fanart.RGBColorToHex(fanartColors[0]));
+                    setGUIProperty("FanArt.Colors.DarkAccent", Fanart.RGBColorToHex(fanartColors[1]));
+                    setGUIProperty("FanArt.Colors.Neutral Midtone", Fanart.RGBColorToHex(fanartColors[2]));
+                }
+                else
+                {
+                    setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
+                    setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
+                    setGUIProperty("FanArt.Colors.Neutral Midtone", string.Empty);
+                }
+
+                if (this.dummyIsFanartColorAvailable != null)
+                    this.dummyIsFanartColorAvailable.Visible = fanart.HasColorInfo;
+
+                if (this.dummyIsFanartLoaded != null)
+                    this.dummyIsFanartLoaded.Visible = true;
+
+                //if (fanart != null && !fanart.SeasonMode)
+                //    DisableFanart();
+
+                return fanartSet = true;
             }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("Failed to load Fanart: " + ex.Message, MPTVSeriesLog.LogLevel.Normal);
-                return false;
+                return fanartSet = false;
             }
+        }
+
+        void DisableFanart()
+        {
+            if (FanartBackground == null)
+            {
+                // Fanart not supported by skin, exit now
+                fanartSet = false;
+                if (this.dummyIsFanartLoaded != null)
+                    this.dummyIsFanartLoaded.Visible = false;
+
+                return;
+            }
+
+            // Disable Fanart                
+            MPTVSeriesLog.Write("Fanart: Disabling Fanart Display", MPTVSeriesLog.LogLevel.Debug);
+
+            currSeriesFanart = null;
+            fanartSet = false;
+            if (backdrop.Active) backdrop.Active = false;            
+
+            // Reset Dummy controls
+            if (this.dummyIsFanartLoaded != null)
+                this.dummyIsFanartLoaded.Visible = false;
+            if (this.dummyIsLightFanartLoaded != null)
+                this.dummyIsLightFanartLoaded.Visible = false;
+            if (this.dummyIsDarkFanartLoaded != null)
+                this.dummyIsDarkFanartLoaded.Visible = false;
+            if (this.dummyIsFanartColorAvailable != null)
+                this.dummyIsFanartColorAvailable.Visible = false;
+
+            // Reset skin properties
+            setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
+            setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
+            setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
         }
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)

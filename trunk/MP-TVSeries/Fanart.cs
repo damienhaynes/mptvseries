@@ -29,39 +29,62 @@ namespace WindowPlugins.GUITVSeries
     class Fanart : IDisposable
     {
         #region config Constants
+        
         const string seriesFanArtFilenameFormat = "*{0}*.*";
         const string seasonFanArtFilenameFormat = "*{0}S{1}*.*";
         const string lightIdentifier = "_light_";
+        
         #endregion
 
         #region Static Vars
+
         static Dictionary<int, Fanart> fanartsCache = new Dictionary<int, Fanart>();
-        //static System.Drawing.Size requiredSize = new System.Drawing.Size();
         static Random fanartRandom = new Random();
+
         #endregion
 
         #region Vars
+
         int _seriesID = -1;
         int _seasonIndex = -1;
+
         bool? _isLight = null;
         bool _seasonMode = false;
+
         List<string> _fanArts = null;
+
         string _randomPick = null;
         string _textureName = null;
+
         DBFanart _dbchosenfanart = null;
+
         #endregion
 
-//         #region BackGroundAllocation
-//         System.ComponentModel.BackgroundWorker bgAllocator = new System.ComponentModel.BackgroundWorker();
-//         public delegate void TextureAllocatedDel(Fanart fanart);
-//         public event TextureAllocatedDel TextureAllocated;
-//         #endregion
-
         #region Properties
-        public int SeriesID { get { return _seriesID; } }
-        public int SeasonIndex { get { return _seasonIndex; } }
-        public bool Found { get { return _fanArts != null && _fanArts.Count > 0; } }
-        public bool SeasonMode { get { return _seasonMode; } }
+        
+        public int SeriesID 
+        { 
+            get { return _seriesID; } 
+        }
+
+        public int SeasonIndex 
+        { 
+            get { return _seasonIndex; }
+        }
+
+        public bool Found 
+        { 
+            get
+            { 
+                return _fanArts != null && _fanArts.Count > 0; 
+            } 
+        }
+        
+        public bool SeasonMode 
+        { 
+            get { return _seasonMode; } 
+        }
+
         public bool HasColorInfo
         {
             get 
@@ -69,6 +92,7 @@ namespace WindowPlugins.GUITVSeries
                 return _dbchosenfanart != null && _dbchosenfanart.HasColorInfo;
             }
         }
+
         public System.Drawing.Color[] Colors
         {
             get
@@ -91,6 +115,7 @@ namespace WindowPlugins.GUITVSeries
                    String.Format("{0:x}", color.G) +
                    String.Format("{0:x}", color.B);
         }
+
         #endregion
 
         #region Private Constructors
@@ -98,7 +123,6 @@ namespace WindowPlugins.GUITVSeries
         {
             _seriesID = seriesID;
             _seasonMode = false;
-//            setUpBGAllocator();
             getFanart();
         }
 
@@ -107,7 +131,6 @@ namespace WindowPlugins.GUITVSeries
             _seriesID = seriesID;
             _seasonIndex = seasonIndex;
             _seasonMode = true;
-//            setUpBGAllocator();
             getFanart();
         }
         #endregion
@@ -156,6 +179,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Instance Methods
+
         public string FanartFilename
         {
             get 
@@ -163,14 +187,18 @@ namespace WindowPlugins.GUITVSeries
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {
                     List<DBFanart> _faInDB = null;
-                    if (_randomPick != null) return _randomPick;
-                    else if (_fanArts == null || _fanArts.Count == 0) _randomPick = string.Empty;
+                    if (_randomPick != null) 
+                        return _randomPick;
+                    else if (_fanArts == null || _fanArts.Count == 0) 
+                        _randomPick = string.Empty;
                     else if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0) 
                     {
-
-                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath; // from db take precedence (not ideal)
+                        // from db take precedence (not ideal)
+                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath; 
                     }
-                    else _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                    else 
+                        _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                    
                     return _randomPick;
                 }
                 else
@@ -180,13 +208,18 @@ namespace WindowPlugins.GUITVSeries
                     if (_faInDB != null && _faInDB.Count > 0)
                     {
                         foreach (DBFanart f in _faInDB)
+                        {
                             if (f.Chosen)
                             {
                                 _dbchosenfanart = f;
                                 break;
                             }
-                        if (_dbchosenfanart == null) // we have some in db but none chosen, we choose the first
+                        }
+
+                        // we have some in db but none chosen, we choose the first
+                        if (_dbchosenfanart == null)
                             _dbchosenfanart = _faInDB[0];
+                        
                         return _dbchosenfanart.FullLocalPath;
                     }
                     else
@@ -194,7 +227,8 @@ namespace WindowPlugins.GUITVSeries
                         // none in db but user doesn't want random, we always return the first
                         if (_fanArts != null && _fanArts.Count > 0)
                             return _randomPick = _fanArts[0];
-                        else return string.Empty;
+                        else 
+                            return string.Empty;
                     }
                 }
             }
@@ -204,7 +238,6 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-//              string _textureName_temp = ImageAllocator.GetOtherImage(FanartFilename, requiredSize, true);
               string _textureName_temp = FanartFilename;
 
               if (_textureName == null)
@@ -222,12 +255,6 @@ namespace WindowPlugins.GUITVSeries
               return _textureName;
             }
         }
-
-//         public void AsynAllocFanartAsTexture()
-//         {
-//             if(!bgAllocator.IsBusy)
-//                 bgAllocator.RunWorkerAsync(FanartFilename);                        
-//         }
 
         public void FlushTexture()
         {
@@ -250,9 +277,11 @@ namespace WindowPlugins.GUITVSeries
             _isLight = null;
             _randomPick = null;
         }
+
         #endregion
 
         #region Implementation Instance Methods
+
         bool fanArtIsLight(string fanartFilename)
         {
             return (fanartFilename.Contains(lightIdentifier));
@@ -300,32 +329,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-//         void setUpBGAllocator()
-//         {
-//             this.bgAllocator.DoWork += new System.ComponentModel.DoWorkEventHandler(bgAllocator_DoWork);
-//             this.bgAllocator.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(bgAllocator_RunWorkerCompleted);
-//         }
-
-//         void bgAllocator_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-//         {
-//             if (TextureAllocated != null)
-//                 TextureAllocated(this);
-//         }
-// 
-//         void bgAllocator_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-//         {
-//             string _textureName_temp = ImageAllocator.GetOtherImage(e.Argument as String, requiredSize, false);
-//             if (_textureName == null) _textureName = _textureName_temp;
-//             lock (_textureName)
-//             {
-//                 if (_textureName != _textureName_temp)
-//                 {
-//                     FlushTexture(); // flush the old one
-//                     _textureName = _textureName_temp;
-//                 }
-//             }
-//         }
-         #endregion
+        #endregion
 
         #region IDisposable Members
 
