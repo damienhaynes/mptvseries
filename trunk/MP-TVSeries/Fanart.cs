@@ -119,6 +119,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Private Constructors
+
         Fanart(int seriesID)
         {
             _seriesID = seriesID;
@@ -133,6 +134,7 @@ namespace WindowPlugins.GUITVSeries
             _seasonMode = true;
             getFanart();
         }
+
         #endregion
 
         #region Static Methods
@@ -179,7 +181,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Instance Methods
-
+        
         public string FanartFilename
         {
             get 
@@ -187,7 +189,8 @@ namespace WindowPlugins.GUITVSeries
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {
                     List<DBFanart> _faInDB = null;
-                    if (_randomPick != null) 
+                    
+                    if (_randomPick != null)
                         return _randomPick;
                     else if (_fanArts == null || _fanArts.Count == 0) 
                         _randomPick = string.Empty;
@@ -287,21 +290,42 @@ namespace WindowPlugins.GUITVSeries
             return (fanartFilename.Contains(lightIdentifier));
         }
 
+        /// <summary>
+        /// Creates a List of Fanarts in your Thumbs folder
+        /// </summary>
         void getFanart()
-        {
-            if(System.IO.Directory.Exists(Settings.GetPath(Settings.Path.fanart)))
+        {            
+            string fanartFolder = Settings.GetPath(Settings.Path.fanart);
+
+            // Check if Fanart folder exists in MediaPortal's Thumbs directory
+            if (System.IO.Directory.Exists(fanartFolder))
             {
-                MPTVSeriesLog.Write("Fanart: checking for ", _seriesID, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Checking for Fanart on series: ", Helper.getCorrespondingSeries(_seriesID).ToString(), MPTVSeriesLog.LogLevel.Debug);
                 try
                 {
-                    string filter = _seasonMode
-                                  ? string.Format(seasonFanArtFilenameFormat, _seriesID, _seasonIndex)
-                                  : string.Format(seriesFanArtFilenameFormat, _seriesID);
+                    // Create a Filename filter for Season / Series Fanart
+                    string seasonFilter = string.Format(seasonFanArtFilenameFormat, _seriesID, _seasonIndex);
+                    string seriesFilter = string.Format(seriesFanArtFilenameFormat, _seriesID);
+                    
+                    string filter = _seasonMode ? seasonFilter : seriesFilter;                                  
+
                     _fanArts = new List<string>();
-                    _fanArts.AddRange(System.IO.Directory.GetFiles(Settings.GetPath(Settings.Path.fanart), filter, System.IO.SearchOption.AllDirectories));
+                    // Store list of all fanart files found in all sub-directories of fanart thumbs folder
+                    _fanArts.AddRange(System.IO.Directory.GetFiles(fanartFolder, filter, System.IO.SearchOption.AllDirectories));
+
+                    // If no Season Fanart was found, see if any Series fanart exist
+                    if (_fanArts.Count == 0 && _seasonMode)
+                    {
+                        MPTVSeriesLog.Write("No Season Fanart found on disk, searching for series fanart", MPTVSeriesLog.LogLevel.Debug);
+                        _fanArts.AddRange(System.IO.Directory.GetFiles(fanartFolder, seriesFilter, System.IO.SearchOption.AllDirectories));
+                    }
+
+                    // Remove any files that we dont want e.g. thumbnails in the _cache folder
+                    // and Season fanart if we are not in Season Mode
                     if (!_seasonMode) removeSeasonFromSeries();
-                    removeFromFanart("_cache"); // thumbnails online
-                    MPTVSeriesLog.Write("Fanart: found ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    removeFromFanart("_cache");
+
+                    MPTVSeriesLog.Write("Number of fanart found on disk: ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 }
                 catch (Exception ex)
                 {
