@@ -187,21 +187,39 @@ namespace WindowPlugins.GUITVSeries
             get 
             {
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
-                {
-                    List<DBFanart> _faInDB = null;
-                    
+                {                                        
                     if (_randomPick != null && _randomPick != String.Empty)
                         return _randomPick;
                     if (_fanArts == null || _fanArts.Count == 0) 
-                        _randomPick = string.Empty;
-                    else if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0) 
+                        return string.Empty;
+
+                    List<DBFanart> _faInDB = null;
+
+                    if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0)
                     {
                         // from db take precedence (not ideal)
-                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath; 
+                        foreach (DBFanart f in _faInDB)
+                        {
+                            if (Helper.String.IsNullOrEmpty(f.FullLocalPath))
+                                _faInDB.Remove(f);
+                        }
+                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
+
+                        if (Helper.String.IsNullOrEmpty(_randomPick))
+                        {
+                            if (_fanArts != null && _fanArts.Count > 0)
+                                _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                            else
+                                _randomPick = string.Empty;
+                        }
                     }
-                    else 
-                        _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
-                    
+                    else
+                    {
+                        if (_fanArts != null && _fanArts.Count > 0)
+                            _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                        else
+                            _randomPick = string.Empty;
+                    }
                     return _randomPick;
                 }
                 else
@@ -222,8 +240,16 @@ namespace WindowPlugins.GUITVSeries
                         // we have some in db but none chosen, we choose the first
                         if (_dbchosenfanart == null)
                             _dbchosenfanart = _faInDB[0];
-                        
-                        return _dbchosenfanart.FullLocalPath;
+
+                        if (Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        {
+                            if (_fanArts != null && _fanArts.Count > 0)
+                                return _randomPick = _fanArts[0];
+                            else
+                                return string.Empty;
+                        }
+                        else
+                            return _dbchosenfanart.FullLocalPath;
                     }
                     else
                     {
