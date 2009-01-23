@@ -237,9 +237,18 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
 
-                        // we have some in db but none chosen, we choose the first
-                        if (_dbchosenfanart == null)
-                            _dbchosenfanart = _faInDB[0];
+                        // we have some in db but none chosen, we choose the first available
+                        if (_dbchosenfanart == null || Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        {
+                            foreach (DBFanart f in _faInDB)
+                            {
+                                if (!Helper.String.IsNullOrEmpty(f.FullLocalPath))
+                                {
+                                    _dbchosenfanart = f;
+                                    break;
+                                }
+                            }
+                        }
 
                         if (Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
                         {
