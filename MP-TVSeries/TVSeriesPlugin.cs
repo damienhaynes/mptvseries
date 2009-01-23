@@ -2704,10 +2704,8 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     DBSeason season = item as DBSeason;
-                    if (season != null)
-                        fanart = Fanart.getFanart(season[DBSeason.cSeriesID]);
-                        // TODO: Test and Ensure Season Fanart still works
-                        //fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                    if (season != null)                      
+                        fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
                 }
                 currSeriesFanart = fanart;
 
@@ -3143,14 +3141,16 @@ namespace WindowPlugins.GUITVSeries
                     setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
                     pushFieldsToSkin(m_SelectedSeries, "Series");                    
                 }
-                else clearGUIProperty(guiProperty.SeriesBanner);
+                else 
+                    clearGUIProperty(guiProperty.SeriesBanner);
 
                 if (m_SelectedSeason != null)
                 {
                     setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
-                else clearGUIProperty(guiProperty.SeasonBanner);
+                else
+                    clearGUIProperty(guiProperty.SeasonBanner);
 
                 m_bUpdateBanner = false;
             }
