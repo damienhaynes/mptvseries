@@ -2703,9 +2703,13 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
+                    // Get Season Fanart if it exists, otherwise return Series fanart
                     DBSeason season = item as DBSeason;
-                    if (season != null)                      
+                    if (season != null)
+                    {
                         fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                        fanart.ForceNewPick();
+                    }
                 }
                 currSeriesFanart = fanart;
 
@@ -2719,16 +2723,16 @@ namespace WindowPlugins.GUITVSeries
 
                 // Activate Backdrop in Image Swapper                
                 if (!backdrop.Active) backdrop.Active = true;
-                
+
                 // Assign Fanart filename to Image Loader
-                if (fanart.Found)                
-                    MPTVSeriesLog.Write(string.Format("Fanart found for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), fanart.FanartFilename), MPTVSeriesLog.LogLevel.Debug);                    
+                // Will display fanart in backdrop or reset to default background
+                backdrop.Filename = fanart.FanartFilename;
+                
+                if (fanart.Found)
+                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), fanart.FanartFilename), MPTVSeriesLog.LogLevel.Debug);
                 else
                     MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}: ", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
                 
-                // Will display fanart in backdrop or reset to default background
-                backdrop.Filename = fanart.FanartFilename;                    
-
                 // I don't think we can support these anymore with dbfanart now
                 //if (this.dummyIsLightFanartLoaded != null)
                 //    this.dummyIsLightFanartLoaded.Visible = f.RandomPickIsLight;

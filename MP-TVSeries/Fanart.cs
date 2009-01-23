@@ -190,9 +190,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     List<DBFanart> _faInDB = null;
                     
-                    if (_randomPick != null)
+                    if (_randomPick != null && _randomPick != String.Empty)
                         return _randomPick;
-                    else if (_fanArts == null || _fanArts.Count == 0) 
+                    if (_fanArts == null || _fanArts.Count == 0) 
                         _randomPick = string.Empty;
                     else if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0) 
                     {
