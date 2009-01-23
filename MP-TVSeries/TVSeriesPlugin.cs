@@ -2697,8 +2697,6 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // Get a Fanart object for currently selected series
                         fanart = Fanart.getFanart(series[DBSeries.cID]);
-                        // Reset Fanart Selection for next time
-                        fanart.ForceNewPick();
                     }                    
                 }
                 else
@@ -2706,11 +2704,10 @@ namespace WindowPlugins.GUITVSeries
                     // Get Season Fanart if it exists, otherwise return Series fanart
                     DBSeason season = item as DBSeason;
                     if (season != null)
-                    {
-                        fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
-                        fanart.ForceNewPick();
-                    }
+                        fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);                        
                 }
+                // Reset Fanart Selection for next time
+                fanart.ForceNewPick();
                 currSeriesFanart = fanart;
 
                 if (fanart == null)
@@ -2725,11 +2722,11 @@ namespace WindowPlugins.GUITVSeries
                 if (!backdrop.Active) backdrop.Active = true;
 
                 // Assign Fanart filename to Image Loader
-                // Will display fanart in backdrop or reset to default background
+                // Will display fanart in backdrop or reset to default background                
                 backdrop.Filename = fanart.FanartFilename;
                 
                 if (fanart.Found)
-                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), fanart.FanartFilename), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
                     MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}: ", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
                 
