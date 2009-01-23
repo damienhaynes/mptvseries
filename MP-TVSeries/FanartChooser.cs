@@ -288,7 +288,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Except in FanartChooser ContextMenu: " + ex.Message);
+                MPTVSeriesLog.Write("Exception in Fanart Chooser Context Menu: " + ex.Message);
                 return;
             }
         }
@@ -362,7 +362,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // if we already have it, we simply set the chosen property (will itself "unchoose" all the others)
                         chosen.Chosen = true;
-                      // ZF: be sure to update the list of downloaded data in the cache - otherwise the selected fanart won't show up for new fanarts until restarted
+                        // ZF: be sure to update the list of downloaded data in the cache - otherwise the selected fanart won't show up for new fanarts until restarted
                         Fanart.RefreshFanart(SeriesID);
                         // now it probably makes sense to just get back to tvseries itself, nothing more for the user to do here really
                         GUIWindowManager.ShowPreviousWindow();
