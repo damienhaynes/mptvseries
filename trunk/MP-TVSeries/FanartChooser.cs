@@ -394,7 +394,6 @@ namespace WindowPlugins.GUITVSeries
         void fetchList(int seriesID)
         {
             // let's fetch a fresh list online and save info about them to the db   
- 
             GetFanart gf = new GetFanart(seriesID);
             foreach (DBFanart f in gf.Fanart)
                 f.Commit();
@@ -406,9 +405,11 @@ namespace WindowPlugins.GUITVSeries
             {                
                 if (loadingWorker.CancellationPending)
                     return;
+
                 GUIListItem item = null;
                 List<DBFanart> onlineFanart = DBFanart.GetAll(seriesID, false);
                 loadingWorker.ReportProgress(onlineFanart.Count < 100 ? onlineFanart.Count : 100);
+                
                 // let's get all the ones we have available locally (from online)
                 foreach (DBFanart f in onlineFanart)
                 {
@@ -439,7 +440,7 @@ namespace WindowPlugins.GUITVSeries
                         // ZF: Cancel, clean up pending download
                         bDownloadSuccess = false;
                         Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                        MPTVSeriesLog.Write("Cancel thumbnail download: " + filename);
+                        MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + filename);
                       }
                       System.Windows.Forms.Application.DoEvents();
                     }
