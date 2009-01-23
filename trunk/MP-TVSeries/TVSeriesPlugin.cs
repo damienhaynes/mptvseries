@@ -3141,8 +3141,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_SelectedSeries != null)
                 {
                     setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
-                    pushFieldsToSkin(m_SelectedSeries, "Series");
-                    //pushFieldsToSkin(m_SelectedSeries.onlineSeries, "Series");
+                    pushFieldsToSkin(m_SelectedSeries, "Series");                    
                 }
                 else clearGUIProperty(guiProperty.SeriesBanner);
 
@@ -3156,6 +3155,10 @@ namespace WindowPlugins.GUITVSeries
                 m_bUpdateBanner = false;
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
+
+            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest
+            loadFanart(m_SelectedSeries);
+
         }
 
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
