@@ -2531,9 +2531,30 @@ namespace WindowPlugins.GUITVSeries
 
         void setNewListLevelOfCurrView(int step)
         {
-            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
-                                                                              DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
-            if (dummyIsSeriesPosters != null) dummyIsSeriesPosters.UpdateVisibility();
+            if (dummyIsSeriesPosters != null) 
+            {
+                dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
+                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
+                dummyIsSeriesPosters.UpdateVisibility();
+            }
+
+            if (dummyThumbnailGraphicalMode != null)
+            {
+                dummyThumbnailGraphicalMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
+                                                    || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners"
+                                                    || DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1"
+                                                    || DBOption.GetOptions(DBOption.cGraphicalGroupView) == "1" );
+                dummyThumbnailGraphicalMode.UpdateVisibility();
+            }
+
+            if (dummyFacadeListMode != null)
+            {
+                dummyFacadeListMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
+                                            || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListBanners"
+                                            || DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "0"
+                                            || DBOption.GetOptions(DBOption.cGraphicalGroupView) == "0");
+                dummyFacadeListMode.UpdateVisibility();
+            }
 
             resetListLevelDummies();
 
@@ -2563,6 +2584,8 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
         }
         
+        
+
         void resetListLevelDummies()
         {
             if (dummyIsSeries != null) dummyIsSeries.Visible = false;
@@ -2706,17 +2729,18 @@ namespace WindowPlugins.GUITVSeries
                     if (season != null)
                         fanart = Fanart.getFanart(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);                        
                 }
-                // Reset Fanart Selection for next time
-                fanart.ForceNewPick();
-                currSeriesFanart = fanart;
-
+               
                 if (fanart == null)
                 {
                     // This shouldn't happen
-                    MPTVSeriesLog.Write(string.Format("Fanart unavailable for series: {0}", Helper.getCorrespondingSeries(fanart.SeriesID)));
+                    MPTVSeriesLog.Write("Fanart is unavailable, disabling", MPTVSeriesLog.LogLevel.Debug);
                     DisableFanart();
                     return false;
                 }
+
+                // Reset Fanart Selection for next time
+                fanart.ForceNewPick();
+                currSeriesFanart = fanart;
 
                 // Activate Backdrop in Image Swapper                
                 if (!backdrop.Active) backdrop.Active = true;
@@ -2728,7 +2752,7 @@ namespace WindowPlugins.GUITVSeries
                 if (fanart.Found)
                     MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
-                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}: ", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
+                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
                 
                 // I don't think we can support these anymore with dbfanart now
                 //if (this.dummyIsLightFanartLoaded != null)
@@ -2755,9 +2779,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (this.dummyIsFanartLoaded != null)
                     this.dummyIsFanartLoaded.Visible = true;
-
-                //if (fanart != null && !fanart.SeasonMode)
-                //    DisableFanart();
 
                 return fanartSet = true;
             }
@@ -3035,18 +3056,18 @@ namespace WindowPlugins.GUITVSeries
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null || !(item.TVTag is DBSeries))
                 return;
+
+            setNewListLevelOfCurrView(m_CurrViewStep);
+
             DBSeries series = item.TVTag as DBSeries;
             if (series == null) return;
 
-            //item.Selected = true;
             m_SelectedSeries = series;
                     
             // set watched/unavailable flag
             if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0);
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
-
-            setNewListLevelOfCurrView(m_CurrViewStep);
-
+            
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
             clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
@@ -3070,7 +3091,9 @@ namespace WindowPlugins.GUITVSeries
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null)
                 return;
-            
+
+            setNewListLevelOfCurrView(m_CurrViewStep);
+
             DBSeason season = item.TVTag as DBSeason;
             if (season == null) return;
 
@@ -3079,8 +3102,6 @@ namespace WindowPlugins.GUITVSeries
             // set watched/unavailable flag
             if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = season[DBSeason.cHasLocalFiles];
-
-            setNewListLevelOfCurrView(m_CurrViewStep);
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeasonTitle, season));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
@@ -3104,19 +3125,21 @@ namespace WindowPlugins.GUITVSeries
             pushFieldsToSkin(m_SelectedSeason, "Season");
 
         }
+
         private void Episode_OnItemSelected(GUIListItem item)
         {
             if (item == null || item.TVTag == null)
                 return;
+
+            setNewListLevelOfCurrView(m_CurrViewStep);
+            
             DBEpisode episode = item.TVTag as DBEpisode;
             if (episode == null) return;
 
             // set watched/unavailable flag
             if (dummyIsWatched != null) dummyIsWatched.Visible = episode[DBOnlineEpisode.cWatched];
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = episode[DBEpisode.cFilename].ToString().Length > 0;
-
-            setNewListLevelOfCurrView(m_CurrViewStep);
-
+           
             this.m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
@@ -3159,9 +3182,8 @@ namespace WindowPlugins.GUITVSeries
 
             // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest
             loadFanart(m_SelectedSeries);
-
         }
-
+        
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
         private CItem m_selected;
         public ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected)
