@@ -53,8 +53,7 @@ namespace WindowPlugins.GUITVSeries
 
         List<string> _fanArts = null;
 
-        string _randomPick = null;
-        string _textureName = null;
+        string _randomPick = null;        
 
         DBFanart _dbchosenfanart = null;
 
@@ -138,6 +137,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Static Methods
+        
         public static Fanart getFanart(int seriesID)
         {
             Fanart f = null;
@@ -154,23 +154,17 @@ namespace WindowPlugins.GUITVSeries
             return f;
         }
 
-      public static bool RefreshFanart(int seriesID)
-      {
-        Fanart f = null;
-        if (fanartsCache.ContainsKey(seriesID))
+        public static bool RefreshFanart(int seriesID)
         {
-          f = fanartsCache[seriesID];
-          f.getFanart();
-          return true;
-        }
-        else
-          return false;
-      }
-
-        public static void FlushTextures()
-        {
-            foreach (KeyValuePair<int, Fanart> p in fanartsCache)
-                p.Value.FlushTexture();
+            Fanart f = null;
+            if (fanartsCache.ContainsKey(seriesID))
+            {
+                f = fanartsCache[seriesID];
+                f.getFanart();
+                return true;
+            }
+            else
+                return false;
         }
 
         public static Fanart getFanart(int seriesID, int seasonIndex)
@@ -178,6 +172,7 @@ namespace WindowPlugins.GUITVSeries
             // no cache for now for series
             return new Fanart(seriesID, seasonIndex);
         }
+
         #endregion
 
         #region Instance Methods
@@ -186,22 +181,30 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
+                // Maybe there has been some new additions we dont know about yet
+                if (_fanArts != null && _fanArts.Count == 0)
+                {
+                    getFanart();
+                    if (_fanArts.Count == 0)
+                        return string.Empty;
+                }
+                
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {                                        
                     if (_randomPick != null && _randomPick != String.Empty)
                         return _randomPick;
-                    if (_fanArts == null || _fanArts.Count == 0) 
-                        return string.Empty;
 
                     List<DBFanart> _faInDB = null;
 
                     if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0)
                     {
-                        // from db take precedence (not ideal)
-                        foreach (DBFanart f in _faInDB)
+                        // Choose from db takes precedence (not ideal)                        
+                        List<DBFanart> _tempFanarts = _faInDB;
+                        for (int i = (_tempFanarts.Count - 1); i >= 0; i--)                        
                         {
-                            if (Helper.String.IsNullOrEmpty(f.FullLocalPath))
-                                _faInDB.Remove(f);
+                            // Remove any fanarts in database that are not local
+                            if (!_tempFanarts[i].isAvailableLocally)
+                                _faInDB.Remove(_faInDB[i]);
                         }
                         _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
 
@@ -223,26 +226,27 @@ namespace WindowPlugins.GUITVSeries
                     return _randomPick;
                 }
                 else
-                {
+                {                    
                     // see if we have a chosen one in the db
                     List<DBFanart> _faInDB = DBFanart.GetAll(SeriesID, true);
                     if (_faInDB != null && _faInDB.Count > 0)
                     {
                         foreach (DBFanart f in _faInDB)
                         {
-                            if (f.Chosen)
+                            if (f.Chosen && f.isAvailableLocally)
                             {
                                 _dbchosenfanart = f;
                                 break;
                             }
                         }
 
-                        // we have some in db but none chosen, we choose the first available
+                        // we couldnt find any fanart set as chosen in db, we try to choose the first available
                         if (_dbchosenfanart == null || Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
                         {
                             foreach (DBFanart f in _faInDB)
                             {
-                                if (!Helper.String.IsNullOrEmpty(f.FullLocalPath))
+                                // Checking if available will also remove from database if not
+                                if (f.isAvailableLocally)
                                 {
                                     _dbchosenfanart = f;
                                     break;
@@ -250,7 +254,11 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
 
-                        if (Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        if (_dbchosenfanart != null)
+                            return _dbchosenfanart.FullLocalPath;
+
+                        // If still no fanart found in db, choose from available on harddrive
+                        if (_dbchosenfanart == null || Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
                         {
                             if (_fanArts != null && _fanArts.Count > 0)
                                 return _randomPick = _fanArts[0];
@@ -262,7 +270,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     else
                     {
-                        // none in db but user doesn't want random, we always return the first
+                        // No fanart found in db but user doesn't want random, we always return the first
                         if (_fanArts != null && _fanArts.Count > 0)
                             return _randomPick = _fanArts[0];
                         else 
@@ -270,34 +278,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }
-
-        public string FanartAsTexture
-        {
-            get
-            {
-              string _textureName_temp = FanartFilename;
-
-              if (_textureName == null)
-                _textureName = _textureName_temp;
-
-              lock (_textureName)
-              {
-                if (_textureName != _textureName_temp)
-                  {
-                      FlushTexture(); // flush the old one
-                      _textureName = _textureName_temp;
-                  }
-              }
-
-              return _textureName;
-            }
-        }
-
-        public void FlushTexture()
-        {
-            if (_textureName != null) ImageAllocator.Flush(_textureName);
-            _textureName = null;
         }
 
         public bool RandomPickIsLight
@@ -348,7 +328,7 @@ namespace WindowPlugins.GUITVSeries
                     // Store list of all fanart files found in all sub-directories of fanart thumbs folder
                     _fanArts.AddRange(System.IO.Directory.GetFiles(fanartFolder, filter, System.IO.SearchOption.AllDirectories));
 
-                    // If no Season Fanart was found, see if any Series fanart exist
+                    // If no Season Fanart was found, see if any Series fanart exists
                     if (_fanArts.Count == 0 && _seasonMode)
                     {
                         MPTVSeriesLog.Write("No Season Fanart found on disk, searching for series fanart", MPTVSeriesLog.LogLevel.Debug);
@@ -394,7 +374,6 @@ namespace WindowPlugins.GUITVSeries
 
         public void Dispose()
         {
-            FlushTexture();
         }
 
         #endregion

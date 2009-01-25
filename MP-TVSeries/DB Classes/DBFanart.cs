@@ -90,7 +90,7 @@ namespace WindowPlugins.GUITVSeries
             if (this.isAvailableLocally)
             {
                 try
-                {
+                {                    
                     System.IO.File.Delete(FullLocalPath);
                 }
                 catch (Exception ex)
@@ -160,7 +160,6 @@ namespace WindowPlugins.GUITVSeries
                     return faForSeries;
                 return new List<DBFanart>();    
             }
-
         }
 
         public bool Chosen
@@ -182,8 +181,10 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 if(Helper.String.IsNullOrEmpty(this[DBFanart.cLocalPath])) return false;
-                if(System.IO.File.Exists(Settings.GetPath(Settings.Path.fanart) + @"\" + this[DBFanart.cLocalPath])) return true;
-                this[DBFanart.cLocalPath] = string.Empty; // file in path doesn't exist
+                
+                // Check if file in path exists, remove it from database if not
+                if (System.IO.File.Exists(Settings.GetPath(Settings.Path.fanart) + @"\" + this[DBFanart.cLocalPath])) return true;
+                this[DBFanart.cLocalPath] = string.Empty;
                 return false;
             }
         }

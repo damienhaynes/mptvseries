@@ -219,6 +219,21 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
+        public static String GetSeriesBannerAsFilename(DBSeries series)
+        {
+            String sFileName;            
+
+            bool IsPoster = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
+                             DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters");
+
+            if (IsPoster)
+                sFileName = series.Poster;
+            else
+                sFileName = series.Banner;
+
+            return sFileName;
+        }
+
         public static String GetSeasonBanner(DBSeason season, bool createIfNotExist)
         {
             String sFileName = season.Banner;
