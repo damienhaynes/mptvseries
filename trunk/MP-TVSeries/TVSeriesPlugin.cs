@@ -58,6 +58,11 @@ namespace WindowPlugins.GUITVSeries
             backdrop.ImageResource.Delay = artworkDelay;
             backdrop.PropertyOne = "#TVSeries.Fanart";
             backdrop.PropertyTwo = "#TVSeries.Fanart2";
+
+            seriesbanner = new AsyncImageResource();
+            seriesbanner.Property = "#TVSeries.SeriesBanner";
+            seriesbanner.Delay = artworkDelay;
+
         }
         #region ISetupForm Members
 
@@ -112,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
 
         /// <summary>
         /// If the plugin should have its own button on the main menu of Media Portal then it
-        // should return true to this method, otherwise if it should not be on home
+        /// should return true to this method, otherwise if it should not be on home
         /// it should return false
         /// </summary>
         /// <param name="strButtonText">text the button should have</param>
@@ -133,6 +138,8 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         private ImageSwapper backdrop;
+        private AsyncImageResource seriesbanner = null;
+
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
@@ -2540,19 +2547,38 @@ namespace WindowPlugins.GUITVSeries
 
             if (dummyThumbnailGraphicalMode != null)
             {
-                dummyThumbnailGraphicalMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
-                                                    || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners"
-                                                    || DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1"
-                                                    || DBOption.GetOptions(DBOption.cGraphicalGroupView) == "1" );
+                if (this.listLevel == Listlevel.Series)
+                    dummyThumbnailGraphicalMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip"
+                                                        || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners");
+
+                if (this.listLevel == Listlevel.Season)
+                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1";
+
+
+                if (this.listLevel == Listlevel.Episode)
+                    dummyFacadeListMode.Visible = false;
+
+                if (this.listLevel == Listlevel.Group)                                               
+                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "1";
+
                 dummyThumbnailGraphicalMode.UpdateVisibility();
             }
 
             if (dummyFacadeListMode != null)
             {
-                dummyFacadeListMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
-                                            || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListBanners"
-                                            || DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "0"
-                                            || DBOption.GetOptions(DBOption.cGraphicalGroupView) == "0");
+                if (this.listLevel == Listlevel.Series)
+                    dummyFacadeListMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
+                                                || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListBanners");
+                                            
+                if (this.listLevel == Listlevel.Season)
+                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "0";
+
+                if (this.listLevel == Listlevel.Episode)
+                    dummyFacadeListMode.Visible = true;
+
+                if (this.listLevel == Listlevel.Group)
+                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "0";
+
                 dummyFacadeListMode.UpdateVisibility();
             }
 
@@ -3070,13 +3096,15 @@ namespace WindowPlugins.GUITVSeries
             
             clearGUIProperty(guiProperty.EpisodeImage);
             clearGUIProperty(guiProperty.SeasonBanner);
-            clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
+            //clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeriesTitle, series));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
+            // Delayed Image Loading of Series Banners
+            seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
+            //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
@@ -3123,6 +3151,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
+
+            loadFanart(m_SelectedSeason);
 
         }
 
