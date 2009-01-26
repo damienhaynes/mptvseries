@@ -63,6 +63,10 @@ namespace WindowPlugins.GUITVSeries
             seriesbanner.Property = "#TVSeries.SeriesBanner";
             seriesbanner.Delay = artworkDelay;
 
+            seasonbanner = new AsyncImageResource();
+            seasonbanner.Property = "#TVSeries.SeasonBanner";
+            seasonbanner.Delay = artworkDelay;
+
         }
         #region ISetupForm Members
 
@@ -139,6 +143,7 @@ namespace WindowPlugins.GUITVSeries
 
         private ImageSwapper backdrop;
         private AsyncImageResource seriesbanner = null;
+        private AsyncImageResource seasonbanner = null;
 
         private Listlevel listLevel = Listlevel.Series;
         private DBSeries m_SelectedSeries;
@@ -982,7 +987,6 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 try
                                 {
-                                    //bEmpty = false;
                                     int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
                                     item = null;
                                     if (!canBeSkipped)
@@ -995,9 +999,6 @@ namespace WindowPlugins.GUITVSeries
                                         else
                                         {
                                             item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
-                                            //if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
-                                                // somehow the seriesname should be displayed too I guess, but this is more important in the episodes view
-
                                             item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
                                             item.Label3 = FieldGetter.resolveDynString(m_sFormatSeasonCol1, season);
 
@@ -3135,7 +3136,9 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
-            setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
+            // Delayed Image Loading of Season Banners
+            seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
+            //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
@@ -3146,8 +3149,10 @@ namespace WindowPlugins.GUITVSeries
                 // it is the case
                 m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null)
-                    setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
-                else clearGUIProperty(guiProperty.SeriesBanner);
+                    seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
+                    //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
+                else 
+                    clearGUIProperty(guiProperty.SeriesBanner);
             }
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
@@ -3192,7 +3197,8 @@ namespace WindowPlugins.GUITVSeries
 
                 if (m_SelectedSeries != null)
                 {
-                    setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
+                    //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
+                    seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
                     pushFieldsToSkin(m_SelectedSeries, "Series");                    
                 }
                 else 
@@ -3200,7 +3206,8 @@ namespace WindowPlugins.GUITVSeries
 
                 if (m_SelectedSeason != null)
                 {
-                    setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
+                    //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
+                    seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(m_SelectedSeason);
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
                 else
@@ -3521,9 +3528,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // Check if File Exist
             if (!System.IO.File.Exists(skinSettings))
-                return;
-           
-            MPTVSeriesLog.Write("Loading Skin View Settings", MPTVSeriesLog.LogLevel.Normal);
+                return;                      
 
             XmlDocument doc = new XmlDocument();
             try
@@ -3540,8 +3545,9 @@ namespace WindowPlugins.GUITVSeries
             XmlNode node = null;
             XmlNode innerNode = null;
                         
-            string layout = null;
-            //string fanart = null;
+            string layout = null;            
+
+            MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
@@ -3595,6 +3601,8 @@ namespace WindowPlugins.GUITVSeries
                 innerNode = node.SelectSingleNode("series/item3");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
 
+                MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                 // Season View Settings
                 innerNode = node.SelectSingleNode("season");
                 if (innerNode != null)
@@ -3614,6 +3622,8 @@ namespace WindowPlugins.GUITVSeries
                 innerNode = node.SelectSingleNode("season/item3");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col3, innerNode.InnerText.Trim());
 
+                MPTVSeriesLog.Write("Loading Skin Episode View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                 // Episode View Settings
                 innerNode = node.SelectSingleNode("episode/item1");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col1, innerNode.InnerText.Trim());
@@ -3622,7 +3632,9 @@ namespace WindowPlugins.GUITVSeries
                 innerNode = node.SelectSingleNode("episode/item3");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col3, innerNode.InnerText.Trim());
             }
-            
+
+            MPTVSeriesLog.Write("Loading Skin Formatting Rules", MPTVSeriesLog.LogLevel.Normal);
+
             // Read Formatting Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/formatting");
             if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
@@ -3645,6 +3657,8 @@ namespace WindowPlugins.GUITVSeries
                     }                    
                 }                
             }
+
+            MPTVSeriesLog.Write("Loading Skin Logo Rules", MPTVSeriesLog.LogLevel.Normal);
 
             // Read Logo Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/logos");

@@ -258,6 +258,12 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
+        public static String GetSeasonBannerAsFilename(DBSeason season)
+        {
+            String sFileName = season.Banner;
+            return sFileName;
+        }
+
         public static String GetEpisodeImage(DBEpisode episode)
         {
             if (Helper.String.IsNullOrEmpty(episode.Image)) return string.Empty;
@@ -266,7 +272,6 @@ namespace WindowPlugins.GUITVSeries
             else
               return String.Empty;
         }
-
 
         public static String GetOtherImage(string sFileName, System.Drawing.Size size, bool bPersistent)
         {
