@@ -30,6 +30,7 @@
         {
             this.list = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnFRDeleteAll = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
@@ -44,17 +45,19 @@
             this.textReplace = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.btnFRDeleteAll = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // list
             // 
-            this.list.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.list.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.list.FormattingEnabled = true;
+            this.list.HorizontalScrollbar = true;
             this.list.Location = new System.Drawing.Point(6, 19);
             this.list.Name = "list";
+            this.list.ScrollAlwaysVisible = true;
             this.list.Size = new System.Drawing.Size(529, 95);
             this.list.TabIndex = 0;
             this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
@@ -78,14 +81,25 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(541, 280);
+            this.groupBox1.Size = new System.Drawing.Size(541, 284);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output Formatting Rules:";
             // 
+            // btnFRDeleteAll
+            // 
+            this.btnFRDeleteAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFRDeleteAll.Location = new System.Drawing.Point(298, 118);
+            this.btnFRDeleteAll.Name = "btnFRDeleteAll";
+            this.btnFRDeleteAll.Size = new System.Drawing.Size(75, 23);
+            this.btnFRDeleteAll.TabIndex = 5;
+            this.btnFRDeleteAll.Text = "Delete All";
+            this.btnFRDeleteAll.UseVisualStyleBackColor = true;
+            this.btnFRDeleteAll.Click += new System.EventHandler(this.btnFRDeleteAll_Click);
+            // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(6, 254);
             this.textBox1.Name = "textBox1";
@@ -95,6 +109,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(7, 235);
             this.label3.Name = "label3";
@@ -104,6 +119,7 @@
             // 
             // linkLabel3
             // 
+            this.linkLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel3.AutoSize = true;
             this.linkLabel3.Location = new System.Drawing.Point(145, 123);
             this.linkLabel3.Name = "linkLabel3";
@@ -115,6 +131,7 @@
             // 
             // lnkImport
             // 
+            this.lnkImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkImport.AutoSize = true;
             this.lnkImport.Location = new System.Drawing.Point(94, 123);
             this.lnkImport.Name = "lnkImport";
@@ -126,6 +143,7 @@
             // 
             // linkLabel1
             // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(197, 123);
             this.linkLabel1.Name = "linkLabel1";
@@ -137,7 +155,7 @@
             // 
             // button2
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Location = new System.Drawing.Point(379, 118);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -148,7 +166,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdd.Location = new System.Drawing.Point(460, 118);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
@@ -159,6 +177,7 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 192);
             this.label2.Name = "label2";
@@ -168,6 +187,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 146);
             this.label1.Name = "label1";
@@ -177,6 +197,7 @@
             // 
             // checkEnabled
             // 
+            this.checkEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEnabled.AutoSize = true;
             this.checkEnabled.Location = new System.Drawing.Point(6, 122);
             this.checkEnabled.Name = "checkEnabled";
@@ -187,7 +208,7 @@
             // 
             // txtWith
             // 
-            this.txtWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtWith.Location = new System.Drawing.Point(6, 210);
             this.txtWith.Name = "txtWith";
@@ -197,7 +218,7 @@
             // 
             // textReplace
             // 
-            this.textReplace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textReplace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textReplace.Location = new System.Drawing.Point(6, 164);
             this.textReplace.Name = "textReplace";
@@ -213,24 +234,13 @@
             // 
             this.openFileDialog1.Filter = "Format Rules (*.formatRules)|*.formatRules|All Files (*.*)|*.*";
             // 
-            // btnFRDeleteAll
-            // 
-            this.btnFRDeleteAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFRDeleteAll.Location = new System.Drawing.Point(298, 118);
-            this.btnFRDeleteAll.Name = "btnFRDeleteAll";
-            this.btnFRDeleteAll.Size = new System.Drawing.Size(75, 23);
-            this.btnFRDeleteAll.TabIndex = 5;
-            this.btnFRDeleteAll.Text = "Delete All";
-            this.btnFRDeleteAll.UseVisualStyleBackColor = true;
-            this.btnFRDeleteAll.Click += new System.EventHandler(this.btnFRDeleteAll_Click);
-            // 
             // FormattingConfiguration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "FormattingConfiguration";
-            this.Size = new System.Drawing.Size(541, 280);
+            this.Size = new System.Drawing.Size(541, 284);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

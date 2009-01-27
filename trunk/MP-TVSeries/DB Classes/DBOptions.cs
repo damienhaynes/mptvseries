@@ -51,14 +51,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
-        public const String cAutoChooseOrder = "AutoChooseOrder";
-        public const String cLocalDataOverride = "LocalDataOverride";
+        public const String cAutoChooseOrder = "AutoChooseOrder";        
         public const String cAutoScanLocalFiles = "AutoScanLocalFiles";
         public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
         public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
         public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
-        public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";
-        public const String cPreferedBannerType = "PreferedBannerType";
+        public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
 
         public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp"; // not used anymore
         public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp"; // not used anymore
@@ -197,9 +195,6 @@ namespace WindowPlugins.GUITVSeries
                 
                 if (GetOptions(cAutoChooseOrder) == null)
                     SetOptions(cAutoChooseOrder, false);
-
-                if (GetOptions(cLocalDataOverride) == null)
-                    SetOptions(cLocalDataOverride, true);
 
                 if (GetOptions(cView_Episode_OnlyShowLocalFiles) == null)
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
@@ -354,10 +349,7 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
                 if (GetOptions("doFolderWatch") == null)
-                    SetOptions("doFolderWatch", true);
-
-                if (GetOptions(cPreferedBannerType) == null)
-                    SetOptions(cPreferedBannerType, 2);  // graphical by default
+                    SetOptions("doFolderWatch", true); 
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default

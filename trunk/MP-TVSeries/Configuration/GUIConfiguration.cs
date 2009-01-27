@@ -194,18 +194,11 @@ namespace WindowPlugins.GUITVSeries
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
-            checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);
-            checkBox_LocalDataOverride.Checked = DBOption.GetOptions(DBOption.cLocalDataOverride);
+            checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
-            //chkDownloadSeriesPoster.Checked = DBOption.GetOptions(DBOption.cGetSeriesPosters);
-
-            comboBox_preferedBannerType.Items.Add("Text");
-            comboBox_preferedBannerType.Items.Add("Graphical");
-            comboBox_preferedBannerType.Items.Add("Blank");
-            comboBox_preferedBannerType.SelectedIndex = DBOption.GetOptions(DBOption.cPreferedBannerType);
-
+           
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
 
@@ -1570,11 +1563,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cAutoChooseSeries, checkBox_AutoChooseSeries.Checked);
         }
 
-        private void checkBox_LocalDataOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cLocalDataOverride, checkBox_LocalDataOverride.Checked);
-        }
-
         private void comboBox_BannerSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (treeView_Library.SelectedNode.Name)
@@ -2839,11 +2827,7 @@ namespace WindowPlugins.GUITVSeries
                 textBox_NewsDownloadPath.Text = folderBrowserDialog1.SelectedPath;
             }
         }
-        # endregion
-        private void comboBox_preferedBannerType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cPreferedBannerType, comboBox_preferedBannerType.SelectedIndex);
-        }
+        # endregion      
 
         private void addLogo_Click(object sender, EventArgs e)
         {
@@ -3421,11 +3405,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cAutoChooseOrder, checkBox_AutoChooseOrder.Checked);
         }
 
-        private void chkDownloadSeriesPoster_CheckedChanged(object sender, EventArgs e)
-        {
-            //DBOption.SetOptions(DBOption.cGetSeriesPosters, chkDownloadSeriesPoster.Checked);
-        }
-
         private void chkShowSeriesFanart_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cShowSeriesFanart, chkShowSeriesFanart.Checked);
@@ -3446,6 +3425,10 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
         }
 
+        private void dbOptiongraphicalGroupView_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cGraphicalGroupView, dbOptiongraphicalGroupView.Checked);
+        }     
     }
 
     public class BannerComboItem
