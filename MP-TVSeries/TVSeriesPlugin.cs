@@ -2621,7 +2621,6 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsGroups != null) dummyIsGroups.Visible = false;
         }
 
-        //int thumbnail_last_selected = 0;
         public override void OnAction(Action action)
         {
             switch (action.wID)
@@ -2631,6 +2630,7 @@ namespace WindowPlugins.GUITVSeries
                     ImageAllocator.FlushAll();
                     GUIWindowManager.ShowPreviousWindow();
                     break;
+
                 case Action.ActionType.ACTION_PREVIOUS_MENU:
                     // back one level
                     MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
@@ -2648,71 +2648,8 @@ namespace WindowPlugins.GUITVSeries
                         m_stepSelection = m_stepSelections[m_CurrViewStep];
                         skipSeasonIfOne_DirectionDown = false; // otherwise the user cant get back out
                         LoadFacade();
-//                         if (this.listLevel == Listlevel.Series) DisableFanart();
-//                         else if (this.listLevel == Listlevel.Season) loadFanart(m_SelectedSeries);
-                        //skipSeasonIfOne_DirectionDown = true;
                     }
                     break;
-                case Action.ActionType.ACTION_MOVE_LEFT:
-                    /*if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
-                    {
-                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
-                        base.OnAction(action);
-                        if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
-                        {
-                            if (DBOption.GetOptions(DBOption.cswitchViewsFast))
-                            {
-                                switchView(-1);
-                                LoadFacade();
-                            }
-                            //else showViewSwitchDialog();
-                        }
-                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
-                    }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.List)
-                    {
-                        if (DBOption.GetOptions(DBOption.cswitchViewsFast))
-                        {
-                            switchView(-1);
-                            LoadFacade();
-                        }
-                        else showViewSwitchDialog();
-                    }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)*/
-                        base.OnAction(action);                   
-
-                    break;
-                case Action.ActionType.ACTION_MOVE_RIGHT:
-                    /*if (this.m_Facade.View == GUIFacadeControl.ViewMode.LargeIcons)
-                    {
-                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
-                        base.OnAction(action);
-                        if (thumbnail_last_selected == m_Facade.SelectedListItemIndex)
-                        {
-                            if (DBOption.GetOptions(DBOption.cswitchViewsFast))
-                            {
-                                switchView(1);
-                                LoadFacade();
-                                OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
-                                OnAction(new Action(Action.ActionType.ACTION_MOVE_DOWN, 0, 0));
-                            }
-                            //else showViewSwitchDialog();
-                        }
-                        thumbnail_last_selected = m_Facade.SelectedListItemIndex;
-                    }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.List)
-                    {
-                        if (DBOption.GetOptions(DBOption.cswitchViewsFast))
-                        {
-                            switchView(1);
-                            LoadFacade();
-                        }
-                        else showViewSwitchDialog();
-                    }
-                    else if (this.m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)*/
-                        base.OnAction(action);                                            
-
-                    break;                                
 
                 default:
                     base.OnAction(action);
@@ -3551,8 +3488,14 @@ namespace WindowPlugins.GUITVSeries
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
-            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
+                // Append First Logo/Image to List
+                if (node.Attributes.GetNamedItem("AppendlmageToList").Value.ToLower() == "true")
+                    DBOption.SetOptions(DBOption.cAppendFirstLogoToList,"1");
+                else
+	                DBOption.SetOptions(DBOption.cAppendFirstLogoToList,"0");            
+
                 // Group View Settings
                 innerNode = node.SelectSingleNode("group");
                 if (innerNode != null)
@@ -3637,7 +3580,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Read Formatting Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/formatting");
-            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
                 DBFormatting.ClearAll();
                 long id = 0;
@@ -3662,7 +3605,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Read Logo Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/logos");
-            if (node != null && node.Attributes.GetNamedItem("import").Value == "true")
+            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
                 DBOption.SetOptions("logoConfig", "");
                 List<string> logos = new List<string>();
@@ -3671,6 +3614,22 @@ namespace WindowPlugins.GUITVSeries
                     logos.Add(rule.Trim());
                 }
                 localLogos.saveToDB(logos);
+            }
+
+            MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
+
+            // Read Graphics Quality and Import into Database
+            node = doc.DocumentElement.SelectSingleNode("/settings/graphicsquality");
+            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
+            {
+                innerNode = node.SelectSingleNode("seriesbanners");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("seriesposters");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesPosters, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("seasonbanners");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeasonBanners, innerNode.InnerText.Trim());
+                innerNode = node.SelectSingleNode("episodethumbs");
+                if (innerNode != null) DBOption.SetOptions(DBOption.cQualityEpisodeImages, innerNode.InnerText.Trim());
             }
 
         }
