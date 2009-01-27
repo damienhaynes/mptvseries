@@ -3482,19 +3482,26 @@ namespace WindowPlugins.GUITVSeries
             XmlNode node = null;
             XmlNode innerNode = null;
                         
-            string layout = null;            
-
-            MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
+            string layout = null;                        
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
+                MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                 // Append First Logo/Image to List
-                if (node.Attributes.GetNamedItem("AppendlmageToList").Value.ToLower() == "true")
-                    DBOption.SetOptions(DBOption.cAppendFirstLogoToList,"1");
-                else
-	                DBOption.SetOptions(DBOption.cAppendFirstLogoToList,"0");            
+                try
+                {
+                    if (node.Attributes.GetNamedItem("AppendlmageToList").Value.ToLower() == "true")
+                        DBOption.SetOptions(DBOption.cAppendFirstLogoToList, "1");
+                    else
+                        DBOption.SetOptions(DBOption.cAppendFirstLogoToList, "0");
+                }
+                catch
+                {
+                    MPTVSeriesLog.Write("Error reading AppendlmageToList skin setting");
+                }
 
                 // Group View Settings
                 innerNode = node.SelectSingleNode("group");
@@ -3543,13 +3550,14 @@ namespace WindowPlugins.GUITVSeries
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col2, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("series/item3");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
-
-                MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
+                
 
                 // Season View Settings
                 innerNode = node.SelectSingleNode("season");
                 if (innerNode != null)
                 {
+                    MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
                     if (layout.ToLower() == "list")
                         DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
@@ -3574,14 +3582,14 @@ namespace WindowPlugins.GUITVSeries
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col2, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("episode/item3");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col3, innerNode.InnerText.Trim());
-            }
-
-            MPTVSeriesLog.Write("Loading Skin Formatting Rules", MPTVSeriesLog.LogLevel.Normal);
+            }            
 
             // Read Formatting Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/formatting");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
+                MPTVSeriesLog.Write("Loading Skin Formatting Rules", MPTVSeriesLog.LogLevel.Normal);
+
                 DBFormatting.ClearAll();
                 long id = 0;
                 foreach (string rule in node.InnerText.Split('\n'))
@@ -3601,12 +3609,12 @@ namespace WindowPlugins.GUITVSeries
                 }                
             }
 
-            MPTVSeriesLog.Write("Loading Skin Logo Rules", MPTVSeriesLog.LogLevel.Normal);
-
             // Read Logo Rules and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/logos");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
+                MPTVSeriesLog.Write("Loading Skin Logo Rules", MPTVSeriesLog.LogLevel.Normal);
+
                 DBOption.SetOptions("logoConfig", "");
                 List<string> logos = new List<string>();
                 foreach (string rule in node.InnerText.Split('\n'))
@@ -3615,13 +3623,13 @@ namespace WindowPlugins.GUITVSeries
                 }
                 localLogos.saveToDB(logos);
             }
-
-            MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
-
+            
             // Read Graphics Quality and Import into Database
-            node = doc.DocumentElement.SelectSingleNode("/settings/graphicsquality");
+            node = doc.DocumentElement.SelectSingleNode("/settings/graphicsquality");            
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
+                MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
+
                 innerNode = node.SelectSingleNode("seriesbanners");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("seriesposters");
