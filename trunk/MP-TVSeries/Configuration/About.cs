@@ -51,12 +51,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://sourceforge.net/projects/mp-tvseries/");
+            System.Diagnostics.Process.Start(@"http://code.google.com/p/mptvseries/");
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://wiki.team-mediaportal.com/Extensions-Plugins/MP-TVSeries");
+            System.Diagnostics.Process.Start(@"http://code.google.com/p/mptvseries/w/list");
         }
 
     }
