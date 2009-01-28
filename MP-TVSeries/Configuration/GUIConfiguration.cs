@@ -3406,6 +3406,16 @@ namespace WindowPlugins.GUITVSeries
         private void dbOptiongraphicalGroupView_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cGraphicalGroupView, dbOptiongraphicalGroupView.Checked);
+        }
+
+        private void checkBox_Episode_OnlyShowLocalFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
+        }
+
+        private void optionAsk2Rate_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAskToRate, optionAsk2Rate.Checked);
         }     
     }
 
