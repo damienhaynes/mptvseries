@@ -171,10 +171,10 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_debuglevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
+            m_paneListSettings.Add(panel_ParsingTest); // makes sense to do parsing test after import path configuration
+            //m_paneListSettings.Add(panel_OnlineData);
             m_paneListSettings.Add(panel_Expressions);
-            m_paneListSettings.Add(panel_StringReplacements);
-            m_paneListSettings.Add(panel_ParsingTest);
-            m_paneListSettings.Add(panel_OnlineData);
+            m_paneListSettings.Add(panel_StringReplacements);            
             m_paneListSettings.Add(panel_manualEpisodeManagement);
 
             foreach (Control pane in m_paneListSettings)
@@ -465,24 +465,13 @@ namespace WindowPlugins.GUITVSeries
                     row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
-            }
+            }              
         }
 
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
             // load them up in the datagrid
-
-            //             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
-            //             {
-            //                 if (field.Key != DBExpression.cIndex)
-            //                 {
-            //                     DataGridViewCheckBoxColumn column = new DataGridBoolColumn();
-            //                     column.Name = field.Key;
-            //                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            //                     dataGridView_Expressions.Columns.Add(column);
-            //                 }
-            //             }
 
             if (dataGridView_Expressions.Columns.Count == 0)
             {
@@ -527,17 +516,6 @@ namespace WindowPlugins.GUITVSeries
             DBReplacements[] replacements = DBReplacements.GetAll();
 
             // load them up in the datagrid
-
-            //             foreach (KeyValuePair<string, DBField> field in expressions[0].m_fields)
-            //             {
-            //                 if (field.Key != DBExpression.cIndex)
-            //                 {
-            //                     DataGridViewCheckBoxColumn column = new DataGridBoolColumn();
-            //                     column.Name = field.Key;
-            //                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            //                     dataGridView_Expressions.Columns.Add(column);
-            //                 }
-            //             }
 
             if (dataGridView_Replace.Columns.Count == 0)
             {
