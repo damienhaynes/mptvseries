@@ -35,7 +35,7 @@
 				layout="List"
 				
 	-->
-	<views import="true">		
+	<views import="true" AppendlmageToList="false">		
 		<group layout="List"></group>
 		<series layout="ListPosters">
 			<item1><![CDATA[]]></item1>
@@ -112,4 +112,13 @@ skin\Blue3wide\Media\TVSeries\Logos\Widescreen White.png;-;<Episode.VideoAspectR
 skin\Blue3wide\Media\TVSeries\Logos\Fullscreen.png;-;<Episode.VideoAspectRatio>;-;>;-;1.3;-;AND;-;<Episode.VideoAspectRatio>;-;<;-;1.5;-;AND;-;;-;=;-;;-;
 skin\Blue3wide\Media\TVSeries\Logos\<Series.Genre>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Series>]]>
 	</logos>	
+	<!-- Only used for Thumbnail view creation e.g. Filmstrip and WideBanners. Episode Thumbs are the exception -->
+	<!-- #TVSeries.SeriesBanner and #TVSeries.SeasonBanner properties dont use the values below, those images will be presented as they are but will be using a delay of 250ms to present image -->
+	<!-- The settings below are configured for best quality, any higher will result in a drop in performance with no visual benefit-->
+	<graphicsquality import="true">
+		<seriesbanners>55</seriesbanners> <!-- 400/758*100 -->
+		<seriesposters>35</seriesposters> <!-- 231/680*100 -->
+		<seasonbanners>35</seasonbanners> <!-- N/A No Thumb View supported, use Filmstrip as a template 231/680*100 this may be added later-->
+		<episodethumbs>80</episodethumbs> <!-- 308/400*100 -->
+	</graphicsquality>
 </settings>
