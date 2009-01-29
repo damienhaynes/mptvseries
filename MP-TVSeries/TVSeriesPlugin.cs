@@ -3353,7 +3353,7 @@ namespace WindowPlugins.GUITVSeries
                 m_sUserInput = String.Empty;
                 VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
                 if (null == keyboard)
-                    return ReturnCode.Cancel; ;
+                    return ReturnCode.Cancel;
 
                 keyboard.Reset();
                 keyboard.Text = descriptor.m_sText;
@@ -3392,8 +3392,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void setProcessAnimationStatus(bool enable)
-        {
-            //MPTVSeriesLog.Write("Set Animation: ", enable.ToString(), MPTVSeriesLog.LogLevel.Normal);
+        {            
             try
             {
                 if (m_ImportAnimation != null)
@@ -3402,12 +3401,11 @@ namespace WindowPlugins.GUITVSeries
                         m_ImportAnimation.AllocResources();
                     else
                         m_ImportAnimation.FreeResources();
-                    m_ImportAnimation.Visible = enable;
-                    //MPTVSeriesLog.Write("Set Animation: ", "Done", MPTVSeriesLog.LogLevel.Normal);
+                    m_ImportAnimation.Visible = enable;                  
                 }
             }
             catch (Exception)
-            {
+            {                
             }
         }
 
@@ -3630,7 +3628,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
 
-                innerNode = node.SelectSingleNode("seriesbanners");
+                innerNode = node.SelectSingleNode("seriesbanners");                
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("seriesposters");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesPosters, innerNode.InnerText.Trim());

@@ -171,10 +171,8 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_debuglevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
-            m_paneListSettings.Add(panel_ParsingTest); // makes sense to do parsing test after import path configuration
-            //m_paneListSettings.Add(panel_OnlineData);
-            m_paneListSettings.Add(panel_Expressions);
             m_paneListSettings.Add(panel_StringReplacements);            
+            m_paneListSettings.Add(panel_Expressions);            
             m_paneListSettings.Add(panel_manualEpisodeManagement);
 
             foreach (Control pane in m_paneListSettings)
@@ -288,6 +286,8 @@ namespace WindowPlugins.GUITVSeries
             qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);            
             qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
             qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
+
+            tabControl_Details.SelectTab(1);
         }
 
         void Panel1_SizeChanged(object sender, EventArgs e)
@@ -756,6 +756,9 @@ namespace WindowPlugins.GUITVSeries
                 }
                 // Set Path value in cell
                 dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = folderBrowserDialog1.SelectedPath;
+
+                // Update Parsing Test
+                TestParsing_Start(true);
             }
 
         }
@@ -784,6 +787,8 @@ namespace WindowPlugins.GUITVSeries
         private void dataGridView_ImportPathes_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {        
             SaveAllImportPathes();
+            // Update Parsing Test
+            TestParsing_Start(true);
         }
 
         private void dataGridView_ImportPathes_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
@@ -1000,6 +1005,8 @@ namespace WindowPlugins.GUITVSeries
                 header.Width += 10;
                 if (header.Width < 80)
                     header.Width = 80;
+                if (header.Width > 200)
+                    header.Width = 200;
             }
 
         }
@@ -1508,9 +1515,7 @@ namespace WindowPlugins.GUITVSeries
                     pane.Visible = false;
             }
 
-            // special behavior for some nodes
-            if (e.Node.Name == panel_ParsingTest.Name)
-                TestParsing_Start(false);
+            // special behavior for some nodes         
             if (e.Node.Name == this.panel_manualEpisodeManagement.Name)
                 panel_manualEpisodeManagement.refreshFileList();
         }
@@ -3416,9 +3421,9 @@ namespace WindowPlugins.GUITVSeries
         private void optionAsk2Rate_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAskToRate, optionAsk2Rate.Checked);
-        }     
+        }
     }
-
+    
     public class BannerComboItem
     {
         public String sName = String.Empty;
