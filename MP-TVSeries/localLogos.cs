@@ -148,20 +148,7 @@ namespace WindowPlugins.GUITVSeries
             // zeflash: since we use an image allocator we can't use a cache for the episode image anymore - so always call getLogos
             tmpEp.cachedLogoResults = null; // have to redo caching here
             lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
-/*
-            if (!firstOnly || tmpEp.cachedFirstLogo == null)
-                lastResult = getLogos(Level.Episode, imgHeight, imgWidth, firstOnly, ref tmpEp.cachedLogoResults);
-            else
-            {
-                lastWasCached = true;
-                lastResult = tmpEp.cachedFirstLogo;
-            }
-            if (firstOnly)
-            {
-                tmpEp.cachedLogoResults = null;
-                tmpEp.cachedFirstLogo = lastResult;
-            }
- */
+
             if(!lastWasCached) cache.addChangeEpisode(tmpEp);
             return lastResult;
         }

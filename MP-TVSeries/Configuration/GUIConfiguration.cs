@@ -436,12 +436,12 @@ namespace WindowPlugins.GUITVSeries
             if (dataGridView_ImportPathes.Columns.Count == 0)
             {
                 DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
-                columnEnabled.Name = DBImportPath.cEnabled;
+                columnEnabled.Name = "enabled";
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_ImportPathes.Columns.Add(columnEnabled);
 
                 DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
-                columnRemovable.Name = DBImportPath.cRemovable;
+                columnRemovable.Name = "removable";
                 columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_ImportPathes.Columns.Add(columnRemovable);
 
@@ -1400,8 +1400,8 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                        // let configs now what was selected (for samples)
-                        this.formattingConfiguration1.Series = series;
+                        // let configs now what was selected (for samples)                        
+                        this.formattingConfiguration1.Series = series;                        
                         this.formattingConfiguration1.Season = null;
                         this.formattingConfiguration1.Episode = null;
                     }
@@ -3421,6 +3421,11 @@ namespace WindowPlugins.GUITVSeries
         private void optionAsk2Rate_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAskToRate, optionAsk2Rate.Checked);
+        }
+
+        private void linkAccountID_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://thetvdb.com/?tab=userinfo");
         }
     }
     

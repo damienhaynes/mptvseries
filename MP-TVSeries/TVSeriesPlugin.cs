@@ -762,7 +762,7 @@ namespace WindowPlugins.GUITVSeries
                     clearGUIProperty(guiProperty.Title);
                     clearGUIProperty(guiProperty.Subtitle);
                     clearGUIProperty(guiProperty.Description);
-
+                    
                     clearGUIProperty(guiProperty.SeriesBanner);
                     clearGUIProperty(guiProperty.SeasonBanner);
                     clearGUIProperty(guiProperty.EpisodeImage);
@@ -819,6 +819,7 @@ namespace WindowPlugins.GUITVSeries
                 bool delayedImageLoading = false;
                 List<DBSeries> seriesList = null;
                 PerfWatcher.GetNamedWatch("FacadeLoading getting/reporting items").Start();
+
                 switch (this.listLevel)
                 {
                     #region Group
@@ -859,20 +860,23 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
                     #region Series
                     case Listlevel.Series:
-                        {                                                 
-                            // reinit the itemsList                       
-                            delayedImageLoading = true;
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgInit, 0, null);
-                      
+                        {
+                            string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                                              
+                            if (!sSeriesDisplayMode.Contains("List"))
+                            {
+                                // reinit the itemsList
+                                delayedImageLoading = true;
+                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgInit, 0, null);
+                            }
+
                             if (DBOption.GetOptions(DBOption.cRandomBanner)) ImageAllocator.FlushAll();
                             else
                             {
                                 // flush episodes & seasons
                                 ImageAllocator.FlushOthers(false);
                                 ImageAllocator.FlushSeasons();
-                            }
-
-                            string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            }                            
 
                             if (!sSeriesDisplayMode.Contains("List"))
                             {
@@ -961,8 +965,11 @@ namespace WindowPlugins.GUITVSeries
                                    
                                     if (bg.CancellationPending) return;
                                     else
-                                    {                              
-                                        ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, count, item);                                
+                                    {
+                                        if (!sSeriesDisplayMode.Contains("List"))
+                                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, count, item);
+                                        else
+                                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
                                     }
 
                                 }
@@ -3008,8 +3015,8 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), this.m_Facade.SelectedListItem.Label, logosHeight, logosWidth));
 
             clearGUIProperty(guiProperty.EpisodeImage);
-            clearGUIProperty(guiProperty.SeriesBanner);
-            clearGUIProperty(guiProperty.SeasonBanner);
+            //clearGUIProperty(guiProperty.SeriesBanner);
+            //clearGUIProperty(guiProperty.SeasonBanner);
         }
 
         private void Series_OnItemSelected(GUIListItem item)
@@ -3033,7 +3040,7 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
             
             clearGUIProperty(guiProperty.EpisodeImage);
-            clearGUIProperty(guiProperty.SeasonBanner);
+            //clearGUIProperty(guiProperty.SeasonBanner);          
             //clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeriesTitle, series));
