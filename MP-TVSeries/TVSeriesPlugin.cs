@@ -486,13 +486,18 @@ namespace WindowPlugins.GUITVSeries
                             }
                             if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners")
                             {
-                                MPTVSeriesLog.Write("FacadeMode: Switching to WideBanners", MPTVSeriesLog.LogLevel.Debug);
+                                MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
                             }
                             break;
                         case (Listlevel.Season):
-                            MPTVSeriesLog.Write("FacadeMode: Switching to LargeIcons", MPTVSeriesLog.LogLevel.Debug);
+                            // There is no point having BigIcons for SeasonView, as it would need to re-use the WideBanner sizes
+                            MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
                             this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                            break;
+                        case (Listlevel.Group):
+                            MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
                             break;
                     }
                 }
@@ -651,8 +656,7 @@ namespace WindowPlugins.GUITVSeries
                     break;
                 case BackGroundLoadingArgumentType.DelayedImgLoading:
                     {
-                        PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Start();
-                        //MPTVSeriesLog.Write("delayed Img: " + arg.IndexArgument.ToString());
+                        PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Start();                        
                         if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
                         {
                             string image = arg.Argument as string;
@@ -673,30 +677,63 @@ namespace WindowPlugins.GUITVSeries
                             // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
                             // Navigate to selected using OnAction instead 
                             if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
-                            {                               
-                                List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
-                                if (arg.IndexArgument > 0)
+                            {
+                                if (this.listLevel == Listlevel.Series)
                                 {
-                                    m_bQuickSelect = true;
-                                    for (int i = m_Facade.SelectedListItemIndex; i < seriesList.Count - 1; i++)
-                                    {
-                                        if (i == arg.IndexArgument)
-                                            break;
-                                        // Now push fields to skin
-                                        if (i == (arg.IndexArgument - 1))
-                                            m_bQuickSelect = false;
+                                    List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
-                                        OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
-                                    }
-                                    m_bQuickSelect = false;                                 
-                                }
-                                else
-                                {                                    
-                                    if (seriesList.Count > 0)
+                                    if (arg.IndexArgument > 0)
                                     {
-                                        GUIListItem selected = new GUIListItem();
-                                        selected.TVTag = seriesList[0];
-                                        Series_OnItemSelected(selected);
+                                        m_bQuickSelect = true;
+                                        for (int i = m_Facade.SelectedListItemIndex; i < seriesList.Count - 1; i++)
+                                        {
+                                            if (i == arg.IndexArgument)
+                                                break;
+                                            // Now push fields to skin
+                                            if (i == (arg.IndexArgument - 1))
+                                                m_bQuickSelect = false;
+
+                                            OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                                        }
+                                        m_bQuickSelect = false;
+                                    }
+                                    else
+                                    {
+                                        if (seriesList.Count > 0)
+                                        {
+                                            GUIListItem selected = new GUIListItem();
+                                            selected.TVTag = seriesList[0];
+                                            Series_OnItemSelected(selected);
+                                        }
+                                    }
+                                }
+                                else if (this.listLevel == Listlevel.Season)
+                                {
+                                    List<DBSeason> seasonList = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+
+                                    if (arg.IndexArgument > 0)
+                                    {
+                                        m_bQuickSelect = true;
+                                        for (int i = m_Facade.SelectedListItemIndex; i < seasonList.Count - 1; i++)
+                                        {
+                                            if (i == arg.IndexArgument)
+                                                break;
+                                            // Now push fields to skin
+                                            if (i == (arg.IndexArgument - 1))
+                                                m_bQuickSelect = false;
+
+                                            OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                                        }
+                                        m_bQuickSelect = false;
+                                    }
+                                    else
+                                    {
+                                        if (seasonList.Count > 0)
+                                        {
+                                            GUIListItem selected = new GUIListItem();
+                                            selected.TVTag = seasonList[0];
+                                            Season_OnItemSelected(selected);
+                                        }
                                     }
                                 }
                             }                                
@@ -3061,6 +3098,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void Season_OnItemSelected(GUIListItem item)
         {
+            if (m_bQuickSelect) return;
+
             m_SelectedEpisode = null;
             if (item == null || item.TVTag == null)
                 return;
@@ -3566,8 +3605,8 @@ namespace WindowPlugins.GUITVSeries
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
                     if (layout.ToLower() == "list")
                         DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-
-                    if (layout.ToLower() == "bigicons")
+                    
+                    if (layout.ToLower() == "bigicons" || layout.ToLower() == "filmstrip")
                         DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
                 }
 

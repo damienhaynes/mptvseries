@@ -168,7 +168,7 @@ namespace WindowPlugins.GUITVSeries
 
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
-            this.comboBox_debuglevel.SelectedIndex = 0;
+            this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
             m_paneListSettings.Add(panel_StringReplacements);            
@@ -236,8 +236,8 @@ namespace WindowPlugins.GUITVSeries
             richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Main);
 
-            comboBox_seasonFormat.Items.Add("Text");
-            comboBox_seasonFormat.Items.Add("Graphical");
+            comboBox_seasonFormat.Items.Add("List");
+            comboBox_seasonFormat.Items.Add("Filmstrip");
             comboBox_seasonFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
 
             richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
@@ -381,7 +381,7 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
-            this.comboBox_debuglevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
+            this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             LoadNewsSearches();
         }
 
@@ -2047,11 +2047,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboLogLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.comboBox_debuglevel.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-            else if (this.comboBox_debuglevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
-            else if (this.comboBox_debuglevel.SelectedIndex == 2) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
+            if (this.comboLogLevel.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
+            else if (this.comboLogLevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
+            else if (this.comboLogLevel.SelectedIndex == 2) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
             else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
         }
 
