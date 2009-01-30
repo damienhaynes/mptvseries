@@ -2814,7 +2814,8 @@ namespace WindowPlugins.GUITVSeries
 
             currSeriesFanart = null;
             fanartSet = false;
-            if (backdrop.Active) backdrop.Active = false;            
+            if (backdrop.Active) backdrop.Active = false;
+            backdrop.Filename = "";
 
             // Reset Dummy controls
             if (this.dummyIsFanartLoaded != null)
