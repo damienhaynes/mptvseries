@@ -260,11 +260,11 @@
       <description>Description (grouplist)</description>
       <id>0</id>
       <posX>50</posX>
-      <posY>515</posY>
-      <width>355</width>
+      <posY>570</posY>
+      <width>380</width>
       <height>190</height>
       <seperator>---------------------------------------------------------------------------------------------------------------------</seperator>
-      <font>font12</font>
+      <font>font10</font>
       <visible>Control.IsVisible(1236)+Control.IsVisible(1240)+!Control.IsVisible(632)</visible>
       <label>#TVSeries.Description</label>
     </control>
@@ -927,8 +927,8 @@
           <thumbPosYBig>2</thumbPosYBig>
           <thumbZoom>no</thumbZoom>
           <!-- text (No banner) -->
-          <textXOff>12</textXOff>
-          <textYOff>-40</textYOff>
+          <textXOff>0</textXOff>
+          <textYOff>0</textYOff>
           <keepaspectratio>no</keepaspectratio>
           <enableFocusZoom>no</enableFocusZoom>
           <scrollOffset>1</scrollOffset>

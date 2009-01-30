@@ -10,7 +10,7 @@
 
 	<!-- TODO: Layouts that are supported by skin, TVSeries will only allow these layouts to be toggled
 	<layouts>
-		<group list="true" bigicons="false" />
+		<group list="true" smallicons="false" />
 		<series filmstrip="true" widebanners="true" listbanners="true" listposters="true" />
 		<season list="true" filmstrip="false" />
 		<episode />		
@@ -22,7 +22,7 @@
 		
 			Groups:
 				layout="List"
-				layout="BigIcons"
+				layout="SmallIcons"
 			Series:
 				layout="ListPosters"
 				layout="ListBanners" 
@@ -36,7 +36,7 @@
 				
 	-->
 	<views import="true" AppendlmageToList="false">		
-		<group layout="List"></group>
+		<group layout="SmallIcons"></group>
 		<series layout="WideBanners">
 			<item1><![CDATA[]]></item1>
 			<item2><![CDATA[<Series.Pretty_Name>]]></item2>

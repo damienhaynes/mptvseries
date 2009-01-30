@@ -496,8 +496,8 @@ namespace WindowPlugins.GUITVSeries
                             this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
                             break;
                         case (Listlevel.Group):
-                            MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                            MPTVSeriesLog.Write("FacadeMode: Switching to Small Thumbs", MPTVSeriesLog.LogLevel.Debug);
+                            this.m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
                             break;
                     }
                 }
@@ -569,7 +569,7 @@ namespace WindowPlugins.GUITVSeries
                         goto case Listlevel.Episode;
                     case Listlevel.Season:
                         int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
-                        if (nSeasonDisplayMode == 1)
+                        if (nSeasonDisplayMode != 0)
                             setFacadeMode(GUIFacadeControl.ViewMode.AlbumView);
                         else
                             setFacadeMode(GUIFacadeControl.ViewMode.List);
@@ -1035,7 +1035,7 @@ namespace WindowPlugins.GUITVSeries
                                     item = null;
                                     if (!canBeSkipped)
                                     {
-                                        if (nSeasonDisplayMode == 1)
+                                        if (nSeasonDisplayMode != 0)
                                         {
                                             item = new GUIListItem();
                                             item.IconImage = item.IconImageBig = ImageAllocator.GetSeasonBanner(season, true);
@@ -2597,7 +2597,7 @@ namespace WindowPlugins.GUITVSeries
                                                         || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners");
 
                 if (this.listLevel == Listlevel.Season)
-                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1";
+                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) != "0";
 
 
                 if (this.listLevel == Listlevel.Episode)
@@ -3554,11 +3554,22 @@ namespace WindowPlugins.GUITVSeries
                 if (innerNode != null)
                 {
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                    if (layout.ToLower() == "list")
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                    switch (layout.ToLower())
+                    {
+                        case "list":
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                            break;
 
-                    if (layout.ToLower() == "bigicons")
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                        case "smallicons":
+                        case "bigicons":
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                            break;
+
+                        default:
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                            break;
+                    }
+                        
                 }
 
                 // Series View Settings
@@ -3605,11 +3616,23 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
 
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                    if (layout.ToLower() == "list")
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                    
-                    if (layout.ToLower() == "bigicons" || layout.ToLower() == "filmstrip")
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                    switch (layout.ToLower())
+                    {
+                        case "list":
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                            break;
+
+                        case "smallicons":
+                        case "bigicons":
+                        case "filmstrip":
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                            break;
+
+                        default:
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                            break;
+                    }
+                        
                 }
 
                 innerNode = node.SelectSingleNode("season/item1");
