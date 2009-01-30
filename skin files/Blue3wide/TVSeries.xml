@@ -222,7 +222,7 @@
       <height>600</height>
       <seperator>---------------------------------------------------------------------------------------------------------------------</seperator>
       <font>font14</font>
-      <visible>Control.IsVisible(1240)+!Control.IsVisible(632)</visible>
+      <visible>Control.IsVisible(1235)+Control.IsVisible(1240)+!Control.IsVisible(632)</visible>
       <label>#TVSeries.Description</label>
     </control>
 	
@@ -252,6 +252,20 @@
       <textcolor>ffffffff</textcolor>
       <font>font13</font>
       <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+!Control.IsVisible(1242)</visible>
+      <label>#TVSeries.Description</label>
+    </control>
+	
+	<control>
+      <type>textboxscrollup</type>
+      <description>Description (grouplist)</description>
+      <id>0</id>
+      <posX>50</posX>
+      <posY>515</posY>
+      <width>355</width>
+      <height>190</height>
+      <seperator>---------------------------------------------------------------------------------------------------------------------</seperator>
+      <font>font12</font>
+      <visible>Control.IsVisible(1236)+Control.IsVisible(1240)+!Control.IsVisible(632)</visible>
       <label>#TVSeries.Description</label>
     </control>
 	
@@ -886,7 +900,7 @@
           <!-- Textures -->
           <imageFolder>-</imageFolder> 			
           <!-- Text -->
-          <font>font12</font>
+          <font>font10</font>
           <selectedColor>00ffffff</selectedColor>
           <textcolor>ffffffff</textcolor>
           <colordiffuse>ffffffff</colordiffuse>
@@ -913,8 +927,8 @@
           <thumbPosYBig>2</thumbPosYBig>
           <thumbZoom>no</thumbZoom>
           <!-- text (No banner) -->
-          <textXOff>60</textXOff>
-          <textYOff>25</textYOff>
+          <textXOff>12</textXOff>
+          <textYOff>-40</textYOff>
           <keepaspectratio>no</keepaspectratio>
           <enableFocusZoom>no</enableFocusZoom>
           <scrollOffset>1</scrollOffset>
