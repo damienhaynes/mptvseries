@@ -12,7 +12,7 @@
 	<layouts>
 		<group list="true" bigicons="false" />
 		<series filmstrip="true" widebanners="true" listbanners="true" listposters="true" />
-		<season list="true" bigicons="false" />
+		<season list="true" filmstrip="false" />
 		<episode />		
 	</layouts>
 	-->
@@ -25,19 +25,19 @@
 				layout="BigIcons"
 			Series:
 				layout="ListPosters"
-				layout="ListBanners" (Not Supported)
+				layout="ListBanners" 
 				layout="Filmstrip"
 				layout="WideBanners"
 			Season:
 				layout="List"
-				layout="BigIcons"
+				layout="Filmstrip" 
 			Episode:
 				layout="List"
 				
 	-->
 	<views import="true" AppendlmageToList="false">		
 		<group layout="List"></group>
-		<series layout="ListPosters">
+		<series layout="WideBanners">
 			<item1><![CDATA[]]></item1>
 			<item2><![CDATA[<Series.Pretty_Name>]]></item2>
 			<item3><![CDATA[SeriesEpisodeCount]]></item3>
@@ -114,11 +114,11 @@ skin\Blue3wide\Media\TVSeries\Logos\<Series.Genre>.png;-;;-;=;-;;-;AND;-;;-;=;-;
 	</logos>	
 	<!-- Only used for Thumbnail view creation e.g. Filmstrip and WideBanners. Episode Thumbs are the exception -->
 	<!-- #TVSeries.SeriesBanner and #TVSeries.SeasonBanner properties dont use the values below, those images will be presented as they are but will be using a delay of 250ms to present image -->
-	<!-- The settings below are configured for best quality, any higher will result in a drop in performance with no visual benefit-->
+	<!-- Note: Choosing higher quality settings will result in a drop in performance -->
 	<graphicsquality import="true">
-		<seriesbanners>55</seriesbanners> <!-- 400/758*100 -->
-		<seriesposters>35</seriesposters> <!-- 231/680*100 -->
-		<seasonbanners>35</seasonbanners> <!-- N/A No Thumb View supported, use Filmstrip as a template 231/680*100 this may be added later-->
-		<episodethumbs>80</episodethumbs> <!-- 308/400*100 -->
+		<seriesbanners>65</seriesbanners>
+		<seriesposters>50</seriesposters>
+		<seasonbanners>75</seasonbanners>
+		<episodethumbs>80</episodethumbs>
 	</graphicsquality>
 </settings>

@@ -278,7 +278,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cSeries_UseSortName, 0); // default sort is by pretty name
 
                 if (GetOptions(cView_Season_ListFormat) == null)
-                    SetOptions(cView_Season_ListFormat, 0); // text by default
+                    SetOptions(cView_Season_ListFormat, 0); // ListView by default
 
                 if (GetOptions(cView_Season_Col1) == null)
                     SetOptions(cView_Season_Col1, "");

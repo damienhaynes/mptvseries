@@ -134,6 +134,31 @@
       <visible>Control.IsVisible(1237)+Control.IsVisible(1235)+Control.IsVisible(1242)</visible>
     </control>
 	
+	<!-- *****************************************  SERIES BANNER ( LIST LAYOUT) ***************************************************************** -->
+    
+	<control>	
+      <description>Thumb/Cover background</description>
+      <type>image</type>
+      <id>67</id>
+      <posX>22</posX>
+      <posY>90</posY>
+      <width>400</width>
+      <height>86</height>
+      <texture>tv_background.png</texture>
+      <visible>Control.IsVisible(1237)+Control.IsVisible(1235)+!Control.IsVisible(1242)</visible>
+    </control>
+    <control>
+      <type>image</type>
+      <description>Season image ( season image background )</description>
+      <id>46</id>
+      <posX>33</posX>
+      <posY>95</posY>
+      <width>375</width>
+      <height>74</height>
+      <texture>#TVSeries.SeriesBanner</texture>
+      <visible>Control.IsVisible(1237)+Control.IsVisible(1235)+!Control.IsVisible(1242)</visible>
+    </control>	
+		  
 	<!-- ***************************************** THUMB / EPISODE (LIST LAYOUT) ***************************************************************** -->
     
 	<control>
@@ -234,7 +259,7 @@
 	
 	<control>
       <type>fadelabel</type>
-      <description>Title (Wide Banners)</description>
+      <description>Title (Filmstrip)</description>
       <id>640</id>
       <posX>320</posX>
       <posY>35</posY>
@@ -242,7 +267,7 @@
       <font>font16</font>
       <align>center</align>
       <label>#TVSeries.Title</label>
-      <visible>!Control.IsVisible(1235)+Control.IsVisible(1242)</visible>
+      <visible>[!Control.IsVisible(1235)+Control.IsVisible(1242)]|[!Control.IsVisible(1235)+Control.IsVisible(1238)]</visible>
     </control>
 	
     <control>
@@ -256,7 +281,7 @@
       <seperator>-----------------------------------------------------------------------------------------------------------------------</seperator>
       <textcolor>ffffffff</textcolor>
       <font>font11</font>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
       <label>#TVSeries.Description</label>
     </control>
 	
@@ -277,7 +302,7 @@
       <visible>Control.IsVisible(1235)+[Control.IsVisible(1237)|Control.IsVisible(1238)|Control.IsVisible(1239)]</visible>
     </control>
 	
-	<!--  ***************************** LOGOS (SERIES WIDE BANNERS  LAYOUT) ******************************** -->
+	<!--  ***************************** LOGOS (SERIES WIDE BANNERS /FIMSTRIP LAYOUT) ******************************** -->
 	
     <control>
       <type>image</type>
@@ -290,7 +315,7 @@
       <texture>#TVSeries.Logos</texture>
       <keepaspectratio>yes</keepaspectratio>
       <spaceBetweenItems>2</spaceBetweenItems>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
 	
     <!--  ***************************** LOGOS (GROUP LIST  LAYOUT) ******************************** -->
@@ -432,7 +457,7 @@
       <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+!Control.IsVisible(1242)</visible>
     </control>
 	
-	<!-- *********************** SERIES INFO LABELS  (FILMSTRIP LAYOUT)************************** -->    
+	<!-- *********************** SERIES/SEASON INFO LABELS  (FILMSTRIP LAYOUT)************************** -->    
 
 	<control>
       <description>TVDB Series Rating Stars</description>
@@ -444,7 +469,7 @@
       <width>180</width>
       <height>18</height>
       <texture>#TVSeries.Series.RatingPath</texture>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>      
       <type>label</type>
@@ -456,7 +481,7 @@
       <align>right</align>
       <font>font11</font>
       <textcolor>ffa9d0f7</textcolor>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>
       <type>fadelabel</type>
@@ -466,7 +491,7 @@
       <width>280</width>
       <label>#TVSeries.Series.InfoPanelLine2Value</label>
       <font>font11</font>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>
       <type>label</type>
@@ -478,7 +503,7 @@
       <align>right</align>
       <font>font11</font>
       <textcolor>ffa9d0f7</textcolor>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>
       <type>fadelabel</type>
@@ -488,7 +513,7 @@
       <width>250</width>
       <label>#TVSeries.Series.InfoPanelLine3Value</label>
       <font>font11</font>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>      
       <type>label</type>
@@ -500,7 +525,7 @@
       <align>right</align>
       <font>font11</font>
       <textcolor>ffa9d0f7</textcolor>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>
       <type>fadelabel</type>
@@ -510,7 +535,7 @@
       <width>250</width>
       <label>#TVSeries.Series.InfoPanelLine4Value</label>
       <font>font11</font>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
 	 <control>      
       <type>label</type>
@@ -522,7 +547,7 @@
       <align>right</align>
       <font>font11</font>
       <textcolor>ffa9d0f7</textcolor>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     <control>
       <type>fadelabel</type>
@@ -532,7 +557,7 @@
       <width>250</width>
       <label>#TVSeries.Series.InfoPanelLine5Value</label>
       <font>font11</font>
-      <visible>Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)</visible>
+      <visible>[Control.IsVisible(1236)+Control.IsVisible(1237)+Control.IsVisible(1242)]|[Control.IsVisible(1236)+Control.IsVisible(1238)]</visible>
     </control>
     
 	
