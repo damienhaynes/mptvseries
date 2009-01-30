@@ -3054,6 +3054,8 @@ namespace WindowPlugins.GUITVSeries
             clearGUIProperty(guiProperty.EpisodeImage);
             //clearGUIProperty(guiProperty.SeriesBanner);
             //clearGUIProperty(guiProperty.SeasonBanner);
+
+            DisableFanart();
         }
 
         private void Series_OnItemSelected(GUIListItem item)
