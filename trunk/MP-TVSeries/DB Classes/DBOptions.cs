@@ -200,8 +200,8 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
 
                 if (GetOptions(cView_Episode_HideUnwatchedSummary) == null)
-                    SetOptions(cView_Episode_HideUnwatchedSummary, true);
-
+                    SetOptions(cView_Episode_HideUnwatchedSummary, false);// Unless we can also hide episode thumb as well there is no point making this default
+                                                                          // I think 90% of users would prefer to see overview always, you need to read it to be spoiled
                 if (GetOptions(cUpdateSeriesTimeStamp) == null)
                     SetOptions(cUpdateSeriesTimeStamp, 0);
 
@@ -317,13 +317,13 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
 		        if (GetOptions(cSubs_Forom_Enable) == null)
-		          SetOptions(cSubs_Forom_Enable, false);
+		            SetOptions(cSubs_Forom_Enable, false);
 
 		        if (GetOptions(cSubs_SeriesSubs_Enable) == null)
-		          SetOptions(cSubs_SeriesSubs_Enable, false);
+		            SetOptions(cSubs_SeriesSubs_Enable, false);
 
 		        if (GetOptions(cSubs_Remository_Enable) == null)
-		          SetOptions(cSubs_Remository_Enable, false);
+		            SetOptions(cSubs_Remository_Enable, false);
 
                 if (GetOptions(cSubs_Forom_BaseURL) == null)
                     SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents");
@@ -390,10 +390,10 @@ namespace WindowPlugins.GUITVSeries
                 //    SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
 
                 if (GetOptions(cShowSeriesFanart) == null)
-                    SetOptions(cShowSeriesFanart, false);
+                    SetOptions(cShowSeriesFanart, true);
 
                 if (GetOptions(cFanartRandom) == null)
-                    SetOptions(cFanartRandom, false);
+                    SetOptions(cFanartRandom, true);
                                 
             }
             catch (Exception ex)

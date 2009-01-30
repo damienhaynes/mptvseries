@@ -1087,8 +1087,6 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-
-
         private void Parsing_Start()
         {
             if (m_parser != null)
@@ -3426,6 +3424,11 @@ namespace WindowPlugins.GUITVSeries
         private void linkAccountID_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://thetvdb.com/?tab=userinfo");
+        }
+
+        private void linkExpressionHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/");
         }
     }
     
