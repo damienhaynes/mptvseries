@@ -110,7 +110,7 @@ skin\Blue3wide\Media\TVSeries\Logos\<Episode.VideoCodec>.png;-;;-;=;-;;-;AND;-;;
 skin\Blue3wide\Media\TVSeries\Logos\<Episode.AudioCodec>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;
 skin\Blue3wide\Media\TVSeries\Logos\Widescreen White.png;-;<Episode.VideoAspectRatio>;-;>;-;1.7;-;AND;-;<Episode.VideoAspectRatio>;-;<;-;2.5;-;AND;-;;-;=;-;;-;
 skin\Blue3wide\Media\TVSeries\Logos\Fullscreen.png;-;<Episode.VideoAspectRatio>;-;>;-;1.3;-;AND;-;<Episode.VideoAspectRatio>;-;<;-;1.5;-;AND;-;;-;=;-;;-;
-skin\Blue3wide\Media\TVSeries\Logos\<Series.Genre>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Series>]]>
+skin\Blue3wide\Media\TVSeries\Logos\<Series.Genre>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;]]>
 	</logos>	
 	<!-- Only used for Thumbnail view creation e.g. Filmstrip and WideBanners. Episode Thumbs are the exception -->
 	<!-- #TVSeries.SeriesBanner and #TVSeries.SeasonBanner properties dont use the values below, those images will be presented as they are but will be using a delay of 250ms to present image -->
