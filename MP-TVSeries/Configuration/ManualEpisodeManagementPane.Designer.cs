@@ -24,8 +24,10 @@ namespace WindowPlugins.GUITVSeries {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManualEpisodeManagementPane));
             this.fileListView = new System.Windows.Forms.ListView();
             this.filenameColumnHeader = new System.Windows.Forms.ColumnHeader();
+            this.partialPathColumnHeader = new System.Windows.Forms.ColumnHeader();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.playEpisodeButton = new System.Windows.Forms.Button();
             this.addUnlistedButton = new System.Windows.Forms.Button();
@@ -37,7 +39,7 @@ namespace WindowPlugins.GUITVSeries {
             this.fileListContextMenu = new System.Windows.Forms.ContextMenu();
             this.addEpisodeMI = new System.Windows.Forms.MenuItem();
             this.playEpisodeMI = new System.Windows.Forms.MenuItem();
-            this.partialPathColumnHeader = new System.Windows.Forms.ColumnHeader();
+            this.label1 = new System.Windows.Forms.Label();
             this.buttonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,10 +55,10 @@ namespace WindowPlugins.GUITVSeries {
             this.fileListView.FullRowSelect = true;
             this.fileListView.GridLines = true;
             this.fileListView.HideSelection = false;
-            this.fileListView.Location = new System.Drawing.Point(3, 33);
+            this.fileListView.Location = new System.Drawing.Point(3, 82);
             this.fileListView.MultiSelect = false;
             this.fileListView.Name = "fileListView";
-            this.fileListView.Size = new System.Drawing.Size(656, 333);
+            this.fileListView.Size = new System.Drawing.Size(656, 287);
             this.fileListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.fileListView.TabIndex = 1;
             this.fileListView.UseCompatibleStateImageBehavior = false;
@@ -69,6 +71,11 @@ namespace WindowPlugins.GUITVSeries {
             this.filenameColumnHeader.Text = "Filename";
             this.filenameColumnHeader.Width = 532;
             // 
+            // partialPathColumnHeader
+            // 
+            this.partialPathColumnHeader.Text = "Path";
+            this.partialPathColumnHeader.Width = 275;
+            // 
             // buttonPanel
             // 
             this.buttonPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -78,7 +85,7 @@ namespace WindowPlugins.GUITVSeries {
             this.buttonPanel.Controls.Add(this.refreshProgressBar);
             this.buttonPanel.Controls.Add(this.manuallyAddButton);
             this.buttonPanel.Controls.Add(this.refreshFileListButton);
-            this.buttonPanel.Location = new System.Drawing.Point(0, 0);
+            this.buttonPanel.Location = new System.Drawing.Point(3, 49);
             this.buttonPanel.Name = "buttonPanel";
             this.buttonPanel.Size = new System.Drawing.Size(659, 31);
             this.buttonPanel.TabIndex = 2;
@@ -166,19 +173,25 @@ namespace WindowPlugins.GUITVSeries {
             this.playEpisodeMI.Text = "Play Episode in Default Player";
             this.playEpisodeMI.Click += new System.EventHandler(this.playEpisodeMI_Click);
             // 
-            // partialPathColumnHeader
+            // label1
             // 
-            this.partialPathColumnHeader.Text = "Path";
-            this.partialPathColumnHeader.Width = 275;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(519, 39);
+            this.label1.TabIndex = 3;
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // ManualEpisodeManagementPane
             // 
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonPanel);
             this.Controls.Add(this.fileListView);
             this.Name = "ManualEpisodeManagementPane";
             this.Size = new System.Drawing.Size(662, 369);
             this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -198,5 +211,6 @@ namespace WindowPlugins.GUITVSeries {
         private System.Windows.Forms.MenuItem addEpisodeMI;
         private System.Windows.Forms.MenuItem playEpisodeMI;
         private System.Windows.Forms.ColumnHeader partialPathColumnHeader;
+        private System.Windows.Forms.Label label1;
     }
 }

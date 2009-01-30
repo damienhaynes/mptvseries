@@ -129,6 +129,11 @@
   <metadata name="fileListContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label1.Text" xml:space="preserve">
+    <value>The Manual Episode Parser is available as a last resort for users that can not get the plugins Parsing Engine
+to match any episodes against the online database. The window below will show all episodes in your defined 
+Import Paths that have not been imported into the database.</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>50</value>
   </metadata>
