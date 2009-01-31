@@ -1361,7 +1361,10 @@ namespace WindowPlugins.GUITVSeries
                             if (sLastPoster.Length > 0)
                                 series[DBOnlineSeries.cCurrentPosterFileName] = sLastPoster;
                             else
-                                series[DBOnlineSeries.cCurrentPosterFileName] = seriesArtwork.seriesPosters[0].sPosterFileName;
+                            {
+                                if (seriesArtwork.seriesPosters.Count > 0)
+                                    series[DBOnlineSeries.cCurrentPosterFileName] = seriesArtwork.seriesPosters[0].sPosterFileName;
+                            }
                         }
                     }
                     
