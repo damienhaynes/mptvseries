@@ -49,7 +49,7 @@
 	<string Field="Force_Online_Match" Original="Force Online Match">Tvinga Online Träff</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Ladda via NewLeecher</string>
 	<string Field="Download" Original="Download">Ladda ner</string>
-	<string Field="Actions" Original="Actions">Actions</string>
+	<string Field="Actions" Original="Actions">Händelser</string>
 	<string Field="Options" Original="Options">Inställningar</string>
 	<string Field="Genres" Original="Genres">Genrer</string>
 	<string Field="All" Original="All">Alla</string>
@@ -58,4 +58,55 @@
 	<string Field="Unwatched" Original="Unwatched">Ej sedda</string>
 	<string Field="Favourites" Original="Favourites">Favoriter</string>
 	<string Field="updateMI" Original="Update Mediainfo of local file">Uppdatera Mediainfo av lokal(a) fil(er)</string>
+	<string Field="RateSeries" Original="Rate this Series">Betygsätt denna serie</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Betygsätt denna episod</string>
+	<string Field="ResetRating" Original="Reset Rating">Nollställ betyg</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Fråga mig om jag vill betygsätta avsnitt utan betyg</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">Fråga inte om jag vill betygsätta igen</string>
+	<string Field="RatingStar" Original="Star">Stjärna</string>
+	<string Field="RatingStars" Original="Stars">Stjärnor</string>
+	<string Field="ChangeView" Original="Change View">Byt vy</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Byt vy omedelbart</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Växla till nästa banner</string>
+	<string Field="FanArt" Original="Fanart">Fanart</string>
+	<string Field="FanListAll" Original="List all Fanart for this Series">Visa Fanart för denna serie</string>
+	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Ladda ner denna Fanart och använd direkt</string>
+	<string Field="FanArtUse" Original="Use Fanart">Använd denna Fanart</string>
+	<string Field="FanArtDelete" Original="Delete Fanart">Radera denna Fanart</string>
+	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Laddar ner {0} Fanart...</string>
+	<string Field="FanArtLocal" Original="Available locally">Tillgänglig lokalt</string>
+	<string Field="FanArtOnline" Original="Available for downloading">Tillgänglig för nerladdning</string>
+	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">laddar {0} av {1} Fanart...</string>
+	<string Field="FanArtRandom" Original="Display random Fanart">Slumpmässig visning av Fanart</string>
+	<string Field="FanArtNoneFound" Original="No Fanart could be found">Ingen Fanart är tillgänglig</string>
+	<string Field="CFS_Choose_Item" Original="Choose item">Välj objekt</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Välj matchande objekt:</string>
+	<string Field="CFS_Search_Again" Original="Search again">Sök igen</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Välj en matchande undertext-fil</string>
+	<string Field="CFS_Subtitle_Episode" Original="Choose item">Episod:</string>
+	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">Matchande undertext</string>
+	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Välj korrekt serie</string>
+	<string Field="CFS_Available_Series" Original="Available Series">Tillgängliga serier</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Välj önskad text-version</string>
+	<string Field="CFS_Select_Version" Original="Version:">Version:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Välj korrekt episod</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Lista över lokalt tillgängliga episoder:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Tillgängliga episoder:</string>
+	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Välj sida att söka från:</string>
+	<string Field="CFS_List_Search_Site" Original="List of search sites:">Lista över sök-sidor:</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">Funna torrent-filer:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">Leta efter:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Välj korrekt säsong</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Lista över lokalt tillgängliga säsonger:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Available Seasons list:</string>
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Överskrivning av undertext-fil</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">En undertext-fil finns redan: skriv över denna?</string>
+	<string Field="RecentlyAdded" Original="Recently Added">Nyligen tillagda</string>
+	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB fel</string>
+	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Konto-id är inte inmatat</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Mata in ditt theTVDB-konto i inställningarna för denna plugin</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com är nere för tillfället, försök igen senare</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Det går inte att ansluta till Internet för tillfället, kontrollera att kontakt finns och försök igen</string>
+	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Visa Fanart i Serie-vyn</string>
 </strings>
