@@ -4,15 +4,15 @@
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
-	<string Field="Series" Original="Series">Сериалы</string>
-	<string Field="Series_Plural" Original="Series (Plr)">Сериал</string> <!-- plural -->
+	<string Field="Series" Original="Series">Сериал</string>
+	<string Field="Series_Plural" Original="Series (Plr)">Сериалы</string> <!-- plural -->
 	<string Field="Season" Original="Season">Сезон</string>
 	<string Field="Seasons" Original="Seasons">Сезоны</string>
 	<string Field="Episode" Original="Episode">Эпизод</string>
 	<string Field="Episodes" Original="Episodes">Эпизоды</string>
 	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Отметить как просмотренный</string>
 	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Получить субтитры</string>
-	<string Field="Load_via_Torrent" Original="Load via Torrent">Загрузить Torrent</string>
+	<string Field="Load_via_Torrent" Original="Load via Torrent">Загрузить через торрент</string>
 	<string Field="Mark_all_as_watched" Original="Mark all as watched">Отметить все как просмотренные</string>
 	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Отметить все как непросмотренные</string>
 	<string Field="Hide" Original="Hide">Скрыть</string>
@@ -60,6 +60,7 @@
 	<string Field="updateMI" Original="Update Mediainfo of local file">Обновить медиаинформацию файла(ов) на  диске</string>
 	<string Field="RateSeries" Original="Rate this Series">Оценить этот сериал</string>
 	<string Field="RateEpisode" Original="Rate this Episode">Оценить этот эпизод</string>
+	<string Field="ResetRating" Original="Reset Rating">Сбросить оценку</string>
 	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Запрашивать у меня оценку неоцененных эпизодов</string>
 	<string Field="DontAskToRate" Original="Don't ask me to rate again">Не запрашивать у меня оценку снова</string>
 	<string Field="RatingStar" Original="Star">Звезда</string>
@@ -107,5 +108,5 @@
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Введите ваш ID онлайн аккаунта в настройках</string>
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com временно недоступен, попробуйте позже</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Сеть не подключена, проверьте подключение и повторите попытку</string>
-
+	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Показывать фанарт в меню сериалов</string>
 </strings>
