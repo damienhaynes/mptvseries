@@ -808,6 +808,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboOnlineLang.TabIndex = 6;
             this.toolTip_Help.SetToolTip(this.comboOnlineLang, "Select the language to download TV Series information in, defaults to English");
             this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
+            this.comboOnlineLang.DropDown += new System.EventHandler(this.comboOnlineLang_DropDown);
             // 
             // checkBox_OnlineSearch
             // 
