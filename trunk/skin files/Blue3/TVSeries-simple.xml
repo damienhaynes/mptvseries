@@ -362,7 +362,7 @@
 			<height>473</height>
 			<texture>Backslide.png</texture>
 			<colordiffuse>f5fefaff</colordiffuse>
-			<visible>!Control.IsVisible(1237)+!Control.IsVisible(1239)+!Control.IsVisible(1240)</visible>
+			<visible>!Control.IsVisible(1237)+!Control.IsVisible(1239)</visible>
 		</control>
 		<control>
 			<description>group element</description>
