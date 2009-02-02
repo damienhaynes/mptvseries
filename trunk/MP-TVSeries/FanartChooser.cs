@@ -114,7 +114,7 @@ namespace WindowPlugins.GUITVSeries
                     downloadingWorker.ReportProgress(0, f[DBFanart.cIndex]);
                   }
                   else 
-                    MPTVSeriesLog.Write("Error downloaded Fanart: " + f.FullLocalPath);
+                    MPTVSeriesLog.Write("Error downloading Fanart: " + f.FullLocalPath);
                 }
             } while (toDownload.Count > 0 && !downloadingWorker.CancellationPending);
         }
@@ -122,8 +122,11 @@ namespace WindowPlugins.GUITVSeries
         static void setDownloadStatus()
         {
             lock (toDownload)
-            {                 
-               TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, toDownload.Count));
+            {  
+                if (toDownload.Count > 0)
+                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, toDownload.Count));
+                else
+                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", " ");
             }
         }
 
@@ -408,9 +411,11 @@ namespace WindowPlugins.GUITVSeries
 
                 GUIListItem item = null;
                 List<DBFanart> onlineFanart = DBFanart.GetAll(seriesID, false);
+                // Inform skin message how many fanarts are online
                 loadingWorker.ReportProgress(onlineFanart.Count < 100 ? onlineFanart.Count : 100);
                 
                 // let's get all the ones we have available locally (from online)
+                int i = 0;
                 foreach (DBFanart f in onlineFanart)
                 {
                     if(f.isAvailableLocally)
@@ -452,8 +457,8 @@ namespace WindowPlugins.GUITVSeries
                       item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
                     }
                     item.TVTag = f;
-                    loadingWorker.ReportProgress(0, item);
-
+                    loadingWorker.ReportProgress((i<100?++i:100), item);
+                    
                   if (loadingWorker.CancellationPending)
                         return;
                 }
