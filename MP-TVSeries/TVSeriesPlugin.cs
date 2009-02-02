@@ -298,7 +298,7 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke.CreateControl();
             Translation.Init();
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
-            
+
             Download.Monitor.Start(this);
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
@@ -492,6 +492,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
                         case (Listlevel.Season):
                             // There is no point having BigIcons for SeasonView, as it would need to re-use the WideBanner sizes
+                            // Having multiple facades would get around this issue
                             MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
                             this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
                             break;
@@ -507,7 +508,6 @@ namespace WindowPlugins.GUITVSeries
             }            
         }
         
-        //bool facadeLoaded = false;
         System.ComponentModel.BackgroundWorker bg = null;        
 
         void LoadFacade()
@@ -3530,6 +3530,11 @@ namespace WindowPlugins.GUITVSeries
             XmlNode innerNode = null;
                         
             string layout = null;                        
+
+            // Read Version if defined
+            node = doc.DocumentElement.SelectSingleNode("/settings/version");
+            if (node != null)
+                MPTVSeriesLog.Write("Loading Skin Settings: v" + node.InnerText);
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");

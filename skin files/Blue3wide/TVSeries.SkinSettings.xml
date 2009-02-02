@@ -6,19 +6,18 @@
 		
 		The TVSeries plugin reads this file on load and will import settings into its database.
 		IMPORTANT: Ensure that all settings are wrapped in a CDATA type otherwise this docment will not get parsed as proper XML.
-	-->
-
-	<!-- TODO: Layouts that are supported by skin, TVSeries will only allow these layouts to be toggled
-	<layouts>
-		<group list="true" smallicons="false" />
-		<series filmstrip="true" widebanners="true" listbanners="true" listposters="true" />
-		<season list="true" filmstrip="false" />
-		<episode />		
-	</layouts>
+		
+		If Import is enabled then any changes for these settings in  the configuration dialog will be overridden with settings below		
 	-->
 	
+	<!-- version may be useful for logging purposes and/or future upgrades -->
+	<version>1.0.0.0</version>
+	
 	<!-- 
-		Possible Layout Types supported by the plugin, the defined layout will be what is loaded by default for the corresponding view:
+		Possible Layout Types supported by the plugin, the defined layout will be what is loaded by default for the corresponding view:	
+		
+		AppendImageToList attribute is a setting that the plugin reads to determine if Episode/Season/Series images should be added to the List control
+		Enabling this will take a hit in performance, enable it only if your skin specifically requires it.
 		
 			Groups:
 				layout="List"
@@ -34,6 +33,7 @@
 			Episode:
 				layout="List"
 				
+		All layouts defined above will work for this skin: Blue3wide
 	-->
 	<views import="true" AppendlmageToList="false">		
 		<group layout="SmallIcons"></group>

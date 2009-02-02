@@ -72,6 +72,16 @@
       <align>left</align>
       <label>#TVSeries.FanArt.DownloadingStatus #TVSeries.FanArt.LoadingStatus</label>
     </control>
+	<control>
+      <description>Status</description>
+      <type>label</type>
+      <id>0</id>
+      <posX>640</posX>
+      <posY>45</posY>	  
+      <font>font14</font>
+      <align>center</align>
+      <label>[#TVSeries.FanArt.SelectedFanartResolution]</label>
+    </control>
     <control>
       <description>Top title</description>
       <type>label</type>
