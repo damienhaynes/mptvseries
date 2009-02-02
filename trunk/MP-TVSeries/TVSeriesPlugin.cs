@@ -3549,9 +3549,7 @@ namespace WindowPlugins.GUITVSeries
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
-            {
-                MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
-
+            {                
                 bLayoutsLoaded = true;
 
                 // Append First Logo/Image to List
@@ -3571,6 +3569,8 @@ namespace WindowPlugins.GUITVSeries
                 innerNode = node.SelectSingleNode("group");
                 if (innerNode != null)
                 {
+                    MPTVSeriesLog.Write("Loading Skin Group View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;
                     switch (layout.ToLower())
                     {
@@ -3593,7 +3593,9 @@ namespace WindowPlugins.GUITVSeries
                 // Series View Settings
                 innerNode = node.SelectSingleNode("series");
                 if (innerNode != null) 
-                {                    
+                {
+                    MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
+
                     layout = innerNode.Attributes.GetNamedItem("layout").Value;                    
                     switch (layout.ToLower())
                     {
