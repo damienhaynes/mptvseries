@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
         // Returns the author of the plugin which is shown in the plugin menu
         public string Author()
         {
-            return "Zeflash Inker";
+            return "Zeflash Inker ltfearme";
         }
 
         // show the setup dialog
@@ -321,7 +321,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
             string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
-            LoadSkinSettings(xmlSkinSettings);
+
+            bool bGraphicsLoaded = false;
+            bool bFormattingLoaded = false;
+            bool bLogosLoaded = false;
+            bool bLayoutsLoaded = false;
+            LoadSkinSettings(xmlSkinSettings, out bGraphicsLoaded, out bFormattingLoaded, out bLogosLoaded, out bLayoutsLoaded);
 
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
@@ -3508,8 +3513,13 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static void LoadSkinSettings(string skinSettings)
+        public static void LoadSkinSettings(string skinSettings, out bool bGraphicsLoaded, out bool bFormattingLoaded, out bool bLogosLoaded, out bool bLayoutsLoaded)
         {
+            bGraphicsLoaded = false;
+            bFormattingLoaded = false;
+            bLogosLoaded = false;
+            bLayoutsLoaded = false;
+
             // Check if File Exist
             if (!System.IO.File.Exists(skinSettings))
                 return;                      
@@ -3541,6 +3551,8 @@ namespace WindowPlugins.GUITVSeries
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {
                 MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
+
+                bLayoutsLoaded = true;
 
                 // Append First Logo/Image to List
                 try
@@ -3681,7 +3693,8 @@ namespace WindowPlugins.GUITVSeries
                         dbf.Commit();
                         id++;
                     }                    
-                }                
+                }
+                bFormattingLoaded = true;
             }
 
             // Read Logo Rules and Import into Database
@@ -3697,6 +3710,7 @@ namespace WindowPlugins.GUITVSeries
                     logos.Add(rule.Trim());
                 }
                 localLogos.saveToDB(logos);
+                bLogosLoaded = true;
             }
             
             // Read Graphics Quality and Import into Database
@@ -3713,6 +3727,8 @@ namespace WindowPlugins.GUITVSeries
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeasonBanners, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("episodethumbs");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualityEpisodeImages, innerNode.InnerText.Trim());
+
+                bGraphicsLoaded = true;
             }
 
         }
