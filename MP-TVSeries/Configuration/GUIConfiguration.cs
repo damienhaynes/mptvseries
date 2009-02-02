@@ -121,22 +121,17 @@ namespace WindowPlugins.GUITVSeries
             this.Refresh();
         }
 
-//         void Monitor_m_NeedUserSelectionEvent(WindowPlugins.GUITVSeries.Feedback.ChooseFromSelectionDescriptor descriptor)
-//         {
-//             Feedback.CItem Selected = null;
-//             if (ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
-//             {
-//                 //                 episodeBestMatch = Selected.m_Tag as DBEpisode;
-//                 //                 seriesBestMatch = new DBOnlineSeries(episodeBestMatch[DBEpisode.cSeriesID]);
-//             }
-//         }
-
-
         #region Init
         private void InitSettingsTreeAndPanes()
         {   
             string skinSettings = null;
-            string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");            
+            string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");
+            
+            bool bGraphicsLoaded = false;
+            bool bFormattingLoaded = false;
+            bool bLogosLoaded = false;
+            bool bLayoutsLoaded = false;
+
             XmlDocument doc = new XmlDocument();
             try
             {
@@ -158,9 +153,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                     }
-                }
-
-                TVSeriesPlugin.LoadSkinSettings(skinSettings);
+                }                
+                TVSeriesPlugin.LoadSkinSettings(skinSettings, out bGraphicsLoaded, out bFormattingLoaded, out bLogosLoaded, out bLayoutsLoaded); ;
                 // Reload formatting rules
                 formattingConfiguration1.LoadFromDB();
             }
@@ -282,10 +276,15 @@ namespace WindowPlugins.GUITVSeries
 
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
 
-            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);     
-            qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);            
-            qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
-            qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
+            //if (!bGraphicsLoaded)
+            //{
+                qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
+                qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
+                qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
+                qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
+            //}
+            //else
+                //groupGraphicsQuality.Visible = false;
 
             tabControl_Details.SelectTab(1);
         }
