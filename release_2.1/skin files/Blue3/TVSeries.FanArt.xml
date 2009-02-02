@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+  <id>9812</id>
+  <defaultcontrol>50</defaultcontrol>
+  <allowoverlay>no</allowoverlay>
+  <disabletopbar>yes</disabletopbar>
+  <define>#title.color:ffffffff</define>        <!-- Titles Color                       Default: ffdedede-->
+  <define>#text.color:ffffffff</define>         <!-- Text Color                         Default: ffffffff-->
+  <define>#default.color:ffffffff</define>      <!-- Normal List Color                  Default: ffffffff-->
+  <define>#watched.color:ff808080</define>      <!-- Watched List Color                 Default: ff666666 -->
+  <define>#notpresent.color:ffF87B72</define>   <!-- File Not Present in List Color     Default: ffef6d16 -->
+  <controls>
+
+    <import>common.time.xml</import>
+  
+    <!-- :::::::::::::: BACKGROUNDS :::::::::::::: -->
+    
+    <control>
+      <id>0</id>
+      <type>image</type>
+      <posX>0</posX>
+      <posY>0</posY>
+      <width>1024</width>
+      <height>576</height>
+      <dimColor>50ffffff</dimColor>
+      <texture>Backgroundtop.png</texture>
+    </control>
+    <control>
+      <description>preview</description>
+      <id>4560</id>
+      <type>image</type>
+      <posx>-170</posx>
+      <posy>0</posy>
+      <width>1024</width>
+      <height>576</height>
+      <texture>#TVSeries.FanArt.SelectedPreview</texture>
+	<colordiffuse>50fefaff</colordiffuse>
+      <visible>true</visible>
+    </control>
+    
+    <!-- :::::::::::::: INFO LABELS :::::::::::::: -->
+    
+    <control>
+      <description>Download Status</description>
+      <type>label</type>
+      <id>0</id>
+      <posX>50</posX>
+      <posY>30</posY>
+		<font>font12</font>
+      <label>#TVSeries.FanArt.DownloadingStatus</label>
+    </control>
+    
+    <control>
+      <description>FanArt Resolution</description>
+      <type>label</type>
+      <id>0</id>
+      <posX>50</posX>
+      <posY>60</posY>
+		<font>font12</font>
+      <label>Resolution: #TVSeries.FanArt.SelectedFanartResolution</label>
+    </control>
+    
+    <!-- :::::::::::::: THUMBNAILPANEL :::::::::::::: -->
+    
+    <control>
+      <type>group</type>
+      <description>group element</description>
+      <id>28</id>
+      <layout>StackLayout</layout>
+      <posX>50</posX>
+      <posY>90</posY>
+      <control>
+        <description>composite control consisting of a list control and a thumbnail panel</description>
+        <type>facadeview</type>
+        <id>50</id>
+        <control>
+          <description>Graphical Thumbpanel</description>
+          <type>thumbnailpanel</type>
+          <id>50</id>
+          <posX>50</posX>
+          <posY>90</posY>
+          <width>680</width>
+          <height>500</height>
+    <font>titlefont10</font>
+    <spinWidth>16</spinWidth>
+    <spinHeight>16</spinHeight>
+    <spinPosX>620</spinPosX>
+    <spinPosY>520</spinPosY>
+    <spinAlign>Right</spinAlign>
+    <spinColor>ffffffff</spinColor>
+    <textureFocus>mediaitemdetailfo.png</textureFocus>
+          <imageFolder>-</imageFolder>
+          <imageFolderFocus>tvseries_fanart_focus.png</imageFolderFocus>
+          <downloadColor>#default.color</downloadColor>
+          <remoteColor>#watched.color</remoteColor>
+          <textcolor>#notpresent.color</textcolor>
+          <textcolor2>#notpresent.color</textcolor2>
+          <textcolor3>#notpresent.color</textcolor3>
+          <itemWidthBig>305</itemWidthBig>
+          <itemHeightBig>215</itemHeightBig>
+          <textureWidthBig>305</textureWidthBig>
+          <textureHeightBig>215</textureHeightBig>
+          <thumbWidthBig>270</thumbWidthBig>
+          <thumbHeightBig>168</thumbHeightBig>
+          <thumbPosXBig>14</thumbPosXBig>
+          <thumbPosYBig>6</thumbPosYBig>
+          <thumbZoom>no</thumbZoom>
+          <enableFocusZoom>no</enableFocusZoom>
+          <textXOff>20</textXOff>
+          <textYOff>-43</textYOff>
+          <unfocusedAlpha>150</unfocusedAlpha>
+        </control>
+      </control>
+    </control>
+  </controls>
+</window>
