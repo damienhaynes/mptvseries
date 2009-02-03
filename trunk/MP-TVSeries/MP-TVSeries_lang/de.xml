@@ -60,6 +60,7 @@
 	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Mediainformationen der lokalen Dateien</string>
 	<string Field="RateSeries" Original="Rate this Series">Bewerte diese Serie</string>
 	<string Field="RateEpisode" Original="Rate this Episode">Bewerte diese Episode</string>
+	<string Field="ResetRating" Original="Reset Rating">Bewertung zurücksetzen</string>
 	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Erinnerung, nicht bewertete Episoden zu bewerten</string>
 	<string Field="DontAskToRate" Original="Don't ask me to rate again">Nicht mehr an Bewertung erinnern</string>
 	<string Field="RatingStar" Original="Star">Stern</string>
@@ -67,4 +68,45 @@
 	<string Field="ChangeView" Original="Change View">Ändere Ansicht</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Ansicht sofort verändern</string>
 	<string Field="Cycle_Banner" Original="Cycle Banner">Wechsle Banner</string>
+	<string Field="FanArt" Original="Fanart">Fanart</string>
+	<string Field="FanListAll" Original="List all Fanart for this Series">Gesamte Fanart für diese Serie zeigen</string>
+	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Fanart herunterladen und nutzen</string>
+	<string Field="FanArtUse" Original="Use Fanart">Nutze Fanart</string>
+	<string Field="FanArtDelete" Original="Delete Fanart">Lösche Fanart</string>
+	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">{0} Fanart wird heruntergeladen...</string>
+	<string Field="FanArtLocal" Original="Available locally">Lokal verfügbar</string>
+	<string Field="FanArtOnline" Original="Available for downloading">Zum Download verfügbar</string>
+	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">lade {0} von {1} Fanart...</string>
+	<string Field="FanArtRandom" Original="Display random Fanart">Zeige zufällige Fanart</string>
+	<string Field="FanArtNoneFound" Original="No Fanart could be found">Keine Fanart gefunden</string>
+	<string Field="CFS_Choose_Item" Original="Choose item">Element auswählen</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Wähle passendes Element:</string>
+	<string Field="CFS_Search_Again" Original="Search again">Erneut suchen</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Wähle passende Untertiteldatei</string>
+	<string Field="CFS_Subtitle_Episode" Original="Episode:">Folge:</string>
+	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">Passende Untertitel</string>
+	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Wähle korrekte Serie</string>
+	<string Field="CFS_Available_Series" Original="Available Series">Verfügbare Serien</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Wähle gewünschte Untertitelversion</string>
+	<string Field="CFS_Select_Version" Original="Version:">Version:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Wähle korrekte Folge</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episode index:">Lokaler Folgenindex:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Verfügbare Folgenliste:</string>
+	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Wähle Suchseite:</string>
+	<string Field="CFS_List_Search_Site" Original="List of search sites:">Liste der Suchseiten:</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">Gefundene Torrents:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">Suche nach:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Wähle korrekte Staffel</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Lokaler Staffelindex:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Verfügbare Staffelliste:</string>
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Untertiteldatei ersetzen</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Alte Untertiteldatei vorhanden: überschreiben?</string>
+	<string Field="RecentlyAdded" Original="Recently Added">Kürzlich hinzugefügt</string>
+	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB Fehler</string>
+	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Zugangskennung ist nicht gesetzt</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Gib die ID deines Onlinezugangs in der Konfiguration ein</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com ist zur Zeit nicht verfügbar, versuch es später wieder</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Internetverbindung nicht verfügbar, prüfe die Verbindung und versuche es erneut</string>
+	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Fanart in Serienansicht zeigen</string>
 </strings>
