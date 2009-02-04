@@ -87,7 +87,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
-            //this.Text += System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString(); //this is now in the about screen
             
             // set height/width
             int height = DBOption.GetOptions("configSizeHeight");
@@ -153,7 +152,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                     }
-                }                
+                }
+                // Load Skin Settings if they exist
                 TVSeriesPlugin.LoadSkinSettings(skinSettings, out bGraphicsLoaded, out bFormattingLoaded, out bLogosLoaded, out bLayoutsLoaded); ;
                 // Reload formatting rules
                 formattingConfiguration1.LoadFromDB();
@@ -190,20 +190,22 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
-           
+            checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
+            textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+            this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
+            this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+            txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
-
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
-            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
-            numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
+                              
             int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
-
-            checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
+            numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);
             comboBox_seriesFormat.Items.Add("ListPosters");
@@ -211,14 +213,20 @@ namespace WindowPlugins.GUITVSeries
             comboBox_seriesFormat.Items.Add("WideBanners");
             comboBox_seriesFormat.Items.Add("Filmstrip");
             comboBox_seriesFormat.Text = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+            comboBox_seriesFormat.Enabled = !bLayoutsLoaded;
+            
             chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
+            
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col1.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
             richTextBox_seriesFormat_Col2.Tag = new FieldTag(DBOption.cView_Series_Col2, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col2.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seriesFormat_Col2);
 
             richTextBox_seriesFormat_Col3.Tag = new FieldTag(DBOption.cView_Series_Col3, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col3.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seriesFormat_Col3);
 
             richTextBox_seriesFormat_Title.Tag = new FieldTag(DBOption.cView_Series_Title, FieldTag.Level.Series);
@@ -233,14 +241,18 @@ namespace WindowPlugins.GUITVSeries
             comboBox_seasonFormat.Items.Add("List");
             comboBox_seasonFormat.Items.Add("Filmstrip");
             comboBox_seasonFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+            comboBox_seasonFormat.Enabled = !bLayoutsLoaded;
 
             richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col1.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seasonFormat_Col1);
 
             richTextBox_seasonFormat_Col2.Tag = new FieldTag(DBOption.cView_Season_Col2, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col2.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seasonFormat_Col2);
 
             richTextBox_seasonFormat_Col3.Tag = new FieldTag(DBOption.cView_Season_Col3, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col3.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_seasonFormat_Col3);
 
             richTextBox_seasonFormat_Title.Tag = new FieldTag(DBOption.cView_Season_Title, FieldTag.Level.Season);
@@ -253,12 +265,15 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_seasonFormat_Main);
 
             richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cView_Episode_Col1, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col1.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_episodeFormat_Col1);
 
             richTextBox_episodeFormat_Col2.Tag = new FieldTag(DBOption.cView_Episode_Col2, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col2.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_episodeFormat_Col2);
 
             richTextBox_episodeFormat_Col3.Tag = new FieldTag(DBOption.cView_Episode_Col3, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col3.Enabled = !bLayoutsLoaded;
             FieldValidate(ref richTextBox_episodeFormat_Col3);
 
             richTextBox_episodeFormat_Title.Tag = new FieldTag(DBOption.cView_Episode_Title, FieldTag.Level.Episode);
@@ -269,23 +284,22 @@ namespace WindowPlugins.GUITVSeries
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
-            textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
 
-            this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+            dbOptiongraphicalGroupView.Checked = DBOption.GetOptions(DBOption.cGraphicalGroupView);
+            dbOptiongraphicalGroupView.Enabled = !bLayoutsLoaded;
 
-            txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
-
-            //if (!bGraphicsLoaded)
-            //{
-                qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
-                qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
-                qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
-                qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
-            //}
-            //else
-                //groupGraphicsQuality.Visible = false;
-
+            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
+            qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
+            qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
+            qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
+            if (bGraphicsLoaded)
+            {
+                qualitySeries.Enabled = false;
+                qualitySeason.Enabled = false;
+                qualityEpisode.Enabled = false;
+                qualityPoster.Enabled = false;
+            }
+      
             tabControl_Details.SelectTab(1);
         }
 
@@ -2775,11 +2789,6 @@ namespace WindowPlugins.GUITVSeries
             m_currentNewsSearch.Commit();
         }
 
-        private void newzbinThisToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button_newsleecherbrowse_Click(object sender, EventArgs e)
         {
             openFileDialog.FileName = DBOption.GetOptions(DBOption.cNewsLeecherPath);
@@ -3163,12 +3172,7 @@ namespace WindowPlugins.GUITVSeries
                 lstLogos.Items.Clear();
                 lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
             }
-        }
-
-        private void tabPage_MP_DisplayControl_Click(object sender, EventArgs e)
-        {
-
-        }
+        } 
 
         private void chkBlankBanners_CheckedChanged(object sender, EventArgs e)
         {
@@ -3189,11 +3193,6 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
                 LoadTree();
             }
-        }
-
-        private void tabControl_Details_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void lnkLogoExport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
