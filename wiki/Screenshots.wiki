@@ -3,27 +3,23 @@
 
 = Screen shots =
 
-All of the following screen shots are taken of the *???* release of MP-TVSeries using the *???* skin. All pieces of promotional movie artwork are copyrighted by their respective owners. 
+All of the following screen shots are taken from MP-TVSeries v2.1 using Blue3wide skin. All pieces of promotional artwork are copyrighted by their respective owners. 
 
 == Media Portal UI ==
+=== Series Filmstrip Layout ===
+http://img24.imageshack.us/img24/5883/blue3wideseriesfilmstriae2.jpg
 
-=== List View ===
-_Displays available TV Series that can be viewed._ 
+=== Series Wide Banners Layout ===
+http://img22.imageshack.us/img22/5501/blue3wideserieswidebannfe9.jpg
 
-http://img273.imageshack.us/img273/8929/mptv1tb6.jpg 
+=== Series List Posters Layout ===
+http://img23.imageshack.us/img23/9959/blue3wideserieslistpostqu5.jpg
 
-=== Season View ===
-_Displays available seasons for a selected TV Series._
+== Season List Layout ==
+http://img6.imageshack.us/img6/1443/blue3wideseasonlistus9.jpg
 
-http://img169.imageshack.us/img169/6838/mptv2pl4.jpg
+== Episode View ==
+http://img7.imageshack.us/img7/6706/blue3wideepisodefanartjm1.jpg
 
-=== Episode View ===
-_Displays available episodes for a select season of a TV Series._
-
-http://img169.imageshack.us/img169/5093/mptv3no1.jpg
-
-== Configurations ==
-
-http://img297.imageshack.us/img297/1690/tv1gz2.jpg
-
-http://img297.imageshack.us/img297/6716/tv2be2.jpg
+== Fanart Chooser ==
+http://img25.imageshack.us/img25/3927/blue3wideseriesfanartchtf4.jpg
