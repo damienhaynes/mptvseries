@@ -1,17 +1,16 @@
 #summary Screen shots of the latest version.
 
 = Screen shots =
-
+<wiki:toc max_depth="2" />
 All of the following screen shots are taken from MP-TVSeries v2.1 using Blue3wide skin. All pieces of promotional artwork are copyrighted by their respective owners. 
 
-== Media Portal UI ==
-=== Series Filmstrip Layout ===
+== Series Filmstrip Layout ==
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg
 
-=== Series Wide Banners Layout ===
+== Series Wide Banners Layout ==
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg
 
-=== Series List Posters Layout ===
+== Series List Posters Layout ==
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg
 
 == Season List Layout ==
