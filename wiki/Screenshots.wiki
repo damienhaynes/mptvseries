@@ -7,19 +7,19 @@ All of the following screen shots are taken from MP-TVSeries v2.1 using Blue3wid
 
 == Media Portal UI ==
 === Series Filmstrip Layout ===
-http://img24.imageshack.us/img24/5883/blue3wideseriesfilmstriae2.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg
 
 === Series Wide Banners Layout ===
-http://img22.imageshack.us/img22/5501/blue3wideserieswidebannfe9.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg
 
 === Series List Posters Layout ===
-http://img23.imageshack.us/img23/9959/blue3wideserieslistpostqu5.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg
 
 == Season List Layout ==
-http://img6.imageshack.us/img6/1443/blue3wideseasonlistus9.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg
 
 == Episode View ==
-http://img7.imageshack.us/img7/6706/blue3wideepisodefanartjm1.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg
 
 == Fanart Chooser ==
-http://img25.imageshack.us/img25/3927/blue3wideseriesfanartchtf4.jpg
+http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg
