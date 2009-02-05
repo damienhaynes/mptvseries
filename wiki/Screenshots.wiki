@@ -1,5 +1,4 @@
 #summary Screen shots of the latest version.
-#labels Featured
 
 = Screen shots =
 
