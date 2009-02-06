@@ -1,0 +1,66 @@
+#summary Installation Guide for plugin.
+<wiki:toc max_depth="2" />
+= Introduction =
+
+This guide is intended to guide you through the installation process of the MP-TVSeries plugin. It is assumed !MediaPortal v1.0.0.0 or higher is installed and the user has a general knowledge of the Windows Operating system.
+
+= Pre-Requisites =
+Below is a list of pre-requisites that must be met before you can proceed to install the plugin.
+
+== Software ==
+ * !MediaPortal v1.0.0.0+
+ * Winzip/[http://www.rarlab.com/download.htm WinRAR] or other archive utility
+ * Windows XP SP2+, Windows Vista SP1+, Windows 2003 SP2+, Windows 7 
+
+MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
+
+For users of Microsoft Vista, there are some additional pre-requisites that must be met. If you are using Windows XP, proceed straight to [http://mptvseries.googlecode.com/svn/wiki/Installation#Installation_Procedure Installation Procedure].
+
+By default !MediaPortal plugins and skins are installed to the Program Files folder and will need elevated permissions for installation. Here are some tips for !MediaPortal and the TVSeries plugin to work as expected in Windows Vista (or other UAC enabled operating systems):
+
+  * Disable UAC (User Account Control), by default Vista has UAC enabled. You can disable UAC from the Control Panel in User Accounts:
+http://mptvseries.googlecode.com/svn/wiki/Images/UACOption.jpg
+ * Reboot PC
+If you prefer to keep UAC enabled you will need to ensure that the following directories have Full Write access for the logged in User:
+  * C:\Program Files\Team !MediaPortal\!MediaPortal
+  * C:\ProgramData\Team !MediaPortal\!MediaPortal
+If you have previously used !MediaPortal and/or the plugin with UAC enabled, delete the following folders:
+  * C:\Users\_username_\AppData\Local\VirtualStore\Program Files\Team !MediaPortal
+  * C:\Users\_username_\AppData\Local\VirtualStore\ProgramData\Team !MediaPortal
+where _username_ is your currently logged in username.
+
+Note: You may need to enable "Show hidden files and folders" to see the folders above.
+= Installation Procedure =
+The following describes the installation procedure of the plugin:
+
+ # [http://code.google.com/p/mptvseries/downloads/list Download] the latest release of the plugin
+ # Extract the contents of the download into your !MediaPortal Installation Directory. By default this is:
+    C:\Program Files\Team !MediaPortal\!MediaPortal
+
+=== Binaries ===
+Confirm that the installation was successful by confirming the following files in the table below are installed:
+
+|| *File(s)* || *Path* || *Version* ||
+|| MP-TVSeries.dll|| C:\Program Files\Team !MediaPortal\!MediaPortal\plugins\windows || v2.1.3321||
+|| MediaInfo.dll || C:\Program Files\Team !MediaPortal\!MediaPortal\plugins\windows || v0.7.7.6||
+
+Its recommended to use the included MediaInfo binary as there have been reports of newer versions not extracting the media info for files correctly as well as memory leaks.
+
+=== Skin Files===
+If you are using Blue3wide or Blue3 skin(s) ensure the installation was successful by confirming the following files in the table below are installed:
+
+|| *File(s)* || *Path* ||
+|| TVSeries.xml || C:\Program Files\Team !MediaPortal\!MediaPortal\skins\Blue3wide||
+|| TVSeries.Dummy.xml || C:\Program Files\Team !MediaPortal\!MediaPortal\skins\Blue3wide||
+|| TVSeries.Fanart.xml || C:\Program Files\Team !MediaPortal\!MediaPortal\skins\Blue3wide||
+|| TVSeries.SkinSettings.xml || C:\Program Files\Team !MediaPortal\!MediaPortal\skins\Blue3wide||
+
+=== Post Install Tasks ===
+ # Open !MediaPortal Configuration Utility
+ # Select General from tree list
+ # Ensure that "Enable Animations / Transitions" are enabled 
+ # Select Plugins from tree list
+ # Right Click on MP-TVSeries
+ # Ensure that "Enabled" is checked
+ # Optionally enable "Listed in Home" for plugin to appear in Home menu when you open !MediaPortal
+ # Select "Configuration" to configure and [http://mptvseries.googlecode.com/svn/wiki/GettingStarted#GettingStarted Get Started]
