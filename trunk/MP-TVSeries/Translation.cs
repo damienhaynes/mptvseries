@@ -121,6 +121,7 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtNoneFound = "No Fanart could be found";
         public static string RecentlyAdded = "Recently Added";
         public static string ShowSeriesFanart = "Show Fanart in Series View";
+        public static string ChangeLayout = "Change Layout";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";

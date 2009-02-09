@@ -168,6 +168,7 @@ namespace WindowPlugins.GUITVSeries
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
+        private static List<string> m_SupportedLayouts = new List<string>();
 
         private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
@@ -212,6 +213,9 @@ namespace WindowPlugins.GUITVSeries
 
         [SkinControlAttribute(2)]
         protected GUIButtonControl viewMenuButton = null;
+
+        [SkinControlAttribute(3)]
+        protected GUIButtonControl LayoutMenuButton = null;
 
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
@@ -850,7 +854,6 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void bgLoadFacade()
-        //void LoadFacade()
         {
             MPTVSeriesLog.Write("Begin LoadFacade", MPTVSeriesLog.LogLevel.Debug);
             try
@@ -924,16 +927,6 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // graphical
                                 ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.AlbumView);
-                                // assume 758 x 140 for all banners
-                                //Size sizeImage = new Size();
-
-                                //m_Facade.AlbumListView.IconOffsetX = m_nInitialIconXOffset;
-                                //sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
-                                //sizeImage.Height = sizeImage.Width * 140 / 758;
-                                //m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * sizeImage.Height / m_nInitialItemHeight;
-                                //m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
-                                //m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
-                                //m_Facade.AlbumListView.AllocResources();
                             }
                             else
                             {
@@ -957,15 +950,7 @@ namespace WindowPlugins.GUITVSeries
                                     if (!sSeriesDisplayMode.Contains("List"))
                                     {
                                         // Graphical Mode
-                                        item = new GUIListItem();                                       
-                                                                
-                                        /*string img = ImageAllocator.GetSeriesBanner(series);
-                                        if (Helper.String.IsNullOrEmpty(img))
-                                        {
-                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
-                                        }
-                                        else
-                                            item.IconImage = item.IconImageBig = img;*/                             
+                                        item = new GUIListItem();                                                                                           
                                     }
                                     else
                                     {
@@ -994,15 +979,13 @@ namespace WindowPlugins.GUITVSeries
                                         // select the first that has a file
                                         if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
                                         {
-                                            selectedIndex = count;
-                                            //item.Selected = true;
+                                            selectedIndex = count;                                        
                                         }
                                     }
 
                                     if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
                                     {
-                                        selectedIndex = count;
-                                        //item.Selected = true;
+                                        selectedIndex = count;                                        
                                     }
                                    
                                     if (bg.CancellationPending) return;
@@ -1534,7 +1517,8 @@ namespace WindowPlugins.GUITVSeries
             action,
             options,
             rate,
-            switchView
+            switchView,
+            switchLayout
         }
 
         internal static void showRatingsDialog(DBTable item, bool auto)
@@ -1779,6 +1763,10 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
 
+                    pItem = new GUIListItem(Translation.ChangeLayout + " >>");
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)eContextMenus.switchLayout;
+
                     if (listLevel != Listlevel.Group)
                     {
                         pItem = new GUIListItem(Translation.Actions + " >>");
@@ -1901,10 +1889,6 @@ namespace WindowPlugins.GUITVSeries
                                     pItem.ItemId = (int)eContextItems.optionsAskToRate;
                                 }
 
-                                /*pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;*/
-
                                 if (FanartBackground != null)
                                 {
                                     pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
@@ -1921,6 +1905,7 @@ namespace WindowPlugins.GUITVSeries
                                     bExitMenu = true;
                             }
                             break;
+                        
                         case (int)eContextMenus.switchView:
                             {
                                 dlg.Reset();
@@ -1928,6 +1913,14 @@ namespace WindowPlugins.GUITVSeries
                                     return;
                             }
                             break;
+
+                        case (int)eContextMenus.switchLayout:
+                            {
+                                dlg.Reset();
+                                ShowLayoutMenu();
+                                return;
+                            }                            
+
                         case (int)eContextMenus.rate:
                             {
                                 switch (listLevel)
@@ -2660,8 +2653,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
         }
         
-        
-
         void resetListLevelDummies()
         {
             if (dummyIsSeries != null) dummyIsSeries.Visible = false;
@@ -2845,6 +2836,14 @@ namespace WindowPlugins.GUITVSeries
                 showViewSwitchDialog();
                 return;
             }
+
+            if (control == this.LayoutMenuButton)
+            {
+                ShowLayoutMenu();
+                LayoutMenuButton.Focus = false;
+                return;
+            }
+
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
             {
@@ -2901,6 +2900,133 @@ namespace WindowPlugins.GUITVSeries
                 }
             }           
             base.OnClicked(controlId, control, actionType);
+        }
+
+        private string GetCurrentLayout()
+        {
+            switch (this.listLevel)
+            {
+                case Listlevel.Group:
+                {
+                    if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
+                        return "SmallIcons";
+                    else
+                        return "List";
+                }
+
+                case Listlevel.Series:
+                {
+                    return DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                }
+
+                case Listlevel.Season:
+                {
+                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
+                        return "Filmstrip";
+                    else
+                        return "List";
+                }
+
+                default:
+                    return "List";
+            }
+        }
+        
+        private void ShowLayoutMenu()
+        {
+            string currentLayout = GetCurrentLayout();
+
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            dlg.Reset();
+            dlg.SetHeading(Translation.ChangeLayout);
+
+            int counter = 0;            
+            string item = string.Empty;
+
+            // Get Available Layouts for Skin
+            foreach (string layout in m_SupportedLayouts)
+            {
+                switch (this.listLevel)
+                {
+                    case Listlevel.Group:
+                    {
+                        if (layout.StartsWith("Group"))
+                            item = layout.Substring(5);
+                    }
+                    break;
+
+                    case Listlevel.Series:
+                    {
+                        if (layout.StartsWith("Series"))
+                            item = layout.Substring(6);
+                    }
+                    break;
+
+                    case Listlevel.Season:
+                    {
+                        if (layout.StartsWith("Season"))
+                            item = layout.Substring(6);
+                    }
+                    break;
+
+                    case Listlevel.Episode:
+                    {
+                        if (layout.StartsWith("Episode"))
+                            item = layout.Substring(7);
+                    }
+                    break;
+                }
+
+                if (item.Length > 0)
+                {
+                    GUIListItem pItem = new GUIListItem(item);            
+                    dlg.Add(pItem);
+                    pItem.ItemId = counter++;
+                    item = string.Empty;
+                }                
+            }
+
+            if (counter > 0)            
+                dlg.DoModal(GUIWindowManager.ActiveWindow);
+            
+            if (dlg.SelectedId >= 0 && !dlg.SelectedLabelText.Equals(currentLayout))
+            {
+                switchLayout(dlg.SelectedLabelText);
+                LoadFacade();
+            }
+        }
+
+        private void switchLayout(string layout)
+        {
+            switch (this.listLevel)
+            {
+                case Listlevel.Group:
+                {
+                    if (layout == "List")
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView,"0");                            
+                    else
+                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                    return;
+                }
+
+                case Listlevel.Series:
+                {
+                    DBOption.SetOptions(DBOption.cView_Series_ListFormat,layout);
+                    return;
+                }
+
+                case Listlevel.Season:
+                {
+                    if (layout == "List")
+                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                    else
+                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                    return;
+                }
+
+                default:
+                    return;
+            }    
         }
 
         public void Clock(Object stateInfo)
@@ -3545,6 +3671,61 @@ namespace WindowPlugins.GUITVSeries
             node = doc.DocumentElement.SelectSingleNode("/settings/version");
             if (node != null)
                 MPTVSeriesLog.Write("Loading Skin Settings: v" + node.InnerText);
+            
+            // Load Supported Layouts
+            node = doc.DocumentElement.SelectSingleNode("/settings/layouts");
+            if (node != null)
+            {
+                MPTVSeriesLog.Write("Loading Supported Layouts Skin Settings");
+
+                innerNode = node.SelectSingleNode("group");
+                if (innerNode != null)
+                {
+                    // Possible type are List and SmallIcons
+                    if (innerNode.Attributes.GetNamedItem("List") != null)
+                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupList");
+
+                    if (innerNode.Attributes.GetNamedItem("SmallIcons") != null)
+                        if (innerNode.Attributes.GetNamedItem("SmallIcons").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupSmallIcons");    
+                }
+
+                innerNode = node.SelectSingleNode("series");
+                if (innerNode != null)
+                {
+                    // Possible type are ListPosters, ListBanners, WideBanners and Filmstrip
+                    if (innerNode.Attributes.GetNamedItem("ListPosters") != null)
+                        if (innerNode.Attributes.GetNamedItem("ListPosters").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListPosters");
+
+                    if (innerNode.Attributes.GetNamedItem("ListBanners") != null)
+                        if (innerNode.Attributes.GetNamedItem("ListBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListBanners");
+
+                    if (innerNode.Attributes.GetNamedItem("WideBanners") != null)
+                        if (innerNode.Attributes.GetNamedItem("WideBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesWideBanners");
+
+                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
+                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesFilmstrip");
+                    
+                }
+
+                innerNode = node.SelectSingleNode("season");
+                if (innerNode != null)
+                {
+                    // Possible type are List and Filmstrip
+                    if (innerNode.Attributes.GetNamedItem("List") != null)
+                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonList");
+
+                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
+                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonFilmstrip");
+                }
+
+                innerNode = node.SelectSingleNode("episode");
+                if (innerNode != null)
+                {
+                    // Possible type are List
+                    if (innerNode.Attributes.GetNamedItem("List") != null)
+                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("EpisodeList");
+                }
+            }
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");

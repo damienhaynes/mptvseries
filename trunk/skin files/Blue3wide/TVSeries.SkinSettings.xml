@@ -11,8 +11,8 @@
 	-->
 	
 	<!-- version may be useful for logging purposes and/or future upgrades -->
-	<version>1.0.0.0</version>
-	
+	<version>1.1.0.0</version>
+
 	<!-- 
 		Possible Layout Types supported by the plugin, the defined layout will be what is loaded by default for the corresponding view:	
 		
@@ -32,9 +32,16 @@
 				layout="Filmstrip" 
 			Episode:
 				layout="List"
-				
-		All layouts defined above will work for this skin: Blue3wide
+	
 	-->
+	
+	<layouts>
+		<group List="true" SmallIcons="true" />
+		<series ListPosters="true" ListBanners="true" Filmstrip="true" WideBanners="true" />
+		<season List="true" Filmstrip="true" />
+		<episode List="true" />
+	</layouts>
+	
 	<views import="true" AppendlmageToList="false">		
 		<group layout="SmallIcons"></group>
 		<series layout="WideBanners">
