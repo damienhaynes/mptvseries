@@ -109,4 +109,5 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com is currently unavailable, try again later</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Network connection is unavailable, check connection and try again</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Show Fanart in Series View</string>
+	<string Field="ChangeLayout" Original="Change Layout">Change Layout</string>
 </strings>
