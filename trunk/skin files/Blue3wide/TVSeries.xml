@@ -882,7 +882,7 @@
             <description>Switch View</description>
             <type>button</type>
             <id>2</id>
-            <label>Switch View</label>
+            <label>Change View</label>
 			<onleft>50</onleft>
             <onright>50</onright>
             <onup>20</onup>
@@ -896,8 +896,28 @@
 			<onleft>50</onleft>
             <onright>50</onright>
             <onup>2</onup>
-			<ondown>66608</ondown>
+			<ondown>4</ondown>
           </control> 
+		  <control>
+            <description>Change Options</description>
+            <type>button</type>
+            <id>4</id>
+            <label>Change Options</label>
+			<onleft>50</onleft>
+            <onright>50</onright>
+            <onup>3</onup>
+			<ondown>5</ondown>
+          </control>
+		  <control>
+            <description>Import</description>
+            <type>button</type>
+            <id>5</id>
+            <label>Start Import</label>
+			<onleft>50</onleft>
+            <onright>50</onright>
+            <onup>4</onup>
+			<ondown>66608</ondown>
+          </control>
           <control>
 	        <description>Video Settings</description>
 	        <type>button</type>
@@ -907,7 +927,7 @@
 			<onleft>50</onleft>
 	        <onright>50</onright>
 			<ondown>10</ondown>
-            <onup>3</onup>
+            <onup>5</onup>
 		  </control>
           <control>
             <description>Moving Pictures</description>

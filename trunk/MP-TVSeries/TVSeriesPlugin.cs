@@ -217,6 +217,12 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(3)]
         protected GUIButtonControl LayoutMenuButton = null;
 
+        [SkinControlAttribute(4)]
+        protected GUIButtonControl OptionsMenuButton = null;
+
+        [SkinControlAttribute(5)]
+        protected GUIButtonControl ImportButton = null;
+
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
 
@@ -1597,6 +1603,84 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
+        internal void ShowOptionsMenu()
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+                if (dlg == null) return;
+
+            dlg.Reset();
+            dlg.SetHeading(Translation.Options);
+
+            GUIListItem pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
+
+            pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
+
+            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+            {
+                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
+                dlg.Add(pItem);
+                pItem.ItemId = (int)eContextItems.optionsAskToRate;
+            }
+
+            if (FanartBackground != null)
+            {
+                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
+                dlg.Add(pItem);
+                pItem.ItemId = (int)eContextItems.optionsFanartRandom;
+
+                pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
+                dlg.Add(pItem);
+                pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
+            }
+
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId >= 0)
+            {
+                switch (dlg.SelectedId)
+                {
+                    case (int)eContextItems.optionsOnlyShowLocal:
+                        DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
+                        // Update Episode counts...this is going to be expensive                        
+                        SQLCondition condEmpty = new SQLCondition();
+                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+                        foreach (DBSeries series in AllSeries)
+                            DBSeries.UpdatedEpisodeCounts(series);
+                        LoadFacade();
+                        break;
+
+                    case (int)eContextItems.optionsPreventSpoilers:
+                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
+                        LoadFacade();
+                        break;
+                    case (int)eContextItems.optionsFastViewSwitch:
+                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
+                        break;
+                    case (int)eContextItems.optionsAskToRate:
+                        DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
+                        break;
+                    case (int)eContextItems.optionsFanartRandom:
+                        DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
+                        break;
+                    case (int)eContextItems.optionsSeriesFanart:
+                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
+                        if (this.listLevel == Listlevel.Series)
+                        {
+                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
+                            {
+                                Series_OnItemSelected(m_Facade.SelectedListItem);
+                            }
+                            else
+                                DisableFanart();
+                        }
+                        break;
+                }
+            }
+        }
+
         protected override void OnShowContextMenu()
         {
             try
@@ -1872,43 +1956,13 @@ namespace WindowPlugins.GUITVSeries
                             }
                             break;
 
-                        case (int)eContextMenus.options:
+                      case (int)eContextMenus.options:
                             {
                                 dlg.Reset();
-                                dlg.SetHeading(Translation.Options);
+                                ShowOptionsMenu();
+                                return;
+                            }                            
 
-                                pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
-
-                                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
-
-                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
-                                {
-                                    pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.optionsAskToRate;
-                                }
-
-                                if (FanartBackground != null)
-                                {
-                                    pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.optionsFanartRandom;
-
-                                    pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
-                                }
-
-                                dlg.DoModal(GUIWindowManager.ActiveWindow);
-                                if (dlg.SelectedId != -1)
-                                    bExitMenu = true;
-                            }
-                            break;
-                        
                         case (int)eContextMenus.switchView:
                             {
                                 dlg.Reset();
@@ -2398,45 +2452,10 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.actionPlayRandom:
                         playRandomEp();
                         break;
-
-                    case (int)eContextItems.optionsOnlyShowLocal:
-                        DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
-                        // Update Episode counts...this is going to be expensive                        
-                        SQLCondition condEmpty = new SQLCondition();
-                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-                        foreach (DBSeries series in AllSeries)
-                            DBSeries.UpdatedEpisodeCounts(series);
-                        LoadFacade();
-                        break;
-
-                    case (int)eContextItems.optionsPreventSpoilers:
-                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
-                        LoadFacade();
-                        break;
-                    case (int)eContextItems.optionsFastViewSwitch:
-                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
-                        break;
-                    case (int)eContextItems.optionsAskToRate:
-                        DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
-                        break;
+                  
                     case (int)eContextItems.showFanartChooser:
                         ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
-                        break;
-                    case (int)eContextItems.optionsFanartRandom:
-                        DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
-                        break;
-                    case (int)eContextItems.optionsSeriesFanart:
-                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
-                        if (this.listLevel == Listlevel.Series)
-                        {
-                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
-                            {
-                                Series_OnItemSelected(m_Facade.SelectedListItem);
-                            }
-                            else
-                                DisableFanart();
-                        }
-                        break;
+                        break;                   
                 }
             }
             catch (Exception ex)
@@ -2837,6 +2856,7 @@ namespace WindowPlugins.GUITVSeries
             if (control == this.viewMenuButton)
             {
                 showViewSwitchDialog();
+                viewMenuButton.Focus = false;
                 return;
             }
 
@@ -2846,6 +2866,23 @@ namespace WindowPlugins.GUITVSeries
                 LayoutMenuButton.Focus = false;
                 return;
             }
+
+            if (control == this.OptionsMenuButton)
+            {
+                ShowOptionsMenu();
+                OptionsMenuButton.Focus = false;
+                return;
+            }
+
+            if (control == this.ImportButton)
+            {
+                lock (m_parserUpdaterQueue)
+                {
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                }
+                ImportButton.Focus = false;
+                return;
+            }            
 
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
