@@ -207,13 +207,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
-            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);
-            comboBox_seriesFormat.Items.Add("ListPosters");
-            comboBox_seriesFormat.Items.Add("ListBanners");
-            comboBox_seriesFormat.Items.Add("WideBanners");
-            comboBox_seriesFormat.Items.Add("Filmstrip");
-            comboBox_seriesFormat.Text = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
-            comboBox_seriesFormat.Enabled = !bLayoutsLoaded;
+            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);            
             
             chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
             
@@ -236,12 +230,7 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_seriesFormat_Subtitle);
 
             richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
-            FieldValidate(ref richTextBox_seriesFormat_Main);
-
-            comboBox_seasonFormat.Items.Add("List");
-            comboBox_seasonFormat.Items.Add("Filmstrip");
-            comboBox_seasonFormat.SelectedIndex = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
-            comboBox_seasonFormat.Enabled = !bLayoutsLoaded;
+            FieldValidate(ref richTextBox_seriesFormat_Main);          
 
             richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
             richTextBox_seasonFormat_Col1.Enabled = !bLayoutsLoaded;
@@ -284,10 +273,7 @@ namespace WindowPlugins.GUITVSeries
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);
-
-            dbOptiongraphicalGroupView.Checked = DBOption.GetOptions(DBOption.cGraphicalGroupView);
-            dbOptiongraphicalGroupView.Enabled = !bLayoutsLoaded;
-
+       
             qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
             qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
             qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
@@ -2066,34 +2052,7 @@ namespace WindowPlugins.GUITVSeries
             else if (this.comboLogLevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
             else if (this.comboLogLevel.SelectedIndex == 2) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
             else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-        }
-
-        private void comboBox_seasonFormat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cView_Season_ListFormat, comboBox_seasonFormat.SelectedIndex);
-
-            richTextBox_seasonFormat_Col1.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
-            richTextBox_seasonFormat_Col2.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
-            richTextBox_seasonFormat_Col3.Enabled = (comboBox_seasonFormat.SelectedIndex == 0);
-        }
-
-        private void comboBox_seriesFormat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cView_Series_ListFormat, comboBox_seriesFormat.Text);
-
-            if (comboBox_seriesFormat.Text.Contains("List"))
-            {
-                richTextBox_seriesFormat_Col1.Enabled = true;
-                richTextBox_seriesFormat_Col2.Enabled = true;
-                richTextBox_seriesFormat_Col3.Enabled = true;
-            }
-            else
-            {
-                richTextBox_seriesFormat_Col1.Enabled = false;
-                richTextBox_seriesFormat_Col2.Enabled = false;
-                richTextBox_seriesFormat_Col3.Enabled = false;
-            }
-        }
+        }     
 
         private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
         {
@@ -3403,12 +3362,7 @@ namespace WindowPlugins.GUITVSeries
             }
             series.Commit();
         }
-
-        private void dbOptiongraphicalGroupView_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cGraphicalGroupView, dbOptiongraphicalGroupView.Checked);
-        }
-
+    
         private void checkBox_Episode_OnlyShowLocalFiles_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);

@@ -1763,9 +1763,12 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
 
-                    pItem = new GUIListItem(Translation.ChangeLayout + " >>");
-                    dlg.Add(pItem);
-                    pItem.ItemId = (int)eContextMenus.switchLayout;
+                    if (GetLayoutCount(this.listLevel) > 1)
+                    {
+                        pItem = new GUIListItem(Translation.ChangeLayout + " >>");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextMenus.switchLayout;
+                    }
 
                     if (listLevel != Listlevel.Group)
                     {
@@ -2931,6 +2934,139 @@ namespace WindowPlugins.GUITVSeries
                     return "List";
             }
         }
+
+        private static bool IsLayoutSupported(Listlevel listLevel)
+        {
+            bool supported = false;
+            string currentLayout = string.Empty;
+            List<String> layouts = null;
+
+            // Get List of layouts for View
+            layouts = GetViewLayouts(listLevel);
+            if (layouts == null || layouts.Count == 0)
+                return false;
+            
+            // Check if Current Layout is supported
+            switch (listLevel)
+            {
+                case Listlevel.Group:
+                    {
+                        if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
+                            currentLayout = "SmallIcons";
+                        else
+                            currentLayout = "List";
+
+                        if (layouts.Contains(currentLayout))
+                            supported = true;
+                    }
+                    break;
+
+                case Listlevel.Series:
+                    {
+                        if (layouts.Contains(DBOption.GetOptions(DBOption.cView_Series_ListFormat)))
+                            supported = true;
+                    }
+                    break;
+
+                case Listlevel.Season:
+                    {
+                       if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
+                            currentLayout = "Filmstrip";
+                        else
+                            currentLayout = "List";
+
+                        if (layouts.Contains(currentLayout))
+                            supported = true;
+                    }
+                    break;
+
+                case Listlevel.Episode:
+                    {
+                        if (layouts.Contains("List"))
+                            supported = true;
+                    }
+                    break;
+            }
+            return supported;            
+        }
+
+        private static List<string> GetViewLayouts(Listlevel listLevel)
+        {
+            List<String> layouts = new List<string>();
+            foreach (string layout in m_SupportedLayouts)
+            {
+                switch (listLevel)
+                {
+                    case Listlevel.Group:
+                        {
+                            if (layout.StartsWith("Group"))
+                                layouts.Add(layout.Substring(5));
+                        }
+                        break;
+
+                    case Listlevel.Series:
+                        {
+                            if (layout.StartsWith("Series"))
+                                layouts.Add(layout.Substring(6));
+                        }
+                        break;
+
+                    case Listlevel.Season:
+                        {
+                            if (layout.StartsWith("Season"))
+                                layouts.Add(layout.Substring(6));
+                        }
+                        break;
+
+                    case Listlevel.Episode:
+                        {
+                            if (layout.StartsWith("Episode"))
+                                layouts.Add(layout.Substring(7));
+                        }
+                        break;
+                }
+            }
+            return layouts;
+        }
+
+        private static int GetLayoutCount(Listlevel listLevel)
+        {
+            int count = 0;
+            foreach (string layout in m_SupportedLayouts)
+            {
+                switch (listLevel)
+                {
+                    case Listlevel.Group:
+                        {
+                            if (layout.StartsWith("Group"))
+                                count++;
+                        }
+                        break;
+
+                    case Listlevel.Series:
+                        {
+                            if (layout.StartsWith("Series"))
+                                count++;
+                        }
+                        break;
+
+                    case Listlevel.Season:
+                        {
+                            if (layout.StartsWith("Season"))
+                                count++;
+                        }
+                        break;
+
+                    case Listlevel.Episode:
+                        {
+                            if (layout.StartsWith("Episode"))
+                                count++;
+                        }
+                        break;
+                }
+            }
+            return count;
+        }
         
         private void ShowLayoutMenu()
         {
@@ -3673,6 +3809,8 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Loading Skin Settings: v" + node.InnerText);
             
             // Load Supported Layouts
+            // Skin Designers can choose to add these settings so there users can change layouts
+            // from with-in MediaPortals GUI
             node = doc.DocumentElement.SelectSingleNode("/settings/layouts");
             if (node != null)
             {
@@ -3732,6 +3870,7 @@ namespace WindowPlugins.GUITVSeries
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {                
                 bLayoutsLoaded = true;
+                List<string> layouts = null;
 
                 // Append First Logo/Image to List
                 try
@@ -3752,23 +3891,39 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Group View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                    switch (layout.ToLower())
+                    // Dont override default Layout if skin can change from GUI
+                    if (GetLayoutCount(Listlevel.Group) == 0)
                     {
-                        case "list":
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                            break;
+                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                        switch (layout.ToLower())
+                        {
+                            case "list":
+                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                                break;
 
-                        case "smallicons":
-                        case "bigicons":
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
-                            break;
+                            case "smallicons":
+                            case "bigicons":
+                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                                break;
 
-                        default:
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                            break;
+                            default:
+                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                                break;
+                        }
                     }
+                    // Confirm that the current layout is really supported
+                    // May have come from another skin that used an unsupported layout for this skin
+                    if (GetLayoutCount(Listlevel.Group) > 0 && !IsLayoutSupported(Listlevel.Group))
+                    {
+                        // Set First Supported Type
+                        layouts = GetViewLayouts(Listlevel.Group);
+                        if (layouts == null || layouts.Count == 0)
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                        else
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, layouts[0]);
                         
+                    }
+    
                 }
 
                 // Series View Settings
@@ -3777,29 +3932,44 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    layout = innerNode.Attributes.GetNamedItem("layout").Value;                    
-                    switch (layout.ToLower())
+                    if (GetLayoutCount(Listlevel.Series) == 0)
                     {
-                        case "listposters":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");                            
-                            break;
+                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                        switch (layout.ToLower())
+                        {
+                            case "listposters":
+                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");
+                                break;
 
-                        case "listbanners":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");                            
-                            break;
+                            case "listbanners":
+                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");
+                                break;
 
-                        case "filmstrip":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");                            
-                            break;
+                            case "filmstrip":
+                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");
+                                break;
 
-                        case "widebanners":
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");                            
-                            break;
-                        
-                        default:
+                            case "widebanners":
+                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
+                                break;
+
+                            default:
+                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
+                                break;
+                        }
+                    }
+                    // Confirm that the current layout is really supported
+                    // May have come from another skin that used an unsupported layout for this skin
+                    if (GetLayoutCount(Listlevel.Series) > 0 && !IsLayoutSupported(Listlevel.Series))
+                    {
+                        // Set First Supported Type                        
+                        layouts = GetViewLayouts(Listlevel.Series);
+                        if (layouts == null || layouts.Count == 0)
                             DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                            break;
-                    }                      
+                        else
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, layouts[0]);
+
+                    }
                 }
 
                 innerNode = node.SelectSingleNode("series/item1");
@@ -3816,24 +3986,38 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                    switch (layout.ToLower())
+                    if (GetLayoutCount(Listlevel.Season) == 0)
                     {
-                        case "list":
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                            break;
+                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                        switch (layout.ToLower())
+                        {
+                            case "list":
+                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                                break;
 
-                        case "smallicons":
-                        case "bigicons":
-                        case "filmstrip":
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
-                            break;
+                            case "smallicons":
+                            case "bigicons":
+                            case "filmstrip":
+                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                                break;
 
-                        default:
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                            break;
+                            default:
+                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                                break;
+                        }
                     }
+                    // Confirm that the current layout is really supported
+                    // May have come from another skin that used an unsupported layout for this skin
+                    if (GetLayoutCount(Listlevel.Season) > 0 && !IsLayoutSupported(Listlevel.Season))
+                    {
+                        // Set First Supported Type
+                        layouts = GetViewLayouts(Listlevel.Season);
+                        if (layouts == null || layouts.Count == 0)
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                        else
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, layouts[0]);
                         
+                    }
                 }
 
                 innerNode = node.SelectSingleNode("season/item1");
