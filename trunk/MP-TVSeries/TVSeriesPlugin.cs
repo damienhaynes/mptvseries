@@ -1566,14 +1566,29 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return;// cancelled
             if (dlg.SelectedId == 11 && auto) DBOption.SetOptions(DBOption.cAskToRate, false);
             else
-            {
-                item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
+            {                                
+                string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);                
+                string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
+                string value = dlg.SelectedId.ToString();
+
+                // Submit rating online database if current rating is different
+                if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
+                {
+                    int rating = -1;
+                    if (Int32.TryParse(value, out rating))
+                    {
+                        Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id ,rating);
+                    }
+                }
+
+                // Apply to local database
+                item[type] = dlg.SelectedId;
                 // Set the all user rating if not already set                
                 if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
                     item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = dlg.SelectedId;
+
                 item.Commit();
             }
-
         }
 
         internal bool showViewSwitchDialog()

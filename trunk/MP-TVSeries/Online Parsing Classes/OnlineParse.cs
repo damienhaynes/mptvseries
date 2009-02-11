@@ -339,7 +339,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // 3) identifies new episodes
                     GetEpisodes();                                                         
-                                                         
+
                     counter++;
 
                 }
@@ -378,6 +378,8 @@ namespace WindowPlugins.GUITVSeries
                 UpdateBanners(true, null);// update new series for banners                             
 
                 UpdateEpisodeThumbNails();
+                UpdateUserRatings();
+
                 Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             }
             
@@ -1106,6 +1108,38 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public void UpdateUserRatings()
+        {
+            string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
+
+            if (!Helper.String.IsNullOrEmpty(sAccountID))
+            {
+                MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));                
+                                
+                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
+                foreach (DBOnlineSeries series in seriesList)
+                {
+                    MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                    GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
+
+                    // Set Series Rating
+                    series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
+                    series.Commit();
+
+                    SQLCondition condition = new SQLCondition();
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(condition);
+
+                    foreach (DBEpisode episode in episodes)
+                    {
+                        if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID]))                        
+                            episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
+                        episode.Commit();
+                    }                                        
+                }
+            }
+        }
+
         public void UpdateEpisodeThumbNails()
         {
             if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true)
@@ -1172,7 +1206,6 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-
 
         public void UpdateBanners(bool bUpdateNewSeries, List<DBValue> updatedSeries)
         {
@@ -1597,23 +1630,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write(localEpisode[DBEpisode.cFilename].ToString() + " could not be matched online, check that the online database has this episode.");
             }            
         }
-        /*
-        static string generateIDList<T>(List<T> entities, string fieldname) where T:DBTable
-        {
-            // generate a comma separated list of all the ids
-            String sSeriesIDs = String.Empty;
-            if (entities.Count > 0)
-            {
-                foreach (DBTable entity in entities)
-                {
-                    if (sSeriesIDs.Length > 0)
-                        sSeriesIDs += ",";
-                    sSeriesIDs += entity[fieldname];
-                }
-            }
-            return sSeriesIDs;
-        }
-        */
+       
         static List<string> generateIDListOfString<T>(List<T> entities, string fieldname) where T : DBTable
         {
             // generate a comma separated list of all the ids
@@ -1629,10 +1646,10 @@ namespace WindowPlugins.GUITVSeries
             return string.Format("***************     {0}     ***************", msg);
         }
 
-        static string prettyStars(int lenght)
+        static string prettyStars(int length)
         {
-            StringBuilder b = new StringBuilder(lenght);
-            for (int i = 0; i < lenght; i++) b.Append('*');
+            StringBuilder b = new StringBuilder(length);
+            for (int i = 0; i < length; i++) b.Append('*');
             return b.ToString();
         }
     }

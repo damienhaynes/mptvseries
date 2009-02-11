@@ -32,88 +32,12 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetEpisodes
     {
-        //private long m_nServerTimeStamp = 0;
         private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
-
-        //public long ServerTimeStamp
-        //{
-        //    get { return m_nServerTimeStamp; }
-        //}
 
         public List<DBOnlineEpisode> Results
         {
             get { return listEpisodes; }
         }
-
-        #region old stuff - safe to remove
-        /*
-        public GetEpisodes(int nSeriesID, long nGetEpisodesTimeStamp)
-        {
-            Work(nSeriesID, -1, -1, nGetEpisodesTimeStamp, default(DateTime));
-        }
-
-        public GetEpisodes(int nSeriesID)
-        {
-            Work(nSeriesID, -1, -1, 0, default(DateTime));
-        }
-
-        public GetEpisodes(int nSeriesID, int nSeasonIndex, int nEpisodeIndex)
-        {
-            Work(nSeriesID, nSeasonIndex, nEpisodeIndex, 0, default(DateTime));
-        }
-
-        public GetEpisodes(int nSeriesID, DateTime firstAired)
-        {
-            Work(nSeriesID, -1, -1, 0, firstAired);
-        }
-
-        public void Work(int nSeriesID, int nSeasonIndex, int nEpisodeIndex, long nGetEpisodesTimeStamp, DateTime firstAired)
-        {
-            XmlNodeList nodeList = null;
-            string choosenOrdering;
-
-            DBSeries localSeries = DBSeries.Get(nSeriesID, false);
-            if (localSeries != null)
-                choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
-            else
-                choosenOrdering = "Aired";
-
-            if (nEpisodeIndex != -1 && nSeasonIndex != -1)
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nSeasonIndex, nEpisodeIndex, choosenOrdering);
-            else if (!firstAired.Equals(default(DateTime)))
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, firstAired, choosenOrdering);
-            else
-                nodeList = ZsoriParser.GetEpisodes(nSeriesID, nGetEpisodesTimeStamp, choosenOrdering);
-
-            if (nodeList != null)
-            {
-                foreach (XmlNode itemNode in nodeList)
-                {
-                    // first return item SHOULD ALWAYS be the sync time (hope so at least!)
-                    if (itemNode.ChildNodes[0].Name == "SyncTime")
-                    {
-                        m_nServerTimeStamp = Convert.ToInt64(itemNode.ChildNodes[0].InnerText);
-                    }
-                    else
-                    {
-                        DBOnlineEpisode episode = new DBOnlineEpisode();
-                        foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                        {
-                            if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                            else
-                            {
-                                // we don't know that field, add it to the series table
-                                episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                                episode[propertyNode.Name] = propertyNode.InnerText;
-                            }
-                        }
-                        listEpisodes.Add(episode);
-                    }
-                }
-            }
-        }*/
-#endregion
 
         public GetEpisodes(string seriesID)
         {
@@ -125,14 +49,7 @@ namespace WindowPlugins.GUITVSeries
         public void doWork(int nSeriesID)
         {            
             XmlNodeList nodeList = null;
-            //string choosenOrdering;
-
-            //DBSeries localSeries = DBSeries.Get(nSeriesID, false);
-            //if (localSeries != null)
-            //    choosenOrdering = DBSeries.Get(nSeriesID, false)[DBOnlineSeries.cChoseEpisodeOrder];
-            //else
-            //    choosenOrdering = "Aired";
-
+    
             nodeList = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
 
             if (nodeList != null)
@@ -154,7 +71,7 @@ namespace WindowPlugins.GUITVSeries
                                     episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
                                     episode[propertyNode.Name] = propertyNode.InnerText;
                                 }
-                            }
+                            }                            
                             listEpisodes.Add(episode);
                         }
                     }
