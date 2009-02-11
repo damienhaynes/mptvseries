@@ -88,9 +88,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                                      sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
     }
 
-    static public XmlNodeList GetUserRatings(String sSeriesName)
-    {
-        return Generic(apiURIs.GetRatingsForUser, Format.Xml);
+    static public XmlNodeList GetUserRatings(String sSeriesID, String sAccountID)
+    {        
+        string url = String.Format(apiURIs.GetRatingsForUser, DBOnlineMirror.cApiKey, sAccountID, sSeriesID);
+        return Generic(url, true, false, Format.NoExtension);
     }
 
     static public XmlNodeList UpdateSeries(String sSeriesID)
@@ -159,7 +160,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     {
       return getFromCache(seriesID, SelLanguageAsString + ".xml");
     }
-
+    
     static public XmlNodeList getBannerList(int seriesID)
     {
       return getFromCache(seriesID, "banners.xml");
