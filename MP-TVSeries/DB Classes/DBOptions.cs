@@ -156,6 +156,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String m_sMainMirror = "http://thetvdb.com";
 
+        public const String cOnlineFavourites = "UseOnlineFavourites";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()
@@ -386,15 +388,15 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
 
-                //if (GetOptions(cGetSeriesPosters) == null)
-                //    SetOptions(cGetSeriesPosters, false); // Default to get wide series banner only
-
                 if (GetOptions(cShowSeriesFanart) == null)
                     SetOptions(cShowSeriesFanart, true);
 
                 if (GetOptions(cFanartRandom) == null)
                     SetOptions(cFanartRandom, true);
-                                
+
+                if (GetOptions(cOnlineFavourites) == null)
+                    SetOptions(cOnlineFavourites, false);
+
             }
             catch (Exception ex)
             {

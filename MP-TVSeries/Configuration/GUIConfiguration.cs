@@ -390,6 +390,9 @@ namespace WindowPlugins.GUITVSeries
             _availViews.Items.Clear();
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
+
+            if (DBOption.GetOptions(DBOption.cOnlineFavourites))
+                chkOnlineFavourites.Checked = true;
         }
 
         private void LoadTorrentSearches()
@@ -3381,6 +3384,25 @@ namespace WindowPlugins.GUITVSeries
         private void linkExpressionHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/");
+        }
+
+        private void chkOnlineFavourites_CheckedChanged(object sender, EventArgs e)
+        {
+            DBView view = new DBView(1);
+            if (!chkOnlineFavourites.Checked)
+            {
+                view[DBView.cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
+                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+            }
+            else
+            {
+                view[DBView.cViewConfig] = @"series<;><Series.isOnlineFavourite>;=;1<;><;>" +
+                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+            }
+            view.Commit();
+            DBOption.SetOptions(DBOption.cOnlineFavourites, chkOnlineFavourites.Checked);
         }
     }
     

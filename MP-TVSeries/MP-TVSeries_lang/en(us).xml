@@ -110,4 +110,5 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Network connection is unavailable, check connection and try again</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Show Fanart in Series View</string>
 	<string Field="ChangeLayout" Original="Change Layout">Change Layout</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
 </strings>
