@@ -1513,6 +1513,7 @@ namespace WindowPlugins.GUITVSeries
             optionsFastViewSwitch,
             optionsFanartRandom,
             optionsSeriesFanart,
+            optionsUseOnlineFavourites,
             actionRecheckMI,
             showFanartChooser
         }
@@ -1652,6 +1653,10 @@ namespace WindowPlugins.GUITVSeries
                 pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
             }
 
+            //pItem = new GUIListItem(Translation.UseOnlineFavourites + " (" + (DBOption.GetOptions(DBOption.cOnlineFavourites) ? Translation.on : Translation.off) + ")");
+            //dlg.Add(pItem);
+            //pItem.ItemId = (int)eContextItems.optionsUseOnlineFavourites;
+
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
@@ -1691,6 +1696,25 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 DisableFanart();
                         }
+                        break;
+                    case (int)eContextItems.optionsUseOnlineFavourites:
+                        DBOption.SetOptions(DBOption.cOnlineFavourites, !DBOption.GetOptions(DBOption.cOnlineFavourites));
+                        // Update Views                        
+                        DBView view = new DBView(1);
+                        if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
+                        {
+                            view[DBView.cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
+                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                        }
+                        else
+                        {
+                            view[DBView.cViewConfig] = @"series<;><Series.isOnlineFavourite>;=;1<;><;>" +
+                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                        }
+                        view.Commit();
+                        LoadFacade();
                         break;
                 }
             }
@@ -1851,7 +1875,13 @@ namespace WindowPlugins.GUITVSeries
                                 currentSeries = (DBSeries)currentitem.TVTag;
                             else currentSeries = m_SelectedSeries;
 
-                            pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
+                            if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
+                            {
+                                pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
+                            }
+                            else
+                                pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsOnlineFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
+
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionToggleFavorite;
                         }
@@ -2441,9 +2471,10 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.actionToggleFavorite:
                         {
-                            // toggle Favourites
+                            // Toggle Favourites
                             m_SelectedSeries.toggleFavourite();
-                            // if we are in fav view we have to reload to get the series away
+                            
+                            // If we are in favourite view we need to reload to remove the series
                             LoadFacade();
                             break;
                         }

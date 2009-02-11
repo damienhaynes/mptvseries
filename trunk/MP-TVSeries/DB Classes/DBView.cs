@@ -202,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
                 switch (nUpgradeDBVersion)
                 {
                     case 1:
-                        //Uupgrade to version 2; 'Latest' view doesn't show anything from the future, and shows only from the last 30 days
+                        //Upgrade to version 2; 'Latest' view doesn't show anything from the future, and shows only from the last 30 days
                         DBView view = new DBView(5);
                         view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
                         view.Commit();
@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
                         view.Commit();
                         nUpgradeDBVersion++;
                         break;
-
+   
                     default:
                         nUpgradeDBVersion = nCurrentDBVersion;
                         break;

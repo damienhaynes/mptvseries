@@ -61,6 +61,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cWatchedFileTimeStamp = "WatchedFileTimeStamp";
 
         public const String cIsFavourite = "isFavourite";
+        public const String cIsOnlineFavourite = "isOnlineFavourite";
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public const String cEpisodeOrders = "EpisodeOrders";
@@ -747,7 +748,16 @@ namespace WindowPlugins.GUITVSeries
         public void toggleFavourite()
         {
             if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
-            this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
+            if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
+            {
+                this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
+            }
+            else
+            {
+                this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite];
+                // Update online (add/remove)
+                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites((bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite], DBOption.GetOptions(DBOption.cOnlineUserID), this.m_onlineSeries[DBOnlineSeries.cID]);
+            }
 
             this.m_onlineSeries.Commit();
 

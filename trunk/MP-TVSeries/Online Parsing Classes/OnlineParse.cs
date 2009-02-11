@@ -330,7 +330,7 @@ namespace WindowPlugins.GUITVSeries
                 while (m_bReparseNeeded && counter < 4) // limit the max number of loops
                 {
                     m_bReparseNeeded = false;
-
+                    
                     // 1) Identify any new/unidentified Series
                     GetSeries();
 
@@ -379,6 +379,7 @@ namespace WindowPlugins.GUITVSeries
 
                 UpdateEpisodeThumbNails();
                 UpdateUserRatings();
+                UpdateUserFavourites();
 
                 Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             }
@@ -1136,6 +1137,34 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
                         episode.Commit();
                     }                                        
+                }
+            }
+        }
+        
+        public void UpdateUserFavourites()
+        {
+            string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
+
+            if (!Helper.String.IsNullOrEmpty(sAccountID))
+            {
+                MPTVSeriesLog.Write(bigLogMessage("Get User Favourites"));
+
+                GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
+                
+                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();                
+                foreach (DBOnlineSeries series in seriesList)
+                {
+                    if (userFavourites.Series.Contains(series[DBOnlineSeries.cID]))
+                    {
+                        MPTVSeriesLog.Write("Retrieving favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                        series[DBOnlineSeries.cIsOnlineFavourite] = "1";
+                        series.Commit();
+                    }
+                    else
+                    {
+                        series[DBOnlineSeries.cIsOnlineFavourite] = "0";
+                        series.Commit();
+                    }
                 }
             }
         }
