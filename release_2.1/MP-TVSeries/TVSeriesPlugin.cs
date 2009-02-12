@@ -3085,6 +3085,7 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
             
             clearGUIProperty(guiProperty.EpisodeImage);
+            seasonbanner.Filename = "";
             //clearGUIProperty(guiProperty.SeasonBanner);          
             //clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
