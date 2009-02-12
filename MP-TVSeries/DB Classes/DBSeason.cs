@@ -246,15 +246,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 switch (fieldName)
-                {
-//                     case DBSeason.cUnwatchedItems:
-//                         // this one is virtual
-//                         SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeason.cSeriesID] + " and  seasonIndex = " + this[DBSeason.cIndex] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
-//                         if (results.Rows.Count > 0)
-//                         {
-//                             return results.Rows[0].fields[0];
-//                         }
-//                         else return 0;   
+                {  
                     default: return base[fieldName];
                 }
             }
@@ -262,8 +254,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-//                     case DBSeason.cUnwatchedItems:
-//                         break;
                     default:
                         base[fieldName] = value;
                         break;
@@ -279,22 +269,16 @@ namespace WindowPlugins.GUITVSeries
                 if (Helper.String.IsNullOrEmpty(sList))
                     return outList;
 
-                String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                //string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
+                String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);                
                 foreach (String filename in split)
-                {
-                    //if (filename.IndexOf(Directory.GetDirectoryRoot(filename)) == -1)
-                    //    outList.Add(path + filename);
-                    //else
-                    //    outList.Add(filename);
+                {                    
                     outList.Add(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), filename));
                 }
                 return outList;
             }
             set
             {
-                String sIn = String.Empty;
-                //string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\banners\";
+                String sIn = String.Empty;                
                 for(int i=0; i<value.Count; i++)
                 {
                     value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");

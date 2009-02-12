@@ -1891,7 +1891,7 @@ namespace WindowPlugins.GUITVSeries
                     pItem = new GUIListItem(Translation.ChangeView + " >>");
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
-
+                    
                     if (GetLayoutCount(this.listLevel) > 1)
                     {
                         pItem = new GUIListItem(Translation.ChangeLayout + " >>");
@@ -3430,6 +3430,7 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = series[DBSeason.cHasLocalFiles];
             
             clearGUIProperty(guiProperty.EpisodeImage);
+            seasonbanner.Filename = "";
             //clearGUIProperty(guiProperty.SeasonBanner);          
             //clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
@@ -3437,7 +3438,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            // Delayed Image Loading of Series Banners
+            // Delayed Image Loading of Series Banners            
             seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
             //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
 
@@ -3472,7 +3473,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
-            // Delayed Image Loading of Season Banners
+            // Delayed Image Loading of Season Banners            
             seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
             //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
 
