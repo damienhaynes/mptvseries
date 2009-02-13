@@ -203,8 +203,12 @@ namespace Cornerstone.MP {
             if (!_active || filename == null || !File.Exists(filename))
                 return false;
 
-            if (GUITextureManager.Load(filename, 0, 0, 0, true) > 0)
-                return true;
+            try
+            {
+                if (GUITextureManager.Load(filename, 0, 0, 0, true) > 0)
+                    return true;
+            }
+            catch { }
            
             return false;
         }
