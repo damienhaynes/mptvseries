@@ -63,7 +63,7 @@
 	<formatting import="true">
 		<![CDATA[<Enabled>1<Format><Episode.RatingPath><FormatAs>TVSeries\starEval(10*Round(<Episode.Rating>*2)/2).png
 <Enabled>1<Format><Episode.InfoPanelLine1Key><FormatAs>
-<Enabled>1<Format><Episode.InfoPanelLine1Value><FormatAs>
+<Enabled>1<Format><Episode.InfoPanelLine1Value><FormatAs>(MY RATING: <Episode.myRating>)
 <Enabled>1<Format><Episode.InfoPanelLine2Key><FormatAs>FILE SIZE
 <Enabled>1<Format><Episode.InfoPanelLine2Value><FormatAs><Episode.FileSize>
 <Enabled>1<Format><Episode.InfoPanelLine3Key><FormatAs>VIDEO INFO
@@ -77,7 +77,7 @@
 <Enabled>1<Format><Episode.SeasonLabel><FormatAs>Season <Episode.SeasonIndex>
 <Enabled>1<Format><Season.SeasonLabel><FormatAs>Season <Season.SeasonIndex>
 <Enabled>1<Format><Series.InfoPanelLine1Key><FormatAs>RATING
-<Enabled>1<Format><Series.InfoPanelLine1Value><FormatAs>Eval(Round(<Series.Rating>*10)/10) / 10 (RATED: <Series.myRating>)
+<Enabled>1<Format><Series.InfoPanelLine1Value><FormatAs>(MY RATING: <Series.myRating>)
 <Enabled>1<Format><Series.InfoPanelLine2Key><FormatAs>FIRST AIRED
 <Enabled>1<Format><Series.InfoPanelLine2Value><FormatAs><Series.FirstAired> (<Series.Status>)
 <Enabled>1<Format><Series.InfoPanelLine3Key><FormatAs>GENRE
@@ -90,7 +90,7 @@
 <Enabled>1<Format><Series.InfoPanelLine6Value><FormatAs><Series.Actors>
 <Enabled>1<Format>x () fps<FormatAs>N / A
 <Enabled>1<Format>0 bytes<FormatAs>N / A
-<Enabled>1<Format> / 10 (RATED: )<FormatAs> / 10
+<Enabled>1<Format>(MY RATING: )<FormatAs> 
 <Enabled>1<Format>2channels <FormatAs>2.0 
 <Enabled>1<Format>6channels <FormatAs>5.1 
 <Enabled>1<Format>V_MPEG4/ISO/AVC<FormatAs>H264
