@@ -157,6 +157,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_OnlyShowLocalFiles = new System.Windows.Forms.CheckBox();
             this.richTextBox_seasonFormat_Col3 = new System.Windows.Forms.RichTextBox();
+            this.comboBox_seasonFormat = new System.Windows.Forms.ComboBox();
             this.richTextBox_seasonFormat_Main = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seasonFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seasonFormat_Subtitle = new System.Windows.Forms.RichTextBox();
@@ -170,11 +171,13 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Main = new System.Windows.Forms.RichTextBox();
+            this.comboBox_seriesFormat = new System.Windows.Forms.ComboBox();
             this.richTextBox_seriesFormat_Subtitle = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptiongraphicalGroupView = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -297,6 +300,7 @@ namespace WindowPlugins.GUITVSeries
             this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
             this.tabLayoutSettings = new System.Windows.Forms.TabPage();
             this.label37 = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -381,7 +385,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.chkOnlineFavourites = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();
@@ -431,6 +434,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.SuspendLayout();
             this.tabFormattingRules.SuspendLayout();
             this.tabLayoutSettings.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -1040,7 +1044,7 @@ namespace WindowPlugins.GUITVSeries
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(165, 313);
+            this.linkExWatched.Location = new System.Drawing.Point(29, 313);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
             this.linkExWatched.TabIndex = 19;
@@ -1052,7 +1056,7 @@ namespace WindowPlugins.GUITVSeries
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(29, 313);
+            this.linkImpWatched.Location = new System.Drawing.Point(156, 313);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
             this.linkImpWatched.TabIndex = 20;
@@ -1439,15 +1443,26 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Col3.Location = new System.Drawing.Point(509, 23);
+            this.richTextBox_seasonFormat_Col3.Location = new System.Drawing.Point(541, 22);
             this.richTextBox_seasonFormat_Col3.Multiline = false;
             this.richTextBox_seasonFormat_Col3.Name = "richTextBox_seasonFormat_Col3";
-            this.richTextBox_seasonFormat_Col3.Size = new System.Drawing.Size(229, 20);
+            this.richTextBox_seasonFormat_Col3.Size = new System.Drawing.Size(197, 20);
             this.richTextBox_seasonFormat_Col3.TabIndex = 4;
             this.richTextBox_seasonFormat_Col3.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Col3, "Enter in the field(s) to be displayed in column three of the season view.\r\nYou ca" +
                     "n right click on this textbox to bring up a menu of available fields from the da" +
                     "tabase.\r\n\r\nDefault: Empty");
+            // 
+            // comboBox_seasonFormat
+            // 
+            this.comboBox_seasonFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_seasonFormat.FormattingEnabled = true;
+            this.comboBox_seasonFormat.Location = new System.Drawing.Point(48, 21);
+            this.comboBox_seasonFormat.Name = "comboBox_seasonFormat";
+            this.comboBox_seasonFormat.Size = new System.Drawing.Size(110, 21);
+            this.comboBox_seasonFormat.TabIndex = 1;
+            this.toolTip_InfoHelp.SetToolTip(this.comboBox_seasonFormat, resources.GetString("comboBox_seasonFormat.ToolTip"));
+            this.comboBox_seasonFormat.SelectedIndexChanged += new System.EventHandler(this.comboBox_seasonFormat_SelectedIndexChanged);
             // 
             // richTextBox_seasonFormat_Main
             // 
@@ -1455,10 +1470,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Main.Location = new System.Drawing.Point(97, 87);
+            this.richTextBox_seasonFormat_Main.Location = new System.Drawing.Point(164, 87);
             this.richTextBox_seasonFormat_Main.Multiline = false;
             this.richTextBox_seasonFormat_Main.Name = "richTextBox_seasonFormat_Main";
-            this.richTextBox_seasonFormat_Main.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seasonFormat_Main.Size = new System.Drawing.Size(575, 20);
             this.richTextBox_seasonFormat_Main.TabIndex = 10;
             this.richTextBox_seasonFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Main, resources.GetString("richTextBox_seasonFormat_Main.ToolTip"));
@@ -1467,7 +1482,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_seasonFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Col1.Location = new System.Drawing.Point(97, 23);
+            this.richTextBox_seasonFormat_Col1.Location = new System.Drawing.Point(164, 22);
             this.richTextBox_seasonFormat_Col1.Multiline = false;
             this.richTextBox_seasonFormat_Col1.Name = "richTextBox_seasonFormat_Col1";
             this.richTextBox_seasonFormat_Col1.Size = new System.Drawing.Size(180, 20);
@@ -1483,10 +1498,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Subtitle.Location = new System.Drawing.Point(97, 66);
+            this.richTextBox_seasonFormat_Subtitle.Location = new System.Drawing.Point(164, 66);
             this.richTextBox_seasonFormat_Subtitle.Multiline = false;
             this.richTextBox_seasonFormat_Subtitle.Name = "richTextBox_seasonFormat_Subtitle";
-            this.richTextBox_seasonFormat_Subtitle.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seasonFormat_Subtitle.Size = new System.Drawing.Size(575, 20);
             this.richTextBox_seasonFormat_Subtitle.TabIndex = 8;
             this.richTextBox_seasonFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Subtitle, resources.GetString("richTextBox_seasonFormat_Subtitle.ToolTip"));
@@ -1497,7 +1512,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Col2.Location = new System.Drawing.Point(276, 23);
+            this.richTextBox_seasonFormat_Col2.Location = new System.Drawing.Point(343, 22);
             this.richTextBox_seasonFormat_Col2.Multiline = false;
             this.richTextBox_seasonFormat_Col2.Name = "richTextBox_seasonFormat_Col2";
             this.richTextBox_seasonFormat_Col2.Size = new System.Drawing.Size(289, 20);
@@ -1511,10 +1526,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seasonFormat_Title.Location = new System.Drawing.Point(97, 45);
+            this.richTextBox_seasonFormat_Title.Location = new System.Drawing.Point(164, 45);
             this.richTextBox_seasonFormat_Title.Multiline = false;
             this.richTextBox_seasonFormat_Title.Name = "richTextBox_seasonFormat_Title";
-            this.richTextBox_seasonFormat_Title.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seasonFormat_Title.Size = new System.Drawing.Size(574, 20);
             this.richTextBox_seasonFormat_Title.TabIndex = 6;
             this.richTextBox_seasonFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Title, resources.GetString("richTextBox_seasonFormat_Title.ToolTip"));
@@ -1524,10 +1539,10 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col3.Location = new System.Drawing.Point(509, 22);
+            this.richTextBox_episodeFormat_Col3.Location = new System.Drawing.Point(541, 20);
             this.richTextBox_episodeFormat_Col3.Multiline = false;
             this.richTextBox_episodeFormat_Col3.Name = "richTextBox_episodeFormat_Col3";
-            this.richTextBox_episodeFormat_Col3.Size = new System.Drawing.Size(229, 20);
+            this.richTextBox_episodeFormat_Col3.Size = new System.Drawing.Size(198, 20);
             this.richTextBox_episodeFormat_Col3.TabIndex = 3;
             this.richTextBox_episodeFormat_Col3.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Col3, resources.GetString("richTextBox_episodeFormat_Col3.ToolTip"));
@@ -1538,7 +1553,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(275, 22);
+            this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(342, 20);
             this.richTextBox_episodeFormat_Col2.Multiline = false;
             this.richTextBox_episodeFormat_Col2.Name = "richTextBox_episodeFormat_Col2";
             this.richTextBox_episodeFormat_Col2.Size = new System.Drawing.Size(289, 20);
@@ -1552,10 +1567,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Main.Location = new System.Drawing.Point(97, 88);
+            this.richTextBox_episodeFormat_Main.Location = new System.Drawing.Point(164, 86);
             this.richTextBox_episodeFormat_Main.Multiline = false;
             this.richTextBox_episodeFormat_Main.Name = "richTextBox_episodeFormat_Main";
-            this.richTextBox_episodeFormat_Main.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_episodeFormat_Main.Size = new System.Drawing.Size(575, 20);
             this.richTextBox_episodeFormat_Main.TabIndex = 9;
             this.richTextBox_episodeFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Main, resources.GetString("richTextBox_episodeFormat_Main.ToolTip"));
@@ -1566,10 +1581,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Subtitle.Location = new System.Drawing.Point(97, 66);
+            this.richTextBox_episodeFormat_Subtitle.Location = new System.Drawing.Point(164, 64);
             this.richTextBox_episodeFormat_Subtitle.Multiline = false;
             this.richTextBox_episodeFormat_Subtitle.Name = "richTextBox_episodeFormat_Subtitle";
-            this.richTextBox_episodeFormat_Subtitle.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_episodeFormat_Subtitle.Size = new System.Drawing.Size(575, 20);
             this.richTextBox_episodeFormat_Subtitle.TabIndex = 7;
             this.richTextBox_episodeFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Subtitle, resources.GetString("richTextBox_episodeFormat_Subtitle.ToolTip"));
@@ -1580,10 +1595,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Title.Location = new System.Drawing.Point(97, 44);
+            this.richTextBox_episodeFormat_Title.Location = new System.Drawing.Point(164, 42);
             this.richTextBox_episodeFormat_Title.Multiline = false;
             this.richTextBox_episodeFormat_Title.Name = "richTextBox_episodeFormat_Title";
-            this.richTextBox_episodeFormat_Title.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_episodeFormat_Title.Size = new System.Drawing.Size(575, 20);
             this.richTextBox_episodeFormat_Title.TabIndex = 5;
             this.richTextBox_episodeFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Title, resources.GetString("richTextBox_episodeFormat_Title.ToolTip"));
@@ -1592,7 +1607,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_episodeFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_episodeFormat_Col1.Location = new System.Drawing.Point(97, 22);
+            this.richTextBox_episodeFormat_Col1.Location = new System.Drawing.Point(164, 20);
             this.richTextBox_episodeFormat_Col1.Multiline = false;
             this.richTextBox_episodeFormat_Col1.Name = "richTextBox_episodeFormat_Col1";
             this.richTextBox_episodeFormat_Col1.Size = new System.Drawing.Size(180, 20);
@@ -1607,10 +1622,10 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Col3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col3.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(509, 25);
+            this.richTextBox_seriesFormat_Col3.Location = new System.Drawing.Point(541, 22);
             this.richTextBox_seriesFormat_Col3.Multiline = false;
             this.richTextBox_seriesFormat_Col3.Name = "richTextBox_seriesFormat_Col3";
-            this.richTextBox_seriesFormat_Col3.Size = new System.Drawing.Size(229, 20);
+            this.richTextBox_seriesFormat_Col3.Size = new System.Drawing.Size(195, 20);
             this.richTextBox_seriesFormat_Col3.TabIndex = 4;
             this.richTextBox_seriesFormat_Col3.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Col3, resources.GetString("richTextBox_seriesFormat_Col3.ToolTip"));
@@ -1621,13 +1636,24 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(97, 89);
+            this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(163, 89);
             this.richTextBox_seriesFormat_Main.Multiline = false;
             this.richTextBox_seriesFormat_Main.Name = "richTextBox_seriesFormat_Main";
-            this.richTextBox_seriesFormat_Main.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seriesFormat_Main.Size = new System.Drawing.Size(573, 20);
             this.richTextBox_seriesFormat_Main.TabIndex = 10;
             this.richTextBox_seriesFormat_Main.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Main, resources.GetString("richTextBox_seriesFormat_Main.ToolTip"));
+            // 
+            // comboBox_seriesFormat
+            // 
+            this.comboBox_seriesFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_seriesFormat.FormattingEnabled = true;
+            this.comboBox_seriesFormat.Location = new System.Drawing.Point(48, 21);
+            this.comboBox_seriesFormat.Name = "comboBox_seriesFormat";
+            this.comboBox_seriesFormat.Size = new System.Drawing.Size(109, 21);
+            this.comboBox_seriesFormat.TabIndex = 1;
+            this.toolTip_InfoHelp.SetToolTip(this.comboBox_seriesFormat, resources.GetString("comboBox_seriesFormat.ToolTip"));
+            this.comboBox_seriesFormat.SelectedIndexChanged += new System.EventHandler(this.comboBox_seriesFormat_SelectedIndexChanged);
             // 
             // richTextBox_seriesFormat_Subtitle
             // 
@@ -1635,10 +1661,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(97, 68);
+            this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(163, 68);
             this.richTextBox_seriesFormat_Subtitle.Multiline = false;
             this.richTextBox_seriesFormat_Subtitle.Name = "richTextBox_seriesFormat_Subtitle";
-            this.richTextBox_seriesFormat_Subtitle.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seriesFormat_Subtitle.Size = new System.Drawing.Size(573, 20);
             this.richTextBox_seriesFormat_Subtitle.TabIndex = 8;
             this.richTextBox_seriesFormat_Subtitle.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Subtitle, resources.GetString("richTextBox_seriesFormat_Subtitle.ToolTip"));
@@ -1649,7 +1675,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(276, 25);
+            this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(342, 22);
             this.richTextBox_seriesFormat_Col2.Multiline = false;
             this.richTextBox_seriesFormat_Col2.Name = "richTextBox_seriesFormat_Col2";
             this.richTextBox_seriesFormat_Col2.Size = new System.Drawing.Size(289, 20);
@@ -1663,10 +1689,10 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(97, 47);
+            this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(163, 47);
             this.richTextBox_seriesFormat_Title.Multiline = false;
             this.richTextBox_seriesFormat_Title.Name = "richTextBox_seriesFormat_Title";
-            this.richTextBox_seriesFormat_Title.Size = new System.Drawing.Size(641, 20);
+            this.richTextBox_seriesFormat_Title.Size = new System.Drawing.Size(573, 20);
             this.richTextBox_seriesFormat_Title.TabIndex = 6;
             this.richTextBox_seriesFormat_Title.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Title, resources.GetString("richTextBox_seriesFormat_Title.ToolTip"));
@@ -1675,7 +1701,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.richTextBox_seriesFormat_Col1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col1.ContextMenuStrip = this.contextMenuStrip_InsertFields;
-            this.richTextBox_seriesFormat_Col1.Location = new System.Drawing.Point(97, 25);
+            this.richTextBox_seriesFormat_Col1.Location = new System.Drawing.Point(163, 22);
             this.richTextBox_seriesFormat_Col1.Multiline = false;
             this.richTextBox_seriesFormat_Col1.Name = "richTextBox_seriesFormat_Col1";
             this.richTextBox_seriesFormat_Col1.Size = new System.Drawing.Size(180, 20);
@@ -1699,6 +1725,20 @@ namespace WindowPlugins.GUITVSeries
                     "ve watched an episodes which hasn\'t been rated yet.");
             this.optionAsk2Rate.UseVisualStyleBackColor = true;
             this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+            // 
+            // dbOptiongraphicalGroupView
+            // 
+            this.dbOptiongraphicalGroupView.AutoSize = true;
+            this.dbOptiongraphicalGroupView.Location = new System.Drawing.Point(10, 28);
+            this.dbOptiongraphicalGroupView.Name = "dbOptiongraphicalGroupView";
+            this.dbOptiongraphicalGroupView.Option = "graphicalGroupView";
+            this.dbOptiongraphicalGroupView.Size = new System.Drawing.Size(198, 17);
+            this.dbOptiongraphicalGroupView.TabIndex = 8;
+            this.dbOptiongraphicalGroupView.Text = "Display Group Layout as Thumbnails";
+            this.dbOptiongraphicalGroupView.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptiongraphicalGroupView, "Enable this option to Display Group Views Graphically");
+            this.dbOptiongraphicalGroupView.UseVisualStyleBackColor = true;
+            this.dbOptiongraphicalGroupView.CheckedChanged += new System.EventHandler(this.dbOptiongraphicalGroupView_CheckedChanged);
             // 
             // splitMain_Log
             // 
@@ -2519,7 +2559,6 @@ namespace WindowPlugins.GUITVSeries
             // tab_view
             // 
             this.tab_view.AutoScroll = true;
-            this.tab_view.Controls.Add(this.chkOnlineFavourites);
             this.tab_view.Controls.Add(this.groupBox10);
             this.tab_view.Controls.Add(this.groupBox9);
             this.tab_view.Controls.Add(this.groupBox8);
@@ -2542,7 +2581,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox10.Controls.Add(this.viewStepGroupLbl);
             this.groupBox10.Controls.Add(this.viewStepGroupByTextBox);
             this.groupBox10.Controls.Add(this.viewStepType);
-            this.groupBox10.Location = new System.Drawing.Point(40, 397);
+            this.groupBox10.Location = new System.Drawing.Point(8, 344);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(482, 273);
             this.groupBox10.TabIndex = 1;
@@ -3279,6 +3318,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.tabLayoutSettings.AutoScroll = true;
             this.tabLayoutSettings.Controls.Add(this.label37);
+            this.tabLayoutSettings.Controls.Add(this.groupBox6);
             this.tabLayoutSettings.Controls.Add(this.groupBox3);
             this.tabLayoutSettings.Controls.Add(this.groupBox4);
             this.tabLayoutSettings.Controls.Add(this.groupBox2);
@@ -3296,11 +3336,23 @@ namespace WindowPlugins.GUITVSeries
             this.label37.AutoSize = true;
             this.label37.Location = new System.Drawing.Point(11, 7);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(644, 26);
+            this.label37.Size = new System.Drawing.Size(611, 26);
             this.label37.TabIndex = 10;
-            this.label37.Text = "Listing Format Settings will be overridden by skin if defined, to override set th" +
-                "e Import attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your " +
-                "skin directory.\r\n";
+            this.label37.Text = "Layout Settings will be overridden by skin if defined, to override set the Import" +
+                " attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin dir" +
+                "ectory.\r\n";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Controls.Add(this.dbOptiongraphicalGroupView);
+            this.groupBox6.Location = new System.Drawing.Point(10, 422);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(745, 67);
+            this.groupBox6.TabIndex = 9;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Group Settings";
             // 
             // groupBox3
             // 
@@ -3308,6 +3360,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col3);
             this.groupBox3.Controls.Add(this.label12);
+            this.groupBox3.Controls.Add(this.comboBox_seasonFormat);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Main);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col1);
@@ -3321,29 +3374,29 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox3.Size = new System.Drawing.Size(745, 121);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Season View";
+            this.groupBox3.Text = "Season Layout";
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(6, 47);
+            this.label12.Location = new System.Drawing.Point(80, 47);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(85, 13);
+            this.label12.Size = new System.Drawing.Size(80, 13);
             this.label12.TabIndex = 5;
             this.label12.Text = "Title Format:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(6, 25);
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(7, 24);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(85, 13);
+            this.label13.Size = new System.Drawing.Size(42, 13);
             this.label13.TabIndex = 0;
-            this.label13.Text = "Listing Format:";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label13.Text = "Layout:";
             // 
             // label14
             // 
-            this.label14.Location = new System.Drawing.Point(6, 68);
+            this.label14.Location = new System.Drawing.Point(75, 68);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(85, 13);
             this.label14.TabIndex = 7;
@@ -3352,9 +3405,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label15
             // 
-            this.label15.Location = new System.Drawing.Point(6, 89);
+            this.label15.Location = new System.Drawing.Point(80, 89);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(85, 13);
+            this.label15.Size = new System.Drawing.Size(80, 13);
             this.label15.TabIndex = 9;
             this.label15.Text = "Main Format:";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3378,29 +3431,29 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.Size = new System.Drawing.Size(745, 121);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Episode View";
+            this.groupBox4.Text = "Episode Layout";
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(6, 25);
+            this.label7.Location = new System.Drawing.Point(80, 25);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(85, 13);
+            this.label7.Size = new System.Drawing.Size(80, 13);
             this.label7.TabIndex = 0;
             this.label7.Text = "Listing Format:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(6, 46);
+            this.label8.Location = new System.Drawing.Point(80, 47);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(85, 13);
+            this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 4;
             this.label8.Text = "Title Format:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(6, 67);
+            this.label9.Location = new System.Drawing.Point(75, 68);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(85, 13);
             this.label9.TabIndex = 6;
@@ -3409,9 +3462,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(6, 90);
+            this.label10.Location = new System.Drawing.Point(80, 91);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(85, 13);
+            this.label10.Size = new System.Drawing.Size(80, 13);
             this.label10.TabIndex = 8;
             this.label10.Text = "Main Format:";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3423,6 +3476,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Main);
+            this.groupBox2.Controls.Add(this.comboBox_seriesFormat);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Subtitle);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col2);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Title);
@@ -3436,29 +3490,29 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox2.Size = new System.Drawing.Size(745, 121);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Series View";
+            this.groupBox2.Text = "Series Layout";
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(6, 29);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 25);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 13);
+            this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 0;
-            this.label3.Text = "Listing Format:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label3.Text = "Layout:";
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(6, 92);
+            this.label6.Location = new System.Drawing.Point(80, 91);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.Size = new System.Drawing.Size(80, 13);
             this.label6.TabIndex = 9;
             this.label6.Text = "Main Format:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(6, 71);
+            this.label5.Location = new System.Drawing.Point(75, 70);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 13);
             this.label5.TabIndex = 7;
@@ -3467,9 +3521,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(6, 50);
+            this.label4.Location = new System.Drawing.Point(80, 49);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 13);
+            this.label4.Size = new System.Drawing.Size(80, 13);
             this.label4.TabIndex = 5;
             this.label4.Text = "Title Format:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4229,19 +4283,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
-            // chkOnlineFavourites
-            // 
-            this.chkOnlineFavourites.AutoSize = true;
-            this.chkOnlineFavourites.Location = new System.Drawing.Point(46, 353);
-            this.chkOnlineFavourites.Name = "chkOnlineFavourites";
-            this.chkOnlineFavourites.Size = new System.Drawing.Size(250, 17);
-            this.chkOnlineFavourites.TabIndex = 22;
-            this.chkOnlineFavourites.Text = "Use Favourites defined online in Favourite View";
-            this.toolTip_InfoHelp.SetToolTip(this.chkOnlineFavourites, "Enable this option to use your favourites that you have defined online at thetvdb" +
-                    ".com in your Favourite view.");
-            this.chkOnlineFavourites.UseVisualStyleBackColor = true;
-            this.chkOnlineFavourites.CheckedChanged += new System.EventHandler(this.chkOnlineFavourites_CheckedChanged);
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4301,7 +4342,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tab_view.ResumeLayout(false);
-            this.tab_view.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox11.ResumeLayout(false);
@@ -4318,9 +4358,13 @@ namespace WindowPlugins.GUITVSeries
             this.tabFormattingRules.PerformLayout();
             this.tabLayoutSettings.ResumeLayout(false);
             this.tabLayoutSettings.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabpage_Extra.ResumeLayout(false);
             this.splitContainer_treeextra.Panel1.ResumeLayout(false);
             this.splitContainer_treeextra.Panel2.ResumeLayout(false);
@@ -4588,6 +4632,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Col3;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox_seasonFormat;
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Main;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.RichTextBox richTextBox_seasonFormat_Col1;
@@ -4610,6 +4655,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Col3;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Main;
+        private System.Windows.Forms.ComboBox comboBox_seriesFormat;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Subtitle;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Col2;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Title;
@@ -4618,6 +4664,8 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RichTextBox richTextBox_seriesFormat_Col1;
         private System.Windows.Forms.Label label4;
+        private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptiongraphicalGroupView;
+        private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label65;
         private System.Windows.Forms.Label label64;
@@ -4655,6 +4703,5 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.LinkLabel linkExpressionHelp;
-        private System.Windows.Forms.CheckBox chkOnlineFavourites;
     }
 }

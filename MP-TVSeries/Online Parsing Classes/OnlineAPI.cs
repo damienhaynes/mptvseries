@@ -14,15 +14,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
   {
     private static class apiURIs
     {
-        public const string Mirrors = "mirrors";
-        public const string Languages = "languages";
-        public const string GetSeries = @"GetSeries.php?seriesname={0}&language=all";
-        public const string FullSeriesUpdate = @"series/{0}/all/{1}";
-        public const string Updates = "updates/updates_{0}";
-        public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
-        public const string GetRatingsForUser = @"GetRatingsForUser.php?apikey={0}&accountid={1}&seriesid={2}";
-        public const string ConfigureFavourites = @"User_Favorites.php?accountid={0}&type={1}&seriesid={2}";
-        public const string GetAllFavourites = @"User_Favorites.php?accountid={0}";
+      public const string Mirrors = "mirrors";
+      public const string Languages = "languages";
+      public const string GetSeries = @"GetSeries.php?seriesname={0}&language=all";
+      public const string FullSeriesUpdate = @"series/{0}/all/{1}";
+      public const string Updates = "updates/updates_{0}";
+      public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
+      public const string GetRatingsForUser = @"GetRatingsForUser.php?apikey={0}&accountid={1}&seriesid={2}";
     }
 
     private enum Format
@@ -90,22 +88,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                                      sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
     }
 
-    static public XmlNodeList GetUserRatings(String sSeriesID, String sAccountID)
-    {        
-        string url = String.Format(apiURIs.GetRatingsForUser, DBOnlineMirror.cApiKey, sAccountID, sSeriesID);
-        return Generic(url, true, false, Format.NoExtension);
-    }
-
-    static public XmlNodeList GetUserFavourites(String sAccountID)
+    static public XmlNodeList GetUserRatings(String sSeriesName)
     {
-        string url = String.Format(apiURIs.GetAllFavourites, sAccountID);
-        return Generic(url, true, false, Format.NoExtension);
-    }
-    
-    static public XmlNodeList ConfigureFavourites(bool bAdd, String sAccountID, String sSeriesID)
-    {
-        string url = String.Format(apiURIs.ConfigureFavourites, sAccountID, (bAdd?"add":"remove"),sSeriesID);
-        return Generic(url, true, false, Format.NoExtension);
+        return Generic(apiURIs.GetRatingsForUser, Format.Xml);
     }
 
     static public XmlNodeList UpdateSeries(String sSeriesID)
@@ -174,7 +159,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     {
       return getFromCache(seriesID, SelLanguageAsString + ".xml");
     }
-    
+
     static public XmlNodeList getBannerList(int seriesID)
     {
       return getFromCache(seriesID, "banners.xml");

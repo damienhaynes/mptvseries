@@ -57,7 +57,6 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region List<T> Methods
-
         public static List<T> inverseList<T>(List<T> input)
         {
             List<T> result = new List<T>(input.Count);
@@ -65,7 +64,18 @@ namespace WindowPlugins.GUITVSeries
                 result.Add(input[i]);
             return result;
         }
-       
+        /*
+        public static List<T> getFilteredList<T, P>(List<T> inputList, string PropertyName, P ValueOfProperty)
+        {
+            List<T> resultList = new List<T>();
+            foreach (T item in inputList)
+            {
+                if (ValueOfProperty.Equals(((P)item.GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.GetProperty, null, item, null))))
+                    resultList.Add(item);
+            }
+            return resultList;
+        }
+        */
         public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
         {
             // takes care of "looping"
@@ -135,7 +145,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <typeparam name="T">The Type of elements in the IList</typeparam>
         /// <param name="elements">All elements, this value cannot be null</param>
-        /// <param name="startElement">The starting point for the operation (0 operates like a traditional foreach loop)</param>
+        /// <param name="startElement">The starting point for the operation (0 operatates like a traditional foreach loop)</param>
         /// <param name="operation">The operation to perform on each element</param>
         public static void ProximityForEach<T>(IList<T> elements, int startElement, ForEachOperation<T> operation)
         {
@@ -164,8 +174,55 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }      
+        }
 
+
+        
+        # region compareAndAdaptList
+        /*
+        // needed for compareAndAdaptList because we cant pass parameters into predicates??
+        class classify<t>
+        {
+            List<t> compareCollection = null;
+            addOperationOnRemovedItemsDelegate<t> AdditionOperation = null;
+            addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare = null;
+            bool inverse = false;
+
+            public classify(List<t> compareCollection, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> AdditionOperation, bool inverse)
+            {
+                this.compareCollection = compareCollection;
+                this.AdditionOperation = AdditionOperation;
+                this.addOperationOnItemBeforeCompare = addOperationOnItemBeforeCompare;
+                this.inverse = inverse;
+            }
+
+            public bool isNotInCompareList(t item)
+            {
+                if (!inverse ? !compareCollection.Contains(addOperationOnItemBeforeCompare(item))
+                    : compareCollection.Contains(addOperationOnItemBeforeCompare(item)))
+                    return AdditionOperation(item);
+                else return false;
+            }
+        }
+        public delegate bool addOperationOnRemovedItemsDelegate<t>(t item);
+        public delegate t addOperationOnItemBeforeCompare<t>(t item);
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> addOperationOnRemovedItems, bool inverse)
+        {
+            classify<t> classif = new classify<t>(compareList, addOperationOnItemBeforeCompare, addOperationOnRemovedItems, inverse);
+            return ANDAdaptList.RemoveAll(classif.isNotInCompareList);
+        }
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, addOperationOnItemBeforeCompare<t> addOperationOnItemBeforeCompare, addOperationOnRemovedItemsDelegate<t> addOperationOnRemovedItems)
+        {
+            return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOperationOnItemBeforeCompare, addOperationOnRemovedItems, false);
+        }
+        public static int compareAndAdaptList<t>(ref List<t> ANDAdaptList, List<t> compareList, bool inverse)
+        {
+            addOperationOnItemBeforeCompare<t> addOp = delegate(t item) { return item; };
+            addOperationOnRemovedItemsDelegate<t> onRemove = delegate(t item) { return true; };
+            return compareAndAdaptList<t>(ref ANDAdaptList, compareList, addOp, onRemove, inverse);
+        }
+         */
+        #endregion
         #endregion
 
         #region getCorrespondingX Methods
@@ -203,7 +260,6 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Other Public Methods
-
         static List<string> nonExistingFiles = new List<string>();
         public static List<string> filterExistingFiles(List<string> filenames)
         {
@@ -260,7 +316,6 @@ namespace WindowPlugins.GUITVSeries
             }
             return path;
         }       
-
         #endregion
     }
 }

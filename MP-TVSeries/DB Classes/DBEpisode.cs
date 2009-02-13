@@ -189,8 +189,23 @@ namespace WindowPlugins.GUITVSeries
 	             return base[fieldName];
             }
             set 
-            {                
-	            base[fieldName] = value;                               
+            { 
+                switch(fieldName)
+                {
+                    case cMyRating:
+                        if (!Helper.String.IsNullOrEmpty(value) && value != base[fieldName])
+                        {
+                            int rating = -1;
+                            if(Int32.TryParse(value, out rating))
+                            {
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.RatingType.episode, base[cID], rating);
+                            }
+                        }
+                        goto default;
+                    default:
+	                    base[fieldName] = value;
+                        break;
+                }
             }
         }
 

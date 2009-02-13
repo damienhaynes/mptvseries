@@ -114,6 +114,12 @@ namespace WindowPlugins.GUITVSeries
 
         double getRelSortingIndexOfEp(DBEpisode ep)
         {
+            /*return ep[DBEpisode.cSeasonIndex] == 0
+                   ? ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty
+                     ? 9999 + ep[DBOnlineEpisode.cEpisodeIndex]
+                     : ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100f)
+                   : ((int)ep[DBEpisode.cEpisodeIndex]);*/
+
             if (ep[DBEpisode.cSeasonIndex] == 0)
             {
                 if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)

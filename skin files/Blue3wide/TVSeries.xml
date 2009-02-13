@@ -886,39 +886,9 @@
 			<onleft>50</onleft>
             <onright>50</onright>
             <onup>20</onup>
-			<ondown>3</ondown>
-          </control> 
-		  <control>
-            <description>Change Layout</description>
-            <type>button</type>
-            <id>3</id>
-            <label>Change Layout</label>
-			<onleft>50</onleft>
-            <onright>50</onright>
-            <onup>2</onup>
-			<ondown>4</ondown>
-          </control> 
-		  <control>
-            <description>Options</description>
-            <type>button</type>
-            <id>4</id>
-            <label>Options</label>
-			<onleft>50</onleft>
-            <onright>50</onright>
-            <onup>3</onup>
-			<ondown>5</ondown>
-          </control>
-          <control>
-            <description>Run Import</description>
-            <type>button</type>
-            <id>5</id>
-            <label>Run Import</label>
-			<onleft>50</onleft>
-            <onright>50</onright>
-            <onup>4</onup>
 			<ondown>66608</ondown>
-          </control>
-		  <control>
+          </control> 
+          <control>
 	        <description>Video Settings</description>
 	        <type>button</type>
 	        <id>66608</id>
@@ -927,7 +897,7 @@
 			<onleft>50</onleft>
 	        <onright>50</onright>
 			<ondown>10</ondown>
-            <onup>5</onup>
+            <onup>2</onup>
 		  </control>
           <control>
             <description>Moving Pictures</description>

@@ -168,7 +168,6 @@ namespace WindowPlugins.GUITVSeries
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
-        private static List<string> m_SupportedLayouts = new List<string>();
 
         private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
@@ -213,15 +212,6 @@ namespace WindowPlugins.GUITVSeries
 
         [SkinControlAttribute(2)]
         protected GUIButtonControl viewMenuButton = null;
-
-        [SkinControlAttribute(3)]
-        protected GUIButtonControl LayoutMenuButton = null;
-
-        [SkinControlAttribute(4)]
-        protected GUIButtonControl OptionsMenuButton = null;
-
-        [SkinControlAttribute(5)]
-        protected GUIButtonControl ImportButton = null;
 
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
@@ -860,6 +850,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void bgLoadFacade()
+        //void LoadFacade()
         {
             MPTVSeriesLog.Write("Begin LoadFacade", MPTVSeriesLog.LogLevel.Debug);
             try
@@ -933,6 +924,16 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // graphical
                                 ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.AlbumView);
+                                // assume 758 x 140 for all banners
+                                //Size sizeImage = new Size();
+
+                                //m_Facade.AlbumListView.IconOffsetX = m_nInitialIconXOffset;
+                                //sizeImage.Width = m_Facade.AlbumListView.Width - 2 * m_Facade.AlbumListView.IconOffsetX;
+                                //sizeImage.Height = sizeImage.Width * 140 / 758;
+                                //m_Facade.AlbumListView.IconOffsetY = m_nInitialIconYOffset * sizeImage.Height / m_nInitialItemHeight;
+                                //m_Facade.AlbumListView.ItemHeight = sizeImage.Height + 2 * m_Facade.AlbumListView.IconOffsetY;
+                                //m_Facade.AlbumListView.SetImageDimensions(sizeImage.Width, sizeImage.Height);
+                                //m_Facade.AlbumListView.AllocResources();
                             }
                             else
                             {
@@ -956,7 +957,15 @@ namespace WindowPlugins.GUITVSeries
                                     if (!sSeriesDisplayMode.Contains("List"))
                                     {
                                         // Graphical Mode
-                                        item = new GUIListItem();                                                                                           
+                                        item = new GUIListItem();                                       
+                                                                
+                                        /*string img = ImageAllocator.GetSeriesBanner(series);
+                                        if (Helper.String.IsNullOrEmpty(img))
+                                        {
+                                            item.Label = FieldGetter.resolveDynString(m_sFormatSeriesCol2, series);
+                                        }
+                                        else
+                                            item.IconImage = item.IconImageBig = img;*/                             
                                     }
                                     else
                                     {
@@ -985,13 +994,15 @@ namespace WindowPlugins.GUITVSeries
                                         // select the first that has a file
                                         if (selectedIndex == -1 && series[DBOnlineSeries.cHasLocalFiles] != 0)
                                         {
-                                            selectedIndex = count;                                        
+                                            selectedIndex = count;
+                                            //item.Selected = true;
                                         }
                                     }
 
                                     if (m_back_up_select_this != null && series != null && selectedIndex == -1 && series[DBSeries.cID] == m_back_up_select_this[0])
                                     {
-                                        selectedIndex = count;                                        
+                                        selectedIndex = count;
+                                        //item.Selected = true;
                                     }
                                    
                                     if (bg.CancellationPending) return;
@@ -1513,7 +1524,6 @@ namespace WindowPlugins.GUITVSeries
             optionsFastViewSwitch,
             optionsFanartRandom,
             optionsSeriesFanart,
-            optionsUseOnlineFavourites,
             actionRecheckMI,
             showFanartChooser
         }
@@ -1524,8 +1534,7 @@ namespace WindowPlugins.GUITVSeries
             action,
             options,
             rate,
-            switchView,
-            switchLayout
+            switchView
         }
 
         internal static void showRatingsDialog(DBTable item, bool auto)
@@ -1567,29 +1576,14 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return;// cancelled
             if (dlg.SelectedId == 11 && auto) DBOption.SetOptions(DBOption.cAskToRate, false);
             else
-            {                                
-                string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);                
-                string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
-                string value = dlg.SelectedId.ToString();
-
-                // Submit rating online database if current rating is different
-                if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
-                {
-                    int rating = -1;
-                    if (Int32.TryParse(value, out rating))
-                    {
-                        Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id ,rating);
-                    }
-                }
-
-                // Apply to local database
-                item[type] = dlg.SelectedId;
+            {
+                item[level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating] = dlg.SelectedId;
                 // Set the all user rating if not already set                
                 if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
                     item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = dlg.SelectedId;
-
                 item.Commit();
             }
+
         }
 
         internal bool showViewSwitchDialog()
@@ -1617,107 +1611,6 @@ namespace WindowPlugins.GUITVSeries
                 return true;
             }
             return false;
-        }
-
-        internal void ShowOptionsMenu()
-        {
-            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-                if (dlg == null) return;
-
-            dlg.Reset();
-            dlg.SetHeading(Translation.Options);
-
-            GUIListItem pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
-            dlg.Add(pItem);
-            pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
-
-            pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
-            dlg.Add(pItem);
-            pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
-
-            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
-            {
-                pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
-                dlg.Add(pItem);
-                pItem.ItemId = (int)eContextItems.optionsAskToRate;
-            }
-
-            if (FanartBackground != null)
-            {
-                pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
-                dlg.Add(pItem);
-                pItem.ItemId = (int)eContextItems.optionsFanartRandom;
-
-                pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
-                dlg.Add(pItem);
-                pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
-            }
-
-            //pItem = new GUIListItem(Translation.UseOnlineFavourites + " (" + (DBOption.GetOptions(DBOption.cOnlineFavourites) ? Translation.on : Translation.off) + ")");
-            //dlg.Add(pItem);
-            //pItem.ItemId = (int)eContextItems.optionsUseOnlineFavourites;
-
-            dlg.DoModal(GUIWindowManager.ActiveWindow);
-            if (dlg.SelectedId >= 0)
-            {
-                switch (dlg.SelectedId)
-                {
-                    case (int)eContextItems.optionsOnlyShowLocal:
-                        DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
-                        // Update Episode counts...this is going to be expensive                        
-                        SQLCondition condEmpty = new SQLCondition();
-                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-                        foreach (DBSeries series in AllSeries)
-                            DBSeries.UpdatedEpisodeCounts(series);
-                        LoadFacade();
-                        break;
-
-                    case (int)eContextItems.optionsPreventSpoilers:
-                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
-                        LoadFacade();
-                        break;
-                    case (int)eContextItems.optionsFastViewSwitch:
-                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
-                        break;
-                    case (int)eContextItems.optionsAskToRate:
-                        DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
-                        break;
-                    case (int)eContextItems.optionsFanartRandom:
-                        DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
-                        break;
-                    case (int)eContextItems.optionsSeriesFanart:
-                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
-                        if (this.listLevel == Listlevel.Series)
-                        {
-                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
-                            {
-                                Series_OnItemSelected(m_Facade.SelectedListItem);
-                            }
-                            else
-                                DisableFanart();
-                        }
-                        break;
-                    case (int)eContextItems.optionsUseOnlineFavourites:
-                        DBOption.SetOptions(DBOption.cOnlineFavourites, !DBOption.GetOptions(DBOption.cOnlineFavourites));
-                        // Update Views                        
-                        DBView view = new DBView(1);
-                        if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
-                        {
-                            view[DBView.cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
-                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                        }
-                        else
-                        {
-                            view[DBView.cViewConfig] = @"series<;><Series.isOnlineFavourite>;=;1<;><;>" +
-                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                        }
-                        view.Commit();
-                        LoadFacade();
-                        break;
-                }
-            }
         }
 
         protected override void OnShowContextMenu()
@@ -1875,13 +1768,7 @@ namespace WindowPlugins.GUITVSeries
                                 currentSeries = (DBSeries)currentitem.TVTag;
                             else currentSeries = m_SelectedSeries;
 
-                            if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
-                            {
-                                pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
-                            }
-                            else
-                                pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsOnlineFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
-
+                            pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionToggleFavorite;
                         }
@@ -1891,13 +1778,6 @@ namespace WindowPlugins.GUITVSeries
                     pItem = new GUIListItem(Translation.ChangeView + " >>");
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
-                    
-                    if (GetLayoutCount(this.listLevel) > 1)
-                    {
-                        pItem = new GUIListItem(Translation.ChangeLayout + " >>");
-                        dlg.Add(pItem);
-                        pItem.ItemId = (int)eContextMenus.switchLayout;
-                    }
 
                     if (listLevel != Listlevel.Group)
                     {
@@ -2001,13 +1881,46 @@ namespace WindowPlugins.GUITVSeries
                             }
                             break;
 
-                      case (int)eContextMenus.options:
+                        case (int)eContextMenus.options:
                             {
                                 dlg.Reset();
-                                ShowOptionsMenu();
-                                return;
-                            }                            
+                                dlg.SetHeading(Translation.Options);
 
+                                pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
+
+                                pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
+
+                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                                {
+                                    pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsAskToRate;
+                                }
+
+                                /*pItem = new GUIListItem(Translation.ChangeViewFast + " (" + (DBOption.GetOptions(DBOption.cswitchViewsFast) ? Translation.on : Translation.off) + ")");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.optionsFastViewSwitch;*/
+
+                                if (FanartBackground != null)
+                                {
+                                    pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsFanartRandom;
+
+                                    pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
+                                }
+
+                                dlg.DoModal(GUIWindowManager.ActiveWindow);
+                                if (dlg.SelectedId != -1)
+                                    bExitMenu = true;
+                            }
+                            break;
                         case (int)eContextMenus.switchView:
                             {
                                 dlg.Reset();
@@ -2015,14 +1928,6 @@ namespace WindowPlugins.GUITVSeries
                                     return;
                             }
                             break;
-
-                        case (int)eContextMenus.switchLayout:
-                            {
-                                dlg.Reset();
-                                ShowLayoutMenu();
-                                return;
-                            }                            
-
                         case (int)eContextMenus.rate:
                             {
                                 switch (listLevel)
@@ -2471,10 +2376,9 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.actionToggleFavorite:
                         {
-                            // Toggle Favourites
+                            // toggle Favourites
                             m_SelectedSeries.toggleFavourite();
-                            
-                            // If we are in favourite view we need to reload to remove the series
+                            // if we are in fav view we have to reload to get the series away
                             LoadFacade();
                             break;
                         }
@@ -2498,10 +2402,45 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.actionPlayRandom:
                         playRandomEp();
                         break;
-                  
+
+                    case (int)eContextItems.optionsOnlyShowLocal:
+                        DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
+                        // Update Episode counts...this is going to be expensive                        
+                        SQLCondition condEmpty = new SQLCondition();
+                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+                        foreach (DBSeries series in AllSeries)
+                            DBSeries.UpdatedEpisodeCounts(series);
+                        LoadFacade();
+                        break;
+
+                    case (int)eContextItems.optionsPreventSpoilers:
+                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
+                        LoadFacade();
+                        break;
+                    case (int)eContextItems.optionsFastViewSwitch:
+                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
+                        break;
+                    case (int)eContextItems.optionsAskToRate:
+                        DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
+                        break;
                     case (int)eContextItems.showFanartChooser:
                         ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
-                        break;                   
+                        break;
+                    case (int)eContextItems.optionsFanartRandom:
+                        DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
+                        break;
+                    case (int)eContextItems.optionsSeriesFanart:
+                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
+                        if (this.listLevel == Listlevel.Series)
+                        {
+                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
+                            {
+                                Series_OnItemSelected(m_Facade.SelectedListItem);
+                            }
+                            else
+                                DisableFanart();
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
@@ -2721,6 +2660,8 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
         }
         
+        
+
         void resetListLevelDummies()
         {
             if (dummyIsSeries != null) dummyIsSeries.Visible = false;
@@ -2902,34 +2843,8 @@ namespace WindowPlugins.GUITVSeries
             if (control == this.viewMenuButton)
             {
                 showViewSwitchDialog();
-                viewMenuButton.Focus = false;
                 return;
             }
-
-            if (control == this.LayoutMenuButton)
-            {
-                ShowLayoutMenu();
-                LayoutMenuButton.Focus = false;
-                return;
-            }
-
-            if (control == this.OptionsMenuButton)
-            {
-                ShowOptionsMenu();
-                OptionsMenuButton.Focus = false;
-                return;
-            }
-
-            if (control == this.ImportButton)
-            {
-                lock (m_parserUpdaterQueue)
-                {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-                }
-                ImportButton.Focus = false;
-                return;
-            }            
-
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
             {
@@ -2986,266 +2901,6 @@ namespace WindowPlugins.GUITVSeries
                 }
             }           
             base.OnClicked(controlId, control, actionType);
-        }
-
-        private string GetCurrentLayout()
-        {
-            switch (this.listLevel)
-            {
-                case Listlevel.Group:
-                {
-                    if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
-                        return "SmallIcons";
-                    else
-                        return "List";
-                }
-
-                case Listlevel.Series:
-                {
-                    return DBOption.GetOptions(DBOption.cView_Series_ListFormat);
-                }
-
-                case Listlevel.Season:
-                {
-                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
-                        return "Filmstrip";
-                    else
-                        return "List";
-                }
-
-                default:
-                    return "List";
-            }
-        }
-
-        private static bool IsLayoutSupported(Listlevel listLevel)
-        {
-            bool supported = false;
-            string currentLayout = string.Empty;
-            List<String> layouts = null;
-
-            // Get List of layouts for View
-            layouts = GetViewLayouts(listLevel);
-            if (layouts == null || layouts.Count == 0)
-                return false;
-            
-            // Check if Current Layout is supported
-            switch (listLevel)
-            {
-                case Listlevel.Group:
-                    {
-                        if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
-                            currentLayout = "SmallIcons";
-                        else
-                            currentLayout = "List";
-
-                        if (layouts.Contains(currentLayout))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Series:
-                    {
-                        if (layouts.Contains(DBOption.GetOptions(DBOption.cView_Series_ListFormat)))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Season:
-                    {
-                       if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
-                            currentLayout = "Filmstrip";
-                        else
-                            currentLayout = "List";
-
-                        if (layouts.Contains(currentLayout))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Episode:
-                    {
-                        if (layouts.Contains("List"))
-                            supported = true;
-                    }
-                    break;
-            }
-            return supported;            
-        }
-
-        private static List<string> GetViewLayouts(Listlevel listLevel)
-        {
-            List<String> layouts = new List<string>();
-            foreach (string layout in m_SupportedLayouts)
-            {
-                switch (listLevel)
-                {
-                    case Listlevel.Group:
-                        {
-                            if (layout.StartsWith("Group"))
-                                layouts.Add(layout.Substring(5));
-                        }
-                        break;
-
-                    case Listlevel.Series:
-                        {
-                            if (layout.StartsWith("Series"))
-                                layouts.Add(layout.Substring(6));
-                        }
-                        break;
-
-                    case Listlevel.Season:
-                        {
-                            if (layout.StartsWith("Season"))
-                                layouts.Add(layout.Substring(6));
-                        }
-                        break;
-
-                    case Listlevel.Episode:
-                        {
-                            if (layout.StartsWith("Episode"))
-                                layouts.Add(layout.Substring(7));
-                        }
-                        break;
-                }
-            }
-            return layouts;
-        }
-
-        private static int GetLayoutCount(Listlevel listLevel)
-        {
-            int count = 0;
-            foreach (string layout in m_SupportedLayouts)
-            {
-                switch (listLevel)
-                {
-                    case Listlevel.Group:
-                        {
-                            if (layout.StartsWith("Group"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Series:
-                        {
-                            if (layout.StartsWith("Series"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Season:
-                        {
-                            if (layout.StartsWith("Season"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Episode:
-                        {
-                            if (layout.StartsWith("Episode"))
-                                count++;
-                        }
-                        break;
-                }
-            }
-            return count;
-        }
-        
-        private void ShowLayoutMenu()
-        {
-            string currentLayout = GetCurrentLayout();
-
-            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-            dlg.Reset();
-            dlg.SetHeading(Translation.ChangeLayout);
-
-            int counter = 0;            
-            string item = string.Empty;
-
-            // Get Available Layouts for Skin
-            foreach (string layout in m_SupportedLayouts)
-            {
-                switch (this.listLevel)
-                {
-                    case Listlevel.Group:
-                    {
-                        if (layout.StartsWith("Group"))
-                            item = layout.Substring(5);
-                    }
-                    break;
-
-                    case Listlevel.Series:
-                    {
-                        if (layout.StartsWith("Series"))
-                            item = layout.Substring(6);
-                    }
-                    break;
-
-                    case Listlevel.Season:
-                    {
-                        if (layout.StartsWith("Season"))
-                            item = layout.Substring(6);
-                    }
-                    break;
-
-                    case Listlevel.Episode:
-                    {
-                        if (layout.StartsWith("Episode"))
-                            item = layout.Substring(7);
-                    }
-                    break;
-                }
-
-                if (item.Length > 0)
-                {
-                    GUIListItem pItem = new GUIListItem(item);            
-                    dlg.Add(pItem);
-                    pItem.ItemId = counter++;
-                    item = string.Empty;
-                }                
-            }
-
-            if (counter > 0)            
-                dlg.DoModal(GUIWindowManager.ActiveWindow);
-            
-            if (dlg.SelectedId >= 0 && !dlg.SelectedLabelText.Equals(currentLayout))
-            {
-                switchLayout(dlg.SelectedLabelText);
-                LoadFacade();
-            }
-        }
-
-        private void switchLayout(string layout)
-        {
-            switch (this.listLevel)
-            {
-                case Listlevel.Group:
-                {
-                    if (layout == "List")
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView,"0");                            
-                    else
-                        DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
-                    return;
-                }
-
-                case Listlevel.Series:
-                {
-                    DBOption.SetOptions(DBOption.cView_Series_ListFormat,layout);
-                    return;
-                }
-
-                case Listlevel.Season:
-                {
-                    if (layout == "List")
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                    else
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
-                    return;
-                }
-
-                default:
-                    return;
-            }    
         }
 
         public void Clock(Object stateInfo)
@@ -3438,7 +3093,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            // Delayed Image Loading of Series Banners            
+            // Delayed Image Loading of Series Banners
             seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
             //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
 
@@ -3473,7 +3128,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
-            // Delayed Image Loading of Season Banners            
+            // Delayed Image Loading of Season Banners
             seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
             //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
 
@@ -3891,70 +3546,12 @@ namespace WindowPlugins.GUITVSeries
             node = doc.DocumentElement.SelectSingleNode("/settings/version");
             if (node != null)
                 MPTVSeriesLog.Write("Loading Skin Settings: v" + node.InnerText);
-            
-            // Load Supported Layouts
-            // Skin Designers can choose to add these settings so there users can change layouts
-            // from with-in MediaPortals GUI
-            node = doc.DocumentElement.SelectSingleNode("/settings/layouts");
-            if (node != null)
-            {
-                MPTVSeriesLog.Write("Loading Supported Layouts Skin Settings");
-
-                innerNode = node.SelectSingleNode("group");
-                if (innerNode != null)
-                {
-                    // Possible type are List and SmallIcons
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupList");
-
-                    if (innerNode.Attributes.GetNamedItem("SmallIcons") != null)
-                        if (innerNode.Attributes.GetNamedItem("SmallIcons").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupSmallIcons");    
-                }
-
-                innerNode = node.SelectSingleNode("series");
-                if (innerNode != null)
-                {
-                    // Possible type are ListPosters, ListBanners, WideBanners and Filmstrip
-                    if (innerNode.Attributes.GetNamedItem("ListPosters") != null)
-                        if (innerNode.Attributes.GetNamedItem("ListPosters").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListPosters");
-
-                    if (innerNode.Attributes.GetNamedItem("ListBanners") != null)
-                        if (innerNode.Attributes.GetNamedItem("ListBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListBanners");
-
-                    if (innerNode.Attributes.GetNamedItem("WideBanners") != null)
-                        if (innerNode.Attributes.GetNamedItem("WideBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesWideBanners");
-
-                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
-                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesFilmstrip");
-                    
-                }
-
-                innerNode = node.SelectSingleNode("season");
-                if (innerNode != null)
-                {
-                    // Possible type are List and Filmstrip
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonList");
-
-                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
-                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonFilmstrip");
-                }
-
-                innerNode = node.SelectSingleNode("episode");
-                if (innerNode != null)
-                {
-                    // Possible type are List
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("EpisodeList");
-                }
-            }
 
             // Read View Settings and Import into Database
             node = doc.DocumentElement.SelectSingleNode("/settings/views");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
             {                
                 bLayoutsLoaded = true;
-                List<string> layouts = null;
 
                 // Append First Logo/Image to List
                 try
@@ -3975,39 +3572,23 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Group View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    // Dont override default Layout if skin can change from GUI
-                    if (GetLayoutCount(Listlevel.Group) == 0)
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                    switch (layout.ToLower())
                     {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "list":
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                                break;
-
-                            case "smallicons":
-                            case "bigicons":
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Group) > 0 && !IsLayoutSupported(Listlevel.Group))
-                    {
-                        // Set First Supported Type
-                        layouts = GetViewLayouts(Listlevel.Group);
-                        if (layouts == null || layouts.Count == 0)
+                        case "list":
                             DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                        else
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, layouts[0]);
-                        
+                            break;
+
+                        case "smallicons":
+                        case "bigicons":
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
+                            break;
+
+                        default:
+                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
+                            break;
                     }
-    
+                        
                 }
 
                 // Series View Settings
@@ -4016,44 +3597,29 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    if (GetLayoutCount(Listlevel.Series) == 0)
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;                    
+                    switch (layout.ToLower())
                     {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "listposters":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");
-                                break;
+                        case "listposters":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");                            
+                            break;
 
-                            case "listbanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");
-                                break;
+                        case "listbanners":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");                            
+                            break;
 
-                            case "filmstrip":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");
-                                break;
+                        case "filmstrip":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");                            
+                            break;
 
-                            case "widebanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Series) > 0 && !IsLayoutSupported(Listlevel.Series))
-                    {
-                        // Set First Supported Type                        
-                        layouts = GetViewLayouts(Listlevel.Series);
-                        if (layouts == null || layouts.Count == 0)
+                        case "widebanners":
+                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");                            
+                            break;
+                        
+                        default:
                             DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                        else
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, layouts[0]);
-
-                    }
+                            break;
+                    }                      
                 }
 
                 innerNode = node.SelectSingleNode("series/item1");
@@ -4070,38 +3636,24 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
 
-                    if (GetLayoutCount(Listlevel.Season) == 0)
+                    layout = innerNode.Attributes.GetNamedItem("layout").Value;
+                    switch (layout.ToLower())
                     {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "list":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                                break;
-
-                            case "smallicons":
-                            case "bigicons":
-                            case "filmstrip":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Season) > 0 && !IsLayoutSupported(Listlevel.Season))
-                    {
-                        // Set First Supported Type
-                        layouts = GetViewLayouts(Listlevel.Season);
-                        if (layouts == null || layouts.Count == 0)
+                        case "list":
                             DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                        else
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, layouts[0]);
-                        
+                            break;
+
+                        case "smallicons":
+                        case "bigicons":
+                        case "filmstrip":
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                            break;
+
+                        default:
+                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                            break;
                     }
+                        
                 }
 
                 innerNode = node.SelectSingleNode("season/item1");

@@ -61,7 +61,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cWatchedFileTimeStamp = "WatchedFileTimeStamp";
 
         public const String cIsFavourite = "isFavourite";
-        public const String cIsOnlineFavourite = "isOnlineFavourite";
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public const String cEpisodeOrders = "EpisodeOrders";
@@ -98,14 +97,14 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cAirsTime, "Hour Aired");
             s_FieldToDisplayNameMap.Add(cSortName, "Sort (Original) Name");
            
-            s_OnlineToFieldMap.Add("id", cID);            
+            s_OnlineToFieldMap.Add("id", cID);
             s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
             s_OnlineToFieldMap.Add("Status", cStatus);
             s_OnlineToFieldMap.Add("Genre", cGenre);
             s_OnlineToFieldMap.Add("Overview", cSummary);
             s_OnlineToFieldMap.Add("Airs_DayOfWeek", cAirsDay);
             s_OnlineToFieldMap.Add("Airs_Time", cAirsTime);
-            s_OnlineToFieldMap.Add("SortName", cSortName);            
+            s_OnlineToFieldMap.Add("SortName", cSortName);
 
             // make sure the table is created on first run
             DBOnlineSeries dummy = new DBOnlineSeries();
@@ -151,7 +150,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        // returns a list of all series with information stored in the database. 
+        // returns a list of all series with nformation stored in the database. 
         public static List<DBOnlineSeries> getAllSeries() {
             List<DBValue> seriesIDs = DBOnlineSeries.GetSingleField(DBOnlineSeries.cID, new SQLCondition(), new DBOnlineSeries());
             List<DBOnlineSeries> rtn = new List<DBOnlineSeries>();
@@ -246,8 +245,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    // forom subtitle retrieval always needs original (english) series title
-                    // if the user choose a different language for the import, we don't have this as the prettyname
+                        // forom subtitle retrieval always needs original (english) series title
+                        // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "7"; // 7 = english (original)
                         if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
@@ -282,7 +281,22 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                base[fieldName] = value;                           
+                switch (fieldName)
+                {
+                    case cMyRating:
+                        if (!Helper.String.IsNullOrEmpty(value) && value != base[fieldName])
+                        {
+                            int rating = -1;
+                            if (Int32.TryParse(value, out rating))
+                            {
+                                Online_Parsing_Classes.OnlineAPI.SubmitRating(WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.RatingType.series, base[cID], rating);
+                            }
+                        }
+                        goto default;
+                    default:
+                        base[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -748,16 +762,7 @@ namespace WindowPlugins.GUITVSeries
         public void toggleFavourite()
         {
             if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
-            if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
-            {
-                this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
-            }
-            else
-            {
-                this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite];
-                // Update online (add/remove)
-                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites((bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite], DBOption.GetOptions(DBOption.cOnlineUserID), this.m_onlineSeries[DBOnlineSeries.cID]);
-            }
+            this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
 
             this.m_onlineSeries.Commit();
 
