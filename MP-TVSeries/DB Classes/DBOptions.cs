@@ -46,6 +46,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBTorrentVersion = "dbTorrentVersion";
         public const String cDBViewsVersion = "DBViewsVersion";
         public const String cDBReplacementsVersion = "DBReplacementsVersion";
+        public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -106,6 +107,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubs_Remository_MainIdx = "Subs_Remository_MainIdx";
         public const String cSubs_Remository_UserName = "Subs_Remository_UserName";
         public const String cSubs_Remository_Password = "Subs_Remository_Password";
+        public const String cSubs_Remository_RegexSeriesSeasons = "Subs_Remository_RegEx_Series_Seasons";
+        public const String cSubs_Remository_RegexEpisode = "Subs_Remository_RegEx_Episode";
+        public const String cSubs_Remository_RegexDownload = "Subs_Remository_Download";
 
         public const String cUTorrentPath = "uTorrentPath";
         public const String cUTorrentDownloadPath = "uTorrentDownloadPath";

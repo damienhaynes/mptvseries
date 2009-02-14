@@ -33,16 +33,23 @@ namespace WindowPlugins.GUITVSeries
         private string m_Filename = string.Empty;
         private string m_FileNameAfterReplacement = string.Empty;
         private Dictionary<string, string> m_Matches = new Dictionary<string, string>();
+        private List<string> m_Tags = new List<string>();
         private String m_RegexpMatched = string.Empty;
         static List<String> sExpressions = new List<String>();
         static List<Regex> regularExpressions = new List<Regex>();
         //static List<DBReplacements> replacements = new List<DBReplacements>();
         static Dictionary<string, string> replacements = new Dictionary<string, string>();
+        static List<string> tags = new List<string>();
         static Dictionary<string, string> replacementsBefore = new Dictionary<string, string>();
 
         public Dictionary<string, string> Matches
         {
             get { return m_Matches;}
+        }
+
+        public List<string> Tags
+        {
+            get { return m_Tags; }
         }
 
         public String RegexpMatched
@@ -134,6 +141,8 @@ namespace WindowPlugins.GUITVSeries
                         replacementsBefore.Add(searchString, replaceString);
                     else
                         replacements.Add(searchString, replaceString);
+                        if (replacement[DBReplacements.cTagEnabled])
+                            tags.Add(searchString);
                 }
                 return error;
             }
@@ -159,7 +168,12 @@ namespace WindowPlugins.GUITVSeries
                 m_FileNameAfterReplacement = m_Filename.ToLower();
                 // run Before replacements
                 foreach (KeyValuePair<string, string> replacement in replacementsBefore)
+                {
+                    if (m_Filename.ToLower().IndexOf(replacement.Key) != -1
+                        && tags.Contains(replacement.Key) && !m_Tags.Contains(replacement.Key))
+                        m_Tags.Add(replacement.Key);
                     m_FileNameAfterReplacement = m_FileNameAfterReplacement.Replace(replacement.Key, replacement.Value);
+                }
                     
                 foreach(Regex regularExpression in regularExpressions)
                 {
@@ -177,7 +191,12 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // ´run after replacements on captures
                                 foreach (KeyValuePair<string, string> replacement in replacements)
+                                {
+                                    if (m_FileNameAfterReplacement.IndexOf(replacement.Key) != -1 
+                                        && tags.Contains(replacement.Key) && !m_Tags.Contains(replacement.Key))
+                                        m_Tags.Add(replacement.Key);
                                     GroupValue = GroupValue.Replace(replacement.Key, replacement.Value);
+                                }
 
                                 GroupValue = GroupValue.Trim();
                                 m_Matches.Add(GroupName, GroupValue);

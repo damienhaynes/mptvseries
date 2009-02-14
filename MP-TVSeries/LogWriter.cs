@@ -130,6 +130,25 @@ namespace WindowPlugins.GUITVSeries
         }
 
         /// <summary>
+        /// Use this for Log entries with many lines (e.g. StackTrace), only show up in LogLevel.Normal
+        /// </summary>
+        /// <param name="entry"></param>
+        static public void WriteMultiLine(String entry, LogLevel level)
+        {
+            Write(entry, level, false);
+        }
+
+        /// <summary>
+        /// Use this for Log entries with many lines (e.g. StackTrace)
+        /// </summary>
+        /// <param name="entry"></param>
+        static public void WriteMultiLine(String entry)
+        {
+            WriteMultiLine(entry, LogLevel.Normal);
+        }
+
+
+        /// <summary>
         /// To avoid having to join values if not needed in lower LogLevels use this
         /// </summary>
         /// <param name="entry"></param>

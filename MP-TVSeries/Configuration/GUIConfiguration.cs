@@ -354,6 +354,9 @@ namespace WindowPlugins.GUITVSeries
             textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
             textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
             textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
+            textBox_RemositoryRegExSeries.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons);
+            textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
+            textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
 
             LoadTorrentSearches();
 
@@ -527,6 +530,11 @@ namespace WindowPlugins.GUITVSeries
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnEnabled);
 
+                DataGridViewCheckBoxColumn columnTagEnabled = new DataGridViewCheckBoxColumn();
+                columnTagEnabled.Name = DBReplacements.cTagEnabled;
+                columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
+                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Replace.Columns.Add(columnTagEnabled);
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
                 columnBefore.Name = DBReplacements.cBefore;
                 columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
@@ -554,6 +562,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DataGridViewRow row = dataGridView_Replace.Rows[replacement[DBReplacements.cIndex]];
                 row.Cells[DBReplacements.cEnabled].Value = (Boolean)replacement[DBReplacements.cEnabled];
+                row.Cells[DBReplacements.cTagEnabled].Value = (Boolean)replacement[DBReplacements.cTagEnabled];
                 row.Cells[DBReplacements.cBefore].Value = (Boolean)replacement[DBReplacements.cBefore];
                 row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
                 row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
@@ -2136,6 +2145,10 @@ namespace WindowPlugins.GUITVSeries
                 case "newzbin":
                     NewzFile(clickedNode);
                     break;
+
+                case "resetUserSelections":
+                    ResetUserSelectionsToolStripMenuItem(clickedNode);
+                    break;
             }
         }
 
@@ -2306,6 +2319,25 @@ namespace WindowPlugins.GUITVSeries
         {
             input = string.Empty;
             return ReturnCode.Ignore;
+        }
+
+        private void ResetUserSelectionsToolStripMenuItem(TreeNode node)
+        {
+            switch (node.Name)
+            {
+                case DBSeries.cTableName:
+                    DBSeries series = (DBSeries)node.Tag;
+                    DBUserSelection.Clear(series);
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = (DBSeason)node.Tag;
+                    DBUserSelection.Clear(season);
+                    break;
+
+                case DBEpisode.cTableName:
+                    break;
+            }
         }
 
         public bool NoneFound()
@@ -3263,6 +3295,20 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSubs_Remository_Password, textBox_remositoryPassword.Text);
         }
 
+        private void textBox_RemositoryRegExSeries_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons, textBox_RemositoryRegExSeries.Text);
+        }
+
+        private void textBox_RemositoryRegexEpisode_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexEpisode, textBox_RemositoryRegexEpisode.Text);
+        }
+
+        private void textBox_RemositoryRegexDownload_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexDownload, textBox_RemositoryRegexDownload.Text);
+        }
         private void checkbox_foromEnable_checkedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubs_Forom_Enable, checkBox_foromEnable.Checked);

@@ -108,6 +108,7 @@ namespace WindowPlugins.GUITVSeries
         public static string RatingStars = "Stars";
         public static string ChangeView = "Change View";
         public static string ChangeViewFast = "Immediately Change Views";
+        public static string ResetUserSelections = "Reset User Selections";
         public static string FanArt = "Fanart";
         public static string FanListAll = "List all Fanart for this Series";
         public static string FanArtGetAndUse = "Download Fanart and Use";

@@ -85,6 +85,7 @@ namespace WindowPlugins.GUITVSeries
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ResetUserSelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_InsertFields = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
@@ -362,6 +363,12 @@ namespace WindowPlugins.GUITVSeries
             this.label61 = new System.Windows.Forms.Label();
             this.checkBox_seriessubsEnable = new System.Windows.Forms.CheckBox();
             this.panel_remository = new System.Windows.Forms.Panel();
+            this.textBox_RemositoryRegexDownload = new System.Windows.Forms.TextBox();
+            this.label_RemositoryRegexDownload = new System.Windows.Forms.Label();
+            this.textBox_RemositoryRegexEpisode = new System.Windows.Forms.TextBox();
+            this.label_RemositoryRegexEpisode = new System.Windows.Forms.Label();
+            this.textBox_RemositoryRegExSeries = new System.Windows.Forms.TextBox();
+            this.label_RemositoryRegexSeries = new System.Windows.Forms.Label();
             this.checkBox_remositoryEnable = new System.Windows.Forms.CheckBox();
             this.textBox_remositoryMainIdx = new System.Windows.Forms.TextBox();
             this.label53 = new System.Windows.Forms.Label();
@@ -487,46 +494,54 @@ namespace WindowPlugins.GUITVSeries
             this.deleteToolStripMenuItem,
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem,
-            this.newzbinThisToolStripMenuItem});
+            this.newzbinThisToolStripMenuItem,
+            this.ResetUserSelToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(143, 114);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(190, 136);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
+            // 
+            // ResetUserSelToolStripMenuItem
+            // 
+            this.ResetUserSelToolStripMenuItem.Name = "ResetUserSelToolStripMenuItem";
+            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.ResetUserSelToolStripMenuItem.Tag = "resetUserSelections";
+            this.ResetUserSelToolStripMenuItem.Text = "Reset User Selections";
             // 
             // contextMenuStrip_InsertFields
             // 
@@ -3592,7 +3607,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.Controls.Add(this.textbox_NewzbinPassword);
             this.panel_newssearch.Controls.Add(this.textBox_NewzbinLogin);
             this.panel_newssearch.Controls.Add(this.textBox_NewsSearchUrl);
-            this.panel_newssearch.Location = new System.Drawing.Point(30, 361);
+            this.panel_newssearch.Location = new System.Drawing.Point(262, 287);
             this.panel_newssearch.Name = "panel_newssearch";
             this.panel_newssearch.Size = new System.Drawing.Size(480, 410);
             this.panel_newssearch.TabIndex = 2;
@@ -3874,7 +3889,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.Controls.Add(this.textBox_NewsDownloadPath);
             this.panel_newsroot.Controls.Add(this.label30);
             this.panel_newsroot.Controls.Add(this.textBox_newsleecher);
-            this.panel_newsroot.Location = new System.Drawing.Point(262, 221);
+            this.panel_newsroot.Location = new System.Drawing.Point(338, 222);
             this.panel_newsroot.Name = "panel_newsroot";
             this.panel_newsroot.Size = new System.Drawing.Size(226, 59);
             this.panel_newsroot.TabIndex = 5;
@@ -3946,7 +3961,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentroot.Controls.Add(this.button_uTorrentBrowse);
             this.panel_torrentroot.Controls.Add(this.label19);
             this.panel_torrentroot.Controls.Add(this.textBox_uTorrentPath);
-            this.panel_torrentroot.Location = new System.Drawing.Point(30, 310);
+            this.panel_torrentroot.Location = new System.Drawing.Point(30, 165);
             this.panel_torrentroot.Name = "panel_torrentroot";
             this.panel_torrentroot.Size = new System.Drawing.Size(226, 45);
             this.panel_torrentroot.TabIndex = 4;
@@ -4013,6 +4028,12 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_remository
             // 
+            this.panel_remository.Controls.Add(this.textBox_RemositoryRegexDownload);
+            this.panel_remository.Controls.Add(this.label_RemositoryRegexDownload);
+            this.panel_remository.Controls.Add(this.textBox_RemositoryRegexEpisode);
+            this.panel_remository.Controls.Add(this.label_RemositoryRegexEpisode);
+            this.panel_remository.Controls.Add(this.textBox_RemositoryRegExSeries);
+            this.panel_remository.Controls.Add(this.label_RemositoryRegexSeries);
             this.panel_remository.Controls.Add(this.checkBox_remositoryEnable);
             this.panel_remository.Controls.Add(this.textBox_remositoryMainIdx);
             this.panel_remository.Controls.Add(this.label53);
@@ -4022,16 +4043,74 @@ namespace WindowPlugins.GUITVSeries
             this.panel_remository.Controls.Add(this.label51);
             this.panel_remository.Controls.Add(this.textBox_remositoryBaseURL);
             this.panel_remository.Controls.Add(this.label50);
-            this.panel_remository.Location = new System.Drawing.Point(30, 161);
+            this.panel_remository.Location = new System.Drawing.Point(30, 222);
             this.panel_remository.Name = "panel_remository";
-            this.panel_remository.Size = new System.Drawing.Size(226, 143);
+            this.panel_remository.Size = new System.Drawing.Size(226, 206);
             this.panel_remository.TabIndex = 6;
             this.panel_remository.Tag = "Remository Subtitle";
+            // 
+            // textBox_RemositoryRegexDownload
+            // 
+            this.textBox_RemositoryRegexDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_RemositoryRegexDownload.Location = new System.Drawing.Point(147, 157);
+            this.textBox_RemositoryRegexDownload.Name = "textBox_RemositoryRegexDownload";
+            this.textBox_RemositoryRegexDownload.Size = new System.Drawing.Size(76, 20);
+            this.textBox_RemositoryRegexDownload.TabIndex = 13;
+            this.textBox_RemositoryRegexDownload.TextChanged += new System.EventHandler(this.textBox_RemositoryRegexDownload_TextChanged);
+            // 
+            // label_RemositoryRegexDownload
+            // 
+            this.label_RemositoryRegexDownload.Location = new System.Drawing.Point(32, 157);
+            this.label_RemositoryRegexDownload.Name = "label_RemositoryRegexDownload";
+            this.label_RemositoryRegexDownload.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label_RemositoryRegexDownload.Size = new System.Drawing.Size(109, 20);
+            this.label_RemositoryRegexDownload.TabIndex = 14;
+            this.label_RemositoryRegexDownload.Text = "RegExp Download:";
+            // 
+            // textBox_RemositoryRegexEpisode
+            // 
+            this.textBox_RemositoryRegexEpisode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_RemositoryRegexEpisode.Location = new System.Drawing.Point(147, 131);
+            this.textBox_RemositoryRegexEpisode.Name = "textBox_RemositoryRegexEpisode";
+            this.textBox_RemositoryRegexEpisode.Size = new System.Drawing.Size(76, 20);
+            this.textBox_RemositoryRegexEpisode.TabIndex = 11;
+            this.textBox_RemositoryRegexEpisode.TextChanged += new System.EventHandler(this.textBox_RemositoryRegexEpisode_TextChanged);
+            // 
+            // label_RemositoryRegexEpisode
+            // 
+            this.label_RemositoryRegexEpisode.Location = new System.Drawing.Point(41, 131);
+            this.label_RemositoryRegexEpisode.Name = "label_RemositoryRegexEpisode";
+            this.label_RemositoryRegexEpisode.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label_RemositoryRegexEpisode.Size = new System.Drawing.Size(100, 23);
+            this.label_RemositoryRegexEpisode.TabIndex = 15;
+            this.label_RemositoryRegexEpisode.Text = "RegExp Episode:";
+            // 
+            // textBox_RemositoryRegExSeries
+            // 
+            this.textBox_RemositoryRegExSeries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_RemositoryRegExSeries.Location = new System.Drawing.Point(148, 105);
+            this.textBox_RemositoryRegExSeries.Name = "textBox_RemositoryRegExSeries";
+            this.textBox_RemositoryRegExSeries.Size = new System.Drawing.Size(75, 20);
+            this.textBox_RemositoryRegExSeries.TabIndex = 9;
+            this.textBox_RemositoryRegExSeries.TextChanged += new System.EventHandler(this.textBox_RemositoryRegExSeries_TextChanged);
+            // 
+            // label_RemositoryRegexSeries
+            // 
+            this.label_RemositoryRegexSeries.AutoSize = true;
+            this.label_RemositoryRegexSeries.Location = new System.Drawing.Point(15, 105);
+            this.label_RemositoryRegexSeries.Name = "label_RemositoryRegexSeries";
+            this.label_RemositoryRegexSeries.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label_RemositoryRegexSeries.Size = new System.Drawing.Size(126, 13);
+            this.label_RemositoryRegexSeries.TabIndex = 8;
+            this.label_RemositoryRegexSeries.Text = "RegExp Series/Seasons:";
             // 
             // checkBox_remositoryEnable
             // 
             this.checkBox_remositoryEnable.AutoSize = true;
-            this.checkBox_remositoryEnable.Location = new System.Drawing.Point(147, 105);
+            this.checkBox_remositoryEnable.Location = new System.Drawing.Point(147, 183);
             this.checkBox_remositoryEnable.Name = "checkBox_remositoryEnable";
             this.checkBox_remositoryEnable.Size = new System.Drawing.Size(58, 17);
             this.checkBox_remositoryEnable.TabIndex = 7;
@@ -4054,6 +4133,7 @@ namespace WindowPlugins.GUITVSeries
             this.label53.AutoSize = true;
             this.label53.Location = new System.Drawing.Point(42, 31);
             this.label53.Name = "label53";
+            this.label53.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label53.Size = new System.Drawing.Size(99, 13);
             this.label53.TabIndex = 6;
             this.label53.Text = "Remository &MainID:";
@@ -4072,8 +4152,9 @@ namespace WindowPlugins.GUITVSeries
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(27, 82);
+            this.label52.Location = new System.Drawing.Point(30, 82);
             this.label52.Name = "label52";
+            this.label52.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label52.Size = new System.Drawing.Size(111, 13);
             this.label52.TabIndex = 4;
             this.label52.Text = "Remository &Password:";
@@ -4091,8 +4172,9 @@ namespace WindowPlugins.GUITVSeries
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(40, 56);
+            this.label51.Location = new System.Drawing.Point(43, 56);
             this.label51.Name = "label51";
+            this.label51.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label51.Size = new System.Drawing.Size(98, 13);
             this.label51.TabIndex = 2;
             this.label51.Text = "Remository U&serID:";
@@ -4110,8 +4192,9 @@ namespace WindowPlugins.GUITVSeries
             // label50
             // 
             this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(27, 7);
+            this.label50.Location = new System.Drawing.Point(27, 8);
             this.label50.Name = "label50";
+            this.label50.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label50.Size = new System.Drawing.Size(114, 13);
             this.label50.TabIndex = 0;
             this.label50.Text = "Remository Base &URL:";
@@ -4128,7 +4211,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentsearch.Controls.Add(this.label22);
             this.panel_torrentsearch.Controls.Add(this.comboBox_TorrentPreset);
             this.panel_torrentsearch.Controls.Add(this.label24);
-            this.panel_torrentsearch.Location = new System.Drawing.Point(262, 12);
+            this.panel_torrentsearch.Location = new System.Drawing.Point(338, 12);
             this.panel_torrentsearch.Name = "panel_torrentsearch";
             this.panel_torrentsearch.Size = new System.Drawing.Size(226, 204);
             this.panel_torrentsearch.TabIndex = 3;
@@ -4525,22 +4608,24 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox textBox_NewsSearchParseArticleRegex;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.Panel panel_remository;
-    private System.Windows.Forms.TextBox textBox_remositoryBaseURL;
-    private System.Windows.Forms.Label label50;
-    private System.Windows.Forms.TextBox textBox_remositoryPassword;
-    private System.Windows.Forms.Label label52;
-    private System.Windows.Forms.TextBox textBox_remositoryUserId;
-    private System.Windows.Forms.Label label51;
-    private System.Windows.Forms.TextBox textBox_remositoryMainIdx;
-    private System.Windows.Forms.Label label53;
-    private System.Windows.Forms.CheckBox checkBox_remositoryEnable;
-    private System.Windows.Forms.CheckBox checkBox_foromEnable;
-    private ManualEpisodeManagementPane panel_manualEpisodeManagement;
+        private System.Windows.Forms.TextBox textBox_remositoryBaseURL;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.TextBox textBox_remositoryPassword;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.TextBox textBox_remositoryUserId;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.TextBox textBox_remositoryMainIdx;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.CheckBox checkBox_remositoryEnable;
+        private System.Windows.Forms.CheckBox checkBox_foromEnable;
+        private ManualEpisodeManagementPane panel_manualEpisodeManagement;
         private System.Windows.Forms.CheckBox checkBox_altImage;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.LinkLabel lnkResetView;
         private System.Windows.Forms.TabPage tabAbout;
         private About aboutScreen;
+        //private System.Windows.Forms.ToolStripMenuItem resetUserSelectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ResetUserSelToolStripMenuItem;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
         private System.Windows.Forms.Panel panel_seriessubs;
         private System.Windows.Forms.CheckBox checkBox_seriessubsEnable;
@@ -4630,6 +4715,15 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.NumericUpDown numericUpDown_AutoOnlineDataRefresh;
         private System.Windows.Forms.CheckBox checkBox_AutoOnlineDataRefresh;
         private System.Windows.Forms.CheckBox checkBox_AutoChooseOrder;
+        private System.Windows.Forms.TextBox textBox_RemositoryRegexEpisode;
+        private System.Windows.Forms.Label label_RemositoryRegexEpisode;
+        private System.Windows.Forms.TextBox textBox_RemositoryRegExSeries;
+        private System.Windows.Forms.Label label_RemositoryRegexSeries;
+        private System.Windows.Forms.TextBox textBox_RemositoryRegexDownload;
+        private System.Windows.Forms.Label label_RemositoryRegexDownload;
+        //private System.Windows.Forms.RadioButton radioButton_episode_AllEpisodes;
+        //private System.Windows.Forms.Label label_textboxEmuleWSType;
+        //private System.Windows.Forms.ComboBox comboBox_emuleWSType;
         private System.Windows.Forms.TextBox txtUserID;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.CheckBox checkDownloadEpisodeSnapshots;
