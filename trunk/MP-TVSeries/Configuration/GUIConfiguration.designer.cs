@@ -175,7 +175,7 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
-            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.chkOnlineFavourites = new System.Windows.Forms.CheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -184,9 +184,6 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_SeriesPoster = new System.Windows.Forms.PictureBox();
             this.comboBox_PosterSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.panDBLocation = new System.Windows.Forms.Panel();
@@ -213,7 +210,6 @@ namespace WindowPlugins.GUITVSeries
             this.SeasonID = new System.Windows.Forms.ColumnHeader();
             this.EpisodeID = new System.Windows.Forms.ColumnHeader();
             this.EpisodeTitle = new System.Windows.Forms.ColumnHeader();
-            this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane();
             this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.tabOnlineData = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
@@ -295,7 +291,6 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoDeleteAll = new System.Windows.Forms.Button();
             this.tabFormattingRules = new System.Windows.Forms.TabPage();
             this.label64 = new System.Windows.Forms.Label();
-            this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
             this.tabLayoutSettings = new System.Windows.Forms.TabPage();
             this.label37 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -386,9 +381,14 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_TorrentPreset = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tabAbout = new System.Windows.Forms.TabPage();
-            this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.chkOnlineFavourites = new System.Windows.Forms.CheckBox();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane();
+            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
+            this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();
@@ -407,7 +407,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SeriesPoster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
             this.panDBLocation.SuspendLayout();
             this.tabPage_Import.SuspendLayout();
@@ -453,6 +452,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_remository.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
             this.tabAbout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -497,49 +497,49 @@ namespace WindowPlugins.GUITVSeries
             this.newzbinThisToolStripMenuItem,
             this.ResetUserSelToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(190, 136);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 136);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Torrent this";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Newzbin this";
             // 
             // ResetUserSelToolStripMenuItem
             // 
             this.ResetUserSelToolStripMenuItem.Name = "ResetUserSelToolStripMenuItem";
-            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.ResetUserSelToolStripMenuItem.Tag = "resetUserSelections";
             this.ResetUserSelToolStripMenuItem.Text = "Reset User Selections";
             // 
@@ -1700,20 +1700,18 @@ namespace WindowPlugins.GUITVSeries
                     "right click on this textbox to bring up a menu of available fields from the data" +
                     "base.\r\n\r\nDefault: Empty");
             // 
-            // optionAsk2Rate
+            // chkOnlineFavourites
             // 
-            this.optionAsk2Rate.AutoSize = true;
-            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
-            this.optionAsk2Rate.Name = "optionAsk2Rate";
-            this.optionAsk2Rate.Option = "askToRate";
-            this.optionAsk2Rate.Size = new System.Drawing.Size(318, 17);
-            this.optionAsk2Rate.TabIndex = 11;
-            this.optionAsk2Rate.Text = "&Popup Ratings Dialog after episode is watched and not Rated";
-            this.optionAsk2Rate.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
-                    "ve watched an episodes which hasn\'t been rated yet.");
-            this.optionAsk2Rate.UseVisualStyleBackColor = true;
-            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+            this.chkOnlineFavourites.AutoSize = true;
+            this.chkOnlineFavourites.Location = new System.Drawing.Point(46, 353);
+            this.chkOnlineFavourites.Name = "chkOnlineFavourites";
+            this.chkOnlineFavourites.Size = new System.Drawing.Size(250, 17);
+            this.chkOnlineFavourites.TabIndex = 22;
+            this.chkOnlineFavourites.Text = "Use Favourites defined online in Favourite View";
+            this.toolTip_InfoHelp.SetToolTip(this.chkOnlineFavourites, "Enable this option to use your favourites that you have defined online at thetvdb" +
+                    ".com in your Favourite view.");
+            this.chkOnlineFavourites.UseVisualStyleBackColor = true;
+            this.chkOnlineFavourites.CheckedChanged += new System.EventHandler(this.chkOnlineFavourites_CheckedChanged);
             // 
             // splitMain_Log
             // 
@@ -1887,26 +1885,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // detailsPropertyBindingSource
-            // 
-            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
             // 
             // pictureBox_Series
             // 
@@ -2287,14 +2265,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.EpisodeTitle.Text = "Episode Title";
             this.EpisodeTitle.Width = 74;
-            // 
-            // panel_manualEpisodeManagement
-            // 
-            this.panel_manualEpisodeManagement.Location = new System.Drawing.Point(6, 311);
-            this.panel_manualEpisodeManagement.Name = "panel_manualEpisodeManagement";
-            this.panel_manualEpisodeManagement.Size = new System.Drawing.Size(164, 143);
-            this.panel_manualEpisodeManagement.TabIndex = 157;
-            this.panel_manualEpisodeManagement.Tag = "Manual Episode Importer";
             // 
             // progressBar_Parsing
             // 
@@ -3280,16 +3250,6 @@ namespace WindowPlugins.GUITVSeries
                 "t attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin di" +
                 "rectory.\r\n";
             // 
-            // formattingConfiguration1
-            // 
-            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.formattingConfiguration1.Location = new System.Drawing.Point(8, 44);
-            this.formattingConfiguration1.Name = "formattingConfiguration1";
-            this.formattingConfiguration1.Size = new System.Drawing.Size(750, 463);
-            this.formattingConfiguration1.TabIndex = 6;
-            // 
             // tabLayoutSettings
             // 
             this.tabLayoutSettings.AutoScroll = true;
@@ -4045,7 +4005,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_remository.Controls.Add(this.label50);
             this.panel_remository.Location = new System.Drawing.Point(30, 222);
             this.panel_remository.Name = "panel_remository";
-            this.panel_remository.Size = new System.Drawing.Size(226, 206);
+            this.panel_remository.Size = new System.Drawing.Size(226, 233);
             this.panel_remository.TabIndex = 6;
             this.panel_remository.Tag = "Remository Subtitle";
             // 
@@ -4053,64 +4013,63 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textBox_RemositoryRegexDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_RemositoryRegexDownload.Location = new System.Drawing.Point(147, 157);
+            this.textBox_RemositoryRegexDownload.Location = new System.Drawing.Point(158, 177);
             this.textBox_RemositoryRegexDownload.Name = "textBox_RemositoryRegexDownload";
-            this.textBox_RemositoryRegexDownload.Size = new System.Drawing.Size(76, 20);
+            this.textBox_RemositoryRegexDownload.Size = new System.Drawing.Size(60, 20);
             this.textBox_RemositoryRegexDownload.TabIndex = 13;
             this.textBox_RemositoryRegexDownload.TextChanged += new System.EventHandler(this.textBox_RemositoryRegexDownload_TextChanged);
             // 
             // label_RemositoryRegexDownload
             // 
-            this.label_RemositoryRegexDownload.Location = new System.Drawing.Point(32, 157);
+            this.label_RemositoryRegexDownload.Location = new System.Drawing.Point(7, 177);
             this.label_RemositoryRegexDownload.Name = "label_RemositoryRegexDownload";
-            this.label_RemositoryRegexDownload.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label_RemositoryRegexDownload.Size = new System.Drawing.Size(109, 20);
+            this.label_RemositoryRegexDownload.Size = new System.Drawing.Size(142, 20);
             this.label_RemositoryRegexDownload.TabIndex = 14;
             this.label_RemositoryRegexDownload.Text = "RegExp Download:";
+            this.label_RemositoryRegexDownload.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox_RemositoryRegexEpisode
             // 
             this.textBox_RemositoryRegexEpisode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_RemositoryRegexEpisode.Location = new System.Drawing.Point(147, 131);
+            this.textBox_RemositoryRegexEpisode.Location = new System.Drawing.Point(158, 149);
             this.textBox_RemositoryRegexEpisode.Name = "textBox_RemositoryRegexEpisode";
-            this.textBox_RemositoryRegexEpisode.Size = new System.Drawing.Size(76, 20);
+            this.textBox_RemositoryRegexEpisode.Size = new System.Drawing.Size(60, 20);
             this.textBox_RemositoryRegexEpisode.TabIndex = 11;
             this.textBox_RemositoryRegexEpisode.TextChanged += new System.EventHandler(this.textBox_RemositoryRegexEpisode_TextChanged);
             // 
             // label_RemositoryRegexEpisode
             // 
-            this.label_RemositoryRegexEpisode.Location = new System.Drawing.Point(41, 131);
+            this.label_RemositoryRegexEpisode.Location = new System.Drawing.Point(7, 149);
             this.label_RemositoryRegexEpisode.Name = "label_RemositoryRegexEpisode";
-            this.label_RemositoryRegexEpisode.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label_RemositoryRegexEpisode.Size = new System.Drawing.Size(100, 23);
+            this.label_RemositoryRegexEpisode.Size = new System.Drawing.Size(142, 20);
             this.label_RemositoryRegexEpisode.TabIndex = 15;
             this.label_RemositoryRegexEpisode.Text = "RegExp Episode:";
+            this.label_RemositoryRegexEpisode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox_RemositoryRegExSeries
             // 
             this.textBox_RemositoryRegExSeries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_RemositoryRegExSeries.Location = new System.Drawing.Point(148, 105);
+            this.textBox_RemositoryRegExSeries.Location = new System.Drawing.Point(158, 121);
             this.textBox_RemositoryRegExSeries.Name = "textBox_RemositoryRegExSeries";
-            this.textBox_RemositoryRegExSeries.Size = new System.Drawing.Size(75, 20);
+            this.textBox_RemositoryRegExSeries.Size = new System.Drawing.Size(60, 20);
             this.textBox_RemositoryRegExSeries.TabIndex = 9;
             this.textBox_RemositoryRegExSeries.TextChanged += new System.EventHandler(this.textBox_RemositoryRegExSeries_TextChanged);
             // 
             // label_RemositoryRegexSeries
             // 
-            this.label_RemositoryRegexSeries.AutoSize = true;
-            this.label_RemositoryRegexSeries.Location = new System.Drawing.Point(15, 105);
+            this.label_RemositoryRegexSeries.Location = new System.Drawing.Point(7, 121);
             this.label_RemositoryRegexSeries.Name = "label_RemositoryRegexSeries";
-            this.label_RemositoryRegexSeries.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label_RemositoryRegexSeries.Size = new System.Drawing.Size(126, 13);
+            this.label_RemositoryRegexSeries.Size = new System.Drawing.Size(142, 20);
             this.label_RemositoryRegexSeries.TabIndex = 8;
             this.label_RemositoryRegexSeries.Text = "RegExp Series/Seasons:";
+            this.label_RemositoryRegexSeries.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // checkBox_remositoryEnable
             // 
             this.checkBox_remositoryEnable.AutoSize = true;
-            this.checkBox_remositoryEnable.Location = new System.Drawing.Point(147, 183);
+            this.checkBox_remositoryEnable.Location = new System.Drawing.Point(157, 203);
             this.checkBox_remositoryEnable.Name = "checkBox_remositoryEnable";
             this.checkBox_remositoryEnable.Size = new System.Drawing.Size(58, 17);
             this.checkBox_remositoryEnable.TabIndex = 7;
@@ -4122,82 +4081,78 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textBox_remositoryMainIdx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_remositoryMainIdx.Location = new System.Drawing.Point(147, 28);
+            this.textBox_remositoryMainIdx.Location = new System.Drawing.Point(158, 37);
             this.textBox_remositoryMainIdx.Name = "textBox_remositoryMainIdx";
-            this.textBox_remositoryMainIdx.Size = new System.Drawing.Size(76, 20);
+            this.textBox_remositoryMainIdx.Size = new System.Drawing.Size(60, 20);
             this.textBox_remositoryMainIdx.TabIndex = 2;
             this.textBox_remositoryMainIdx.TextChanged += new System.EventHandler(this.textBox_remositoryMainIdx_TextChanged);
             // 
             // label53
             // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(42, 31);
+            this.label53.Location = new System.Drawing.Point(7, 37);
             this.label53.Name = "label53";
-            this.label53.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label53.Size = new System.Drawing.Size(99, 13);
+            this.label53.Size = new System.Drawing.Size(142, 20);
             this.label53.TabIndex = 6;
             this.label53.Text = "Remository &MainID:";
+            this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox_remositoryPassword
             // 
             this.textBox_remositoryPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_remositoryPassword.Location = new System.Drawing.Point(147, 79);
+            this.textBox_remositoryPassword.Location = new System.Drawing.Point(158, 93);
             this.textBox_remositoryPassword.Name = "textBox_remositoryPassword";
             this.textBox_remositoryPassword.PasswordChar = '*';
-            this.textBox_remositoryPassword.Size = new System.Drawing.Size(76, 20);
+            this.textBox_remositoryPassword.Size = new System.Drawing.Size(60, 20);
             this.textBox_remositoryPassword.TabIndex = 4;
             this.textBox_remositoryPassword.TextChanged += new System.EventHandler(this.textbox_remositoryPassword_TextChanged);
             // 
             // label52
             // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(30, 82);
+            this.label52.Location = new System.Drawing.Point(7, 93);
             this.label52.Name = "label52";
-            this.label52.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label52.Size = new System.Drawing.Size(111, 13);
+            this.label52.Size = new System.Drawing.Size(142, 20);
             this.label52.TabIndex = 4;
             this.label52.Text = "Remository &Password:";
+            this.label52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox_remositoryUserId
             // 
             this.textBox_remositoryUserId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_remositoryUserId.Location = new System.Drawing.Point(147, 53);
+            this.textBox_remositoryUserId.Location = new System.Drawing.Point(158, 65);
             this.textBox_remositoryUserId.Name = "textBox_remositoryUserId";
-            this.textBox_remositoryUserId.Size = new System.Drawing.Size(76, 20);
+            this.textBox_remositoryUserId.Size = new System.Drawing.Size(60, 20);
             this.textBox_remositoryUserId.TabIndex = 3;
             this.textBox_remositoryUserId.TextChanged += new System.EventHandler(this.textbox_remositoryUserId_TextChanged);
             // 
             // label51
             // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(43, 56);
+            this.label51.Location = new System.Drawing.Point(7, 65);
             this.label51.Name = "label51";
-            this.label51.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label51.Size = new System.Drawing.Size(98, 13);
+            this.label51.Size = new System.Drawing.Size(142, 20);
             this.label51.TabIndex = 2;
             this.label51.Text = "Remository U&serID:";
+            this.label51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox_remositoryBaseURL
             // 
             this.textBox_remositoryBaseURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_remositoryBaseURL.Location = new System.Drawing.Point(147, 4);
+            this.textBox_remositoryBaseURL.Location = new System.Drawing.Point(158, 9);
             this.textBox_remositoryBaseURL.Name = "textBox_remositoryBaseURL";
-            this.textBox_remositoryBaseURL.Size = new System.Drawing.Size(76, 20);
+            this.textBox_remositoryBaseURL.Size = new System.Drawing.Size(60, 20);
             this.textBox_remositoryBaseURL.TabIndex = 1;
             this.textBox_remositoryBaseURL.TextChanged += new System.EventHandler(this.textBox_remositoryBaseURL_TextChanged);
             // 
             // label50
             // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(27, 8);
+            this.label50.Location = new System.Drawing.Point(7, 9);
             this.label50.Name = "label50";
-            this.label50.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label50.Size = new System.Drawing.Size(114, 13);
+            this.label50.Size = new System.Drawing.Size(142, 20);
             this.label50.TabIndex = 0;
             this.label50.Text = "Remository Base &URL:";
+            this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // panel_torrentsearch
             // 
@@ -4289,18 +4244,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
             // 
-            // aboutScreen
-            // 
-            this.aboutScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.aboutScreen.AutoScroll = true;
-            this.aboutScreen.BackColor = System.Drawing.Color.White;
-            this.aboutScreen.Location = new System.Drawing.Point(2, 3);
-            this.aboutScreen.Name = "aboutScreen";
-            this.aboutScreen.Size = new System.Drawing.Size(764, 510);
-            this.aboutScreen.TabIndex = 0;
-            // 
             // listBox_Log
             // 
             this.listBox_Log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4312,18 +4255,70 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
-            // chkOnlineFavourites
+            // dataGridViewTextBoxColumn1
             // 
-            this.chkOnlineFavourites.AutoSize = true;
-            this.chkOnlineFavourites.Location = new System.Drawing.Point(46, 353);
-            this.chkOnlineFavourites.Name = "chkOnlineFavourites";
-            this.chkOnlineFavourites.Size = new System.Drawing.Size(250, 17);
-            this.chkOnlineFavourites.TabIndex = 22;
-            this.chkOnlineFavourites.Text = "Use Favourites defined online in Favourite View";
-            this.toolTip_InfoHelp.SetToolTip(this.chkOnlineFavourites, "Enable this option to use your favourites that you have defined online at thetvdb" +
-                    ".com in your Favourite view.");
-            this.chkOnlineFavourites.UseVisualStyleBackColor = true;
-            this.chkOnlineFavourites.CheckedChanged += new System.EventHandler(this.chkOnlineFavourites_CheckedChanged);
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // detailsPropertyBindingSource
+            // 
+            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
+            // 
+            // panel_manualEpisodeManagement
+            // 
+            this.panel_manualEpisodeManagement.Location = new System.Drawing.Point(6, 311);
+            this.panel_manualEpisodeManagement.Name = "panel_manualEpisodeManagement";
+            this.panel_manualEpisodeManagement.Size = new System.Drawing.Size(164, 143);
+            this.panel_manualEpisodeManagement.TabIndex = 157;
+            this.panel_manualEpisodeManagement.Tag = "Manual Episode Importer";
+            // 
+            // optionAsk2Rate
+            // 
+            this.optionAsk2Rate.AutoSize = true;
+            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
+            this.optionAsk2Rate.Name = "optionAsk2Rate";
+            this.optionAsk2Rate.Option = "askToRate";
+            this.optionAsk2Rate.Size = new System.Drawing.Size(318, 17);
+            this.optionAsk2Rate.TabIndex = 11;
+            this.optionAsk2Rate.Text = "&Popup Ratings Dialog after episode is watched and not Rated";
+            this.optionAsk2Rate.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
+                    "ve watched an episodes which hasn\'t been rated yet.");
+            this.optionAsk2Rate.UseVisualStyleBackColor = true;
+            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+            // 
+            // formattingConfiguration1
+            // 
+            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.formattingConfiguration1.Location = new System.Drawing.Point(8, 44);
+            this.formattingConfiguration1.Name = "formattingConfiguration1";
+            this.formattingConfiguration1.Size = new System.Drawing.Size(750, 463);
+            this.formattingConfiguration1.TabIndex = 6;
+            // 
+            // aboutScreen
+            // 
+            this.aboutScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.aboutScreen.AutoScroll = true;
+            this.aboutScreen.BackColor = System.Drawing.Color.White;
+            this.aboutScreen.Location = new System.Drawing.Point(2, 3);
+            this.aboutScreen.Name = "aboutScreen";
+            this.aboutScreen.Size = new System.Drawing.Size(764, 510);
+            this.aboutScreen.TabIndex = 0;
             // 
             // ConfigurationForm
             // 
@@ -4356,7 +4351,6 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SeriesPoster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
             this.panDBLocation.ResumeLayout(false);
             this.panDBLocation.PerformLayout();
@@ -4423,6 +4417,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_torrentsearch.ResumeLayout(false);
             this.panel_torrentsearch.PerformLayout();
             this.tabAbout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
