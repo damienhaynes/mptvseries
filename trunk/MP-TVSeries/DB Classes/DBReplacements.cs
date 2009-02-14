@@ -33,10 +33,11 @@ namespace WindowPlugins.GUITVSeries
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
-        public const int cDBVersion = 2;
+        public const int cDBVersion = 3;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
+        public const String cTagEnabled = "tagEnabled";
         public const String cToReplace = "toreplace";
         public const String cWith = "with";
         public const String cBefore = "before";
@@ -46,6 +47,7 @@ namespace WindowPlugins.GUITVSeries
         static DBReplacements()
         {
             s_FieldToDisplayNameMap.Add(cEnabled, "Enabled");
+            s_FieldToDisplayNameMap.Add(cTagEnabled, "Used As Tag");
             s_FieldToDisplayNameMap.Add(cBefore, "Run before matching");
             s_FieldToDisplayNameMap.Add(cToReplace, "Replace this..");
             s_FieldToDisplayNameMap.Add(cWith, "With this");
@@ -53,15 +55,103 @@ namespace WindowPlugins.GUITVSeries
             DBReplacements dummy = new DBReplacements();
 
             int nCurrentDBVersion = cDBVersion;
-            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
+            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBReplacementsVersion);
             while (nUpgradeDBVersion != nCurrentDBVersion)
-                // take care of the upgrade in the table
+            // take care of the upgrade in the table
+            {
+                DBReplacements replacement = new DBReplacements();
                 switch (nUpgradeDBVersion)
                 {
+                    case 2:
+                        //Add tagEnabled colum
+                        DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cTagEnabled, new DBValue(0), new SQLCondition());
+
+                        replacement = new DBReplacements(3);
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement.Commit();
+
+                        replacement = new DBReplacements(4);
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement.Commit();
+
+                        replacement = new DBReplacements(5);
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement.Commit();
+
+                        //adding new replacement
+                        DBReplacements[] replacements = DBReplacements.GetAll();
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = replacements.Length;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "DSR";
+                        replacement[DBReplacements.cWith] = @"<empty>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = replacements.Length + 1;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "HR-HDTV";
+                        replacement[DBReplacements.cWith] = @"<empty>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = replacements.Length + 2;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "HR.HDTV";
+                        replacement[DBReplacements.cWith] = @"<empty>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = replacements.Length + 3;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "HDTV";
+                        replacement[DBReplacements.cWith] = @"<empty>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = replacements.Length + 4;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 1;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "DVDMux";
+                        replacement[DBReplacements.cWith] = @"<empty>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        nUpgradeDBVersion++;
+                        break;
+
                     default:
                         {
                             // no replacements in the db => put the default ones
-                            DBReplacements replacement = new DBReplacements();
                             replacement[DBReplacements.cIndex] = "0";
                             replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cBefore] = "0";
@@ -112,10 +202,12 @@ namespace WindowPlugins.GUITVSeries
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
-                            nUpgradeDBVersion = nCurrentDBVersion;
+                            nUpgradeDBVersion=3;
                         }
                         break;
                 }
+            }
+
             DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
         }
 
@@ -147,6 +239,7 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
+            AddColumn(cTagEnabled, new DBField(DBField.cTypeInt));
             AddColumn(cBefore, new DBField(DBField.cTypeInt));
             AddColumn(cToReplace, new DBField(DBField.cTypeString));
             AddColumn(cWith, new DBField(DBField.cTypeString));

@@ -1515,6 +1515,7 @@ namespace WindowPlugins.GUITVSeries
             optionsSeriesFanart,
             optionsUseOnlineFavourites,
             actionRecheckMI,
+            resetUserSelections,
             showFanartChooser
         }
 
@@ -1982,6 +1983,10 @@ namespace WindowPlugins.GUITVSeries
                                     pItem = new GUIListItem(Translation.updateMI);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionRecheckMI;
+
+                                    pItem = new GUIListItem(Translation.ResetUserSelections);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.resetUserSelections;
                                 }
                                 pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
                                 dlg.Add(pItem);
@@ -2144,6 +2149,22 @@ namespace WindowPlugins.GUITVSeries
                                 break;
                         }
                         break;
+
+                    case (int)eContextItems.resetUserSelections:
+
+                        if (listLevel != Listlevel.Group)
+                        {
+                            if (selectedSeries != null)
+                                DBUserSelection.Clear(selectedSeries);
+
+                            if (selectedEpisode != null)
+                                DBUserSelection.Clear(selectedEpisode);
+
+                            if (selectedSeason != null)
+                                DBUserSelection.Clear(selectedSeason);
+                        }
+                        break;
+
                     case (int)eContextItems.forceSeriesQuery:
                         {
                             // clear the series
