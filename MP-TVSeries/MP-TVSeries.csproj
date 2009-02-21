@@ -197,6 +197,7 @@
     <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBTorrent.cs" />
+    <Compile Include="DB Classes\DBUserSelections.cs" />
     <Compile Include="DB Classes\DBView.cs" />
     <Compile Include="Downloaders\DownloadMonitor.cs" />
     <Compile Include="Downloaders\IDownloaders.cs" />
@@ -245,16 +246,22 @@
     <Compile Include="Online Parsing Classes\GetUpdates.cs" />
     <Compile Include="Online Parsing Classes\OnlineAPI.cs" />
     <Compile Include="Online Parsing Classes\OnlineParse.cs" />
-    <Compile Include="Online Parsing Classes\UpdateEpisodes.cs" />
     <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
     <Compile Include="PerfWatch.cs" />
+    <Compile Include="Playlist Classes\GUITVSeriesPlaylist.cs" />
+    <Compile Include="Playlist Classes\IPlayListIO.cs" />
+    <Compile Include="Playlist Classes\PlayList.cs" />
+    <Compile Include="Playlist Classes\PlayListFactory.cs" />
+    <Compile Include="Playlist Classes\PlayListIO.cs" />
+    <Compile Include="Playlist Classes\PlayListItem.cs" />
+    <Compile Include="Playlist Classes\PlayListPlayer.cs" />
+    <Compile Include="Playlist Classes\PlayListType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Online Parsing Classes\ZsoriParser.cs" />
     <Compile Include="settings.cs" />
     <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
     <Compile Include="Subtitle Retrievers Classes\Remository.cs" />
