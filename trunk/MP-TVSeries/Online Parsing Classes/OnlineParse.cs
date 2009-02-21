@@ -1174,9 +1174,9 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true)
             {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"));
+                
                 // get a list of all the episodes with thumbnailUrl
-                SQLCondition condition = new SQLCondition();
-                //condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, string.Empty, SQLConditionType.NotEqual);
+                SQLCondition condition = new SQLCondition();                
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, ".jpg", SQLConditionType.Like);
                 condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
                 List<DBEpisode> episodes = DBEpisode.Get(condition);
@@ -1186,51 +1186,61 @@ namespace WindowPlugins.GUITVSeries
                     String sThumbNailFilename = episode[DBOnlineEpisode.cEpisodeThumbnailFilename];
                     string basePath = Settings.GetPath(Settings.Path.banners);
                     string completePath = Helper.PathCombine(basePath, sThumbNailFilename);
-                    if (!File.Exists(completePath))
-                    {
-                        // we need the pretty name to figure out the folder to store to
-                        try
-                        {
-                            if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
-                            {
-                                tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                            }
-                            string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
-                            foreach (char c in System.IO.Path.GetInvalidFileNameChars()) seriesFolder = seriesFolder.Replace(c, '_');
-                            sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg");
-                            completePath = Helper.PathCombine(basePath, sThumbNailFilename);
 
-                            if (!File.Exists(completePath))
+                    // we need the pretty name to figure out the folder to store to
+                    try
+                    {                                                
+                        if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
+                        {
+                            tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                        }
+                        
+                        // Create different filename for different orders, this will ensure that correct thumbnail is viewed                            
+                        string orderIdentifier = ".jpg";
+                        string order = tmpSeries[DBOnlineSeries.cChoseEpisodeOrder];
+
+                        if (Helper.String.IsNullOrEmpty(order) || order == "Aired")
+                            orderIdentifier = ".jpg";    
+                        else
+                            orderIdentifier = "_" + tmpSeries[DBOnlineSeries.cChoseEpisodeOrder] + ".jpg";
+
+                        string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
+                        foreach (char c in System.IO.Path.GetInvalidFileNameChars()) seriesFolder = seriesFolder.Replace(c, '_');
+
+                        sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + orderIdentifier);
+                        completePath = Helper.PathCombine(basePath, sThumbNailFilename);
+
+                        if (!File.Exists(completePath))
+                        {
+                            MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
+                            System.Net.WebClient webClient = new System.Net.WebClient();
+                            webClient.Headers.Add("user-agent", Settings.UserAgent);
+                            try
                             {
-                                MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
-                                System.Net.WebClient webClient = new System.Net.WebClient();
-                                webClient.Headers.Add("user-agent", Settings.UserAgent);
-                                try
+                                Directory.CreateDirectory(Path.GetDirectoryName(completePath));
+                                string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
+                                // Determine if a thumbnail
+                                if (!url.Contains(".jpg"))
                                 {
-                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));
-                                    string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
-                                    // Determine if a thumbnail
-                                    if (!url.Contains(".jpg"))
-                                    {
-                                        MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
-                                        episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
-                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
-                                    }
-                                    webClient.DownloadFile(url, completePath);
+                                    MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
+                                    episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
+                                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
                                 }
-                                catch (System.Net.WebException)
-                                {
-                                    MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailFilename] + ")");
-                                }
+                                webClient.DownloadFile(url, completePath);
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailFilename] + ")");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            MPTVSeriesLog.Write(string.Format("There was a problem getting the episode image: {0} ({1})", episode[DBOnlineEpisode.cEpisodeThumbnailFilename], ex.Message));
-                        }
-                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
-                        episode.Commit();
                     }
+                    catch (Exception ex)
+                    {
+                        MPTVSeriesLog.Write(string.Format("There was a problem getting the episode image: {0} ({1})", episode[DBOnlineEpisode.cEpisodeThumbnailFilename], ex.Message));
+                    }
+                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
+                    episode.Commit();
+                
                 }
             }
 
