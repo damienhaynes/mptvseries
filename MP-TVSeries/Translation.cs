@@ -124,6 +124,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ShowSeriesFanart = "Show Fanart in Series View";
         public static string ChangeLayout = "Change Layout";
         public static string UseOnlineFavourites = "Use Online Favourites";
+        public static string AddToPlaylist = "Add to Playlist";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";

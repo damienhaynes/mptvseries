@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries
     class VideoHandler
     {
         #region Vars
-        static PlayListPlayer playlistPlayer;
+        static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;      
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
@@ -48,7 +48,7 @@ namespace WindowPlugins.GUITVSeries
         #region Constructor
         public VideoHandler()
         {
-            playlistPlayer = PlayListPlayer.SingletonPlayer;
+            playlistPlayer = MediaPortal.Playlists.PlayListPlayer.SingletonPlayer;
 
             g_Player.PlayBackStopped += new MediaPortal.Player.g_Player.StoppedHandler(OnPlayBackStopped);
             g_Player.PlayBackEnded += new MediaPortal.Player.g_Player.EndedHandler(OnPlayBackEnded);
