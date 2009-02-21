@@ -921,7 +921,7 @@
             <label>Switch View</label>
 			<onleft>50</onleft>
             <onright>50</onright>
-            <onup>20</onup>
+            <onup>30</onup>
 			<ondown>3</ondown>
           </control> 
 		  <control>
@@ -932,8 +932,29 @@
 			<onleft>50</onleft>
             <onright>50</onright>
             <onup>2</onup>
-			<ondown>4</ondown>
-          </control> 
+			<ondown>20</ondown>
+          </control>
+         <control>
+            <description>Current Playlist</description>
+            <type>button</type>
+            <id>20</id>
+            <label>4555</label>
+            <action>33</action>
+			<onleft>50</onleft>
+            <onright>50</onright>
+            <ondown>9</ondown>
+            <onup>3</onup>
+          </control>	
+          <control>
+            <description>My Playlists</description>
+            <type>button</type>
+            <id>9</id>
+            <label>983</label>
+			<onleft>50</onleft>
+            <onright>50</onright>
+            <ondown>4</ondown>
+            <onup>20</onup>
+          </control>		  
 		  <control>
             <description>Options</description>
             <type>button</type>
@@ -941,7 +962,7 @@
             <label>Options</label>
 			<onleft>50</onleft>
             <onright>50</onright>
-            <onup>3</onup>
+            <onup>9</onup>
 			<ondown>5</ondown>
           </control>
           <control>
@@ -973,14 +994,14 @@
             <label>My Movies</label>
             <onleft>50</onleft>
 			<onright>50</onright>
-            <ondown>20</ondown>
+            <ondown>30</ondown>
             <onup>66608</onup>
             <visible>plugin.isenabled(Moving Pictures)</visible>
           </control>
 		  <control>
             <description>My Trailers</description>
             <type>button</type>
-            <id>20</id>
+            <id>30</id>
             <hyperlink>5900</hyperlink>
             <label>My Trailers</label>
             <onleft>50</onleft>

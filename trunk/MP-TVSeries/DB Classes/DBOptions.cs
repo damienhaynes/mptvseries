@@ -161,6 +161,9 @@ namespace WindowPlugins.GUITVSeries
         public const String m_sMainMirror = "http://thetvdb.com";
 
         public const String cOnlineFavourites = "UseOnlineFavourites";
+        public const String cPlaylistPath = "PlayListPath";
+        public const String cRepeatPlaylist = "RepeatPlaylist";
+        public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -400,6 +403,17 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cOnlineFavourites) == null)
                     SetOptions(cOnlineFavourites, false);
+
+                string playListFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                playListFolder += @"\My Playlists";
+                if (GetOptions(cPlaylistPath) == null)
+                    SetOptions(cPlaylistPath, playListFolder);
+
+                if (GetOptions(cRepeatPlaylist) == null)
+                    SetOptions(cRepeatPlaylist, false);
+
+                if (GetOptions(cPlaylistAutoPlay) == null)
+                    SetOptions(cPlaylistAutoPlay, true);
 
             }
             catch (Exception ex)

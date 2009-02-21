@@ -29,7 +29,6 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
-using MediaPortal.Playlists;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
 using System.Collections.Generic;
@@ -206,8 +205,8 @@ namespace WindowPlugins.GUITVSeries
         private DBEpisode ask2Rate = null;
         private static bool m_bResumeFromStandby = false;
         private static bool m_bIsNetworkAvailable = true;
-
         private static bool m_bQuickSelect = false;
+        public static PlayListPlayer _playlistPlayer;
 
         #region Skin Variables
 
@@ -222,6 +221,9 @@ namespace WindowPlugins.GUITVSeries
 
         [SkinControlAttribute(5)]
         protected GUIButtonControl ImportButton = null;
+
+        [SkinControlAttribute(9)]
+        protected GUIButtonControl LoadPlaylistButton = null;
 
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
@@ -244,6 +246,7 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(526)]
         protected GUIImage loadingImage = null;
 
+        // let the skins react to what we are displaying
         [SkinControlAttribute(1232)]
         protected GUILabelControl dummyIsFanartLoaded = null;
 
@@ -258,8 +261,7 @@ namespace WindowPlugins.GUITVSeries
 
         [SkinControlAttribute(1236)]
         protected GUILabelControl dummyThumbnailGraphicalMode = null;
-
-        // let the skins react to what we are displaying
+        
         [SkinControlAttribute(1237)]
         protected GUILabelControl dummyIsSeries = null;
 
@@ -329,7 +331,7 @@ namespace WindowPlugins.GUITVSeries
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
-
+          
             string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
 
             bool bGraphicsLoaded = false;
@@ -1516,7 +1518,8 @@ namespace WindowPlugins.GUITVSeries
             optionsUseOnlineFavourites,
             actionRecheckMI,
             resetUserSelections,
-            showFanartChooser
+            showFanartChooser,
+            addToPlaylist
         }
 
         enum eContextMenus
@@ -1819,6 +1822,19 @@ namespace WindowPlugins.GUITVSeries
                             pItem.ItemId = (int)eContextItems.actionMarkAllUnwatched;
 
                         }
+
+                        // Add To Playlist is supported on all views
+                        // Group:   Add all episodes for all series in selected group (TODO)
+                        // Series:  Add all episodes for selected series
+                        // Season:  Add all episodes for selected season
+                        // Episode: Add selected episode
+                        if (this.listLevel != Listlevel.Group)
+                        {
+                            pItem = new GUIListItem(Translation.AddToPlaylist);
+                            dlg.Add(pItem);
+                            pItem.ItemId = (int)eContextItems.addToPlaylist;
+                        }
+
                         if (this.listLevel != Listlevel.Group)
                         {
                             if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
@@ -2090,7 +2106,11 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         break;
-
+                    
+                    case (int)eContextItems.addToPlaylist:
+                        AddItemToPlayList();
+                        break;        
+                                
                     case (int)eContextItems.cycleSeriesBanner:
                         {
                             int nCurrent = selectedSeries.BannerList.IndexOf(selectedSeries.Banner);
@@ -2780,6 +2800,10 @@ namespace WindowPlugins.GUITVSeries
                     }
                     break;
 
+                case Action.ActionType.ACTION_SHOW_PLAYLIST:
+                    ShowPlaylistWindow();                    
+                    break;
+
                 default:
                     base.OnAction(action);
                     break;
@@ -2949,7 +2973,13 @@ namespace WindowPlugins.GUITVSeries
                 }
                 ImportButton.Focus = false;
                 return;
-            }            
+            }
+
+            if (control == this.LoadPlaylistButton)
+            {
+                OnShowSavedPlaylists(DBOption.GetOptions(DBOption.cPlaylistPath));
+                return;
+            }
 
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
@@ -4280,6 +4310,182 @@ namespace WindowPlugins.GUITVSeries
                 fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
             else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");
             GUIWindowManager.ActivateWindow(fc.GetID, false);
+        }
+
+        GUITVSeriesPlayList TVSeriesPlaylist = null;
+        public void ShowPlaylistWindow()
+        {         
+            MPTVSeriesLog.Write("Switching to Playlist Window");
+
+            if (TVSeriesPlaylist == null)
+            {
+                TVSeriesPlaylist = new GUITVSeriesPlayList();
+                GUIWindow window = (GUIWindow)TVSeriesPlaylist;
+                GUIWindowManager.Add(ref window);
+                TVSeriesPlaylist.Init();
+            }
+            GUIWindowManager.ActivateWindow(TVSeriesPlaylist.GetID, false);
+        }
+
+
+        protected void AddItemToPlayList()
+        {
+            if (_playlistPlayer == null)
+            {
+                _playlistPlayer = PlayListPlayer.SingletonPlayer;
+                _playlistPlayer.PlaylistAutoPlay = DBOption.GetOptions(DBOption.cPlaylistAutoPlay);
+                _playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
+            }
+
+            SQLCondition condition = new SQLCondition();
+            List<DBEpisode> episodes;
+
+            if (this.listLevel == Listlevel.Group)
+            {
+                
+            }
+            else if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
+            {
+                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+            }
+            else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
+            {
+                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+            }
+            else if (this.listLevel == Listlevel.Episode && m_SelectedEpisode != null)
+            {
+                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cEpisodeIndex, m_SelectedEpisode[DBEpisode.cEpisodeIndex], SQLConditionType.Equal);
+            }
+
+            episodes = DBEpisode.Get(condition, false);
+            foreach (DBEpisode episode in episodes)
+            {
+                PlayListItem playlistItem = new PlayListItem(episode);                              
+                _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Add(playlistItem);
+            }   
+   
+            // Select next item in list
+            int item = m_Facade.SelectedListItemIndex;
+            if (item < m_Facade.Count)
+                m_Facade.SelectedListItemIndex = item + 1;        
+
+        }
+
+        protected void OnShowSavedPlaylists(string _directory)
+        {            
+            VirtualDirectory _virtualDirectory = new VirtualDirectory();
+            _virtualDirectory.AddExtension(".tvsplaylist");
+
+            List<GUIListItem> itemlist = _virtualDirectory.GetDirectoryExt(_directory);
+            if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
+                itemlist.RemoveAt(0);
+
+            GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlg == null)
+                return;
+            dlg.Reset();
+            dlg.SetHeading(983); // Saved Playlists
+
+            foreach (GUIListItem item in itemlist)
+            {
+                MediaPortal.Util.Utils.SetDefaultIcons(item);
+                dlg.Add(item);
+            }
+
+            dlg.DoModal(GetID);
+
+            if (dlg.SelectedLabel == -1)
+                return;
+
+            GUIListItem selectItem = itemlist[dlg.SelectedLabel];
+            if (selectItem.IsFolder)
+            {
+                OnShowSavedPlaylists(selectItem.Path);
+                return;
+            }
+
+            GUIWaitCursor.Show();
+            LoadPlayList(selectItem.Path);
+            GUIWaitCursor.Hide();
+        }
+
+        protected void LoadPlayList(string strPlayList)
+        {
+            IPlayListIO loader = PlayListFactory.CreateIO(strPlayList);
+            if (loader == null)
+                return;
+            PlayList playlist = new PlayList();
+
+            if (!loader.Load(playlist, strPlayList))
+            {
+                TellUserSomethingWentWrong();
+                return;
+            }
+
+            if (_playlistPlayer == null)
+            {
+                _playlistPlayer = PlayListPlayer.SingletonPlayer;
+                _playlistPlayer.PlaylistAutoPlay = DBOption.GetOptions(DBOption.cPlaylistAutoPlay);
+                _playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
+            }
+            _playlistPlayer.CurrentPlaylistName = System.IO.Path.GetFileNameWithoutExtension(strPlayList);
+
+            if (playlist.Count == 1 && _playlistPlayer.PlaylistAutoPlay)
+            {
+                MPTVSeriesLog.Write(string.Format("GUITVSeriesPlaylist: play single playlist item - {0}", playlist[0].FileName));
+                if (g_Player.Play(playlist[0].FileName))
+                {
+                    if (MediaPortal.Util.Utils.IsVideo(playlist[0].FileName))
+                    {
+                        g_Player.ShowFullScreenWindow();
+                    }
+                }
+                return;
+            }
+
+            // clear current playlist
+            _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Clear();
+
+            // add each item of the playlist to the playlistplayer
+            for (int i = 0; i < playlist.Count; ++i)
+            {
+                PlayListItem playListItem = playlist[i];
+                _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Add(playListItem);
+            }
+
+            // if we got a playlist
+            if (_playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Count > 0)
+            {
+                // then get 1st item
+                playlist = _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
+                PlayListItem item = playlist[0];
+
+                // and start playing it
+                if (_playlistPlayer.PlaylistAutoPlay)
+                {
+                    _playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
+                    _playlistPlayer.Reset();
+                    _playlistPlayer.Play(0);
+                }
+
+                // and activate the playlist window
+                ShowPlaylistWindow();
+            }
+        }
+
+        private void TellUserSomethingWentWrong()
+        {
+            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+            if (dlgOK != null)
+            {
+                dlgOK.SetHeading(6);
+                dlgOK.SetLine(1, 477);
+                dlgOK.SetLine(2, string.Empty);
+                dlgOK.DoModal(GetID);
+            }
         }
 
         ~TVSeriesPlugin()
