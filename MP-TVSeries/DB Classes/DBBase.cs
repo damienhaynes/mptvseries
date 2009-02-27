@@ -744,35 +744,18 @@ namespace WindowPlugins.GUITVSeries
 
                 try
                 {
-                if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
-                else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
-                else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                else if(eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
-                else return string.Empty;
+                    if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
+                    else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
+                    else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
+                    else if(eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+                    else return string.Empty;
                 }
-
-                //try
-                //{
-                //    randImage = BannerList[randomPick];
-                //    if (preferGraphical && !randImage.Contains(graphicalBannerRecognizerSubstring))
-                //    {
-                //        // prefer graphical banners
-                //        List<string> gBanners = new List<string>();
-                //        foreach (string banner in BannerList)
-                //            if (banner.Contains(graphicalBannerRecognizerSubstring))
-                //                gBanners.Add(banner);
-                //        if (gBanners.Count > 0)
-                //            randImage = getRandomBanner(gBanners, false);
-                //        // else no graphical banners avail. -> use text Banner we already picked
-                //    }
-                //}
                 catch
                 {
                     MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
                     return string.Empty;
                 }
-            }
-            randImage = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), randImage);
+            }            
             return System.IO.File.Exists(randImage) ? randImage : string.Empty;
         }
 
