@@ -322,7 +322,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 try
                                 {
-                                    dbf[propertyNode.Name] = propertyNode.InnerText;
+                                    dbf[propertyNode.Name] = propertyNode.InnerText;                                    
                                 }
                                 catch (Exception ex)
                                 { MPTVSeriesLog.Write("Error adding Fanart Property to DBEntry: " + propertyNode.Name + " - " + ex.Message); }
@@ -332,8 +332,17 @@ namespace WindowPlugins.GUITVSeries
                                     isFanart = true;
                             }
                             if (isFanart)
-                            {
-                                dbf[DBFanart.cSeriesID] = SeriesID;
+                            {                                                              
+                                // Sync local files with database     
+                                string localPath = dbf[DBFanart.cBannerPath];
+                                localPath = localPath.Replace("/", @"\");
+                                string fanart = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localPath);
+                                if (File.Exists(fanart))
+                                    dbf[DBFanart.cLocalPath] = localPath;
+                                else
+                                    dbf[DBFanart.cLocalPath] = string.Empty;
+                                                                                        
+                                dbf[DBFanart.cSeriesID] = SeriesID;                                
                                 _fanart.Add(dbf);
                             }
                         }
