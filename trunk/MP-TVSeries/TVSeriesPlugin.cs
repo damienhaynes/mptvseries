@@ -776,11 +776,18 @@ namespace WindowPlugins.GUITVSeries
 
         void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Stop();
-            foreach (aclib.Performance.Watch w in aclib.Performance.PerfWatcher.InstantiatedWatches)
+            try
             {
-                MPTVSeriesLog.Write(w.Info,MPTVSeriesLog.LogLevel.Debug);
-                w.Reset();
+                aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Stop();
+                foreach (aclib.Performance.Watch w in aclib.Performance.PerfWatcher.InstantiatedWatches)
+                {
+                    MPTVSeriesLog.Write(w.Info, MPTVSeriesLog.LogLevel.Debug);
+                    w.Reset();
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error writing performance statistics to log " + ex.InnerException);
             }
 
             // ZF - seems to be crashing because of facade being null sometimes, before getting inside the plugin
@@ -3349,7 +3356,9 @@ namespace WindowPlugins.GUITVSeries
             }
             m_parserUpdaterWorking = false;
             if (bDataUpdated)
-                LoadFacade();
+            {
+               if (m_Facade != null) LoadFacade();
+            }
         }
 
         public override bool OnMessage(GUIMessage message)

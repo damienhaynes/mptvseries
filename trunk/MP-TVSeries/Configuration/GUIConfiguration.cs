@@ -581,21 +581,22 @@ namespace WindowPlugins.GUITVSeries
             load.updateStats(seriesList.Count, 0, 0);
             List<DBSeason> altSeasonList = DBSeason.Get(new SQLCondition(), false);
             load.updateStats(seriesList.Count, altSeasonList.Count, 0);
-            List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false);
+            List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false); 
             load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
             aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, altEpList.Count);
+
             if (seriesList.Count == 0)
             {
                 load.Close();
                 load = null;
                 return;
             }
+
             foreach (DBSeries series in seriesList)
             {
                 TreeNode seriesNode = new TreeNode(series[DBOnlineSeries.cPrettyName]);
                 seriesNode.Name = DBSeries.cTableName;
-                seriesNode.Tag = (DBSeries)series;
-                //seriesNode.Expand();
+                seriesNode.Tag = (DBSeries)series;               
                 root.Nodes.Add(seriesNode);
                 if (series[DBSeries.cHidden])
                 {
@@ -603,7 +604,7 @@ namespace WindowPlugins.GUITVSeries
                     seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
                 }
 
-                int seriesID = series[DBSeries.cID];
+                int seriesID = series[DBSeries.cID];            
                 foreach (DBSeason season in altSeasonList)
                 {
                     if (season[DBSeason.cSeriesID] == seriesID)
@@ -626,11 +627,12 @@ namespace WindowPlugins.GUITVSeries
 
                         int epCount = 0;
                         int seasonIndex = season[DBSeason.cIndex];
+                                              
                         foreach (DBEpisode episode in altEpList)
                         {
                             if (episode[DBEpisode.cSeriesID] == seriesID && episode[DBEpisode.cSeasonIndex] == seasonIndex)
                             {
-                                epCount++;
+                                epCount++;                                
                                 String sEpisodeName = (String)episode[DBEpisode.cEpisodeName];
                                 TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
                                 episodeNode.Name = DBEpisode.cTableName;
@@ -652,12 +654,12 @@ namespace WindowPlugins.GUITVSeries
                                 seasonNode.Nodes.Add(episodeNode);
                             }
                         }
-                        if (epCount == 0) // no episodes => no season node
-                            seriesNode.Nodes.Remove(seasonNode);
+                        if (epCount == 0) // no episodes, then no season node
+                            seriesNode.Nodes.Remove(seasonNode);                    
                     }
                 }
-            }
-            this.ResumeLayout();
+            }            
+            this.ResumeLayout();            
             load.Close();
             load = null; ;
         }
@@ -1037,7 +1039,7 @@ namespace WindowPlugins.GUITVSeries
 
         void TestParsing_Start(bool bForceRefresh)
         {
-            if (!bForceRefresh && listView_ParsingResults.Items.Count > 0)
+            if (!bForceRefresh && listView_ParsingResults.Items.Count > 0 || initLoading)
                 return;
 
             // refresh regex and replacements
