@@ -71,7 +71,8 @@
 	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">List all Fanart for this Series</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Download Fanart and Use</string>
-	<string Field="FanArtUse" Original="Use Fanart">Use Fanart</string>
+	<string Field="FanArtGet" Original="Download Fanart">Download Fanart</string>
+	<string Field="FanArtUse" Original="Set Fanart as Default">Set Fanart as Default</string>
 	<string Field="FanArtDelete" Original="Delete Fanart">Delete Fanart</string>
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Downloading {0} Fanart...</string>
 	<string Field="FanArtLocal" Original="Available locally">Available locally</string>
@@ -113,6 +114,6 @@
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
 	<string Field="AddToPlaylist" Original="Add To Playlist">Add To Playlist</string>
 	<string Field="FanartDisableLabel" Original="Disabled">Disabled</string>
-	<string Field="FanartMenuEnable" Original="Enable">Enable</string>
-	<string Field="FanartMenuDisable" Original="Disable">Disable</string>
+	<string Field="FanartMenuEnable" Original="Enable">Enable Fanart</string>
+	<string Field="FanartMenuDisable" Original="Disable">Disable Fanart</string>
 </strings>
