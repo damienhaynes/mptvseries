@@ -41,7 +41,15 @@ namespace WindowPlugins.GUITVSeries
         public const String cBannerPath = "BannerPath"; // online
         public const String cThumbnailPath = "ThumbnailPath"; // online
         public const String cColors = "Colors"; // online
-        
+        public const String cResolution = "BannerType2"; // online
+        public const String cDisabled = "Disabled";
+
+        enum FanartResolution
+        {
+            BOTH,
+            HD,
+            FULLHD
+        }
 
         public DBFanart()
             : base(cTableName)
@@ -68,6 +76,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cBannerPath, new DBField(DBField.cTypeString));
             AddColumn(cThumbnailPath, new DBField(DBField.cTypeString));
             AddColumn(cColors, new DBField(DBField.cTypeString));
+            AddColumn(cDisabled, new DBField(DBField.cTypeString));
         }
 
         public static void ClearAll()
@@ -100,7 +109,7 @@ namespace WindowPlugins.GUITVSeries
             }
             Clear(this[cIndex]);         
         }
-
+   
         public override bool Commit()
         {
             lock(cache)
@@ -162,6 +171,53 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public List<DBFanart> FanartsToDownload(int SeriesID)
+        {       
+            // Only get a list of fanart that is available for download
+            String sqlQuery = "select * from " + cTableName;
+            sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
+    
+            // Get Preferred Resolution
+            int res = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);            
+            
+            if (res == (int)FanartResolution.HD)
+                sqlQuery += " and " + cResolution + " = " + "1280x720";
+            if (res == (int)FanartResolution.FULLHD)
+                sqlQuery += " and " + cResolution + " = " + "1920x1080";
+      
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+
+            if (results.Rows.Count > 0)
+            {                              
+                int iFanartCount = 0;
+                List<DBFanart> AvailableFanarts = new List<DBFanart>(results.Rows.Count);
+                for (int index = 0; index < results.Rows.Count; index++)
+                {
+                    if (results.GetField(index, (int)results.ColumnIndices[cLocalPath]).Length > 0)
+                        iFanartCount++;
+                    else
+                    {
+                        // Add 'Available to Download' fanart to list
+                        AvailableFanarts.Add(new DBFanart());
+                        AvailableFanarts[AvailableFanarts.Count-1].Read(ref results, index);                       
+                    }
+                }
+                // Only return the fanarts that we want to download
+                int AutoDownloadCount = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
+
+                for (int i = 0; i < AvailableFanarts.Count; i++)
+                {
+                    // Dont get more than the user wants
+                    if (iFanartCount >= AutoDownloadCount)
+                        break;
+                    _FanartsToDownload.Add(AvailableFanarts[i]);
+                    iFanartCount++;
+                }
+            }
+            return _FanartsToDownload;
+          
+        } List<DBFanart> _FanartsToDownload = new List<DBFanart>();
+
         public bool Chosen
         {
             get
@@ -172,6 +228,23 @@ namespace WindowPlugins.GUITVSeries
             {
                 GlobalSet(new DBFanart(), cChosen, false, new SQLCondition(new DBFanart(), cSeriesID, this[cSeriesID], SQLConditionType.Equal));
                 this[cChosen] = value;
+                this.Commit();
+
+                Clear(this[cIndex]);
+            }
+        }
+
+        public bool Disabled
+        {
+            get
+            {
+                if (this[cDisabled])
+                    return true;
+                return false;
+            }  
+            set
+            {                
+                this[cDisabled] = value;
                 this.Commit();
             }
         }

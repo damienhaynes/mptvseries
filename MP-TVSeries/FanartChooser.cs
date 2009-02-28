@@ -40,7 +40,9 @@ namespace WindowPlugins.GUITVSeries
             use,
             download,
             delete,
-            optionRandom
+            optionRandom,
+            disable,
+            enable
         }
 
         const int windowID = 9812;
@@ -101,10 +103,10 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (downloadingWorker.CancellationPending) 
                         {
-                        // Cancel, clean up pending download
-                        bDownloadSuccess = false;
-                        Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                        MPTVSeriesLog.Write("cancel Fanart download: " + f.FullLocalPath);
+                            // Cancel, clean up pending download
+                            bDownloadSuccess = false;
+                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
+                            MPTVSeriesLog.Write("cancel Fanart download: " + f.FullLocalPath);
                         }
                         System.Windows.Forms.Application.DoEvents();
                     }
@@ -240,12 +242,12 @@ namespace WindowPlugins.GUITVSeries
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.download;
                     }
-                    else // likewise delete obviously only makes sense for available stuff
-                    {
-                        pItem = new GUIListItem(Translation.FanArtDelete);
-                        dlg.Add(pItem);
-                        pItem.ItemId = (int)menuAction.delete;
-                    }
+                    //else // likewise delete obviously only makes sense for available stuff
+                    //{
+                    //    pItem = new GUIListItem(Translation.FanArtDelete);
+                    //    dlg.Add(pItem);
+                    //    pItem.ItemId = (int)menuAction.delete;
+                    //}
                 }
                 else
                 {
@@ -256,15 +258,31 @@ namespace WindowPlugins.GUITVSeries
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.download;
 
-                        pItem = new GUIListItem(Translation.FanArtDelete);
-                        dlg.Add(pItem);
-                        pItem.ItemId = (int)menuAction.delete;
+                        //pItem = new GUIListItem(Translation.FanArtDelete);
+                        //dlg.Add(pItem);
+                        //pItem.ItemId = (int)menuAction.delete;   
                     }
                     else
                     {
                         pItem = new GUIListItem(Translation.FanArtGetAndUse);
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.download;
+                    }
+                }
+
+                if (selectedFanart.isAvailableLocally)
+                {
+                    if (selectedFanart.Disabled)
+                    {
+                        pItem = new GUIListItem(Translation.FanartMenuEnable);
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)menuAction.enable;
+                    }
+                    else
+                    {
+                        pItem = new GUIListItem(Translation.FanartMenuDisable);
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)menuAction.disable;
                     }
                 }
 
@@ -279,7 +297,7 @@ namespace WindowPlugins.GUITVSeries
                     case (int)menuAction.delete:
                         if (selectedFanart.isAvailableLocally)
                         {                            
-                            selectedFanart.Delete();
+                            selectedFanart.Delete();  
                             // and reinit the display to get rid of it
                             m_Facade.Clear();
                             loadingWorker.RunWorkerAsync(SeriesID);
@@ -292,6 +310,14 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case (int)menuAction.optionRandom:
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
+                        break;
+                    case (int)menuAction.disable:
+                        selectedFanart.Disabled = true;
+                        currentitem.Label = Translation.FanartDisableLabel;
+                        break;
+                    case (int)menuAction.enable:
+                        selectedFanart.Disabled = false;                        
+                        currentitem.Label = Translation.FanArtLocal;
                         break;
                 }
             }
@@ -425,7 +451,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if(f.isAvailableLocally)
                     {
-                        item = new GUIListItem(Translation.FanArtLocal);
+                        if (f.Disabled)
+                            item = new GUIListItem(Translation.FanartDisableLabel);
+                        else
+                            item = new GUIListItem(Translation.FanArtLocal);
                         item.IsRemote = false;
                         if (f.Chosen) item.IsRemote = true;
                         else item.IsDownloading = false;

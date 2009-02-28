@@ -202,8 +202,8 @@ namespace WindowPlugins.GUITVSeries
                         List<DBFanart> _tempFanarts = _faInDB;
                         for (int i = (_tempFanarts.Count - 1); i >= 0; i--)                        
                         {
-                            // Remove any fanarts in database that are not local
-                            if (!_tempFanarts[i].isAvailableLocally)
+                            // Remove any fanarts in database that are not local or have been disabled
+                            if (!_tempFanarts[i].isAvailableLocally || _tempFanarts[i].Disabled)
                                 _faInDB.Remove(_faInDB[i]);
                         }
                         _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;

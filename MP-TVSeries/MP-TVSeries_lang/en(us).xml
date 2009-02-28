@@ -112,4 +112,7 @@
 	<string Field="ChangeLayout" Original="Change Layout">Change Layout</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
 	<string Field="AddToPlaylist" Original="Add To Playlist">Add To Playlist</string>
+	<string Field="FanartDisableLabel" Original="Disabled">Disabled</string>
+	<string Field="FanartMenuEnable" Original="Enable">Enable</string>
+	<string Field="FanartMenuDisable" Original="Disable">Disable</string>
 </strings>
