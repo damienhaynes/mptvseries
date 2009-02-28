@@ -548,11 +548,18 @@ namespace WindowPlugins.GUITVSeries
 
         private void GetFileTimeStamps()
         {
-            if (System.IO.File.Exists(this[DBEpisode.cFilename]))
+            try
             {
-                this[cFileDateAdded] = DateTime.Now.ToString("yyyy-MM-dd");
-                this[cFileDateCreated] = System.IO.File.GetCreationTime(this[DBEpisode.cFilename]).ToString("yyyy-MM-dd");
-                Commit();
+                if (System.IO.File.Exists(this[DBEpisode.cFilename]))
+                {
+                    this[cFileDateAdded] = DateTime.Now.ToString("yyyy-MM-dd");
+                    this[cFileDateCreated] = System.IO.File.GetCreationTime(this[DBEpisode.cFilename]).ToString("yyyy-MM-dd");
+                    Commit();
+                }
+            }
+            catch
+            {
+                MPTVSeriesLog.Write("Error: Unable to extract File Timestamps");
             }
         }
 
