@@ -422,7 +422,11 @@ namespace WindowPlugins.GUITVSeries
             textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
             try
             {
-                m_currentNewsSearch = DBNewzbin.Get()[0];
+                List<DBNewzbin> newsSearches = DBNewzbin.Get();
+                if (newsSearches.Count == 0)
+                    return;
+
+                m_currentNewsSearch = newsSearches[0];
 
                 textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
                 textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
