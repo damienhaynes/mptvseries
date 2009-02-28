@@ -112,7 +112,8 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArt = "Fanart";
         public static string FanListAll = "List all Fanart for this Series";
         public static string FanArtGetAndUse = "Download Fanart and Use";
-        public static string FanArtUse = "Use Fanart";
+        public static string FanArtGet = "Download Fanart";
+        public static string FanArtUse = "Set Fanart as Default";
         public static string FanArtDelete = "Delete Fanart";
         public static string FanDownloadingStatus = "Downloading {0} Fanart...";
         public static string FanArtLocal = "Available locally";
@@ -126,8 +127,8 @@ namespace WindowPlugins.GUITVSeries
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";
         public static string FanartDisableLabel = "Disabled";
-        public static string FanartMenuEnable = "Enable";
-        public static string FanartMenuDisable = "Disable";
+        public static string FanartMenuEnable = "Enable Fanart";
+        public static string FanartMenuDisable = "Disable Fanart";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";

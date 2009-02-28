@@ -230,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
                 this[cChosen] = value;
                 this.Commit();
 
-                Clear(this[cIndex]);
+                //Clear(this[cIndex]);
             }
         }
 

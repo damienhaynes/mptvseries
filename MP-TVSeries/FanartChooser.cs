@@ -241,13 +241,7 @@ namespace WindowPlugins.GUITVSeries
                         pItem = new GUIListItem(Translation.FanArtGetAndUse);
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.download;
-                    }
-                    //else // likewise delete obviously only makes sense for available stuff
-                    //{
-                    //    pItem = new GUIListItem(Translation.FanArtDelete);
-                    //    dlg.Add(pItem);
-                    //    pItem.ItemId = (int)menuAction.delete;
-                    //}
+                    }        
                 }
                 else
                 {
@@ -256,15 +250,11 @@ namespace WindowPlugins.GUITVSeries
                     {
                         pItem = new GUIListItem(Translation.FanArtUse);
                         dlg.Add(pItem);
-                        pItem.ItemId = (int)menuAction.download;
-
-                        //pItem = new GUIListItem(Translation.FanArtDelete);
-                        //dlg.Add(pItem);
-                        //pItem.ItemId = (int)menuAction.delete;   
+                        pItem.ItemId = (int)menuAction.use;
                     }
                     else
                     {
-                        pItem = new GUIListItem(Translation.FanArtGetAndUse);
+                        pItem = new GUIListItem(Translation.FanArtGet);
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.download;
                     }
@@ -304,9 +294,15 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                     case (int)menuAction.download:
+                        if (!selectedFanart.isAvailableLocally)
+                            downloadFanart(selectedFanart);                        
+                        break;
                     case (int)menuAction.use:
-                        if (selectedFanart.isAvailableLocally) selectedFanart.Chosen = true;
-                        else downloadFanart(selectedFanart);                        
+                        if (selectedFanart.isAvailableLocally)
+                        {
+                            selectedFanart.Chosen = true;
+                            Fanart.RefreshFanart(SeriesID);
+                        }                        
                         break;
                     case (int)menuAction.optionRandom:
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
