@@ -2355,6 +2355,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_OnlineData.AutoScroll = true;
             this.panel_OnlineData.Controls.Add(this.label73);
             this.panel_OnlineData.Controls.Add(this.spinMaxFanarts);
             this.panel_OnlineData.Controls.Add(this.label72);
@@ -2387,7 +2388,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label73
             // 
-            this.label73.Location = new System.Drawing.Point(166, 309);
+            this.label73.Location = new System.Drawing.Point(170, 309);
             this.label73.Name = "label73";
             this.label73.Size = new System.Drawing.Size(66, 21);
             this.label73.TabIndex = 23;
@@ -2396,7 +2397,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // spinMaxFanarts
             // 
-            this.spinMaxFanarts.Location = new System.Drawing.Point(124, 311);
+            this.spinMaxFanarts.Location = new System.Drawing.Point(127, 311);
             this.spinMaxFanarts.Maximum = new decimal(new int[] {
             99,
             0,
@@ -2419,7 +2420,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label72
             // 
-            this.label72.Location = new System.Drawing.Point(53, 310);
+            this.label72.Location = new System.Drawing.Point(49, 310);
             this.label72.Name = "label72";
             this.label72.Size = new System.Drawing.Size(66, 21);
             this.label72.TabIndex = 21;
@@ -2428,7 +2429,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label71
             // 
-            this.label71.Location = new System.Drawing.Point(53, 285);
+            this.label71.Location = new System.Drawing.Point(49, 285);
             this.label71.Name = "label71";
             this.label71.Size = new System.Drawing.Size(66, 21);
             this.label71.TabIndex = 20;
@@ -2443,7 +2444,7 @@ namespace WindowPlugins.GUITVSeries
             "Both",
             "1280x720",
             "1920x1080"});
-            this.cboFanartResolution.Location = new System.Drawing.Point(123, 285);
+            this.cboFanartResolution.Location = new System.Drawing.Point(127, 285);
             this.cboFanartResolution.Name = "cboFanartResolution";
             this.cboFanartResolution.Size = new System.Drawing.Size(121, 21);
             this.cboFanartResolution.TabIndex = 19;
