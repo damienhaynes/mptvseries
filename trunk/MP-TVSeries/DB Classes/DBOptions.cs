@@ -165,6 +165,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 
+        public const String cAutoDownloadFanart = "AutoDownloadFanart";
+        public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
+        public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()
@@ -414,6 +418,15 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPlaylistAutoPlay) == null)
                     SetOptions(cPlaylistAutoPlay, true);
+
+                if (GetOptions(cAutoDownloadFanart) == null)
+                    SetOptions(cAutoDownloadFanart, true);
+
+                if (GetOptions(cAutoDownloadFanartCount) == null)
+                    SetOptions(cAutoDownloadFanartCount, 3);
+
+                if (GetOptions(cAutoDownloadFanartResolution) == null)
+                    SetOptions(cAutoDownloadFanartResolution, 0); //0=Both,1=1280x720,2=1920x1080
 
             }
             catch (Exception ex)

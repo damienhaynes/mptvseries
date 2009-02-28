@@ -207,6 +207,10 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
+            chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
+            cboFanartResolution.SelectedIndex = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
+            spinMaxFanarts.Value = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
+
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);            
             
             chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
@@ -3451,6 +3455,26 @@ namespace WindowPlugins.GUITVSeries
             }
             view.Commit();
             DBOption.SetOptions(DBOption.cOnlineFavourites, chkOnlineFavourites.Checked);
+        }
+
+        private void chkAutoDownloadFanart_CheckedChanged(object sender, EventArgs e)
+        {
+            // Enable/Disable Fanart controls
+            cboFanartResolution.Enabled = chkAutoDownloadFanart.Checked;
+            spinMaxFanarts.Enabled = chkAutoDownloadFanart.Checked;
+
+            DBOption.SetOptions(DBOption.cAutoDownloadFanart, chkAutoDownloadFanart.Checked);
+        }
+
+        private void cboFanartResolution_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoDownloadFanartResolution, cboFanartResolution.SelectedIndex);
+        }
+
+        private void spinMaxFanarts_ValueChanged(object sender, EventArgs e)
+        {
+            decimal val = spinMaxFanarts.Value;
+            DBOption.SetOptions(DBOption.cAutoDownloadFanartCount, val.ToString());
         }
     }
     
