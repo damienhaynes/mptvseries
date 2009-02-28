@@ -68,7 +68,7 @@
 	<string Field="ChangeView" Original="Change View">Skift syn</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Øjeblikkelig oversigts ændring</string>
 	<string Field="Cycle_Banner" Original="Cycle Banner">Roter banner</string>
-	<string Field="FanArt" Original="Fanart">fanart</string>
+	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">Vis alle fanart for denne serie</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Hent fanart og benyt det</string>
 	<string Field="FanArtUse" Original="Use Fanart">Benyt fanart</string>
@@ -109,4 +109,6 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com er på nuværende tidspunkt ikke tilgængelig, prøv igen senere</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Netværks forbindelse ikke tilgængelig, kontroller forbindelsen og prøv igen</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Vis Fanart ved serie oversigt</string>
+	<string Field="ChangeLayout" Original="Change Layout">Ændre layout</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Brug online favoritter</string>
 </strings>
