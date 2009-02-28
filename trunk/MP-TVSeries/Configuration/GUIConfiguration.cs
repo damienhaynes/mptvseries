@@ -415,29 +415,35 @@ namespace WindowPlugins.GUITVSeries
             }
             if (m_currentTorrentSearch != null)
                 comboBox_TorrentPreset.SelectedItem = m_currentTorrentSearch;
-            //else
-                //comboBox_TorrentPreset.SelectedIndex = 0;
         }
 
         private void LoadNewsSearches()
         {
             textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
-            m_currentNewsSearch = DBNewzbin.Get()[0];
+            try
+            {
+                m_currentNewsSearch = DBNewzbin.Get()[0];
 
-            textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
-            textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
-            textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
-            textBox_NewsSearchReportRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReport];
-            textBox_NewsSearchNameRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexName];
-            textBox_NewsSearchIDRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexID];
-            textBox_NewsSearchSizeRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexSize];
-            textBox_NewsSearchPostDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate];
-            textBox_NewsSearchReportDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate];
-            textBox_NewsSearchFormatRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexFormat];
-            textBox_NewsSearchGroupRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexGroup];
-            textBox_NewsSearchLanguageRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage];
-            textBox_NewsSearchIsolateArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName];
-            textBox_NewsSearchParseArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName];
+                textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
+                textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
+                textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
+                textBox_NewsSearchReportRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReport];
+                textBox_NewsSearchNameRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexName];
+                textBox_NewsSearchIDRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexID];
+                textBox_NewsSearchSizeRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexSize];
+                textBox_NewsSearchPostDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate];
+                textBox_NewsSearchReportDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate];
+                textBox_NewsSearchFormatRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexFormat];
+                textBox_NewsSearchGroupRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexGroup];
+                textBox_NewsSearchLanguageRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage];
+                textBox_NewsSearchIsolateArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName];
+                textBox_NewsSearchParseArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName];
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error: unable to retrieve NewsSearch settings from database: " + ex.Message);
+            }
+
         }
 
         private void LoadImportPathes()
