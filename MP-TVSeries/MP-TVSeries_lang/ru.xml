@@ -1,112 +1,119 @@
-<?xml version="1.0" encoding="windows-1251"?>
+п»ї<?xml version="1.0" encoding="UTF-8"?>
 <!-- MP-TV-Series translation file -->
 <!-- Russian(RU) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
-	<string Field="Series" Original="Series">Сериал</string>
-	<string Field="Series_Plural" Original="Series (Plr)">Сериалы</string> <!-- plural -->
-	<string Field="Season" Original="Season">Сезон</string>
-	<string Field="Seasons" Original="Seasons">Сезоны</string>
-	<string Field="Episode" Original="Episode">Эпизод</string>
-	<string Field="Episodes" Original="Episodes">Эпизоды</string>
-	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Отметить как просмотренный</string>
-	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Получить субтитры</string>
-	<string Field="Load_via_Torrent" Original="Load via Torrent">Загрузить через торрент</string>
-	<string Field="Mark_all_as_watched" Original="Mark all as watched">Отметить все как просмотренные</string>
-	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Отметить все как непросмотренные</string>
-	<string Field="Hide" Original="Hide">Скрыть</string>
-	<string Field="Delete" Original="Delete">Удалить</string>
-	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Удалит сериал из  избранного</string>
-	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Добавить сериал в избранное</string>
-	<string Field="Force_Local_Scan" Original="Force Local Scan ">Принудительное локальное сканирование </string>
-	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Принудительное обновление онлайн </string>
-	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(Прогресс)</string>
-	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Показывать  только эпизоды, к которым есть файлы</string>
-	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Скрыть описания  непросмотренных эпизодов</string>
-	<string Field="on" Original="on">Вкл</string>
-	<string Field="off" Original="off">Выкл</string>
-	<string Field="Play_Random_Episode" Original="Play Random Episode">Показать случайный эпизод</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Показать случайный непросмотренный эпизод</string>
-	<string Field="Delete_that_series" Original="Delete that series?">Удалить этот сериал?</string>
-	<string Field="Delete_that_season" Original="Delete that season?">Удалить этот сезон?</string>
-	<string Field="Delete_that_episode" Original="Delete that episode?">Удалить этот эпизод?</string>
-	<string Field="Confirm" Original="Confirm">Подтверждение</string>
-	<string Field="Completed" Original="Completed">Завершено</string>
-	<string Field="No_subtitles_found" Original="No subtitles found">Субтитры не найдены</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Пропустить / Больше не спрашивать</string>
-	<string Field="no_results_found" Original="no results found!">ничего не найдено!</string>
-	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Скрыто, чтобы не  показывать спойлеры *</string>
-	<string Field="Yes" Original="Yes">Да</string>
-	<string Field="No" Original="No">Нет</string>
-	<string Field="Error" Original="#Error">#Ошибка</string>
-	<string Field="No_items" Original="No items!">Нет содержимого!</string>
-	<string Field="Unknown" Original="Unknown">Неизвестно</string>
-	<string Field="wrongSkin" Original="Wrong Skin file">Неверный файл скина</string>
-	<string Field="special" Original="Special">Дополнение</string>
-	<string Field="specials" Original="Specials">Дополнения</string>
-	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you  like to proceed?">"Вы собираетесь удалить навсегда {0} файл(ов) с диска.\nВы хотите продолжить?"</string>
-	<string Field="Force_Online_Match" Original="Force Online Match">Принудительное соответствие онлайн</string>
-	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Загрузить качалкой новостей</string>
-	<string Field="Download" Original="Download">Скачать</string>
-	<string Field="Actions" Original="Actions">Действия</string>
-	<string Field="Options" Original="Options">Опции</string>
-	<string Field="Genres" Original="Genres">Жанры</string>
-	<string Field="All" Original="All">Все</string>
-	<string Field="Latest" Original="Latest">Последние</string>
-	<string Field="Channels" Original="Channels">Каналы</string>
-	<string Field="Unwatched" Original="Unwatched">непросмотренное</string>
-	<string Field="Favourites" Original="Favourites">Избранное</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Обновить медиаинформацию файла(ов) на  диске</string>
-	<string Field="RateSeries" Original="Rate this Series">Оценить этот сериал</string>
-	<string Field="RateEpisode" Original="Rate this Episode">Оценить этот эпизод</string>
-	<string Field="ResetRating" Original="Reset Rating">Сбросить оценку</string>
-	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Запрашивать у меня оценку неоцененных эпизодов</string>
-	<string Field="DontAskToRate" Original="Don't ask me to rate again">Не запрашивать у меня оценку снова</string>
-	<string Field="RatingStar" Original="Star">Звезда</string>
-	<string Field="RatingStars" Original="Stars">Звезды</string>
-	<string Field="ChangeView" Original="Change View">Изменить вид</string>
-	<string Field="ChangeViewFast" Original="Immediatly Change Views">Немедленно менять вид</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">Чередовать баннеры</string>
-	<string Field="FanArt" Original="Fanart">Фанарт</string>
-	<string Field="FanListAll" Original="List all Fanart for this Series">Отобразить весь фанарт для сериала</string>
-	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Скачать и использовать фанарт</string>
-	<string Field="FanArtUse" Original="Use Fanart">Использовать фанарт</string>
-	<string Field="FanArtDelete" Original="Delete Fanart">Удалить фанарт</string>
-	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Загружается {0} фанартов...</string>
-	<string Field="FanArtLocal" Original="Available locally">Доступно локально</string>
-	<string Field="FanArtOnline" Original="Available for downloading">Доступно для загрузки</string>
-	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">Загружается {0} из {1} фанартов...</string>
-	<string Field="FanArtRandom" Original="Display random Fanart">Показать случайный фанарт</string>
-	<string Field="FanArtNoneFound" Original="No Fanart could be found">Фанарт не найден</string>
-	<string Field="CFS_Choose_Item" Original="Choose item">Выберите пункт</string>
-	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Выберите соответсвующий пункт:</string>
-	<string Field="CFS_Search_Again" Original="Search again">Повторный поиск</string>
-	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Выберите соответствующий файл субтитров</string>
-	<string Field="CFS_Subtitle_Episode" Original="Choose item">Эпизод:</string>
-	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">Соответствующие субтитры</string>
-	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Выберите нужный сериал</string>
-	<string Field="CFS_Available_Series" Original="Available Series">Доступные сериалы</string>
-	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Выберите желаюмую версию субтитров</string>
-	<string Field="CFS_Select_Version" Original="Version:">Версия:</string>
-	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Выберите нужный эпизод</string>
-	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Локальный список эпизодов:</string>
-	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Список доступных эпизодов:</string>
-	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Показать сайт поиска:</string>
-	<string Field="CFS_List_Search_Site" Original="List of search sites:">Список сайтов поиска:</string>
-	<string Field="CFS_Found_Torrents" Original="Found torrents:">Найдено торрентов:</string>
-	<string Field="CFS_Looking_For" Original="Looking for:">Поиск для:</string>
-	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Выберите нужный сезон</string>
-	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Локальный список сезонов:</string>
-	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Список доступных сезонов:</string>
-	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Замена файла субтитров</string>
-	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Присутствует старый файл субтитров: перезаписать?</string>
-	<string Field="RecentlyAdded" Original="Recently Added">Недавно добавленные</string>
-	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Ошибка БД ТВ(theTVDB)</string>
-	<string Field="TVDB_INFO_TITLE" Original="theTVDB">БД ТВ(theTVDB)</string>
-	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Не установлен идентификатор аккаунта</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Введите ваш ID онлайн аккаунта в настройках</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com временно недоступен, попробуйте позже</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Сеть не подключена, проверьте подключение и повторите попытку</string>
-	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Показывать фанарт в меню сериалов</string>
+	<string Field="Series" Original="Series">РЎРµСЂРёР°Р»</string>
+	<string Field="Series_Plural" Original="Series (Plr)">РЎРµСЂРёР°Р»С‹</string> <!-- plural -->
+	<string Field="Season" Original="Season">РЎРµР·РѕРЅ</string>
+	<string Field="Seasons" Original="Seasons">РЎРµР·РѕРЅС‹</string>
+	<string Field="Episode" Original="Episode">Р­РїРёР·РѕРґ</string>
+	<string Field="Episodes" Original="Episodes">Р­РїРёР·РѕРґС‹</string>
+	<string Field="Toggle_watched_flag" Original="Toggle watched flag">РћС‚РјРµС‚РёС‚СЊ РєР°Рє РїСЂРѕСЃРјРѕС‚СЂРµРЅРЅС‹Р№</string>
+	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">РџРѕР»СѓС‡РёС‚СЊ СЃСѓР±С‚РёС‚СЂС‹</string>
+	<string Field="Load_via_Torrent" Original="Load via Torrent">Р—Р°РіСЂСѓР·РёС‚СЊ С‡РµСЂРµР· С‚РѕСЂСЂРµРЅС‚</string>
+	<string Field="Mark_all_as_watched" Original="Mark all as watched">РћС‚РјРµС‚РёС‚СЊ РІСЃРµ РєР°Рє РїСЂРѕСЃРјРѕС‚СЂРµРЅРЅС‹Рµ</string>
+	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">РћС‚РјРµС‚РёС‚СЊ РІСЃРµ РєР°Рє РЅРµРїСЂРѕСЃРјРѕС‚СЂРµРЅРЅС‹Рµ</string>
+	<string Field="Hide" Original="Hide">РЎРєСЂС‹С‚СЊ</string>
+	<string Field="Delete" Original="Delete">РЈРґР°Р»РёС‚СЊ</string>
+	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">РЈРґР°Р»РёС‚ СЃРµСЂРёР°Р» РёР·  РёР·Р±СЂР°РЅРЅРѕРіРѕ</string>
+	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Р”РѕР±Р°РІРёС‚СЊ СЃРµСЂРёР°Р» РІ РёР·Р±СЂР°РЅРЅРѕРµ</string>
+	<string Field="Force_Local_Scan" Original="Force Local Scan ">РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРµ Р»РѕРєР°Р»СЊРЅРѕРµ СЃРєР°РЅРёСЂРѕРІР°РЅРёРµ </string>
+	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РѕРЅР»Р°Р№РЅ </string>
+	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(РџСЂРѕРіСЂРµСЃСЃ)</string>
+	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">РџРѕРєР°Р·С‹РІР°С‚СЊ  С‚РѕР»СЊРєРѕ СЌРїРёР·РѕРґС‹, Рє РєРѕС‚РѕСЂС‹Рј РµСЃС‚СЊ С„Р°Р№Р»С‹</string>
+	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">РЎРєСЂС‹С‚СЊ РѕРїРёСЃР°РЅРёСЏ  РЅРµРїСЂРѕСЃРјРѕС‚СЂРµРЅРЅС‹С… СЌРїРёР·РѕРґРѕРІ</string>
+	<string Field="on" Original="on">Р’РєР»</string>
+	<string Field="off" Original="off">Р’С‹РєР»</string>
+	<string Field="Play_Random_Episode" Original="Play Random Episode">РџРѕРєР°Р·Р°С‚СЊ СЃР»СѓС‡Р°Р№РЅС‹Р№ СЌРїРёР·РѕРґ</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">РџРѕРєР°Р·Р°С‚СЊ СЃР»СѓС‡Р°Р№РЅС‹Р№ РЅРµРїСЂРѕСЃРјРѕС‚СЂРµРЅРЅС‹Р№ СЌРїРёР·РѕРґ</string>
+	<string Field="Delete_that_series" Original="Delete that series?">РЈРґР°Р»РёС‚СЊ СЌС‚РѕС‚ СЃРµСЂРёР°Р»?</string>
+	<string Field="Delete_that_season" Original="Delete that season?">РЈРґР°Р»РёС‚СЊ СЌС‚РѕС‚ СЃРµР·РѕРЅ?</string>
+	<string Field="Delete_that_episode" Original="Delete that episode?">РЈРґР°Р»РёС‚СЊ СЌС‚РѕС‚ СЌРїРёР·РѕРґ?</string>
+	<string Field="Confirm" Original="Confirm">РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ</string>
+	<string Field="Completed" Original="Completed">Р—Р°РІРµСЂС€РµРЅРѕ</string>
+	<string Field="No_subtitles_found" Original="No subtitles found">РЎСѓР±С‚РёС‚СЂС‹ РЅРµ РЅР°Р№РґРµРЅС‹</string>
+	<string Field="skip_Never_ask_again" Original="skip / Never ask again">РџСЂРѕРїСѓСЃС‚РёС‚СЊ / Р‘РѕР»СЊС€Рµ РЅРµ СЃРїСЂР°С€РёРІР°С‚СЊ</string>
+	<string Field="no_results_found" Original="no results found!">РЅРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ!</string>
+	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * РЎРєСЂС‹С‚Рѕ, С‡С‚РѕР±С‹ РЅРµ  РїРѕРєР°Р·С‹РІР°С‚СЊ СЃРїРѕР№Р»РµСЂС‹ *</string>
+	<string Field="Yes" Original="Yes">Р”Р°</string>
+	<string Field="No" Original="No">РќРµС‚</string>
+	<string Field="Error" Original="#Error">#РћС€РёР±РєР°</string>
+	<string Field="No_items" Original="No items!">РќРµС‚ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ!</string>
+	<string Field="Unknown" Original="Unknown">РќРµРёР·РІРµСЃС‚РЅРѕ</string>
+	<string Field="wrongSkin" Original="Wrong Skin file">РќРµРІРµСЂРЅС‹Р№ С„Р°Р№Р» СЃРєРёРЅР°</string>
+	<string Field="special" Original="Special">Р”РѕРїРѕР»РЅРµРЅРёРµ</string>
+	<string Field="specials" Original="Specials">Р”РѕРїРѕР»РЅРµРЅРёСЏ</string>
+	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you  like to proceed?">"Р’С‹ СЃРѕР±РёСЂР°РµС‚РµСЃСЊ СѓРґР°Р»РёС‚СЊ РЅР°РІСЃРµРіРґР° {0} С„Р°Р№Р»(РѕРІ) СЃ РґРёСЃРєР°.\nР’С‹ С…РѕС‚РёС‚Рµ РїСЂРѕРґРѕР»Р¶РёС‚СЊ?"</string>
+	<string Field="Force_Online_Match" Original="Force Online Match">РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РѕРЅР»Р°Р№РЅ</string>
+	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Р—Р°РіСЂСѓР·РёС‚СЊ РєР°С‡Р°Р»РєРѕР№ РЅРѕРІРѕСЃС‚РµР№</string>
+	<string Field="Download" Original="Download">РЎРєР°С‡Р°С‚СЊ</string>
+	<string Field="Actions" Original="Actions">Р”РµР№СЃС‚РІРёСЏ</string>
+	<string Field="Options" Original="Options">РћРїС†РёРё</string>
+	<string Field="Genres" Original="Genres">Р–Р°РЅСЂС‹</string>
+	<string Field="All" Original="All">Р’СЃРµ</string>
+	<string Field="Latest" Original="Latest">РџРѕСЃР»РµРґРЅРёРµ</string>
+	<string Field="Channels" Original="Channels">РљР°РЅР°Р»С‹</string>
+	<string Field="Unwatched" Original="Unwatched">РЅРµРїСЂРѕСЃРјРѕС‚СЂРµРЅРЅРѕРµ</string>
+	<string Field="Favourites" Original="Favourites">РР·Р±СЂР°РЅРЅРѕРµ</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">РћР±РЅРѕРІРёС‚СЊ РјРµРґРёР°РёРЅС„РѕСЂРјР°С†РёСЋ С„Р°Р№Р»Р°(РѕРІ) РЅР°  РґРёСЃРєРµ</string>
+	<string Field="RateSeries" Original="Rate this Series">РћС†РµРЅРёС‚СЊ СЌС‚РѕС‚ СЃРµСЂРёР°Р»</string>
+	<string Field="RateEpisode" Original="Rate this Episode">РћС†РµРЅРёС‚СЊ СЌС‚РѕС‚ СЌРїРёР·РѕРґ</string>
+	<string Field="ResetRating" Original="Reset Rating">РЎР±СЂРѕСЃРёС‚СЊ РѕС†РµРЅРєСѓ</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Р—Р°РїСЂР°С€РёРІР°С‚СЊ Сѓ РјРµРЅСЏ РѕС†РµРЅРєСѓ РЅРµРѕС†РµРЅРµРЅРЅС‹С… СЌРїРёР·РѕРґРѕРІ</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">РќРµ Р·Р°РїСЂР°С€РёРІР°С‚СЊ Сѓ РјРµРЅСЏ РѕС†РµРЅРєСѓ СЃРЅРѕРІР°</string>
+	<string Field="RatingStar" Original="Star">Р—РІРµР·РґР°</string>
+	<string Field="RatingStars" Original="Stars">Р—РІРµР·РґС‹</string>
+	<string Field="ChangeView" Original="Change View">РР·РјРµРЅРёС‚СЊ РІРёРґ</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">РќРµРјРµРґР»РµРЅРЅРѕ РјРµРЅСЏС‚СЊ РІРёРґ</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">Р§РµСЂРµРґРѕРІР°С‚СЊ Р±Р°РЅРЅРµСЂС‹</string>
+	<string Field="FanArt" Original="Fanart">Р¤Р°РЅР°СЂС‚</string>
+	<string Field="FanListAll" Original="List all Fanart for this Series">РћС‚РѕР±СЂР°Р·РёС‚СЊ РІРµСЃСЊ С„Р°РЅР°СЂС‚ РґР»СЏ СЃРµСЂРёР°Р»Р°</string>
+	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">РЎРєР°С‡Р°С‚СЊ Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanArtGet" Original="Download Fanart">РЎРєР°С‡Р°С‚СЊ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanArtUse" Original="Use Fanart">РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanArtDelete" Original="Delete Fanart">РЈРґР°Р»РёС‚СЊ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Р—Р°РіСЂСѓР¶Р°РµС‚СЃСЏ {0} С„Р°РЅР°СЂС‚РѕРІ...</string>
+	<string Field="FanArtLocal" Original="Available locally">Р”РѕСЃС‚СѓРїРЅРѕ Р»РѕРєР°Р»СЊРЅРѕ</string>
+	<string Field="FanArtOnline" Original="Available for downloading">Р”РѕСЃС‚СѓРїРЅРѕ РґР»СЏ Р·Р°РіСЂСѓР·РєРё</string>
+	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">Р—Р°РіСЂСѓР¶Р°РµС‚СЃСЏ {0} РёР· {1} С„Р°РЅР°СЂС‚РѕРІ...</string>
+	<string Field="FanArtRandom" Original="Display random Fanart">РџРѕРєР°Р·Р°С‚СЊ СЃР»СѓС‡Р°Р№РЅС‹Р№ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanArtNoneFound" Original="No Fanart could be found">Р¤Р°РЅР°СЂС‚ РЅРµ РЅР°Р№РґРµРЅ</string>
+	<string Field="CFS_Choose_Item" Original="Choose item">Р’С‹Р±РµСЂРёС‚Рµ РїСѓРЅРєС‚</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">Р’С‹Р±РµСЂРёС‚Рµ СЃРѕРѕС‚РІРµС‚СЃРІСѓСЋС‰РёР№ РїСѓРЅРєС‚:</string>
+	<string Field="CFS_Search_Again" Original="Search again">РџРѕРІС‚РѕСЂРЅС‹Р№ РїРѕРёСЃРє</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Р’С‹Р±РµСЂРёС‚Рµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ С„Р°Р№Р» СЃСѓР±С‚РёС‚СЂРѕРІ</string>
+	<string Field="CFS_Subtitle_Episode" Original="Choose item">Р­РїРёР·РѕРґ:</string>
+	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ СЃСѓР±С‚РёС‚СЂС‹</string>
+	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Р’С‹Р±РµСЂРёС‚Рµ РЅСѓР¶РЅС‹Р№ СЃРµСЂРёР°Р»</string>
+	<string Field="CFS_Available_Series" Original="Available Series">Р”РѕСЃС‚СѓРїРЅС‹Рµ СЃРµСЂРёР°Р»С‹</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Р’С‹Р±РµСЂРёС‚Рµ Р¶РµР»Р°СЋРјСѓСЋ РІРµСЂСЃРёСЋ СЃСѓР±С‚РёС‚СЂРѕРІ</string>
+	<string Field="CFS_Select_Version" Original="Version:">Р’РµСЂСЃРёСЏ:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Р’С‹Р±РµСЂРёС‚Рµ РЅСѓР¶РЅС‹Р№ СЌРїРёР·РѕРґ</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Р›РѕРєР°Р»СЊРЅС‹Р№ СЃРїРёСЃРѕРє СЌРїРёР·РѕРґРѕРІ:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЌРїРёР·РѕРґРѕРІ:</string>
+	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">РџРѕРєР°Р·Р°С‚СЊ СЃР°Р№С‚ РїРѕРёСЃРєР°:</string>
+	<string Field="CFS_List_Search_Site" Original="List of search sites:">РЎРїРёСЃРѕРє СЃР°Р№С‚РѕРІ РїРѕРёСЃРєР°:</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">РќР°Р№РґРµРЅРѕ С‚РѕСЂСЂРµРЅС‚РѕРІ:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">РџРѕРёСЃРє РґР»СЏ:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Р’С‹Р±РµСЂРёС‚Рµ РЅСѓР¶РЅС‹Р№ СЃРµР·РѕРЅ</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Р›РѕРєР°Р»СЊРЅС‹Р№ СЃРїРёСЃРѕРє СЃРµР·РѕРЅРѕРІ:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЃРµР·РѕРЅРѕРІ:</string>
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Р—Р°РјРµРЅР° С„Р°Р№Р»Р° СЃСѓР±С‚РёС‚СЂРѕРІ</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">РџСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ СЃС‚Р°СЂС‹Р№ С„Р°Р№Р» СЃСѓР±С‚РёС‚СЂРѕРІ: РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ?</string>
+	<string Field="RecentlyAdded" Original="Recently Added">РќРµРґР°РІРЅРѕ РґРѕР±Р°РІР»РµРЅРЅС‹Рµ</string>
+	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">РћС€РёР±РєР° Р‘Р” РўР’(theTVDB)</string>
+	<string Field="TVDB_INFO_TITLE" Original="theTVDB">Р‘Р” РўР’(theTVDB)</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">РќРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р°РєРєР°СѓРЅС‚Р°</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Р’РІРµРґРёС‚Рµ РІР°С€ ID РѕРЅР»Р°Р№РЅ Р°РєРєР°СѓРЅС‚Р° РІ РЅР°СЃС‚СЂРѕР№РєР°С…</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ, РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">РЎРµС‚СЊ РЅРµ РїРѕРґРєР»СЋС‡РµРЅР°, РїСЂРѕРІРµСЂСЊС‚Рµ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рё РїРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ</string>
+	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">РџРѕРєР°Р·С‹РІР°С‚СЊ С„Р°РЅР°СЂС‚ РІ РјРµРЅСЋ СЃРµСЂРёР°Р»РѕРІ</string>
+<string Field="ChangeLayout" Original="Change Layout">РЎРјРµРЅРёС‚СЊ РѕСЂРёРµРЅС‚Р°С†РёСЋ</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РёР·Р±СЂР°РЅРЅРѕРµ РѕРЅР»Р°Р№РЅ</string>
+	<string Field="AddToPlaylist" Original="Add To Playlist">Р”РѕР±Р°РІРёС‚СЊ РІ РїР»РµР№Р»РёСЃС‚</string>
+	<string Field="FanartDisableLabel" Original="Disabled">РћС‚РєР»СЋС‡РµРЅРѕ</string>
+	<string Field="FanartMenuEnable" Original="Enable">Р’РєР»СЋС‡РёС‚СЊ С„Р°РЅР°СЂС‚</string>
+	<string Field="FanartMenuDisable" Original="Disable">РћС‚РєР»СЋС‡РёС‚СЊ С„Р°РЅР°СЂС‚</string>
 </strings>
