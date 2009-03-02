@@ -188,7 +188,7 @@ namespace WindowPlugins.GUITVSeries
           
         private static bool LoadMirrorList(String sServer)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true)).ChildNodes;
             if (nodeList == null)
                 return false;
             int count = 0;

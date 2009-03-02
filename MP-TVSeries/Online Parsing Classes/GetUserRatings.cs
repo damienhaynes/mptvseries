@@ -67,7 +67,7 @@ namespace WindowPlugins.GUITVSeries
         public void doWork(String sSeriesID, string sAccountID)
         {            
             XmlNodeList nodeList = null;
-            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID);
+            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID).ChildNodes;
 
             if (nodeList != null)
             {

@@ -74,44 +74,44 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     }
     #endregion
 
-    static public XmlNodeList GetMirrors(String sServer)
+    static public XmlNode GetMirrors(String sServer)
     {
       return Generic(sServer + apiURIs.Mirrors, false, Format.Xml);
     }
 
-    static public XmlNodeList GetLanguages()
+    static public XmlNode GetLanguages()
     {
       return Generic(apiURIs.Languages, Format.Xml);
     }
 
-    static public XmlNodeList GetSeries(String sSeriesName)
+    static public XmlNode GetSeries(String sSeriesName)
     {
       return Generic(string.Format(apiURIs.GetSeries,
                                      sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
     }
 
-    static public XmlNodeList GetUserRatings(String sSeriesID, String sAccountID)
+    static public XmlNode GetUserRatings(String sSeriesID, String sAccountID)
     {        
         string url = String.Format(apiURIs.GetRatingsForUser, DBOnlineMirror.cApiKey, sAccountID, sSeriesID);
         return Generic(url, true, false, Format.NoExtension);
     }
 
-    static public XmlNodeList GetUserFavourites(String sAccountID)
+    static public XmlNode GetUserFavourites(String sAccountID)
     {
         string url = String.Format(apiURIs.GetAllFavourites, sAccountID);
         return Generic(url, true, false, Format.NoExtension);
     }
     
-    static public XmlNodeList ConfigureFavourites(bool bAdd, String sAccountID, String sSeriesID)
+    static public XmlNode ConfigureFavourites(bool bAdd, String sAccountID, String sSeriesID)
     {
         string url = String.Format(apiURIs.ConfigureFavourites, sAccountID, (bAdd?"add":"remove"),sSeriesID);
         return Generic(url, true, false, Format.NoExtension);
     }
 
-    static public XmlNodeList UpdateSeries(String sSeriesID)
+    static public XmlNode UpdateSeries(String sSeriesID)
     { return UpdateSeries(sSeriesID, true); }
 
-    static private XmlNodeList UpdateSeries(String sSeriesID, bool first)
+    static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
       int series = Int32.Parse(sSeriesID);
       return getFromCache(series, SelLanguageAsString + ".xml");
@@ -161,21 +161,21 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return true;
     }
 
-    static public XmlNodeList Updates(UpdateType type)
+    static public XmlNode Updates(UpdateType type)
     {
       string typeName = Enum.GetName(typeof(UpdateType), type);
       return Generic(string.Format(apiURIs.Updates, typeName), true, true, Format.Zip, "updates_" + typeName, -1);
     }
 
-    static public XmlNodeList UpdateEpisodes(int seriesID)
+    static public XmlNode UpdateEpisodes(int seriesID)
     { return UpdateEpisodes(seriesID, true); }
 
-    static XmlNodeList UpdateEpisodes(int seriesID, bool first)
+    static XmlNode UpdateEpisodes(int seriesID, bool first)
     {
       return getFromCache(seriesID, SelLanguageAsString + ".xml");
     }
     
-    static public XmlNodeList getBannerList(int seriesID)
+    static public XmlNode getBannerList(int seriesID)
     {
       return getFromCache(seriesID, "banners.xml");
     }
@@ -252,11 +252,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return false;
     }
 
-    static XmlNodeList getFromCache(int seriesID, string elemName)
+    static XmlNode getFromCache(int seriesID, string elemName)
     {
       return getFromCache(seriesID, true, elemName);
     }
-    static XmlNodeList getFromCache(int seriesID, bool first, string elemName)
+    static XmlNode getFromCache(int seriesID, bool first, string elemName)
     {
       if (zipCache.ContainsKey(seriesID))
       {
@@ -264,7 +264,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         Dictionary<string, XmlDocument> d = zipCache[seriesID];
         if (d.ContainsKey(elemName))
         {
-          return d[elemName].ChildNodes;
+          return d[elemName];
         }
       }
       else if (first)
@@ -278,16 +278,16 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     }
 
     #region Generic Private Implementation
-    static XmlNodeList Generic(String sUrl, Format format)
+    static XmlNode Generic(String sUrl, Format format)
     { return Generic(sUrl, true, format); }
 
-    static XmlNodeList Generic(String sUrl, bool appendBaseUrl, Format format)
+    static XmlNode Generic(String sUrl, bool appendBaseUrl, Format format)
     { return Generic(sUrl, appendBaseUrl, true, format); }
 
-    static XmlNodeList Generic(String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format)
+    static XmlNode Generic(String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format)
     { return Generic(sUrl, appendBaseUrl, appendAPIKey, format, null, 0); }
 
-    static XmlNodeList Generic(String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format, string entryNameToGetIfZip, int seriesIDIfZip)
+    static XmlNode Generic(String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format, string entryNameToGetIfZip, int seriesIDIfZip)
     {
       if (format == Format.Zip)
       {
@@ -324,7 +324,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
               if (zipCache.ContainsKey(seriesIDIfZip)) zipCache.Remove(seriesIDIfZip);
               if (x.Keys.Count > 0) zipCache.Add(seriesIDIfZip, x);
 
-              return root.ChildNodes;
+              return root;
             }
             else MPTVSeriesLog.Write("Decompression returned null or not the requested entry");
           }
@@ -344,7 +344,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(sXmlData);
             XmlNode root = doc.FirstChild.NextSibling;
-            return root.ChildNodes;
+            return root;
           }
           catch (XmlException e)
           {

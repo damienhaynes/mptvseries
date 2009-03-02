@@ -200,7 +200,6 @@ namespace WindowPlugins.GUITVSeries
                     setFanartPreviewBackground(selectedFanart);
                 }
             }
-
         }
 
         protected override void OnPageDestroy(int new_windowId)
