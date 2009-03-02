@@ -57,7 +57,7 @@ namespace WindowPlugins.GUITVSeries
 
         public GetSeries(String sSeriesName)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName);
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName).ChildNodes;
             nameToMatch = sSeriesName;
             if (nodeList != null)
             {

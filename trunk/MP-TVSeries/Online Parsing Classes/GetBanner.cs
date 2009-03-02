@@ -103,7 +103,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void doWork(string seriesID)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID));
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID)).ChildNodes;
             List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
             List<PosterSeries> m_posterSeriesList = new List<PosterSeries>();
             List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
@@ -307,7 +307,7 @@ namespace WindowPlugins.GUITVSeries
         
         public GetFanart(int SeriesID)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID);
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID).ChildNodes;
             if (nodeList != null)
             {
                 foreach (XmlNode topNode in nodeList)

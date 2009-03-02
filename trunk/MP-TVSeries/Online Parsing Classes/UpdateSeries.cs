@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (sSeriesID.Length > 0)
             {
-                XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID).ChildNodes;
 
                 if (nodeList != null)
                 {

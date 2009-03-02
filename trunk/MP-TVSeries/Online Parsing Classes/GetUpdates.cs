@@ -10,7 +10,6 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         long timestamp;
         List<DBValue> series = null;
         List<DBValue> episodes = null;
-        //public List<seriesBannersMap> seriesBanners = new List<seriesBannersMap>();
 
         public long OnlineTimeStamp
         { get { return timestamp; } }
@@ -23,7 +22,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         public GetUpdates(OnlineAPI.UpdateType type)
         {
-            XmlNodeList nodelist = OnlineAPI.Updates(type);
+            XmlNode updates = OnlineAPI.Updates(type);
+            long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
+            
+            XmlNodeList nodelist = updates.ChildNodes;
+            
             series = new List<DBValue>();
             episodes = new List<DBValue>();
             if (nodelist != null)
@@ -44,9 +47,6 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                                 break;
                             case "Series":
                                 this.series.Add(id);
-                                break;
-                            case "Time":
-                                long.TryParse(node.InnerText, out this.timestamp);
                                 break;
                         }
                     }

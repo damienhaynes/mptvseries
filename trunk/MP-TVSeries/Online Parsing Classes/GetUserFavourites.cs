@@ -55,7 +55,7 @@ namespace WindowPlugins.GUITVSeries
         public void doWork(string sAccountID)
         {
             XmlNodeList nodeList = null;
-            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserFavourites(sAccountID);
+            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserFavourites(sAccountID).ChildNodes;
 
             if (nodeList != null)
             {

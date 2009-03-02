@@ -1306,12 +1306,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for missing artwork"));
                 // and that never had data imported from the online DB
+                condition.beginGroup();
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
                 condition.nextIsOr = true;
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.Equal);
-                condition.nextIsOr = true;
-                condition.AddCustom(" exists (select * from season where seriesID = online_series.id and bannerfilenames != '')");
+                condition.nextIsOr = true;                
+                condition.AddCustom(" exists (select * from season where season.seriesID = online_series.id and season.bannerfilenames = '')");
                 condition.nextIsOr = false;
+                condition.endGroup();
             }
             else
             {

@@ -40,7 +40,7 @@ namespace WindowPlugins.GUITVSeries
 
         public GetLanguages()
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages();
+            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages().ChildNodes;
             if (nodeList != null)
             {
                 Language lang = null;
