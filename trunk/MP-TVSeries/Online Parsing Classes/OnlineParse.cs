@@ -1082,6 +1082,8 @@ namespace WindowPlugins.GUITVSeries
 
         public void UpdateEpisodes(List<DBValue> episodesUpdated)
         {
+            MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Episodes"));
+
             // let's check which series/episodes we have locally
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
             cond.AddOrderItem(DBEpisode.Q(DBEpisode.cSeriesID), SQLCondition.orderType.Ascending);
@@ -1094,7 +1096,7 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < episodesInDB.Count; i++)
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
                     episodesInDB.RemoveAt(i--);
-
+            
             // let's updated those we are interested in
             // for the remaining ones get the <lang>.xml
             MPTVSeriesLog.Write(episodesInDB.Count.ToString() + " episodes need updating");
@@ -1104,7 +1106,14 @@ namespace WindowPlugins.GUITVSeries
                 if (seriesID != episodesInDB[i][DBEpisode.cSeriesID])
                 {
                     seriesID = episodesInDB[i][DBEpisode.cSeriesID];
-                    matchOnlineToLocalEpisodes(Helper.getCorrespondingSeries(episodesInDB[i][DBEpisode.cSeriesID]), episodesInDB, new GetEpisodes((string)episodesInDB[i][DBEpisode.cSeriesID]));
+                    
+                    // Filter out episodes and parse only the ones in the current series
+                    List<DBEpisode> eps = new List<DBEpisode>(episodesInDB.Count);
+                    for (int j = 0; j < episodesInDB.Count; j++)
+                        if (episodesInDB[j][DBEpisode.cSeriesID] == seriesID)                     
+                            eps.Add(episodesInDB[j]);                        
+
+                    matchOnlineToLocalEpisodes(Helper.getCorrespondingSeries(seriesID), eps, new GetEpisodes(seriesID.ToString()));
                 }
             }
         }
