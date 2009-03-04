@@ -634,144 +634,155 @@ namespace WindowPlugins.GUITVSeries
         List<GUIListItem> itemsForDelayedImgLoading = null;
         void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-          BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
-          MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
-
-          if (bg.CancellationPending)
-          {
-            MPTVSeriesLog.Write("bg_ProgressChanged cancelled", MPTVSeriesLog.LogLevel.Debug);
-            return;
-          }
-
-            PerfWatcher.GetNamedWatch("FacadeLoading changed").Start();
-            if (arg == null || arg.Type == BackGroundLoadingArgumentType.None) return;
-
-            switch (arg.Type)
+            try
             {
-                case BackGroundLoadingArgumentType.FullElement:
-                case BackGroundLoadingArgumentType.ElementForDelayedImgLoading:
-                    {
-                        PerfWatcher.GetNamedWatch("FacadeLoading addElem").Start();
-                        GUIListItem gli = arg.Argument as GUIListItem;
-                        // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
-                        if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
-                            gli.OnItemSelected+=new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
-                        
-                        if (m_Facade != null && gli != null)
+                BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
+                MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
+
+                if (bg.CancellationPending)
+                {
+                    MPTVSeriesLog.Write("bg_ProgressChanged cancelled", MPTVSeriesLog.LogLevel.Debug);
+                    return;
+                }
+
+                PerfWatcher.GetNamedWatch("FacadeLoading changed").Start();
+                if (arg == null || arg.Type == BackGroundLoadingArgumentType.None) return;
+
+                switch (arg.Type)
+                {
+                    case BackGroundLoadingArgumentType.FullElement:
+                    case BackGroundLoadingArgumentType.ElementForDelayedImgLoading:
                         {
-                            bFacadeEmpty = false;                        
-                            m_Facade.Add(gli);
-                            if (arg.Type == BackGroundLoadingArgumentType.ElementForDelayedImgLoading)
+                            PerfWatcher.GetNamedWatch("FacadeLoading addElem").Start();
+                            GUIListItem gli = arg.Argument as GUIListItem;
+                            if (m_Facade != null && gli != null)
                             {
-                                if (itemsForDelayedImgLoading == null) 
-                                    itemsForDelayedImgLoading = new List<GUIListItem>();
-                                itemsForDelayedImgLoading.Add(gli);
+                                // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
+                                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                                    gli.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
+
+                                bFacadeEmpty = false;
+                                m_Facade.Add(gli);
+                                if (arg.Type == BackGroundLoadingArgumentType.ElementForDelayedImgLoading)
+                                {
+                                    if (itemsForDelayedImgLoading == null)
+                                        itemsForDelayedImgLoading = new List<GUIListItem>();
+                                    itemsForDelayedImgLoading.Add(gli);
+                                }
+                            }
+                            PerfWatcher.GetNamedWatch("FacadeLoading addElem").Stop();
+                        }
+                        break;
+
+                    case BackGroundLoadingArgumentType.DelayedImgLoading:
+                        {
+                            PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Start();
+                            if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
+                            {
+                                string image = arg.Argument as string;
+                                itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
+                            }
+                            PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
+                        }
+                        break;
+
+                    case BackGroundLoadingArgumentType.ElementSelection:
+                        {
+                            // thread told us which element it'd like to select
+                            // however the user might have already started moving around
+                            // if that is the case, we don't select anything
+                            MPTVSeriesLog.Write("Element Selection: " + arg.IndexArgument.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                            if (this.m_Facade != null && this.m_Facade.SelectedListItemIndex < 1)
+                            {
+                                this.m_Facade.Focus = true;
+                                this.m_Facade.SelectedListItemIndex = arg.IndexArgument;
+                                // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
+                                // Navigate to selected using OnAction instead 
+                                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                                {
+                                    if (this.listLevel == Listlevel.Series)
+                                    {
+                                        List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+
+                                        if (arg.IndexArgument > 0)
+                                        {
+                                            m_bQuickSelect = true;
+                                            for (int i = m_Facade.SelectedListItemIndex; i < seriesList.Count - 1; i++)
+                                            {
+                                                if (i == arg.IndexArgument)
+                                                    break;
+                                                // Now push fields to skin
+                                                if (i == (arg.IndexArgument - 1))
+                                                    m_bQuickSelect = false;
+
+                                                OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                                            }
+                                            m_bQuickSelect = false;
+                                        }
+                                        else
+                                        {
+                                            if (seriesList.Count > 0)
+                                            {
+                                                GUIListItem selected = new GUIListItem();
+                                                selected.TVTag = seriesList[0];
+                                                Series_OnItemSelected(selected);
+                                            }
+                                        }
+                                    }
+                                    else if (this.listLevel == Listlevel.Season)
+                                    {
+                                        List<DBSeason> seasonList = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+
+                                        if (arg.IndexArgument > 0)
+                                        {
+                                            m_bQuickSelect = true;
+                                            for (int i = m_Facade.SelectedListItemIndex; i < seasonList.Count - 1; i++)
+                                            {
+                                                if (i == arg.IndexArgument)
+                                                    break;
+                                                // Now push fields to skin
+                                                if (i == (arg.IndexArgument - 1))
+                                                    m_bQuickSelect = false;
+
+                                                OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                                            }
+                                            m_bQuickSelect = false;
+                                        }
+                                        else
+                                        {
+                                            if (seasonList.Count > 0)
+                                            {
+                                                GUIListItem selected = new GUIListItem();
+                                                selected.TVTag = seasonList[0];
+                                                Season_OnItemSelected(selected);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                        PerfWatcher.GetNamedWatch("FacadeLoading addElem").Stop();
-                    }
-                    break;
-                case BackGroundLoadingArgumentType.DelayedImgLoading:
-                    {
-                        PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Start();                        
-                        if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
-                        {
-                            string image = arg.Argument as string;
-                            itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
-                        }
-                        PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
-                    } break;
-                case BackGroundLoadingArgumentType.ElementSelection:
-                    {
-                        // thread told us which element it'd like to select
-                        // however the user might have already started moving around
-                        // if that is the case, we don't select anything
-                        MPTVSeriesLog.Write("Element Selection: " + arg.IndexArgument.ToString(),MPTVSeriesLog.LogLevel.Debug);
-                        if (this.m_Facade != null && this.m_Facade.SelectedListItemIndex < 1)
-                        {
-                            this.m_Facade.Focus = true;                            
-                            this.m_Facade.SelectedListItemIndex = arg.IndexArgument;
-                            // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
-                            // Navigate to selected using OnAction instead 
-                            if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
-                            {
-                                if (this.listLevel == Listlevel.Series)
-                                {
-                                    List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+                        break;
 
-                                    if (arg.IndexArgument > 0)
-                                    {
-                                        m_bQuickSelect = true;
-                                        for (int i = m_Facade.SelectedListItemIndex; i < seriesList.Count - 1; i++)
-                                        {
-                                            if (i == arg.IndexArgument)
-                                                break;
-                                            // Now push fields to skin
-                                            if (i == (arg.IndexArgument - 1))
-                                                m_bQuickSelect = false;
-
-                                            OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
-                                        }
-                                        m_bQuickSelect = false;
-                                    }
-                                    else
-                                    {
-                                        if (seriesList.Count > 0)
-                                        {
-                                            GUIListItem selected = new GUIListItem();
-                                            selected.TVTag = seriesList[0];
-                                            Series_OnItemSelected(selected);
-                                        }
-                                    }
-                                }
-                                else if (this.listLevel == Listlevel.Season)
-                                {
-                                    List<DBSeason> seasonList = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
-
-                                    if (arg.IndexArgument > 0)
-                                    {
-                                        m_bQuickSelect = true;
-                                        for (int i = m_Facade.SelectedListItemIndex; i < seasonList.Count - 1; i++)
-                                        {
-                                            if (i == arg.IndexArgument)
-                                                break;
-                                            // Now push fields to skin
-                                            if (i == (arg.IndexArgument - 1))
-                                                m_bQuickSelect = false;
-
-                                            OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
-                                        }
-                                        m_bQuickSelect = false;
-                                    }
-                                    else
-                                    {
-                                        if (seasonList.Count > 0)
-                                        {
-                                            GUIListItem selected = new GUIListItem();
-                                            selected.TVTag = seasonList[0];
-                                            Season_OnItemSelected(selected);
-                                        }
-                                    }
-                                }
-                            }                                
-                        }
-                    } break;
-                case BackGroundLoadingArgumentType.DelayedImgInit:
-                    itemsForDelayedImgLoading = null;
-                    break;
-                case BackGroundLoadingArgumentType.SkipSeasonDown:
-                    SkipSeasonCode = SkipSeasonCodes.SkipSeasonDown;
-                    break;
-                case BackGroundLoadingArgumentType.SkipSeasonUp:
-                    SkipSeasonCode = SkipSeasonCodes.SkipSeasonUp;
-                    break;
-
-                case BackGroundLoadingArgumentType.SetFacadeMode:
-                    GUIFacadeControl.ViewMode viewMode = (GUIFacadeControl.ViewMode)arg.Argument;
-                    setFacadeMode(viewMode);
-                    break;
+                    case BackGroundLoadingArgumentType.DelayedImgInit:
+                        itemsForDelayedImgLoading = null;
+                        break;
+                    case BackGroundLoadingArgumentType.SkipSeasonDown:
+                        SkipSeasonCode = SkipSeasonCodes.SkipSeasonDown;
+                        break;
+                    case BackGroundLoadingArgumentType.SkipSeasonUp:
+                        SkipSeasonCode = SkipSeasonCodes.SkipSeasonUp;
+                        break;
+                    case BackGroundLoadingArgumentType.SetFacadeMode:
+                        GUIFacadeControl.ViewMode viewMode = (GUIFacadeControl.ViewMode)arg.Argument;
+                        setFacadeMode(viewMode);
+                        break;
+                }
+                PerfWatcher.GetNamedWatch("FacadeLoading changed").Stop();
             }
-            PerfWatcher.GetNamedWatch("FacadeLoading changed").Stop();
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write(string.Format("Error in bg_ProgressChanged: {0}: {1}", ex.Message, ex.InnerException));
+            }
         }
 
         void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
