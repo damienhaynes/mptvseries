@@ -129,6 +129,7 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartDisableLabel = "Disabled";
         public static string FanartMenuEnable = "Enable Fanart";
         public static string FanartMenuDisable = "Disable Fanart";
+        public static string SortByStrings = "the|a|an";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";

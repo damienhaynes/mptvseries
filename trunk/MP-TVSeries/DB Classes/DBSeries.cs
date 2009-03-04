@@ -303,7 +303,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 10;
+        public const int cDBVersion = 11;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -406,6 +406,16 @@ namespace WindowPlugins.GUITVSeries
                             DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
                             series[DBOnlineSeries.cEpisodeCount] = epsTotal;
                             series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+                            series.Commit();
+                        }
+                        nUpgradeDBVersion++;
+                        break;
+                    
+                    case 10:
+                        // Update Sort Name Column
+                        foreach (DBSeries series in AllSeries)
+                        {
+                            series[DBOnlineSeries.cSortName] = Helper.GetSortByName(series[DBOnlineSeries.cPrettyName]);
                             series.Commit();
                         }
                         nUpgradeDBVersion++;
@@ -537,22 +547,14 @@ namespace WindowPlugins.GUITVSeries
                 return outList;
             }
         }
-        // function override to search on both this & the onlineEpisode
+
+        // function override to search on both this & the onlineSeries
         public override DBValue this[String fieldName]
         {
             get
             {
                 switch (fieldName)
-                {
-//                     case DBOnlineSeries.cUnwatchedItems:
-//                         // this one is virtual
-//                         SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes where seriesid = " + this[DBSeries.cID] + " and watched = 0 and " + DBEpisode.stdConditions.ConditionsSQLString);
-//                         if (results.Rows.Count > 0)
-//                         {
-//                             return results.Rows[0].fields[0];
-//                         }
-//                         else return 0;
-                        
+                {                        
                     case DBOnlineSeries.cPrettyName:
                     case DBOnlineSeries.cSortName:
                         DBValue retVal = null;
@@ -569,7 +571,6 @@ namespace WindowPlugins.GUITVSeries
                     case cHidden:
                         return base[fieldName];
 
-
                     default:
                         if (m_onlineSeries != null)
                             return m_onlineSeries[fieldName];
@@ -582,9 +583,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-//                     case DBOnlineSeries.cUnwatchedItems:
-//                         // this one is virtual
-//                         break;
                     case cScanIgnore:
                     case cDuplicateLocalName:
                     case cHidden:
@@ -595,6 +593,20 @@ namespace WindowPlugins.GUITVSeries
                         base[fieldName] = value;
                         if (m_onlineSeries != null)
                             m_onlineSeries[fieldName] = value;
+                        break;
+
+                    case DBOnlineSeries.cSortName:
+                        // Online Field is no longer populated, create it manually                        
+                        m_onlineSeries[DBOnlineSeries.cSortName] = Helper.GetSortByName(m_onlineSeries[DBOnlineSeries.cPrettyName]);
+                        break;
+
+                    case DBOnlineSeries.cPrettyName:                    
+                        if (m_onlineSeries != null)
+                        {
+                            // Set sort name again just incase Pretty Name wasn't populated
+                            m_onlineSeries[DBOnlineSeries.cSortName] = Helper.GetSortByName(value); 
+                            m_onlineSeries[fieldName] = value;
+                        }
                         break;
 
                     default:
@@ -872,7 +884,6 @@ namespace WindowPlugins.GUITVSeries
 
         private static List<DBSeries> Get(String sqlQuery)
         {
-            //MPTVSeriesLog.Write(sqlQuery);
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBSeries> outList = new List<DBSeries>();
             if (results.Rows.Count > 0)
@@ -893,10 +904,12 @@ namespace WindowPlugins.GUITVSeries
             }
             return outList;
         }
+
         public static DBSeries Get(int seriesID)
         {
             return Get(seriesID, true);
         }
+
         public static DBSeries Get(int seriesID, bool includeStdCond)
         {
             SQLCondition cond = new SQLCondition();
