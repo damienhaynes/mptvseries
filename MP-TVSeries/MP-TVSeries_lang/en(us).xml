@@ -114,6 +114,7 @@
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
 	<string Field="AddToPlaylist" Original="Add To Playlist">Add To Playlist</string>
 	<string Field="FanartDisableLabel" Original="Disabled">Disabled</string>
-	<string Field="FanartMenuEnable" Original="Enable">Enable Fanart</string>
-	<string Field="FanartMenuDisable" Original="Disable">Disable Fanart</string>
+	<string Field="FanartMenuEnable" Original="Enable Fanart">Enable Fanart</string>
+	<string Field="FanartMenuDisable" Original="Disable Fanart">Disable Fanart</string>
+	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will used as well-->
 </strings>

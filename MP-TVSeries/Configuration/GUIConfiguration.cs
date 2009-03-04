@@ -608,7 +608,8 @@ namespace WindowPlugins.GUITVSeries
 
             foreach (DBSeries series in seriesList)
             {
-                TreeNode seriesNode = new TreeNode(series[DBOnlineSeries.cPrettyName]);
+                string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
+                TreeNode seriesNode = new TreeNode(sName);
                 seriesNode.Name = DBSeries.cTableName;
                 seriesNode.Tag = (DBSeries)series;               
                 root.Nodes.Add(seriesNode);
@@ -3284,11 +3285,6 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
             LoadTree();
-        }
-
-        private void detailsPropertyBindingSource_CurrentChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void textBox_remositoryBaseURL_TextChanged(object sender, EventArgs e)

@@ -969,6 +969,12 @@ namespace WindowPlugins.GUITVSeries
                                     }
                                     else
                                     {
+                                        // Adjust Display name to reflect sort order
+                                        if (DBOption.GetOptions(DBOption.cSeries_UseSortName))
+                                            m_sFormatSeriesCol2 = m_sFormatSeriesCol2.Replace("Series.Pretty_Name", "Series.SortName");
+                                        else
+                                            m_sFormatSeriesCol2 = m_sFormatSeriesCol2.Replace("Series.SortName", "Series.Pretty_Name");
+
                                         item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeriesCol2, series));
                                         item.Label2 = FieldGetter.resolveDynString(m_sFormatSeriesCol3, series);
                                         item.Label3 = FieldGetter.resolveDynString(m_sFormatSeriesCol1, series);

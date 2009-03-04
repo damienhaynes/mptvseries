@@ -259,7 +259,26 @@ namespace WindowPlugins.GUITVSeries
                 path = path.Replace(c, invalidCharReplacement);                
             }
             return path;
-        }       
+        }
+
+        public static string GetSortByName(string sName)
+        {
+            string SortBy = sName;
+            string SortByStrings = Translation.SortByStrings;
+
+            // loop through and try to remove a preposition            
+            string[] prepositions = SortByStrings.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);            
+            foreach (string currWord in prepositions)
+            {
+                string word = currWord.ToLower() + " ";
+                if (sName.ToLower().IndexOf(word) == 0)
+                {
+                    SortBy = sName.Substring(word.Length) + ", " + sName.Substring(0, currWord.Length);
+                    break;
+                }
+            }
+            return SortBy;
+        }
 
         #endregion
     }
