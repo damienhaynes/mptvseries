@@ -8,11 +8,11 @@
   <define>#text.color:ffffffff</define>         <!-- Text Color                         Default: ffffffff-->
   <define>#default.color:ffffffff</define>      <!-- Normal List Color                  Default: ffffffff-->
   <define>#watched.color:ff808080</define>      <!-- Watched List Color                 Default: ff666666 -->
-  <define>#notpresent.color:ffF87B72</define>   <!-- File Not Present in List Color     Default: ffef6d16 -->
+  <define>#notpresent.color:ffF87B72</define>   <!-- File Not Present in List Color     Default: ffef6d16 -->  
+  
   <controls>
 
-    <import>common.time.xml</import>
-  
+    <import>common.time.xml</import>    
     <!-- :::::::::::::: BACKGROUNDS :::::::::::::: -->
     
     <control>
@@ -46,7 +46,7 @@
       <id>0</id>
       <posX>50</posX>
       <posY>30</posY>
-		<font>font12</font>
+	  <font>font12</font>
       <label>#TVSeries.FanArt.DownloadingStatus</label>
     </control>
     
@@ -56,7 +56,7 @@
       <id>0</id>
       <posX>50</posX>
       <posY>60</posY>
-		<font>font12</font>
+	  <font>font14</font>
       <label>Resolution: #TVSeries.FanArt.SelectedFanartResolution</label>
     </control>
     
@@ -81,14 +81,14 @@
           <posY>90</posY>
           <width>680</width>
           <height>500</height>
-    <font>titlefont10</font>
-    <spinWidth>16</spinWidth>
-    <spinHeight>16</spinHeight>
-    <spinPosX>620</spinPosX>
-    <spinPosY>520</spinPosY>
-    <spinAlign>Right</spinAlign>
-    <spinColor>ffffffff</spinColor>
-    <textureFocus>mediaitemdetailfo.png</textureFocus>
+	      <font>font16</font>
+	      <spinWidth>16</spinWidth>
+	      <spinHeight>16</spinHeight>
+	      <spinPosX>620</spinPosX>
+	      <spinPosY>520</spinPosY>
+	      <spinAlign>Right</spinAlign>
+	      <spinColor>ffffffff</spinColor>
+	      <textureFocus>mediaitemdetailfo.png</textureFocus>
           <imageFolder>-</imageFolder>
           <imageFolderFocus>tvseries_fanart_focus.png</imageFolderFocus>
           <downloadColor>#default.color</downloadColor>
