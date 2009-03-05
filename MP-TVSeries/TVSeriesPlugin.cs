@@ -2993,7 +2993,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 lock (m_parserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
                 }
                 ImportButton.Focus = false;
                 return;
