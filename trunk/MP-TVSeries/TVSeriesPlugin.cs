@@ -904,9 +904,10 @@ namespace WindowPlugins.GUITVSeries
                             // view handling
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
+                            setGUIProperty(guiProperty.GroupCount, items.Count.ToString());
+
                             for (int index = 0; index < items.Count; index++)
-                            {
-                                //bEmpty = false;
+                            {                                
                                 item = new GUIListItem(items[index]);
                                 if (item.Label.Length == 0) item.Label = Translation.Unknown;
                                 item.TVTag = items[index];
@@ -918,9 +919,34 @@ namespace WindowPlugins.GUITVSeries
                                     // also display fist logo in list directly
                                     item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
                                 }
+                                else
+                                {
+                                    //string groupedBy = m_CurrLView.groupedInfo(m_CurrViewStep);
+                                    //SQLCondition cond = new SQLCondition();
+                                    //if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && item.Label != Translation.Unknown)
+                                    //{
+                                    //    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), item.Label, SQLConditionType.Like);
+                                    //}
+                                    //else
+                                    //{
+                                    //    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
+                                    //             (item.Label == Translation.Unknown ? string.Empty : item.Label),
+                                    //              SQLConditionType.Equal);
+                                    //}
+                                    //if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                                    //{
+                                    //    // not generic
+                                    //    SQLCondition fullSubCond = new SQLCondition();
+                                    //    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+                                    //    cond.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                                    //}
+                                    //cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");
+                                    //List<DBValue> seriesInGroup = DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName, cond, new DBOnlineSeries());
+                                    //item.Label3 = string.Format("{0} {1}", seriesInGroup.Count.ToString(), Translation.Series_Plural);
 
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, index, item);
-                                //this.m_Facade.Add(item);
+                                }
+
+                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, index, item);                             
 
                                 if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
                                     selectedIndex = index;
@@ -965,6 +991,9 @@ namespace WindowPlugins.GUITVSeries
 
                             if (seriesList.Count == 0)
                                 bFacadeEmpty = true;
+
+                            // Update Series Count Property
+                            setGUIProperty(guiProperty.SeriesCount, seriesList.Count.ToString());
 
                             MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Debug);
                             foreach (DBSeries series in seriesList)
@@ -1483,6 +1512,8 @@ namespace WindowPlugins.GUITVSeries
             SeasonBanner,
             EpisodeImage,
             Logos,
+            SeriesCount,
+            GroupCount
         }
 
         string getGUIProperty(guiProperty which)
@@ -3466,6 +3497,7 @@ namespace WindowPlugins.GUITVSeries
                     count++;
                 }
 
+                setGUIProperty(guiProperty.SeriesCount, count.ToString());
                 setGUIProperty(guiProperty.Subtitle, count.ToString() + " " + (count == 1 ? Translation.Series : Translation.Series_Plural));
                 setGUIProperty(guiProperty.Description, seriesNames);
             }
