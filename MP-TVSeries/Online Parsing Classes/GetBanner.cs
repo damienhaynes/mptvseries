@@ -103,15 +103,15 @@ namespace WindowPlugins.GUITVSeries
 
         private void doWork(string seriesID)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID)).ChildNodes;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID));
             List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
             List<PosterSeries> m_posterSeriesList = new List<PosterSeries>();
             List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
             seriesBannersMap map = new seriesBannersMap();
 
-            if (nodeList != null)
+            if (node != null)
             {                
-                foreach (XmlNode topNode in nodeList)
+                foreach (XmlNode topNode in node.ChildNodes)
                 {
                     bool bHighestRatedSeriesBannerIsSet = false;
                     bool bHighestRatedSeriesPosterIsSet = false;
@@ -307,10 +307,10 @@ namespace WindowPlugins.GUITVSeries
         
         public GetFanart(int SeriesID)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID).ChildNodes;
-            if (nodeList != null)
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID);
+            if (node != null)
             {
-                foreach (XmlNode topNode in nodeList)
+                foreach (XmlNode topNode in node.ChildNodes)
                 {
                     foreach (XmlNode itemNode in topNode.ChildNodes)
                     {                        

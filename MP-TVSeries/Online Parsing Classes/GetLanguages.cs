@@ -34,17 +34,18 @@ namespace WindowPlugins.GUITVSeries
         public int id = default(int);
         public string abbreviation = string.Empty;
     }
+
     public class GetLanguages
     {
         public List<Language> languages = new List<Language>();
 
         public GetLanguages()
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetLanguages().ChildNodes;
-            if (nodeList != null)
+            XmlNode rootNode = Online_Parsing_Classes.OnlineAPI.GetLanguages();
+            if (rootNode != null)
             {
                 Language lang = null;
-                foreach (XmlNode itemNode in nodeList)
+                foreach (XmlNode itemNode in rootNode.ChildNodes)
                 {
                     lang = new Language();
                     foreach (XmlNode node in itemNode)
@@ -54,7 +55,8 @@ namespace WindowPlugins.GUITVSeries
                         if (node.Name == "name") lang.language = node.InnerText;
                         if (node.Name == "abbreviation") lang.abbreviation = node.InnerText;
                     }
-                    if (lang.id != default(int) && lang.language.Length > 0) languages.Add(lang);
+                    if (lang.id != default(int) && lang.language.Length > 0)
+                        languages.Add(lang);
                 }
             }
         }

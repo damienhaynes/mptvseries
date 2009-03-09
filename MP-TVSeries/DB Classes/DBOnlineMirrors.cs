@@ -188,29 +188,39 @@ namespace WindowPlugins.GUITVSeries
           
         private static bool LoadMirrorList(String sServer)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true)).ChildNodes;
-            if (nodeList == null)
-                return false;
-            int count = 0;
-            foreach (XmlNode itemNode in nodeList)
+            try
             {
-                // create a new OnlineMirror object
-                DBOnlineMirror mirror = new DBOnlineMirror();
+                XmlNode node = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));
 
-                foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                if (node == null)
+                    return false;
+
+                int count = 0;
+                foreach (XmlNode itemNode in node.ChildNodes)
                 {
-                    if (s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                        mirror[s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                    else
+                    // create a new OnlineMirror object
+                    DBOnlineMirror mirror = new DBOnlineMirror();
+
+                    foreach (XmlNode propertyNode in itemNode.ChildNodes)
                     {
-                        mirror[propertyNode.Name] = propertyNode.InnerText;
+                        if (s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                            mirror[s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                        else
+                        {
+                            mirror[propertyNode.Name] = propertyNode.InnerText;
+                        }
                     }
+                    count++;
+                    memoryMirrors.Add(mirror);
                 }
-                count++;
-                memoryMirrors.Add(mirror);
+                MPTVSeriesLog.Write("Received " + count.ToString() + " mirror site(s) from " + sServer);
+                return true;
             }
-            MPTVSeriesLog.Write("Received " + count.ToString() + " mirror site(s) from " + sServer);
-            return true;
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write(string.Format("Error: unable to retrieve list of mirrors online: {0}", ex.Message));
+                return false;
+            }
         }
 
         static string appendAPI(string path, bool appendKey)

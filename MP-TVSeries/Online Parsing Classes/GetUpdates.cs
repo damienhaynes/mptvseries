@@ -23,6 +23,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         public GetUpdates(OnlineAPI.UpdateType type)
         {
             XmlNode updates = OnlineAPI.Updates(type);
+            if (updates == null)
+                return;
+
             long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
             
             XmlNodeList nodelist = updates.ChildNodes;
@@ -36,8 +39,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                     string entryType = node.Name;
                     string id = string.Empty;
                     for (int i = 0; i < node.ChildNodes.Count; i++)
+                    {
                         if (node.ChildNodes[i].Name.Equals("id", StringComparison.InvariantCultureIgnoreCase))
-                        { id = node.ChildNodes[i].InnerText; break; }
+                        {
+                            id = node.ChildNodes[i].InnerText;
+                            break;
+                        }
+                    }
+
                     if (id.Length > 0)
                     {
                         switch (entryType)

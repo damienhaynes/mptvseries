@@ -66,12 +66,11 @@ namespace WindowPlugins.GUITVSeries
         
         public void doWork(String sSeriesID, string sAccountID)
         {            
-            XmlNodeList nodeList = null;
-            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID).ChildNodes;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID);        
 
-            if (nodeList != null)
+            if (node != null)
             {
-                foreach (XmlNode itemNode in nodeList)
+                foreach (XmlNode itemNode in node.ChildNodes)
                 {
                     if (itemNode.Name == "Episode")
                     {    

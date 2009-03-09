@@ -48,13 +48,11 @@ namespace WindowPlugins.GUITVSeries
         
         public void doWork(int nSeriesID)
         {            
-            XmlNodeList nodeList = null;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
 
-            nodeList = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID).ChildNodes;
-
-            if (nodeList != null)
+            if (node != null)
             {
-                foreach (XmlNode itemNode in nodeList)
+                foreach (XmlNode itemNode in node.ChildNodes)
                 {
                     foreach (XmlNode episodeNode in itemNode)
                     {
