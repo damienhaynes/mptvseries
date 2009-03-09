@@ -773,7 +773,7 @@ namespace WindowPlugins.GUITVSeries
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     folderBrowserDialog1.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 
-                // Open Folder Browser Dialog
+                // Open Folder Browser Dialog                
                 DialogResult result = this.folderBrowserDialog1.ShowDialog();
                 if (result.ToString() == "Cancel")
                 {
@@ -3035,11 +3035,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-
-        }
-
         ~ConfigurationForm()
         {
             // so that locallogos can clean up its stuff
@@ -3054,11 +3049,14 @@ namespace WindowPlugins.GUITVSeries
         {
             string sel = "en";
             foreach (Language lang in onlineLanguages)
+            {
                 if (lang.language == (string)comboOnlineLang.SelectedItem)
                 {
                     sel = lang.abbreviation;
                     break;
                 }
+            }
+
             if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
@@ -3066,7 +3064,7 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
-                System.Windows.Forms.MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
+                MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
         }
 
@@ -3344,6 +3342,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (onlineLanguages.Count != 0) return;
             // get the online languages from the interface
+            MPTVSeriesLog.Write("Retrieving a list of languages from online");
             onlineLanguages.AddRange(new GetLanguages().languages);
             string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
             foreach (Language lang in onlineLanguages)

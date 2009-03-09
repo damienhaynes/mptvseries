@@ -57,11 +57,12 @@ namespace WindowPlugins.GUITVSeries
 
         public GetSeries(String sSeriesName)
         {
-            XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName).ChildNodes;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName);
+
             nameToMatch = sSeriesName;
-            if (nodeList != null)
+            if (node != null)
             {
-                foreach (XmlNode itemNode in nodeList)
+                foreach (XmlNode itemNode in node.ChildNodes)
                 {
                     DBOnlineSeries series = new DBOnlineSeries();
                     

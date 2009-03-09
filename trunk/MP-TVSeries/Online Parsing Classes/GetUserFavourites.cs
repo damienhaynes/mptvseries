@@ -54,13 +54,12 @@ namespace WindowPlugins.GUITVSeries
 
         public void doWork(string sAccountID)
         {
-            XmlNodeList nodeList = null;
-            nodeList = Online_Parsing_Classes.OnlineAPI.GetUserFavourites(sAccountID).ChildNodes;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetUserFavourites(sAccountID);          
 
-            if (nodeList != null)
+            if (node != null)
             {
                 string id = string.Empty;
-                foreach (XmlNode itemNode in nodeList)
+                foreach (XmlNode itemNode in node.ChildNodes)
                 {
                     if (itemNode.Name == "Series")
                     {

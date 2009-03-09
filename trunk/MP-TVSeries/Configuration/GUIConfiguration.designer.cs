@@ -3110,7 +3110,7 @@ namespace WindowPlugins.GUITVSeries
             this.button7.Text = "Paste all at once";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Visible = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+          
             // 
             // label25
             // 

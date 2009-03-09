@@ -61,11 +61,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (sSeriesID.Length > 0)
             {
-                XmlNodeList nodeList = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID).ChildNodes;
+                XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
 
-                if (nodeList != null)
+                if (node != null)
                 {
-                    foreach (XmlNode itemNode in nodeList)
+                    foreach (XmlNode itemNode in node.ChildNodes)
                     {
                         bool hasDVDOrdering = false;
                         bool hasAbsoluteOrdering = false;
@@ -74,8 +74,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // first return item SHOULD ALWAYS be the series
                             if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {                                
-                                //foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                            {                                                                
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
