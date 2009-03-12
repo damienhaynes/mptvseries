@@ -116,5 +116,11 @@
 	<string Field="FanartDisableLabel" Original="Disabled">Disabled</string>
 	<string Field="FanartMenuEnable" Original="Enable Fanart">Enable Fanart</string>
 	<string Field="FanartMenuDisable" Original="Disable Fanart">Disable Fanart</string>
-	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will used as well-->
+	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+	<string Field="LayoutList" Original="List">List</string>
+	<string Field="LayoutListBanners" Original="List Banners">List Banners</string>
+	<string Field="LayoutListPosters" Original="List Posters">List Posters</string>
+	<string Field="LayoutWideBanners" Original="Wide Banners">Wide Banners</string>
+	<string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
+	<string Field="LayoutSmallIcons" Original="Small Icons">Small Icons</string>
 </strings>

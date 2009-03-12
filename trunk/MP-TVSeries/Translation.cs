@@ -130,6 +130,12 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartMenuEnable = "Enable Fanart";
         public static string FanartMenuDisable = "Disable Fanart";
         public static string SortByStrings = "the|a|an";
+        public static string LayoutList = "List";
+        public static string LayoutSmallIcons = "Small Icons";
+        public static string LayoutWideBanners = "Wide Banners";
+        public static string LayoutListBanners = "List Banners";
+        public static string LayoutListPosters = "List Posters";
+        public static string LayoutFilmstrip = "Filmstrip";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
