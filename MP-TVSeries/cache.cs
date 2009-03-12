@@ -117,6 +117,9 @@ namespace WindowPlugins.GUITVSeries
 
         static void DBTable_dbUpdateOccured(string table)
         {
+            if (_cache == null)
+                return;
+
             MPTVSeriesLog.Write("Cache: DB Write operation: ", table, MPTVSeriesLog.LogLevel.Debug);
             switch (table)
             {

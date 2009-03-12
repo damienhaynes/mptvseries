@@ -3304,21 +3304,82 @@ namespace WindowPlugins.GUITVSeries
 
                 if (item.Length > 0)
                 {
-                    GUIListItem pItem = new GUIListItem(item);            
-                    dlg.Add(pItem);
-                    pItem.ItemId = counter++;
+                    string menuItem = GetTranslatedLayout(item);
+                    if (menuItem.Length > 0)
+                    {
+                        GUIListItem pItem = new GUIListItem(menuItem);
+                        dlg.Add(pItem);
+                        pItem.ItemId = counter++;
+                    }
                     item = string.Empty;
                 }                
             }
 
             if (counter > 0)            
                 dlg.DoModal(GUIWindowManager.ActiveWindow);
+
             
-            if (dlg.SelectedId >= 0 && !dlg.SelectedLabelText.Equals(currentLayout))
+            if (dlg.SelectedId >= 0)
             {
-                switchLayout(dlg.SelectedLabelText);
-                LoadFacade();
+                string selectedLayout = GetLogicalLayout(dlg.SelectedLabelText);
+                if (!selectedLayout.Equals(currentLayout))
+                {
+                    switchLayout(selectedLayout);
+                    LoadFacade();
+                }
             }
+        }
+
+        private string GetLogicalLayout(string layout)
+        {
+            if (layout == Translation.LayoutList)
+                return "List";
+
+            if (layout == Translation.LayoutListPosters)
+                return "ListPosters";
+
+            if (layout == Translation.LayoutListBanners)
+                return "ListBanners";
+
+            if (layout == Translation.LayoutFilmstrip)
+                return "Filmstrip";
+
+            if (layout == Translation.LayoutSmallIcons)
+                return "SmallIcons";
+
+            if (layout == Translation.LayoutWideBanners)
+                return "WideBanners";
+
+            return layout;
+        }
+
+        private string GetTranslatedLayout(string layout)
+        {
+            string translatedLayout = string.Empty;
+
+            switch (layout)
+            {
+                case "List":
+                    translatedLayout = Translation.LayoutList;
+                    break;
+                case "SmallIcons":
+                    translatedLayout = Translation.LayoutSmallIcons;
+                    break;
+                case "ListPosters":
+                    translatedLayout = Translation.LayoutListPosters;
+                    break;
+                case "ListBanners":
+                    translatedLayout = Translation.LayoutListBanners;
+                    break;
+                case "Filmstrip":
+                    translatedLayout = Translation.LayoutFilmstrip;
+                    break;
+                case "WideBanners":
+                    translatedLayout = Translation.LayoutWideBanners;
+                    break;
+            }
+            return translatedLayout;
+
         }
 
         private void switchLayout(string layout)
