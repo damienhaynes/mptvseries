@@ -1484,6 +1484,20 @@ namespace WindowPlugins.GUITVSeries
 
             LoadFacade();
             m_Facade.Focus = true;
+
+            // Update Button Labels with translations
+            if (viewMenuButton != null)
+                viewMenuButton.Label = Translation.ButtonSwitchView;
+
+            if (ImportButton != null)
+                ImportButton.Label = Translation.ButtonRunImport;
+
+            if (LayoutMenuButton != null)
+                LayoutMenuButton.Label = Translation.ButtonChangeLayout;
+
+            if (OptionsMenuButton != null)
+                OptionsMenuButton.Label = Translation.ButtonOptions;
+
             setProcessAnimationStatus(m_parserUpdaterWorking);
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
 
@@ -1492,6 +1506,7 @@ namespace WindowPlugins.GUITVSeries
                 logosHeight = m_Logos_Image.Height;
                 logosWidth = m_Logos_Image.Width;
             }
+          
         }
 
         protected override void OnPageDestroy(int new_windowId)

@@ -136,6 +136,11 @@ namespace WindowPlugins.GUITVSeries
         public static string LayoutListBanners = "List Banners";
         public static string LayoutListPosters = "List Posters";
         public static string LayoutFilmstrip = "Filmstrip";
+        public static string ButtonAutoPlay = "Auto Play";
+        public static string ButtonSwitchView = "Switch View";
+        public static string ButtonRunImport = "Run Import";
+        public static string ButtonChangeLayout = "Change Layout";        
+        public static string ButtonOptions = "Options";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";

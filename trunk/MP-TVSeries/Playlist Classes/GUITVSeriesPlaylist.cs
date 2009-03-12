@@ -201,6 +201,7 @@ namespace WindowPlugins.GUITVSeries
             if (btnAutoPlay != null)
             {
                 btnAutoPlay.Selected = playlistPlayer.PlaylistAutoPlay;
+                btnAutoPlay.Label = Translation.ButtonAutoPlay;
             }
         }
 
