@@ -51,15 +51,25 @@
     </control>
     
     <control>
+      <description>Resolution</description>
+      <type>label</type>
+      <id>0</id>
+      <posX>66</posX>
+      <posY>60</posY>
+	  <font>font14</font>
+      <label>169</label>
+    </control>
+    <control>
       <description>FanArt Resolution</description>
       <type>label</type>
       <id>0</id>
-      <posX>50</posX>
+      <posX>170</posX>
       <posY>60</posY>
 	  <font>font14</font>
-      <label>Resolution: #TVSeries.FanArt.SelectedFanartResolution</label>
+      <label>#TVSeries.FanArt.SelectedFanartResolution</label>
+	  <align>left</align>
     </control>
-    
+    	
     <!-- :::::::::::::: THUMBNAILPANEL :::::::::::::: -->
     
     <control>

@@ -57,7 +57,7 @@
 		<episode>	
 			<item1><![CDATA[]]></item1>
 			<item2><![CDATA[<Episode.EpisodeIndex>: <Episode.LocalEpisodeName>]]></item2>
-			<item3><![CDATA[]]></item3>
+			<item3><![CDATA[SMALLSPACE]]></item3>
 		</episode>
 	</views>
 	<formatting import="true">
