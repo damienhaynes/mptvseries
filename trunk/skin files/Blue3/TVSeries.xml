@@ -466,13 +466,14 @@
 				<spinHeight>18</spinHeight>
 				<spinPosX>675</spinPosX>
 				<spinPosY>550</spinPosY>
-				<width>320</width>
+				<width>355</width>
 				<height>470</height>
 				<textXOff>-100</textXOff>
+				<textYOff>4</textYOff>
 				<textXOff2>320</textXOff2>
-				<textYOff2>3</textYOff2>
+				<textYOff2>4</textYOff2>
 				<textXOff3>300</textXOff3>
-				<textYOff3>5</textYOff3>
+				<textYOff3>4</textYOff3>
 				<spaceBetweenItems>1</spaceBetweenItems>
 				<!-- Text -->
 				<downloadColor>ffffffff</downloadColor>
@@ -583,7 +584,7 @@
 	            <description>Options</description>
 	            <type>button</type>
 	            <id>4</id>
-	            <label>Options</label>
+	            <label>496</label>
 				<onleft>50</onleft>
 	            <onright>50</onright>
 	            <onup>9</onup>
