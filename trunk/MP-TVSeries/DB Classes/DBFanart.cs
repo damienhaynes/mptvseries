@@ -178,13 +178,13 @@ namespace WindowPlugins.GUITVSeries
             sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
     
             // Get Preferred Resolution
-            int res = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);            
-            
+            int res = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
+
             if (res == (int)FanartResolution.HD)
-                sqlQuery += " and " + cResolution + " = " + "1280x720";
+                sqlQuery += " and " + cResolution + " = " + "\"1280x720\"";
             if (res == (int)FanartResolution.FULLHD)
-                sqlQuery += " and " + cResolution + " = " + "1920x1080";
-      
+                sqlQuery += " and " + cResolution + " = " + "\"1920x1080\"";
+
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
 
             if (results.Rows.Count > 0)
@@ -229,8 +229,6 @@ namespace WindowPlugins.GUITVSeries
                 GlobalSet(new DBFanart(), cChosen, false, new SQLCondition(new DBFanart(), cSeriesID, this[cSeriesID], SQLConditionType.Equal));
                 this[cChosen] = value;
                 this.Commit();
-
-                //Clear(this[cIndex]);
             }
         }
 
