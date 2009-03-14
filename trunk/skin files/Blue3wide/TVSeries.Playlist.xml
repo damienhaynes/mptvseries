@@ -154,7 +154,7 @@
             <description>Autoplay on/off button</description>
             <type>togglebutton</type>
             <id>40</id>
-            <label>Auto Play</label>
+            <label>713</label>
             <onright>50</onright>
             <onup>30</onup>
             <ondown>21</ondown>

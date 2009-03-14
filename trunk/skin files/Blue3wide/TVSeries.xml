@@ -959,7 +959,7 @@
             <description>Options</description>
             <type>button</type>
             <id>4</id>
-            <label>Options</label>
+            <label>496</label>
 			<onleft>50</onleft>
             <onright>50</onright>
             <onup>9</onup>
@@ -1173,20 +1173,28 @@
           <textureNoFocus>button_green_nofocus_165x32.png</textureNoFocus>
           <font>font10</font>
 		  <font2>font10</font2>
-		  <textXOff>-25</textXOff>
-          <textXOff2>475</textXOff2>
-          <IconXOff>990</IconXOff>
+		  <font3>font10</font3>
+		  <textXOff>-90</textXOff>
+		  <textYOff>4</textYOff>
+          <textXOff2>325</textXOff2>
+		  <textYOff2>4</textYOff2>
+		  <textXOff3>360</textXOff3>
+		  <textYOff3>6</textYOff3>
+          <IconXOff>330</IconXOff>
+		  <IconYOff>7</IconYOff>
+		  <itemWidth>100</itemWidth>
+		  <itemHeight>20</itemHeight>
           <spaceBetweenItems>1</spaceBetweenItems>
           <!-- Text -->
           <downloadColor>ffffffff</downloadColor>
           <!-- not watched color (normal) -->
-          <remoteColor>ffa0d0ff</remoteColor>
+          <remoteColor>ffffffff</remoteColor>
           <!-- watched color -->
-          <textcolor>fff8bc70</textcolor>
+          <textcolor>ffffffff</textcolor>
           <!-- local file not present color -->
-          <textcolor2>fff8bc70</textcolor2>
+          <textcolor2>ffffffff</textcolor2>
           <!-- local file not present colorcolumn 2-->
-          <textcolor3>fff8bc70</textcolor3>
+          <textcolor3>ffffffff</textcolor3>
           <!-- local file not present color column 3-->
         </control>
       </control>
