@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) -->
+<!-- Svenska (sv) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -61,8 +61,8 @@
 	<string Field="RateSeries" Original="Rate this Series">Betygsätt denna serie</string>
 	<string Field="RateEpisode" Original="Rate this Episode">Betygsätt denna episod</string>
 	<string Field="ResetRating" Original="Reset Rating">Nollställ betyg</string>
-	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Fråga mig om jag vill betygsätta avsnitt utan betyg</string>
-	<string Field="DontAskToRate" Original="Don't ask me to rate again">Fråga inte om jag vill betygsätta igen</string>
+	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Fråga om betygsättning av avsnitt utan betyg</string>
+	<string Field="DontAskToRate" Original="Don't ask me to rate again">Fråga inte om betygsättning igen</string>
 	<string Field="RatingStar" Original="Star">Stjärna</string>
 	<string Field="RatingStars" Original="Stars">Stjärnor</string>
 	<string Field="ChangeView" Original="Change View">Byt vy</string>
@@ -109,4 +109,22 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com är nere för tillfället, försök igen senare</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Det går inte att ansluta till Internet för tillfället, kontrollera att kontakt finns och försök igen</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Visa Fanart i Serie-vyn</string>
+	<string Field="ChangeLayout" Original="Change Layout">Byt layout</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Använd online-favoriter</string>
+	<string Field="AddToPlaylist" Original="Add To Playlist">Lägg till i spellistan</string>
+	<string Field="FanartDisableLabel" Original="Disabled">Används ej</string>
+	<string Field="FanartMenuEnable" Original="Enable">Använd denna Fanart</string>
+	<string Field="FanartMenuDisable" Original="Disable">Stäng av denna Fanart</string>
+	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+	<string Field="LayoutList" Original="List">Lista</string>
+	<string Field="LayoutListBanners" Original="Lista med banners">List Banners</string>
+	<string Field="LayoutListPosters" Original="Lista med posters">List Posters</string>
+	<string Field="LayoutWideBanners" Original="Breda banners">Wide Banners</string>
+	<string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
+	<string Field="LayoutSmallIcons" Original="Small Icons">Små ikoner</string>
+	<string Field="ButtonAutoPlay" Original="Auto Play">Spela automatiskt</string>
+	<string Field="ButtonSwitchView" Original="Switch Layout">Byt vy</string>
+	<string Field="ButtonRunImport" Original="Run Import">Starta importören</string>
+	<string Field="ButtonChangeLayout" Original="Change Layout">Byt layout</string>
+	<string Field="ButtonOptions" Original="Options">Inställningar</string>
 </strings>
