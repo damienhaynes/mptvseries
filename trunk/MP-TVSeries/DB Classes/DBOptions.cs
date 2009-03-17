@@ -169,6 +169,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
 
+        public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         static DBOption()
@@ -427,6 +429,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cAutoDownloadFanartResolution) == null)
                     SetOptions(cAutoDownloadFanartResolution, 0); //0=Both,1=1280x720,2=1920x1080
+
+                if (GetOptions(cFanartThumbnailResolutionFilter) == null)
+                    SetOptions(cFanartThumbnailResolutionFilter, 0);
 
             }
             catch (Exception ex)

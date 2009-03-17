@@ -127,6 +127,13 @@
 	<string Field="ButtonSwitchView" Original="Switch Layout">Switch Layout</string>
 	<string Field="ButtonRunImport" Original="Run Import">Run Import</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Change Layout</string>
-	<string Field="ButtonOptions" Original="Options">Options</string>
+	<string Field="ButtonOptions" Original="Options">Options</string>	
+	<string Field="FanArtFilter" Original="Filter">Filter</string>
+	<string Field="FanArtFilterAll" Original="All">All</string>
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Random Fanart</string>
+	<string Field="ButtonToggleLayout" Original="Toggle Layout">Toggle Layout</string>
+	<string Field="LabelResolution" Original="Resolution:">Resolution:</string>
+	<string Field="LabelChosen" Original="Chosen:">Chosen:</string>
+	<string Field="LabelDisabled" Original="Disabled:">Disabled:</string>
 	
 </strings>

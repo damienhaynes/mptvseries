@@ -80,10 +80,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void ClearAll()
-        {
-            String sqlQuery = "delete from " + cTableName;
-            cache = null;
-            DBTVSeries.Execute(sqlQuery);
+        {      
+            cache.Clear();         
         }
 
         public static void Clear(int Index)

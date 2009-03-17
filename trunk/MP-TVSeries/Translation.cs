@@ -115,12 +115,14 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtGet = "Download Fanart";
         public static string FanArtUse = "Set Fanart as Default";
         public static string FanArtDelete = "Delete Fanart";
-        public static string FanDownloadingStatus = "Downloading {0} Fanart...";
+        public static string FanDownloadingStatus = "Downloading {0} Fanart...";        
         public static string FanArtLocal = "Available locally";
         public static string FanArtOnline = "Available for downloading";
         public static string FanArtOnlineLoading = "loading {0} of {1} Fanart...";
         public static string FanArtRandom = "Display random Fanart";
-        public static string FanArtNoneFound = "No Fanart could be found";
+        public static string FanArtNoneFound = "No Fanart could be found";        
+        public static string FanArtFilter = "Filter";
+        public static string FanArtFilterAll = "All";        
         public static string RecentlyAdded = "Recently Added";
         public static string ShowSeriesFanart = "Show Fanart in Series View";
         public static string ChangeLayout = "Change Layout";
@@ -141,6 +143,11 @@ namespace WindowPlugins.GUITVSeries
         public static string ButtonRunImport = "Run Import";
         public static string ButtonChangeLayout = "Change Layout";        
         public static string ButtonOptions = "Options";
+        public static string ButtonRandomFanart = "Random Fanart";
+        public static string ButtonToggleLayout = "Toggle Layout";
+        public static string LabelResolution = "Resolution:";
+        public static string LabelChosen = "Chosen:";
+        public static string LabelDisabled = "Disabled:";
 
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
