@@ -4440,9 +4440,10 @@ namespace WindowPlugins.GUITVSeries
                 fc.Init();
             }
             fc.SeriesID = seriesID;
-            if (listLevel == Listlevel.Season || listLevel == Listlevel.Episode)
-                fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
-            else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");
+            fc.setPageTitle(Translation.FanArt);
+            //if (listLevel == Listlevel.Season || listLevel == Listlevel.Episode)
+            //    fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
+            //else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");            
             GUIWindowManager.ActivateWindow(fc.GetID, false);
         }
 

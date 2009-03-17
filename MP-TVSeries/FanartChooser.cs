@@ -35,6 +35,24 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
 
+        [SkinControlAttribute(2)]
+        protected GUIButtonControl buttonLayouts = null;
+
+        [SkinControlAttribute(11)]
+        protected GUILabelControl labelResolution = null;
+
+        [SkinControlAttribute(12)]
+        protected GUIButtonControl buttonFilters = null;
+
+        [SkinControlAttribute(13)]
+        protected GUIToggleButtonControl togglebuttonRandom = null;
+
+        [SkinControlAttribute(14)]
+        protected GUILabelControl labelDisabled = null;
+
+        [SkinControlAttribute(15)]
+        protected GUILabelControl labelChosen = null;
+
         enum menuAction
         {
             use,
@@ -42,7 +60,15 @@ namespace WindowPlugins.GUITVSeries
             delete,
             optionRandom,
             disable,
-            enable
+            enable,
+            filters
+        }
+
+        enum menuFilterAction
+        {
+            all,
+            hd,
+            fullhd
         }
 
         const int windowID = 9812;
@@ -128,10 +154,12 @@ namespace WindowPlugins.GUITVSeries
         static void setDownloadStatus()
         {
             lock (toDownload)
-            {  
+            {
                 if (toDownload.Count > 0)
-                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, toDownload.Count));
-                else
+                {
+                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, toDownload.Count));                    
+                }
+                else                
                     TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", " ");
             }
         }
@@ -167,13 +195,26 @@ namespace WindowPlugins.GUITVSeries
                 m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
             }
 
-            base.OnPageLoad();            
+            base.OnPageLoad();
 
-            TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Empty);
-            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", string.Empty);
+            // update skin controls
+            if (labelResolution != null) labelResolution.Label = Translation.LabelResolution;
+            if (labelChosen != null) labelChosen.Label = Translation.LabelChosen;
+            if (labelDisabled != null) labelDisabled.Label = Translation.LabelDisabled;
+            if (buttonLayouts != null) buttonLayouts.Label = Translation.ButtonToggleLayout;
+            if (buttonFilters != null) buttonFilters.Label = Translation.FanArtFilter;
+            if (togglebuttonRandom != null)
+            {
+                togglebuttonRandom.Label = Translation.ButtonRandomFanart;
+                togglebuttonRandom.Selected = DBOption.GetOptions(DBOption.cFanartRandom);
+            }
+
+            ClearProperties();
+            UpdateFilterProperty(false);
+
             setDownloadStatus();
 
-            MPTVSeriesLog.Write("Fanartchooser Window initializing");
+            MPTVSeriesLog.Write("Fanart Chooser Window initializing");
 
             fetchList(SeriesID);
             loadingWorker.RunWorkerAsync(SeriesID);
@@ -182,9 +223,42 @@ namespace WindowPlugins.GUITVSeries
             
         }
 
+        private void ClearProperties()
+        {
+            TVSeriesPlugin.setGUIProperty("FanArt.Count", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartResolution", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsDisabled", " ");
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartColors", " ");            
+        }
+
+        private void UpdateFilterProperty(bool btnEnabled)
+        {
+            if (buttonFilters != null)
+                buttonFilters.IsEnabled = btnEnabled;
+
+            string resolution = string.Empty;
+            if (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) == "0")
+            {
+                resolution = Translation.FanArtFilterAll;
+            }
+            else if (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) == "1")
+            {
+                resolution = "1280x720";
+            }
+            else
+                resolution = "1920x1080";
+
+            TVSeriesPlugin.setGUIProperty("FanArt.FilterResolution", resolution);            
+        }
+
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {            
             TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Empty);
+            TVSeriesPlugin.setGUIProperty("FanArt.Count", totalFanart.ToString());
+
             if (totalFanart == 0) TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", Translation.FanArtNoneFound);
             totalFanart = 0;
 
@@ -200,6 +274,7 @@ namespace WindowPlugins.GUITVSeries
                     setFanartPreviewBackground(selectedFanart);
                 }
             }
+            UpdateFilterProperty(true);            
         }
 
         protected override void OnPageDestroy(int new_windowId)
@@ -279,6 +354,14 @@ namespace WindowPlugins.GUITVSeries
                 dlg.Add(pItem);
                 pItem.ItemId = (int)menuAction.optionRandom;
 
+                // Dont allowing filtering until DB has all data
+                if (!loadingWorker.IsBusy)
+                {
+                    pItem = new GUIListItem(Translation.FanArtFilter + " >>");
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)menuAction.filters;
+                }
+
                 // lets show it
                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                 switch (dlg.SelectedId) // what was chosen?
@@ -305,6 +388,8 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case (int)menuAction.optionRandom:
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
+                        if (togglebuttonRandom != null)
+                            togglebuttonRandom.Selected = DBOption.GetOptions(DBOption.cFanartRandom);
                         break;
                     case (int)menuAction.disable:
                         selectedFanart.Disabled = true;
@@ -314,12 +399,58 @@ namespace WindowPlugins.GUITVSeries
                         selectedFanart.Disabled = false;                        
                         currentitem.Label = Translation.FanArtLocal;
                         break;
+                    case (int)menuAction.filters:
+                        dlg.Reset();
+                        ShowFiltersMenu();
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("Exception in Fanart Chooser Context Menu: " + ex.Message);
                 return;
+            }
+        }
+
+        private void ShowFiltersMenu()
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlg == null) return;
+
+            dlg.Reset();
+            dlg.SetHeading(Translation.FanArtFilter);
+
+            GUIListItem pItem = new GUIListItem(Translation.FanArtFilterAll);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuFilterAction.all;            
+
+            pItem = new GUIListItem("1280x720");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuFilterAction.hd;            
+
+            pItem = new GUIListItem("1920x1080");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuFilterAction.fullhd;            
+            
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId >= 0)
+            {
+                switch (dlg.SelectedId)
+                {
+                    case (int)menuFilterAction.all:
+                        DBOption.SetOptions(DBOption.cFanartThumbnailResolutionFilter, "0");
+                        break;
+                    case (int)menuFilterAction.hd:
+                        DBOption.SetOptions(DBOption.cFanartThumbnailResolutionFilter, "1");
+                        break;
+                    case (int)menuFilterAction.fullhd:
+                        DBOption.SetOptions(DBOption.cFanartThumbnailResolutionFilter, "2");
+                        break;                  
+                }
+                m_Facade.Clear();
+                DBFanart.ClearAll();
+                UpdateFilterProperty(false);
+                loadingWorker.RunWorkerAsync(SeriesID);                   
             }
         }
 
@@ -334,6 +465,7 @@ namespace WindowPlugins.GUITVSeries
                     m_Facade.Add(loadedItem);
                     // we use this to tell the gui how many fanart we are loading
                     TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, e.ProgressPercentage, totalFanart));
+                    TVSeriesPlugin.setGUIProperty("FanArt.Count", e.ProgressPercentage.ToString());
                     if (m_Facade != null) this.m_Facade.Focus = true;
                 }
                 else if (e.ProgressPercentage > 0)
@@ -381,6 +513,24 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
+            if (control == buttonFilters)
+            {
+                ShowFiltersMenu();
+                buttonFilters.Focus = false;
+                return;
+            }
+            if (control == buttonLayouts)
+            {
+                buttonLayouts.Focus = false;
+                return;
+            }
+            if (control == togglebuttonRandom)
+            {
+                DBOption.SetOptions(DBOption.cFanartRandom, togglebuttonRandom.Selected);
+                togglebuttonRandom.Focus = false;
+                return;
+            }
+
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
             {
@@ -437,13 +587,25 @@ namespace WindowPlugins.GUITVSeries
 
                 GUIListItem item = null;
                 List<DBFanart> onlineFanart = DBFanart.GetAll(seriesID, false);
+
+                // Filter Fanart Thumbnails to be displayed by resolution
+                if (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) != 0)
+                {
+                    string filteredRes = (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) == "1" ? "1280x720" : "1920x1080");
+                    for (int j = onlineFanart.Count - 1; j >= 0; j--)
+                    {
+                        if (onlineFanart[j][DBFanart.cResolution] != filteredRes)
+                            onlineFanart.Remove(onlineFanart[j]);
+                    }
+                }
+
                 // Inform skin message how many fanarts are online
                 loadingWorker.ReportProgress(onlineFanart.Count < 100 ? onlineFanart.Count : 100);
                 
                 // let's get all the ones we have available locally (from online)
                 int i = 0;
                 foreach (DBFanart f in onlineFanart)
-                {
+                {                    
                     if(f.isAvailableLocally)
                     {
                         if (f.Disabled)
@@ -469,26 +631,27 @@ namespace WindowPlugins.GUITVSeries
                     int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, filename);
                     while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID))
                     {
-                      if (loadingWorker.CancellationPending)
-                      {
-                        // ZF: Cancel, clean up pending download
-                        bDownloadSuccess = false;
-                        Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                        MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + filename);
-                      }
-                      System.Windows.Forms.Application.DoEvents();
+                        if (loadingWorker.CancellationPending)
+                        {
+                            // ZF: Cancel, clean up pending download
+                            bDownloadSuccess = false;
+                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
+                            MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + filename);
+                        }
+                        System.Windows.Forms.Application.DoEvents();
                     }
 
                     // ZF: should be downloaded now
                     filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
                     if (bDownloadSuccess)
                     {
-                      item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
+                        item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
                     }
                     item.TVTag = f;
-                    loadingWorker.ReportProgress((i<100?++i:100), item);
-                    
-                  if (loadingWorker.CancellationPending)
+                    // This will need to be tweaked for more than 100 fanarts
+                    loadingWorker.ReportProgress((i < 100 ? ++i: 100), item);                    
+
+                    if (loadingWorker.CancellationPending)
                         return;
                 }
             }
@@ -496,22 +659,40 @@ namespace WindowPlugins.GUITVSeries
 
         void setFanartPreviewBackground(DBFanart fanart)
         {
-          string fanartInfo = fanart.isAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
-          fanartInfo += Environment.NewLine;
+            string fanartInfo = fanart.isAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
+            fanartInfo += Environment.NewLine;
 
-          foreach (KeyValuePair<string, DBField> kv in fanart.m_fields)
-          {
-              if(kv.Key == "BannerType2") // resolution
-                  TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartResolution", kv.Value.Value);
-              fanartInfo += kv.Key + ": " + kv.Value.Value + Environment.NewLine;
-          }
+            foreach (KeyValuePair<string, DBField> kv in fanart.m_fields)
+            {
+                switch (kv.Key)
+                {
+                    case DBFanart.cResolution:                 
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartResolution", kv.Value.Value);                        
+                        break;
 
-          TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", fanartInfo);
+                    case DBFanart.cColors:
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartColors", kv.Value.Value);
+                        break;
 
-          string preview = fanart.isAvailableLocally ?
-              ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
-              m_Facade.SelectedListItem.IconImageBig;
-          TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
+                    case DBFanart.cChosen:
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", kv.Value.Value?Translation.Yes:Translation.No);
+                        break;
+
+                    case DBFanart.cDisabled:
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsDisabled", kv.Value.Value ? Translation.Yes : Translation.No);
+                        break;
+                    
+                }
+                fanartInfo += kv.Key + ": " + kv.Value.Value + Environment.NewLine;
+            }
+
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", fanartInfo);
+
+            string preview = fanart.isAvailableLocally ?
+                             ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
+                             m_Facade.SelectedListItem.IconImageBig;
+          
+            TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
         }
     }
 }
