@@ -170,9 +170,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
 
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
+        public const String cFanartCurrentView = "FanartCurrentView";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
-
+        
         static DBOption()
         {
             try
@@ -432,6 +433,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cFanartThumbnailResolutionFilter) == null)
                     SetOptions(cFanartThumbnailResolutionFilter, 0);
+
+                if (GetOptions(cFanartCurrentView) == null)
+                    SetOptions(cFanartCurrentView, 2); // Large Icons
 
             }
             catch (Exception ex)
