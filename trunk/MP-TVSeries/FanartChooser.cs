@@ -88,6 +88,7 @@ namespace WindowPlugins.GUITVSeries
         static Queue<DBFanart> toDownload = new Queue<DBFanart>();
         int m_PreviousSelectedItem = -1;
         private View currentView = View.LargeIcons;
+        bool m_bQuickSelect = false;
 
         # region DownloadWorker
         static FanartChooser()
@@ -212,10 +213,9 @@ namespace WindowPlugins.GUITVSeries
                 int defaultView = 2;
                 if (int.TryParse(DBOption.GetOptions(DBOption.cFanartCurrentView), out defaultView))
                 {
-                    m_Facade.View = (GUIFacadeControl.ViewMode)defaultView;
-                }
-                else                
-                    m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
+                    CurrentView = (View)defaultView;                    
+                }                
+                m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
             }            
 
             base.OnPageLoad();
@@ -339,6 +339,17 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_Facade.Count > m_PreviousSelectedItem)
                     m_Facade.SelectedListItemIndex = m_PreviousSelectedItem;
+                
+                // Work around for dodgy Filmstrip
+                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                {
+                    m_bQuickSelect = true;
+                    for (int i = 0; i < m_PreviousSelectedItem; i++)
+                    {                          
+                        OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                    }
+                    m_bQuickSelect = false;
+                }
 
                 DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
                 if (selectedFanart != null)
@@ -574,22 +585,41 @@ namespace WindowPlugins.GUITVSeries
         {
             switch (message.Message)
             {
-                case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
-                    {
-                        int iControl = message.SenderControlId;
-                        if (iControl == (int)m_Facade.GetID && m_Facade.SelectedListItem != null)
-                        {
-                            DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
-                            if (selectedFanart != null)
-                            {
-                                setFanartPreviewBackground(selectedFanart);
-                            }
-                        }
-                        return true;
-                    } 
+                // Can't use OnMessage when using Filmstrip - it doesn't work!!
+                //case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
+                //    {
+                //        int iControl = message.SenderControlId;
+                //        if (iControl == (int)m_Facade.GetID && m_Facade.SelectedListItem != null)
+                //        {
+                //            DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
+                //            if (selectedFanart != null)
+                //            {
+                //                setFanartPreviewBackground(selectedFanart);
+                //            }
+                //        }
+                //        return true;
+                //    } 
                 default:
                     return base.OnMessage(message);
             }
+        }
+
+        // triggered when a selection change was made on the facade
+        private void onFacadeItemSelected(GUIListItem item, GUIControl parent)
+        {
+            if (m_bQuickSelect) return;
+
+            // if this is not a message from the facade, exit
+            if (parent != m_Facade && parent != m_Facade.FilmstripView &&
+                parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
+                return;
+           
+            DBFanart selectedFanart = item.TVTag as DBFanart;
+            if (selectedFanart != null)
+            {
+                setFanartPreviewBackground(selectedFanart);
+            }      
+            
         }
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
@@ -799,6 +829,10 @@ namespace WindowPlugins.GUITVSeries
                         item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
                     }
                     item.TVTag = f;
+                    
+                    // Subscribe to Item Selected Event
+                    item.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
+                    
                     // This will need to be tweaked for more than 100 fanarts
                     loadingWorker.ReportProgress((i < 100 ? ++i: 100), item);                    
 
