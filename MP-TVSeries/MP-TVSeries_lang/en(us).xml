@@ -34,8 +34,8 @@
 	<string Field="Confirm" Original="Confirm">Confirm</string>
 	<string Field="Completed" Original="Completed">Completed</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">No subtitles found</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Skip / Never ask again</string>
-	<string Field="no_results_found" Original="no results found!">no results found!</string>
+	<string Field="skip_Never_ask_again" Original="Skip / Never ask again">Skip / Never ask again</string>
+	<string Field="no_results_found" Original="No results found!">No results found!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Hidden to prevent spoilers *</string>
 	<string Field="Yes" Original="Yes">Yes</string>
 	<string Field="No" Original="No">No</string>
@@ -77,7 +77,7 @@
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Downloading {0} Fanart...</string>
 	<string Field="FanArtLocal" Original="Available locally">Available locally</string>
 	<string Field="FanArtOnline" Original="Available for downloading">Available for downloading</string>
-	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">loading {0} of {1} Fanart...</string>
+	<string Field="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Loading {0} of {1} Fanart...</string>
 	<string Field="FanArtRandom" Original="Display random Fanart">Display random Fanart</string>
 	<string Field="FanArtNoneFound" Original="No Fanart could be found">No Fanart could be found</string>
 	<string Field="CFS_Choose_Item" Original="Choose item">Choose item</string>
@@ -130,10 +130,9 @@
 	<string Field="ButtonOptions" Original="Options">Options</string>	
 	<string Field="FanArtFilter" Original="Filter">Filter</string>
 	<string Field="FanArtFilterAll" Original="All">All</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">Random Fanart</string>
-	<string Field="ButtonToggleLayout" Original="Toggle Layout">Toggle Layout</string>
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Random Fanart</string>	
 	<string Field="LabelResolution" Original="Resolution:">Resolution:</string>
 	<string Field="LabelChosen" Original="Chosen:">Chosen:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Disabled:</string>
-	
+	<string Field="ResetUserSelections" Original="Reset User Selections">Reset User Selections</string>
 </strings>

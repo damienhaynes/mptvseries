@@ -71,7 +71,7 @@ namespace WindowPlugins.GUITVSeries
         public static string No_subtitles_found = "No subtitles found";
         public static string Subtitles_download_complete = "Subtitles Download Complete";
         public static string skip_Never_ask_again = "Skip / Never ask again";
-        public static string no_results_found = "no results found!";
+        public static string no_results_found = "No results found!";
         public static string _Hidden_to_prevent_spoilers_ = " * Hidden to prevent spoilers *";
         public static string Yes = "Yes";
         public static string No = "No";
@@ -88,12 +88,6 @@ namespace WindowPlugins.GUITVSeries
         public static string Download = "Download";
         public static string Actions = "Actions";
         public static string Options = "Options";
-        public static string Genres = "Genres";
-        public static string All = "All";
-        public static string Latest = "Latest";
-        public static string Channels = "Channels";
-        public static string Unwatched = "Unwatched";
-        public static string Favourites = "Favourites";
         public static string updateMI = "Update Media Info";
         public static string insertDisk = "Please insert Disk";
         public static string OK = "OK";
@@ -105,10 +99,25 @@ namespace WindowPlugins.GUITVSeries
         public static string AskToRate = "Ask me to rate unrated episodes";
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
-        public static string RatingStars = "Stars";
+        public static string RatingStars = "Stars";        
+        public static string ResetUserSelections = "Reset User Selections";        
+        public static string ChangeLayout = "Change Layout";
+        public static string UseOnlineFavourites = "Use Online Favourites";
+        public static string AddToPlaylist = "Add to Playlist";
+        public static string SortByStrings = "the|a|an";
+
+        // Views
+        public static string Genres = "Genres";
+        public static string All = "All";
+        public static string Latest = "Latest";
+        public static string Channels = "Channels";
+        public static string Unwatched = "Unwatched";
+        public static string Favourites = "Favourites";
+        public static string RecentlyAdded = "Recently Added";
         public static string ChangeView = "Change View";
         public static string ChangeViewFast = "Immediately Change Views";
-        public static string ResetUserSelections = "Reset User Selections";
+
+        // Fanart
         public static string FanArt = "Fanart";
         public static string FanListAll = "List all Fanart for this Series";
         public static string FanArtGetAndUse = "Download Fanart and Use";
@@ -118,33 +127,31 @@ namespace WindowPlugins.GUITVSeries
         public static string FanDownloadingStatus = "Downloading {0} Fanart...";        
         public static string FanArtLocal = "Available locally";
         public static string FanArtOnline = "Available for downloading";
-        public static string FanArtOnlineLoading = "loading {0} of {1} Fanart...";
+        public static string FanArtOnlineLoading = "Loading {0} of {1} Fanart...";
         public static string FanArtRandom = "Display random Fanart";
         public static string FanArtNoneFound = "No Fanart could be found";        
         public static string FanArtFilter = "Filter";
-        public static string FanArtFilterAll = "All";        
-        public static string RecentlyAdded = "Recently Added";
-        public static string ShowSeriesFanart = "Show Fanart in Series View";
-        public static string ChangeLayout = "Change Layout";
-        public static string UseOnlineFavourites = "Use Online Favourites";
-        public static string AddToPlaylist = "Add to Playlist";
+        public static string FanArtFilterAll = "All";
         public static string FanartDisableLabel = "Disabled";
         public static string FanartMenuEnable = "Enable Fanart";
         public static string FanartMenuDisable = "Disable Fanart";
-        public static string SortByStrings = "the|a|an";
+        public static string ShowSeriesFanart = "Show Fanart in Series View";
+
+        // Layouts
         public static string LayoutList = "List";
         public static string LayoutSmallIcons = "Small Icons";
         public static string LayoutWideBanners = "Wide Banners";
         public static string LayoutListBanners = "List Banners";
         public static string LayoutListPosters = "List Posters";
         public static string LayoutFilmstrip = "Filmstrip";
+
+        // Skin Controls
         public static string ButtonAutoPlay = "Auto Play";
         public static string ButtonSwitchView = "Switch View";
         public static string ButtonRunImport = "Run Import";
         public static string ButtonChangeLayout = "Change Layout";        
         public static string ButtonOptions = "Options";
-        public static string ButtonRandomFanart = "Random Fanart";
-        public static string ButtonToggleLayout = "Toggle Layout";
+        public static string ButtonRandomFanart = "Random Fanart";        
         public static string LabelResolution = "Resolution:";
         public static string LabelChosen = "Chosen:";
         public static string LabelDisabled = "Disabled:";
@@ -171,6 +178,7 @@ namespace WindowPlugins.GUITVSeries
         public static string CFS_Choose_Correct_Season = "Choose correct season";
         public static string CFS_Local_Season_Index = "Local Season index:";
         public static string CFS_Available_Seasons = "Available Seasons list:";
+        
         // ChooseYesNoDescriptor
         public static string CYN_Subtitle_File_Replace = "Subtitle File Replace";
         public static string CYN_Old_Subtitle_Replace = "Old subtitle File present: overwrite?";

@@ -71,12 +71,23 @@ namespace WindowPlugins.GUITVSeries
             fullhd
         }
 
+        public enum View
+        {
+            List = 0,
+            Icons = 1,
+            LargeIcons = 2,
+            FilmStrip = 3,
+            AlbumView = 4,
+            PlayList = 5
+        }
+
         const int windowID = 9812;
         int seriesID = -1;
         BackgroundWorker loadingWorker = null; // to fetch list and thumbnails
         public static BackgroundWorker downloadingWorker = new BackgroundWorker(); // to do the actual downloading
         static Queue<DBFanart> toDownload = new Queue<DBFanart>();
         int m_PreviousSelectedItem = -1;
+        private View currentView = View.LargeIcons;
 
         # region DownloadWorker
         static FanartChooser()
@@ -181,6 +192,12 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
         }
 
+        protected View CurrentView
+        {
+            get { return currentView; }
+            set { currentView = value; }
+        }
+
         protected override void OnPageLoad()
         {
             loadingWorker = new BackgroundWorker();            
@@ -192,16 +209,22 @@ namespace WindowPlugins.GUITVSeries
 
             if (m_Facade != null)
             {
-                m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
-            }
+                int defaultView = 2;
+                if (int.TryParse(DBOption.GetOptions(DBOption.cFanartCurrentView), out defaultView))
+                {
+                    m_Facade.View = (GUIFacadeControl.ViewMode)defaultView;
+                }
+                else                
+                    m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
+            }            
 
             base.OnPageLoad();
 
             // update skin controls
+            UpdateLayoutButton();
             if (labelResolution != null) labelResolution.Label = Translation.LabelResolution;
             if (labelChosen != null) labelChosen.Label = Translation.LabelChosen;
-            if (labelDisabled != null) labelDisabled.Label = Translation.LabelDisabled;
-            if (buttonLayouts != null) buttonLayouts.Label = Translation.ButtonToggleLayout;
+            if (labelDisabled != null) labelDisabled.Label = Translation.LabelDisabled;            
             if (buttonFilters != null) buttonFilters.Label = Translation.FanArtFilter;
             if (togglebuttonRandom != null)
             {
@@ -221,6 +244,46 @@ namespace WindowPlugins.GUITVSeries
 
             downloadingWorker.ProgressChanged += new ProgressChangedEventHandler(downloadingWorker_ProgressChanged);            
             
+        }
+
+        protected bool AllowView(View view)
+        {
+            if (view == View.List)
+                return false;
+
+            if (view == View.AlbumView)
+                return false;
+
+            if (view == View.PlayList)
+                return false;
+            
+            return true;
+        }
+
+        private void UpdateLayoutButton()
+        {
+            string strLine = string.Empty;
+            View view = CurrentView;
+            switch (view)
+            {
+                case View.List:
+                    strLine = GUILocalizeStrings.Get(101);
+                    break;
+                case View.Icons:
+                    strLine = GUILocalizeStrings.Get(100);
+                    break;
+                case View.LargeIcons:
+                    strLine = GUILocalizeStrings.Get(417);
+                    break;
+                case View.FilmStrip:
+                    strLine = GUILocalizeStrings.Get(733);
+                    break;
+                case View.PlayList:
+                    strLine = GUILocalizeStrings.Get(101);
+                    break;
+            }
+            if (buttonLayouts != null)
+                GUIControl.SetControlLabel(GetID, buttonLayouts.GetID, strLine);
         }
 
         private void ClearProperties()
@@ -259,7 +322,16 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Empty);
             TVSeriesPlugin.setGUIProperty("FanArt.Count", totalFanart.ToString());
 
-            if (totalFanart == 0) TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", Translation.FanArtNoneFound);
+            if (totalFanart == 0)
+            {
+                TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", Translation.FanArtNoneFound);
+                // Enable Filters button in case fanart is filtered
+                if (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) != "0" && buttonFilters != null)
+                {
+                    OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                    OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));                    
+                }
+            }
             totalFanart = 0;
 
             // Load the selected facade so it's not black by default
@@ -279,6 +351,8 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnPageDestroy(int new_windowId)
         {
+            DBOption.SetOptions(DBOption.cFanartCurrentView, (int)CurrentView);
+
             if (loadingWorker.IsBusy)
                 loadingWorker.CancelAsync();
             while (loadingWorker.IsBusy)
@@ -384,6 +458,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             selectedFanart.Chosen = true;
                             Fanart.RefreshFanart(SeriesID);
+                            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
                         }                        
                         break;
                     case (int)menuAction.optionRandom:
@@ -393,11 +468,15 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case (int)menuAction.disable:
                         selectedFanart.Disabled = true;
+                        selectedFanart.Chosen = false;
                         currentitem.Label = Translation.FanartDisableLabel;
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsDisabled", Translation.Yes);
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.No);
                         break;
                     case (int)menuAction.enable:
                         selectedFanart.Disabled = false;                        
                         currentitem.Label = Translation.FanArtLocal;
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsDisabled", Translation.No);
                         break;
                     case (int)menuAction.filters:
                         dlg.Reset();
@@ -449,6 +528,8 @@ namespace WindowPlugins.GUITVSeries
                 }
                 m_Facade.Clear();
                 DBFanart.ClearAll();
+                ClearProperties();
+
                 UpdateFilterProperty(false);
                 loadingWorker.RunWorkerAsync(SeriesID);                   
             }
@@ -519,16 +600,85 @@ namespace WindowPlugins.GUITVSeries
                 buttonFilters.Focus = false;
                 return;
             }
-            if (control == buttonLayouts)
-            {
-                buttonLayouts.Focus = false;
-                return;
-            }
+            
             if (control == togglebuttonRandom)
             {
                 DBOption.SetOptions(DBOption.cFanartRandom, togglebuttonRandom.Selected);
                 togglebuttonRandom.Focus = false;
                 return;
+            }
+
+            if (control == buttonLayouts)
+            {
+                bool shouldContinue = false;
+                do
+                {
+                    shouldContinue = false;
+                    switch (CurrentView)
+                    {
+                        case View.List:
+                            CurrentView = View.PlayList;
+                            if (!AllowView(CurrentView) || m_Facade.PlayListView == null)
+                            {
+                                shouldContinue = true;
+                            }
+                            else
+                            {
+                                m_Facade.View = GUIFacadeControl.ViewMode.Playlist;
+                            }
+                            break;
+
+                        case View.PlayList:
+                            CurrentView = View.Icons;
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
+                            {
+                                shouldContinue = true;
+                            }
+                            else
+                            {
+                                m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
+                            }
+                            break;
+
+                        case View.Icons:
+                            CurrentView = View.LargeIcons;
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
+                            {
+                                shouldContinue = true;
+                            }
+                            else
+                            {
+                                m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                            }
+                            break;
+
+                        case View.LargeIcons:
+                            CurrentView = View.FilmStrip;
+                            if (!AllowView(CurrentView) || m_Facade.FilmstripView == null)
+                            {
+                                shouldContinue = true;
+                            }
+                            else
+                            {
+                                m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                            }
+                            break;
+
+                        case View.FilmStrip:
+                            CurrentView = View.List;
+                            if (!AllowView(CurrentView) || m_Facade.ListView == null)
+                            {
+                                shouldContinue = true;
+                            }
+                            else
+                            {
+                                m_Facade.View = GUIFacadeControl.ViewMode.List;
+                            }
+                            break;
+                    }
+                } while (shouldContinue);
+                UpdateLayoutButton();
+                GUIControl.FocusControl(GetID, controlId);
             }
 
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
@@ -540,11 +690,12 @@ namespace WindowPlugins.GUITVSeries
                     if (chosen.isAvailableLocally)
                     {
                         // if we already have it, we simply set the chosen property (will itself "unchoose" all the others)
-                        chosen.Chosen = true;
+                        chosen.Chosen = true;                        
                         // ZF: be sure to update the list of downloaded data in the cache - otherwise the selected fanart won't show up for new fanarts until restarted
                         Fanart.RefreshFanart(SeriesID);
-                        // now it probably makes sense to just get back to tvseries itself, nothing more for the user to do here really
-                        GUIWindowManager.ShowPreviousWindow();
+                        // Now it probably makes sense to just get back to tvseries itself, nothing more for the user to do here really
+                        //GUIWindowManager.ShowPreviousWindow(); // Removed this as its quite annoying! Pressing Back is not that hard :)
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
                     }
                     else
                     {
