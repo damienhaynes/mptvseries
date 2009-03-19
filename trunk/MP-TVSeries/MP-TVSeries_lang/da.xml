@@ -123,7 +123,7 @@
 	<string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
 	<string Field="LayoutSmallIcons" Original="Small Icons">Små ikoner</string>
 	<string Field="ButtonAutoPlay" Original="Auto Play">Automatisk afspilning</string>
-	<string Field="ButtonSwitchView" Original="Switch Layout">Skift layout</string>
+	<string Field="ButtonSwitchView" Original="Switch View">Skift syn</string>
 	<string Field="ButtonRunImport" Original="Run Import">Kør import</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Ændre layout</string>
 	<string Field="ButtonOptions" Original="Options">Indstillinger</string>

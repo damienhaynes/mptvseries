@@ -338,17 +338,23 @@ namespace WindowPlugins.GUITVSeries
             if (m_Facade != null && m_Facade.SelectedListItem != null && m_Facade.SelectedListItem.TVTag != null)
             {
                 if (m_Facade.Count > m_PreviousSelectedItem)
-                    m_Facade.SelectedListItemIndex = m_PreviousSelectedItem;
-                
-                // Work around for dodgy Filmstrip
-                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                 {
-                    m_bQuickSelect = true;
-                    for (int i = 0; i < m_PreviousSelectedItem; i++)
-                    {                          
-                        OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                    if (m_PreviousSelectedItem <= 0)
+                        m_Facade.SelectedListItemIndex = 0;
+                    else
+                        m_Facade.SelectedListItemIndex = m_PreviousSelectedItem;                    
+
+                    // Work around for Filmstrip not allowing to programmatically select item
+                    if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                    {
+                        m_bQuickSelect = true;
+                        for (int i = 0; i < m_PreviousSelectedItem; i++)
+                        {
+                            OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
+                        }
+                        m_bQuickSelect = false;
                     }
-                    m_bQuickSelect = false;
+                    m_PreviousSelectedItem = -1;
                 }
 
                 DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
