@@ -3074,6 +3074,7 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
             
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
