@@ -124,7 +124,7 @@
 	<string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
 	<string Field="LayoutSmallIcons" Original="Small Icons">Small Icons</string>
 	<string Field="ButtonAutoPlay" Original="Auto Play">Auto Play</string>
-	<string Field="ButtonSwitchView" Original="Switch Layout">Switch Layout</string>
+	<string Field="ButtonSwitchView" Original="Switch View">Switch View</string>
 	<string Field="ButtonRunImport" Original="Run Import">Run Import</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Change Layout</string>
 	<string Field="ButtonOptions" Original="Options">Options</string>	
