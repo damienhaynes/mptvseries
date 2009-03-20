@@ -351,10 +351,12 @@ namespace WindowPlugins.GUITVSeries
                     long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
                     double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
-                    
+
+                    MPTVSeriesLog.Write(bigLogMessage("Processing Updates from online DB"));
+
                     Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
-                    if (sinceLastUpdate < 3600 * 24)
-                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
+                    if (sinceLastUpdate < 3600 * 24)         
+                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;         
                     else if (sinceLastUpdate < 3600 * 24 * 7)
                         uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
                     else if (sinceLastUpdate < 3600 * 24 * 30)
@@ -884,87 +886,90 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Series"));
                 // and that already had data imported from the online DB (but not the new ones, that are set to 2)
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, SQLConditionType.Equal);
-                //nUpdateSeriesTimeStamp = (long)DBOption.GetOptions(DBOption.cUpdateSeriesTimeStamp);
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, SQLConditionType.Equal);                
             }
             List<DBSeries> SeriesList = DBSeries.Get(condition, false, false);
 
             if (!bUpdateNewSeries && SeriesList.Count > 0)
             {
-
                 // let's check which of these we have any interest in
                 for (int i = 0; i < SeriesList.Count; i++)
+                {
                     if (!seriesUpdated.Contains(SeriesList[i][DBSeries.cID]))
                     {
                         SeriesList.RemoveAt(i);
                         i--;
                     }
-            }
-
-            if (SeriesList.Count > 0)
-            {
-                MPTVSeriesLog.Write(string.Format("{0} metadata of {1} Series", (bUpdateNewSeries ? "Retrieving" : "Looking for updated"), SeriesList.Count));
-
-                UpdateSeries UpdateSeriesParser = new UpdateSeries(generateIDListOfString(SeriesList, DBSeries.cID));
-
-                if (UpdateSeriesParser.Results.Count == 0)
-                    MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewSeries ? "metadata" : "updates")));
-
-                foreach (DBOnlineSeries updatedSeries in UpdateSeriesParser.Results)
-                {
-                    m_bDataUpdated = true;
-                    if (worker.CancellationPending)
-                        return;
-
-                    MPTVSeriesLog.Write(string.Format("Metadata {0} for \"{1}\"", (bUpdateNewSeries ? "retrieved" : "updated"), updatedSeries.ToString()));
-                    // find the corresponding series in our list
-                    foreach (DBSeries localSeries in SeriesList)
-                    {
-                        if (localSeries[DBSeries.cID] == updatedSeries[DBSeries.cID])
-                        {
-                            // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
-                            foreach (String key in updatedSeries.FieldNames)
-                            {
-                                switch (key)
-                                {
-                                    // do not overwrite current series local settings with the one from the online series (baaaad design??)
-                                    case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
-                                    case DBOnlineSeries.cHasLocalFiles:
-                                    case DBOnlineSeries.cHasLocalFilesTemp:
-                                    case DBOnlineSeries.cIsFavourite:                                    
-                                    case DBOnlineSeries.cChoseEpisodeOrder:
-
-                                    case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
-                                    case DBOnlineSeries.cPosterFileNames:
-                                    case DBOnlineSeries.cCurrentBannerFileName:
-                                    case DBOnlineSeries.cCurrentPosterFileName:
-                                    case DBOnlineSeries.cMyRating:
-                                        break;
-                                    case DBOnlineSeries.cEpisodeOrders:
-                                        if(bUpdateNewSeries) goto default;
-                                        break;
-                                    default:
-                                        localSeries.AddColumn(key, new DBField(DBField.cTypeString));
-                                        localSeries[key] = updatedSeries[key];
-                                        break;
-                                }
-                            }
-
-                            // diff. order options
-                            if (bUpdateNewSeries) determineOrderOption(localSeries);                            
-
-                            // data import completed; set to 2 (data up to date)
-                            localSeries[DBOnlineSeries.cOnlineDataImported] = 2;
-
-                            if (localSeries[DBOnlineSeries.cHasLocalFilesTemp])
-                                localSeries[DBOnlineSeries.cHasLocalFiles] = 1;
-                            localSeries.Commit();
-                            //                        SeriesList.Remove(localSeries);
-                        }
-                    }
                 }
             }
-            else MPTVSeriesLog.Write("Nothing to do");
+
+            if (SeriesList.Count == 0)
+            {
+                MPTVSeriesLog.Write("Nothing to do");
+                return;
+            }
+          
+            MPTVSeriesLog.Write(string.Format("{0} metadata of {1} Series", (bUpdateNewSeries ? "Retrieving" : "Looking for updated"), SeriesList.Count));
+
+            UpdateSeries UpdateSeriesParser = new UpdateSeries(generateIDListOfString(SeriesList, DBSeries.cID));
+
+            if (UpdateSeriesParser.Results.Count == 0)
+                MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewSeries ? "metadata" : "updates")));
+
+            foreach (DBOnlineSeries updatedSeries in UpdateSeriesParser.Results)
+            {
+                m_bDataUpdated = true;
+                if (worker.CancellationPending)
+                    return;
+
+                MPTVSeriesLog.Write(string.Format("Metadata {0} for \"{1}\"", (bUpdateNewSeries ? "retrieved" : "updated"), updatedSeries.ToString()));
+                // find the corresponding series in our list
+                foreach (DBSeries localSeries in SeriesList)
+                {
+                    if (localSeries[DBSeries.cID] == updatedSeries[DBSeries.cID])
+                    {
+                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        foreach (String key in updatedSeries.FieldNames)
+                        {
+                            switch (key)
+                            {
+                                // do not overwrite current series local settings with the one from the online series (baaaad design??)
+                                case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
+                                case DBOnlineSeries.cHasLocalFiles:
+                                case DBOnlineSeries.cHasLocalFilesTemp:
+                                case DBOnlineSeries.cIsFavourite:                                    
+                                case DBOnlineSeries.cChoseEpisodeOrder:
+
+                                case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
+                                case DBOnlineSeries.cPosterFileNames:
+                                case DBOnlineSeries.cCurrentBannerFileName:
+                                case DBOnlineSeries.cCurrentPosterFileName:
+                                case DBOnlineSeries.cMyRating:
+                                    break;
+                                case DBOnlineSeries.cEpisodeOrders:
+                                    if(bUpdateNewSeries) goto default;
+                                    break;
+                                default:
+                                    localSeries.AddColumn(key, new DBField(DBField.cTypeString));
+                                    localSeries[key] = updatedSeries[key];
+                                    break;
+                            }
+                        }
+
+                        // diff. order options
+                        if (bUpdateNewSeries) 
+                            determineOrderOption(localSeries);                            
+
+                        // data import completed; set to 2 (data up to date)
+                        localSeries[DBOnlineSeries.cOnlineDataImported] = 2;
+
+                        if (localSeries[DBOnlineSeries.cHasLocalFilesTemp])
+                            localSeries[DBOnlineSeries.cHasLocalFiles] = 1;
+                        
+                        localSeries.Commit();                        
+                    }
+                }
+            }           
         }
 
         public void GetEpisodes()
@@ -990,6 +995,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_bFullSeriesRetrieval && m_params.m_bUpdateScan)
                 MPTVSeriesLog.Write("Mode: Get all Episodes of Series");
 
+            int epCount = 0;
             foreach (DBSeries series in seriesList)
             {
                 List<DBEpisode> episodesList = null;
@@ -999,7 +1005,9 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);                    
                 episodesList = DBEpisode.Get(conditions, false);
-            
+
+                epCount += episodesList.Count;
+
                 if (m_bFullSeriesRetrieval || episodesList.Count > 0)
                 {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
@@ -1078,6 +1086,8 @@ namespace WindowPlugins.GUITVSeries
                     }                    
                 }
             }
+            if (epCount == 0)
+                MPTVSeriesLog.Write("No new episodes identified");
         }
 
         public void UpdateEpisodes(List<DBValue> episodesUpdated)

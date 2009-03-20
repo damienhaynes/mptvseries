@@ -22,10 +22,15 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         public GetUpdates(OnlineAPI.UpdateType type)
         {
+            if (type != OnlineAPI.UpdateType.all)
+                MPTVSeriesLog.Write(string.Format("Downloading updates from the last {0}", type.ToString()));
+            else
+                MPTVSeriesLog.Write("Downloading all updates");
+
             XmlNode updates = OnlineAPI.Updates(type);
             if (updates == null)
                 return;
-
+       
             long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
             
             XmlNodeList nodelist = updates.ChildNodes;
