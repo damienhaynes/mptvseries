@@ -90,7 +90,7 @@
           <align>left</align>
           <textcolor>20ffffff</textcolor>
           <label>#currentplaytime</label>
-           <visible>!Control.HasFocus(50)+player.hasmedia</visible>
+          <visible>!Control.HasFocus(50)+player.hasmedia</visible>
         </control>
         <control>
           <description>Progress background</description>

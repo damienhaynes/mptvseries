@@ -122,6 +122,7 @@
 <Enabled>1<Format>A_AAC/MPEG4/LC/SBR<FormatAs>AAC
 <Enabled>1<Format>A_AAC<FormatAs>AAC
 <Enabled>1<Format>A_AC3<FormatAs>AC3
+<Enabled>1<Format><Episode.RatingPath><FormatAs>TVSeries\starEval(10*Round(<Episode.Rating>*2)/2).png
 <Enabled>1<Format><Series.RatingPath><FormatAs>TVSeries\starEval(10*Round(<Series.Rating>*2)/2).png           
 <Enabled>1<Format>SeriesCol2<FormatAs><Series.EpisodesUnWatched>
 <Enabled>1<Format>SeasonCol2<FormatAs><Season.EpisodesUnWatched>
