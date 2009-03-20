@@ -4,7 +4,7 @@
   <id>9811</id>
   <defaultcontrol>50</defaultcontrol>
   <allowoverlay>yes</allowoverlay>
-  <define>#header.label:#TVSeries.CurrentView</define>
+  <define>#header.label:#TVSeries.SimpleCurrentView</define>
   <define>#header.image:tvseries_logo.png</define>
   <define>#header.hover:-</define>
 
@@ -14,36 +14,50 @@
 	<import>TVSeries.dummy.xml</import>
 
   <!-- ********************** BACKGROUNDS************************************** -->
-		<control>
-			<description>Fan Art Image</description>
-			<type>image</type>
-			<id>524</id>
-			<posX>0</posX>
-			<posY>0</posY>
-			<width>1024</width>
-			<height>576</height>
-			<texture>#TVSeries.Fanart</texture>
-			<colordiffuse>50fefaff</colordiffuse>
-			<animation effect="fade" start="0" end="100" time="3000">WindowOpen</animation>
-			<animation effect="fade" start="0" end="100" time="200">Visible</animation>
-			<animation effect="fade" start="100" end="0" time="200" delay="200">Hidden</animation>
-		</control>
-		<control>
-			<description>Fanart Background #2</description>
-			<type>image</type>
-			<id>525</id>
-			<posX>0</posX>
-			<posY>0</posY>
-			<width>1024</width>
-			<height>576</height>
-			<texture>#TVSeries.Fanart2</texture>
-			<colordiffuse>50fefaff</colordiffuse>
-			<animation effect="fade" start="0" end="100" time="200">Visible</animation>
-			<animation effect="fade" start="100" end="0" time="200" delay="200">Hidden</animation>
-			<!-- Do not modify the visibility for this component. It is handled by the plug-in. Use the above 
-			  defines for conditional visibility if you dont want to use fan-art only specific views. -->
-		</control>
-
+	<control>
+		<description>Fan Art Image</description>
+		<type>image</type>
+		<id>524</id>
+		<posX>0</posX>
+		<posY>0</posY>
+		<width>1024</width>
+		<height>576</height>
+		<texture>#TVSeries.Fanart</texture>
+		<colordiffuse>50fefaff</colordiffuse>
+		<animation effect="fade" start="0" end="100" time="3000">WindowOpen</animation>
+		<animation effect="fade" start="0" end="100" time="200">Visible</animation>
+		<animation effect="fade" start="100" end="0" time="200" delay="200">Hidden</animation>
+	</control>
+	<control>
+		<description>Fanart Background #2</description>
+		<type>image</type>
+		<id>525</id>
+		<posX>0</posX>
+		<posY>0</posY>
+		<width>1024</width>
+		<height>576</height>
+		<texture>#TVSeries.Fanart2</texture>
+		<colordiffuse>50fefaff</colordiffuse>
+		<animation effect="fade" start="0" end="100" time="200">Visible</animation>
+		<animation effect="fade" start="100" end="0" time="200" delay="200">Hidden</animation>
+		<!-- Do not modify the visibility for this component. It is handled by the plug-in. Use the above 
+		  defines for conditional visibility if you dont want to use fan-art only specific views. -->
+	</control>
+	
+	<!-- Series Rating -->
+	<control>
+      <description>Series Rating</description>
+      <type>image</type>
+      <id>0</id>
+      <posX>300</posX>
+      <posY>20</posY>
+      <height>20</height>
+      <width>180</width>
+   	  <keepaspectratio>yes</keepaspectratio>	  
+      <texture>#TVSeries.Series.RatingPath</texture>
+      <visible>Control.IsVisible(1237)</visible>
+    </control>
+	
 	<!-- Bottom info panel  in Series WideBanner Layout -->
 	<control>
 		<description>group element</description>
@@ -103,7 +117,7 @@
 		<height>442</height>
 		<texture>#TVSeries.SeriesBanner</texture>
 		<visible>[Control.IsVisible(1237)|Control.IsVisible(1238)]+Control.IsVisible(1235)+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
-    </control>
+    </control>	
 	<!-- Season View List Layout -->
 	<control>
 		<type>image</type>
@@ -181,6 +195,7 @@
 			<label>#TVSeries.Description</label>
 		</control>
 		<control>
+		    <id>0</id>
 			<label>#TVSeries.Series.InfoPanelLine1Key:</label>
 			<type>fadelabel</type>
 			<posX>120</posX>
@@ -188,6 +203,7 @@
 			<align>right</align>
 		</control>
 		<control>
+		    <id>0</id>		
 			<label>#TVSeries.Series.InfoPanelLine1Value</label>
 			<type>fadelabel</type>
 			<posX>125</posX>
@@ -197,6 +213,7 @@
 			<width>195</width>
 		</control>
 		<control>
+		  <id>0</id>				
 		  <label>#TVSeries.Series.InfoPanelLine2Key:</label>
 		  <type>fadelabel</type>
 		  <posX>120</posX>
@@ -204,6 +221,7 @@
 		  <align>right</align>
 		</control>
 		<control>
+		  <id>0</id>
 		  <label>#TVSeries.Series.InfoPanelLine2Value</label>
 		  <type>fadelabel</type>
 		  <posX>125</posX>
@@ -211,6 +229,7 @@
 		  <align>left</align>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Key:</label>
 		  <type>fadelabel</type>
 		  <posX>120</posX>
@@ -218,6 +237,7 @@
 		  <align>right</align>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Value</label>
 		  <type>fadelabel</type>
 		  <posX>125</posX>
@@ -225,6 +245,7 @@
 		  <align>left</align>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine7Value</label>
 		  <type>fadelabel</type>
 		  <posX>185</posX>
@@ -275,13 +296,25 @@
       <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
     </control>
 	<control>
+      <description>Episode Rating</description>
+      <type>image</type>
+      <id>0</id>
+      <posX>35</posX>
+      <posY>300</posY>
+      <height>20</height>
+      <width>180</width>
+   	  <keepaspectratio>yes</keepaspectratio>	  
+      <texture>#TVSeries.Episode.RatingPath</texture>
+      <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+    </control>
+	<control>
 		<type>textboxscrollup</type>
 		<description>Description of episode</description>
 		<id>631</id>
 		<posX>37</posX>
-		<posY>305</posY>
+		<posY>320</posY>
 		<width>300</width>
-		<height>200</height>
+		<height>180</height>
 		<seperator>----------------------------------------------------------------------</seperator>
 		<dimColor>ff000000</dimColor>
 		<textcolor>d4d2d2</textcolor>
@@ -557,6 +590,16 @@
 				<onleft>50</onleft>
 	            <onright>50</onright>
 	            <onup>2</onup>
+				<ondown>5</ondown>
+			</control>
+			<control>
+	            <description>Run Import</description>
+	            <type>button</type>
+	            <id>5</id>
+	            <label>Run Import</label>
+				<onleft>50</onleft>
+	            <onright>50</onright>
+	            <onup>3</onup>
 				<ondown>20</ondown>
 			</control>
 			<control>
@@ -568,7 +611,7 @@
 				<onleft>50</onleft>
 	            <onright>50</onright>
 	            <ondown>9</ondown>
-	            <onup>3</onup>
+	            <onup>5</onup>
 			</control>	
 			<control>
 	            <description>My Playlists</description>
@@ -668,12 +711,14 @@
 			<label>#TVSeries.Description</label>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine1Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>450</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine1Value</label>
 		  <type>fadelabel</type>
 		  <posX>465</posX>
@@ -681,30 +726,35 @@
 		  <width>230</width>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine2Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>475</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine2Value</label>
 		  <type>fadelabel</type>
 		  <posX>500</posX>
 		  <posY>475</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>500</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Value</label>
 		  <type>fadelabel</type>
 		  <posX>455</posX>
 		  <posY>500</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine7Value</label>
 		  <type>fadelabel</type>
 		  <posX>530</posX>
@@ -762,12 +812,14 @@
 			<label>#TVSeries.Description</label>
 		</control>
 		<control>
+		  <id>0</id>
 		  <label>#TVSeries.Series.InfoPanelLine1Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>450</posY>
 		</control>
 		<control>
+		  <id>0</id>
 		  <label>#TVSeries.Series.InfoPanelLine1Value</label>
 		  <type>fadelabel</type>
 		  <posX>465</posX>
@@ -775,30 +827,35 @@
 		  <width>230</width>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine2Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>475</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine2Value</label>
 		  <type>fadelabel</type>
 		  <posX>500</posX>
 		  <posY>475</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Key</label>
 		  <type>fadelabel</type>
 		  <posX>410</posX>
 		  <posY>500</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine8Value</label>
 		  <type>fadelabel</type>
 		  <posX>455</posX>
 		  <posY>500</posY>
 		</control>
 		<control>
+		  <id>0</id>		
 		  <label>#TVSeries.Series.InfoPanelLine7Value</label>
 		  <type>fadelabel</type>
 		  <posX>530</posX>

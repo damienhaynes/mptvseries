@@ -31,18 +31,19 @@
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
-    <control>
+    <!--<control>
       <description>Number of Files Label</description>
       <type>label</type>
       <id>1</id>
-      <posX>260</posX>
-      <posY>530</posY>
-      <label>#itemcount</label>
+      <posX>365</posX>
+      <posY>545</posY>
+      <label>Series: #TVSeries.SeriesCount</label>
       <align>left</align>
       <textcolor>White</textcolor>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-    </control>
+	  <visible>Control.IsVisible(1235)+Control.IsVisible(1237)</visible>
+    </control>-->
     <control>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
@@ -55,7 +56,7 @@
       <texture>#header.hover</texture>
       <visible>!videoplayer.usingoverlays</visible>
       <animation effect="slide" time="350" end="-300,0">hidden</animation>
-        <animation effect="slide" time="450" start="-300,0">visible</animation>
+      <animation effect="slide" time="450" start="-300,0">visible</animation>
     </control>
   </controls>
 </window>

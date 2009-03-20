@@ -4462,7 +4462,6 @@ namespace WindowPlugins.GUITVSeries
             GUIWindowManager.ActivateWindow(TVSeriesPlaylist.GetID, false);
         }
 
-
         protected void AddItemToPlayList()
         {
             if (_playlistPlayer == null)
