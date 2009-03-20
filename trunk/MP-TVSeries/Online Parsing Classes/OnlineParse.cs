@@ -1297,16 +1297,18 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
                                         episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
-                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
+                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";                                        
                                     }
-                                    webClient.DownloadFile(url, completePath);
-
-                                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
-                                    episode.Commit();
+                                    else
+                                    {
+                                        webClient.DownloadFile(url, completePath);
+                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;                                        
+                                    }
+                                    episode.Commit();                                
                                 }
                                 catch (System.Net.WebException)
                                 {
-                                    MPTVSeriesLog.Write("Episode Thumbnail download failed (" + episode[DBOnlineEpisode.cEpisodeThumbnailFilename] + ")");
+                                    MPTVSeriesLog.Write("Episode Thumbnail download failed ( " + sThumbNailFilename + " )");
                                 }
                             }
                         }
