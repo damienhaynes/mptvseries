@@ -271,6 +271,9 @@ namespace WindowPlugins.GUITVSeries
 
             public void AddRaw(int key, S subItem)
             {
+                if (subItem == null)
+                    return;
+
                 if (!subItems.ContainsKey(key))
                 {
                     subItems.Add(key, subItem);
@@ -282,6 +285,9 @@ namespace WindowPlugins.GUITVSeries
 
             public void Add(int key, M subItem)
             {
+                if (subItem == null)
+                    return;
+
                 if (!subItems.ContainsKey(key))
                 {
                     S rawsubItem = new S();
