@@ -1263,13 +1263,12 @@ namespace WindowPlugins.GUITVSeries
                         if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
                         {
                             tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                        }
-                        
-                        // Create different filename for different orders, this will ensure that correct thumbnail is viewed                            
-                        string orderIdentifier = ".jpg";
+                        }                       
 
                         if (tmpSeries != null)
                         {
+                            // Create different filename for different orders, this will ensure that correct thumbnail is viewed                            
+                            string orderIdentifier = ".jpg";
                             string order = tmpSeries[DBOnlineSeries.cChoseEpisodeOrder];
 
                             if (Helper.String.IsNullOrEmpty(order) || order == "Aired")
@@ -1288,10 +1287,10 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
+                                string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
                                 try
                                 {
-                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));
-                                    string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
+                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));                                    
                                     // Determine if a thumbnail
                                     if (!url.Contains(".jpg"))
                                     {
@@ -1308,7 +1307,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 catch (System.Net.WebException)
                                 {
-                                    MPTVSeriesLog.Write("Episode Thumbnail download failed ( " + sThumbNailFilename + " )");
+                                    MPTVSeriesLog.Write("Episode Thumbnail download failed ( " + url + " )");
                                 }
                             }
                         }
