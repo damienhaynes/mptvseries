@@ -233,7 +233,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         foreach (DBFanart f in _faInDB)
                         {
-                            if (f.Chosen && f.isAvailableLocally)
+                            if (f.Chosen && f.isAvailableLocally && !f.Disabled)
                             {
                                 _dbchosenfanart = f;
                                 break;
@@ -246,7 +246,7 @@ namespace WindowPlugins.GUITVSeries
                             foreach (DBFanart f in _faInDB)
                             {
                                 // Checking if available will also remove from database if not
-                                if (f.isAvailableLocally)
+                                if (f.isAvailableLocally && !f.Disabled)
                                 {
                                     _dbchosenfanart = f;
                                     break;

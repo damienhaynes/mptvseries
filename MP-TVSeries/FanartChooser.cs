@@ -411,13 +411,13 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // if we are not random, we can choose available fanart
-                    if (selectedFanart.isAvailableLocally)
+                    if (selectedFanart.isAvailableLocally && !selectedFanart.Disabled)
                     {
                         pItem = new GUIListItem(Translation.FanArtUse);
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.use;
                     }
-                    else
+                    else if (!selectedFanart.isAvailableLocally)
                     {
                         pItem = new GUIListItem(Translation.FanArtGet);
                         dlg.Add(pItem);
@@ -723,7 +723,7 @@ namespace WindowPlugins.GUITVSeries
                 DBFanart chosen;
                 if ((chosen = this.m_Facade.SelectedListItem.TVTag as DBFanart) != null)
                 {
-                    if (chosen.isAvailableLocally)
+                    if (chosen.isAvailableLocally && !chosen.Disabled)
                     {
                         // if we already have it, we simply set the chosen property (will itself "unchoose" all the others)
                         chosen.Chosen = true;                        
@@ -733,7 +733,7 @@ namespace WindowPlugins.GUITVSeries
                         //GUIWindowManager.ShowPreviousWindow(); // Removed this as its quite annoying! Pressing Back is not that hard :)
                         TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
                     }
-                    else
+                    else if (!chosen.isAvailableLocally)
                     {
                         downloadFanart(chosen);
                     }
