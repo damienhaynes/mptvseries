@@ -1247,10 +1247,21 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"));
                 
                 // get a list of all the episodes with thumbnailUrl
-                SQLCondition condition = new SQLCondition();                
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, ".jpg", SQLConditionType.Like);
-                condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
-                List<DBEpisode> episodes = DBEpisode.Get(condition);
+                //SQLCondition condition = new SQLCondition();                
+                //condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);                
+                //condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+                //List<DBEpisode> episodes = DBEpisode.Get(condition);
+                
+                // Get all online episodes that have a image but not yet downloaded                
+                string query = string.Empty;                
+                if (Settings.isConfig)
+                    // Be more thorough in configuration, user may have deleted thumbs locally
+                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                else
+                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+
+                List<DBEpisode> episodes = DBEpisode.Get(query);
+
                 DBSeries tmpSeries = null; 
                 foreach (DBEpisode episode in episodes)
                 {
@@ -1264,7 +1275,7 @@ namespace WindowPlugins.GUITVSeries
                         if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
                         {
                             tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                        }                       
+                        }
 
                         if (tmpSeries != null)
                         {
@@ -1291,32 +1302,38 @@ namespace WindowPlugins.GUITVSeries
                                 string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
                                 try
                                 {
-                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));                                    
+                                    Directory.CreateDirectory(Path.GetDirectoryName(completePath));
                                     // Determine if a thumbnail
                                     if (!url.Contains(".jpg"))
                                     {
                                         MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
                                         episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
-                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";                                        
+                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
                                     }
                                     else
                                     {
-                                        webClient.DownloadFile(url, completePath);
-                                        episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;                                        
+                                        webClient.DownloadFile(url, completePath);                                        
                                     }
-                                    episode.Commit();                                
+                                    episode.Commit();
                                 }
                                 catch (System.Net.WebException)
                                 {
                                     MPTVSeriesLog.Write("Episode Thumbnail download failed ( " + url + " )");
+                                    sThumbNailFilename = "";                                    
+                                    // try to delete file if it exists on disk. maybe download was cut short. Re-download next time
+                                    try { System.IO.File.Delete(completePath); }
+                                    catch { }
                                 }
-                            }
-                        }
+                            }                                                                                                
+                        }    
                     }
                     catch (Exception ex)
                     {
                         MPTVSeriesLog.Write(string.Format("There was a problem getting the episode image: {0}", ex.Message));
-                    }                                   
+                        sThumbNailFilename = "";
+                    }
+                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = sThumbNailFilename;
+                    episode.Commit();
                 }
             }
         }

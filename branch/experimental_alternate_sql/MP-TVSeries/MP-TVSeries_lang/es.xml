@@ -117,4 +117,24 @@
   <string Field="FanartDisableLabel" Original="Disabled">Desactivado</string>
   <string Field="FanartMenuEnable" Original="Enable">Activar Fanart</string>
   <string Field="FanartMenuDisable" Original="Disable">Desactivar Fanart</string>
+  <string Field="SortByStrings" Original="SortByStrings">the|a|an</string>
+  <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string Field="LayoutList" Original="List">Lista</string>
+  <string Field="LayoutListBanners" Original="List Banners">Lista de Banners</string>
+  <string Field="LayoutListPosters" Original="List Posters">Lista de Posters</string>
+  <string Field="LayoutWideBanners" Original="Wide Banners">Banners Anchos</string>
+  <string Field="LayoutFilmstrip" Original="Filmstrip">Diapositivas</string>
+  <string Field="LayoutSmallIcons" Original="Small Icons">Iconos Pequeños</string>
+  <string Field="ButtonAutoPlay" Original="Auto Play">Reproducción Automática</string>
+  <string Field="ButtonSwitchView" Original="Switch Layout">Conmutar Diseño</string>
+  <string Field="ButtonRunImport" Original="Run Import">Comenzar Importación</string>
+  <string Field="ButtonChangeLayout" Original="Change Layout">Cambiar Diseño</string>
+  <string Field="ButtonOptions" Original="Options">Opciones</string>
+  <string Field="FanArtFilter" Original="Filter">Fitro</string>
+  <string Field="FanArtFilterAll" Original="All">Todo</string>
+  <string Field="ButtonRandomFanart" Original="Random Fanart">Fanart Aleatorio</string>
+  <string Field="LabelResolution" Original="Resolution:">Resolución:</string>
+  <string Field="LabelChosen" Original="Chosen:">Preferido:</string>
+  <string Field="LabelDisabled" Original="Disabled:">Desactivado:</string>
+  <string Field="ResetUserSelections" Original="Reset User Selections">Anular Selecciones de Usuario</string>
 </strings>
