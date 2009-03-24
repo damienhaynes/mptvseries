@@ -1187,7 +1187,7 @@ namespace WindowPlugins.GUITVSeries
             //builder.Add("USER ID", "sa");                       //username
             //builder.Add("Password", "mediaportal");             //password
             //builder.Add("Initial Catalog", "MpTvSeriesDb4");    //database name
-            //builder.Add("Data Source", "Media\\SQLEXPRESS");    //computer name
+            //builder.Add("Data Source", @"Media\SQLEXPRESS");    //computer name
             //builder.Add("Connection Timeout", 300);
 
             m_sConnectionString = connectionString;

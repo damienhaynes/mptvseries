@@ -876,7 +876,7 @@ namespace WindowPlugins.GUITVSeries
                       ? conditions.orderString
                       : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
             }
-            return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
+            return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + " = " + DBOnlineSeries.Q(cID)
                              + conds
                              + orderBy
                              + conditions.limitString;

@@ -60,8 +60,8 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
-            AddColumn(cReplace, new DBField(DBField.cTypeString, 100));
-            AddColumn(cWith, new DBField(DBField.cTypeString, 100));
+            AddColumn(cReplace, new DBField(DBField.cTypeString));
+            AddColumn(cWith, new DBField(DBField.cTypeString));
         }
 
         public static void ClearAll()
