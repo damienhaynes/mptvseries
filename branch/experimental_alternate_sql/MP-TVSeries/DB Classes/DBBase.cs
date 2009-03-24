@@ -512,8 +512,12 @@ namespace WindowPlugins.GUITVSeries
                 try {
                     field.Value.Value = row[field.Key].ToString();
                 } catch (ArgumentException) {
-                    // we have a column in mfields that is not in the database result (or null), as such it is to be empty
-                    field.Value.Value = string.Empty;
+                    try {
+                        field.Value.Value = row[string.Format("{0}.{1}", m_tableName, field.Key)].ToString();
+                    } catch (ArgumentException) {
+                        // we have a column in mfields that is not in the database result (or null), as such it is to be empty
+                        field.Value.Value = string.Empty;
+                    }
                 }
             }
             m_CommitNeeded = false;
@@ -1097,7 +1101,9 @@ namespace WindowPlugins.GUITVSeries
         {
             DbProviderFactory factory = System.Data.SQLite.SQLiteFactory.Instance;
             using (DbConnection connection = factory.CreateConnection()) {
+                connection.ConnectionString = sConnectionString;
                 try {
+                    connection.Open();
                     using (DbCommand command = connection.CreateCommand()) {
                         command.CommandText = "PRAGMA cache_size=5000;";        // Each page uses about 1.5K of memory
                         command.ExecuteNonQuery();
@@ -1119,7 +1125,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     using (DbCommand command = connection.CreateCommand()) {
-                        command.CommandText = "PRAGMA short_column_names=0;";
+                        command.CommandText = "PRAGMA short_column_names=1;";
                         command.ExecuteNonQuery();
                     }
 
@@ -1176,15 +1182,15 @@ namespace WindowPlugins.GUITVSeries
     {
         public SQLClientProvider(string connectionString)
         {
-            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            builder.Add("Password", "mediaportal");
-            builder.Add("Persist Security Info", true);
-            builder.Add("USER ID", "sa");
-            builder.Add("Initial Catalog", "MpTvSeriesDb4");
-            builder.Add("Data Source", "Media\\SQLEXPRESS");
-            builder.Add("Connection Timeout", 300);
+            //DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            //builder.Add("Persist Security Info", true);
+            //builder.Add("USER ID", "sa");                       //username
+            //builder.Add("Password", "mediaportal");             //password
+            //builder.Add("Initial Catalog", "MpTvSeriesDb4");    //database name
+            //builder.Add("Data Source", "Media\\SQLEXPRESS");    //computer name
+            //builder.Add("Connection Timeout", 300);
 
-            m_sConnectionString = builder.ConnectionString;
+            m_sConnectionString = connectionString;
         }
 
         public override string sProviderName
@@ -1378,10 +1384,11 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public static DataTable Execute(String sCommand)
         {
-            DataTable result = null;
+            DataTable result = new DataTable();
             using (DbConnection connection = GetConnection()) {
                 try {
                     MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
+                    connection.Open();
                     using (DbCommand command = connection.CreateCommand()) {
                         command.CommandText = sCommand;
                         using (DbDataReader reader = command.ExecuteReader()) {

@@ -992,17 +992,15 @@ namespace WindowPlugins.GUITVSeries
         public static List<DBEpisode> Get(string query)
         {
             DataTable results = DBTVSeries.Execute(query);
-            List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
-            {
-                for (int index = 0; index < results.Rows.Count; index++)
-                {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(results.Rows[index], results.Columns);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index], results.Columns);
-                    outList.Add(episode);
-                }
+            List<DBEpisode> outList = new List<DBEpisode>(results.Rows.Count);
+            DBEpisode episode = null;
+
+            for (int index = 0; index < results.Rows.Count; index++) {
+                episode = new DBEpisode();
+                episode.Read(results.Rows[index], results.Columns);
+                episode.m_onlineEpisode = new DBOnlineEpisode();
+                episode.m_onlineEpisode.Read(results.Rows[index], results.Columns);
+                outList.Add(episode);
             }
             return outList;
         }

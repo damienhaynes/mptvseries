@@ -1659,7 +1659,7 @@ namespace WindowPlugins.GUITVSeries
                 // Apply to local database
                 item[type] = dlg.SelectedId;
                 // Set the all user rating if not already set                
-                if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
+                if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == " ")
                     item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = dlg.SelectedId;
 
                 item.Commit();
