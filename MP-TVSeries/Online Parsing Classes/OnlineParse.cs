@@ -1251,8 +1251,16 @@ namespace WindowPlugins.GUITVSeries
                 //condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
                 //List<DBEpisode> episodes = DBEpisode.Get(condition);
                 
-                // Get all online episodes that have a image but not yet downloaded
-                List<DBEpisode> episodes = DBEpisode.Get("select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc");
+                // Get all online episodes that have a image but not yet downloaded                
+                string query = string.Empty;                
+                if (Settings.isConfig)
+                    // Be more thorough in configuration, user may have deleted thumbs locally
+                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                else
+                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+
+                List<DBEpisode> episodes = DBEpisode.Get(query);
+
                 DBSeries tmpSeries = null; 
                 foreach (DBEpisode episode in episodes)
                 {
