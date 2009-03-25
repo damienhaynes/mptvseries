@@ -112,7 +112,7 @@
             this.textBox_server.Name = "textBox_server";
             this.textBox_server.Size = new System.Drawing.Size(310, 20);
             this.textBox_server.TabIndex = 5;
-            this.textBox_server.Text = "(localhost)";
+            this.textBox_server.Text = "localhost\\SQLEXPRESS";
             this.textBox_server.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_database
@@ -219,7 +219,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.textBox_dblocation);
             this.groupBox1.Controls.Add(this.button_dbbrowse);
             this.groupBox1.Controls.Add(this.label28);
@@ -232,11 +231,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 28);
+            this.label5.Location = new System.Drawing.Point(202, 14);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(81, 13);
+            this.label5.Size = new System.Drawing.Size(255, 13);
             this.label5.TabIndex = 1;
-            this.label5.Text = "(restart needed)";
+            this.label5.Text = "(All changes made on this dialog will require a restart)";
             // 
             // groupBox2
             // 
@@ -261,6 +260,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 314);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.radio_sqlclient);
             this.Controls.Add(this.radio_sqlite);

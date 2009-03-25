@@ -126,8 +126,10 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!DBOption.GetOptions(DBOption.cNewAPIUpgradeDone)) // upgrade
             {
-                String sqlDel = "drop table if exists " + cTableName;
-                DBTVSeries.Execute(sqlDel);
+                if (DBTVSeries.TableExists(cTableName)) {
+                    String sqlDel = "drop table " + cTableName;
+                    DBTVSeries.ExecuteNonQuery(sqlDel);
+                }
             }
 
             if (Helper.String.IsNullOrEmpty(cApiKey))
