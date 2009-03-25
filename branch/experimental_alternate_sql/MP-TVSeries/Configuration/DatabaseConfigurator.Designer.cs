@@ -93,6 +93,7 @@
             this.textBox_username.Size = new System.Drawing.Size(310, 20);
             this.textBox_username.TabIndex = 1;
             this.textBox_username.Text = "sa";
+            this.textBox_username.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_password
             // 
@@ -102,6 +103,7 @@
             this.textBox_password.Size = new System.Drawing.Size(310, 20);
             this.textBox_password.TabIndex = 3;
             this.textBox_password.Text = "mediaportal";
+            this.textBox_password.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_server
             // 
@@ -111,6 +113,7 @@
             this.textBox_server.Size = new System.Drawing.Size(310, 20);
             this.textBox_server.TabIndex = 5;
             this.textBox_server.Text = "(localhost)";
+            this.textBox_server.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_database
             // 
@@ -120,6 +123,7 @@
             this.textBox_database.Size = new System.Drawing.Size(312, 20);
             this.textBox_database.TabIndex = 7;
             this.textBox_database.Text = "MpTvSeriesDb";
+            this.textBox_database.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // label1
             // 

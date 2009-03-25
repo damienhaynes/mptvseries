@@ -62,7 +62,23 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void button_create_Click(object sender, EventArgs e)
         {
+            string connectionString = getConnectionString();
+            try {
+                SQLClientProvider.TestConnection(connectionString);
+                if (MessageBox.Show(this, "Overwrite Existing Database?", "OverWrite Database", MessageBoxButtons.YesNo) == DialogResult.No) {
+                    return;
+                }
+            } catch {
+                //connection test failed - do nothing
+            }
 
+            button_ok.Enabled = false;
+            try {
+                SQLClientProvider.CreateDatabase(connectionString);
+                button_test.Enabled = true;
+            } catch (Exception ex) {
+                MessageBox.Show(this, string.Format("Error Creating Database: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private string getConnectionString()
@@ -80,8 +96,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void button_test_Click(object sender, EventArgs e)
         {
-            button_ok.Enabled = SQLClientProvider.TestConnection(getConnectionString());
-            button_create.Enabled = !button_ok.Enabled;
+            try {
+                SQLClientProvider.TestConnection(getConnectionString());
+                button_ok.Enabled = true;
+            } catch (Exception ex) {
+                MessageBox.Show(this, string.Format("Error Connecting to Database: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void radio_sqlclient_CheckedChanged(object sender, EventArgs e)
@@ -107,6 +127,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 Settings.SetDBPath(textBox_dblocation.Text);
             }
             Close();
+        }
+
+        private void textBox_TextChanged(object sender, EventArgs e)
+        {
+            button_ok.Enabled = false;
+            button_test.Enabled = true;
+            button_create.Enabled = true;
         }
     }
 }

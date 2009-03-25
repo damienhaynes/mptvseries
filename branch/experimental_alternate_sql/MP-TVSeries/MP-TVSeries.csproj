@@ -356,6 +356,7 @@
     <None Include="img\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DB Classes\create_sqlserver_database.sql" />
     <Content Include="img\control_play_blue.png" />
     <Content Include="img\folder_explore.png" />
     <Content Include="img\television_add.png" />

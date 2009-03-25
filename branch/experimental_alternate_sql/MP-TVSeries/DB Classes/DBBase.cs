@@ -1209,7 +1209,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static bool TestConnection(string ConnectionString)
+        public static void TestConnection(string ConnectionString)
         {
             DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
             using (DbConnection connection = factory.CreateConnection()) {
@@ -1217,20 +1217,60 @@ namespace WindowPlugins.GUITVSeries
                 try {
                     connection.ConnectionString = ConnectionString;
                     connection.Open();
-                } catch {
-                    return false;
                 } finally {
                     connection.Close();
                 }
             }
-            return true;
+        }
+
+        public static void CreateDatabase(string ConnectionString)
+        {
+            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = ConnectionString;
+
+            string database = builder["Initial Catalog"].ToString();
+
+            //were going to make the database, so remove the database from the connectionstring
+            builder.Remove("Initial Catalog");
+
+            System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
+
+            string createScript = string.Empty;
+            using (StreamReader reader = new StreamReader(stream)) {
+                createScript = reader.ReadToEnd();
+            }
+
+            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
+            createScript = createScript.Replace("GO\r\n", "!");
+            createScript = createScript.Replace("\r\n", " ");
+            createScript = createScript.Replace("\t", " ");
+            string[] Commands = createScript.Split('!');
+
+            DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
+            using (DbConnection connection = factory.CreateConnection()) {
+                try {
+                    connection.ConnectionString = builder.ConnectionString;
+                    connection.Open();
+
+                    foreach (string commandText in Commands) {
+                        string Sql = commandText.Trim();
+                        if (!string.IsNullOrEmpty(Sql) && !Sql.StartsWith("--") && !Sql.StartsWith("/*")) {
+                            using (DbCommand command = connection.CreateCommand()) {
+                                command.CommandText = commandText;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                } finally {
+                    connection.Close();
+                }
+            }
         }
 
         public override void InitDB()
         {
-            if (!TestConnection(sConnectionString)) {
-                throw new Exception(string.Format("Unable to Open Database: {0}", sConnectionString));
-            }
+            TestConnection(sConnectionString);
         }
 
          public override void AddColumn(string tableName, string fieldName, DBField field)
