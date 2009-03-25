@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (DBTVSeries.TableExists(cTableName)) {
                     String sqlDel = "drop table " + cTableName;
-                    DBTVSeries.ExecuteNonQuery(sqlDel);
+                    DBTVSeries.Execute(sqlDel);
                 }
             }
 

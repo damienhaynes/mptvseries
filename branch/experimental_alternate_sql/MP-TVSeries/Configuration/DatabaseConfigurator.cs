@@ -11,7 +11,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 {
     public partial class DatabaseConfigurator : Form
     {
-        private const string defaultConnectionString = "Persist Security Info=True;USER ID=sa;Password=mediaportal;Initial Catalog=MpTvSeriesDb4;Data Source=localhost\SQLEXPRESS;Connection Timeout=300";
+        private const string defaultConnectionString = @"Persist Security Info=True;USER ID=sa;Password=mediaportal;Initial Catalog=MpTvSeriesDb4;Data Source=localhost\SQLEXPRESS;Connection Timeout=300";
 
         public DatabaseConfigurator()
         {
@@ -41,7 +41,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if (builder.TryGetValue("Data Source", out o)) {
                 textBox_server.Text = o.ToString();
             } else {
-                textBox_server.Text = "localhost\SQLEXPRESS";
+                textBox_server.Text = @"localhost\SQLEXPRESS";
             }
             if (builder.TryGetValue("Initial Catalog", out o)) {
                 textBox_database.Text = o.ToString();
