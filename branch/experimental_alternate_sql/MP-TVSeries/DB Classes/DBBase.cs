@@ -1187,7 +1187,7 @@ namespace WindowPlugins.GUITVSeries
             //builder.Add("USER ID", "sa");                       //username
             //builder.Add("Password", "mediaportal");             //password
             //builder.Add("Initial Catalog", "MpTvSeriesDb4");    //database name
-            //builder.Add("Data Source", @"Media\SQLEXPRESS");    //computer name
+            //builder.Add("Data Source", "(localhost)");    //computer name
             //builder.Add("Connection Timeout", 300);
 
             m_sConnectionString = connectionString;
@@ -1209,15 +1209,27 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-         public override void InitDB()
+        public static bool TestConnection(string ConnectionString)
         {
-            //try and open the database
-            DbProviderFactory factory = DbProviderFactories.GetFactory(sProviderName);
+            DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
             using (DbConnection connection = factory.CreateConnection()) {
-                connection.ConnectionString = sConnectionString;
-                connection.Open();
+                //try and open the database
+                try {
+                    connection.ConnectionString = ConnectionString;
+                    connection.Open();
+                } catch {
+                    return false;
+                } finally {
+                    connection.Close();
+                }
+            }
+            return true;
+        }
 
-                connection.Close();
+        public override void InitDB()
+        {
+            if (!TestConnection(sConnectionString)) {
+                throw new Exception(string.Format("Unable to Open Database: {0}", sConnectionString));
             }
         }
 

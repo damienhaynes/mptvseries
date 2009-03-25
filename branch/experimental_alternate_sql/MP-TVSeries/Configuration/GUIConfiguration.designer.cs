@@ -90,8 +90,6 @@ namespace WindowPlugins.GUITVSeries
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox_ShowHidden = new System.Windows.Forms.CheckBox();
-            this.textBox_dblocation = new System.Windows.Forms.TextBox();
-            this.lblClearDB = new System.Windows.Forms.LinkLabel();
             this.buildExpr = new System.Windows.Forms.LinkLabel();
             this.resetExpr = new System.Windows.Forms.LinkLabel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
@@ -191,8 +189,8 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.panDBLocation = new System.Windows.Forms.Panel();
-            this.button_dbbrowse = new System.Windows.Forms.Button();
-            this.label28 = new System.Windows.Forms.Label();
+            this.button_clearDB = new System.Windows.Forms.Button();
+            this.button_configDatabase = new System.Windows.Forms.Button();
             this.tabPage_Import = new System.Windows.Forms.TabPage();
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
             this.splitContainerImportSettings = new System.Windows.Forms.SplitContainer();
@@ -587,31 +585,6 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.checkBox_ShowHidden, "Shows the Series,Seasons and Episodes that have been hidden from view");
             this.checkBox_ShowHidden.UseVisualStyleBackColor = true;
             this.checkBox_ShowHidden.CheckedChanged += new System.EventHandler(this.checkBox_ShowHidden_CheckedChanged);
-            // 
-            // textBox_dblocation
-            // 
-            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_dblocation.Location = new System.Drawing.Point(198, 2);
-            this.textBox_dblocation.Name = "textBox_dblocation";
-            this.textBox_dblocation.ReadOnly = true;
-            this.textBox_dblocation.Size = new System.Drawing.Size(268, 20);
-            this.textBox_dblocation.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.textBox_dblocation, "The Database Path used by MP-TVSeries to store all TV information and settings fo" +
-                    "r this plugin");
-            // 
-            // lblClearDB
-            // 
-            this.lblClearDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblClearDB.AutoSize = true;
-            this.lblClearDB.Location = new System.Drawing.Point(504, 5);
-            this.lblClearDB.Name = "lblClearDB";
-            this.lblClearDB.Size = new System.Drawing.Size(36, 13);
-            this.lblClearDB.TabIndex = 3;
-            this.lblClearDB.TabStop = true;
-            this.lblClearDB.Text = "Empty";
-            this.toolTip_Help.SetToolTip(this.lblClearDB, "Deletes all Series, Season and Episode information from the local database");
-            this.lblClearDB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblClearDB_LinkClicked);
             // 
             // buildExpr
             // 
@@ -1958,35 +1931,33 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panDBLocation
             // 
-            this.panDBLocation.Controls.Add(this.textBox_dblocation);
-            this.panDBLocation.Controls.Add(this.lblClearDB);
-            this.panDBLocation.Controls.Add(this.button_dbbrowse);
-            this.panDBLocation.Controls.Add(this.label28);
+            this.panDBLocation.Controls.Add(this.button_clearDB);
+            this.panDBLocation.Controls.Add(this.button_configDatabase);
             this.panDBLocation.Dock = System.Windows.Forms.DockStyle.Top;
             this.panDBLocation.Location = new System.Drawing.Point(0, 0);
             this.panDBLocation.Name = "panDBLocation";
             this.panDBLocation.Size = new System.Drawing.Size(548, 25);
             this.panDBLocation.TabIndex = 0;
             // 
-            // button_dbbrowse
+            // button_clearDB
             // 
-            this.button_dbbrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_dbbrowse.Location = new System.Drawing.Point(472, 0);
-            this.button_dbbrowse.Name = "button_dbbrowse";
-            this.button_dbbrowse.Size = new System.Drawing.Size(26, 23);
-            this.button_dbbrowse.TabIndex = 2;
-            this.button_dbbrowse.Text = "...";
-            this.button_dbbrowse.UseVisualStyleBackColor = true;
-            this.button_dbbrowse.Click += new System.EventHandler(this.button_dbbrowse_Click);
+            this.button_clearDB.Location = new System.Drawing.Point(438, 0);
+            this.button_clearDB.Name = "button_clearDB";
+            this.button_clearDB.Size = new System.Drawing.Size(109, 23);
+            this.button_clearDB.TabIndex = 5;
+            this.button_clearDB.Text = "Empty Database";
+            this.button_clearDB.UseVisualStyleBackColor = true;
+            this.button_clearDB.Click += new System.EventHandler(this.button_clearDB_Click);
             // 
-            // label28
+            // button_configDatabase
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(16, 5);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(173, 13);
-            this.label28.TabIndex = 0;
-            this.label28.Text = "Database location (restart needed):";
+            this.button_configDatabase.Location = new System.Drawing.Point(325, 0);
+            this.button_configDatabase.Name = "button_configDatabase";
+            this.button_configDatabase.Size = new System.Drawing.Size(109, 23);
+            this.button_configDatabase.TabIndex = 0;
+            this.button_configDatabase.Text = "Configure Database";
+            this.button_configDatabase.UseVisualStyleBackColor = true;
+            this.button_configDatabase.Click += new System.EventHandler(this.button_configDatabase_Click);
             // 
             // tabPage_Import
             // 
@@ -3110,7 +3081,6 @@ namespace WindowPlugins.GUITVSeries
             this.button7.Text = "Paste all at once";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Visible = false;
-          
             // 
             // label25
             // 
@@ -4443,7 +4413,6 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
             this.panDBLocation.ResumeLayout(false);
-            this.panDBLocation.PerformLayout();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel2.ResumeLayout(false);
@@ -4635,7 +4604,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.TextBox cond1_cond;
         private System.Windows.Forms.ComboBox cond1_type;
         private System.Windows.Forms.RichTextBox cond1_what;
-        private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox comboLanguage;
         private System.Windows.Forms.CheckBox checkCurViewEnabled;
         private System.Windows.Forms.SplitContainer splitContainer_treeextra;
@@ -4649,8 +4617,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox textBox_newsleecher;
         private System.Windows.Forms.TreeView treeView_Extra;
-        private System.Windows.Forms.Button button_dbbrowse;
-        private System.Windows.Forms.TextBox textBox_dblocation;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textBox_NewsSearchReportRegex;
         private System.Windows.Forms.Label label36;
@@ -4664,7 +4630,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Button button_NewsDownloadPathBrowse;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox textBox_NewsDownloadPath;
-        private System.Windows.Forms.LinkLabel lblClearDB;
         private System.Windows.Forms.Panel panDBLocation;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.NumericUpDown nudWatchedAfter;
@@ -4841,5 +4806,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label73;
         private System.Windows.Forms.NumericUpDown spinMaxFanarts;
         private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Button button_configDatabase;
+        private System.Windows.Forms.Button button_clearDB;
     }
 }

@@ -145,6 +145,12 @@
     <Compile Include="Configuration\ChooseFromSelection.designer.cs">
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\DatabaseConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DatabaseConfigurator.Designer.cs">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ExpressionBuilder.cs">
     </Compile>
     <Compile Include="Configuration\ExpressionBuilder.designer.cs">
@@ -285,6 +291,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ChooseFromSelection.resx">
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DatabaseConfigurator.resx">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
