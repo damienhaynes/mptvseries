@@ -576,7 +576,19 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                     episode.Commit();
+
                 }
+            }
+
+            //now make DBOnlineEpisodes for each unmatched double episode
+            //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
+            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
+            cond.AddCustom(DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " is null");
+            List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false);
+            //now foreach episode make a DBOnlineEpisode
+            foreach (DBEpisode episode in missingDoubleEpisodes) {
+                DBOnlineEpisode onlineEpisode = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2]);
+                onlineEpisode.Commit();
             }
 
             // now go over the touched seasons & series
@@ -1003,7 +1015,7 @@ namespace WindowPlugins.GUITVSeries
                 // lets get the list of unidentified series
                 SQLCondition conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);                    
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
                 episodesList = DBEpisode.Get(conditions, false);
 
                 epCount += episodesList.Count;
