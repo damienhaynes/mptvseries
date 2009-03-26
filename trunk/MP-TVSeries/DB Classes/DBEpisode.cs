@@ -884,7 +884,9 @@ namespace WindowPlugins.GUITVSeries
         {
             String sqlQuery = string.Empty;
             String sqlWhat = string.Empty;
-            conditions.AddCustom(stdConditions.ConditionsSQLString);
+            if (inclStdCond) {
+                conditions.AddCustom(stdConditions.ConditionsSQLString);
+            }
 
             SQLCondition conditionsFirst = conditions.Copy();
             SQLCondition conditionsSecond = conditions.Copy();
