@@ -380,9 +380,13 @@ namespace WindowPlugins.GUITVSeries
                         join = " left join online_episodes on season.seriesid = online_episodes.seriesid " +
                             " and season.seasonindex = online_episodes.seasonindex";
                     }
-                    return "select " + new SQLWhat(new DBSeason()) + 
-                        join +
-                        condition  + " group by season.id " + orderBy + condition.limitString;
+                    //SQLite has a relaxed Group By clause that dosn't require all fields to be listed - most other SQLs do however
+                    // - in this case we can simply use a select distinct to get the same data set
+                    //return "select " + new SQLWhat(new DBSeason()) +
+                    //    join +
+                    //    condition + " group by season.id " + orderBy + condition.limitString;
+                    return "select distinct " + new SQLWhat(new DBSeason()) +
+                        join + condition + orderBy + condition.limitString;
                 }
             }
 
