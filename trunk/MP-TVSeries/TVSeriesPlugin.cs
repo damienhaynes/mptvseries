@@ -1025,8 +1025,10 @@ namespace WindowPlugins.GUITVSeries
                                         LoadWatchedFlag(item, bWatched, bAvailable);                                        
                                     }
                                     item.TVTag = series;
+                                    // Has no local files in series
                                     item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
-                                    item.IsDownloading = series[DBOnlineSeries.cUnwatchedItems] != 0;
+                                    // Has atleast one unwatched episode in series - no IsWatched property
+                                    item.IsDownloading = int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) != 0;
 
                                     if (this.m_SelectedSeries != null)
                                     {
@@ -1107,8 +1109,10 @@ namespace WindowPlugins.GUITVSeries
                                                 }
                                             }                                                                                                                                    
                                         }
+                                        // Has no local files in season
                                         item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                        item.IsDownloading = season[DBSeason.cUnwatchedItems] != 0;
+                                        // Has atleast one unwatched episode in season - no IsWatched property
+                                        item.IsDownloading = int.Parse(season[DBSeason.cEpisodesUnWatched]) != 0;
                                     }
                                     else item = new GUIListItem();
                                     item.TVTag = season;
@@ -1216,8 +1220,13 @@ namespace WindowPlugins.GUITVSeries
 
                                     item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);
                                     item.Label3 = FieldGetter.resolveDynString(m_sFormatEpisodeCol1, episode);
+                                    
+                                    // File is local
                                     item.IsRemote = episode[DBEpisode.cFilename].ToString().Length > 0;
+                                    // Unwatched
                                     item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
+                                    
+                                    
                                     item.TVTag = episode;
 
                                     if (this.m_SelectedEpisode != null)
