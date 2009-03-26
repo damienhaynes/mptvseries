@@ -918,14 +918,15 @@ namespace WindowPlugins.GUITVSeries
                 if (Helper.String.IsNullOrEmpty(orderBy))
                     orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
 
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
+                //reverse the order of these so that its possible to select DBEpisodes without DBOnlineEpisodes
+                SQLWhat what = new SQLWhat(new DBEpisode());
+                what.AddWhat(new DBOnlineEpisode());
                 // one query gets both first & second episode
                 sqlWhat = "select " + what;
             }
             else
             {
-                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + DBOnlineEpisode.cTableName;
+                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + DBEpisode.cTableName;
             }
             // oh, oh, the or join condition is slower than hell
             // its orders of magnitude faster to make two queries instead and do a UNION
@@ -944,10 +945,10 @@ namespace WindowPlugins.GUITVSeries
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
-            sqlQuery = sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery = sqlWhat + " left join " + DBOnlineEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsFirst
                 + " union ";
-            sqlQuery += sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery += sqlWhat + " left join " + DBOnlineEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsSecond + orderBy + conditions.limitString;
             
             return sqlQuery;
