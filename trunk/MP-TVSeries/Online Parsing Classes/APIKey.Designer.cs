@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 25716B24FCAEFDEE.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string Key {
             get {
