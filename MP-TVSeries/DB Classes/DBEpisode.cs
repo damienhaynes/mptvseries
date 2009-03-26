@@ -876,11 +876,23 @@ namespace WindowPlugins.GUITVSeries
         {
             return stdGetSQL(conditions, selectFull, true);
         }
-        
+
         public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond)
-        { return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex); }
+        {
+            return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex, false);
+        }
+
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, bool reverseJoin)
+        {
+            return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex, reverseJoin);
+        }
 
         public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, string fieldToSelectIfNotFull)
+        {
+            return stdGetSQL(conditions, selectFull, inclStdCond, fieldToSelectIfNotFull, false);
+        }
+
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, string fieldToSelectIfNotFull, bool reverseJoin)
         {
             String sqlQuery = string.Empty;
             String sqlWhat = string.Empty;
@@ -910,6 +922,17 @@ namespace WindowPlugins.GUITVSeries
             conditionsFirst.AddCustom(sqlSubQuery, DBOnlineEpisode.Q(cCompositeID), SQLConditionType.NotIn);
             conditionsSecond.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
 
+            DBTable first = null;
+            DBTable second = null;
+            if (reverseJoin) {
+                //reverse the order of these so that its possible to select DBEpisodes without DBOnlineEpisodes
+                first = new DBEpisode();
+                second = new DBOnlineEpisode();
+            } else {
+                first = new DBOnlineEpisode();
+                second = new DBEpisode();
+            }
+
             string orderBy = string.Empty;
             if(selectFull)
             {
@@ -920,15 +943,14 @@ namespace WindowPlugins.GUITVSeries
                 if (Helper.String.IsNullOrEmpty(orderBy))
                     orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
 
-                //reverse the order of these so that its possible to select DBEpisodes without DBOnlineEpisodes
-                SQLWhat what = new SQLWhat(new DBEpisode());
-                what.AddWhat(new DBOnlineEpisode());
+                SQLWhat what = new SQLWhat(first);
+                what.AddWhat(second);
                 // one query gets both first & second episode
                 sqlWhat = "select " + what;
             }
             else
             {
-                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + DBEpisode.cTableName;
+                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + first.m_tableName;
             }
             // oh, oh, the or join condition is slower than hell
             // its orders of magnitude faster to make two queries instead and do a UNION
@@ -947,10 +969,10 @@ namespace WindowPlugins.GUITVSeries
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
-            sqlQuery = sqlWhat + " left join " + DBOnlineEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery = sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsFirst
                 + " union ";
-            sqlQuery += sqlWhat + " left join " + DBOnlineEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery += sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsSecond + orderBy + conditions.limitString;
             
             return sqlQuery;
@@ -988,7 +1010,12 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(SQLCondition conditions, bool includeStdCond)
         {
-            return Get(stdGetSQL(conditions, true, includeStdCond));
+            return Get(stdGetSQL(conditions, true, includeStdCond, false));
+        }
+
+        public static List<DBEpisode> Get(SQLCondition conditions, bool includeStdCond, bool reverseJoin)
+        {
+            return Get(stdGetSQL(conditions, true, includeStdCond, reverseJoin));
         }
 
         public static List<DBEpisode> Get(string query)

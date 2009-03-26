@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Core, Version=0.9.4.21896, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Mediaportal SVN\xbmc\bin\Debug\Core.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

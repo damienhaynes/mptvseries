@@ -584,7 +584,7 @@ namespace WindowPlugins.GUITVSeries
             //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
             SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
             cond.AddCustom(DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " is null");
-            List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false);
+            List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false, true);
             //now foreach episode make a DBOnlineEpisode
             foreach (DBEpisode episode in missingDoubleEpisodes) {
                 DBOnlineEpisode onlineEpisode = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2]);
