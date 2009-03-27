@@ -1224,8 +1224,7 @@ namespace WindowPlugins.GUITVSeries
                                     // File is local
                                     item.IsRemote = episode[DBEpisode.cFilename].ToString().Length > 0;
                                     // Unwatched
-                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;
-                                    
+                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;                                    
                                     
                                     item.TVTag = episode;
 

@@ -395,7 +395,7 @@ namespace WindowPlugins.GUITVSeries
                 IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
                 if (dlg == null) return;
                 dlg.Reset();
-                dlg.SetHeading("Fanart");
+                dlg.SetHeading(Translation.FanArt);
 
                 GUIListItem pItem;
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
