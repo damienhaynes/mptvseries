@@ -99,6 +99,7 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {                    
                     System.IO.File.Delete(FullLocalPath);
+                    MPTVSeriesLog.Write("Fanart Deleted: " + FullLocalPath);
                 }
                 catch (Exception ex)
                 {
