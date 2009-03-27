@@ -402,8 +402,34 @@ namespace WindowPlugins.GUITVSeries
             }
             base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
             base[cSeriesID] = nSeriesID;
-            if (base[DBEpisode.cCompositeID2].ToString().Length > 0)
+
+            if (base[DBEpisode.cCompositeID2].ToString().Length > 0) {
+                DBOnlineEpisode oldDouble = new DBOnlineEpisode();
+                bool oldExist = oldDouble.ReadPrimary(base[DBEpisode.cCompositeID2]);
                 base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
+                DBOnlineEpisode newDouble = new DBOnlineEpisode();
+                if (!newDouble.ReadPrimary(base[DBEpisode.cCompositeID2])) {
+                    if (oldExist) {
+                        foreach (string fieldName in oldDouble.FieldNames) {
+                            switch (fieldName) {
+                                case DBOnlineEpisode.cCompositeID:
+                                case DBOnlineEpisode.cSeriesID:
+                                    break;
+
+                                default:
+                                    newDouble[fieldName] = oldDouble[fieldName];
+                                    break;
+                            }
+                        }
+                    }
+
+                    newDouble[cSeriesID] = nSeriesID;
+                    newDouble[cSeasonIndex] = base[cSeasonIndex];
+                    newDouble[cEpisodeIndex] = base[cEpisodeIndex2];
+
+                    newDouble.Commit();
+                }
+            }
             m_onlineEpisode = newOnlineEpisode;
             Commit();
         }
@@ -926,6 +952,7 @@ namespace WindowPlugins.GUITVSeries
             DBTable second = null;
             if (reverseJoin) {
                 //reverse the order of these so that its possible to select DBEpisodes without DBOnlineEpisodes
+                // - SQLite dosen't fully support right joins so we have to reverse the table order
                 first = new DBEpisode();
                 second = new DBOnlineEpisode();
             } else {
