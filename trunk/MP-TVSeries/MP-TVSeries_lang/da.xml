@@ -127,4 +127,11 @@
 	<string Field="ButtonRunImport" Original="Run Import">Kør import</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Ændre layout</string>
 	<string Field="ButtonOptions" Original="Options">Indstillinger</string>
+	<string Field="FanArtFilter" Original="Filter">Filter</string>
+	<string Field="FanArtFilterAll" Original="All">Alle</string>
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Tilfældig Fanart</string>	
+	<string Field="LabelResolution" Original="Resolution:">Opløsning:</string>
+	<string Field="LabelChosen" Original="Chosen:">Valgt:</string>
+	<string Field="LabelDisabled" Original="Disabled:">Ikke aktiv:</string>
+	<string Field="ResetUserSelections" Original="Reset User Selections">Nustil bruger Reset valgt</string>
 </strings>
