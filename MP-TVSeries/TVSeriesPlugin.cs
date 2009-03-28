@@ -3708,7 +3708,7 @@ namespace WindowPlugins.GUITVSeries
             this.m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
-            if (!localLogos.appendEpImage && episode[DBOnlineEpisode.cWatched])
+            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)))
                 setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(m_SelectedEpisode));
             else
                 clearGUIProperty(guiProperty.EpisodeImage);
