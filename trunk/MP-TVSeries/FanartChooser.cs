@@ -380,8 +380,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public void setPageTitle(string Title)
-        {
-            TVSeriesPlugin.setGUIProperty("Fanart.PageTitle", Title);
+        {            
+            TVSeriesPlugin.setGUIProperty("FanArt.PageTitle", Title);
         }
 
         protected override void OnShowContextMenu()
