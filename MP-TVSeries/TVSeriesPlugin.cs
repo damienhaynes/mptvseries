@@ -55,8 +55,8 @@ namespace WindowPlugins.GUITVSeries
 
             backdrop = new ImageSwapper();
             backdrop.ImageResource.Delay = artworkDelay;
-            backdrop.PropertyOne = "#TVSeries.Fanart";
-            backdrop.PropertyTwo = "#TVSeries.Fanart2";
+            backdrop.PropertyOne = "#TVSeries.Fanart.1";
+            backdrop.PropertyTwo = "#TVSeries.Fanart.2";
 
             seriesbanner = new AsyncImageResource();
             seriesbanner.Property = "#TVSeries.SeriesBanner";
