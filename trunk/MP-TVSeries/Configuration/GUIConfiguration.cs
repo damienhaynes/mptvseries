@@ -548,7 +548,9 @@ namespace WindowPlugins.GUITVSeries
                 columnTagEnabled.Name = DBReplacements.cTagEnabled;
                 columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
                 columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                
                 dataGridView_Replace.Columns.Add(columnTagEnabled);
+
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
                 columnBefore.Name = DBReplacements.cBefore;
                 columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
@@ -912,14 +914,27 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cIndex] = e.RowIndex.ToString();
             foreach (DataGridViewCell cell in dataGridView_Replace.Rows[e.RowIndex].Cells)
             {
-                if (cell.Value == null)
+                if (cell.Value == null) {
                     return;
-                if (cell.ValueType.Name == "Boolean")
+                }
+
+                if (cell.ValueType.Name == "Boolean") {
                     replacement[cell.OwningColumn.Name] = (Boolean)cell.Value;
-                else
+                } else {
                     replacement[cell.OwningColumn.Name] = (String)cell.Value;
+                }
             }
             replacement.Commit();
+        }
+
+        void dataGridView_Replace_DefaultValuesNeeded(object sender, System.Windows.Forms.DataGridViewRowEventArgs e)
+        {
+            foreach (DataGridViewCell cell in e.Row.Cells) {
+                //give all the check boxes a default value of false
+                if (cell.ValueType.Name == "Boolean") {
+                    cell.Value = false;
+                }
+            }
         }
 
         private void SaveAllReplacements()
