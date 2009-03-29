@@ -450,7 +450,7 @@ namespace WindowPlugins.GUITVSeries
                         // table is already there, perfect
                     } else {
                         // no table, create it
-                        String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
+                        String sQuery = "CREATE TABLE options (option_id integer identity primary key, property text, value text);\n";
                         DBTVSeries.Execute(sQuery);
                     }
                 }
@@ -471,7 +471,7 @@ namespace WindowPlugins.GUITVSeries
 
                     String sqlQuery;
                     if (GetOptions(convertedProperty) == null)
-                        sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
+                        sqlQuery = "insert into options (property, value) values('" + convertedProperty + "', '" + convertedvalue + "')";
                     else
                         sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
                     optionsCache[property] = value;
