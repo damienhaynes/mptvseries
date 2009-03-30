@@ -173,6 +173,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
 
+        public const String cDateFormatString = "DateFormatString";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -435,6 +437,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cFanartCurrentView) == null)
                     SetOptions(cFanartCurrentView, 2); // Large Icons
 
+                if (GetOptions(cDateFormatString) == null) {
+                    SetOptions(cDateFormatString, System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
+                }
             }
             catch (Exception ex)
             {

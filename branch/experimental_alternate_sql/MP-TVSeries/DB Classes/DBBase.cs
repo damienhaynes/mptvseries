@@ -504,25 +504,59 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        public bool Read(DataRow row, DataColumnCollection Columns)
+        public bool Read(DataRow row, DataColumnCollection columns)
         {
             if (row == null || row.ItemArray.Length == 0)
                 return false;
+            string fullName = string.Empty;
             foreach (KeyValuePair<string, DBField> field in m_fields) {
-                try {
+                if (columns.Contains(field.Key)) {
                     field.Value.Value = row[field.Key].ToString();
-                } catch (ArgumentException) {
-                    try {
-                        field.Value.Value = row[string.Format("{0}.{1}", m_tableName, field.Key)].ToString();
-                    } catch (ArgumentException) {
-                        // we have a column in mfields that is not in the database result (or null), as such it is to be empty
-                        field.Value.Value = string.Empty;
-                    }
+                    continue;
                 }
+                fullName = m_tableName + "_" + field.Key;
+                if (columns.Contains(fullName)) {
+                    field.Value.Value = row[fullName].ToString();
+                    continue;
+                }
+                fullName = string.Format("{0}.{1}", m_tableName, field.Key);
+                if (columns.Contains(fullName)) {
+                    field.Value.Value = row[fullName].ToString();
+                    continue;
+                }
+                field.Value.Value = string.Empty;
             }
             m_CommitNeeded = false;
             return true;
         }
+
+        //public bool Read(DataTableReader row, ref System.Collections.IEnumerator columns)
+        //{
+        //    if (row == null || row.FieldCount == 0) {
+        //        return false;
+        //    }
+        //    string fullName = string.Empty;
+        //    foreach (KeyValuePair<string, DBField> field in m_fields) {
+        //        columns.MoveNext();
+        //        DataColumn current = columns.Current as DataColumn;
+        //        field.Value.Value = string.Empty;
+        //        if (current.ColumnName.Contains(".")) {
+        //            //only create the fullname once
+        //            fullName = string.Format("{0}.{1}", m_tableName, field.Key);
+        //            if (current.ColumnName == fullName) {
+        //                field.Value.Value = row[fullName].ToString();
+        //            }
+        //        } else {
+        //            if (current.ColumnName == field.Key) {
+        //                field.Value.Value = row[field.Key].ToString();
+        //            } else if (!current.Unique && current.ColumnName == field.Key + "1") {
+        //                field.Value.Value = row[field.Key + "1"].ToString();
+        //            }
+        //        }
+        //    }
+        //    m_CommitNeeded = false;
+        //    return true;
+        //}
 
         public String PrimaryKey()
         {
@@ -802,9 +836,9 @@ namespace WindowPlugins.GUITVSeries
         {
             foreach (KeyValuePair<string, DBField> field in table.m_fields) {
                 if (Helper.String.IsNullOrEmpty(m_sWhat))
-                    m_sWhat += table.m_tableName + "." + field.Key;
+                    m_sWhat += table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
                 else
-                    m_sWhat += ", " + table.m_tableName + "." + field.Key;
+                    m_sWhat += ", " + table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
             }
 
         }
@@ -1125,7 +1159,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     using (DbCommand command = connection.CreateCommand()) {
-                        command.CommandText = "PRAGMA short_column_names=1;";
+                        command.CommandText = "PRAGMA short_column_names=0;";
                         command.ExecuteNonQuery();
                     }
 

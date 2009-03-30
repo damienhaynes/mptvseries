@@ -577,7 +577,19 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                     episode.Commit();
+
                 }
+            }
+
+            //now make DBOnlineEpisodes for each unmatched double episode
+            //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
+            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
+            cond.AddCustom(DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " is null");
+            List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false, true);
+            //now foreach episode make a DBOnlineEpisode
+            foreach (DBEpisode episode in missingDoubleEpisodes) {
+                DBOnlineEpisode onlineEpisode = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex], episode[DBEpisode.cEpisodeIndex2]);
+                onlineEpisode.Commit();
             }
 
             // now go over the touched seasons & series
@@ -1246,21 +1258,15 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"));
                 
-                // get a list of all the episodes with thumbnailUrl
-                //SQLCondition condition = new SQLCondition();                
-                //condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);                
-                //condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
-                //List<DBEpisode> episodes = DBEpisode.Get(condition);
-                
+                SQLCondition condition = new SQLCondition();
                 // Get all online episodes that have a image but not yet downloaded                
-                string query = string.Empty;                
-                if (Settings.isConfig)
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, "", SQLConditionType.NotEqual);                
+                if (!Settings.isConfig) {
                     // Be more thorough in configuration, user may have deleted thumbs locally
-                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
-                else
-                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
-
-                List<DBEpisode> episodes = DBEpisode.Get(query);
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, "", SQLConditionType.Equal);
+                }
+                condition.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+                List<DBEpisode> episodes = DBEpisode.Get(condition);
 
                 DBSeries tmpSeries = null; 
                 foreach (DBEpisode episode in episodes)

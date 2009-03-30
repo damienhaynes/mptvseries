@@ -22,7 +22,7 @@
 		<posY>0</posY>
 		<width>1024</width>
 		<height>576</height>
-		<texture>#TVSeries.Fanart</texture>
+		<texture>#TVSeries.Fanart.1</texture>
 		<colordiffuse>50fefaff</colordiffuse>
 		<animation effect="fade" start="0" end="100" time="3000">WindowOpen</animation>
 		<animation effect="fade" start="0" end="100" time="200">Visible</animation>
@@ -36,7 +36,7 @@
 		<posY>0</posY>
 		<width>1024</width>
 		<height>576</height>
-		<texture>#TVSeries.Fanart2</texture>
+		<texture>#TVSeries.Fanart.2</texture>
 		<colordiffuse>50fefaff</colordiffuse>
 		<animation effect="fade" start="0" end="100" time="200">Visible</animation>
 		<animation effect="fade" start="100" end="0" time="200" delay="200">Hidden</animation>

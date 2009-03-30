@@ -155,18 +155,23 @@ namespace WindowPlugins.GUITVSeries
                             // no replacements in the db => put the default ones
                             replacement[DBReplacements.cIndex] = "0";
                             replacement[DBReplacements.cEnabled] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "0";
                             replacement[DBReplacements.cBefore] = "0";
                             replacement[DBReplacements.cToReplace] = ".";
                             replacement[DBReplacements.cWith] = @"<space>";
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "1";
+                            replacement[DBReplacements.cEnabled] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "0";
                             replacement[DBReplacements.cBefore] = "0";
                             replacement[DBReplacements.cToReplace] = "_";
                             replacement[DBReplacements.cWith] = @"<space>";
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "2";
+                            replacement[DBReplacements.cEnabled] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "0";
                             replacement[DBReplacements.cBefore] = "0";
                             replacement[DBReplacements.cToReplace] = "-<space>";
                             replacement[DBReplacements.cWith] = @"<empty>";
@@ -181,24 +186,28 @@ namespace WindowPlugins.GUITVSeries
                             // to avoid being parsed as second episode 20/80
                             replacement[DBReplacements.cIndex] = "3";
                             replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "720p";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "4";
                             replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "1080i";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "5";
                             replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "1080p";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "6";
                             replacement[DBReplacements.cBefore] = "1";
+                            replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "x264";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();

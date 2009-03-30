@@ -186,12 +186,38 @@ namespace WindowPlugins.GUITVSeries
         public override DBValue  this[string fieldName]
         {
             get 
-            { 
-	             return base[fieldName];
+            {
+                switch (fieldName) {
+                    case cFirstAired:
+                        DateTime firstAired = new DateTime();
+                        //if the try parse fails just get the value normally
+                        if (DateTime.TryParse(base[fieldName], out firstAired)) {
+                            return firstAired.ToString(DBOption.GetOptions(DBOption.cDateFormatString));
+                        }
+                        return base[fieldName];
+
+                    default:
+                        return base[fieldName];
+                }
             }
             set 
-            {                
-	            base[fieldName] = value;                               
+            {
+                switch (fieldName) {
+                    case cFirstAired:
+                        DateTime firstAired = new DateTime();
+                        //if the try parse fails just set the value normally
+                        if (DateTime.TryParseExact(value, DBOption.GetOptions(DBOption.cDateFormatString), 
+                                System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out firstAired)) {
+                            base[fieldName] = firstAired.ToString("yyyy-MM-dd");
+                        } else {
+                            base[fieldName] = value;
+                        }
+                        break;
+
+                    default:
+                        base[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -367,10 +393,10 @@ namespace WindowPlugins.GUITVSeries
             if (!ReadPrimary(filename))
                 InitValues();
             if (System.IO.File.Exists(filename) && !mediaInfoIsSet) readMediaInfoOfLocal();
-            if (base[cSeriesID].ToString().Length > 0 && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
+            if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
-                m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
-                base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
+                m_onlineEpisode = new DBOnlineEpisode(this[cSeriesID], this[cSeasonIndex], this[cEpisodeIndex]);
+                this[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
             }
         }
 
@@ -378,14 +404,14 @@ namespace WindowPlugins.GUITVSeries
         {
             // TODO: update local_episodes set seriesID =  74205 where seriesID = -1
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
-            string composite = nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
-            if (!base[DBEpisode.cCompositeID].ToString().Contains("x"))
-                composite = nSeriesID + "_" + base[DBOnlineEpisode.cFirstAired];
+            string composite = nSeriesID + "_" + this[cSeasonIndex] + "x" + this[cEpisodeIndex];
+            if (!this[DBEpisode.cCompositeID].ToString().Contains("x"))
+                composite = nSeriesID + "_" + this[DBOnlineEpisode.cFirstAired];
             if (!newOnlineEpisode.ReadPrimary(composite))
             {
                 newOnlineEpisode[cSeriesID] = nSeriesID;
-                newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
+                newOnlineEpisode[cSeasonIndex] = this[cSeasonIndex];
+                newOnlineEpisode[cEpisodeIndex] = this[cEpisodeIndex];
 
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
                 {
@@ -401,10 +427,36 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
-            base[cSeriesID] = nSeriesID;
-            if (base[DBEpisode.cCompositeID2].ToString().Length > 0)
-                base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
+            this[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
+            this[cSeriesID] = nSeriesID;
+
+            if (this[DBEpisode.cCompositeID2].ToString().Length > 0) {
+                DBOnlineEpisode oldDouble = new DBOnlineEpisode();
+                bool oldExist = oldDouble.ReadPrimary(this[DBEpisode.cCompositeID2]);
+                this[DBEpisode.cCompositeID2] = nSeriesID + "_" + this[DBEpisode.cSeasonIndex] + "x" + this[DBEpisode.cEpisodeIndex2];
+                DBOnlineEpisode newDouble = new DBOnlineEpisode();
+                if (!newDouble.ReadPrimary(this[DBEpisode.cCompositeID2])) {
+                    if (oldExist) {
+                        foreach (string fieldName in oldDouble.FieldNames) {
+                            switch (fieldName) {
+                                case DBOnlineEpisode.cCompositeID:
+                                case DBOnlineEpisode.cSeriesID:
+                                    break;
+
+                                default:
+                                    newDouble[fieldName] = oldDouble[fieldName];
+                                    break;
+                            }
+                        }
+                    }
+
+                    newDouble[cSeriesID] = nSeriesID;
+                    newDouble[cSeasonIndex] = this[cSeasonIndex];
+                    newDouble[cEpisodeIndex] = this[cEpisodeIndex2];
+
+                    newDouble.Commit();
+                }
+            }
             m_onlineEpisode = newOnlineEpisode;
             Commit();
         }
@@ -456,8 +508,8 @@ namespace WindowPlugins.GUITVSeries
         public override void InitValues()
         {
             base.InitValues();
-            base[cSeasonIndex] = -1;
-            base[cEpisodeIndex] = -1;
+            this[cSeasonIndex] = -1;
+            this[cEpisodeIndex] = -1;
         }
 
         public bool mediaInfoIsSet
@@ -835,25 +887,27 @@ namespace WindowPlugins.GUITVSeries
             SQLWhat what = new SQLWhat(new DBEpisode());
             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
-            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
-                + @" and online_episodes.hidden = 0 "
-                + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
-                + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "
-                + @"group by local_episodes.seriesID );";
-            DataTable results = DBTVSeries.Execute(sqlQuery);
-            List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
-            {
-                for (int index = 0; index < results.Rows.Count; index++)
-                {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index], results.Columns);
-                    outList.Add(episode);
-                }
-            }
-            return outList;
+            return DBEpisode.Get(conditions);
+
+            //string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
+            //    + @" and online_episodes.hidden = 0 "
+            //    + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
+            //    + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "
+            //    + @"group by local_episodes.seriesID );";
+            //DataTable results = DBTVSeries.Execute(sqlQuery);
+            //List<DBEpisode> outList = new List<DBEpisode>();
+            //if (results.Rows.Count > 0)
+            //{
+            //    for (int index = 0; index < results.Rows.Count; index++)
+            //    {
+            //        DBEpisode episode = new DBEpisode();
+            //        episode.Read(ref results, index);
+            //        episode.m_onlineEpisode = new DBOnlineEpisode();
+            //        episode.m_onlineEpisode.Read(results.Rows[index], results.Columns);
+            //        outList.Add(episode);
+            //    }
+            //}
+            //return outList;
         }
 
         public static SQLCondition stdConditions
@@ -879,13 +933,27 @@ namespace WindowPlugins.GUITVSeries
         }
         
         public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond)
-        { return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex); }
+        {
+            return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex, false);
+        }
+
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, bool reverseJoin)
+        {
+            return stdGetSQL(conditions, selectFull, inclStdCond, DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cEpisodeIndex, reverseJoin);
+        }
 
         public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, string fieldToSelectIfNotFull)
         {
+            return stdGetSQL(conditions, selectFull, inclStdCond, fieldToSelectIfNotFull, false);
+        }
+
+        public static string stdGetSQL(SQLCondition conditions, bool selectFull, bool inclStdCond, string fieldToSelectIfNotFull, bool reverseJoin)
+        {
             String sqlQuery = string.Empty;
             String sqlWhat = string.Empty;
+            if (inclStdCond) {
             conditions.AddCustom(stdConditions.ConditionsSQLString);
+            }
 
             SQLCondition conditionsFirst = conditions.Copy();
             SQLCondition conditionsSecond = conditions.Copy();
@@ -909,6 +977,18 @@ namespace WindowPlugins.GUITVSeries
             conditionsFirst.AddCustom(sqlSubQuery, DBOnlineEpisode.Q(cCompositeID), SQLConditionType.NotIn);
             conditionsSecond.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
 
+            DBTable first = null;
+            DBTable second = null;
+            if (reverseJoin) {
+                //reverse the order of these so that its possible to select DBEpisodes without DBOnlineEpisodes
+                // - SQLite dosen't fully support right joins so we have to reverse the table order
+                first = new DBEpisode();
+                second = new DBOnlineEpisode();
+            } else {
+                first = new DBOnlineEpisode();
+                second = new DBEpisode();
+            }
+
             string orderBy = string.Empty;
             if(selectFull)
             {
@@ -919,36 +999,36 @@ namespace WindowPlugins.GUITVSeries
                 if (Helper.String.IsNullOrEmpty(orderBy))
                     orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
 
-                SQLWhat what = new SQLWhat(new DBOnlineEpisode());
-                what.AddWhat(new DBEpisode());
+                SQLWhat what = new SQLWhat(first);
+                what.AddWhat(second);
                 // one query gets both first & second episode
                 sqlWhat = "select " + what;
             }
             else
             {
-                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + DBOnlineEpisode.cTableName;
+                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + first.m_tableName;
             }
             // oh, oh, the or join condition is slower than hell
             // its orders of magnitude faster to make two queries instead and do a UNION
             // union currently has a problem with orders in sqlite (bug in 3.4) -> temp workaround = use explicite alias on order field (works only if a single order col)
-            // http://www.sqlite.org/cvstrac/tktview?tn=2561,6
-            if (!Helper.String.IsNullOrEmpty(orderBy))
-            {
-                string ordercol = orderBy.Replace(" order by ", "").Replace(" asc ", "").Replace(" desc ", "");
-                string ordecolsplit = ordercol;
+            // http://www.sqlite.org/cvstrac/tktview?tn=2561,6 -- Status = Fixed
+            //if (!Helper.String.IsNullOrEmpty(orderBy))
+            //{
+            //    string ordercol = orderBy.Replace(" order by ", "").Replace(" asc ", "").Replace(" desc ", "");
+            //    string ordecolsplit = ordercol;
                 
-                if (ordercol.Contains("."))
-                {
-                    ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
-                }
-                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
-                orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
-            }
+            //    if (ordercol.Contains("."))
+            //    {
+            //        ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
+            //    }
+            //    sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+            //    orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
+            //}
 
-            sqlQuery = sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery = sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsFirst
                 + " union ";
-            sqlQuery += sqlWhat + " left join " + DBEpisode.cTableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery += sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsSecond + orderBy + conditions.limitString;
             
             return sqlQuery;
@@ -986,7 +1066,12 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(SQLCondition conditions, bool includeStdCond)
         {
-            return Get(stdGetSQL(conditions, true, includeStdCond));
+            return Get(stdGetSQL(conditions, true, includeStdCond, false));
+        }
+
+        public static List<DBEpisode> Get(SQLCondition conditions, bool includeStdCond, bool reverseJoin)
+        {
+            return Get(stdGetSQL(conditions, true, includeStdCond, reverseJoin));
         }
 
         public static List<DBEpisode> Get(string query)

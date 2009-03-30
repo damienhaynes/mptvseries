@@ -380,8 +380,8 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public void setPageTitle(string Title)
-        {
-            TVSeriesPlugin.setGUIProperty("Fanart.PageTitle", Title);
+        {            
+            TVSeriesPlugin.setGUIProperty("FanArt.PageTitle", Title);
         }
 
         protected override void OnShowContextMenu()
@@ -395,7 +395,7 @@ namespace WindowPlugins.GUITVSeries
                 IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
                 if (dlg == null) return;
                 dlg.Reset();
-                dlg.SetHeading("Fanart");
+                dlg.SetHeading(Translation.FanArt);
 
                 GUIListItem pItem;
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
@@ -879,10 +879,27 @@ namespace WindowPlugins.GUITVSeries
 
             TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartInfo", fanartInfo);
 
-            string preview = fanart.isAvailableLocally ?
-                             ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
-                             m_Facade.SelectedListItem.IconImageBig;
-          
+            string preview = string.Empty;
+            
+            if (fanart.isAvailableLocally)
+            {
+                // Ensure Fanart on Disk is valid as well
+                if (ImageAllocator.LoadImageFastFromFile(fanart.FullLocalPath) == null)
+                {
+                    MPTVSeriesLog.Write("Fanart is invalid, deleting...");
+                    fanart.Delete();
+                    fanart.Chosen = false;
+                    m_Facade.SelectedListItem.Label = Translation.FanArtOnline;
+                }                    
+                
+                // Should be safe to assign size fanart if available
+                preview = fanart.isAvailableLocally ?
+                          ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
+                          m_Facade.SelectedListItem.IconImageBig;
+            }
+            else
+                preview = m_Facade.SelectedListItem.IconImageBig;
+                      
             TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
         }
     }

@@ -78,6 +78,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
 
+        public const String cFirstAired = "FirstAired";
+
         public const int cDBVersion = 2;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -277,13 +279,37 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                         }
+                    case cFirstAired:
+                        DateTime firstAired = new DateTime();
+                        //if the try parse fails just get the value normally
+                        if (DateTime.TryParse(base[fieldName], out firstAired)) {
+                            return firstAired.ToString(DBOption.GetOptions(DBOption.cDateFormatString));
+                        }
+                        return base[fieldName];
+
                     default:
                         return base[fieldName];
                 }
             }
             set
             {
-                base[fieldName] = value;                           
+                switch (fieldName) {
+                    case cFirstAired:
+                        DateTime firstAired = new DateTime();
+                        //if the try parse fails just set the value normally
+                        if (DateTime.TryParseExact(value, DBOption.GetOptions(DBOption.cDateFormatString),
+                                System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out firstAired)) {
+                            base[fieldName] = firstAired.ToString("yyyy-MM-dd");
+                        } else {
+                            base[fieldName] = value;
+                        }
+                        break;
+
+
+                    default:
+                        base[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -465,22 +491,22 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(SeriesName))
                 InitValues();
-            if (base[cID] == 0)
+            if (this[cID] == 0)
             {
                 m_onlineSeries = new DBOnlineSeries(s_nLastLocalID);
                 s_nLastLocalID--;
                 DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
-                base[cID] = m_onlineSeries[DBOnlineSeries.cID];
+                this[cID] = m_onlineSeries[DBOnlineSeries.cID];
                 if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cPrettyName]))
                 {
-                    m_onlineSeries[DBOnlineSeries.cPrettyName] = base[cParsedName];
-                    m_onlineSeries[DBOnlineSeries.cSortName] = base[cParsedName];
+                    m_onlineSeries[DBOnlineSeries.cPrettyName] = this[cParsedName];
+                    m_onlineSeries[DBOnlineSeries.cSortName] = this[cParsedName];
                     m_onlineSeries.Commit();
                 }
             }
             else
             {
-                m_onlineSeries = new DBOnlineSeries(base[cID]);
+                m_onlineSeries = new DBOnlineSeries(this[cID]);
             }
         }
 
@@ -523,7 +549,7 @@ namespace WindowPlugins.GUITVSeries
             newOnlineSeries[DBOnlineSeries.cEpisodeOrders] = m_onlineSeries[DBOnlineSeries.cEpisodeOrders];
             newOnlineSeries[DBOnlineSeries.cChoseEpisodeOrder] = m_onlineSeries[DBOnlineSeries.cChoseEpisodeOrder];
             m_onlineSeries = newOnlineSeries;
-            base[cID] = nSeriesID;
+            this[cID] = nSeriesID;
         }
 
         public override ICollection<String> FieldNames

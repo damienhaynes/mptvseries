@@ -668,6 +668,7 @@ namespace WindowPlugins.GUITVSeries
                     "ookup");
             this.dataGridView_Replace.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_UserDeletedRow);
             this.dataGridView_Replace.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_Replace_CellEndEdit);
+            this.dataGridView_Replace.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(dataGridView_Replace_DefaultValuesNeeded);
             // 
             // button_TestReparse
             // 

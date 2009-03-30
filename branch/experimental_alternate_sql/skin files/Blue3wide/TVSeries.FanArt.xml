@@ -91,7 +91,7 @@
       <font>font16</font>
 	  <textcolor>ffa9d0f7</textcolor>
       <width>660</width>
-	  <label>#TVSeries.Fanart.PageTitle</label>
+	  <label>#TVSeries.FanArt.PageTitle</label>
     </control>
 	
 	<!--  ************** HIDDEN MENU *****************  -->    
