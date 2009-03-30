@@ -268,6 +268,7 @@
     <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
     <Compile Include="Subtitle Retrievers Classes\Remository.cs" />
     <Compile Include="Subtitle Retrievers Classes\seriessubs.cs" />
+    <Compile Include="Subtitle Retrievers Classes\tvsubtitles.cs" />
     <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
     <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Translation.cs" />
