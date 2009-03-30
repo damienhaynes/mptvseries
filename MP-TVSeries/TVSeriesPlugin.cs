@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
-        private bool foromWorking = false;
+        private bool tvsubsWorking = false;
         private bool seriessubWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;        
@@ -2005,13 +2005,13 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.options;
 
-                    bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                    bool tvSubtitlesEnable = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
                     bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
                     bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
                     bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
                     bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
-                    if (foromEnable || seriesSubEnable || remositoryEnable || newsEnable || torrentsEnable)
+                    if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable || newsEnable || torrentsEnable)
                     {
                         if (listLevel != Listlevel.Group)
                         {
@@ -2033,7 +2033,7 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.SetHeading(Translation.Download);
                                 
                                 
-                                if (foromEnable || seriesSubEnable || remositoryEnable)
+                                if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
@@ -2298,12 +2298,12 @@ namespace WindowPlugins.GUITVSeries
                                 setProcessAnimationStatus(true);
 
                                 List<CItem> Choices = new List<CItem>();
-                                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                                bool tvSubtitlesEnable = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
                                 bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
                                 bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
 
-                                if (foromEnable)
-                                  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                                if (tvSubtitlesEnable)
+                                  Choices.Add(new CItem("TVSubtitles.Net", "TVSubtitles.Net", "TVSubtitles.Net"));
                                 if (seriesSubEnable)
                                   Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
                                 if (remositoryEnable)
@@ -2363,10 +2363,10 @@ namespace WindowPlugins.GUITVSeries
                                                 {
                                   switch ((String)selected.m_Tag)
                                   {
-                                    case "Forom":
-                                      Forom forom = new Forom(this);
-                                      forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                      forom.GetSubs(episode);
+                                    case "TVSubtitles.Net":
+                                      TvSubtitles tvsubs = new TvSubtitles(this);
+                                      tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
+                                      tvsubs.GetSubs(episode);
                                       break;
 
                                     case "Series Subs":
@@ -2644,10 +2644,10 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void forom_SubtitleRetrievalCompleted(bool bFound)
+        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
         {
             setProcessAnimationStatus(false);
-            foromWorking = false;
+            tvsubsWorking = false;
             if (bFound)
             {
                 LoadFacade();
@@ -3469,7 +3469,7 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
-                    else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
+                    else if (!tvsubsWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
                 }
             }
