@@ -2376,8 +2376,8 @@ namespace WindowPlugins.GUITVSeries
                                       break;
 
                                     case "Remository":
-                                                    Remository remository = new Remository(this);
-                                                    remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                      Remository remository = new Remository(this);
+                                      remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
                                       remository.GetSubs(episode);
                                       break;
                                   }
