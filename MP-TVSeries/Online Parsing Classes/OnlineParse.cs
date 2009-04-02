@@ -1108,7 +1108,7 @@ namespace WindowPlugins.GUITVSeries
 
             // let's check which series/episodes we have locally
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
-            cond.AddOrderItem(DBEpisode.Q(DBEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+            cond.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
 
             List<DBEpisode> episodesInDB = DBEpisode.Get(cond);
 
@@ -1118,13 +1118,13 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < episodesInDB.Count; i++)
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
                     episodesInDB.RemoveAt(i--);
-            
+                   
             // let's updated those we are interested in
             // for the remaining ones get the <lang>.xml
             MPTVSeriesLog.Write(episodesInDB.Count.ToString() + " episodes need updating");
             int seriesID = 0;
             for(int i=0; i<episodesInDB.Count; i++)
-            {
+            {            
                 if (seriesID != episodesInDB[i][DBEpisode.cSeriesID])
                 {
                     seriesID = episodesInDB[i][DBEpisode.cSeriesID];
