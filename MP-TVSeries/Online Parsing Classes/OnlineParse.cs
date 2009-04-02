@@ -371,7 +371,7 @@ namespace WindowPlugins.GUITVSeries
                     UpdateEpisodes(GU.UpdatedEpisodes);
 
                     // update banners
-                    UpdateBanners(false, GU.UpdatedSeries);
+                    UpdateBanners(false, GU.UpdatedBanners);
 
                     // lets save the updateTimestamp
                     if (GU.OnlineTimeStamp > 0)
