@@ -897,8 +897,8 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Series"));
-                // and that already had data imported from the online DB (but not the new ones, that are set to 2)
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, SQLConditionType.Equal);                
+                // and that already had data imported from the online DB (but not the new ones, that are set to 1) ??
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);                
             }
             List<DBSeries> SeriesList = DBSeries.Get(condition, false, false);
 

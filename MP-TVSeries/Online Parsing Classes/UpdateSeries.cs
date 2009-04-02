@@ -61,6 +61,10 @@ namespace WindowPlugins.GUITVSeries
         {
             if (sSeriesID.Length > 0)
             {
+                int result;
+                if (int.TryParse(sSeriesID,out result))
+                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
+                
                 XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
 
                 if (node != null)
