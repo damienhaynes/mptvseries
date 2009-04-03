@@ -184,15 +184,15 @@ namespace WindowPlugins.GUITVSeries
 
         public override DBValue  this[string fieldName]
         {
-            get 
-            { 
-	             return base[fieldName];
-            }
-            set 
-            {                
-	            base[fieldName] = value;                               
-            }
-        }
+            get
+            {
+                        return base[fieldName];
+                }
+            set
+            {
+                            base[fieldName] = value;
+                        }
+                }
 
         /// <summary>
         /// Returns a pretty String representation of this DBOnlineEpisode (Series - 1x01 - Pilot)
@@ -366,10 +366,10 @@ namespace WindowPlugins.GUITVSeries
             if (!ReadPrimary(filename))
                 InitValues();
             if (System.IO.File.Exists(filename) && !mediaInfoIsSet) readMediaInfoOfLocal();
-            if (base[cSeriesID].ToString().Length > 0 && base[cSeasonIndex] != -1 && base[cEpisodeIndex] != -1)
+            if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
-                m_onlineEpisode = new DBOnlineEpisode(base[cSeriesID], base[cSeasonIndex], base[cEpisodeIndex]);
-                base[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
+                m_onlineEpisode = new DBOnlineEpisode(this[cSeriesID], this[cSeasonIndex], this[cEpisodeIndex]);
+                this[cCompositeID] = m_onlineEpisode[DBOnlineEpisode.cCompositeID];
             }
         }
 
@@ -377,14 +377,14 @@ namespace WindowPlugins.GUITVSeries
         {
             // TODO: update local_episodes set seriesID =  74205 where seriesID = -1
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
-            string composite = nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
-            if (!base[DBEpisode.cCompositeID].ToString().Contains("x"))
-                composite = nSeriesID + "_" + base[DBOnlineEpisode.cFirstAired];
+            string composite = nSeriesID + "_" + this[cSeasonIndex] + "x" + this[cEpisodeIndex];
+            if (!this[DBEpisode.cCompositeID].ToString().Contains("x"))
+                composite = nSeriesID + "_" + this[DBOnlineEpisode.cFirstAired];
             if (!newOnlineEpisode.ReadPrimary(composite))
             {
                 newOnlineEpisode[cSeriesID] = nSeriesID;
-                newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
+                newOnlineEpisode[cSeasonIndex] = this[cSeasonIndex];
+                newOnlineEpisode[cEpisodeIndex] = this[cEpisodeIndex];
 
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
                 {
@@ -400,15 +400,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
-            base[cSeriesID] = nSeriesID;
+            this[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
+            this[cSeriesID] = nSeriesID;
 
-            if (base[DBEpisode.cCompositeID2].ToString().Length > 0) {
+            if (this[DBEpisode.cCompositeID2].ToString().Length > 0) {
                 DBOnlineEpisode oldDouble = new DBOnlineEpisode();
-                bool oldExist = oldDouble.ReadPrimary(base[DBEpisode.cCompositeID2]);
-                base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
+                bool oldExist = oldDouble.ReadPrimary(this[DBEpisode.cCompositeID2]);
+                this[DBEpisode.cCompositeID2] = nSeriesID + "_" + this[DBEpisode.cSeasonIndex] + "x" + this[DBEpisode.cEpisodeIndex2];
                 DBOnlineEpisode newDouble = new DBOnlineEpisode();
-                if (!newDouble.ReadPrimary(base[DBEpisode.cCompositeID2])) {
+                if (!newDouble.ReadPrimary(this[DBEpisode.cCompositeID2])) {
                     if (oldExist) {
                         foreach (string fieldName in oldDouble.FieldNames) {
                             switch (fieldName) {
@@ -424,8 +424,8 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     newDouble[cSeriesID] = nSeriesID;
-                    newDouble[cSeasonIndex] = base[cSeasonIndex];
-                    newDouble[cEpisodeIndex] = base[cEpisodeIndex2];
+                    newDouble[cSeasonIndex] = this[cSeasonIndex];
+                    newDouble[cEpisodeIndex] = this[cEpisodeIndex2];
 
                     newDouble.Commit();
                 }
@@ -481,8 +481,8 @@ namespace WindowPlugins.GUITVSeries
         public override void InitValues()
         {
             base.InitValues();
-            base[cSeasonIndex] = -1;
-            base[cEpisodeIndex] = -1;
+            this[cSeasonIndex] = -1;
+            this[cEpisodeIndex] = -1;
         }
 
         public bool mediaInfoIsSet
@@ -697,7 +697,7 @@ namespace WindowPlugins.GUITVSeries
                         return Helper.MSToMMSS(this["localPlaytime"]);
                     case cFilenameWOPath:
                         return System.IO.Path.GetFileName(this[cFilename]);
-                }
+                        }
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {
@@ -740,11 +740,11 @@ namespace WindowPlugins.GUITVSeries
                         case cEpisodeIndex2:
                             if (!Helper.String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
                             {
-                                MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discared because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
+                                MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discarded because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
                                 return;
                             }
-                            break;                        
+                            break;
 
                         default:
                             if (m_onlineEpisode.m_fields.ContainsKey(fieldName) || fieldName == DBOnlineEpisode.cMyRating)

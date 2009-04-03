@@ -45,7 +45,7 @@ namespace WindowPlugins.GUITVSeries
 
         public override string ToString()
         {
-            return base[cID];
+            return this[cID];
         }
 
         static DBTorrentSearch()
