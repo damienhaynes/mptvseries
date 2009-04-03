@@ -198,7 +198,7 @@ namespace WindowPlugins.GUITVSeries
         public void ChangeSeriesID(int nSeriesID)
         {
             DBSeason newSeason = new DBSeason();
-            String sSeasonID = nSeriesID + "_s" + base[cIndex];
+            String sSeasonID = nSeriesID + "_s" + this[cIndex];
             if (!newSeason.ReadPrimary(sSeasonID))
             {
                 foreach (String fieldName in FieldNames)
@@ -210,7 +210,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
 
                         default:
-                            newSeason[fieldName] = base[fieldName];
+                            newSeason[fieldName] = this[fieldName];
                             break;
                     }
                 }
@@ -225,20 +225,20 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                if (Helper.String.IsNullOrEmpty(base[cCurrentBannerFileName]))
+                if (Helper.String.IsNullOrEmpty(this[cCurrentBannerFileName]))
                     return String.Empty;
                 string filename;
-                if (base[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(base[cCurrentBannerFileName])) == -1)
-                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), base[cCurrentBannerFileName]);
+                if (this[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(this[cCurrentBannerFileName])) == -1)
+                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cCurrentBannerFileName]);
                 else
-                    filename = base[cCurrentBannerFileName];
+                    filename = this[cCurrentBannerFileName];
                 if (System.IO.File.Exists(filename)) return filename;
                 return string.Empty;
             }
             set
             {
                 value = value.Replace(Settings.GetPath(Settings.Path.banners), "");
-                base[cCurrentBannerFileName] = value;
+                this[cCurrentBannerFileName] = value;
             }
         }
         public override DBValue this[String fieldName]
@@ -265,7 +265,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 List<String> outList = new List<string>();
-                String sList = base[cBannerFileNames];
+                String sList = this[cBannerFileNames];
                 if (Helper.String.IsNullOrEmpty(sList))
                     return outList;
 
@@ -287,7 +287,7 @@ namespace WindowPlugins.GUITVSeries
                     else
                         sIn += "," + value[i];
                 }
-                base[cBannerFileNames] = sIn;
+                this[cBannerFileNames] = sIn;
 
             }
         }

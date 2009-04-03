@@ -61,6 +61,9 @@ namespace WindowPlugins.GUITVSeries
         static List<formatingRule> formatingRules = new List<formatingRule>();
         static List<string> nonFormattingFields = new List<string>();
         static bool _splitFields = true; // not thread safe
+
+        static bool _formatDates = false;
+        static string _dateFormat = null;
         #endregion
 
         #region Constructors
@@ -114,7 +117,9 @@ namespace WindowPlugins.GUITVSeries
 
             // want to ensure these show as is
             nonFormattingFields.Add("<Episode.EpisodeFilename>");
-            
+
+            _dateFormat = DBOption.GetOptions(DBOption.cDateFormatString);
+            _formatDates = !Helper.String.IsNullOrEmpty(_dateFormat);
         }
         #endregion
 
@@ -262,6 +267,18 @@ namespace WindowPlugins.GUITVSeries
                 if (_splitFields) result = result.Trim('|').Replace("|", ", ");
                 /*if (m.Value == "EpisodeIndex" && item["SeasonIndex"].ToString() == "0" && what.IndexOf("<SeasonIndex>",0) < 0)
                     result = "S" + item["EpisodeIndex"];*/
+
+                if (_formatDates) {
+                    //this seems to be the only location that we can easily get the individual field values without having to worry if the
+                    //format string contains more than one field (eg. "<firstAried> (<status>)")
+                    //so this is were we test if the value is a date in the format "yyyy-MM-dd" and if it is we format it.
+
+                    DateTime date;
+                    if (DateTime.TryParseExact(result, "yyyy-MM-dd", System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out date)) {
+                        result = date.ToString(_dateFormat);
+                    }
+                }
+
                 value = value.Replace(Identifier + m.Value + ">", result);
             }            
             return value;
