@@ -193,7 +193,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
-            this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+            this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
@@ -289,7 +289,9 @@ namespace WindowPlugins.GUITVSeries
                 qualityEpisode.Enabled = false;
                 qualityPoster.Enabled = false;
             }
-      
+
+            chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
+
             tabControl_Details.SelectTab(1);
         }
 
@@ -3394,11 +3396,7 @@ namespace WindowPlugins.GUITVSeries
         private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
-        }
-        private void checkBox_altImage_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cAltImgLoading, checkBox_altImage.Checked);
-        }
+        }  
 
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
         {
@@ -3542,6 +3540,11 @@ namespace WindowPlugins.GUITVSeries
         {
             decimal val = spinMaxFanarts.Value;
             DBOption.SetOptions(DBOption.cAutoDownloadFanartCount, val.ToString());
+        }
+
+        private void chkUseRegionalDateFormatString_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cUseRegionalDateFormatString, chkUseRegionalDateFormatString.Checked);
         }
     }
     
