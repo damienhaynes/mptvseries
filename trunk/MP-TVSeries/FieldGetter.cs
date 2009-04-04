@@ -118,8 +118,9 @@ namespace WindowPlugins.GUITVSeries
             // want to ensure these show as is
             nonFormattingFields.Add("<Episode.EpisodeFilename>");
 
-            _dateFormat = DBOption.GetOptions(DBOption.cDateFormatString);
-            _formatDates = !Helper.String.IsNullOrEmpty(_dateFormat);
+            //_dateFormat = DBOption.GetOptions(DBOption.cDateFormatString);
+            _dateFormat = System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
+            _formatDates = !Helper.String.IsNullOrEmpty(_dateFormat) && DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
         }
         #endregion
 
