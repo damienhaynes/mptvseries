@@ -40,13 +40,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             //get all the series ids
             series = new List<DBValue>();
             foreach (XmlNode node in updates.SelectNodes("/Data/Series/id")) {
-                this.series.Add(node.Value);
+                this.series.Add(node.InnerText);
             }
 
             //get all the episode ids
             episodes = new List<DBValue>();
             foreach (XmlNode node in updates.SelectNodes("/Data/Episode/id")) {
-                this.episodes.Add(node.Value);
+                this.episodes.Add(node.InnerText);
             }
             
             //get all the season banners
