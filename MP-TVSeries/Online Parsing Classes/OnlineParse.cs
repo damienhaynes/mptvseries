@@ -1025,7 +1025,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
                     if (episodesParser.Results.Count > 0)
                     {
-                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\", matching them up with local episodes now", episodesParser.Results.Count, series.ToString()));
+                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\", matching them up with local episodes now", episodesParser.Results.Count.ToString().PadLeft(3,'0'), series.ToString()));
                         // look for the episodes for that series, and compare / update the values
                         matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                     }
@@ -1118,6 +1118,11 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < episodesInDB.Count; i++)
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
                     episodesInDB.RemoveAt(i--);
+            
+            if (episodesInDB.Count == 0) {
+                MPTVSeriesLog.Write("Nothing to do");
+                return;
+            }
                    
             // let's updated those we are interested in
             // for the remaining ones get the <lang>.xml
