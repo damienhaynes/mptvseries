@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
             m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
 
             // Clear GUI Properties
-            ClearGUIPropertys();
+            ClearGUIProperties();
 
             LoadDirectory(string.Empty);
             if (g_Player.Playing && playlistPlayer.CurrentPlaylistType == PlayListType.PLAYLIST_TVSERIES)
@@ -600,7 +600,7 @@ namespace WindowPlugins.GUITVSeries
             }
             LoadDirectory(string.Empty);
             UpdateButtonStates();
-            ClearGUIPropertys();
+            ClearGUIProperties();
             if (btnLoad != null)
                 GUIControl.FocusControl(GetID, btnLoad.GetID);
         }
@@ -645,7 +645,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void ClearGUIPropertys()
+        private void ClearGUIProperties()
         {
             TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
@@ -789,7 +789,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     GUIListItem listItem = m_Facade[i];
                     PlayListItem playListItem = new PlayListItem();                                       
-                    playListItem.EpisodeID = listItem.TVTag.ToString();
+                    playListItem.Episode = listItem.TVTag as DBEpisode;
                     playlist.Add(playListItem);
                 }
                 PlayListIO saver = new PlayListIO();
