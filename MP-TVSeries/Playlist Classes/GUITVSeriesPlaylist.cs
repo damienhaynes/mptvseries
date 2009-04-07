@@ -51,6 +51,9 @@ namespace WindowPlugins.GUITVSeries
         PlayListPlayer playlistPlayer;
         private View currentView = View.PlayList;
         const int windowID = 9813;
+        private String m_sFormatEpisodeTitle = String.Empty;
+        private String m_sFormatEpisodeSubtitle = String.Empty;
+        private String m_sFormatEpisodeMain = String.Empty;
 
         #endregion
 
@@ -86,7 +89,6 @@ namespace WindowPlugins.GUITVSeries
             EpisodeImage,
             SeriesBanner,
             SeasonBanner
-
         }
 
         public GUITVSeriesPlayList()
@@ -174,6 +176,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
             }
+            
+            // Episode Formatting
+            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
+            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
+            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+
+            // Clear GUI Properties
+            ClearGUIPropertys();
 
             LoadDirectory(string.Empty);
             if (g_Player.Playing && playlistPlayer.CurrentPlaylistType == PlayListType.PLAYLIST_TVSERIES)
@@ -488,8 +498,8 @@ namespace WindowPlugins.GUITVSeries
                     GUIListItem pItem = new GUIListItem(item.Description);
                     pItem.Path = strFileName;
                     pItem.IsFolder = false;
-                    pItem.TVTag = item.EpisodeID;
-
+                    pItem.TVTag = item.Episode;
+                    
                     // update images
                     pItem.ThumbnailImage = item.EpisodeThumb;
                     pItem.IconImageBig = item.EpisodeThumb;
@@ -590,6 +600,7 @@ namespace WindowPlugins.GUITVSeries
             }
             LoadDirectory(string.Empty);
             UpdateButtonStates();
+            ClearGUIPropertys();
             if (btnLoad != null)
                 GUIControl.FocusControl(GetID, btnLoad.GetID);
         }
@@ -624,8 +635,22 @@ namespace WindowPlugins.GUITVSeries
             if (item == null || item.TVTag == null)
                 return;
 
-            // TODO: Push properties to skin
-            //TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), "");
+            DBEpisode episode = item.TVTag as DBEpisode;
+            
+            // Push properties to skin
+            TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
+            TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
+            TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
+            TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
+
+        }
+
+        private void ClearGUIPropertys()
+        {
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
+            TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 
         protected void OnQueueItem(int itemIndex)
