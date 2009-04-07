@@ -191,6 +191,12 @@ namespace WindowPlugins.GUITVSeries
                 GUIControl.FocusControl(GetID, btnLoad.GetID);
             }
 
+            if (m_Facade.Count > 0)
+            {
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
+                SelectCurrentItem();
+            }
+
             playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
             if (btnRepeat != null)
             {
@@ -203,6 +209,8 @@ namespace WindowPlugins.GUITVSeries
                 btnAutoPlay.Selected = playlistPlayer.PlaylistAutoPlay;
                 btnAutoPlay.Label = Translation.ButtonAutoPlay;
             }
+            
+            
         }
 
         protected override void OnPageDestroy(int newWindowId)
@@ -551,11 +559,11 @@ namespace WindowPlugins.GUITVSeries
 
                 //set object count label
                 int iTotalItems = itemlist.Count;
-                GUIPropertyManager.SetProperty("#itemcount", "Episodes: " + iTotalItems.ToString());
+                GUIPropertyManager.SetProperty("#itemcount", Translation.Episodes + ": " + iTotalItems.ToString());
 
                 if (currentSelectedItem >= 0)
                 {
-                    GUIControl.SelectItemControl(GetID, m_Facade.GetID, currentSelectedItem);
+                    GUIControl.SelectItemControl(GetID, m_Facade.GetID, currentSelectedItem);                    
                 }
                 UpdateButtonStates();
                 GUIWaitCursor.Hide();
