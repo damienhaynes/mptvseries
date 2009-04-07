@@ -1564,7 +1564,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(which, string.Empty);
         }
 
-        void clearGUIProperty(string which)
+        public static void clearGUIProperty(string which)
         {
             setGUIProperty(which, "-"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
@@ -4022,8 +4022,8 @@ namespace WindowPlugins.GUITVSeries
             m_watcherUpdater.StartFolderWatch();
         }
 
-        Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
-        private void pushFieldsToSkin(DBTable item, string pre)
+        static Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
+        public static void pushFieldsToSkin(DBTable item, string pre)
         {
             if (item == null) return;
             List<string> fieldsRequestedForPre = null;
@@ -4038,12 +4038,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-        private void pushFieldToSkin(DBTable item, string pre, string field)
+        private static void pushFieldToSkin(DBTable item, string pre, string field)
         {
             string t = pre + "." + field;
             setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
         }
-        private void clearFieldsForskin(string pre)
+        public static void clearFieldsForskin(string pre)
         {
             if (_allFieldsForSkin.ContainsKey(pre))
             {
