@@ -208,8 +208,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 btnAutoPlay.Selected = playlistPlayer.PlaylistAutoPlay;
                 btnAutoPlay.Label = Translation.ButtonAutoPlay;
-            }
-            
+            }            
             
         }
 

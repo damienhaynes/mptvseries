@@ -3056,6 +3056,7 @@ namespace WindowPlugins.GUITVSeries
             if (control == this.LoadPlaylistButton)
             {
                 OnShowSavedPlaylists(DBOption.GetOptions(DBOption.cPlaylistPath));
+                LoadPlaylistButton.Focus = false;
                 return;
             }
 
@@ -4603,7 +4604,10 @@ namespace WindowPlugins.GUITVSeries
             {
                 // then get 1st item
                 playlist = _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
-                PlayListItem item = playlist[0];
+                PlayListItem item = playlist[0];                
+
+                // and activate the playlist window
+                ShowPlaylistWindow();
 
                 // and start playing it
                 if (_playlistPlayer.PlaylistAutoPlay)
@@ -4612,9 +4616,6 @@ namespace WindowPlugins.GUITVSeries
                     _playlistPlayer.Reset();
                     _playlistPlayer.Play(0);
                 }
-
-                // and activate the playlist window
-                ShowPlaylistWindow();
             }
         }
 
