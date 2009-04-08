@@ -135,5 +135,5 @@
         <string Field="LabelResolution" Original="Resolution:">Upplösning:</string>
         <string Field="LabelChosen" Original="Chosen:">Vald:</string>
         <string Field="LabelDisabled" Original="Disabled:">Ej vald:</string>
-        
+        <string Field="ResetUserSelections" Original="Reset User Selections">Nollställ egen markering</string>
 </strings>
