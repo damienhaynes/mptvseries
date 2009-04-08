@@ -1008,6 +1008,9 @@ namespace WindowPlugins.GUITVSeries
             if (m_Facade.Count == 0)
             {
                 g_Player.Stop();
+                ClearGUIProperties();
+                if (btnLoad != null)
+                    GUIControl.FocusControl(GetID, btnLoad.GetID); 
             }
             else
             {
