@@ -542,6 +542,7 @@ namespace WindowPlugins.GUITVSeries
                         this["AudioCodec"] = (result = MI.getAudioCodec()).Length > 0 ? result : "-1";
                         this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
                         this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
+                        this["AudioTracks"] = (result = MI.getAudioStreamCount()).Length > 0 ? result : "-1";
                     }
                     else failed = true;
                     //MI.Close();

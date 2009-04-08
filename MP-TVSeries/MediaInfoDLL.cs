@@ -160,6 +160,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string getAudioCount() { return this.Get(StreamKind.Audio, 0, "StreamCount");}
         public string getAudioCodec() { return this.Get(StreamKind.Audio, 0, "Codec");  }
         public string getAudioBitrate() { return this.Get(StreamKind.Audio, 0, "BitRate"); }
+        public string getAudioStreamCount() { return this.Get(StreamKind.Audio, 0, "StreamCount"); }
         public string getNoChannels() { return getNoChannels(0); }
         public string getNoChannels(int stream) { return this.Get(StreamKind.Audio, (uint)stream, "Channel(s)"); }
 
