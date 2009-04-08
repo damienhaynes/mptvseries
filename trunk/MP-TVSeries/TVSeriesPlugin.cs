@@ -379,6 +379,7 @@ namespace WindowPlugins.GUITVSeries
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
             analyseSkinForWantedFields(xmlSkin);
+
             return Load(xmlSkin);
         }
 
@@ -4378,7 +4379,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void analyseSkinForWantedFields(string skinfile)
+        public static void analyseSkinForWantedFields(string skinfile)
         {
             string content = string.Empty;
             using (System.IO.StreamReader r = new System.IO.StreamReader(skinfile))
@@ -4403,7 +4404,12 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write(matches[i].Value);
                     if (_allFieldsForSkin.ContainsKey(pre))
-                        _allFieldsForSkin[pre].Add(value);
+                    {
+                        if (!_allFieldsForSkin[pre].Contains(value))
+                        {
+                            _allFieldsForSkin[pre].Add(value);
+                        }
+                    }
                     else
                     {
                         List<string> v = new List<string>();

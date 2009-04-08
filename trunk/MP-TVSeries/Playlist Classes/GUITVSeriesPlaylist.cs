@@ -124,7 +124,12 @@ namespace WindowPlugins.GUITVSeries
         public override bool Init()
         {
             currentFolder = Directory.GetCurrentDirectory();
-            return Load(GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml");
+
+            string xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml";
+            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
+            TVSeriesPlugin.analyseSkinForWantedFields(xmlSkin);
+
+            return Load(xmlSkin);            
         }
 
         #region BaseWindow Members
