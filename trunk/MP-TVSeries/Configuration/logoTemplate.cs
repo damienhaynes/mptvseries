@@ -237,7 +237,7 @@ namespace WindowPlugins.GUITVSeries
 
             t = new Template();
             t.name = "Subtitles Logo";
-            t.descr = "Display a Logo if an Episode has subtitles alongside it."
+            t.descr = "Display a Logo if an Episode has an embedded subtitle or subtitles alongside it."
                        + Environment.NewLine +
                        "Expected Filename: static";
 
