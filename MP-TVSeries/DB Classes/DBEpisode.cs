@@ -543,6 +543,9 @@ namespace WindowPlugins.GUITVSeries
                         this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
                         this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
                         this["AudioTracks"] = (result = MI.getAudioStreamCount()).Length > 0 ? result : "-1";
+                        
+                        this["TextCount"] = (result = MI.getTextCount()).Length > 0 ? result : "-1";                        
+
                     }
                     else failed = true;
                     //MI.Close();
@@ -628,6 +631,14 @@ namespace WindowPlugins.GUITVSeries
                 subTitleExtensions.Add(".zeg");
                 
             }
+
+            // Read MediaInfo for embedded subtitles
+            if (!Helper.String.IsNullOrEmpty(this["TextCount"]))
+            {
+                if ((int)this["TextCount"] > 0) 
+                    return true;
+            }
+
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {

@@ -163,6 +163,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string getAudioStreamCount() { return this.Get(StreamKind.Audio, 0, "StreamCount"); }
         public string getNoChannels() { return getNoChannels(0); }
         public string getNoChannels(int stream) { return this.Get(StreamKind.Audio, (uint)stream, "Channel(s)"); }
+        public string getTextCount() { return this.Get(StreamKind.General, 0, "TextCount"); }
 
 
         #region IDisposable Members
