@@ -232,7 +232,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
           reader.Close();
 
           String sFilters = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
-          String RegExp = @"<a href=""([^""]*)""[^>]*>\s*<[^>]*><img src="".*?/(" + sFilters + @")[^>/]*>([^<]*)";
+          String RegExp = @"<a href=""([^""]*)""[^>]*>(?:\s*?<(?!/a)[^>]*>[^<]*)*?<img src="".*?/(" + sFilters + @")[^>/]*>([^<]*)";
           Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
           matches = Engine.Matches(sPage);
           if (matches.Count == 0)
