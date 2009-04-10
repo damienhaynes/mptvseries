@@ -375,16 +375,19 @@ namespace WindowPlugins.GUITVSeries
 
         public void ChangeSeriesID(int nSeriesID)
         {
+            // use base[] as this[] as logic for DBOnlineEpisode prevents localepisode seriesID being set 
+            // and interfers with double episode logic
+
             // TODO: update local_episodes set seriesID =  74205 where seriesID = -1
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
-            string composite = nSeriesID + "_" + this[cSeasonIndex] + "x" + this[cEpisodeIndex];
-            if (!this[DBEpisode.cCompositeID].ToString().Contains("x"))
-                composite = nSeriesID + "_" + this[DBOnlineEpisode.cFirstAired];
+            string composite = nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
+            if (!base[DBEpisode.cCompositeID].ToString().Contains("x"))
+                composite = nSeriesID + "_" + base[DBOnlineEpisode.cFirstAired];
             if (!newOnlineEpisode.ReadPrimary(composite))
             {
                 newOnlineEpisode[cSeriesID] = nSeriesID;
-                newOnlineEpisode[cSeasonIndex] = this[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = this[cEpisodeIndex];
+                newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
+                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
 
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
                 {
@@ -400,15 +403,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            this[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
-            this[cSeriesID] = nSeriesID;
+            base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
+            base[cSeriesID] = nSeriesID;
 
-            if (this[DBEpisode.cCompositeID2].ToString().Length > 0) {
+            if (base[DBEpisode.cCompositeID2].ToString().Length > 0) {
                 DBOnlineEpisode oldDouble = new DBOnlineEpisode();
-                bool oldExist = oldDouble.ReadPrimary(this[DBEpisode.cCompositeID2]);
-                this[DBEpisode.cCompositeID2] = nSeriesID + "_" + this[DBEpisode.cSeasonIndex] + "x" + this[DBEpisode.cEpisodeIndex2];
+                bool oldExist = oldDouble.ReadPrimary(base[DBEpisode.cCompositeID2]);
+                base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
                 DBOnlineEpisode newDouble = new DBOnlineEpisode();
-                if (!newDouble.ReadPrimary(this[DBEpisode.cCompositeID2])) {
+                if (!newDouble.ReadPrimary(base[DBEpisode.cCompositeID2])) {
                     if (oldExist) {
                         foreach (string fieldName in oldDouble.FieldNames) {
                             switch (fieldName) {
@@ -424,8 +427,8 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     newDouble[cSeriesID] = nSeriesID;
-                    newDouble[cSeasonIndex] = this[cSeasonIndex];
-                    newDouble[cEpisodeIndex] = this[cEpisodeIndex2];
+                    newDouble[cSeasonIndex] = base[cSeasonIndex];
+                    newDouble[cEpisodeIndex] = base[cEpisodeIndex2];
 
                     newDouble.Commit();
                 }
