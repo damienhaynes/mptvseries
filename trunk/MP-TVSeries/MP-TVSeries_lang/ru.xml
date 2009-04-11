@@ -116,4 +116,23 @@
 	<string Field="FanartDisableLabel" Original="Disabled">Отключено</string>
 	<string Field="FanartMenuEnable" Original="Enable">Включить фанарт</string>
 	<string Field="FanartMenuDisable" Original="Disable">Отключить фанарт</string>
+<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+	<string Field="LayoutList" Original="List">Список</string>
+	<string Field="LayoutListBanners" Original="List Banners">Список и баннеры</string>
+	<string Field="LayoutListPosters" Original="List Posters">Список и постеры</string>
+	<string Field="LayoutWideBanners" Original="Wide Banners">Широкие баннеры</string>
+	<string Field="LayoutFilmstrip" Original="Filmstrip">Диафильм</string>
+	<string Field="LayoutSmallIcons" Original="Small Icons">Маленькие значки</string>
+	<string Field="ButtonAutoPlay" Original="Auto Play">Автоматическое воспроизведение</string>
+	<string Field="ButtonSwitchView" Original="Switch View">Переключить вид</string>
+	<string Field="ButtonRunImport" Original="Run Import">Начать импорт</string>
+	<string Field="ButtonChangeLayout" Original="Change Layout">Сменить отображение</string>
+	<string Field="ButtonOptions" Original="Options">Опции</string>	
+	<string Field="FanArtFilter" Original="Filter">Фильтр</string>
+	<string Field="FanArtFilterAll" Original="All">Все</string>
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Случайный фанарт</string>	
+	<string Field="LabelResolution" Original="Resolution:">Разрешение:</string>
+	<string Field="LabelChosen" Original="Chosen:">Выбрано:</string>
+	<string Field="LabelDisabled" Original="Disabled:">Отключено:</string>
+	<string Field="ResetUserSelections" Original="Reset User Selections">Сбросить выбор пользователя</string>
 </strings>
