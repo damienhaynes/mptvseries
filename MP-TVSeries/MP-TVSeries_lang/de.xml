@@ -71,6 +71,7 @@
 	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">Gesamte Fanart für diese Serie zeigen</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Fanart herunterladen und nutzen</string>
+	<string Field="FanArtGet" Original="Download Fanart">Fanart herunterladen</string>
 	<string Field="FanArtUse" Original="Use Fanart">Nutze Fanart</string>
 	<string Field="FanArtDelete" Original="Delete Fanart">Lösche Fanart</string>
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">{0} Fanart wird heruntergeladen...</string>
@@ -109,4 +110,29 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com ist zur Zeit nicht verfügbar, versuch es später wieder</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Internetverbindung nicht verfügbar, prüfe die Verbindung und versuche es erneut</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Fanart in Serienansicht zeigen</string>
+	<string Field="ChangeLayout" Original="Change Layout">Layout ändern</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Online-Favoriten nutzen</string>
+	<string Field="AddToPlaylist" Original="Add To Playlist">Zu Playlist hinzufügen</string>
+	<string Field="FanartDisableLabel" Original="Disabled">Deaktiviert</string>
+	<string Field="FanartMenuEnable" Original="Enable Fanart">Fanart aktivieren</string>
+	<string Field="FanartMenuDisable" Original="Disable Fanart">Fanart deaktivieren</string>
+	<string Field="SortByStrings" Original="SortByStrings">the|a|an|das|dem|den|des|der|die|ein|eine|einem|einen|eines|einer</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+	<string Field="LayoutList" Original="List">Liste</string>
+	<string Field="LayoutListBanners" Original="List Banners">Bannerliste</string>
+	<string Field="LayoutListPosters" Original="List Posters">Posterliste</string>
+	<string Field="LayoutWideBanners" Original="Wide Banners">Breite Banner</string>
+	<string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
+	<string Field="LayoutSmallIcons" Original="Small Icons">Kleine Icons</string>
+	<string Field="ButtonAutoPlay" Original="Auto Play">Auto Play</string>
+	<string Field="ButtonSwitchView" Original="Switch View">Ansicht wechseln</string>
+	<string Field="ButtonRunImport" Original="Run Import">Import starten</string>
+	<string Field="ButtonChangeLayout" Original="Change Layout">Layout ändern</string>
+	<string Field="ButtonOptions" Original="Options">Optionen</string>	
+	<string Field="FanArtFilter" Original="Filter">Filter</string>
+	<string Field="FanArtFilterAll" Original="All">Alle</string>
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Zufalls-Fanart</string>	
+	<string Field="LabelResolution" Original="Resolution:">Auflösung:</string>
+	<string Field="LabelChosen" Original="Chosen:">Gewählt:</string>
+	<string Field="LabelDisabled" Original="Disabled:">Deaktiviert:</string>
+	<string Field="ResetUserSelections" Original="Reset User Selections">Nutzerauswahl zurücksetzen</string>
 </strings>
