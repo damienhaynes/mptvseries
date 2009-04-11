@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
-        private bool foromWorking = false;
+        private bool tvsubsWorking = false;
         private bool seriessubWorking = false;
         private bool remositoryWorking = false;
         private bool torrentWorking = false;        
@@ -379,6 +379,7 @@ namespace WindowPlugins.GUITVSeries
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
             analyseSkinForWantedFields(xmlSkin);
+
             return Load(xmlSkin);
         }
 
@@ -1564,7 +1565,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(which, string.Empty);
         }
 
-        void clearGUIProperty(string which)
+        public static void clearGUIProperty(string which)
         {
             setGUIProperty(which, "-"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
@@ -2005,13 +2006,13 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.options;
 
-                    bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                    bool tvSubtitlesEnable = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
                     bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
                     bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
                     bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
                     bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
-                    if (foromEnable || seriesSubEnable || remositoryEnable || newsEnable || torrentsEnable)
+                    if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable || newsEnable || torrentsEnable)
                     {
                         if (listLevel != Listlevel.Group)
                         {
@@ -2033,7 +2034,7 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.SetHeading(Translation.Download);
                                 
                                 
-                                if (foromEnable || seriesSubEnable || remositoryEnable)
+                                if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
                                     dlg.Add(pItem);
@@ -2298,12 +2299,12 @@ namespace WindowPlugins.GUITVSeries
                                 setProcessAnimationStatus(true);
 
                                 List<CItem> Choices = new List<CItem>();
-                                bool foromEnable = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
+                                bool tvSubtitlesEnable = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
                                 bool seriesSubEnable = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
                                 bool remositoryEnable = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
 
-                                if (foromEnable)
-                                  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                                if (tvSubtitlesEnable)
+                                  Choices.Add(new CItem("TVSubtitles.Net", "TVSubtitles.Net", "TVSubtitles.Net"));
                                 if (seriesSubEnable)
                                   Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
                                 if (remositoryEnable)
@@ -2363,10 +2364,10 @@ namespace WindowPlugins.GUITVSeries
                                                 {
                                   switch ((String)selected.m_Tag)
                                   {
-                                    case "Forom":
-                                      Forom forom = new Forom(this);
-                                      forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                      forom.GetSubs(episode);
+                                    case "TVSubtitles.Net":
+                                      TvSubtitles tvsubs = new TvSubtitles(this);
+                                      tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
+                                      tvsubs.GetSubs(episode);
                                       break;
 
                                     case "Series Subs":
@@ -2376,8 +2377,8 @@ namespace WindowPlugins.GUITVSeries
                                       break;
 
                                     case "Remository":
-                                                    Remository remository = new Remository(this);
-                                                    remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                      Remository remository = new Remository(this);
+                                      remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
                                       remository.GetSubs(episode);
                                       break;
                                   }
@@ -2644,10 +2645,10 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void forom_SubtitleRetrievalCompleted(bool bFound)
+        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
         {
             setProcessAnimationStatus(false);
-            foromWorking = false;
+            tvsubsWorking = false;
             if (bFound)
             {
                 LoadFacade();
@@ -3056,6 +3057,7 @@ namespace WindowPlugins.GUITVSeries
             if (control == this.LoadPlaylistButton)
             {
                 OnShowSavedPlaylists(DBOption.GetOptions(DBOption.cPlaylistPath));
+                LoadPlaylistButton.Focus = false;
                 return;
             }
 
@@ -3469,7 +3471,7 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
-                    else if (!foromWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
+                    else if (!tvsubsWorking && !seriessubWorking && !torrentWorking && !remositoryWorking)
                         setProcessAnimationStatus(false);
                 }
             }
@@ -4021,8 +4023,8 @@ namespace WindowPlugins.GUITVSeries
             m_watcherUpdater.StartFolderWatch();
         }
 
-        Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
-        private void pushFieldsToSkin(DBTable item, string pre)
+        static Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
+        public static void pushFieldsToSkin(DBTable item, string pre)
         {
             if (item == null) return;
             List<string> fieldsRequestedForPre = null;
@@ -4037,12 +4039,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-        private void pushFieldToSkin(DBTable item, string pre, string field)
+        private static void pushFieldToSkin(DBTable item, string pre, string field)
         {
             string t = pre + "." + field;
             setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
         }
-        private void clearFieldsForskin(string pre)
+        public static void clearFieldsForskin(string pre)
         {
             if (_allFieldsForSkin.ContainsKey(pre))
             {
@@ -4377,7 +4379,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void analyseSkinForWantedFields(string skinfile)
+        public static void analyseSkinForWantedFields(string skinfile)
         {
             string content = string.Empty;
             using (System.IO.StreamReader r = new System.IO.StreamReader(skinfile))
@@ -4402,7 +4404,12 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write(matches[i].Value);
                     if (_allFieldsForSkin.ContainsKey(pre))
-                        _allFieldsForSkin[pre].Add(value);
+                    {
+                        if (!_allFieldsForSkin[pre].Contains(value))
+                        {
+                            _allFieldsForSkin[pre].Add(value);
+                        }
+                    }
                     else
                     {
                         List<string> v = new List<string>();
@@ -4603,7 +4610,10 @@ namespace WindowPlugins.GUITVSeries
             {
                 // then get 1st item
                 playlist = _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
-                PlayListItem item = playlist[0];
+                PlayListItem item = playlist[0];                
+
+                // and activate the playlist window
+                ShowPlaylistWindow();
 
                 // and start playing it
                 if (_playlistPlayer.PlaylistAutoPlay)
@@ -4612,9 +4622,6 @@ namespace WindowPlugins.GUITVSeries
                     _playlistPlayer.Reset();
                     _playlistPlayer.Play(0);
                 }
-
-                // and activate the playlist window
-                ShowPlaylistWindow();
             }
         }
 

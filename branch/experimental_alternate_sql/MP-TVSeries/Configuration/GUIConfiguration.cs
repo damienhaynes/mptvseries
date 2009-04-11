@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
-            this.checkBox_altImage.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
+            this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
@@ -288,6 +288,8 @@ namespace WindowPlugins.GUITVSeries
                 qualityPoster.Enabled = false;
             }
       
+            chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
+
             tabControl_Details.SelectTab(1);
         }
 
@@ -301,15 +303,15 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeRoot = null;
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
-            m_paneListExtra.Add(panel_forom);
+            m_paneListExtra.Add(panel_tvsubtitles);
             m_paneListExtra.Add(panel_seriessubs);
             m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
             nodeRoot.Name = panel_subtitleroot.Name;
             treeView_Extra.Nodes.Add(nodeRoot);
-            nodeChild = new TreeNode(panel_forom.Tag.ToString());
-            nodeChild.Name = panel_forom.Name;
+            nodeChild = new TreeNode(panel_tvsubtitles.Tag.ToString());
+            nodeChild.Name = panel_tvsubtitles.Name;
             nodeRoot.Nodes.Add(nodeChild);
             nodeChild = new TreeNode(panel_seriessubs.Tag.ToString());
             nodeChild.Name = panel_seriessubs.Name;
@@ -344,13 +346,36 @@ namespace WindowPlugins.GUITVSeries
 
             treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
 
-            checkBox_foromEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Forom_Enable);
-            textBox_foromBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Forom_BaseURL);
-            textBox_foromID.Text = DBOption.GetOptions(DBOption.cSubs_Forom_ID);
-
+            checkBox_TVSubtitlesEnable.Checked = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
             checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
 			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
             
+          String sTVSubtitlesLanguageFilterList = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
+          if (sTVSubtitlesLanguageFilterList.IndexOf("en") != -1)
+            tvsub_en.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("fr") != -1)
+            tvsub_fr.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("es") != -1)
+            tvsub_es.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("de") != -1)
+            tvsub_de.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("br") != -1)
+            tvsub_br.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("ru") != -1)
+            tvsub_ru.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("it") != -1)
+            tvsub_it.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("gr") != -1)
+            tvsub_gr.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("ar") != -1)
+            tvsub_ar.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("hu") != -1)
+            tvsub_hu.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("pl") != -1)
+            tvsub_pl.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("tr") != -1)
+            tvsub_tr.Checked = true;
+
             checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
             textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
             textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
@@ -359,6 +384,8 @@ namespace WindowPlugins.GUITVSeries
             textBox_RemositoryRegExSeries.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons);
             textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
             textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
+
+
 
             LoadTorrentSearches();
 
@@ -2101,16 +2128,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
         }
 
-        private void textBox_foromID_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Forom_ID, textBox_foromID.Text);
-        }
-
-        private void textBox_foromBaseURL_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Forom_BaseURL, textBox_foromBaseURL.Text);
-        }
-
 		private void textBox_seriessubsBaseURL_TextChanged(object sender, EventArgs e)
 		{
 		  DBOption.SetOptions(DBOption.cSubs_SeriesSubs_BaseURL, textBox_seriessubsBaseURL.Text);
@@ -2392,8 +2409,8 @@ namespace WindowPlugins.GUITVSeries
                     DBEpisode episode = (DBEpisode)node.Tag;
 
                     List<CItem> Choices = new List<CItem>();
-                    if (checkBox_foromEnable.Checked)
-					  Choices.Add(new CItem("Forom", "Forom", "Forom"));
+                    if (checkBox_TVSubtitlesEnable.Checked)
+                      Choices.Add(new CItem("TVSubtitles.net", "TVSubtitles.net", "TVSubtitles.net"));
                     if (checkBox_seriessubsEnable.Checked)
 					  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
                     if (checkBox_remositoryEnable.Checked)
@@ -2453,10 +2470,10 @@ namespace WindowPlugins.GUITVSeries
                     {
                         switch ((String)selected.m_Tag)
                         {
-                            case "Forom":
-                                Subtitles.Forom forom = new Subtitles.Forom(this);
-                                forom.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Forom.SubtitleRetrievalCompletedHandler(forom_SubtitleRetrievalCompleted);
-                                forom.GetSubs(episode);
+                          case "TVSubtitles.net":
+                                Subtitles.TvSubtitles tvsubs = new Subtitles.TvSubtitles(this);
+                                tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
+                                tvsubs.GetSubs(episode);
                                 break;
 
                             case "Series Subs":
@@ -2480,7 +2497,7 @@ namespace WindowPlugins.GUITVSeries
 		{
 		}
 
-        void forom_SubtitleRetrievalCompleted(bool bFound)
+        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
         {
         }
 
@@ -3333,9 +3350,40 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cSubs_Remository_RegexDownload, textBox_RemositoryRegexDownload.Text);
         }
-        private void checkbox_foromEnable_checkedChanged(object sender, EventArgs e)
+        private void checkbox_tvsubsEnable_checkedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cSubs_Forom_Enable, checkBox_foromEnable.Checked);
+            DBOption.SetOptions(DBOption.cSubs_TVSubtitles_Enable, checkBox_TVSubtitlesEnable.Checked);
+        }
+
+        private void tvsub_CheckedChanged(object sender, EventArgs e)
+        {
+          String sFilterList = String.Empty;
+          if (tvsub_en.Checked)
+            sFilterList += "en";
+          if (tvsub_fr.Checked)
+            sFilterList += "|fr";
+          if (tvsub_es.Checked)
+            sFilterList += "|es";
+          if (tvsub_de.Checked)
+            sFilterList += "|de";
+          if (tvsub_br.Checked)
+            sFilterList += "|br";
+          if (tvsub_ru.Checked)
+            sFilterList += "|ru";
+          if (tvsub_it.Checked)
+            sFilterList += "|it";
+          if (tvsub_gr.Checked)
+            sFilterList += "|gr";
+          if (tvsub_ar.Checked)
+            sFilterList += "|ar";
+          if (tvsub_hu.Checked)
+            sFilterList += "|hu";
+          if (tvsub_pl.Checked)
+            sFilterList += "|pl";
+          if (tvsub_tr.Checked)
+            sFilterList += "|tr";
+
+          DBOption.SetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList, sFilterList);
         }
 
         private void checkBox_seriessubEnable_CheckedChanged(object sender, EventArgs e)
@@ -3346,10 +3394,6 @@ namespace WindowPlugins.GUITVSeries
         private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
-        }
-        private void checkBox_altImage_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cAltImgLoading, checkBox_altImage.Checked);
         }
 
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
@@ -3494,6 +3538,11 @@ namespace WindowPlugins.GUITVSeries
         {
             decimal val = spinMaxFanarts.Value;
             DBOption.SetOptions(DBOption.cAutoDownloadFanartCount, val.ToString());
+        }
+
+        private void chkUseRegionalDateFormatString_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cUseRegionalDateFormatString, chkUseRegionalDateFormatString.Checked);
         }
 
         private void button_configDatabase_Click(object sender, EventArgs e)

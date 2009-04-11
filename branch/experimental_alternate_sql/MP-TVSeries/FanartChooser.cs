@@ -473,9 +473,11 @@ namespace WindowPlugins.GUITVSeries
                     case (int)menuAction.use:
                         if (selectedFanart.isAvailableLocally)
                         {
+                            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
+                            SetFacadeItemAsChosen(m_Facade.SelectedListItemIndex);
+
                             selectedFanart.Chosen = true;
                             Fanart.RefreshFanart(SeriesID);
-                            TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
                         }                        
                         break;
                     case (int)menuAction.optionRandom:
@@ -725,19 +727,43 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (chosen.isAvailableLocally && !chosen.Disabled)
                     {
+                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);                        
+                        SetFacadeItemAsChosen(m_Facade.SelectedListItemIndex);
+                        
                         // if we already have it, we simply set the chosen property (will itself "unchoose" all the others)
                         chosen.Chosen = true;                        
                         // ZF: be sure to update the list of downloaded data in the cache - otherwise the selected fanart won't show up for new fanarts until restarted
                         Fanart.RefreshFanart(SeriesID);
-                        // Now it probably makes sense to just get back to tvseries itself, nothing more for the user to do here really
-                        //GUIWindowManager.ShowPreviousWindow(); // Removed this as its quite annoying! Pressing Back is not that hard :)
-                        TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
+
                     }
                     else if (!chosen.isAvailableLocally)
                     {
                         downloadFanart(chosen);
                     }
                 }
+            }
+        }
+
+        void SetFacadeItemAsChosen(int iSelectedItem)
+        {
+            try
+            {
+                for (int i = 0; i < m_Facade.Count; i++)
+                {
+                    if (i == iSelectedItem)
+                        m_Facade[i].IsRemote = true;
+                    else
+                    {
+                        m_Facade[i].IsRemote = false;
+                        DBFanart item;
+                        item = m_Facade[i].TVTag as DBFanart;
+                        item.Chosen = false;
+                    }
+                }
+            }
+            catch ( Exception ex )
+            {
+                MPTVSeriesLog.Write("Failed to set Facade Item as chosen: " + ex.Message);
             }
         }
 
@@ -800,8 +826,11 @@ namespace WindowPlugins.GUITVSeries
                         else
                             item = new GUIListItem(Translation.FanArtLocal);
                         item.IsRemote = false;
-                        if (f.Chosen) item.IsRemote = true;
-                        else item.IsDownloading = false;
+                        
+                        if (f.Chosen) 
+                            item.IsRemote = true;
+                        else 
+                            item.IsDownloading = false;
                     }
                     else 
                     {
@@ -892,7 +921,7 @@ namespace WindowPlugins.GUITVSeries
                     m_Facade.SelectedListItem.Label = Translation.FanArtOnline;
                 }                    
                 
-                // Should be safe to assign size fanart if available
+                // Should be safe to assign fullsize fanart if available
                 preview = fanart.isAvailableLocally ?
                           ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
                           m_Facade.SelectedListItem.IconImageBig;

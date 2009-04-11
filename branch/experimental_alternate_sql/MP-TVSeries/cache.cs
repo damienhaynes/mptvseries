@@ -88,7 +88,7 @@ namespace WindowPlugins.GUITVSeries
                 DBSeason.dbSeasonUpdateOccured += new DBSeason.dbSeasonUpdateOccuredDelegate(DBSeason_dbSeasonUpdateOccured);
                 DBEpisode.dbEpisodeUpdateOccured += new DBEpisode.dbEpisodeUpdateOccuredDelegate(DBEpisode_dbEpisodeUpdateOccured);
 
-                MPTVSeriesLog.Write("Cache Initialized");
+                MPTVSeriesLog.Write("Cache Initialized",MPTVSeriesLog.LogLevel.Debug);
             }
         }
         #endregion

@@ -377,8 +377,18 @@ namespace WindowPlugins.GUITVSeries.MathParser
         {
             string[] parameters = input.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
             string[] options = parameters[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            
             MPTVSeriesLog.Write("MathParser: StringOptions -> prev Result was set to ", prevResult.ToString(), MPTVSeriesLog.LogLevel.Debug);
-            if (options.Length >= prevResult) return double.Parse(parameters[0], provider).ToString() + options[prevResult];
+
+            if (options.Length >= prevResult)
+            {
+                double result;
+                if (double.TryParse(parameters[0],NumberStyles.Number, provider, out result))
+                    return result.ToString() + options[prevResult];
+                else
+                    return string.Empty;
+            }
+
             return string.Empty;
 
         }

@@ -372,7 +372,7 @@ namespace WindowPlugins.GUITVSeries
                     UpdateEpisodes(GU.UpdatedEpisodes);
 
                     // update banners
-                    UpdateBanners(false, GU.UpdatedSeries);
+                    UpdateBanners(false, GU.UpdatedBanners);
 
                     // lets save the updateTimestamp
                     if (GU.OnlineTimeStamp > 0)
@@ -898,8 +898,8 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Series"));
-                // and that already had data imported from the online DB (but not the new ones, that are set to 2)
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 1, SQLConditionType.Equal);                
+                // and that already had data imported from the online DB (but not the new ones, that are set to 1) ??
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);                
             }
             List<DBSeries> SeriesList = DBSeries.Get(condition, false, false);
 
@@ -1026,7 +1026,7 @@ namespace WindowPlugins.GUITVSeries
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
                     if (episodesParser.Results.Count > 0)
                     {
-                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\", matching them up with local episodes now", episodesParser.Results.Count, series.ToString()));
+                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\", matching them up with local episodes now", episodesParser.Results.Count.ToString().PadLeft(3,'0'), series.ToString()));
                         // look for the episodes for that series, and compare / update the values
                         matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                     }
@@ -1109,7 +1109,7 @@ namespace WindowPlugins.GUITVSeries
 
             // let's check which series/episodes we have locally
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
-            cond.AddOrderItem(DBEpisode.Q(DBEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+            cond.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
 
             List<DBEpisode> episodesInDB = DBEpisode.Get(cond);
 
@@ -1120,6 +1120,11 @@ namespace WindowPlugins.GUITVSeries
                 if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
                     episodesInDB.RemoveAt(i--);
             
+            if (episodesInDB.Count == 0) {
+                MPTVSeriesLog.Write("Nothing to do");
+                return;
+            }
+                   
             // let's updated those we are interested in
             // for the remaining ones get the <lang>.xml
             MPTVSeriesLog.Write(episodesInDB.Count.ToString() + " episodes need updating");

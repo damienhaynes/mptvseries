@@ -185,39 +185,13 @@ namespace WindowPlugins.GUITVSeries
 
         public override DBValue  this[string fieldName]
         {
-            get 
+            get
             {
-                switch (fieldName) {
-                    case cFirstAired:
-                        DateTime firstAired = new DateTime();
-                        //if the try parse fails just get the value normally
-                        if (DateTime.TryParse(base[fieldName], out firstAired)) {
-                            return firstAired.ToString(DBOption.GetOptions(DBOption.cDateFormatString));
-                        }
-                        return base[fieldName];
-
-                    default:
-                        return base[fieldName];
-                }
+                return base[fieldName];
             }
-            set 
+            set
             {
-                switch (fieldName) {
-                    case cFirstAired:
-                        DateTime firstAired = new DateTime();
-                        //if the try parse fails just set the value normally
-                        if (DateTime.TryParseExact(value, DBOption.GetOptions(DBOption.cDateFormatString), 
-                                System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out firstAired)) {
-                            base[fieldName] = firstAired.ToString("yyyy-MM-dd");
-                        } else {
-                            base[fieldName] = value;
-                        }
-                        break;
-
-                    default:
-                        base[fieldName] = value;
-                        break;
-                }
+                base[fieldName] = value;
             }
         }
 
@@ -402,6 +376,9 @@ namespace WindowPlugins.GUITVSeries
 
         public void ChangeSeriesID(int nSeriesID)
         {
+            // use base[] as this[] as logic for DBOnlineEpisode prevents localepisode seriesID being set 
+            // and interfers with double episode logic
+
             // TODO: update local_episodes set seriesID =  74205 where seriesID = -1
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
             string composite = nSeriesID + "_" + this[cSeasonIndex] + "x" + this[cEpisodeIndex];
@@ -427,15 +404,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            this[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
-            this[cSeriesID] = nSeriesID;
+            base[cCompositeID] = newOnlineEpisode[DBOnlineEpisode.cCompositeID];
+            base[cSeriesID] = nSeriesID;
 
-            if (this[DBEpisode.cCompositeID2].ToString().Length > 0) {
+            if (base[DBEpisode.cCompositeID2].ToString().Length > 0) {
                 DBOnlineEpisode oldDouble = new DBOnlineEpisode();
-                bool oldExist = oldDouble.ReadPrimary(this[DBEpisode.cCompositeID2]);
-                this[DBEpisode.cCompositeID2] = nSeriesID + "_" + this[DBEpisode.cSeasonIndex] + "x" + this[DBEpisode.cEpisodeIndex2];
+                bool oldExist = oldDouble.ReadPrimary(base[DBEpisode.cCompositeID2]);
+                base[DBEpisode.cCompositeID2] = nSeriesID + "_" + base[DBEpisode.cSeasonIndex] + "x" + base[DBEpisode.cEpisodeIndex2];
                 DBOnlineEpisode newDouble = new DBOnlineEpisode();
-                if (!newDouble.ReadPrimary(this[DBEpisode.cCompositeID2])) {
+                if (!newDouble.ReadPrimary(base[DBEpisode.cCompositeID2])) {
                     if (oldExist) {
                         foreach (string fieldName in oldDouble.FieldNames) {
                             switch (fieldName) {
@@ -451,8 +428,8 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     newDouble[cSeriesID] = nSeriesID;
-                    newDouble[cSeasonIndex] = this[cSeasonIndex];
-                    newDouble[cEpisodeIndex] = this[cEpisodeIndex2];
+                    newDouble[cSeasonIndex] = base[cSeasonIndex];
+                    newDouble[cEpisodeIndex] = base[cEpisodeIndex2];
 
                     newDouble.Commit();
                 }
@@ -569,6 +546,10 @@ namespace WindowPlugins.GUITVSeries
                         this["AudioCodec"] = (result = MI.getAudioCodec()).Length > 0 ? result : "-1";
                         this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
                         this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
+                        this["AudioTracks"] = (result = MI.getAudioStreamCount()).Length > 0 ? result : "-1";
+                        
+                        this["TextCount"] = (result = MI.getTextCount()).Length > 0 ? result : "-1";                        
+
                     }
                     else failed = true;
                     //MI.Close();
@@ -654,6 +635,14 @@ namespace WindowPlugins.GUITVSeries
                 subTitleExtensions.Add(".zeg");
                 
             }
+
+            // Read MediaInfo for embedded subtitles
+            if (!Helper.String.IsNullOrEmpty(this["TextCount"]))
+            {
+                if ((int)this["TextCount"] > 0) 
+                    return true;
+            }
+
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {
@@ -767,7 +756,7 @@ namespace WindowPlugins.GUITVSeries
                         case cEpisodeIndex2:
                             if (!Helper.String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
                             {
-                                MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discared because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
+                                MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discarded because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
                                 return;
                             }

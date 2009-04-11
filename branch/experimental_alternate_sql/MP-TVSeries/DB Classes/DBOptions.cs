@@ -96,9 +96,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
 
-        public const String cSubs_Forom_Enable = "Subs_Forom_Enable";
-        public const String cSubs_Forom_BaseURL = "Subs_Forom_BaseURL";
-        public const String cSubs_Forom_ID = "Subs_Forom_ID";
+        public const String cSubs_TVSubtitles_Enable = "Subs_TVSubtitles_Enable";
+        public const String cSubs_TVSubtitles_LanguageFilterList = "Subs_TVSubtitles_LanguageFilterList";
 
 	    public const String cSubs_SeriesSubs_Enable = "Subs_Series_Enable";
 	    public const String cSubs_SeriesSubs_BaseURL = "Subs_SeriesSubs_BaseURL";
@@ -173,7 +172,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
 
-        public const String cDateFormatString = "DateFormatString";
+        //public const String cDateFormatString = "DateFormatString";
+        public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -332,8 +332,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
-		        if (GetOptions(cSubs_Forom_Enable) == null)
-		            SetOptions(cSubs_Forom_Enable, false);
+		        if (GetOptions(cSubs_TVSubtitles_Enable) == null)
+		            SetOptions(cSubs_TVSubtitles_Enable, false);
 
 		        if (GetOptions(cSubs_SeriesSubs_Enable) == null)
 		            SetOptions(cSubs_SeriesSubs_Enable, false);
@@ -341,8 +341,8 @@ namespace WindowPlugins.GUITVSeries
 		        if (GetOptions(cSubs_Remository_Enable) == null)
 		            SetOptions(cSubs_Remository_Enable, false);
 
-                if (GetOptions(cSubs_Forom_BaseURL) == null)
-                    SetOptions(cSubs_Forom_BaseURL, @"http://www.foroms.net/documents");
+                if (GetOptions(cSubs_TVSubtitles_LanguageFilterList) == null)
+                  SetOptions(cSubs_TVSubtitles_LanguageFilterList, @"en");
 
 		        if (GetOptions(cSubs_SeriesSubs_BaseURL) == null)
 		            SetOptions(cSubs_SeriesSubs_BaseURL, @"http://www.seriessub.com/sous-titres/");
@@ -437,9 +437,12 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cFanartCurrentView) == null)
                     SetOptions(cFanartCurrentView, 2); // Large Icons
 
-                if (GetOptions(cDateFormatString) == null) {
-                    SetOptions(cDateFormatString, System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
-                }
+                //if (GetOptions(cDateFormatString) == null) {
+                //    SetOptions(cDateFormatString, System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
+                //}
+
+                if (GetOptions(cUseRegionalDateFormatString) == null)
+                    SetOptions(cUseRegionalDateFormatString, 0);
             }
             catch (Exception ex)
             {

@@ -279,13 +279,6 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                         }
-                    case cFirstAired:
-                        DateTime firstAired = new DateTime();
-                        //if the try parse fails just get the value normally
-                        if (DateTime.TryParse(base[fieldName], out firstAired)) {
-                            return firstAired.ToString(DBOption.GetOptions(DBOption.cDateFormatString));
-                        }
-                        return base[fieldName];
 
                     default:
                         return base[fieldName];
@@ -293,23 +286,7 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                switch (fieldName) {
-                    case cFirstAired:
-                        DateTime firstAired = new DateTime();
-                        //if the try parse fails just set the value normally
-                        if (DateTime.TryParseExact(value, DBOption.GetOptions(DBOption.cDateFormatString),
-                                System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out firstAired)) {
-                            base[fieldName] = firstAired.ToString("yyyy-MM-dd");
-                        } else {
-                            base[fieldName] = value;
-                        }
-                        break;
-
-
-                    default:
-                        base[fieldName] = value;
-                        break;
-                }
+                base[fieldName] = value;
             }
         }
 

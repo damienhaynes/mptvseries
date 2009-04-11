@@ -51,6 +51,9 @@ namespace WindowPlugins.GUITVSeries
         PlayListPlayer playlistPlayer;
         private View currentView = View.PlayList;
         const int windowID = 9813;
+        private String m_sFormatEpisodeTitle = String.Empty;
+        private String m_sFormatEpisodeSubtitle = String.Empty;
+        private String m_sFormatEpisodeMain = String.Empty;
 
         #endregion
 
@@ -86,7 +89,6 @@ namespace WindowPlugins.GUITVSeries
             EpisodeImage,
             SeriesBanner,
             SeasonBanner
-
         }
 
         public GUITVSeriesPlayList()
@@ -122,7 +124,12 @@ namespace WindowPlugins.GUITVSeries
         public override bool Init()
         {
             currentFolder = Directory.GetCurrentDirectory();
-            return Load(GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml");
+
+            string xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml";
+            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
+            TVSeriesPlugin.analyseSkinForWantedFields(xmlSkin);
+
+            return Load(xmlSkin);            
         }
 
         #region BaseWindow Members
@@ -174,6 +181,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
             }
+            
+            // Episode Formatting
+            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
+            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
+            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+
+            // Clear GUI Properties
+            ClearGUIProperties();
 
             LoadDirectory(string.Empty);
             if (g_Player.Playing && playlistPlayer.CurrentPlaylistType == PlayListType.PLAYLIST_TVSERIES)
@@ -191,6 +206,12 @@ namespace WindowPlugins.GUITVSeries
                 GUIControl.FocusControl(GetID, btnLoad.GetID);
             }
 
+            if (m_Facade.Count > 0)
+            {
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
+                SelectCurrentItem();
+            }
+
             playlistPlayer.RepeatPlaylist = DBOption.GetOptions(DBOption.cRepeatPlaylist);
             if (btnRepeat != null)
             {
@@ -202,7 +223,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 btnAutoPlay.Selected = playlistPlayer.PlaylistAutoPlay;
                 btnAutoPlay.Label = Translation.ButtonAutoPlay;
-            }
+            }            
+            
         }
 
         protected override void OnPageDestroy(int newWindowId)
@@ -481,8 +503,8 @@ namespace WindowPlugins.GUITVSeries
                     GUIListItem pItem = new GUIListItem(item.Description);
                     pItem.Path = strFileName;
                     pItem.IsFolder = false;
-                    pItem.TVTag = item.EpisodeID;
-
+                    pItem.TVTag = item.Episode;
+                    
                     // update images
                     pItem.ThumbnailImage = item.EpisodeThumb;
                     pItem.IconImageBig = item.EpisodeThumb;
@@ -551,11 +573,11 @@ namespace WindowPlugins.GUITVSeries
 
                 //set object count label
                 int iTotalItems = itemlist.Count;
-                GUIPropertyManager.SetProperty("#itemcount", "Episodes: " + iTotalItems.ToString());
+                GUIPropertyManager.SetProperty("#itemcount", Translation.Episodes + ": " + iTotalItems.ToString());
 
                 if (currentSelectedItem >= 0)
                 {
-                    GUIControl.SelectItemControl(GetID, m_Facade.GetID, currentSelectedItem);
+                    GUIControl.SelectItemControl(GetID, m_Facade.GetID, currentSelectedItem);                    
                 }
                 UpdateButtonStates();
                 GUIWaitCursor.Hide();
@@ -583,6 +605,7 @@ namespace WindowPlugins.GUITVSeries
             }
             LoadDirectory(string.Empty);
             UpdateButtonStates();
+            ClearGUIProperties();
             if (btnLoad != null)
                 GUIControl.FocusControl(GetID, btnLoad.GetID);
         }
@@ -617,8 +640,22 @@ namespace WindowPlugins.GUITVSeries
             if (item == null || item.TVTag == null)
                 return;
 
-            // TODO: Push properties to skin
-            //TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), "");
+            DBEpisode episode = item.TVTag as DBEpisode;
+            
+            // Push properties to skin
+            TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
+            TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
+            TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
+            TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
+
+        }
+
+        private void ClearGUIProperties()
+        {
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
+            TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 
         protected void OnQueueItem(int itemIndex)
@@ -757,7 +794,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     GUIListItem listItem = m_Facade[i];
                     PlayListItem playListItem = new PlayListItem();                                       
-                    playListItem.EpisodeID = listItem.TVTag.ToString();
+                    playListItem.Episode = listItem.TVTag as DBEpisode;
                     playlist.Add(playListItem);
                 }
                 PlayListIO saver = new PlayListIO();
@@ -976,6 +1013,9 @@ namespace WindowPlugins.GUITVSeries
             if (m_Facade.Count == 0)
             {
                 g_Player.Stop();
+                ClearGUIProperties();
+                if (btnLoad != null)
+                    GUIControl.FocusControl(GetID, btnLoad.GetID); 
             }
             else
             {
