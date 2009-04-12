@@ -422,9 +422,17 @@ namespace WindowPlugins.GUITVSeries
         static string getCleanAbsolutePath(string file)
         {
             if (!System.IO.Path.IsPathRooted(file))
-                file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
-           foreach (char c in System.IO.Path.GetInvalidPathChars())
+            {
+                // Respect custom skin folders
+                if (file.ToLower().StartsWith("skin\\"))
+                    file = file.Replace("skin", Settings.GetPath(Settings.Path.skin));
+                else
+                    file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
+            }
+
+            foreach (char c in System.IO.Path.GetInvalidPathChars())
                file = file.Replace(c, '_');
+
            return file;
         }
 
