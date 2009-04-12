@@ -233,7 +233,17 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     return filenames[0]; // if we only need the first then we just return the original here
                                 }
-                                else logosForBuilding.AddRange(filenames);
+                                else
+                                {
+                                    //logosForBuilding.AddRange(filenames);
+                                    // Strange things happen when in playlist view and using the mouse, so dont add duplicates that get generated
+                                    // Need to get to the bottom of the issue!
+                                    foreach (string filename in filenames)
+                                    {
+                                        if (!logosForBuilding.Contains(filename))
+                                            logosForBuilding.Add(filename);
+                                    }                                    
+                                }
                             }
                         }
                         else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
@@ -296,7 +306,7 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < logosForBuilding.Count; i++)
             {
                 try
-                {
+                {                    
                     single = ImageAllocator.LoadImageFastFromFile(logosForBuilding[i]);
                 }
                 catch (Exception)
