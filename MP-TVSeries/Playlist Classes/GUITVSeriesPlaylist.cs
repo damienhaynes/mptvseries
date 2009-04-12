@@ -88,7 +88,8 @@ namespace WindowPlugins.GUITVSeries
             Description,            
             EpisodeImage,
             SeriesBanner,
-            SeasonBanner
+            SeasonBanner,
+            Logos
         }
 
         public GUITVSeriesPlayList()
@@ -232,6 +233,7 @@ namespace WindowPlugins.GUITVSeries
             currentSelectedItem = m_Facade.SelectedListItemIndex;
             DBOption.SetOptions(DBOption.cRepeatPlaylist, playlistPlayer.RepeatPlaylist);
             DBOption.SetOptions(DBOption.cPlaylistAutoPlay, playlistPlayer.PlaylistAutoPlay);
+            prevSelectedEpisode = null;
             base.OnPageDestroy(newWindowId);
         }
 
@@ -629,6 +631,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         // triggered when a selection change was made on the facade
+        DBEpisode prevSelectedEpisode = null;
         private void onFacadeItemSelected(GUIListItem item, GUIControl parent)
         {
             // if this is not a message from the facade, exit
@@ -641,20 +644,30 @@ namespace WindowPlugins.GUITVSeries
                 return;
 
             DBEpisode episode = item.TVTag as DBEpisode;
-            
-            // Push properties to skin
+            if (episode == null || prevSelectedEpisode == episode) 
+                return;
+
+            // Push properties to skin            
             TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
             TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
+            TVSeriesPlugin.setGUIProperty(guiProperty.Logos.ToString(), localLogos.getLogos(ref episode, TVSeriesPlugin.logosHeight, TVSeriesPlugin.logosWidth));
+            
             TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
+            
+            // Some strange issues with logos when using mouse and hovering over current item
+            // Dont push properties next time if the same episode is selected
+            prevSelectedEpisode = episode;
 
-        }
+        } 
 
         private void ClearGUIProperties()
         {
             TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());
+           
             TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 
