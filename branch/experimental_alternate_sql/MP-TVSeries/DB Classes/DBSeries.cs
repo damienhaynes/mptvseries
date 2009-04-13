@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 //using SQLite.NET;
 using System.Data;
-//using MediaPortal.Database;
+using MediaPortal.Database;
 using System.IO;
 using System.Xml;
 
@@ -186,29 +186,29 @@ namespace WindowPlugins.GUITVSeries
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
-            base.AddColumn(cPrettyName, new DBField(DBField.cTypeString, 100));
-            base.AddColumn(cSortName, new DBField(DBField.cTypeString, 100));
-            base.AddColumn(cStatus, new DBField(DBField.cTypeString, 20));
-            base.AddColumn(cGenre, new DBField(DBField.cTypeString, 100));
-            base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString, DBField.cMaxLength));
-            base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString, 200));
-            base.AddColumn(cPosterFileNames, new DBField(DBField.cTypeString, DBField.cMaxLength));
-            base.AddColumn(cCurrentPosterFileName, new DBField(DBField.cTypeString, 200));
-            base.AddColumn(cSummary, new DBField(DBField.cTypeString, DBField.cMaxLength));
+            base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
+            base.AddColumn(cSortName, new DBField(DBField.cTypeString));
+            base.AddColumn(cStatus, new DBField(DBField.cTypeString));
+            base.AddColumn(cGenre, new DBField(DBField.cTypeString));
+            base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
+            base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
+            base.AddColumn(cPosterFileNames, new DBField(DBField.cTypeString));
+            base.AddColumn(cCurrentPosterFileName, new DBField(DBField.cTypeString));
+            base.AddColumn(cSummary, new DBField(DBField.cTypeString));
             base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            base.AddColumn(cAirsDay, new DBField(DBField.cTypeString, 20));
-            base.AddColumn(cAirsTime, new DBField(DBField.cTypeString, 20));
-            base.AddColumn(cActors, new DBField(DBField.cTypeString, DBField.cMaxLength));
+            base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
+            base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
+            base.AddColumn(cActors, new DBField(DBField.cTypeString));
             base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
             base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString, 5));
+            base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
             base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            //base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
+            //base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -243,40 +243,63 @@ namespace WindowPlugins.GUITVSeries
             Clear(new DBOnlineSeries(), conditions);
         }
 
+        public static string EpisodeCountQuery(DBValue seriesID, bool watched)
+        {
+            string query = "select count(*) as count from " + DBOnlineEpisode.cTableName + " where " + DBOnlineEpisode.cSeriesID + " = " + seriesID;
+            if (watched) {
+                query += " and " + DBOnlineEpisode.cWatched + " = 0";
+            }
+            return query;
+        }
+
         public override DBValue this[String fieldName]
         {
             get
             {
-                switch (fieldName)
-                {
+                switch (fieldName) {
                     // forom subtitle retrieval always needs original (english) series title
                     // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "7"; // 7 = english (original)
                         if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
                             return base[DBOnlineSeries.cPrettyName];
-                        else
-                        {
+                        else {
                             if (base[DBOnlineSeries.cOriginalName].ToString().Length > 0)
                                 return base[DBOnlineSeries.cOriginalName];
-                            else
-                            {
+                            else {
                                 // we need to get it
                                 MPTVSeriesLog.Write("Retrieving original Series Name...");
                                 UpdateSeries origParser = null; //= new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage); // doesn't work anymore
-                                if (origParser != null && origParser.Results.Count == 1)
-                                {
+                                if (origParser != null && origParser.Results.Count == 1) {
                                     base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
                                     Commit(); // save for next time
                                     MPTVSeriesLog.Write("Original Series Name retrieved");
                                     return origParser.Results[0][DBOnlineSeries.cPrettyName];
-                                }
-                                else
-                                {
+                                } else {
                                     MPTVSeriesLog.Write("Original Series Name could not be retrieved");
                                     // something wrong
                                     return base[DBOnlineSeries.cPrettyName];
                                 }
+                            }
+                        }
+
+                    case DBOnlineSeries.cEpisodeCount: {
+                            object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[DBSeason.cID], false));
+                            int count = default(int);
+                            if (int.TryParse(o.ToString(), out count)) {
+                                return count;
+                            } else {
+                                return new DBValue(0);
+                            }
+                        }
+
+                    case DBOnlineSeries.cEpisodesUnWatched: {
+                            object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[DBSeason.cID], true));
+                            int count = default(int);
+                            if (int.TryParse(o.ToString(), out count)) {
+                                return count;
+                            } else {
+                                return new DBValue(0);
                             }
                         }
 
@@ -286,7 +309,16 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                base[fieldName] = value;
+                switch (fieldName) {
+                    //Episode Counts are no longer stored in the table so do nothing
+                    case DBOnlineSeries.cEpisodeCount:
+                    case DBOnlineSeries.cEpisodesUnWatched:
+                        break;
+
+                    default:
+                        base[fieldName] = value;
+                        break;
+                }
             }
         }
 
@@ -402,16 +434,18 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 9:
+                        // This is no longer needed - and will create unused columns in the database
+
                         // Set number of watched/unwatched episodes                                       
-                        foreach (DBSeries series in AllSeries)
-                        {                                                                                    
-                            int epsTotal = 0;
-                            int epsUnWatched = 0;
-                            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-                            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-                            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-                            series.Commit();
-                        }
+                        //foreach (DBSeries series in AllSeries)
+                        //{                                                                                    
+                        //    int epsTotal = 0;
+                        //    int epsUnWatched = 0;
+                        //    DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+                        //    series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+                        //    series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+                        //    series.Commit();
+                        //}
                         nUpgradeDBVersion++;
                         break;
                     
@@ -450,7 +484,7 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             InitValues();
 
-            DBTVSeries.CreateDBIndices("create index seriesIDLocal on local_series(ID ASC)", m_tableName, "seriesIDLocal", false);
+            DBTVSeries.CreateDBIndices("create index seriesIDLocal on local_series(ID ASC)", m_tableName, "seriesIDLocal", true);
         }
 
         public DBSeries(bool bCreateEmptyOnline)
@@ -490,7 +524,7 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cParsedName, new DBField(DBField.cTypeString, true, 200));
+            base.AddColumn(cParsedName, new DBField(DBField.cTypeString, true));
             base.AddColumn(cID, new DBField(DBField.cTypeInt));
             base.AddColumn(cScanIgnore, new DBField(DBField.cTypeInt));
             base.AddColumn(cDuplicateLocalName, new DBField(DBField.cTypeInt));
@@ -890,14 +924,15 @@ namespace WindowPlugins.GUITVSeries
         {
             DataTable results = DBTVSeries.Execute(sqlQuery);
             List<DBSeries> outList = new List<DBSeries>();
+            DBSeries series = null;
             if (results.Rows.Count > 0)
             {
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
-                    DBSeries series = new DBSeries();
-                    series.Read(ref results, index);
+                    series = new DBSeries();
+                    series.Read(results.Rows[index], results.Columns);
                     series.m_onlineSeries = new DBOnlineSeries();
-                    series.m_onlineSeries.Read(ref results, index);
+                    series.m_onlineSeries.Read(results.Rows[index], results.Columns);
                     outList.Add(series);
                     if (series[cID] < 0 && series.m_onlineSeries[DBOnlineSeries.cPrettyName].ToString().Length == 0)
                     {
@@ -948,29 +983,29 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
         }
 
-        public static void UpdatedEpisodeCounts(DBSeries series)
-        {
-            int epsTotal = 0;
-            int epsUnWatched = 0;
+        //public static void UpdatedEpisodeCounts(DBSeries series)
+        //{
+        //    int epsTotal = 0;
+        //    int epsUnWatched = 0;
 
-            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-            series.Commit();
+        //    DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+        //    series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+        //    series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+        //    series.Commit();
     
-            // Now Update for each season in series
-            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
-            foreach (DBSeason season in Seasons)
-            {
-                epsTotal = 0;
-                epsUnWatched = 0;
+        //    // Now Update for each season in series
+        //    List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
+        //    foreach (DBSeason season in Seasons)
+        //    {
+        //        epsTotal = 0;
+        //        epsUnWatched = 0;
              
-                DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
-                season[DBSeason.cEpisodeCount] = epsTotal;
-                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-                season.Commit();
-            }
-        }
+        //        DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+        //        season[DBSeason.cEpisodeCount] = epsTotal;
+        //        season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+        //        season.Commit();
+        //    }
+        //}
 
     }
 }

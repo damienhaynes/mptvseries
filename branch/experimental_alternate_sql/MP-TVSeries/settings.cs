@@ -42,7 +42,8 @@ namespace WindowPlugins.GUITVSeries
             lang,
             thumbs,
             app,
-            fanart
+            fanart,
+            skin
         };
 
         #region Path Vars
@@ -54,6 +55,7 @@ namespace WindowPlugins.GUITVSeries
         static string thumbsPath = string.Empty;
         static string apppath = string.Empty;
         static string fanArtPath = string.Empty;
+        static string skinPath = string.Empty;
         #endregion
 
         #region Vars
@@ -112,6 +114,7 @@ namespace WindowPlugins.GUITVSeries
             bannersPath = Config.GetSubFolder(Config.Dir.Thumbs, "MPTVSeriesBanners");
             langPath = Config.GetSubFolder(Config.Dir.Language, "MP-TVSeries");
             thumbsPath = Config.GetFolder(Config.Dir.Thumbs);
+            skinPath = Config.GetFolder(Config.Dir.Skin);
             fanArtPath = thumbsPath + @"\Fan Art";
             initFolders();
         }
@@ -175,6 +178,8 @@ namespace WindowPlugins.GUITVSeries
                     return apppath;
                 case Path.fanart:
                     return fanArtPath;
+                case Path.skin:
+                    return skinPath;
                 default: return string.Empty;
             }
         }

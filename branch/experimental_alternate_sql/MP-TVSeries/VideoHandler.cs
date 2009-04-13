@@ -189,9 +189,9 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries.UpdateUnWatched(ep);
             }
             // Update Episode Counts
-            DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
-            DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            DBSeason.UpdatedEpisodeCounts(series, season);           
+            //DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            //DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+            //DBSeason.UpdatedEpisodeCounts(series, season);           
         }
 
         /// <summary>
