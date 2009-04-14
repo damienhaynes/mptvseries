@@ -2508,43 +2508,44 @@ namespace WindowPlugins.GUITVSeries
         {
         }
 
-       private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
+        private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;
             if (node == null)
                 return;
 
             bool bHidden = false;
-            switch (node.Name)
-            {
+
+            //NOTE: use names to access the menu items in case the order get altered in the future
+            switch (node.Name) {
                 case DBSeries.cTableName:
                     DBSeries series = (DBSeries)node.Tag;
                     bHidden = series[DBSeries.cHidden];
-                    contextMenuStrip_DetailsTree.Items[2].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[3].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[4].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
                     break;
 
                 case DBSeason.cTableName:
                     DBSeason season = (DBSeason)node.Tag;
                     bHidden = season[DBSeason.cHidden];
-                    contextMenuStrip_DetailsTree.Items[2].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[3].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items[4].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
                     break;
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
-                    contextMenuStrip_DetailsTree.Items[2].Enabled = true;
-                    contextMenuStrip_DetailsTree.Items[3].Enabled = true;
-                    contextMenuStrip_DetailsTree.Items[4].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
                     break;
             }
             if (bHidden)
-                contextMenuStrip_DetailsTree.Items[0].Text = "UnHide";
+                contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "UnHide";
             else
-                contextMenuStrip_DetailsTree.Items[0].Text = "Hide";
+                contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "Hide";
         }
 
         private void treeView_Library_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
