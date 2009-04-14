@@ -103,7 +103,7 @@
         <string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">överskrivning av undertext-fil</string>
         <string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Tidigare skapad fil existerar: Skriv över den?</string>
         <string Field="RecentlyAdded" Original="Recently Added">Nyligen tillagd(a)</string>
-        <string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Fel hos theTVDBs server /string>
+        <string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Fel hos theTVDBs server</string>
         <string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
         <string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Konto-id är inte korrekt inmatat</string>
         <string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Mata in ditt theTVDB-konto i inställningarna för denna plugin</string>
