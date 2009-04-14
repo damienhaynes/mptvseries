@@ -999,7 +999,7 @@ namespace WindowPlugins.GUITVSeries
         void TestParsing_FillList(List<parseResult> results)
         {
             listView_ParsingResults.SuspendLayout();
-            IComparer sorter = listView_ParsingResults.ListViewItemSorter;
+            //IComparer sorter = listView_ParsingResults.ListViewItemSorter;
             listView_ParsingResults.ListViewItemSorter = null;
             foreach (parseResult progress in results)
             {
@@ -1016,6 +1016,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 ListViewItem item = new ListViewItem(progress.match_filename);
+                item.Tag = progress;
                 item.SubItems[0].Name = listView_ParsingResults.Columns[0].Name;
 
                 foreach (ColumnHeader column in listView_ParsingResults.Columns)
@@ -1064,7 +1065,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write(progress.exception + " for " + progress.match_filename);
                 listView_ParsingResults.Items.Add(item);
             }
-            listView_ParsingResults.ListViewItemSorter = sorter;
+            listView_ParsingResults.ListViewItemSorter = parseResult.Comparer;
             listView_ParsingResults.Sort();
             listView_ParsingResults.ResumeLayout();
             listView_ParsingResults.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
