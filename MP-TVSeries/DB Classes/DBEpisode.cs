@@ -359,22 +359,6 @@ namespace WindowPlugins.GUITVSeries
                 m_onlineEpisode = new DBOnlineEpisode();
         }
 
-        public DBEpisode(DBOnlineEpisode onlineEpisode, String filename)
-            : base(cTableName)
-        {
-            InitColumns();
-            if (!ReadPrimary(filename))
-                InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet)
-                readMediaInfoOfLocal();
-
-            //composite id will bw set automatically from setting these three
-            this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
-            this[DBEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
-            this[DBEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
-            m_onlineEpisode = onlineEpisode;
-        }
-
         public DBEpisode(String filename)
             : base(cTableName)
         {

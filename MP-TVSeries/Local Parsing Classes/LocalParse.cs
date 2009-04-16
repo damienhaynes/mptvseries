@@ -23,7 +23,6 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
@@ -209,46 +208,11 @@ namespace WindowPlugins.GUITVSeries
         public string match_filename;
         public string full_filename;
 
-        private static parseResultComparer comparer = new parseResultComparer();
-        public static parseResultComparer Comparer { get { return comparer;}}
-
         #region IComparable<parseResult> Members
+
         public int CompareTo(parseResult other)
         {
-            return comparer.Compare(this, other);
-        }
-
-        #endregion
-    }
-
-    public class parseResultComparer : IComparer
-    {
-        #region IComparer Members
-
-        public int Compare(object x, object y)
-        {
-            ListViewItem xItem = x as ListViewItem;
-            ListViewItem yItem = y as ListViewItem;
-
-            if (xItem == null || yItem == null) {
-                throw new ArgumentException();
-            }
-
-            parseResult xResult = xItem.Tag as parseResult;
-            parseResult yResult = yItem.Tag as parseResult;
-
-            if (xResult == null || yResult == null) {
-                throw new ArgumentException();
-            }
-
-            //sort the parsing failures to the top of the list so they don't get lost in the middle of a big list
-            if (xResult.success && !yResult.success) {
-                return 1;
-            } else if (!xResult.success && yResult.success) {
-                return -1;
-            }
-
-            return xResult.full_filename.CompareTo(yResult.full_filename);
+            return this.full_filename.CompareTo(other.full_filename);
         }
 
         #endregion

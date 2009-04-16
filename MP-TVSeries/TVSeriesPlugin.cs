@@ -1750,8 +1750,8 @@ namespace WindowPlugins.GUITVSeries
                         // Update Episode counts...this is going to be expensive                        
                         SQLCondition condEmpty = new SQLCondition();
                         List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-                        //foreach (DBSeries series in AllSeries)
-                        //    DBSeries.UpdatedEpisodeCounts(series);
+                        foreach (DBSeries series in AllSeries)
+                            DBSeries.UpdatedEpisodeCounts(series);
                         LoadFacade();
                         break;
 
@@ -2180,7 +2180,7 @@ namespace WindowPlugins.GUITVSeries
                                     DBSeries.UpdateUnWatched(selectedEpisode);
                                 }
                                 // Update Episode Counts
-                                //DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
+                                DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
                                 LoadFacade();
                             }
                         }
@@ -2427,14 +2427,14 @@ namespace WindowPlugins.GUITVSeries
                                 case Listlevel.Season:
                                     selectedSeason[DBSeason.cHidden] = true;
                                     selectedSeason.Commit();
-                                    //DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+                                    DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                                     break;
 
                                 case Listlevel.Episode:
                                     selectedEpisode[DBOnlineEpisode.cHidden] = true;
                                     MPTVSeriesLog.Write(string.Format("Hiding series {0} from view", m_SelectedEpisode));
                                     selectedEpisode.Commit();
-                                    //DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+                                    DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
                                     break;
                             }                                                        
                             LoadFacade();
@@ -2450,7 +2450,7 @@ namespace WindowPlugins.GUITVSeries
                             m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
                             m_SelectedSeries.Commit();
                             // Updated Episode Counts
-                            //DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+                            DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
@@ -2459,7 +2459,7 @@ namespace WindowPlugins.GUITVSeries
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
                             m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
                             m_SelectedSeason.Commit();
-                            //DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
+                            DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);
                             cache.dump();
                         }
                         LoadFacade(); // refresh
@@ -2472,7 +2472,7 @@ namespace WindowPlugins.GUITVSeries
                             DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
                             m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
                             m_SelectedSeries.Commit();
-                            //DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+                            DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
                             cache.dump();
                         }
                         else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
@@ -2481,7 +2481,7 @@ namespace WindowPlugins.GUITVSeries
                                                 " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
                             m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
                             m_SelectedSeason.Commit();
-                            //DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+                            DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
                             cache.dump();
                         }
                         LoadFacade(); // refresh
