@@ -389,8 +389,8 @@ namespace WindowPlugins.GUITVSeries
             // Update Episode counts
             SQLCondition condEmpty = new SQLCondition();
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-            //foreach (DBSeries series in AllSeries)
-            //    DBSeries.UpdatedEpisodeCounts(series);
+            foreach (DBSeries series in AllSeries)
+                DBSeries.UpdatedEpisodeCounts(series);
 
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
