@@ -123,18 +123,16 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 4:
-                        // This is no longer needed - and will create unused columns in the database
-
                         // Set number of watched/unwatched episodes                                       
-                        //foreach (DBSeason season in AllSeasons)
-                        //{                           
-                        //    int epsTotal = 0;
-                        //    int epsUnWatched = 0;
-                        //    DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
-                        //    season[DBSeason.cEpisodeCount] = epsTotal;
-                        //    season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-                        //    season.Commit();
-                        //}
+                        foreach (DBSeason season in AllSeasons)
+                        {                           
+                            int epsTotal = 0;
+                            int epsUnWatched = 0;
+                            DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+                            season[DBSeason.cEpisodeCount] = epsTotal;
+                            season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+                            season.Commit();
+                        }
                         nUpgradeDBVersion++;
                         break;
 
@@ -194,8 +192,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cHidden, new DBField(DBField.cTypeInt));
             AddColumn(cForomSubtitleRoot, new DBField(DBField.cTypeString));
             AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            //AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            //AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
+            AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -244,38 +242,12 @@ namespace WindowPlugins.GUITVSeries
                 this[cCurrentBannerFileName] = value;
             }
         }
-
-        public static string EpisodeCountQuery(DBValue seriesID, DBValue seasonIndex, bool watched)
-        {
-            return DBOnlineSeries.EpisodeCountQuery(seriesID, watched) + " and " + DBOnlineEpisode.cSeasonIndex + " = " + seasonIndex;
-        }
-
         public override DBValue this[String fieldName]
         {
             get
             {
                 switch (fieldName)
                 {
-                    case DBSeason.cEpisodeCount: {
-                        object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[cSeriesID], this[cIndex], false));
-                        int count = default(int);
-                        if (int.TryParse(o.ToString(), out count)) {
-                                return count;
-                            } else {
-                                return new DBValue(0);
-                            }
-                        }
-
-                    case DBSeason.cEpisodesUnWatched: {
-                            object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[cSeriesID], this[cIndex], true));
-                            int count = default(int);
-                            if (int.TryParse(o.ToString(), out count)) {
-                                return count;
-                            } else {
-                                return new DBValue(0);
-                            }
-                        }
-
                     default: return base[fieldName];
                 }
             }
@@ -283,11 +255,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 switch (fieldName)
                 {
-                    //Episode Counts are no longer stored in the table so do nothing
-                    case DBSeason.cEpisodeCount:
-                    case DBSeason.cEpisodesUnWatched:
-                        break;
-
                     default:
                         base[fieldName] = value;
                         break;
@@ -502,26 +469,26 @@ namespace WindowPlugins.GUITVSeries
             season.Commit();
         }
 
-        //public static void UpdatedEpisodeCounts(DBSeries series, DBSeason season)
-        //{
-        //    int epsTotal = 0;
-        //    int epsUnWatched = 0;
+        public static void UpdatedEpisodeCounts(DBSeries series, DBSeason season)
+        {
+            int epsTotal = 0;
+            int epsUnWatched = 0;
 
-        //    // Updated Season count
-        //    DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
-        //    season[DBSeason.cEpisodeCount] = epsTotal;
-        //    season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-        //    season.Commit();
+            // Updated Season count
+            DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+            season[DBSeason.cEpisodeCount] = epsTotal;
+            season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+            season.Commit();
 
-        //    // Now Update the series count
-        //    epsTotal = 0;
-        //    epsUnWatched = 0;
+            // Now Update the series count
+            epsTotal = 0;
+            epsUnWatched = 0;
 
-        //    DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-        //    series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-        //    series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-        //    series.Commit();            
-        //}
+            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+            series.Commit();            
+        }
         
     }
 }

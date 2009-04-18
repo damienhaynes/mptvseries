@@ -126,35 +126,27 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
         }
 
         // commits the episode to the database (as well as the season and series if neccisary)
-        private bool commitEpisode() {
-            DBOnlineEpisode onlineEp = (DBOnlineEpisode) episodeComboBox.SelectedItem;
-            DBOnlineSeries onlineSeries = (DBOnlineSeries) seriesComboBox.SelectedItem;
+        private bool commitEpisode()
+        {
+            DBOnlineEpisode onlineEp = (DBOnlineEpisode)episodeComboBox.SelectedItem;
+            DBOnlineSeries onlineSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
 
             if (onlineEp == null || onlineSeries == null)
                 return false;
 
-            int seriesID = (int) onlineSeries[DBOnlineSeries.cID];
-            int seasonNum = (int) onlineEp[DBOnlineEpisode.cSeasonIndex];
-            int episodeNum = (int) onlineEp[DBOnlineEpisode.cEpisodeIndex]; 
+            int seriesID = (int)onlineSeries[DBOnlineSeries.cID];
+            int seasonNum = (int)onlineEp[DBOnlineEpisode.cSeasonIndex];
+            int episodeNum = (int)onlineEp[DBOnlineEpisode.cEpisodeIndex];
 
-          
-            
             // construct and add the episode (i am not sure how much of this is required...
             // would be nice if a DBOnlineEpisode object could just create a DBEpisode object...
-            DBEpisode episode = new DBEpisode(this.videoFile.FullName);
+            DBEpisode episode = new DBEpisode(onlineEp, this.videoFile.FullName);
             episode[DBEpisode.cImportProcessed] = 1;
-            episode[DBEpisode.cSeriesID] = seriesID;
-            episode[DBEpisode.cSeasonIndex] = seasonNum;
-            episode[DBEpisode.cEpisodeIndex] = episodeNum; 
-            episode.onlineEpisode[DBOnlineEpisode.cEpisodeIndex] = episodeNum;
-            episode.onlineEpisode[DBOnlineEpisode.cSeasonIndex] = seasonNum;
-            //episode[DBOnlineEpisode.cID] = onlineEp[DBOnlineEpisode.cID];
+
             episode[DBOnlineEpisode.cID] = 0; //Force it to update on next scan
             if (episode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                 episode[DBOnlineEpisode.cEpisodeName] = onlineEp[DBOnlineEpisode.cEpisodeName];
             episode.Commit();
-            onlineEp.Commit();
-
 
             // make sure the season is in the DB
             DBSeason season = new DBSeason(seriesID, seasonNum);
@@ -166,8 +158,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             // build the local series
             DBSeries localSeries = DBSeries.Get(onlineSeries[DBOnlineSeries.cID]);
-            if (localSeries == null)
-            {
+            if (localSeries == null) {
                 localSeries = new DBSeries((string)onlineSeries[DBOnlineSeries.cPrettyName]);
                 localSeries[DBSeries.cID] = onlineSeries[DBOnlineSeries.cID];
             }
@@ -175,14 +166,14 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             onlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
             if (onlineEp[DBOnlineEpisode.cWatched] == 0)
                 onlineSeries[DBOnlineSeries.cUnwatchedItems] = 1;
-            onlineSeries.Commit();  
+            onlineSeries.Commit();
 
             // update detailed online data for new stuff
             OnlineParsing onlineParser = new OnlineParsing(ConfigurationForm.GetInstance());
             //onlineParser.UpdateSeries(true);
             //onlineParser.UpdateBanners(true);
             //onlineParser.UpdateEpisodes(true);
-            
+
             return true;
         }
  

@@ -360,6 +360,22 @@ namespace WindowPlugins.GUITVSeries
                 m_onlineEpisode = new DBOnlineEpisode();
         }
 
+        public DBEpisode(DBOnlineEpisode onlineEpisode, String filename)
+            : base(cTableName)
+        {
+            InitColumns();
+            if (!ReadPrimary(filename))
+                InitValues();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet)
+                readMediaInfoOfLocal();
+
+            //composite id will bw set automatically from setting these three
+            this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
+            this[DBEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
+            this[DBEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
+            m_onlineEpisode = onlineEpisode;
+        }
+
         public DBEpisode(String filename)
             : base(cTableName)
         {
@@ -848,26 +864,45 @@ namespace WindowPlugins.GUITVSeries
         public static void GetSeasonEpisodeCounts(DBSeason season, out int epsTotal, out int epsUnWatched)
         {
             m_bUpdateEpisodeCount = true;
-            List<DBEpisode> eps = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], true);            
-            epsTotal = eps.Count;
-            epsUnWatched = eps.Count;
-            foreach (DBEpisode ep in eps)
-            {
-                if (ep[DBOnlineEpisode.cWatched])
-                    epsUnWatched--;
+
+            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+            cond.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+            DataTable results = DBTVSeries.Execute(query);
+            epsTotal = 0;
+            epsUnWatched = 0;
+            //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
+            for (int i = 0; i < results.Rows.Count; i++) {
+                int parseResult = 0;
+                if (int.TryParse(results.Rows[i][0].ToString(), out parseResult)) {
+                    epsTotal += parseResult;
+                }
+                if (int.TryParse(results.Rows[i][1].ToString(), out parseResult)) {
+                    epsUnWatched += parseResult;
+                }
             }
+        }
+
         }
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
         {
             m_bUpdateEpisodeCount = true;
-            List<DBEpisode> eps = DBEpisode.Get(series, true);
-            epsTotal = eps.Count;
-            epsUnWatched = eps.Count;
-            foreach (DBEpisode ep in eps)
-            {
-                if (ep[DBOnlineEpisode.cWatched])
-                    epsUnWatched--;
+
+            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cSeriesID, series, SQLConditionType.Equal);
+            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+            DataTable results = DBTVSeries.Execute(query);
+            epsTotal = 0;
+            epsUnWatched = 0;
+            //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
+            for (int i = 0; i < results.Rows.Count; i++) {
+                int parseResult = 0;
+                if (int.TryParse(results.Rows[i][0].ToString(), out parseResult)) {
+                    epsTotal += parseResult;
+                }
+                if (int.TryParse(results.Rows[i][1].ToString(), out parseResult)) {
+                    epsUnWatched += parseResult;
+                }
             }
         }
 

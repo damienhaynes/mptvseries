@@ -207,8 +207,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
             base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            //base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            //base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
+            base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -243,84 +243,51 @@ namespace WindowPlugins.GUITVSeries
             Clear(new DBOnlineSeries(), conditions);
         }
 
-        public static string EpisodeCountQuery(DBValue seriesID, bool watched)
-        {
-            string query = "select count(*) as count from " + DBOnlineEpisode.cTableName + " where " + DBOnlineEpisode.cSeriesID + " = " + seriesID;
-            if (watched) {
-                query += " and " + DBOnlineEpisode.cWatched + " = 0";
-            }
-            return query;
-        }
-
         public override DBValue this[String fieldName]
         {
             get
             {
-                switch (fieldName) {
+                switch (fieldName)
+                {
                     // forom subtitle retrieval always needs original (english) series title
                     // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "7"; // 7 = english (original)
                         if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
                             return base[DBOnlineSeries.cPrettyName];
-                        else {
+                        else
+                        {
                             if (base[DBOnlineSeries.cOriginalName].ToString().Length > 0)
                                 return base[DBOnlineSeries.cOriginalName];
-                            else {
+                            else
+                            {
                                 // we need to get it
                                 MPTVSeriesLog.Write("Retrieving original Series Name...");
                                 UpdateSeries origParser = null; //= new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage); // doesn't work anymore
-                                if (origParser != null && origParser.Results.Count == 1) {
+                                if (origParser != null && origParser.Results.Count == 1)
+                                {
                                     base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
                                     Commit(); // save for next time
                                     MPTVSeriesLog.Write("Original Series Name retrieved");
                                     return origParser.Results[0][DBOnlineSeries.cPrettyName];
-                                } else {
+                                }
+                                else
+                                {
                                     MPTVSeriesLog.Write("Original Series Name could not be retrieved");
                                     // something wrong
                                     return base[DBOnlineSeries.cPrettyName];
                                 }
                             }
                         }
-
-                    case DBOnlineSeries.cEpisodeCount: {
-                            object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[DBSeason.cID], false));
-                            int count = default(int);
-                            if (int.TryParse(o.ToString(), out count)) {
-                                return count;
-                            } else {
-                                return new DBValue(0);
-                            }
-                        }
-
-                    case DBOnlineSeries.cEpisodesUnWatched: {
-                            object o = DBTVSeries.ExecuteScalar(EpisodeCountQuery(this[DBSeason.cID], true));
-                            int count = default(int);
-                            if (int.TryParse(o.ToString(), out count)) {
-                                return count;
-                            } else {
-                                return new DBValue(0);
-                            }
-                        }
-
                     default:
                         return base[fieldName];
                 }
             }
             set
             {
-                switch (fieldName) {
-                    //Episode Counts are no longer stored in the table so do nothing
-                    case DBOnlineSeries.cEpisodeCount:
-                    case DBOnlineSeries.cEpisodesUnWatched:
-                        break;
-
-                    default:
                         base[fieldName] = value;
-                        break;
                 }
             }
-        }
 
         /// <summary>
         /// Returns PrettyName
@@ -434,18 +401,16 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 9:
-                        // This is no longer needed - and will create unused columns in the database
-
                         // Set number of watched/unwatched episodes                                       
-                        //foreach (DBSeries series in AllSeries)
-                        //{                                                                                    
-                        //    int epsTotal = 0;
-                        //    int epsUnWatched = 0;
-                        //    DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-                        //    series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-                        //    series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-                        //    series.Commit();
-                        //}
+                        foreach (DBSeries series in AllSeries)
+                        {                                                                                    
+                            int epsTotal = 0;
+                            int epsUnWatched = 0;
+                            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+                            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+                            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+                            series.Commit();
+                        }
                         nUpgradeDBVersion++;
                         break;
                     
@@ -983,29 +948,29 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
         }
 
-        //public static void UpdatedEpisodeCounts(DBSeries series)
-        //{
-        //    int epsTotal = 0;
-        //    int epsUnWatched = 0;
+        public static void UpdatedEpisodeCounts(DBSeries series)
+        {
+            int epsTotal = 0;
+            int epsUnWatched = 0;
 
-        //    DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-        //    series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-        //    series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-        //    series.Commit();
+            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+            series.Commit();
     
-        //    // Now Update for each season in series
-        //    List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
-        //    foreach (DBSeason season in Seasons)
-        //    {
-        //        epsTotal = 0;
-        //        epsUnWatched = 0;
+            // Now Update for each season in series
+            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
+            foreach (DBSeason season in Seasons)
+            {
+                epsTotal = 0;
+                epsUnWatched = 0;
              
-        //        DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
-        //        season[DBSeason.cEpisodeCount] = epsTotal;
-        //        season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-        //        season.Commit();
-        //    }
-        //}
+                DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+                season[DBSeason.cEpisodeCount] = epsTotal;
+                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+                season.Commit();
+            }
+        }
 
     }
 }
