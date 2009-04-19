@@ -869,18 +869,18 @@ namespace WindowPlugins.GUITVSeries
             string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             SQLiteResultSet results = DBTVSeries.Execute(query);
             epsTotal = 0;
-            epsUnWatched = 0;
             int parseResult = 0;
+            int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
                     epsTotal += parseResult;
                 }
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-                    epsUnWatched += parseResult;
+                    epsWatched += parseResult;
                 }
             }
-
+            epsUnWatched = epsTotal - epsWatched;
         }
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
@@ -891,17 +891,18 @@ namespace WindowPlugins.GUITVSeries
             string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             SQLiteResultSet results = DBTVSeries.Execute(query);
             epsTotal = 0;
-            epsUnWatched = 0;
             int parseResult = 0;
+            int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
                     epsTotal += parseResult;
                 }
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-                    epsUnWatched += parseResult;
+                    epsWatched += parseResult;
                 }
             }
+            epsUnWatched = epsTotal - epsWatched;
         }
 
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
