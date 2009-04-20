@@ -325,7 +325,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
   
-        public static string Q(string sField)
+        public static new string Q(string sField)
         {
             return (cTableName + "." + sField);
         }
