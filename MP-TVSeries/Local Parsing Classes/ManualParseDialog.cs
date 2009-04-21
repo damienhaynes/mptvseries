@@ -277,8 +277,7 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
 
             DBOnlineSeries selectedSeries = (DBOnlineSeries)seriesComboBox.SelectedItem;
             if (seriesComboBox.Text.Length != 0 && seriesComboBox.SelectedItem == null) {
-                OnlineParsing parser = new OnlineParsing((Feedback.IFeedback)ConfigurationForm.GetInstance());
-                DBOnlineSeries newSeries = parser.SearchForSeries(seriesComboBox.Text);
+                DBOnlineSeries newSeries = OnlineParsing.SearchForSeries(seriesComboBox.Text, false, (Feedback.IFeedback)ConfigurationForm.GetInstance());
 
                 // if a series was able to be parsed from the custom text, 
                 // set it as the selected series
