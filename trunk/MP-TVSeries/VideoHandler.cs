@@ -137,14 +137,20 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        /// <summary>
-        /// Waits 2 seconds and then Sets the GuiProperties (clears them if EventArgs.Argument == true)
+        /// <summary>        
+        /// Updates the movie metadata on the playback screen (for when the user clicks info). 
+        /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
+        /// We want to update this after that happens so the correct info is there.
+        /// Clears properties if (EventArgs.Argument == true)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(2000);
+            bool clear = (bool)e.Argument;
+            if (!clear)
+                System.Threading.Thread.Sleep(2000);
+            
             SetGUIProperties((bool)e.Argument);
         }
 
@@ -172,7 +178,8 @@ namespace WindowPlugins.GUITVSeries
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
 
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
         }
 
         void MarkEpisodeAsWatched(DBEpisode episode)
