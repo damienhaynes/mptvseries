@@ -414,8 +414,8 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (g_Player.HasVideo)
                         {                            
-                            SetProperties(item, false);
                             g_Player.ShowFullScreenWindow();
+                            System.Threading.Thread.Sleep(2000);
                             SetProperties(item, false);
                         }
                     }
@@ -424,14 +424,21 @@ namespace WindowPlugins.GUITVSeries
             while (skipmissing);
             return g_Player.Playing;
         }
-        
-        private void SetProperties(PlayListItem item, bool bClear)
+
+        /// <summary>        
+        /// Updates the movie metadata on the playback screen (for when the user clicks info). 
+        /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
+        /// We want to update this after that happens so the correct info is there.       
+        /// </summary>
+        /// <param name="item">Playlist item</param>
+        /// <param name="clear">Clears the properties instead of filling them if True</param>
+        private void SetProperties(PlayListItem item, bool clear)
         {
-            if (item == null) return;            
-            GUIPropertyManager.SetProperty("#Play.Current.Title", bClear ? "" : item.Description);
-            GUIPropertyManager.SetProperty("#Play.Current.Plot", bClear ? "" : item.Summary);
-            GUIPropertyManager.SetProperty("#Play.Current.Thumb", bClear ? "" : item.EpisodeThumb);
-            GUIPropertyManager.SetProperty("#Play.Current.Year", bClear ? "" : item.FirstAired);
+            if (item == null) return;
+            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : item.Description);
+            GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : item.Summary);
+            GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : item.EpisodeThumb);
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : item.FirstAired);            
         }
 
         private void SetAsWatched()
