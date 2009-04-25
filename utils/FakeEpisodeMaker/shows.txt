@@ -1,4 +1,4 @@
-﻿24
+24
 Battlestar Galactica (2003)
 Chuck
 Damages
@@ -23,7 +23,6 @@ The Clone Wars
 Superjail
 The Big Bang Theory
 The Drinky Crow Show
-The Life and Times of Tim
 The Office (US)
 The Simpsons
 The Universe
@@ -117,7 +116,6 @@ Captain N and the New Super Mario World
 The Game Master
 Captain Planet and the Planeteers
 Care Bears
-Carnivàle
 Carrier
 Cashmere Mafia
 The Series
@@ -375,10 +373,10 @@ Mad Men
 Magnum, P.I.
 Man Stroke Woman
 Man vs. Wild
-Married ... with Children
+Married with Children
 Martin
 Martin Lawrence Presents 1st Amendment Stand-Up
-M*A*S*H
+MASH
 Masters of Horror
 Masters of Science Fiction
 Matlock
@@ -746,7 +744,7 @@ Wall Street Warriors
 Wallander
 Weeds
 Weird Science
-When Louis Met...
+When Louis Met
 The NASA Missions
 Where on Earth is Carmen Sandiego
 Whose Line Is It Anyway
