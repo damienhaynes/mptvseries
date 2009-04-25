@@ -142,7 +142,7 @@ namespace WindowPlugins.GUITVSeries
         /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
         /// We want to update this after that happens so the correct info is there.
         /// Clears properties if (EventArgs.Argument == true)
-        /// </summary>
+        /// </summary>ippiiiifmp4ipimippiiiiipi8mipps
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
