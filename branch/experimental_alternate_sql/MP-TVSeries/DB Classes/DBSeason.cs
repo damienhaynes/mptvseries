@@ -432,7 +432,7 @@ namespace WindowPlugins.GUITVSeries
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBSeason season = new DBSeason();
-                    season.Read(ref results, index);
+                    season.Read(results, index);
                     outList.Add(season);
                 }
             }

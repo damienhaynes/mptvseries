@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(new DBUserSelection(), cInternalKey, new DBValue(internalkey.ToString()), SQLConditionType.Equal);
 
                 DataTable records = DBTVSeries.Execute("select * from " + base.m_tableName + condition);
-                return base.Read(ref records, 0);
+                return base.Read(records, 0);
             }
             catch (Exception exception)
             {
@@ -290,7 +290,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int i = 0; i < records.Rows.Count; i++)
                     {
                         selectionArray[i] = new DBUserSelection();
-                        selectionArray[i].Read(ref records, i);
+                        selectionArray[i].Read(records, i);
                     }
                     return selectionArray;
                 }
@@ -318,7 +318,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
   
-        public static string Q(string sField)
+        public static new string Q(string sField)
         {
             return (cTableName + "." + sField);
         }

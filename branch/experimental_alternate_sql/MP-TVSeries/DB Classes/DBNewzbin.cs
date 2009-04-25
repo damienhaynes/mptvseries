@@ -212,7 +212,7 @@ namespace WindowPlugins.GUITVSeries
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBNewzbin outItem = new DBNewzbin();
-                    outItem.Read(ref results, index);
+                    outItem.Read(results, index);
                     outList.Add(outItem);
                 }
             }

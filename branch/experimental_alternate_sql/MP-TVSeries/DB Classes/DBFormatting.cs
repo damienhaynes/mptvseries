@@ -116,7 +116,7 @@ namespace WindowPlugins.GUITVSeries
                         for (int index = 0; index < results.Rows.Count; index++)
                         {
                             cache[index] = new DBFormatting();
-                            cache[index].Read(ref results, index);                            
+                            cache[index].Read(results, index);                            
                         }
                     }
                     MPTVSeriesLog.Write("Found and loaded " + results.Rows.Count + " User Formatting Rules",MPTVSeriesLog.LogLevel.Debug);

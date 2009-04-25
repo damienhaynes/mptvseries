@@ -151,7 +151,7 @@ namespace WindowPlugins.GUITVSeries
                             for (int index = 0; index < results.Rows.Count; index++)
                             {
                                 ourFanart.Add(new DBFanart());
-                                ourFanart[index].Read(ref results, index);
+                                ourFanart[index].Read(results, index);
                             }
                             if (cache == null) cache = new Dictionary<int, List<DBFanart>>();
                             cache.Add(SeriesID, ourFanart);
@@ -199,7 +199,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // Add 'Available to Download' fanart to list
                         AvailableFanarts.Add(new DBFanart());
-                        AvailableFanarts[AvailableFanarts.Count-1].Read(ref results, index);                       
+                        AvailableFanarts[AvailableFanarts.Count-1].Read(results, index);                       
                     }
                 }
                 // Only return the fanarts that we want to download

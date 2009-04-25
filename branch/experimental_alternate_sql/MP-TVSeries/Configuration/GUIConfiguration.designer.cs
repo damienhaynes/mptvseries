@@ -396,8 +396,6 @@ namespace WindowPlugins.GUITVSeries
             this.label24 = new System.Windows.Forms.Label();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -405,11 +403,6 @@ namespace WindowPlugins.GUITVSeries
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane();
-            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
-            this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();

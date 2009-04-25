@@ -283,7 +283,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int index = 0; index < results.Rows.Count; index++)
                     {
                         expressions[index] = new DBExpression();
-                        expressions[index].Read(ref results, index);
+                        expressions[index].Read(results, index);
                     }
                     return expressions;
                 }

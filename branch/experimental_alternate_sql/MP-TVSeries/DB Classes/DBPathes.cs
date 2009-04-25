@@ -93,7 +93,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int index = 0; index < results.Rows.Count; index++)
                     {
                         importPathes[index] = new DBImportPath();
-                        importPathes[index].Read(ref results, index);                        
+                        importPathes[index].Read(results, index);                        
                     }
                     return importPathes;
                 }

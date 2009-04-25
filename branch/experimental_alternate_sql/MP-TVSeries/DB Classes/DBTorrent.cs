@@ -146,7 +146,7 @@ namespace WindowPlugins.GUITVSeries
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBTorrentSearch outItem = new DBTorrentSearch();
-                    outItem.Read(ref results, index);
+                    outItem.Read(results, index);
                     outList.Add(outItem);
                 }
             }

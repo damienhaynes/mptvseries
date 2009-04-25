@@ -92,7 +92,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int index = 0; index < results.Rows.Count; index++)
                     {
                         views[index] = new DBView();
-                        views[index].Read(ref results, index);
+                        views[index].Read(results, index);
                     }
                     return views;
                 }

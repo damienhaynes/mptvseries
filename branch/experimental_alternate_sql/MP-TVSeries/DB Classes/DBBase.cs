@@ -495,19 +495,20 @@ namespace WindowPlugins.GUITVSeries
             return sField;
         }
 
-        public bool Read(ref DataTable records, int index)
+        public bool Read(DataTable records, int index)
         {
             if (records.Rows.Count > 0 || records.Rows.Count < index) {
                 DataRow row = records.Rows[index];
-                return Read(row, records.Columns);
+                return Read(row);
             }
             return false;
         }
 
-        public bool Read(DataRow row, DataColumnCollection columns)
+        public bool Read(DataRow row)
         {
             if (row == null || row.ItemArray.Length == 0)
                 return false;
+            DataColumnCollection columns = row.Table.Columns;
             string fullName = string.Empty;
             foreach (KeyValuePair<string, DBField> field in m_fields) {
                 if (columns.Contains(field.Key)) {
@@ -519,7 +520,7 @@ namespace WindowPlugins.GUITVSeries
                     field.Value.Value = row[fullName].ToString();
                     continue;
                 }
-                fullName = string.Format("{0}.{1}", m_tableName, field.Key);
+                fullName = m_tableName + "." + field.Key;
                 if (columns.Contains(fullName)) {
                     field.Value.Value = row[fullName].ToString();
                     continue;
@@ -529,34 +530,6 @@ namespace WindowPlugins.GUITVSeries
             m_CommitNeeded = false;
             return true;
         }
-
-        //public bool Read(DataTableReader row, ref System.Collections.IEnumerator columns)
-        //{
-        //    if (row == null || row.FieldCount == 0) {
-        //        return false;
-        //    }
-        //    string fullName = string.Empty;
-        //    foreach (KeyValuePair<string, DBField> field in m_fields) {
-        //        columns.MoveNext();
-        //        DataColumn current = columns.Current as DataColumn;
-        //        field.Value.Value = string.Empty;
-        //        if (current.ColumnName.Contains(".")) {
-        //            //only create the fullname once
-        //            fullName = string.Format("{0}.{1}", m_tableName, field.Key);
-        //            if (current.ColumnName == fullName) {
-        //                field.Value.Value = row[fullName].ToString();
-        //            }
-        //        } else {
-        //            if (current.ColumnName == field.Key) {
-        //                field.Value.Value = row[field.Key].ToString();
-        //            } else if (!current.Unique && current.ColumnName == field.Key + "1") {
-        //                field.Value.Value = row[field.Key + "1"].ToString();
-        //            }
-        //        }
-        //    }
-        //    m_CommitNeeded = false;
-        //    return true;
-        //}
 
         public String PrimaryKey()
         {
@@ -576,7 +549,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(this, PrimaryKey(), m_fields[PrimaryKey()].Value, SQLConditionType.Equal);
                 String sqlQuery = "select * from " + m_tableName + condition;
                 DataTable records = DBTVSeries.Execute(sqlQuery);
-                return Read(ref records, 0);
+                return Read(records, 0);
             } catch (Exception ex) {
                 MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
             }
@@ -1478,6 +1451,14 @@ namespace WindowPlugins.GUITVSeries
                     using (DbCommand command = connection.CreateCommand()) {
                         command.CommandText = sCommand;
                         using (DbDataReader reader = command.ExecuteReader()) {
+                            //setup the data types for the columns, to avoid the incorrect columns being loaded
+                            for (int i = 0; i < reader.FieldCount; i++) {
+                                if (reader.GetFieldType(i) == typeof(int)) {
+                                    result.Columns.Add(reader.GetName(i), typeof(int));
+                                } else {
+                                    result.Columns.Add(reader.GetName(i), typeof(string));
+                                }
+                            }
                             result.Load(reader);
                         }
                         MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);

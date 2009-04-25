@@ -883,8 +883,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        }
-
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
         {
             m_bUpdateEpisodeCount = true;
@@ -1106,9 +1104,9 @@ namespace WindowPlugins.GUITVSeries
 
             for (int index = 0; index < results.Rows.Count; index++) {
                 episode = new DBEpisode();
-                episode.Read(results.Rows[index], results.Columns);
+                episode.Read(results.Rows[index]);
                 episode.m_onlineEpisode = new DBOnlineEpisode();
-                episode.m_onlineEpisode.Read(results.Rows[index], results.Columns);
+                episode.m_onlineEpisode.Read(results.Rows[index]);
                 outList.Add(episode);
             }
             return outList;

@@ -276,7 +276,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int index = 0; index < results.Rows.Count; index++)
                     {
                         outlist[index] = new DBReplacements();
-                        outlist[index].Read(ref results, index);
+                        outlist[index].Read(results, index);
                     }
                     return outlist;
                 }

@@ -895,9 +895,9 @@ namespace WindowPlugins.GUITVSeries
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     series = new DBSeries();
-                    series.Read(results.Rows[index], results.Columns);
+                    series.Read(results.Rows[index]);
                     series.m_onlineSeries = new DBOnlineSeries();
-                    series.m_onlineSeries.Read(results.Rows[index], results.Columns);
+                    series.m_onlineSeries.Read(results.Rows[index]);
                     outList.Add(series);
                     if (series[cID] < 0 && series.m_onlineSeries[DBOnlineSeries.cPrettyName].ToString().Length == 0)
                     {
