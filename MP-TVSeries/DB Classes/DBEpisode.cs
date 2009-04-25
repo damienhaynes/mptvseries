@@ -537,7 +537,8 @@ namespace WindowPlugins.GUITVSeries
 
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
             if (null == MI) return false; // MediaInfo Object could not be created
-            if(System.IO.File.Exists(this[DBEpisode.cFilename]))
+            
+            if (System.IO.File.Exists(this[DBEpisode.cFilename]))
             {
                 try
                 {
@@ -567,7 +568,7 @@ namespace WindowPlugins.GUITVSeries
 
                     }
                     else failed = true;
-                    //MI.Close();
+                    MI.Close();
 
                     if (failed)
                     {
@@ -579,7 +580,8 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
 
                     }
-                    else MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                    else 
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
                     Commit();
                     
