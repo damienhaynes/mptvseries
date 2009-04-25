@@ -145,11 +145,25 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         //MediaInfo class
         public MediaInfo()
         {
-            Handle = MediaInfo_New();         
+            try
+            {
+                Handle = MediaInfo_New();
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error creating the MediaInfo Object, check that MediaInfo.dll is in the windows plugins directory: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+            }
         }
         ~MediaInfo()
-        { 
-            MediaInfo_Delete(Handle); 
+        {
+            try
+            {
+                MediaInfo_Delete(Handle);
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error deleting the MediaInfo Object: ", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+            }
         }
 
         public int Open(String FileName)
