@@ -266,9 +266,10 @@ namespace WindowPlugins.GUITVSeries
             {                
                 string result = item[m.Value];                
                 if (_splitFields) result = result.Trim('|').Replace("|", ", ");
-                /*if (m.Value == "EpisodeIndex" && item["SeasonIndex"].ToString() == "0" && what.IndexOf("<SeasonIndex>",0) < 0)
-                    result = "S" + item["EpisodeIndex"];*/
-
+                
+                if (m.Value == "EpisodeIndex" && item["SeasonIndex"].ToString() == "0" && what.IndexOf("<SeasonIndex>",0) < 0)
+                    result = "S" + item["EpisodeIndex"];
+                
                 if (_formatDates) {
                     //this seems to be the only location that we can easily get the individual field values without having to worry if the
                     //format string contains more than one field (eg. "<firstAried> (<status>)")

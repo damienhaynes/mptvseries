@@ -538,6 +538,7 @@ namespace WindowPlugins.GUITVSeries
 
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
             if (null == MI) return false; // MediaInfo Object could not be created
+            
             if(System.IO.File.Exists(this[DBEpisode.cFilename]))
             {
                 try
@@ -568,7 +569,7 @@ namespace WindowPlugins.GUITVSeries
 
                     }
                     else failed = true;
-                    //MI.Close();
+                    MI.Close();
 
                     if (failed)
                     {
@@ -580,7 +581,8 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
 
                     }
-                    else MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                    else 
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
                     Commit();
                     
@@ -865,12 +867,12 @@ namespace WindowPlugins.GUITVSeries
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-            cond.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
             string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             DataTable results = DBTVSeries.Execute(query);
             epsTotal = 0;
-            epsUnWatched = 0;
+            int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
                 int parseResult = 0;
@@ -878,20 +880,21 @@ namespace WindowPlugins.GUITVSeries
                     epsTotal += parseResult;
                 }
                 if (int.TryParse(results.Rows[i][1].ToString(), out parseResult)) {
-                    epsUnWatched += parseResult;
+                    epsWatched += parseResult;
                 }
             }
+            epsUnWatched = epsTotal - epsWatched;
         }
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cSeriesID, series, SQLConditionType.Equal);
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
             string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             DataTable results = DBTVSeries.Execute(query);
             epsTotal = 0;
-            epsUnWatched = 0;
+            int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
                 int parseResult = 0;
@@ -899,9 +902,10 @@ namespace WindowPlugins.GUITVSeries
                     epsTotal += parseResult;
                 }
                 if (int.TryParse(results.Rows[i][1].ToString(), out parseResult)) {
-                    epsUnWatched += parseResult;
+                    epsWatched += parseResult;
                 }
             }
+            epsUnWatched = epsTotal - epsWatched;
         }
 
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
