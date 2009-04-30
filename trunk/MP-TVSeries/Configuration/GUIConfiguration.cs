@@ -199,7 +199,12 @@ namespace WindowPlugins.GUITVSeries
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
-                              
+
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
+            checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
+            checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
+            checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
+
             int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
@@ -3548,6 +3553,27 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cUseRegionalDateFormatString, chkUseRegionalDateFormatString.Checked);
         }
+
+        private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cScanOnStartup, checkBox_ScanOnStartup.Checked);
+        }
+
+        private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoDownloadMissingArtwork, checkBox_AutoDownloadMissingArtwork.Checked);
+        }
+
+        private void checkBox_AutoUpdateEpisodeRatings_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateEpisodeRatings, checkBox_AutoUpdateEpisodeRatings.Checked);
+        }
+
+        private void checkBox_AutoUpdateAllFanart_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateAllFanart, checkBox_AutoUpdateAllFanart.Checked);
+        }
+
     }
     
     public class BannerComboItem

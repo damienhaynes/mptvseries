@@ -948,14 +948,11 @@ namespace WindowPlugins.GUITVSeries
 
         public static void UpdatedEpisodeCounts(DBSeries series)
         {
+            int seriesEpsTotal = 0;
+            int seriesEpsUnWatched = 0;
             int epsTotal = 0;
             int epsUnWatched = 0;
 
-            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-            series.Commit();
-    
             // Now Update for each season in series
             List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
             foreach (DBSeason season in Seasons)
@@ -964,10 +961,14 @@ namespace WindowPlugins.GUITVSeries
                 epsUnWatched = 0;
              
                 DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
-                season[DBSeason.cEpisodeCount] = epsTotal;
-                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
+                season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
+                season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
                 season.Commit();
             }
+
+            series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
+            series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
+            series.Commit();
         }
 
     }

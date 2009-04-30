@@ -11,6 +11,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         List<DBValue> series = null;
         List<DBValue> episodes = null;
         List<DBValue> banners = null;
+        List<DBValue> fanart = null;
 
         public long OnlineTimeStamp
         { get { return timestamp; } }
@@ -23,6 +24,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         public List<DBValue> UpdatedBanners
         { get { return banners; } }
+
+        public List<DBValue> UpdatedFanart
+        { get { return fanart; } }
 
         public GetUpdates(OnlineAPI.UpdateType type)
         {
@@ -71,6 +75,16 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 id = node.SelectSingleNode("Series").InnerText;
                 if (!this.banners.Contains(id))
                     this.banners.Add(id);
+            }
+
+            //get all the fanart banners
+            fanart = new List<DBValue>();
+            id = string.Empty;
+            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='fanart']"))
+            {
+                id = node.SelectSingleNode("Series").InnerText;
+                if (!this.fanart.Contains(id))
+                    this.fanart.Add(id);
             }
 
         }

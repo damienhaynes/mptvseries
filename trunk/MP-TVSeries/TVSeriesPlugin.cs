@@ -322,9 +322,12 @@ namespace WindowPlugins.GUITVSeries
 
                 setUpFolderWatches();
 
-                // always do a local scan when starting up the app - later on the watcher will monitor changes
-                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-                Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);                
+                // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
+                if (DBOption.GetOptions("ScanOnStartup"))
+                {
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                    Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+                }
             }
             else
             {
@@ -400,7 +403,10 @@ namespace WindowPlugins.GUITVSeries
                 setUpFolderWatches();
 
                 // lets do a full folder scan since we might have network shares which could have been updated
-                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                if (DBOption.GetOptions("ScanOnStartup"))
+                {
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                }
             }
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend)
             {
