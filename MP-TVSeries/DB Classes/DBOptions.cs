@@ -164,6 +164,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 
+        public const String cScanOnStartup = "ScanOnStartup";
+        public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
+        public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
+        public const String cAutoUpdateAllFanart = "AutoUpdateAllFanart";
+
         public const String cAutoDownloadFanart = "AutoDownloadFanart";
         public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
@@ -423,6 +428,18 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPlaylistAutoPlay) == null)
                     SetOptions(cPlaylistAutoPlay, true);
+
+                if (GetOptions(cScanOnStartup) == null)
+                    SetOptions(cScanOnStartup, true);
+
+                if (GetOptions(cAutoDownloadMissingArtwork) == null)
+                    SetOptions(cAutoDownloadMissingArtwork, true);
+
+                if (GetOptions(cAutoUpdateEpisodeRatings) == null)
+                    SetOptions(cAutoUpdateEpisodeRatings, true);
+
+                if (GetOptions(cAutoUpdateAllFanart) == null)
+                    SetOptions(cAutoUpdateAllFanart, true);
 
                 if (GetOptions(cAutoDownloadFanart) == null)
                     SetOptions(cAutoDownloadFanart, true);

@@ -238,12 +238,16 @@ namespace WindowPlugins.GUITVSeries
                     // update banners
                     UpdateBanners(false, GU.UpdatedBanners);
 
+                    // update fanart
+                    if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
+                        UpdateFanart(false, GU.UpdatedFanart);
+
                     // lets save the updateTimestamp
                     if (GU.OnlineTimeStamp > 0)
                         DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
                 }
                 UpdateBanners(true, null);// update new series for banners                                             
-                UpdateFanart();
+                UpdateFanart(true, null);// update all series for fanart - todo: only scan for series with missing fanart - mirror how banners does it.
                 UpdateEpisodeThumbNails();
                 UpdateUserRatings();
                 UpdateUserFavourites();
@@ -252,21 +256,22 @@ namespace WindowPlugins.GUITVSeries
             }
             
             // Update Episode counts
+            MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
             SQLCondition condEmpty = new SQLCondition();
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
             foreach (DBSeries series in AllSeries)
-                DBSeries.UpdatedEpisodeCounts(series);
+                DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
 
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
-            MPTVSeriesLog.Write("*******************          Completed          ***************************");
+            MPTVSeriesLog.Write("*******************            Completed           ************************");
             MPTVSeriesLog.Write("***************************************************************************");
         }
 
         #region ParseActions
         private void ParseActionRemove(List<PathPair> files)
         {
-            string initialMsg = "*******************    Remove Run Starting     ***************************";
+            string initialMsg = "*******************        Remove Run Starting      ***********************";
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             MPTVSeriesLog.Write(initialMsg);
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
@@ -715,6 +720,9 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBOnlineSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries) {
+                if (!DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork))
+                    return;
+
                 MPTVSeriesLog.Write(bigLogMessage("Checking for missing artwork"));
                 // and that never had data imported from the online DB
                 condition.beginGroup();
@@ -916,12 +924,12 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void UpdateFanart()
+        private void UpdateFanart(bool bUpdateNewSeries, List<DBValue> updatedSeries)
         {
             if (!DBOption.GetOptions(DBOption.cAutoDownloadFanart))
                 return;
 
-            MPTVSeriesLog.Write(bigLogMessage("Get Series Fanart"));
+            //MPTVSeriesLog.Write(bigLogMessage("Get Series Fanart"));
 
             SQLCondition condition = new SQLCondition();
             condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
@@ -929,7 +937,25 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
-            foreach (DBSeries series in seriesList) {
+            if (!bUpdateNewSeries && seriesList.Count > 0)
+            {
+                MPTVSeriesLog.Write(bigLogMessage("Checking for new Fanart"));
+                // let's check which of these we have any interest in
+                for (int i = 0; i < seriesList.Count; i++)
+                    if (!updatedSeries.Contains(seriesList[i][DBSeries.cID]))
+                    {
+                        seriesList.RemoveAt(i--);
+                    }
+            }
+            else
+            {
+                if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
+                    return;
+                MPTVSeriesLog.Write(bigLogMessage("Checking for all Fanart"));
+            }
+
+            foreach (DBSeries series in seriesList)
+            {
                 MPTVSeriesLog.Write("Retrieving Fanart for: " + Helper.getCorrespondingSeries(series[DBSeries.cID]));
 
                 try {
@@ -962,29 +988,48 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public void UpdateUserRatings()
-        {
+        {            
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
 
             if (!Helper.String.IsNullOrEmpty(sAccountID)) {
                 MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
 
                 List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
-                foreach (DBOnlineSeries series in seriesList) {
-                    MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                    GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
 
-                    // Set Series Rating
-                    series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
-                    series.Commit();
+                if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
+                {
+                    foreach (DBOnlineSeries series in seriesList)
+                    {
+                        MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                        GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
 
-                    SQLCondition condition = new SQLCondition();
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
-                    List<DBEpisode> episodes = DBEpisode.Get(condition);
+                        // Set Series Rating
+                        series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
+                        series.Commit();
 
-                    foreach (DBEpisode episode in episodes) {
-                        if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID]))
-                            episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
-                        episode.Commit();
+                        SQLCondition condition = new SQLCondition();
+                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
+                        List<DBEpisode> episodes = DBEpisode.Get(condition);
+
+                        foreach (DBEpisode episode in episodes)
+                        {
+                            if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID]))
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
+                            episode.Commit();
+                        }
+                    }
+                }
+                else //update Series only, not Episodes -- workaround for not being able to pull up all series/episode ratings at once from theTVDB.com; saves time.
+                {
+                    GetUserRatings userRatings = new GetUserRatings(null, sAccountID);
+                    foreach (DBOnlineSeries series in seriesList)
+                    {
+                        if (userRatings.AllSeriesRatings.ContainsKey(series[DBOnlineSeries.cID]))
+                        {
+                            MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                            series[DBOnlineSeries.cMyRating] = userRatings.AllSeriesRatings[series[DBOnlineSeries.cID]];
+                            series.Commit();
+                        }
                     }
                 }
             }
@@ -1002,7 +1047,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
                 foreach (DBOnlineSeries series in seriesList) {
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
-                        MPTVSeriesLog.Write("Retrieving favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                        MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
                         series[DBOnlineSeries.cIsOnlineFavourite] = "1";
                         series.Commit();
                     } else {
