@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cOnlineLanguage = "onlineLanguage";
 
-        public const String cDeleteFile = "deleteFile";
+        public const String cShowDeleteMenu = "ShowDeleteMenu";
 
         public const String cMainMirror = "mainMirror";
         public const String cGetBlankBanners = "getBlankBanners";

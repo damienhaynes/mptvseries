@@ -2261,8 +2261,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Download);
-                                
-                                
+                                                                
                                 if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable)
                                 {
                                     pItem = new GUIListItem(Translation.Retrieve_Subtitle);
@@ -2300,9 +2299,11 @@ namespace WindowPlugins.GUITVSeries
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionHide;
 
-                                    pItem = new GUIListItem(Translation.Delete);
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.actionDelete;
+                                    if (DBOption.GetOptions(DBOption.cShowDeleteMenu)) {
+                                        pItem = new GUIListItem(Translation.Delete);
+                                        dlg.Add(pItem);
+                                        pItem.ItemId = (int)eContextItems.actionDelete;
+                                    }
 
                                     pItem = new GUIListItem(Translation.updateMI);
                                     dlg.Add(pItem);
@@ -3018,32 +3019,34 @@ namespace WindowPlugins.GUITVSeries
                     break;
 				
 				case Action.ActionType.REMOTE_0:
-					// MediaPortal Delete Shortcut on Remote/Keyboard					
-					if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
-						return;
+                    if (DBOption.GetOptions(DBOption.cShowDeleteMenu)) {
+                        // MediaPortal Delete Shortcut on Remote/Keyboard					
+                        if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
+                            return;
 
-					if (this.listLevel == Listlevel.Group)
-						return;
+                        if (this.listLevel == Listlevel.Group)
+                            return;
 
-					DBSeries selectedSeries = null;
-					DBSeason selectedSeason = null;
-					DBEpisode selectedEpisode = null;
+                        DBSeries selectedSeries = null;
+                        DBSeason selectedSeason = null;
+                        DBEpisode selectedEpisode = null;
 
-					switch (this.listLevel)
-					{
-						case Listlevel.Series:
-							selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
-							break;
-						case Listlevel.Season:
-							selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
-							break;
-						case Listlevel.Episode:
-							selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
-							break;
-					}
-					// Invoke Delete Menu
-					ShowDeleteMenu(selectedSeries, selectedSeason, selectedEpisode);
-					return;
+                        switch (this.listLevel) {
+                            case Listlevel.Series:
+                                selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
+                                break;
+                            case Listlevel.Season:
+                                selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                                break;
+                            case Listlevel.Episode:
+                                selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
+                                break;
+                        }
+                        // Invoke Delete Menu
+                        ShowDeleteMenu(selectedSeries, selectedSeason, selectedEpisode);
+                        return;
+                    }
+                    break;
 
                 default:
                     base.OnAction(action);
