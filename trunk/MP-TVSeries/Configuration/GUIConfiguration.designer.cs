@@ -1588,8 +1588,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoUpdateEpisodeRatings.Name = "checkBox_AutoUpdateEpisodeRatings";
             this.checkBox_AutoUpdateEpisodeRatings.Size = new System.Drawing.Size(351, 17);
             this.checkBox_AutoUpdateEpisodeRatings.TabIndex = 17;
-            this.checkBox_AutoUpdateEpisodeRatings.Text = "Automatically update user episode ratings in addition to series ratings.";
-            this.toolTip_Help.SetToolTip(this.checkBox_AutoUpdateEpisodeRatings, "Only update series user ratings when unchecked.  Saves up to 3 minutes per scan.");
+            this.checkBox_AutoUpdateEpisodeRatings.Text = "Automatically update user episode ratings in addition to series ratings";
+            this.toolTip_Help.SetToolTip(this.checkBox_AutoUpdateEpisodeRatings, "Only update user series ratings when unchecked.  Saves up to 3 minutes per scan.");
             this.checkBox_AutoUpdateEpisodeRatings.UseVisualStyleBackColor = true;
             this.checkBox_AutoUpdateEpisodeRatings.CheckedChanged += new System.EventHandler(this.checkBox_AutoUpdateEpisodeRatings_CheckedChanged);
             // 
