@@ -952,8 +952,8 @@ namespace WindowPlugins.GUITVSeries
             int seriesEpsUnWatched = 0;
             int epsTotal = 0;
             int epsUnWatched = 0;
-
-            // Now Update for each season in series
+            
+            // Update for each season in series and add each to total series count
             List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
             foreach (DBSeason season in Seasons)
             {

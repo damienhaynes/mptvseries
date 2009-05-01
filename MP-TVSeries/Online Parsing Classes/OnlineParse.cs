@@ -259,6 +259,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
             SQLCondition condEmpty = new SQLCondition();
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+            MPTVSeriesLog.Write("List of series obtained...");
             foreach (DBSeries series in AllSeries)
                 DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
 
@@ -762,9 +763,9 @@ namespace WindowPlugins.GUITVSeries
                 if (m_worker.CancellationPending)
                     return;
                 nIndex++;
-                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series.ToString() + "\"");
+                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series[DBOnlineSeries.cPrettyName] + "\"");
 
-                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);
+                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID], series[DBOnlineSeries.cPrettyName]);
 
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
@@ -797,12 +798,13 @@ namespace WindowPlugins.GUITVSeries
                         sAvailablePosters += "|" + filename;
                 }
                 series[DBOnlineSeries.cPosterFileNames] = sAvailablePosters;
-
+MPTVSeriesLog.Write(sAvailableBanners); //temp log
                 seriesBannersMap seriesArtwork = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBannersMap);
                 if (seriesArtwork != null)  // oops!
                 {
                     bool hasOwnLang = false;
                     foreach (BannerSeries bannerSeries in seriesArtwork.seriesBanners) {
+                        MPTVSeriesLog.Write(bannerSeries.sSeriesName + " " + bannerSeries.sOnlineBannerPath + " " + bannerSeries.sBannerFileName);
                         if (!series[DBOnlineSeries.cBannerFileNames].ToString().Contains(bannerSeries.sBannerFileName)) {
                             m_bDataUpdated = true;
                             MPTVSeriesLog.Write("New series banner found for \"" + series.ToString() + "\" : " + bannerSeries.sOnlineBannerPath);
@@ -1088,7 +1090,12 @@ namespace WindowPlugins.GUITVSeries
                     // we need the pretty name to figure out the folder to store to
                     try {
                         if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID]) {
-                            tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                            //temp fix to avoid cache of getCorrespondingSeries that doesn't have the cPrettyName filled in.
+                            SQLCondition cond = new SQLCondition();
+                            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                            List<DBSeries> tmpList = DBSeries.Get(cond);
+                            if (tmpList.Count == 1) tmpSeries = tmpList[0];
+                            else tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                         }
 
                         if (tmpSeries != null) {
@@ -1101,10 +1108,8 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 orderIdentifier = "_" + tmpSeries[DBOnlineSeries.cChoseEpisodeOrder] + ".jpg";
 
-                            string seriesFolder = tmpSeries[DBOnlineSeries.cPrettyName];
-                            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-                                seriesFolder = seriesFolder.Replace(c, '_');
-
+                            string seriesFolder = Helper.cleanLocalPath(tmpSeries[DBOnlineSeries.cPrettyName]);
+                            
                             sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + orderIdentifier);
                             completePath = Helper.PathCombine(basePath, sThumbNailFilename);
 
