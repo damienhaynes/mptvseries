@@ -207,6 +207,7 @@ namespace WindowPlugins.GUITVSeries
         private static bool m_bIsNetworkAvailable = true;
         private static bool m_bQuickSelect = false;
         public static PlayListPlayer _playlistPlayer;
+        public static bool m_bOnActionProcessed = false;
 
         #region Skin Variables
 
@@ -3044,8 +3045,20 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // Invoke Delete Menu
                         ShowDeleteMenu(selectedSeries, selectedSeason, selectedEpisode);
+                        m_bOnActionProcessed = true;
                         return;
                     }
+                    break;
+
+                case Action.ActionType.ACTION_KEY_PRESSED:
+                    // For some reason this action gets processed twice after deleting an item
+                    // using the shortcut above (ZERO on Remote action). This is a workaround
+                    // so MediaPortal doesnt throw an exception.
+                    if (m_bOnActionProcessed && this.m_Facade.SelectedListItemIndex == -1) {
+                        m_bOnActionProcessed = false;
+                        return;
+                    }
+                    base.OnAction(action);
                     break;
 
                 default:
@@ -3224,7 +3237,7 @@ namespace WindowPlugins.GUITVSeries
                 OnShowSavedPlaylists(DBOption.GetOptions(DBOption.cPlaylistPath));
                 LoadPlaylistButton.Focus = false;
                 return;
-            }			
+            }
 
             if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
             if (control == this.m_Facade)
@@ -3698,7 +3711,7 @@ namespace WindowPlugins.GUITVSeries
                         LoadFacade();
                     }
                     return true;				
-
+               
                 default:
                     return base.OnMessage(message);
             }
