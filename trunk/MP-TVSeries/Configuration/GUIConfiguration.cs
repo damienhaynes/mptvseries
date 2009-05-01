@@ -1834,7 +1834,8 @@ namespace WindowPlugins.GUITVSeries
                     // delete the actual files!!
                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-                    if (MessageBox.Show("Would you also like to delete " + files.Count.ToString() + " file(s) from disk?", "Confirm File Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					string msg = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?";
+					if (MessageBox.Show(msg, "Confirm File Deletion", MessageBoxButtons.YesNo,MessageBoxIcon.Question,MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                     {
                         foreach (string file in files)
                         {
