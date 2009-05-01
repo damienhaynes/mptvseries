@@ -192,7 +192,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
+            this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
             this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
@@ -1766,7 +1766,7 @@ namespace WindowPlugins.GUITVSeries
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
 
                             condition = new SQLCondition();
@@ -1793,14 +1793,12 @@ namespace WindowPlugins.GUITVSeries
                         if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             DBSeason season = (DBSeason)nodeDeleted.Tag;
-
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
-
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
+
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
@@ -1819,13 +1817,10 @@ namespace WindowPlugins.GUITVSeries
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
-
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
-
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                            condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                            
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
+                                                       
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
@@ -1833,16 +1828,22 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                 }
-                if (epsDeletion.Count > 0 && DBOption.GetOptions(DBOption.cDeleteFile))
+                if (epsDeletion.Count > 0)
                 {
                     // delete the actual files!!
                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-                    if (MessageBox.Show("You are about to delete " + files.Count.ToString() + " physical file(s), would you like to proceed?", "Confirm File Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Would you also like to delete " + files.Count.ToString() + " file(s) from disk?", "Confirm File Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         foreach (string file in files)
                         {
-                            System.IO.File.Delete(file);
+                            try {
+                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
+                                System.IO.File.Delete(file);
+                            }
+                            catch (Exception ex) {
+                                MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
+                            }
                         }
                     }
                 }
@@ -3118,9 +3119,9 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
 
-        private void checkFileDeletion_CheckedChanged(object sender, EventArgs e)
+        private void chkAllowDeletes_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cDeleteFile, this.checkFileDeletion.Checked);
+            DBOption.SetOptions(DBOption.cShowDeleteMenu, this.chkAllowDeletes.Checked);
         }
 
         bool pauseViewConfigSave = false;
