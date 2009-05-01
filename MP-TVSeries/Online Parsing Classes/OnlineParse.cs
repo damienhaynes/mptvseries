@@ -257,9 +257,9 @@ namespace WindowPlugins.GUITVSeries
             
             // Update Episode counts
             MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
+
             SQLCondition condEmpty = new SQLCondition();
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-            MPTVSeriesLog.Write("List of series obtained...");
             foreach (DBSeries series in AllSeries)
                 DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
 
@@ -798,13 +798,12 @@ namespace WindowPlugins.GUITVSeries
                         sAvailablePosters += "|" + filename;
                 }
                 series[DBOnlineSeries.cPosterFileNames] = sAvailablePosters;
-MPTVSeriesLog.Write(sAvailableBanners); //temp log
+                
                 seriesBannersMap seriesArtwork = Helper.getElementFromList<seriesBannersMap, string>(series[DBSeries.cID], "seriesID", 0, bannerParser.seriesBannersMap);
                 if (seriesArtwork != null)  // oops!
                 {
                     bool hasOwnLang = false;
                     foreach (BannerSeries bannerSeries in seriesArtwork.seriesBanners) {
-                        MPTVSeriesLog.Write(bannerSeries.sSeriesName + " " + bannerSeries.sOnlineBannerPath + " " + bannerSeries.sBannerFileName);
                         if (!series[DBOnlineSeries.cBannerFileNames].ToString().Contains(bannerSeries.sBannerFileName)) {
                             m_bDataUpdated = true;
                             MPTVSeriesLog.Write("New series banner found for \"" + series.ToString() + "\" : " + bannerSeries.sOnlineBannerPath);
