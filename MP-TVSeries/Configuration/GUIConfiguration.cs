@@ -34,6 +34,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
+using SQLite.NET;
 using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
@@ -3176,7 +3177,15 @@ namespace WindowPlugins.GUITVSeries
                 cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, SQLConditionType.Equal);
                 foreach (DBValue val in DBOnlineEpisode.GetSingleField(DBOnlineEpisode.cCompositeID, cond, new DBOnlineEpisode()))
                 {
-                    w.WriteLine((string)val);
+                    try
+                    {
+                        w.WriteLine((string)val);
+                    }
+                    catch(IOException exception)
+                    {
+                        MPTVSeriesLog.Write("Watched info NOT exported!  Error: " + exception.ToString());
+                        return;
+                    }
                 }
                 w.Close();
                 MPTVSeriesLog.Write("Watched info succesfully exported!");
@@ -3204,6 +3213,90 @@ namespace WindowPlugins.GUITVSeries
                 }
                 r.Close();
                 MPTVSeriesLog.Write("Watched info succesfully imported!");
+                LoadTree(); // reload tree so the changes are visible
+            }
+        }
+
+        private void linkExParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SaveFileDialog fd = new SaveFileDialog();
+            fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter w = new StreamWriter(fd.FileName);
+                DBExpression[] expressions = DBExpression.GetAll();
+
+                foreach (DBExpression expression in expressions)
+                {
+                    String val = "";
+                    //val += expression[DBExpression.cIndex];
+                    //val += ";";
+                    val += (int)expression[DBExpression.cEnabled];
+                    val += ";";
+                    val += (String)expression[DBExpression.cType];
+                    val += ";";
+                    val += (String)expression[DBExpression.cExpression];
+                    
+                    try
+                    {
+                        w.WriteLine((string)val);
+                    }
+                    catch (IOException exception)
+                    {
+                        MPTVSeriesLog.Write("Parsing Expressions NOT exported!  Error: " + exception.ToString());
+                        return;
+                    }
+                }
+                w.Close();
+                MPTVSeriesLog.Write("Parsing Expressions succesfully exported!");
+            }
+        }
+
+        private void linkImpParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
+            if (fd.ShowDialog() == DialogResult.OK && System.IO.File.Exists(fd.FileName))
+            {
+                StreamReader r = new StreamReader(fd.FileName);
+                DBExpression expr;
+
+                //Dialog box to make sure they want to clear out current expressions to import new ones.
+                if (DialogResult.Yes ==
+                    MessageBox.Show("You are about to delete all current parsing expressions," + Environment.NewLine +
+                        "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
+                        "Any current Expressions will be lost.  Would you like to proceed?", "Import Expressions", MessageBoxButtons.YesNo))
+                {
+                    dataGridView_Expressions.Rows.Clear();
+                    DBExpression.ClearAll();
+                    MPTVSeriesLog.Write("Expressions cleared");
+                }
+
+                string line = string.Empty;
+                string[] parts;
+                int index = 0;
+
+                // now set watched for all in file
+                while ((line = r.ReadLine()) != null)
+                {
+                    char[] c = {';'};
+                    parts = line.Split(c, 3);
+                    if (parts.Length != 3) continue;
+
+                    expr = new DBExpression();
+                    //if (Convert.ToInt32(parts[0]) >= 0) expr[DBExpression.cIndex] = parts[0]; else continue;
+                    expr[DBExpression.cIndex] = index;
+                    if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) expr[DBExpression.cEnabled] = parts[0]; else continue;
+                    if (parts[1] == DBExpression.cType_Regexp || parts[1] == DBExpression.cType_Simple) expr[DBExpression.cType] = parts[1]; else continue;
+                    expr[DBExpression.cExpression] = parts[2];
+                   
+                    if (expr.Commit()) index++;
+                }
+
+                r.Close();
+                MPTVSeriesLog.Write("Parsing Expressions succesfully imported!");
+                
+                LoadExpressions();
                 LoadTree(); // reload tree so the changes are visible
             }
         }
