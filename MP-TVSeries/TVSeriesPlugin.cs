@@ -1608,6 +1608,7 @@ namespace WindowPlugins.GUITVSeries
             actionPlayRandom,
             optionsOnlyShowLocal,
             optionsPreventSpoilers,
+            optionsPreventSpoilerThumbnail,
             optionsAskToRate,
             optionsFastViewSwitch,
             optionsFanartRandom,
@@ -1743,6 +1744,10 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
+            pItem = new GUIListItem(Translation.Hide_thumbnail_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
+
             if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
             {
                 pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
@@ -1782,6 +1787,10 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.optionsPreventSpoilers:
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
+                        LoadFacade();
+                        break;
+                    case (int)eContextItems.optionsPreventSpoilerThumbnail:
+                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail));
                         LoadFacade();
                         break;
                     case (int)eContextItems.optionsFastViewSwitch:
@@ -3888,7 +3897,7 @@ namespace WindowPlugins.GUITVSeries
             this.m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
-            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)))
+            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail)))
                 setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(m_SelectedEpisode));
             else
                 clearGUIProperty(guiProperty.EpisodeImage);

@@ -68,6 +68,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
+        public const String cView_Episode_HideUnwatchedThumbnail = "View_Episode_HideUnwatchedThumbnail";
         public const String cViewAutoHeight = "ViewAutoHeight";
 
         public const String cView_Series_ListFormat = "View_Series_ListFormat";
@@ -223,8 +224,11 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
 
                 if (GetOptions(cView_Episode_HideUnwatchedSummary) == null)
-                    SetOptions(cView_Episode_HideUnwatchedSummary, false);// Unless we can also hide episode thumb as well there is no point making this default
-                                                                          // I think 90% of users would prefer to see overview always, you need to read it to be spoiled
+                    SetOptions(cView_Episode_HideUnwatchedSummary, false);
+
+                if (GetOptions(cView_Episode_HideUnwatchedThumbnail) == null)
+                    SetOptions(cView_Episode_HideUnwatchedThumbnail, false);
+                
                 if (GetOptions(cUpdateSeriesTimeStamp) == null)
                     SetOptions(cUpdateSeriesTimeStamp, 0);
 
