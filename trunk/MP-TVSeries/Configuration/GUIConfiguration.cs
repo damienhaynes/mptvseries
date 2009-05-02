@@ -190,6 +190,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
+            checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
@@ -3667,6 +3668,11 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_AutoUpdateAllFanart_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAutoUpdateAllFanart, checkBox_AutoUpdateAllFanart.Checked);
+        }
+
+        private void checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
         }
 
     }
