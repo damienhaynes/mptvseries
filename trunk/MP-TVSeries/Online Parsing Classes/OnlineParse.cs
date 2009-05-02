@@ -563,7 +563,7 @@ namespace WindowPlugins.GUITVSeries
                         localSeries.Commit();
                         
                         // UPDATE CACHE to fix getting the series named as the parsed name instead of the online pretty name!
-                        Helper.updateCachedSeries(localSeries[DBSeries.cID]);
+                        if(bUpdateNewSeries) cache.addChangeSeries(localSeries);
                     }
                 }
             }
