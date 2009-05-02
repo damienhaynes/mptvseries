@@ -280,6 +280,20 @@ namespace WindowPlugins.GUITVSeries
             return SortBy;
         }
 
+        public static DBSeries updateCachedSeries(int id)
+        {
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
+            List<DBSeries> tmpSeries = DBSeries.Get(cond);
+            foreach (DBSeries series in tmpSeries) // should only be one!
+                if (series[DBSeries.cID] == id)
+                {
+                    cache.addChangeSeries(series);
+                    return series;
+                }
+            return null;
+        }
+
         #endregion
     }
 }
