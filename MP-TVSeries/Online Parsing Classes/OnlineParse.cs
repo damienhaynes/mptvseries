@@ -559,8 +559,11 @@ namespace WindowPlugins.GUITVSeries
 
                         if (localSeries[DBOnlineSeries.cHasLocalFilesTemp])
                             localSeries[DBOnlineSeries.cHasLocalFiles] = 1;
-
+                        
                         localSeries.Commit();
+                        
+                        // UPDATE CACHE to fix getting the series named as the parsed name instead of the online pretty name!
+                        Helper.updateCachedSeries(localSeries[DBSeries.cID]);
                     }
                 }
             }
@@ -763,9 +766,9 @@ namespace WindowPlugins.GUITVSeries
                 if (m_worker.CancellationPending)
                     return;
                 nIndex++;
-                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series[DBOnlineSeries.cPrettyName] + "\"");
+                MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series.ToString() + "\"");
 
-                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID], series[DBOnlineSeries.cPrettyName]);
+                GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);
 
                 String sLastTextBanner = String.Empty;
                 String sLastGraphicalBanner = String.Empty;
@@ -1088,14 +1091,8 @@ namespace WindowPlugins.GUITVSeries
 
                     // we need the pretty name to figure out the folder to store to
                     try {
-                        if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID]) {
-                            //temp fix to avoid cache of getCorrespondingSeries that doesn't have the cPrettyName filled in.
-                            SQLCondition cond = new SQLCondition();
-                            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-                            List<DBSeries> tmpList = DBSeries.Get(cond);
-                            if (tmpList.Count == 1) tmpSeries = tmpList[0];
-                            else tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                        }
+                        if (null == tmpSeries || tmpSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
+                            tmpSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
 
                         if (tmpSeries != null) {
                             // Create different filename for different orders, this will ensure that correct thumbnail is viewed                            
@@ -1107,7 +1104,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 orderIdentifier = "_" + tmpSeries[DBOnlineSeries.cChoseEpisodeOrder] + ".jpg";
 
-                            string seriesFolder = Helper.cleanLocalPath(tmpSeries[DBOnlineSeries.cPrettyName]);
+                            string seriesFolder = Helper.cleanLocalPath(tmpSeries.ToString());
                             
                             sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + orderIdentifier);
                             completePath = Helper.PathCombine(basePath, sThumbNailFilename);
