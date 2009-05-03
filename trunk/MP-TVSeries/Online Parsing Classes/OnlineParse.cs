@@ -71,6 +71,9 @@ namespace WindowPlugins.GUITVSeries
         public bool m_bUpdateScan = true;
         public List<PathPair> m_files = null;
 
+        public List<DBValue> m_series = null;
+        public List<DBValue> m_episodes = null;
+
         public CParsingParameters(bool bScanNew, bool bUpdateExisting)
         {
             m_bLocalScan = bScanNew;
@@ -97,17 +100,11 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.AddRange(LastLocalScanActions);
         }
 
-        public CParsingParameters(IEnumerable<ParsingAction> actions, List<PathPair> files, bool bScanNew, bool bUpdateExisting)
+        public CParsingParameters(IEnumerable<ParsingAction> actions, List<DBValue> series, List<DBValue> episodes)
         {
             m_actions.AddRange(actions);
-            m_files = files;
-
-            if (m_bLocalScan)
-                m_actions.AddRange(FirstLocalScanActions);
-            if (m_bUpdateScan)
-                m_actions.AddRange(UpdateActions);
-            if (m_bLocalScan)
-                m_actions.AddRange(LastLocalScanActions);
+            m_episodes = episodes;
+            m_series = series;
         }
     };
 
@@ -261,13 +258,21 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ParsingAction.UpdateSeries:
-                        if (online && updates != null)
-                            UpdateSeries(false, updates.UpdatedSeries);
+                        if (online) {
+                            if (updates != null)
+                                UpdateSeries(false, updates.UpdatedSeries);
+                            if (m_params.m_series != null)
+                                UpdateSeries(false, m_params.m_series);
+                        }
                         break;
 
                     case ParsingAction.UpdateEpisodes:
-                        if (online && updates != null)
-                            UpdateEpisodes(updates.UpdatedEpisodes);
+                        if (online) {
+                            if (updates != null)
+                                UpdateEpisodes(updates.UpdatedEpisodes);
+                            if (m_params.m_episodes != null)
+                                UpdateEpisodes(m_params.m_episodes);
+                        }
                         break;
 
                     case ParsingAction.UpdateBanners:
