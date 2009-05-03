@@ -72,6 +72,9 @@ namespace WindowPlugins.GUITVSeries
         private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
 
+		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
+		private MemoryBox deleteFilesMemBox = new MemoryBox();
+
         public static ConfigurationForm GetInstance()
         {
             return instance;
@@ -1760,10 +1763,18 @@ namespace WindowPlugins.GUITVSeries
             if (nodeDeleted != null)
             {
                 List<DBEpisode> epsDeletion = new List<DBEpisode>();
+
+				string message = string.Empty;
+				deleteDatabaseMemBox.DisableButton(MemoryBoxResult.NoToAll, false);
+				MemoryBoxResult result = MemoryBoxResult.No;
+
                 switch (nodeDeleted.Name)
                 {
                     case DBSeries.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this series and all the underlying seasons and\nepisodes from the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";						
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Series");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
@@ -1792,7 +1803,10 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBSeason.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this season and all the underlying episodes\nfrom the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Season");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBSeason season = (DBSeason)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
@@ -1815,7 +1829,10 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBEpisode.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this episode from the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Episode");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
@@ -1835,8 +1852,10 @@ namespace WindowPlugins.GUITVSeries
                     // delete the actual files!!
                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-					string msg = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?";
-					if (MessageBox.Show(msg, "Confirm File Deletion", MessageBoxButtons.YesNo,MessageBoxIcon.Question,MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+					message = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?\n\n\n";
+					message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";					
+					result = deleteFilesMemBox.ShowMemoryDialog(message, "Delete Files");
+					if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                     {
                         foreach (string file in files)
                         {
