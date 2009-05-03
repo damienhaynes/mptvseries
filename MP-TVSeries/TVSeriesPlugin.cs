@@ -468,7 +468,7 @@ namespace WindowPlugins.GUITVSeries
                 // queue it
                 lock (m_parserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Add, filesAdded));
+                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Add, filesAdded, true, false));
                 }
             }
 
@@ -477,7 +477,7 @@ namespace WindowPlugins.GUITVSeries
                 // queue it
                 lock (m_parserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Remove, filesRemoved));
+                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Remove, filesRemoved, false, false));
                 }
             }
         }
@@ -2527,7 +2527,7 @@ namespace WindowPlugins.GUITVSeries
                             DBOnlineSeries.Clear(condition);
 
                             // look for it again
-                            m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.LocalScanNoExactMatch, null));
+                            m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.NoExactMatch, null, true, false));
                         }
                         break;
 
