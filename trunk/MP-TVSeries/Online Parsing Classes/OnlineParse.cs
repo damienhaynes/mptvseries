@@ -36,15 +36,37 @@ namespace WindowPlugins.GUITVSeries
 
     enum ParsingAction
     {
-        Full,
+        NoExactMatch,
+
+        LocalScan,
         List_Add,
         List_Remove,
-        LocalScanNoExactMatch,
+        IdentifyNewSeries,
+        IdentifyNewEpisodes,
+
+        GetOnlineUpdates,
+        UpdateSeries,
+        UpdateEpisodes,
+        UpdateBanners,
+        UpdateFanart,
+
+        GetNewBanners,
+        GetNewFanArt,
+        UpdateEpisodeThumbNails,
+        UpdateUserRatings,
+        UpdateUserFavourites
     }
 
     class CParsingParameters
     {
-        public ParsingAction m_action = ParsingAction.Full;
+        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
+        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction .GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
+            ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
+        private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
+            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites };
+
+        public List<ParsingAction> m_actions = new List<ParsingAction>();
+
         public bool m_bLocalScan = true;
         public bool m_bUpdateScan = true;
         public List<PathPair> m_files = null;
@@ -53,14 +75,39 @@ namespace WindowPlugins.GUITVSeries
         {
             m_bLocalScan = bScanNew;
             m_bUpdateScan = bUpdateExisting;
+
+            if (m_bLocalScan) 
+                m_actions.AddRange(FirstLocalScanActions);
+            if (m_bUpdateScan)
+                m_actions.AddRange(UpdateActions);
+            if (m_bLocalScan)
+                m_actions.AddRange(LastLocalScanActions);
         }
 
-        public CParsingParameters(ParsingAction action, List<PathPair> files)
+        public CParsingParameters(ParsingAction action, List<PathPair> files, bool bScanNew, bool bUpdateExisting)
         {
-            m_action = action;
+            m_actions.Add(action);
             m_files = files;
-            m_bLocalScan = true;
-            m_bUpdateScan = false;
+
+            if (m_bLocalScan)
+                m_actions.AddRange(FirstLocalScanActions);
+            if (m_bUpdateScan)
+                m_actions.AddRange(UpdateActions);
+            if (m_bLocalScan)
+                m_actions.AddRange(LastLocalScanActions);
+        }
+
+        public CParsingParameters(IEnumerable<ParsingAction> actions, List<PathPair> files, bool bScanNew, bool bUpdateExisting)
+        {
+            m_actions.AddRange(actions);
+            m_files = files;
+
+            if (m_bLocalScan)
+                m_actions.AddRange(FirstLocalScanActions);
+            if (m_bUpdateScan)
+                m_actions.AddRange(UpdateActions);
+            if (m_bLocalScan)
+                m_actions.AddRange(LastLocalScanActions);
         }
     };
 
@@ -71,7 +118,7 @@ namespace WindowPlugins.GUITVSeries
 
         bool m_bDataUpdated = false;
         bool m_bFullSeriesRetrieval = false;
-        bool m_bNoExactMatch = false;
+        bool m_bNoExactMatch = false;       //if set to true then the user will be always prompted to choose the series
         CParsingParameters m_params = null;
 
         int RETRY_INTERVAL = 1000;
@@ -142,7 +189,6 @@ namespace WindowPlugins.GUITVSeries
         public void Cancel()
         {
             m_worker.CancelAsync();
-            //            m_bAbort = true;
         }
 
         public void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -171,98 +217,103 @@ namespace WindowPlugins.GUITVSeries
                 DBOnlineMirror.Init();
                 iSleepInterval *= RETRY_MULTIPLIER;
             }
-            TVSeriesPlugin.IsResumeFromStandby = false;           
+            TVSeriesPlugin.IsResumeFromStandby = false;
 
-            switch (m_params.m_action)
-            {
-                case ParsingAction.List_Remove:
-                    ParseActionRemove(m_params.m_files);
-                    return;
-
-                case ParsingAction.List_Add:
-                    ParseActionAdd(m_params.m_files);
+            bool online = DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable;
+            Online_Parsing_Classes.GetUpdates updates = null;
+            foreach (ParsingAction action in m_params.m_actions) {
+                
+                if (m_worker.CancellationPending)
                     break;
 
-                case ParsingAction.LocalScanNoExactMatch: {
-                        string initialMsg = String.Format("******************* NoExactMatch Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", m_params.m_bLocalScan, m_params.m_bUpdateScan);
-                        MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
-                        MPTVSeriesLog.Write(initialMsg);
-                        MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
-                        m_bNoExactMatch = true;
-                    }
-                    goto case ParsingAction.Full;
+                switch (action) {
+                    case ParsingAction.List_Remove:
+                        ParseActionRemove(m_params.m_files);
+                        break;
 
-                case ParsingAction.Full:
-                    ParseActionFull(m_params.m_bLocalScan, m_params.m_bUpdateScan);
-                    break;
-            }
+                    case ParsingAction.List_Add:
+                        ParseActionAdd(m_params.m_files);
+                        break;
 
-            // now on with online parsing            
-            if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable)
-            {    
-                // 1) Identify any new/unidentified Series
-                GetSeries(m_worker, m_bNoExactMatch);
+                    case ParsingAction.NoExactMatch:
+                        this.m_bNoExactMatch = true;
+                        break;
 
-                // 2) Download metadata for them
-                UpdateSeries(true, null); // todo: ask orderoption
+                    case ParsingAction.LocalScan:
+                        ParseActionLocalScan(m_params.m_bLocalScan, m_params.m_bUpdateScan);
+                        break;
 
-                // 3) identifies new episodes
-                GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);                                                         
+                    case ParsingAction.IdentifyNewSeries:
+                        if (online) {
+                            GetSeries(m_worker, m_bNoExactMatch);
+                            UpdateSeries(true, null); // todo: ask orderoption
+                        }
+                        break;
 
-                // if we do updates too, let's get the current timestamp
-                if (m_params.m_bUpdateScan)
-                {
-                    // let's get the time we last updated from the local options
-                    long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
-                    double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                    double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
+                    case ParsingAction.IdentifyNewEpisodes:
+                        if (online)
+                            GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);
+                        break;
 
-                    MPTVSeriesLog.Write(bigLogMessage("Processing Updates from online DB"));
+                    case ParsingAction.GetOnlineUpdates:
+                        if (online)
+                            updates = GetOnlineUpdates();
+                        break;
 
-                    Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
-                    if (sinceLastUpdate < 3600 * 24)         
-                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;         
-                    else if (sinceLastUpdate < 3600 * 24 * 7)
-                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
-                    else if (sinceLastUpdate < 3600 * 24 * 30)
-                        uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
-                    
-                    Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
+                    case ParsingAction.UpdateSeries:
+                        if (online && updates != null)
+                            UpdateSeries(false, updates.UpdatedSeries);
+                        break;
 
-                    // update series
-                    UpdateSeries(false, GU.UpdatedSeries);
+                    case ParsingAction.UpdateEpisodes:
+                        if (online && updates != null)
+                            UpdateEpisodes(updates.UpdatedEpisodes);
+                        break;
 
-                    // update episodes
-                    UpdateEpisodes(GU.UpdatedEpisodes);
+                    case ParsingAction.UpdateBanners:
+                        if (online && updates != null)
+                            UpdateBanners(false, updates.UpdatedBanners);
+                        break;
 
-                    // update banners
-                    UpdateBanners(false, GU.UpdatedBanners);
+                    case ParsingAction.UpdateFanart:
+                        if (online && updates != null && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
+                            UpdateFanart(false, updates.UpdatedFanart);
+                        break;
 
-                    // update fanart
-                    if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
-                        UpdateFanart(false, GU.UpdatedFanart);
+                    case ParsingAction.GetNewBanners:
+                        if (online)
+                            UpdateBanners(true, null);// update new series for banners                                             
+                        break;
 
-                    // lets save the updateTimestamp
-                    if (GU.OnlineTimeStamp > 0)
-                        DBOption.SetOptions(DBOption.cUpdateTimeStamp, GU.OnlineTimeStamp);
+                    case ParsingAction.GetNewFanArt:
+                        if (online)
+                            UpdateFanart(true, null);// update all series for fanart - todo: only scan for series with missing fanart - mirror how banners does it.
+                        break;
+
+                    case ParsingAction.UpdateEpisodeThumbNails:
+                        if (online)
+                            UpdateEpisodeThumbNails();
+                        break;
+
+                    case ParsingAction.UpdateUserRatings:
+                        if (online)
+                            UpdateUserRatings();
+                        break;
+
+                    case ParsingAction.UpdateUserFavourites:
+                        if (online)
+                            UpdateUserFavourites();
+                        break;
                 }
-                UpdateBanners(true, null);// update new series for banners                                             
-                UpdateFanart(true, null);// update all series for fanart - todo: only scan for series with missing fanart - mirror how banners does it.
-                UpdateEpisodeThumbNails();
-                UpdateUserRatings();
-                UpdateUserFavourites();
-
-                Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             }
-            
-            // Update Episode counts
-            MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
 
-            SQLCondition condEmpty = new SQLCondition();
-            List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-            foreach (DBSeries series in AllSeries)
-                DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
+            UpdateEpisodeCounts();
 
+            // lets save the updateTimestamp
+            if (updates != null &&  updates.OnlineTimeStamp > 0)
+                DBOption.SetOptions(DBOption.cUpdateTimeStamp, updates.OnlineTimeStamp);
+
+            Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************            Completed           ************************");
@@ -357,9 +408,12 @@ namespace WindowPlugins.GUITVSeries
             ParseLocal(files);
         }
 
-        private void ParseActionFull(bool localScan, bool updateScan)
+        private void ParseActionLocalScan(bool localScan, bool updateScan)
         {
             string initialMsg = String.Format("******************* Full Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", localScan, updateScan);
+            if (m_bNoExactMatch) {
+                initialMsg = String.Format("******************* NoExactMatch Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", localScan, updateScan);
+            }
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             MPTVSeriesLog.Write(initialMsg);
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
@@ -472,6 +526,28 @@ namespace WindowPlugins.GUITVSeries
                 }
 
             }
+        }
+
+        private Online_Parsing_Classes.GetUpdates GetOnlineUpdates()
+        {
+            // let's get the time we last updated from the local options
+            long lastUpdateTimeStamp = DBOption.GetOptions(DBOption.cUpdateTimeStamp);
+            double curTimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            double sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
+
+            MPTVSeriesLog.Write(bigLogMessage("Processing Updates from online DB"));
+
+            Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
+            if (sinceLastUpdate < 3600 * 24)
+                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
+            else if (sinceLastUpdate < 3600 * 24 * 7)
+                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
+            else if (sinceLastUpdate < 3600 * 24 * 30)
+                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
+
+            Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
+
+            return GU;
         }
 
         private void UpdateSeries(bool bUpdateNewSeries, List<DBValue> seriesUpdated)
@@ -1144,6 +1220,16 @@ namespace WindowPlugins.GUITVSeries
                     episode.Commit();
                 }
             }
+        }
+
+        public void UpdateEpisodeCounts()
+        {
+            // Update Episode counts
+            MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
+            SQLCondition condEmpty = new SQLCondition();
+            List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+            foreach (DBSeries series in AllSeries)
+                DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
         }
         #endregion
 
