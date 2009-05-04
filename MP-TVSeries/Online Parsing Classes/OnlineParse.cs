@@ -42,6 +42,7 @@ namespace WindowPlugins.GUITVSeries
         List_Add,
         List_Remove,
         MediaInfo,
+        UpdateEpisodeCounts,
         IdentifyNewSeries,
         IdentifyNewEpisodes,
 
@@ -56,18 +57,17 @@ namespace WindowPlugins.GUITVSeries
         UpdateEpisodeThumbNails,
         UpdateUserRatings,
         UpdateUserFavourites,
-
-        UpdateEpisodeCounts,
+        
         WaitForCompletion
     }
 
     class CParsingParameters
     {
         private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.UpdateEpisodeCounts, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
-        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
+        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateUserRatings, ParsingAction.UpdateEpisodes, 
             ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites/*, ParsingAction.UpdateEpisodeCounts*/, ParsingAction.WaitForCompletion };
+            /*ParsingAction.UpdateUserRatings, */ParsingAction.UpdateUserFavourites, ParsingAction.WaitForCompletion };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -221,7 +221,8 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.IsResumeFromStandby = false;
 
             BackgroundWorker tMediaInfo = null;
-            BackgroundWorker tEpisodeCount = null;
+            BackgroundWorker tEpisodeCounts = null;
+            BackgroundWorker tUserRatings = null;
 
             bool online = DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable;
             Online_Parsing_Classes.GetUpdates updates = null;
@@ -315,7 +316,8 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.UpdateUserRatings:
                         if (online)
-                            UpdateUserRatings();
+                            tUserRatings = new BackgroundWorker();
+                            UpdateUserRatings(tUserRatings);
                         break;
 
                     case ParsingAction.UpdateUserFavourites:
@@ -325,20 +327,21 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.UpdateEpisodeCounts:
                         //Threaded processing of episode counts - goes straight to next task
-                        tMediaInfo = new BackgroundWorker();
-                        UpdateEpisodeCounts(tMediaInfo);
+                        tEpisodeCounts = new BackgroundWorker();
+                        UpdateEpisodeCounts(tEpisodeCounts);
                         break;
 
                     case ParsingAction.WaitForCompletion:
                         //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
-                        if (tMediaInfo == null && tEpisodeCount == null) break;
+                        if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
                         if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
-                        if (tEpisodeCount.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
+                        if (tEpisodeCounts.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
+                        if (tUserRatings.IsBusy) MPTVSeriesLog.Write("*******************    User Ratings Still Going    ************************");
                         do
                         {
                             Thread.Sleep(1000);
                         }
-                        while (tMediaInfo.IsBusy || tEpisodeCount.IsBusy);
+                        while (tMediaInfo.IsBusy || tEpisodeCounts.IsBusy || tUserRatings.IsBusy);
                         break;
                 }
             }
@@ -1101,15 +1104,34 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateUserRatings()
-        {            
+
+
+
+        public void UpdateUserRatings(BackgroundWorker tUserRatings)
+        {
+            MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
+            List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
+
+            tUserRatings.DoWork += new DoWorkEventHandler(asyncUserRatings);
+            tUserRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncUserRatingsCompleted);
+            tUserRatings.RunWorkerAsync(seriesList);
+        }
+
+        void asyncUserRatingsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write("*****************   User Ratings Updated in Database    *******************");
+        }
+
+        void asyncUserRatings(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
 
-            if (!Helper.String.IsNullOrEmpty(sAccountID)) {
-                MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
+            List<DBOnlineSeries> seriesList = (List<DBOnlineSeries>)e.Argument;
 
-                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
-
+            if (!Helper.String.IsNullOrEmpty(sAccountID))
+            {
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
                     foreach (DBOnlineSeries series in seriesList)
@@ -1147,7 +1169,11 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+            
         }
+
+
+
 
         public void UpdateUserFavourites()
         {
@@ -1171,6 +1197,9 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+
+
+
 
         public void UpdateEpisodeThumbNails()
         {
@@ -1256,6 +1285,9 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+
+
+
         public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             // Update Episode counts
@@ -1285,6 +1317,9 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries.UpdatedEpisodeCounts(series);
             //e.Result = series.Count;
         }
+
+
+
 
         public void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
