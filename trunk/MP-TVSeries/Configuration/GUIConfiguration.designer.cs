@@ -411,6 +411,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();
@@ -511,12 +512,13 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_DetailsTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hideToolStripMenuItem,
             this.deleteToolStripMenuItem,
+            this.updateToolStripMenuItem,
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem,
             this.ResetUserSelToolStripMenuItem});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 136);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 158);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
@@ -4660,6 +4662,13 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.updateToolStripMenuItem.Tag = "update";
+            this.updateToolStripMenuItem.Text = "Update";
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5108,5 +5117,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_AutoDownloadMissingArtwork;
         private System.Windows.Forms.LinkLabel linkExParsingExpressions;
         private System.Windows.Forms.LinkLabel linkImpParsingExpressions;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
     }
 }
