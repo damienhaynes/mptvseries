@@ -1181,12 +1181,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void Parsing_Start()
         {
-            if (m_parser != null)
-            {
-                m_parser.Cancel();
-                button_Start.Enabled = false;
-            }
-            else
+            Parsing_Start(new CParsingParameters(true, true));
+        }
+
+        private void Parsing_Start(CParsingParameters parsingParams)
+        {
+            if (m_parser == null)
             {
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
@@ -1196,7 +1196,7 @@ namespace WindowPlugins.GUITVSeries
                 m_parser = new OnlineParsing(this);
                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-                m_parser.Start(new CParsingParameters(true, true));
+                m_parser.Start(parsingParams);
             }
         }
 
@@ -1612,7 +1612,11 @@ namespace WindowPlugins.GUITVSeries
 
         private void button_Start_Click(object sender, EventArgs e)
         {
-            Parsing_Start();
+            if (m_parser != null) {
+                m_parser.Cancel();
+                button_Start.Enabled = false;
+            } else
+                Parsing_Start();
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)
@@ -1765,6 +1769,41 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // just remove the node
                     treeView_Library.Nodes.Remove(nodeHidden);
+                }
+            }
+        }
+
+        private void UpdateNode(TreeNode nodeUpdated)
+        {
+            if (nodeUpdated != null) {
+                List<DBValue> epIdsUpdates = new List<DBValue>();
+                List<DBValue> seriesIDsUpdates = new List<DBValue>();
+
+                switch (nodeUpdated.Name) {
+                    case DBSeries.cTableName: {
+                            DBSeries series = nodeUpdated.Tag as DBSeries;
+                            seriesIDsUpdates.Add(series[DBSeries.cID]);
+                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                        }
+                        break;
+
+                    case DBSeason.cTableName: {
+                            DBSeason season = nodeUpdated.Tag as DBSeason;
+                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                        }
+                        break;
+
+                    case DBEpisode.cTableName: {
+                            DBEpisode episode = nodeUpdated.Tag as DBEpisode;
+                            epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
+                        }
+                        break;
+                }
+                if (epIdsUpdates.Count > 0) {
+                    Parsing_Start((new CParsingParameters(new List<ParsingAction> { ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeThumbNails }, seriesIDsUpdates, epIdsUpdates)));
                 }
             }
         }
@@ -2237,6 +2276,10 @@ namespace WindowPlugins.GUITVSeries
 
                 case "resetUserSelections":
                     ResetUserSelectionsToolStripMenuItem(clickedNode);
+                    break;
+
+                case "update":
+                    UpdateNode(clickedNode);
                     break;
             }
         }
