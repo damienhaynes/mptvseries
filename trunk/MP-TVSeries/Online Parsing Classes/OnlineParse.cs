@@ -41,6 +41,7 @@ namespace WindowPlugins.GUITVSeries
         LocalScan,
         List_Add,
         List_Remove,
+        MediaInfo,
         IdentifyNewSeries,
         IdentifyNewEpisodes,
 
@@ -54,16 +55,19 @@ namespace WindowPlugins.GUITVSeries
         GetNewFanArt,
         UpdateEpisodeThumbNails,
         UpdateUserRatings,
-        UpdateUserFavourites
+        UpdateUserFavourites,
+
+        UpdateEpisodeCounts,
+        WaitForCompletion
     }
 
     class CParsingParameters
     {
-        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
-        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction .GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
+        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
+        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
             ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites };
+            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites, ParsingAction.UpdateEpisodeCounts, ParsingAction.WaitForCompletion };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -216,6 +220,8 @@ namespace WindowPlugins.GUITVSeries
             }
             TVSeriesPlugin.IsResumeFromStandby = false;
 
+            BackgroundWorker resReader = null;
+
             bool online = DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable;
             Online_Parsing_Classes.GetUpdates updates = null;
             foreach (ParsingAction action in m_params.m_actions) {
@@ -238,6 +244,12 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.LocalScan:
                         ParseActionLocalScan(m_params.m_bLocalScan, m_params.m_bUpdateScan);
+                        break;
+
+                    case ParsingAction.MediaInfo:
+                        //Threaded MediaInfo.dll parsing of new files - goes straight to next task
+                        resReader = new BackgroundWorker();
+                        MediaInfoParse(resReader);
                         break;
 
                     case ParsingAction.IdentifyNewSeries:
@@ -309,10 +321,24 @@ namespace WindowPlugins.GUITVSeries
                         if (online)
                             UpdateUserFavourites();
                         break;
+
+                    case ParsingAction.UpdateEpisodeCounts:
+                        UpdateEpisodeCounts();
+                        break;
+
+                    case ParsingAction.WaitForCompletion:
+                        //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
+                        if (resReader == null) break;
+                        do
+                        {
+                            Thread.Sleep(1000);
+                        }
+                        while (resReader.IsBusy);
+                        break;
                 }
             }
 
-            UpdateEpisodeCounts();
+            //UpdateEpisodeCounts();
 
             // lets save the updateTimestamp
             if (updates != null &&  updates.OnlineTimeStamp > 0)
@@ -339,7 +365,7 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (PathPair pair in files) {
                     if (!LocalParse.isOnRemovable(pair.m_sFull_FileName)) {
-                        DBEpisode episode = new DBEpisode(pair.m_sFull_FileName);
+                        DBEpisode episode = new DBEpisode(pair.m_sFull_FileName, true);
 
                         // already in?
                         bool bSeasonFound = false;
@@ -1235,7 +1261,53 @@ namespace WindowPlugins.GUITVSeries
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
             foreach (DBSeries series in AllSeries)
                 DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
+            MPTVSeriesLog.Write("*****************  Episode Counts in Database Updated   *******************");
         }
+
+        void MediaInfoParse(BackgroundWorker resReader)
+        {
+            SQLCondition cond = new SQLCondition();
+            cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+            cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);
+            List<DBEpisode> episodes = new List<DBEpisode>();
+            // get all the episodes
+            episodes = DBEpisode.Get(cond, false);
+            /*
+            List<DBEpisode> todoeps = new List<DBEpisode>();
+            // only get episodes without mediaInfo
+            for (int i = 0; i < episodes.Count; i++)
+                if (!episodes[i].mediaInfoIsSet)
+                    todoeps.Add(episodes[i]);
+            episodes = todoeps;
+            */
+            if (episodes.Count > 0)
+            {
+                MPTVSeriesLog.Write("Updating MediaInfo...Running in the background (threaded)!  Only errors will be shown.");
+                MPTVSeriesLog.Write("Note: MediaInfo processing may not be completed until after Parsing is finished.  "
+                                    + "Please wait until MediaInfo completes before you close the config.");
+                //BackgroundWorker resReader = new BackgroundWorker();
+                resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
+                resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
+                resReader.RunWorkerAsync(episodes);
+
+            }
+            else MPTVSeriesLog.Write("No Episodes found that need updating");
+        }
+
+        void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write("Update of MediaInfo complete (processed " + e.Result.ToString() + " files)");
+        }
+
+        void asyncReadResolutions(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
+            foreach (DBEpisode ep in episodes)
+                ep.readMediaInfoOfLocal();
+            e.Result = episodes.Count;
+        }
+
         #endregion
 
         #region SeriesHelpers
@@ -1702,7 +1774,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     
                     // then episode
-                    DBEpisode episode = new DBEpisode(progress.full_filename);
+                    DBEpisode episode = new DBEpisode(progress.full_filename, true);
                     bool bNewFile = false;
                     if (episode[DBEpisode.cImportProcessed] != 2)
                     {
