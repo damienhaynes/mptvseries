@@ -69,6 +69,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
+        public const String cView_Episode_HideUnwatchedThumbnail = "View_Episode_HideUnwatchedThumbnail";
         public const String cViewAutoHeight = "ViewAutoHeight";
 
         public const String cView_Series_ListFormat = "View_Series_ListFormat";
@@ -129,7 +130,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cOnlineLanguage = "onlineLanguage";
 
-        public const String cDeleteFile = "deleteFile";
+        public const String cShowDeleteMenu = "ShowDeleteMenu";
 
         public const String cMainMirror = "mainMirror";
         public const String cGetBlankBanners = "getBlankBanners";
@@ -164,6 +165,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cPlaylistPath = "PlayListPath";
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
+
+        public const String cScanOnStartup = "ScanOnStartup";
+        public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
+        public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
+        public const String cAutoUpdateAllFanart = "AutoUpdateAllFanart";
 
         public const String cAutoDownloadFanart = "AutoDownloadFanart";
         public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
@@ -216,8 +222,11 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
 
                 if (GetOptions(cView_Episode_HideUnwatchedSummary) == null)
-                    SetOptions(cView_Episode_HideUnwatchedSummary, false);// Unless we can also hide episode thumb as well there is no point making this default
-                                                                          // I think 90% of users would prefer to see overview always, you need to read it to be spoiled
+                    SetOptions(cView_Episode_HideUnwatchedSummary, false);
+
+                if (GetOptions(cView_Episode_HideUnwatchedThumbnail) == null)
+                    SetOptions(cView_Episode_HideUnwatchedThumbnail, false);
+                
                 if (GetOptions(cUpdateSeriesTimeStamp) == null)
                     SetOptions(cUpdateSeriesTimeStamp, 0);
 
@@ -421,6 +430,18 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPlaylistAutoPlay) == null)
                     SetOptions(cPlaylistAutoPlay, true);
+
+                if (GetOptions(cScanOnStartup) == null)
+                    SetOptions(cScanOnStartup, true);
+
+                if (GetOptions(cAutoDownloadMissingArtwork) == null)
+                    SetOptions(cAutoDownloadMissingArtwork, true);
+
+                if (GetOptions(cAutoUpdateEpisodeRatings) == null)
+                    SetOptions(cAutoUpdateEpisodeRatings, true);
+
+                if (GetOptions(cAutoUpdateAllFanart) == null)
+                    SetOptions(cAutoUpdateAllFanart, true);
 
                 if (GetOptions(cAutoDownloadFanart) == null)
                     SetOptions(cAutoDownloadFanart, true);

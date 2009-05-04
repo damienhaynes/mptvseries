@@ -59,6 +59,7 @@ namespace WindowPlugins.GUITVSeries
         public static string In_Progress_with_Barracks = "(In Progress)";
         public static string Only_show_episodes_with_a_local_file = "Only Show Local Episodes";
         public static string Hide_summary_on_unwatched = "Hide Spoilers";
+        public static string Hide_thumbnail_on_unwatched = "Hide Spoiler Thumbnails";
         public static string on = "on";
         public static string off = "off";
         public static string Play_Random_Episode = "Play Random Episode";
@@ -105,6 +106,9 @@ namespace WindowPlugins.GUITVSeries
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";
         public static string SortByStrings = "the|a|an";
+        public static string DeleteFromDisk = "Delete from Disk";       
+        public static string DeleteFromDatabase = "Delete from Database";     
+        public static string DeleteFromFileDatabase = "Delete from Disk and Database";      
 
         // Views
         public static string Genres = "Genres";

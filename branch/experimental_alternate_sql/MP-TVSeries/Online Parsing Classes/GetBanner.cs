@@ -93,8 +93,8 @@ namespace WindowPlugins.GUITVSeries
     {
         public List<seriesBannersMap> seriesBannersMap = new List<seriesBannersMap>();
 
-        static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
-        String localizedSeriesName = string.Empty;
+        //static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
+        //String localizedSeriesName = string.Empty;
 
         public GetBanner(string seriesID)
         {
@@ -221,8 +221,7 @@ namespace WindowPlugins.GUITVSeries
 
                             try
                             {
-                                seriesBanners.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
-                                seriesPosters.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+                                seriesBanners.sSeriesName = seriesPosters.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
                             }
                             catch { return; }
                             seasonBanners.sSeriesName = seriesBanners.sSeriesName;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,8 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Key" xml:space="preserve">
-    <value>25716B24FCAEFDEE</value>
-    <comment>Do NOT submitt this file with a working APIKey, developers need to get their own</comment>
+  <data name="labelBody.Text" xml:space="preserve">
+    <value>This is the text of the Memory Box.  To change, set
+the LabelText property at run time.  Text is included here
+for easier spacing of the control.
+line 1
+line 2
+line 3
+line 4
+line 5
+line 6
+line 7
+line 8
+line 9
+line 10</value>
   </data>
 </root>

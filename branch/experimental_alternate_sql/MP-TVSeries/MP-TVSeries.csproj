@@ -202,6 +202,18 @@
     <Compile Include="Configuration\DBOptionCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
+	 <Compile Include="Configuration\MemoryBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\MemoryBox.designer.cs">
+      <DependentUpon>MemoryBox.cs</DependentUpon>
+    </Compile>
+	<Compile Include="Configuration\AddImportPathPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\AddImportPathPopup.designer.cs">
+      <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
     <Compile Include="DB Classes\DBFormatting.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
@@ -334,6 +346,13 @@
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ManualParseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+	<EmbeddedResource Include="Configuration\MemoryBox.resx">
+      <DependentUpon>MemoryBox.cs</DependentUpon>
+    </EmbeddedResource>
+	<EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
+      <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>

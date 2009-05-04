@@ -135,4 +135,7 @@
 	<string Field="LabelChosen" Original="Chosen:">Chosen:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Disabled:</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Reset User Selections</string>
+	<string Field="DeleteFromDisk" Original="Delete from Disk">Delete from Disk</string>
+	<string Field="DeleteFromDatabase" Original="Delete from Database">Delete from Database</string>
+	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Delete from Disk and Database</string>
 </strings>

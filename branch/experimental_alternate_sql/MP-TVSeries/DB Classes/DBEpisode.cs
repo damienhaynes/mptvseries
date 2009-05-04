@@ -376,13 +376,13 @@ namespace WindowPlugins.GUITVSeries
             m_onlineEpisode = onlineEpisode;
         }
 
-        public DBEpisode(String filename)
+        public DBEpisode(String filename, bool bSkipMediaInfo)
             : base(cTableName)
         {
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet) readMediaInfoOfLocal();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !bSkipMediaInfo) readMediaInfoOfLocal();
             if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(this[cSeriesID], this[cSeasonIndex], this[cEpisodeIndex]);
@@ -543,7 +543,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
-                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
                     MI.Open(this[DBEpisode.cFilename]);
                     string result = string.Empty;
                     int noAttempts = 0;
@@ -582,7 +582,7 @@ namespace WindowPlugins.GUITVSeries
 
                     }
                     else 
-                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
                     Commit();
                     

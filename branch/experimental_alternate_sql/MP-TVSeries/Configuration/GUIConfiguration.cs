@@ -34,6 +34,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
 using System.Windows.Forms;
+//using SQLite.NET;
 using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
@@ -70,6 +71,9 @@ namespace WindowPlugins.GUITVSeries
 
         private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
+
+		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
+		private MemoryBox deleteFilesMemBox = new MemoryBox();
 
         public static ConfigurationForm GetInstance()
         {
@@ -160,6 +164,8 @@ namespace WindowPlugins.GUITVSeries
             }
             catch { }
 
+            textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
+
             this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
@@ -187,16 +193,22 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
+            checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            this.checkFileDeletion.Checked = (bool)DBOption.GetOptions(DBOption.cDeleteFile);
+            this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
             this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
+
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
+            checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
+            checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
+            checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
 
             int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
@@ -287,7 +299,7 @@ namespace WindowPlugins.GUITVSeries
                 qualityEpisode.Enabled = false;
                 qualityPoster.Enabled = false;
             }
-      
+
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
 
             tabControl_Details.SelectTab(1);
@@ -349,7 +361,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_TVSubtitlesEnable.Checked = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
             checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
 			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
-            
+          
           String sTVSubtitlesLanguageFilterList = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
           if (sTVSubtitlesLanguageFilterList.IndexOf("en") != -1)
             tvsub_en.Checked = true;
@@ -794,23 +806,34 @@ namespace WindowPlugins.GUITVSeries
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
                     bNewRow = true;
-                }       
+                }
+
+                AddImportPathPopup importPathPopup = new AddImportPathPopup();
 
                 // If Path is defined, set path to default in folder browser dialog
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
-                    folderBrowserDialog1.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    importPathPopup.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 
-                // Open Folder Browser Dialog                
-                DialogResult result = this.folderBrowserDialog1.ShowDialog();
-                if (result.ToString() == "Cancel")
-                {
+                // Open Folder Browser Dialog 
+                importPathPopup.Owner = this;
+                DialogResult result = importPathPopup.ShowDialog();
+                if (result == DialogResult.Cancel) {
                     // Delete this row if user didnt select a path
                     if (bNewRow)
                         dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     return;
                 }
+                if (result == DialogResult.OK) {
+                    if (!Directory.Exists(importPathPopup.SelectedPath)) {
+                        MessageBox.Show("Import path entered does not exist or is invalid.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (bNewRow)
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
+                        return;
+                    }
+                }
+
                 // Set Path value in cell
-                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = folderBrowserDialog1.SelectedPath;
+                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = importPathPopup.SelectedPath;
 
                 // Update Parsing Test
                 TestParsing_Start(true);
@@ -1158,12 +1181,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void Parsing_Start()
         {
-            if (m_parser != null)
-            {
-                m_parser.Cancel();
-                button_Start.Enabled = false;
-            }
-            else
+            Parsing_Start(new CParsingParameters(true, true));
+        }
+
+        private void Parsing_Start(CParsingParameters parsingParams)
+        {
+            if (m_parser == null)
             {
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
@@ -1173,7 +1196,7 @@ namespace WindowPlugins.GUITVSeries
                 m_parser = new OnlineParsing(this);
                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-                m_parser.Start(new CParsingParameters(true, true));
+                m_parser.Start(parsingParams);
             }
         }
 
@@ -1589,7 +1612,11 @@ namespace WindowPlugins.GUITVSeries
 
         private void button_Start_Click(object sender, EventArgs e)
         {
-            Parsing_Start();
+            if (m_parser != null) {
+                m_parser.Cancel();
+                button_Start.Enabled = false;
+            } else
+                Parsing_Start();
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)
@@ -1746,20 +1773,63 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void UpdateNode(TreeNode nodeUpdated)
+        {
+            if (nodeUpdated != null) {
+                List<DBValue> epIdsUpdates = new List<DBValue>();
+                List<DBValue> seriesIDsUpdates = new List<DBValue>();
+
+                switch (nodeUpdated.Name) {
+                    case DBSeries.cTableName: {
+                            DBSeries series = nodeUpdated.Tag as DBSeries;
+                            seriesIDsUpdates.Add(series[DBSeries.cID]);
+                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                        }
+                        break;
+
+                    case DBSeason.cTableName: {
+                            DBSeason season = nodeUpdated.Tag as DBSeason;
+                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                        }
+                        break;
+
+                    case DBEpisode.cTableName: {
+                            DBEpisode episode = nodeUpdated.Tag as DBEpisode;
+                            epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
+                        }
+                        break;
+                }
+                if (epIdsUpdates.Count > 0) {
+                    Parsing_Start((new CParsingParameters(new List<ParsingAction> { ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeThumbNails }, seriesIDsUpdates, epIdsUpdates)));
+                }
+            }
+        }
+
         private void DeleteNode(TreeNode nodeDeleted)
         {
             if (nodeDeleted != null)
             {
                 List<DBEpisode> epsDeletion = new List<DBEpisode>();
+
+				string message = string.Empty;
+				deleteDatabaseMemBox.DisableButton(MemoryBoxResult.NoToAll, false);
+				MemoryBoxResult result = MemoryBoxResult.No;
+
                 switch (nodeDeleted.Name)
                 {
                     case DBSeries.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that series and all the underlying seasons and episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this series and all the underlying seasons and\nepisodes from the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";						
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Series");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
 
                             condition = new SQLCondition();
@@ -1783,17 +1853,18 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBSeason.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that season and all the underlying episodes?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this season and all the underlying episodes\nfrom the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Season");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBSeason season = (DBSeason)nodeDeleted.Tag;
-
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
-
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
+
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
@@ -1808,17 +1879,17 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBEpisode.cTableName:
-                        if (MessageBox.Show("Are you sure you want to delete that episode?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						message = "Are you sure you want to delete this episode from the database?\n\n\n";
+						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
+						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Episode");
+						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
-
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
-
-                            if (DBOption.GetOptions(DBOption.cDeleteFile)) epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                            condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                            
+                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
                             DBEpisode.Clear(condition);
+                                                       
                             condition = new SQLCondition();
                             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition);
@@ -1826,16 +1897,25 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                 }
-                if (epsDeletion.Count > 0 && DBOption.GetOptions(DBOption.cDeleteFile))
+                if (epsDeletion.Count > 0)
                 {
                     // delete the actual files!!
                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-                    if (MessageBox.Show("You are about to delete " + files.Count.ToString() + " physical file(s), would you like to proceed?", "Confirm File Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					message = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?\n\n\n";
+					message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";					
+					result = deleteFilesMemBox.ShowMemoryDialog(message, "Delete Files");
+					if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
                     {
                         foreach (string file in files)
                         {
-                            System.IO.File.Delete(file);
+                            try {
+                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
+                                System.IO.File.Delete(file);
+                            }
+                            catch (Exception ex) {
+                                MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
+                            }
                         }
                     }
                 }
@@ -2196,6 +2276,10 @@ namespace WindowPlugins.GUITVSeries
 
                 case "resetUserSelections":
                     ResetUserSelectionsToolStripMenuItem(clickedNode);
+                    break;
+
+                case "update":
+                    UpdateNode(clickedNode);
                     break;
             }
         }
@@ -2737,16 +2821,16 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        //private void button_dbbrowse_Click(object sender, EventArgs e)
-        //{
-        //    openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
-        //    openFileDialog.Filter = "Executable files (*.db3)|";
-        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        Settings.SetDBPath(openFileDialog.FileName);
-        //        textBox_dblocation.Text = openFileDialog.FileName;
-        //    }
-        //}
+        private void button_dbbrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
+            openFileDialog.Filter = "Executable files (*.db3)|";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Settings.SetDBPath(openFileDialog.FileName);
+                textBox_dblocation.Text = openFileDialog.FileName;
+            }
+        }
         # region Newsbin
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
@@ -2852,11 +2936,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void button_NewsDownloadPathBrowse_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog1.SelectedPath);
-                textBox_NewsDownloadPath.Text = folderBrowserDialog1.SelectedPath;
+                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog.SelectedPath);
+                textBox_NewsDownloadPath.Text = folderBrowserDialog.SelectedPath;
             }
         }
         # endregion      
@@ -3111,9 +3196,9 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
 
-        private void checkFileDeletion_CheckedChanged(object sender, EventArgs e)
+        private void chkAllowDeletes_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cDeleteFile, this.checkFileDeletion.Checked);
+            DBOption.SetOptions(DBOption.cShowDeleteMenu, this.chkAllowDeletes.Checked);
         }
 
         bool pauseViewConfigSave = false;
@@ -3168,7 +3253,15 @@ namespace WindowPlugins.GUITVSeries
                 cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, SQLConditionType.Equal);
                 foreach (DBValue val in DBOnlineEpisode.GetSingleField(DBOnlineEpisode.cCompositeID, cond, new DBOnlineEpisode()))
                 {
-                    w.WriteLine((string)val);
+                    try
+                    {
+                        w.WriteLine((string)val);
+                    }
+                    catch(IOException exception)
+                    {
+                        MPTVSeriesLog.Write("Watched info NOT exported!  Error: " + exception.ToString());
+                        return;
+                    }
                 }
                 w.Close();
                 MPTVSeriesLog.Write("Watched info succesfully exported!");
@@ -3200,6 +3293,90 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void linkExParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SaveFileDialog fd = new SaveFileDialog();
+            fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter w = new StreamWriter(fd.FileName);
+                DBExpression[] expressions = DBExpression.GetAll();
+
+                foreach (DBExpression expression in expressions)
+                {
+                    String val = "";
+                    //val += expression[DBExpression.cIndex];
+                    //val += ";";
+                    val += (int)expression[DBExpression.cEnabled];
+                    val += ";";
+                    val += (String)expression[DBExpression.cType];
+                    val += ";";
+                    val += (String)expression[DBExpression.cExpression];
+                    
+                    try
+                    {
+                        w.WriteLine((string)val);
+                    }
+                    catch (IOException exception)
+                    {
+                        MPTVSeriesLog.Write("Parsing Expressions NOT exported!  Error: " + exception.ToString());
+                        return;
+                    }
+                }
+                w.Close();
+                MPTVSeriesLog.Write("Parsing Expressions succesfully exported!");
+            }
+        }
+
+        private void linkImpParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
+            if (fd.ShowDialog() == DialogResult.OK && System.IO.File.Exists(fd.FileName))
+            {
+                StreamReader r = new StreamReader(fd.FileName);
+                DBExpression expr;
+
+                //Dialog box to make sure they want to clear out current expressions to import new ones.
+                if (DialogResult.Yes ==
+                    MessageBox.Show("You are about to delete all current parsing expressions," + Environment.NewLine +
+                        "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
+                        "Any current Expressions will be lost.  Would you like to proceed?", "Import Expressions", MessageBoxButtons.YesNo))
+                {
+                    dataGridView_Expressions.Rows.Clear();
+                    DBExpression.ClearAll();
+                    MPTVSeriesLog.Write("Expressions cleared");
+                }
+
+                string line = string.Empty;
+                string[] parts;
+                int index = 0;
+
+                // now set watched for all in file
+                while ((line = r.ReadLine()) != null)
+                {
+                    char[] c = {';'};
+                    parts = line.Split(c, 3);
+                    if (parts.Length != 3) continue;
+
+                    expr = new DBExpression();
+                    //if (Convert.ToInt32(parts[0]) >= 0) expr[DBExpression.cIndex] = parts[0]; else continue;
+                    expr[DBExpression.cIndex] = index;
+                    if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) expr[DBExpression.cEnabled] = parts[0]; else continue;
+                    if (parts[1] == DBExpression.cType_Regexp || parts[1] == DBExpression.cType_Simple) expr[DBExpression.cType] = parts[1]; else continue;
+                    expr[DBExpression.cExpression] = parts[2];
+                   
+                    if (expr.Commit()) index++;
+                }
+
+                r.Close();
+                MPTVSeriesLog.Write("Parsing Expressions succesfully imported!");
+                
+                LoadExpressions();
+                LoadTree(); // reload tree so the changes are visible
+            }
+        }
+
         private void btnLogoTemplate_Click(object sender, EventArgs e)
         {
             logoTemplate t = new logoTemplate();
@@ -3221,21 +3398,21 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cGetBlankBanners, chkBlankBanners.Checked);
         }
 
-        //private void lblClearDB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        //{
-        //    if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
-        //    {
-        //        // we delete everything
-        //        DBTVSeries.Execute("delete from online_episodes");
-        //        DBTVSeries.Execute("delete from local_episodes");
-        //        DBTVSeries.Execute("delete from season");
-        //        DBTVSeries.Execute("delete from local_series");
-        //        DBTVSeries.Execute("delete from online_series");
+        private void lblClearDB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                // we delete everything
+                DBTVSeries.Execute("delete from online_episodes");
+                DBTVSeries.Execute("delete from local_episodes");
+                DBTVSeries.Execute("delete from season");
+                DBTVSeries.Execute("delete from local_series");
+                DBTVSeries.Execute("delete from online_series");
 
-        //        MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
-        //        LoadTree();
-        //    }
-        //}
+                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
+                LoadTree();
+            }
+        }
 
         private void lnkLogoExport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -3396,7 +3573,7 @@ namespace WindowPlugins.GUITVSeries
         private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
-        }
+        }  
 
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
         {
@@ -3547,26 +3724,31 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cUseRegionalDateFormatString, chkUseRegionalDateFormatString.Checked);
         }
 
-        private void button_configDatabase_Click(object sender, EventArgs e)
+        private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
-            DatabaseConfigurator dc = new DatabaseConfigurator();
-            dc.ShowDialog(this);
+            DBOption.SetOptions(DBOption.cScanOnStartup, checkBox_ScanOnStartup.Checked);
         }
 
-        private void button_clearDB_Click(object sender, EventArgs e)
+        private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
         {
-            if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                // we delete everything
-                DBTVSeries.Execute("delete from online_episodes");
-                DBTVSeries.Execute("delete from local_episodes");
-                DBTVSeries.Execute("delete from season");
-                DBTVSeries.Execute("delete from local_series");
-                DBTVSeries.Execute("delete from online_series");
-
-                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
-                LoadTree();
-            }
+            DBOption.SetOptions(DBOption.cAutoDownloadMissingArtwork, checkBox_AutoDownloadMissingArtwork.Checked);
         }
+
+        private void checkBox_AutoUpdateEpisodeRatings_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateEpisodeRatings, checkBox_AutoUpdateEpisodeRatings.Checked);
+        }
+
+        private void checkBox_AutoUpdateAllFanart_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cAutoUpdateAllFanart, checkBox_AutoUpdateAllFanart.Checked);
+        }
+
+        private void checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
+        }
+
     }
     
     public class BannerComboItem
