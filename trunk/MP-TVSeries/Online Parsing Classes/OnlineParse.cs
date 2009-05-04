@@ -63,11 +63,11 @@ namespace WindowPlugins.GUITVSeries
 
     class CParsingParameters
     {
-        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
+        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.UpdateEpisodeCounts, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
         private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
             ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites, ParsingAction.UpdateEpisodeCounts, ParsingAction.WaitForCompletion };
+            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites/*, ParsingAction.UpdateEpisodeCounts*/, ParsingAction.WaitForCompletion };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -220,7 +220,8 @@ namespace WindowPlugins.GUITVSeries
             }
             TVSeriesPlugin.IsResumeFromStandby = false;
 
-            BackgroundWorker resReader = null;
+            BackgroundWorker tMediaInfo = null;
+            BackgroundWorker tEpisodeCount = null;
 
             bool online = DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable;
             Online_Parsing_Classes.GetUpdates updates = null;
@@ -248,8 +249,8 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.MediaInfo:
                         //Threaded MediaInfo.dll parsing of new files - goes straight to next task
-                        resReader = new BackgroundWorker();
-                        MediaInfoParse(resReader);
+                        tMediaInfo = new BackgroundWorker();
+                        MediaInfoParse(tMediaInfo);
                         break;
 
                     case ParsingAction.IdentifyNewSeries:
@@ -323,22 +324,24 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ParsingAction.UpdateEpisodeCounts:
-                        UpdateEpisodeCounts();
+                        //Threaded processing of episode counts - goes straight to next task
+                        tMediaInfo = new BackgroundWorker();
+                        UpdateEpisodeCounts(tMediaInfo);
                         break;
 
                     case ParsingAction.WaitForCompletion:
                         //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
-                        if (resReader == null) break;
+                        if (tMediaInfo == null && tEpisodeCount == null) break;
+                        if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
+                        if (tEpisodeCount.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
                         do
                         {
                             Thread.Sleep(1000);
                         }
-                        while (resReader.IsBusy);
+                        while (tMediaInfo.IsBusy || tEpisodeCount.IsBusy);
                         break;
                 }
             }
-
-            //UpdateEpisodeCounts();
 
             // lets save the updateTimestamp
             if (updates != null &&  updates.OnlineTimeStamp > 0)
@@ -1253,18 +1256,37 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateEpisodeCounts()
+        public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             // Update Episode counts
             MPTVSeriesLog.Write("*****************  Updating Episode Counts in Database  *******************");
+            MPTVSeriesLog.Write("Episode counts running in the background (threaded)!");
             SQLCondition condEmpty = new SQLCondition();
             List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
-            foreach (DBSeries series in AllSeries)
-                DBSeries.UpdatedEpisodeCounts(series); //todo: SPEED THIS UP - takes most time of anything
+
+            //BackgroundWorker resReader = new BackgroundWorker();
+            tEpisodeCounts.DoWork += new DoWorkEventHandler(asyncEpisodeCounts);
+            tEpisodeCounts.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncEpisodeCountsCompleted);
+            tEpisodeCounts.RunWorkerAsync(AllSeries);
+
+
+        }
+
+        void asyncEpisodeCountsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             MPTVSeriesLog.Write("*****************  Episode Counts in Database Updated   *******************");
         }
 
-        void MediaInfoParse(BackgroundWorker resReader)
+        void asyncEpisodeCounts(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+            List<DBSeries> AllSeries = (List<DBSeries>)e.Argument;
+            foreach (DBSeries series in AllSeries)
+                DBSeries.UpdatedEpisodeCounts(series);
+            //e.Result = series.Count;
+        }
+
+        public void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
@@ -1286,9 +1308,9 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Note: MediaInfo processing may not be completed until after Parsing is finished.  "
                                     + "Please wait until MediaInfo completes before you close the config.");
                 //BackgroundWorker resReader = new BackgroundWorker();
-                resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
-                resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
-                resReader.RunWorkerAsync(episodes);
+                tMediaInfo.DoWork += new DoWorkEventHandler(asyncReadResolutions);
+                tMediaInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
+                tMediaInfo.RunWorkerAsync(episodes);
 
             }
             else MPTVSeriesLog.Write("No Episodes found that need updating");
