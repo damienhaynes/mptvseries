@@ -806,23 +806,34 @@ namespace WindowPlugins.GUITVSeries
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
                     bNewRow = true;
-                }       
+                }
+
+                AddImportPathPopup importPathPopup = new AddImportPathPopup();
 
                 // If Path is defined, set path to default in folder browser dialog
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
-                    folderBrowserDialog1.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    importPathPopup.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                 
-                // Open Folder Browser Dialog                
-                DialogResult result = this.folderBrowserDialog1.ShowDialog();
-                if (result.ToString() == "Cancel")
-                {
+                // Open Folder Browser Dialog 
+                importPathPopup.Owner = this;
+                DialogResult result = importPathPopup.ShowDialog();
+                if (result == DialogResult.Cancel) {
                     // Delete this row if user didnt select a path
                     if (bNewRow)
                         dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     return;
                 }
+                if (result == DialogResult.OK) {
+                    if (!Directory.Exists(importPathPopup.SelectedPath)) {
+                        MessageBox.Show("Import path entered does not exist or is invalid.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (bNewRow)
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
+                        return;
+                    }
+                }
+
                 // Set Path value in cell
-                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = folderBrowserDialog1.SelectedPath;
+                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = importPathPopup.SelectedPath;
 
                 // Update Parsing Test
                 TestParsing_Start(true);
@@ -2882,11 +2893,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void button_NewsDownloadPathBrowse_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog1.SelectedPath);
-                textBox_NewsDownloadPath.Text = folderBrowserDialog1.SelectedPath;
+                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog.SelectedPath);
+                textBox_NewsDownloadPath.Text = folderBrowserDialog.SelectedPath;
             }
         }
         # endregion      
