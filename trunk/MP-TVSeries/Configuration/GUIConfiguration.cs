@@ -681,7 +681,7 @@ namespace WindowPlugins.GUITVSeries
 
                         int epCount = 0;
                         int seasonIndex = season[DBSeason.cIndex];
-                                              
+                        
                         foreach (DBEpisode episode in altEpList)
                         {
                             if (episode[DBEpisode.cSeriesID] == seriesID && episode[DBEpisode.cSeasonIndex] == seasonIndex)
@@ -709,7 +709,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         if (epCount == 0) // no episodes, then no season node
-                            seriesNode.Nodes.Remove(seasonNode);                    
+                            seriesNode.Nodes.Remove(seasonNode);
                     }
                 }
             }            
