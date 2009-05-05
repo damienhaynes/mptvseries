@@ -164,8 +164,6 @@ namespace WindowPlugins.GUITVSeries
             }
             catch { }
 
-            textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
-
             this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
@@ -2821,16 +2819,16 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void button_dbbrowse_Click(object sender, EventArgs e)
-        {
-            openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
-            openFileDialog.Filter = "Executable files (*.db3)|";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Settings.SetDBPath(openFileDialog.FileName);
-                textBox_dblocation.Text = openFileDialog.FileName;
-            }
-        }
+        //private void button_dbbrowse_Click(object sender, EventArgs e)
+        //{
+        //    openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
+        //    openFileDialog.Filter = "Executable files (*.db3)|";
+        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        Settings.SetDBPath(openFileDialog.FileName);
+        //        textBox_dblocation.Text = openFileDialog.FileName;
+        //    }
+        //}
         # region Newsbin
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
@@ -3398,22 +3396,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cGetBlankBanners, chkBlankBanners.Checked);
         }
 
-        private void lblClearDB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                // we delete everything
-                DBTVSeries.Execute("delete from online_episodes");
-                DBTVSeries.Execute("delete from local_episodes");
-                DBTVSeries.Execute("delete from season");
-                DBTVSeries.Execute("delete from local_series");
-                DBTVSeries.Execute("delete from online_series");
-
-                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
-                LoadTree();
-            }
-        }
-
         private void lnkLogoExport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SaveFileDialog fd = new SaveFileDialog();
@@ -3747,6 +3729,27 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                // we delete everything
+                DBTVSeries.Execute("delete from online_episodes");
+                DBTVSeries.Execute("delete from local_episodes");
+                DBTVSeries.Execute("delete from season");
+                DBTVSeries.Execute("delete from local_series");
+                DBTVSeries.Execute("delete from online_series");
+
+                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
+                LoadTree();
+            }
+        }
+
+        private void ConfigureDatabaseButton_Click(object sender, EventArgs e)
+        {
+            DatabaseConfigurator configurer = new DatabaseConfigurator();
+            configurer.ShowDialog(this);
         }
 
     }
