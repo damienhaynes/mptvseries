@@ -81,6 +81,9 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_DetailsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.watchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unWatchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -411,7 +414,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();
@@ -513,6 +515,8 @@ namespace WindowPlugins.GUITVSeries
             this.hideToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.updateToolStripMenuItem,
+            this.watchedToolStripMenuItem,
+            this.unWatchedToolStripMenuItem,
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem,
@@ -535,6 +539,27 @@ namespace WindowPlugins.GUITVSeries
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
+            // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.updateToolStripMenuItem.Tag = "update";
+            this.updateToolStripMenuItem.Text = "Update";
+            // 
+            // watchedToolStripMenuItem
+            // 
+            this.watchedToolStripMenuItem.Name = "watchedToolStripMenuItem";
+            this.watchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.watchedToolStripMenuItem.Tag = "watched";
+            this.watchedToolStripMenuItem.Text = "Set As Watched";
+            // 
+            // unWatchedToolStripMenuItem
+            // 
+            this.unWatchedToolStripMenuItem.Name = "unWatchedToolStripMenuItem";
+            this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.unWatchedToolStripMenuItem.Tag = "unwatched";
+            this.unWatchedToolStripMenuItem.Text = "Set As Un-Watched";
             // 
             // getSubtitlesToolStripMenuItem
             // 
@@ -4662,13 +4687,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
-            // updateToolStripMenuItem
-            // 
-            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.updateToolStripMenuItem.Tag = "update";
-            this.updateToolStripMenuItem.Text = "Update";
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4820,7 +4838,14 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_DetailsTree;
         private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem watchedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unWatchedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getSubtitlesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem torrentThToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newzbinThisToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem resetUserSelectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ResetUserSelToolStripMenuItem;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button_uTorrentBrowse;
         private System.Windows.Forms.TextBox textBox_uTorrentPath;
@@ -4830,7 +4855,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ToolStripMenuItem torrentThToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox_TorrentDetailsUrl;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
@@ -4915,7 +4939,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.TextBox textbox_NewzbinPassword;
         private System.Windows.Forms.TextBox textBox_NewzbinLogin;
-        private System.Windows.Forms.ToolStripMenuItem newzbinThisToolStripMenuItem;
         private System.Windows.Forms.Button button_NewsDownloadPathBrowse;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox textBox_NewsDownloadPath;
@@ -4964,8 +4987,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel lnkResetView;
         private System.Windows.Forms.TabPage tabAbout;
         private About aboutScreen;
-        //private System.Windows.Forms.ToolStripMenuItem resetUserSelectionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ResetUserSelToolStripMenuItem;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
         private System.Windows.Forms.Panel panel_seriessubs;
         private System.Windows.Forms.CheckBox checkBox_seriessubsEnable;
@@ -5117,6 +5138,5 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_AutoDownloadMissingArtwork;
         private System.Windows.Forms.LinkLabel linkExParsingExpressions;
         private System.Windows.Forms.LinkLabel linkImpParsingExpressions;
-        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
     }
 }

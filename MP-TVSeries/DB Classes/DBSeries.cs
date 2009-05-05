@@ -963,11 +963,15 @@ namespace WindowPlugins.GUITVSeries
                 DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
                 season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
                 season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
+                if (epsUnWatched == 0) season[DBSeason.cUnwatchedItems] = false;
+                else season[DBSeason.cUnwatchedItems] = true;
                 season.Commit();
             }
 
             series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
+            if (seriesEpsUnWatched == 0) series[DBOnlineSeries.cUnwatchedItems] = false;
+            else series[DBOnlineSeries.cUnwatchedItems] = true;
             series.Commit();
         }
 
