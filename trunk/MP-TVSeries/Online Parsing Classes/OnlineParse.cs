@@ -335,7 +335,7 @@ namespace WindowPlugins.GUITVSeries
 
             //WaitForCompletion()
             //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
-            if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
+            //if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
             if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
             if (tEpisodeCounts.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
             if (tUserRatings.IsBusy) MPTVSeriesLog.Write("*******************    User Ratings Still Going    ************************");
