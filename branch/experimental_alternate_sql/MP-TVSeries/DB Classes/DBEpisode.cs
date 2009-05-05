@@ -397,14 +397,14 @@ namespace WindowPlugins.GUITVSeries
 
             // TODO: update local_episodes set seriesID =  74205 where seriesID = -1
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
-            string composite = nSeriesID + "_" + this[cSeasonIndex] + "x" + this[cEpisodeIndex];
-            if (!this[DBEpisode.cCompositeID].ToString().Contains("x"))
-                composite = nSeriesID + "_" + this[DBOnlineEpisode.cFirstAired];
+            string composite = nSeriesID + "_" + base[cSeasonIndex] + "x" + base[cEpisodeIndex];
+            if (!base[DBEpisode.cCompositeID].ToString().Contains("x"))
+                composite = nSeriesID + "_" + base[DBOnlineEpisode.cFirstAired];
             if (!newOnlineEpisode.ReadPrimary(composite))
             {
                 newOnlineEpisode[cSeriesID] = nSeriesID;
-                newOnlineEpisode[cSeasonIndex] = this[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = this[cEpisodeIndex];
+                newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
+                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
 
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
                 {
