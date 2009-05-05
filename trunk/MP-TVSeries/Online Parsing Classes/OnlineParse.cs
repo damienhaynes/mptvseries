@@ -42,20 +42,20 @@ namespace WindowPlugins.GUITVSeries
         List_Add,
         List_Remove,
         MediaInfo,
-        UpdateEpisodeCounts,
         IdentifyNewSeries,
         IdentifyNewEpisodes,
 
         GetOnlineUpdates,
         UpdateSeries,
         UpdateEpisodes,
+        UpdateEpisodeCounts,
+        UpdateUserRatings,
         UpdateBanners,
         UpdateFanart,
 
         GetNewBanners,
         GetNewFanArt,
         UpdateEpisodeThumbNails,
-        UpdateUserRatings,
         UpdateUserFavourites,
         
         WaitForCompletion
@@ -63,11 +63,12 @@ namespace WindowPlugins.GUITVSeries
 
     class CParsingParameters
     {
-        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.UpdateEpisodeCounts, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
-        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateUserRatings, ParsingAction.UpdateEpisodes, 
-            ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
+        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo,
+            ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
+        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, 
+            ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeCounts, ParsingAction.UpdateUserRatings, ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            /*ParsingAction.UpdateUserRatings, */ParsingAction.UpdateUserFavourites, ParsingAction.WaitForCompletion };
+            ParsingAction.UpdateUserFavourites, ParsingAction.WaitForCompletion };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -301,12 +302,13 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.GetNewBanners:
                         if (online)
-                            UpdateBanners(true, null);// update new series for banners                                             
+                            UpdateBanners(true, null);// update new series for banners
                         break;
 
                     case ParsingAction.GetNewFanArt:
                         if (online)
-                            UpdateFanart(true, null);// update all series for fanart - todo: only scan for series with missing fanart - mirror how banners does it.
+                            UpdateFanart(true, null);// updates ALL series for fanart - todo: only scan for series with missing fanart since we got new ones from thetvdb.com above...
+                                                     //                                       mirror how banners does it.
                         break;
 
                     case ParsingAction.UpdateEpisodeThumbNails:
@@ -1046,7 +1048,7 @@ namespace WindowPlugins.GUITVSeries
             if (!DBOption.GetOptions(DBOption.cAutoDownloadFanart))
                 return;
 
-            //MPTVSeriesLog.Write(bigLogMessage("Get Series Fanart"));
+            if (bUpdateNewSeries && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart)) return;
 
             SQLCondition condition = new SQLCondition();
             condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
@@ -1066,8 +1068,6 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
-                    return;
                 MPTVSeriesLog.Write(bigLogMessage("Checking for all Fanart"));
             }
 
