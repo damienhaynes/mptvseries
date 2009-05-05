@@ -1937,6 +1937,66 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void ToggleWatchedNode(TreeNode nodeWatched, int watched)
+        {
+            if (nodeWatched != null)
+            {
+                switch (nodeWatched.Name)
+                {
+                    case DBSeries.cTableName:
+                        DBSeries series = (DBSeries)nodeWatched.Tag;
+                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + series[DBSeries.cID]);
+                        //DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 and " + DBSeason.cEpisodesUnWatched + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + series[DBSeries.cID]);
+                        //DBTVSeries.Execute("update online_series set " + DBOnlineSeries.cUnwatchedItems + " = 0 and " + DBOnlineSeries.cEpisodesUnWatched + " = 0 where " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " = " + series[DBSeries.cID]);
+                        //series[DBOnlineSeries.cUnwatchedItems] = false;
+                        //series.Commit();
+                        // Updated Episode Counts
+                        DBSeries.UpdatedEpisodeCounts(series);
+                        cache.dump();
+
+                        break;
+
+                    case DBSeason.cTableName:
+                        DBSeason season = (DBSeason)nodeWatched.Tag;
+                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + season[DBSeason.cSeriesID] +
+                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + season[DBSeason.cIndex]);
+                        //season[DBSeason.cUnwatchedItems] = false;
+                        //season.Commit();
+                        DBSeason.UpdatedEpisodeCounts(DBSeries.Get(season[DBSeason.cSeriesID]), season);
+                        cache.dump();
+                        
+                        break;
+
+                    case DBEpisode.cTableName:
+                        DBEpisode episode = (DBEpisode)nodeWatched.Tag;
+                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " = \"" + episode[DBEpisode.cCompositeID] + "\"");/* +
+                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + episode[DBEpisode.cSeasonIndex] +
+                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cEpisodeIndex) + " = " + episode[DBEpisode.cEpisodeIndex]);*/
+                        //episode.Commit();
+                        DBSeason.UpdatedEpisodeCounts(DBSeries.Get(episode[DBEpisode.cSeriesID]), Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
+                        cache.dump();
+
+                        break;
+                }
+                //reload tree? - need to just refresh the pane on the right with new database information since we changed it!
+
+                //set font?
+                //need to set the season/series fonts also in case all are unwatched or watched in season/series
+                /*Font fontDefault = treeView_Library.Font;
+                if (watched == 1)
+                {
+                    FontStyle fontStyle = FontStyle.Bold;
+                    //if (nodeWatched.NodeFont.Italic.Equals(true)) fontStyle = (FontStyle.Bold | FontStyle.Italic);
+                    //if (nodeWatched.NodeFont.FontFamily.IsStyleAvailable(FontStyle.Italic)) fontStyle = FontStyle.Bold | FontStyle.Italic;
+                    nodeWatched.NodeFont = new Font(fontDefault.Name, fontDefault.Size, fontStyle);
+                }
+                else
+                {
+                    nodeWatched.NodeFont = fontDefault;
+                }*/
+            }
+        }
+        
         private void treeView_Library_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -2280,6 +2340,14 @@ namespace WindowPlugins.GUITVSeries
 
                 case "update":
                     UpdateNode(clickedNode);
+                    break;
+
+                case "watched":
+                    ToggleWatchedNode(clickedNode, 1);
+                    break;
+
+                case "unwatched":
+                    ToggleWatchedNode(clickedNode, 0);
                     break;
             }
         }

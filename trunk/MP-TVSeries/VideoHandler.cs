@@ -192,8 +192,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 ep[DBOnlineEpisode.cWatched] = 1;
                 ep.Commit();
-                DBSeason.UpdateUnWatched(ep);
-                DBSeries.UpdateUnWatched(ep);
+                //DBSeason.UpdateUnWatched(ep);
+                //DBSeries.UpdateUnWatched(ep);
             }
             // Update Episode Counts
             DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);

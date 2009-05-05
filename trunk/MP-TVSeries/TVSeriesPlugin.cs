@@ -2408,16 +2408,16 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                         episode.Commit();
-                                        DBSeason.UpdateUnWatched(episode);
-                                        DBSeries.UpdateUnWatched(episode);
+                                        //DBSeason.UpdateUnWatched(episode);
+                                        //DBSeries.UpdateUnWatched(episode);
                                     }
                                 }
                                 else
                                 {
                                     selectedEpisode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
                                     selectedEpisode.Commit();
-                                    DBSeason.UpdateUnWatched(selectedEpisode);
-                                    DBSeries.UpdateUnWatched(selectedEpisode);
+                                    //DBSeason.UpdateUnWatched(selectedEpisode);
+                                    //DBSeries.UpdateUnWatched(selectedEpisode);
                                 }
                                 // Update Episode Counts
                                 DBSeason.UpdatedEpisodeCounts(m_SelectedSeries,m_SelectedSeason);

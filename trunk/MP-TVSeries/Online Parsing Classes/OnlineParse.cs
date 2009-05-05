@@ -56,9 +56,7 @@ namespace WindowPlugins.GUITVSeries
         GetNewBanners,
         GetNewFanArt,
         UpdateEpisodeThumbNails,
-        UpdateUserFavourites,
-        
-        WaitForCompletion
+        UpdateUserFavourites
     }
 
     class CParsingParameters
@@ -68,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
         private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, 
             ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeCounts, ParsingAction.UpdateUserRatings, ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserFavourites, ParsingAction.WaitForCompletion };
+            ParsingAction.UpdateUserFavourites };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -332,26 +330,27 @@ namespace WindowPlugins.GUITVSeries
                         tEpisodeCounts = new BackgroundWorker();
                         UpdateEpisodeCounts(tEpisodeCounts);
                         break;
-
-                    case ParsingAction.WaitForCompletion:
-                        //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
-                        if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
-                        if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
-                        if (tEpisodeCounts.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
-                        if (tUserRatings.IsBusy) MPTVSeriesLog.Write("*******************    User Ratings Still Going    ************************");
-                        do
-                        {
-                            Thread.Sleep(1000);
-                        }
-                        while (tMediaInfo.IsBusy || tEpisodeCounts.IsBusy || tUserRatings.IsBusy);
-                        break;
                 }
             }
 
+            //WaitForCompletion()
+            //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
+            if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
+            if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
+            if (tEpisodeCounts.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
+            if (tUserRatings.IsBusy) MPTVSeriesLog.Write("*******************    User Ratings Still Going    ************************");
+            do
+            {
+                Thread.Sleep(1000);
+            }
+            while (tMediaInfo.IsBusy || tEpisodeCounts.IsBusy || tUserRatings.IsBusy);
+
+            
             // lets save the updateTimestamp
             if (updates != null &&  updates.OnlineTimeStamp > 0)
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, updates.OnlineTimeStamp);
 
+            
             Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
