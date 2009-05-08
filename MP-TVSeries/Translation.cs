@@ -108,7 +108,8 @@ namespace WindowPlugins.GUITVSeries
         public static string SortByStrings = "the|a|an";
         public static string DeleteFromDisk = "Delete from Disk";       
         public static string DeleteFromDatabase = "Delete from Database";     
-        public static string DeleteFromFileDatabase = "Delete from Disk and Database";      
+        public static string DeleteFromFileDatabase = "Delete from Disk and Database";
+		public static string RateDialogLabel = "Select Your Rating for {0}";
 
         // Views
         public static string Genres = "Genres";

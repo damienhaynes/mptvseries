@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Windows.Forms;
 using System.Drawing;
@@ -84,7 +83,7 @@ namespace WindowPlugins.GUITVSeries
         // Returns the author of the plugin which is shown in the plugin menu
         public string Author()
         {
-            return "Zeflash Inker ltfearme";
+            return "MP-TVSeries Team";
         }
 
         // show the setup dialog
@@ -1640,65 +1639,88 @@ namespace WindowPlugins.GUITVSeries
         internal static void showRatingsDialog(DBTable item, bool auto)
         {
             if (item == null) return;
-            MPTVSeriesLog.Write("Asking to rate", MPTVSeriesLog.LogLevel.Debug);
-            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            MPTVSeriesLog.Write("Asking to rate", MPTVSeriesLog.LogLevel.Debug);					
 
-            dlg.Reset();
-            GUIListItem pItem = null;
+			GUIListItem pItem = null;
+			Listlevel level = item is DBEpisode ? Listlevel.Episode : Listlevel.Series;
 
-            Listlevel level = item is DBEpisode ? Listlevel.Episode : Listlevel.Series;
+			string value = "0";
+			string dlgHeading = (level == Listlevel.Episode ? Translation.RateEpisode : Translation.RateSeries);
 
-            dlg.SetHeading((level == Listlevel.Episode ? Translation.RateEpisode : Translation.RateSeries) + ": " + item.ToString());
+			if (System.IO.File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.RatingDialog.xml")) {
+				GUIUserRating ratingDlg = (GUIUserRating)GUIWindowManager.GetWindow(GUIUserRating.ID);
+				ratingDlg.Reset();
+				ratingDlg.SetHeading((level == Listlevel.Episode ? Translation.RateEpisode : Translation.RateSeries));
+				if (level == Listlevel.Series) {
+					ratingDlg.SetLine(1, string.Format(Translation.RateDialogLabel, item.ToString()));
+				} 
+				else {
+					ratingDlg.SetLine(1, string.Format(Translation.RateDialogLabel, Translation.Episode));
+					ratingDlg.SetLine(2, item.ToString());
+				}
+				ratingDlg.Rating = DBOption.GetOptions(DBOption.cDefaultRating);
+				ratingDlg.DoModal(ratingDlg.GetID);
+				if (ratingDlg.IsSubmitted) {
+					value = ratingDlg.Rating.ToString();
+				} 
+				else return;
+			} 
+			else {
+				IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+				dlg.Reset();
+				dlg.SetHeading(dlgHeading + ": " + item.ToString());
 
-            pItem = new GUIListItem(Translation.ResetRating);
-            dlg.Add(pItem);
-            pItem.ItemId = 0;
+				pItem = new GUIListItem(Translation.ResetRating);
+				dlg.Add(pItem);
+				pItem.ItemId = 0;
 
-            pItem = new GUIListItem("1 " + Translation.RatingStar);
-            dlg.Add(pItem);
-            pItem.ItemId = 1;
+				pItem = new GUIListItem("1 " + Translation.RatingStar);
+				dlg.Add(pItem);
+				pItem.ItemId = 1;
 
-            for (int i = 2; i < 11; i++)
-            {
-                pItem = new GUIListItem(i.ToString() + " " + Translation.RatingStars);
-                dlg.Add(pItem);
-                pItem.ItemId = i;
-            }
+				for (int i = 2; i < 11; i++) {
+					pItem = new GUIListItem(i.ToString() + " " + Translation.RatingStars);
+					dlg.Add(pItem);
+					pItem.ItemId = i;
+				}
 
-            if (auto)
-            {
-                pItem = new GUIListItem(Translation.DontAskToRate);
-                dlg.Add(pItem);
-                pItem.ItemId = 11;
-            }
+				if (auto) {
+					pItem = new GUIListItem(Translation.DontAskToRate);
+					dlg.Add(pItem);
+					pItem.ItemId = 11;
+				}
 
-            dlg.DoModal(GUIWindowManager.ActiveWindow);
-            if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return;// cancelled
-            if (dlg.SelectedId == 11 && auto) DBOption.SetOptions(DBOption.cAskToRate, false);
-            else
-            {                                
-                string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);                
-                string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
-                string value = dlg.SelectedId.ToString();
+				dlg.DoModal(GUIWindowManager.ActiveWindow);
 
-                // Submit rating online database if current rating is different
-                if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
-                {
-                    int rating = -1;
-                    if (Int32.TryParse(value, out rating))
-                    {
-                        Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id ,rating);
-                    }
-                }
+				if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return; // cancelled
+				if (dlg.SelectedId == 11 && auto) {
+					DBOption.SetOptions(DBOption.cAskToRate, false);
+					return;
+				}
+				value = dlg.SelectedId.ToString();
+			}
+			
+			string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);
+			string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
+			
+			// Submit rating online database if current rating is different
+			if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
+			{
+				int rating = -1;
+				if (Int32.TryParse(value, out rating))
+				{
+					Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
+				}
+			}
 
-                // Apply to local database
-                item[type] = dlg.SelectedId;
-                // Set the all user rating if not already set                
-                if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
-                    item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = dlg.SelectedId;
+			// Apply to local database
+			item[type] = value;
+			// Set the all user rating if not already set                
+			if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
+				item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = value;
 
-                item.Commit();
-            }
+			item.Commit();
+			
         }
 
         internal bool showViewSwitchDialog()
@@ -2364,7 +2386,7 @@ namespace WindowPlugins.GUITVSeries
                             }                            
 
                         case (int)eContextMenus.rate:
-                            {
+                            {                            
                                 switch (listLevel)
                                 {
                                     case Listlevel.Episode:

@@ -138,4 +138,6 @@
 	<string Field="DeleteFromDisk" Original="Delete from Disk">Delete from Disk</string>
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Delete from Database</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Delete from Disk and Database</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Select Your Rating for {0}</string>
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Hide Spoiler Thumbnails</string>	
 </strings>

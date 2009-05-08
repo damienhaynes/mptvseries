@@ -287,6 +287,7 @@
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
+	<Compile Include="GUIUserRating.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
