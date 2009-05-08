@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+  <id>9814</id>
+  <defaultcontrol>10</defaultcontrol>
+  <allowoverlay>yes</allowoverlay>
+  <controls>
+    <import>common.dialog.xml</import>
+  
+	<!-- Star Controls -->
+    <control>
+		<description>1 Star</description>
+		<type>togglebutton</type>
+		<id>100</id>
+		<posX>210</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+
+    <control>
+		<description>2 Star</description>
+		<type>togglebutton</type>
+		<id>101</id>
+		<posX>235</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+
+    <control>
+		<description>3 Star</description>
+		<type>togglebutton</type>
+		<id>102</id>
+		<posX>260</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+
+    <control>
+		<description>4 Star</description>
+		<type>togglebutton</type>
+		<id>103</id>
+		<posX>285</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+    <control>
+		<description>5 Star</description>
+		<type>togglebutton</type>
+		<id>104</id>
+		<posX>310</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+	<control>
+		<description>6 Star</description>
+		<type>togglebutton</type>
+		<id>105</id>
+		<posX>335</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+	<control>
+		<description>7 Star</description>
+		<type>togglebutton</type>
+		<id>106</id>
+		<posX>360</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+	<control>
+		<description>8 Star</description>
+		<type>togglebutton</type>
+		<id>107</id>
+		<posX>385</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+	<control>
+		<description>9 Star</description>
+		<type>togglebutton</type>
+		<id>108</id>
+		<posX>410</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+	<control>
+		<description>10 Star</description>
+		<type>togglebutton</type>
+		<id>109</id>
+		<posX>435</posX>
+		<posY>300</posY>
+		<width>24</width>
+		<height>24</height>
+		<textureFocus>UserRatingStarOn.png</textureFocus>
+		<textureNoFocus>UserRatingStarOn.png</textureNoFocus>
+		<AltTextureFocus>UserRatingStarOff.png</AltTextureFocus>
+		<AltTextureNoFocus>UserRatingStarOff.png</AltTextureNoFocus>
+    </control>
+	
+  </controls>
+</window>
