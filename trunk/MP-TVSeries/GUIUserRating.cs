@@ -15,6 +15,8 @@ namespace WindowPlugins.GUITVSeries {
 
         [SkinControlAttribute(6)]
         protected GUILabelControl lblText = null;
+		[SkinControlAttribute(7)]
+		protected GUILabelControl lblRating = null;
         [SkinControlAttribute(100)]
         protected GUIToggleButtonControl btnStar1 = null;
         [SkinControlAttribute(101)]
@@ -42,12 +44,7 @@ namespace WindowPlugins.GUITVSeries {
             }
 
             set {
-                //LoadSkin();
-                //AllocResources();
-                //InitControls();
-
-                //lblText.Label = value;
-				SetLine(1, value);
+                lblText.Label = value;				
             }
         }		
 
@@ -225,6 +222,10 @@ namespace WindowPlugins.GUITVSeries {
                 btnStars[i].Selected = (Rating >= i + 1);
             }
             btnStars[Rating - 1].Focus = true;
+
+			if (lblRating != null) {
+				lblRating.Label = string.Format("{0} / 10", Rating.ToString());
+			}
         }
 
         public void SetHeading(string HeadingLine) {
