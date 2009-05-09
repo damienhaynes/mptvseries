@@ -196,6 +196,25 @@ namespace WindowPlugins.GUITVSeries
         public static string TVDB_ERROR_UNAVAILABLE = "TheTVDB.com is currently unavailable, try again later";
         public static string NETWORK_ERROR_UNAVAILABLE = "Network connection is unavailable, check connection and try again";
 
+		// Rate Movie Descriptions - 5 Stars
+		public static string RateFiveStarOne = "Terrible";
+		public static string RateFiveStarTwo = "Mediocre";
+		public static string RateFiveStarThree = "Good";
+		public static string RateFiveStarFour = "Superb";
+		public static string RateFiveStarFive = "Perfect";
+
+		// Rate Movie Descriptions - 10 Stars
+		public static string RateTenStarOne = "Abysmal";
+		public static string RateTenStarTwo = "Terrible";
+		public static string RateTenStarThree = "Bad";
+		public static string RateTenStarFour = "Poor";
+		public static string RateTenStarFive = "Mediocre";
+		public static string RateTenStarSix = "Fair";
+		public static string RateTenStarSeven = "Good";
+		public static string RateTenStarEight = "Great";
+		public static string RateTenStarNine = "Superb";
+		public static string RateTenStarTen = "Perfect";
+
         #endregion
 
         static string path = string.Empty;

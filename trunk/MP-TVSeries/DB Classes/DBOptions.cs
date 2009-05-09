@@ -181,6 +181,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
 
 		public const String cDefaultRating = "DefaultRating";
+		public const String cRatingDisplayStars = "RatingDisplayStars";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -471,6 +472,9 @@ namespace WindowPlugins.GUITVSeries
 
 				if (GetOptions(cDefaultRating) == null)
 					SetOptions(cDefaultRating, 5);
+
+				if (GetOptions(cRatingDisplayStars) == null)
+					SetOptions(cRatingDisplayStars, 10);
 
             }
             catch (Exception ex)

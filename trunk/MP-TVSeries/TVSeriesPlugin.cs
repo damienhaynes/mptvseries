@@ -1658,9 +1658,20 @@ namespace WindowPlugins.GUITVSeries
 					ratingDlg.SetLine(1, string.Format(Translation.RateDialogLabel, Translation.Episode));
 					ratingDlg.SetLine(2, item.ToString());
 				}
-				ratingDlg.Rating = DBOption.GetOptions(DBOption.cDefaultRating);
+
+				if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 10) {
+					ratingDlg.DisplayStars = GUIUserRating.StarDisplay.TEN_STARS;
+					ratingDlg.Rating = DBOption.GetOptions(DBOption.cDefaultRating);
+				} 
+				else {
+					ratingDlg.DisplayStars = GUIUserRating.StarDisplay.FIVE_STARS;
+					ratingDlg.Rating = (int)(DBOption.GetOptions(DBOption.cDefaultRating) / 2);
+				}
+				
 				ratingDlg.DoModal(ratingDlg.GetID);
 				if (ratingDlg.IsSubmitted) {
+					if (ratingDlg.DisplayStars == GUIUserRating.StarDisplay.FIVE_STARS)
+						value = (ratingDlg.Rating * 2).ToString();
 					value = ratingDlg.Rating.ToString();
 				} 
 				else return;
