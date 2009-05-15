@@ -79,6 +79,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFirstAired = "FirstAired";
 
+		public const String cViewTags = "ViewTags";
+
         public const int cDBVersion = 2;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -208,6 +210,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -284,9 +287,9 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                            base[fieldName] = value;
-                        }
-                }
+				base[fieldName] = value;
+            }
+        }
 
         /// <summary>
         /// Returns PrettyName
@@ -314,7 +317,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
 
         private DBOnlineSeries m_onlineSeries = null;
-        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network" });
+		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
 

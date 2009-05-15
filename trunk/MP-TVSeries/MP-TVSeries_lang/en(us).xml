@@ -140,4 +140,26 @@
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Delete from Disk and Database</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Select Your Rating for {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Hide Spoiler Thumbnails</string>	
+	<!-- Rate Movie Descriptions - 5 Stars-->
+	<string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
+	<string Field="RateFiveStarTwo" Original="">Mediocre</string>
+	<string Field="RateFiveStarThree" Original="">Good</string>
+	<string Field="RateFiveStarFour" Original="">Superb</string>
+	<string Field="RateFiveStarFive" Original="">Perfect</string>
+	<!-- Rate Movie Descriptions - 10 Stars-->
+	<string Field="RateTenStarOne" Original="Abysmal">Abysmal</string>
+	<string Field="RateTenStarTwo" Original="Terrible">Terrible</string>
+	<string Field="RateTenStarThree" Original="Bad">Bad</string>
+	<string Field="RateTenStarFour" Original="Poor">Poor</string>
+	<string Field="RateTenStarFive" Original="Mediocre">Mediocre</string>
+	<string Field="RateTenStarSix" Original="Fair">Fair</string>
+	<string Field="RateTenStarSeven" Original="Good">Good</string>
+	<string Field="RateTenStarEight" Original="Great">Great</string>
+	<string Field="RateTenStarNine" Original="Superb">Superb</string>
+	<string Field="RateTenStarTen" Original="Perfect">Perfect</string>
+	<string Field="ContentRating" Original="Content Rating">Content Rating</string>
+	<string Field="ViewTags" Original="View Tags">View Tags</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Add Series to Tag</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from Tag</string>
+	<string Field="NewViewTag" Original="New Tag">New Tag</string>
 </strings>

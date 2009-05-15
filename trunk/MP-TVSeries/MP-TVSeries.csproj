@@ -204,6 +204,9 @@
     <Compile Include="Configuration\AddImportPathPopup.designer.cs">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
     </Compile>
+	<Compile Include="Configuration\ViewsConfiguration.Designer.cs">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
+    </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
     <Compile Include="DB Classes\DBFormatting.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
@@ -339,6 +342,10 @@
     </EmbeddedResource>
 	<EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+	<EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">

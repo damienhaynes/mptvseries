@@ -430,10 +430,14 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadViews()
         {
+            availViews.Clear();
             availViews = logicalView.getAll(true); //include disabled
             _availViews.Items.Clear();
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
+
+			if (availViews.Count > 0)
+				_availViews.SelectedIndex = 0;
 
             if (DBOption.GetOptions(DBOption.cOnlineFavourites))
                 chkOnlineFavourites.Checked = true;
@@ -1698,10 +1702,6 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void comboBox_BannerSelection_KeyPress(object sender, KeyPressEventArgs e)
-        {
-        }
-
         private void checkBox_Episode_MatchingLocalFile_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
@@ -2312,6 +2312,10 @@ namespace WindowPlugins.GUITVSeries
         private void contextMenuStrip_DetailsTree_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             TreeNode clickedNode = contextMenuStrip_DetailsTree.Tag as TreeNode;
+
+            if (e.ClickedItem.Tag == null)
+                return;
+            
             switch (e.ClickedItem.Tag.ToString())
             {
                 case "hide":
@@ -2354,6 +2358,9 @@ namespace WindowPlugins.GUITVSeries
 
         public void TorrentFile(TreeNode node)
         {
+            if (node == null)
+                return;
+
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2375,6 +2382,9 @@ namespace WindowPlugins.GUITVSeries
 
         public void NewzFile(TreeNode node)
         {
+            if (node == null)
+                return;
+
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2523,6 +2533,9 @@ namespace WindowPlugins.GUITVSeries
 
         private void ResetUserSelectionsToolStripMenuItem(TreeNode node)
         {
+            if (node == null)
+                return;
+
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2548,6 +2561,9 @@ namespace WindowPlugins.GUITVSeries
 
         private void GetSubtitles(TreeNode node)
         {
+            if (node == null)
+                return;
+
             switch (node.Name)
             {
                 case DBSeries.cTableName:
@@ -2658,6 +2674,8 @@ namespace WindowPlugins.GUITVSeries
         {
         }
 
+        ToolStripMenuItem subMenuItem = null;
+        ContextMenuStrip subMenu = null;
         private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;
@@ -2674,6 +2692,38 @@ namespace WindowPlugins.GUITVSeries
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
+
+					// Create AddToView ContextMenu Item and Submenu
+                    // No need to create a Remove Item as we can use the checked state
+                    if (subMenuItem == null) {
+                        subMenuItem = new ToolStripMenuItem("Add Series to View");
+                        subMenu = new ContextMenuStrip(this.components);
+                        subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+                        subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_AddToView_ItemClicked);
+                        subMenuItem.DropDown = subMenu;
+                        subMenu.ShowCheckMargin = true;
+                        subMenu.ShowImageMargin = false;                        
+                    }					
+                                        
+                    // Populate View Sub-Menu
+					DBView[] views = DBView.getTaggedViews();                    
+                    string viewTags = series[DBOnlineSeries.cViewTags];
+
+                    subMenu.Items.Clear();
+					foreach (DBView view in views) {                        
+                        ToolStripMenuItem item = new ToolStripMenuItem();						
+                        item.Name = view[DBView.cPrettyName];
+						item.Text = view[DBView.cPrettyName];
+						item.Tag = view;
+                        // Check View if already a member                                                
+                        string viewTag = "|" + view[DBView.cPrettyName] + "|";
+                        if (viewTags.Contains(viewTag))
+                            item.Checked = true;
+
+						subMenu.Items.Add(item);						
+					}                    
+					contextMenuStrip_DetailsTree.Items.Add(subMenuItem);
+                                        
                     break;
 
                 case DBSeason.cTableName:
@@ -2697,12 +2747,69 @@ namespace WindowPlugins.GUITVSeries
             else
                 contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "Hide";
         }
+        
+		private void contextMenuStrip_AddToView_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;           
+            ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
+
+            // Get Selected View
+            DBView view = (DBView)e.ClickedItem.Tag;
+            string selectedView = view[DBView.cPrettyName];            
+
+            // Get Current View Tags for series
+            DBSeries series = (DBSeries)node.Tag;
+            string currTags = series[DBOnlineSeries.cViewTags];
+            String[] splitTags = currTags.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            string newTags = string.Empty;
+
+            bool tagExists = false;
+
+            // Add Series to view if unchecked
+            // Remove Series from view if checked            
+            if (item.Checked) {
+                MPTVSeriesLog.Write(string.Format("Removing Tag \"{0}\" from series: {1}", selectedView, series.ToString()));
+
+                foreach (String tag in splitTags) {
+                    if (!tag.Equals(selectedView, StringComparison.CurrentCultureIgnoreCase))
+                        newTags += "|" + tag;
+                }
+                if (!Helper.String.IsNullOrEmpty(newTags))
+                    newTags += "|";          
+
+            }
+            else {
+                MPTVSeriesLog.Write(string.Format("Adding Tag \"{0}\" to series: {1}", selectedView, series.ToString()));
+
+                if (Helper.String.IsNullOrEmpty(currTags)) {
+                    newTags = "|" + selectedView + "|";
+                }
+                else {
+                    // Check if the series is already tagged with selected series                    
+                    foreach (String tag in splitTags) {
+                        if (tag.Equals(selectedView, StringComparison.CurrentCultureIgnoreCase)) {
+                            tagExists = true;
+                            newTags = currTags;
+                            break;
+                        }
+                    }
+                    // Add tag to series if it doesnt exist
+                    if (!tagExists)
+                        newTags = currTags + selectedView + "|";
+                }
+            }
+
+            // Commit changes to database
+            series[DBOnlineSeries.cViewTags] = newTags;
+            series.Commit();
+                      
+		}
 
         private void treeView_Library_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
                 contextMenuStrip_DetailsTree.Tag = e.Node;
         }
+
         # region Torrent
         private void textBox_uTorrentPath_TextChanged(object sender, EventArgs e)
         {
@@ -2818,6 +2925,7 @@ namespace WindowPlugins.GUITVSeries
             m_currentTorrentSearch.Commit();
         }
         # endregion
+
         private void checkBox_RandBanner_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cRandomBanner, checkBox_RandBanner.Checked);
@@ -3111,11 +3219,11 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions("doFolderWatch", checkBox_doFolderWatch.Checked);
         }
 
-        List<logicalView> testViews = new List<logicalView>();
-        string[] viewArgument = null;
-        logicalViewStep.type currType = logicalViewStep.type.group;
-        bool isinit = false;
-        private void button3_Click(object sender, EventArgs e)
+        //List<logicalView> testViews = new List<logicalView>();
+        //string[] viewArgument = null;
+        //logicalViewStep.type currType = logicalViewStep.type.group;
+        //bool isinit = false;
+        /*private void button3_Click(object sender, EventArgs e)
         {
             if (!isinit)
                 this.listBox1.DoubleClick += new EventHandler(listBox1_DoubleClick);
@@ -3166,7 +3274,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 button3_Click(new object(), new EventArgs());
             }
-        }
+        }*/
 
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3188,24 +3296,24 @@ namespace WindowPlugins.GUITVSeries
                 selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
                 view_selectedName.Text = selectedView.prettyName;
                 checkCurViewEnabled.Checked = selectedView.m_Enabled;
+                //btnRemoveView.Enabled = selectedView.IsTaggedView;
+
                 foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.m_steps))
                     view_selStepsList.Items.Add(step);
-
+                
                 pauseViewConfigSave = false;
             }
         }
 
-        private void view_selStepsList_SelectedIndexChanged(object sender, EventArgs e)
+        /*private void view_selStepsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             // disable for now
-            /*
+            
             selectedViewStep = selectedView.steps[view_selStepsList.SelectedIndex];
-            this.viewStepType.SelectedItem = selectedViewStep.Type.ToString();
-             **/
+            this.viewStepType.SelectedItem = selectedViewStep.Type.ToString();           
+        }*/
 
-        }
-
-        private void viewStepType_SelectedIndexChanged(object sender, EventArgs e)
+        /*private void viewStepType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((string)viewStepType.SelectedItem == "group")
             {
@@ -3218,7 +3326,7 @@ namespace WindowPlugins.GUITVSeries
                 viewStepGroupByTextBox.Visible = false;
                 viewStepGroupByTextBox.Text = "";
             }
-        }
+        }*/
 
         ~ConfigurationForm()
         {
@@ -3815,6 +3923,72 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
+        }
+
+        private void btnRemoveView_Click(object sender, EventArgs e) {
+            if (availViews.Count == 0)
+                return;
+            
+            // Get Selected View from list
+            selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
+            
+            // Confirm Delete
+            string message = string.Format("Are you sure you want to delete view \"{0}\"?",selectedView.prettyName);
+            DialogResult result = MessageBox.Show(message, "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Get All current Views
+            DBView[] views = DBView.getAll(true);
+
+            // Remove all Rows from Database
+            DBView.ClearAll();
+
+            int index = 0;
+
+            // Add Rows back excluding deleted one
+            foreach (DBView view in views) {
+                if (view[DBView.cIndex] != int.Parse(selectedView.m_uniqueID)) {
+                    DBView newView = new DBView();
+
+                    newView[DBView.cIndex] = index;
+                    newView[DBView.cEnabled] = view[DBView.cEnabled];
+                    newView[DBView.cSort] = view[DBView.cSort];
+                    newView[DBView.cTransToken] = view[DBView.cTransToken];
+                    newView[DBView.cPrettyName] = view[DBView.cPrettyName];
+                    newView[DBView.cViewConfig] = view[DBView.cViewConfig];
+                    newView[DBView.cTaggedView] = view[DBView.cTaggedView];
+                    newView.Commit();
+                    index++;
+                }
+            }
+            
+            // Reload List and available Views
+            LoadViews();            
+        }
+
+        private void btnAddView_Click(object sender, EventArgs e) {
+			ViewsConfiguration viewConfigDialog = new ViewsConfiguration();
+
+			viewConfigDialog.ViewName = string.Empty;
+			viewConfigDialog.Type = ViewsConfiguration.ViewType.SIMPLE;
+
+			DialogResult result = viewConfigDialog.ShowDialog(this);
+			if (result == DialogResult.OK) {
+				// Add New view
+				if (viewConfigDialog.Type == ViewsConfiguration.ViewType.SIMPLE) {										
+					// Ensure index is unique...assumes index is updated when deleting views
+					int index = logicalView.getAll(true).Count;
+					string name = viewConfigDialog.ViewName;
+
+					string config = @"series<;><Series.ViewTags>;like;|" + name + "|<;><;>" +
+									 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+									 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+	                
+					DBView.AddView(index, name, config, true);
+
+					// Reload List and available Views
+					LoadViews();
+				}
+			}
         }
 
     }

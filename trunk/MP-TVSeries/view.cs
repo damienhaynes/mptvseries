@@ -52,6 +52,7 @@ namespace WindowPlugins.GUITVSeries
         }
         public string m_uniqueID = string.Empty;
         public bool m_Enabled = true;
+        public bool IsTaggedView { get; set; }
 
         DBView m_toUpdateForConfig = null;
 
@@ -336,6 +337,7 @@ namespace WindowPlugins.GUITVSeries
             this.m_prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this.m_name) : (String)fromDB[DBView.cPrettyName];
             this.m_uniqueID = fromDB[DBView.cIndex];
             this.m_Enabled = fromDB[DBView.cEnabled];
+            this.IsTaggedView = fromDB[DBView.cTaggedView];
 
             if (Settings.isConfig) m_toUpdateForConfig = fromDB;
 
@@ -469,6 +471,9 @@ namespace WindowPlugins.GUITVSeries
                 case "!=":
                     condtype = SQLConditionType.NotEqual;
                     break;
+				case "like":
+					condtype = SQLConditionType.Like;
+					break;
                 default:
                     condtype = SQLConditionType.Equal;
                     break;
