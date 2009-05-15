@@ -183,6 +183,8 @@ namespace WindowPlugins.GUITVSeries
 		public const String cDefaultRating = "DefaultRating";
 		public const String cRatingDisplayStars = "RatingDisplayStars";
 
+        public const String cSortSpecials = "SortSpecials";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -475,6 +477,9 @@ namespace WindowPlugins.GUITVSeries
 
 				if (GetOptions(cRatingDisplayStars) == null)
 					SetOptions(cRatingDisplayStars, 10);
+
+                if (GetOptions(cSortSpecials) == null)
+                    SetOptions(cSortSpecials, 1);
 
             }
             catch (Exception ex)

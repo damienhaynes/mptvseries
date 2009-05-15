@@ -297,10 +297,12 @@ namespace WindowPlugins.GUITVSeries
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.nextIsOr = true;
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.nextIsOr = false;
+                        if (DBOption.GetOptions(DBOption.cSortSpecials)) {
+                            conditions.nextIsOr = true;
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
+                            conditions.nextIsOr = false;
+                        }
                         conditions.endGroup();
                         break;
                 }
