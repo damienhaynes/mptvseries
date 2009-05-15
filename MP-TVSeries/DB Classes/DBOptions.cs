@@ -184,6 +184,8 @@ namespace WindowPlugins.GUITVSeries
 		public const String cRatingDisplayStars = "RatingDisplayStars";
 
         public const String cSortSpecials = "SortSpecials";
+        public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
+        public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -480,6 +482,13 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cSortSpecials) == null)
                     SetOptions(cSortSpecials, 1);
+
+                if (GetOptions(cBackdropLoadingDelay) == null)
+                    SetOptions(cBackdropLoadingDelay, 250);
+
+                if (GetOptions(cArtworkLoadingDelay) == null)
+                    SetOptions(cArtworkLoadingDelay, 250);
+
 
             }
             catch (Exception ex)

@@ -50,10 +50,11 @@ namespace WindowPlugins.GUITVSeries
             // disable that dynamic skin adjustment....skinners should have the power to position the elements whereever with the plugin inerveining
             if (DBOption.GetOptions(DBOption.cViewAutoHeight)) DBOption.SetOptions(DBOption.cViewAutoHeight, false);
             
-            int artworkDelay = 250;
+            int artworkDelay = DBOption.GetOptions(DBOption.cArtworkLoadingDelay);
+            int backdropDelay = DBOption.GetOptions(DBOption.cBackdropLoadingDelay);
 
             backdrop = new ImageSwapper();
-            backdrop.ImageResource.Delay = artworkDelay;
+            backdrop.ImageResource.Delay = backdropDelay;
             backdrop.PropertyOne = "#TVSeries.Fanart.1";
             backdrop.PropertyTwo = "#TVSeries.Fanart.2";
 

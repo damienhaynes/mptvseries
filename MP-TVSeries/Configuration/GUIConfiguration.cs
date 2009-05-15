@@ -3995,6 +3995,14 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSortSpecials, checkbox_SortSpecials.Checked);
         }
 
+        private void numericUpDownBackdropDelay_ValueChanged(object sender, EventArgs e) {
+            DBOption.SetOptions(DBOption.cBackdropLoadingDelay, (int)numericUpDownBackdropDelay.Value);
+        }
+
+        private void numericUpDownArtworkDelay_ValueChanged(object sender, EventArgs e) {
+            DBOption.SetOptions(DBOption.cArtworkLoadingDelay, (int)numericUpDownArtworkDelay.Value);
+        }
+
     }
     
     public class BannerComboItem
