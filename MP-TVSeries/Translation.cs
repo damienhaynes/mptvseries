@@ -119,8 +119,14 @@ namespace WindowPlugins.GUITVSeries
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
         public static string RecentlyAdded = "Recently Added";
+		public static string ContentRating = "Content Rating";
         public static string ChangeView = "Change View";
+		public static string ViewTags = "View Tags";
         public static string ChangeViewFast = "Immediately Change Views";
+		public static string AddViewTag = "Add Series to View";
+		public static string RemoveViewTag = "Remove Series from View";
+		public static string NewViewTag = "Create New View";        
+        public static string ViewTagExistsMessage = "The view \"{0}\" already exists";
 
         // Fanart
         public static string FanArt = "Fanart";

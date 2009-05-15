@@ -82,8 +82,10 @@ namespace WindowPlugins.GUITVSeries
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.watchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unWatchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -260,45 +262,9 @@ namespace WindowPlugins.GUITVSeries
             this.label32 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.tab_view = new System.Windows.Forms.TabPage();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.comboBox7 = new System.Windows.Forms.ComboBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.comboBox8 = new System.Windows.Forms.ComboBox();
-            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
-            this.comboBox9 = new System.Windows.Forms.ComboBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.comboBox10 = new System.Windows.Forms.ComboBox();
-            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this._23_link = new System.Windows.Forms.ComboBox();
-            this.cond3_cond = new System.Windows.Forms.TextBox();
-            this.cond3_type = new System.Windows.Forms.ComboBox();
-            this.cond3_what = new System.Windows.Forms.RichTextBox();
-            this._12_link = new System.Windows.Forms.ComboBox();
-            this.cond2_cond = new System.Windows.Forms.TextBox();
-            this.cond2_type = new System.Windows.Forms.ComboBox();
-            this.cond2_what = new System.Windows.Forms.RichTextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.cond1_cond = new System.Windows.Forms.TextBox();
-            this.cond1_type = new System.Windows.Forms.ComboBox();
-            this.cond1_what = new System.Windows.Forms.RichTextBox();
-            this.viewStepGroupLbl = new System.Windows.Forms.Label();
-            this.viewStepGroupByTextBox = new System.Windows.Forms.TextBox();
-            this.viewStepType = new System.Windows.Forms.ComboBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.checkCurViewEnabled = new System.Windows.Forms.CheckBox();
-            this.button7 = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.view_selStepsList = new System.Windows.Forms.ListBox();
@@ -311,10 +277,6 @@ namespace WindowPlugins.GUITVSeries
             this.btnRemoveView = new System.Windows.Forms.Button();
             this.btnAddView = new System.Windows.Forms.Button();
             this._availViews = new System.Windows.Forms.ListBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.button3 = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabLogoRules = new System.Windows.Forms.TabPage();
             this.label65 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -414,6 +376,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             this.groupGraphicsQuality.SuspendLayout();
@@ -455,11 +418,8 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tab_view.SuspendLayout();
-            this.groupBox10.SuspendLayout();
-            this.groupBox11.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabLogoRules.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabFormattingRules.SuspendLayout();
@@ -515,14 +475,17 @@ namespace WindowPlugins.GUITVSeries
             this.hideToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.updateToolStripMenuItem,
+            this.toolStripSeparator2,
             this.watchedToolStripMenuItem,
             this.unWatchedToolStripMenuItem,
+            this.toolStripSeparator1,
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem,
-            this.ResetUserSelToolStripMenuItem});
+            this.ResetUserSelToolStripMenuItem,
+            this.toolStripSeparator3});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 158);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 242);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
@@ -547,6 +510,11 @@ namespace WindowPlugins.GUITVSeries
             this.updateToolStripMenuItem.Tag = "update";
             this.updateToolStripMenuItem.Text = "Update";
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+            // 
             // watchedToolStripMenuItem
             // 
             this.watchedToolStripMenuItem.Name = "watchedToolStripMenuItem";
@@ -560,6 +528,11 @@ namespace WindowPlugins.GUITVSeries
             this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.unWatchedToolStripMenuItem.Tag = "unwatched";
             this.unWatchedToolStripMenuItem.Text = "Set As Un-Watched";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
             // 
             // getSubtitlesToolStripMenuItem
             // 
@@ -2203,8 +2176,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
             this.comboBox_BannerSelection.Size = new System.Drawing.Size(460, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
-            this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
-            this.comboBox_BannerSelection.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox_BannerSelection_KeyPress);
+            this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);            
             // 
             // panDBLocation
             // 
@@ -2906,13 +2878,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.tab_view.AutoScroll = true;
             this.tab_view.Controls.Add(this.chkOnlineFavourites);
-            this.tab_view.Controls.Add(this.groupBox10);
             this.tab_view.Controls.Add(this.groupBox9);
             this.tab_view.Controls.Add(this.groupBox8);
-            this.tab_view.Controls.Add(this.listBox1);
-            this.tab_view.Controls.Add(this.numericUpDown1);
-            this.tab_view.Controls.Add(this.button3);
-            this.tab_view.Controls.Add(this.richTextBox1);
             this.tab_view.ImageIndex = 2;
             this.tab_view.Location = new System.Drawing.Point(4, 31);
             this.tab_view.Name = "tab_view";
@@ -2922,431 +2889,10 @@ namespace WindowPlugins.GUITVSeries
             this.tab_view.Text = "Views";
             this.tab_view.UseVisualStyleBackColor = true;
             // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.groupBox11);
-            this.groupBox10.Controls.Add(this.viewStepGroupLbl);
-            this.groupBox10.Controls.Add(this.viewStepGroupByTextBox);
-            this.groupBox10.Controls.Add(this.viewStepType);
-            this.groupBox10.Location = new System.Drawing.Point(40, 397);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(482, 273);
-            this.groupBox10.TabIndex = 1;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "configure Hierarchy Step";
-            this.groupBox10.Visible = false;
-            // 
-            // groupBox11
-            // 
-            this.groupBox11.Controls.Add(this.comboBox7);
-            this.groupBox11.Controls.Add(this.textBox5);
-            this.groupBox11.Controls.Add(this.comboBox8);
-            this.groupBox11.Controls.Add(this.richTextBox4);
-            this.groupBox11.Controls.Add(this.comboBox9);
-            this.groupBox11.Controls.Add(this.textBox6);
-            this.groupBox11.Controls.Add(this.comboBox10);
-            this.groupBox11.Controls.Add(this.richTextBox5);
-            this.groupBox11.Controls.Add(this.comboBox3);
-            this.groupBox11.Controls.Add(this.textBox3);
-            this.groupBox11.Controls.Add(this.comboBox4);
-            this.groupBox11.Controls.Add(this.richTextBox2);
-            this.groupBox11.Controls.Add(this.comboBox5);
-            this.groupBox11.Controls.Add(this.textBox4);
-            this.groupBox11.Controls.Add(this.comboBox6);
-            this.groupBox11.Controls.Add(this.richTextBox3);
-            this.groupBox11.Controls.Add(this._23_link);
-            this.groupBox11.Controls.Add(this.cond3_cond);
-            this.groupBox11.Controls.Add(this.cond3_type);
-            this.groupBox11.Controls.Add(this.cond3_what);
-            this.groupBox11.Controls.Add(this._12_link);
-            this.groupBox11.Controls.Add(this.cond2_cond);
-            this.groupBox11.Controls.Add(this.cond2_type);
-            this.groupBox11.Controls.Add(this.cond2_what);
-            this.groupBox11.Controls.Add(this.label27);
-            this.groupBox11.Controls.Add(this.cond1_cond);
-            this.groupBox11.Controls.Add(this.cond1_type);
-            this.groupBox11.Controls.Add(this.cond1_what);
-            this.groupBox11.Location = new System.Drawing.Point(6, 62);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(455, 205);
-            this.groupBox11.TabIndex = 3;
-            this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Step Conditions";
-            // 
-            // comboBox7
-            // 
-            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox7.Enabled = false;
-            this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox7.Location = new System.Drawing.Point(20, 177);
-            this.comboBox7.Name = "comboBox7";
-            this.comboBox7.Size = new System.Drawing.Size(57, 21);
-            this.comboBox7.TabIndex = 24;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Enabled = false;
-            this.textBox5.Location = new System.Drawing.Point(312, 175);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(130, 20);
-            this.textBox5.TabIndex = 27;
-            // 
-            // comboBox8
-            // 
-            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox8.Enabled = false;
-            this.comboBox8.FormattingEnabled = true;
-            this.comboBox8.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox8.Location = new System.Drawing.Point(231, 175);
-            this.comboBox8.Name = "comboBox8";
-            this.comboBox8.Size = new System.Drawing.Size(75, 21);
-            this.comboBox8.TabIndex = 26;
-            // 
-            // richTextBox4
-            // 
-            this.richTextBox4.Enabled = false;
-            this.richTextBox4.Location = new System.Drawing.Point(83, 177);
-            this.richTextBox4.Name = "richTextBox4";
-            this.richTextBox4.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox4.TabIndex = 25;
-            this.richTextBox4.Text = "";
-            // 
-            // comboBox9
-            // 
-            this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox9.Enabled = false;
-            this.comboBox9.FormattingEnabled = true;
-            this.comboBox9.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox9.Location = new System.Drawing.Point(20, 151);
-            this.comboBox9.Name = "comboBox9";
-            this.comboBox9.Size = new System.Drawing.Size(57, 21);
-            this.comboBox9.TabIndex = 20;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Enabled = false;
-            this.textBox6.Location = new System.Drawing.Point(312, 149);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(130, 20);
-            this.textBox6.TabIndex = 23;
-            // 
-            // comboBox10
-            // 
-            this.comboBox10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox10.Enabled = false;
-            this.comboBox10.FormattingEnabled = true;
-            this.comboBox10.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox10.Location = new System.Drawing.Point(231, 149);
-            this.comboBox10.Name = "comboBox10";
-            this.comboBox10.Size = new System.Drawing.Size(75, 21);
-            this.comboBox10.TabIndex = 22;
-            // 
-            // richTextBox5
-            // 
-            this.richTextBox5.Enabled = false;
-            this.richTextBox5.Location = new System.Drawing.Point(83, 151);
-            this.richTextBox5.Name = "richTextBox5";
-            this.richTextBox5.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox5.TabIndex = 21;
-            this.richTextBox5.Text = "";
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.Enabled = false;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox3.Location = new System.Drawing.Point(20, 125);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(57, 21);
-            this.comboBox3.TabIndex = 16;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(312, 123);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(130, 20);
-            this.textBox3.TabIndex = 19;
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.Enabled = false;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox4.Location = new System.Drawing.Point(231, 123);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(75, 21);
-            this.comboBox4.TabIndex = 18;
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Enabled = false;
-            this.richTextBox2.Location = new System.Drawing.Point(83, 125);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox2.TabIndex = 17;
-            this.richTextBox2.Text = "";
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.Enabled = false;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox5.Location = new System.Drawing.Point(20, 99);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(57, 21);
-            this.comboBox5.TabIndex = 12;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(312, 97);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(130, 20);
-            this.textBox4.TabIndex = 15;
-            // 
-            // comboBox6
-            // 
-            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox6.Enabled = false;
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox6.Location = new System.Drawing.Point(231, 97);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(75, 21);
-            this.comboBox6.TabIndex = 14;
-            // 
-            // richTextBox3
-            // 
-            this.richTextBox3.Enabled = false;
-            this.richTextBox3.Location = new System.Drawing.Point(83, 99);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox3.TabIndex = 13;
-            this.richTextBox3.Text = "";
-            // 
-            // _23_link
-            // 
-            this._23_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._23_link.Enabled = false;
-            this._23_link.FormattingEnabled = true;
-            this._23_link.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this._23_link.Location = new System.Drawing.Point(20, 72);
-            this._23_link.Name = "_23_link";
-            this._23_link.Size = new System.Drawing.Size(57, 21);
-            this._23_link.TabIndex = 8;
-            // 
-            // cond3_cond
-            // 
-            this.cond3_cond.Enabled = false;
-            this.cond3_cond.Location = new System.Drawing.Point(312, 70);
-            this.cond3_cond.Name = "cond3_cond";
-            this.cond3_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond3_cond.TabIndex = 11;
-            // 
-            // cond3_type
-            // 
-            this.cond3_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond3_type.Enabled = false;
-            this.cond3_type.FormattingEnabled = true;
-            this.cond3_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond3_type.Location = new System.Drawing.Point(231, 70);
-            this.cond3_type.Name = "cond3_type";
-            this.cond3_type.Size = new System.Drawing.Size(75, 21);
-            this.cond3_type.TabIndex = 10;
-            // 
-            // cond3_what
-            // 
-            this.cond3_what.Enabled = false;
-            this.cond3_what.Location = new System.Drawing.Point(83, 72);
-            this.cond3_what.Name = "cond3_what";
-            this.cond3_what.Size = new System.Drawing.Size(142, 20);
-            this.cond3_what.TabIndex = 9;
-            this.cond3_what.Text = "";
-            // 
-            // _12_link
-            // 
-            this._12_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._12_link.Enabled = false;
-            this._12_link.FormattingEnabled = true;
-            this._12_link.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this._12_link.Location = new System.Drawing.Point(20, 46);
-            this._12_link.Name = "_12_link";
-            this._12_link.Size = new System.Drawing.Size(57, 21);
-            this._12_link.TabIndex = 4;
-            // 
-            // cond2_cond
-            // 
-            this.cond2_cond.Enabled = false;
-            this.cond2_cond.Location = new System.Drawing.Point(312, 44);
-            this.cond2_cond.Name = "cond2_cond";
-            this.cond2_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond2_cond.TabIndex = 7;
-            // 
-            // cond2_type
-            // 
-            this.cond2_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond2_type.Enabled = false;
-            this.cond2_type.FormattingEnabled = true;
-            this.cond2_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond2_type.Location = new System.Drawing.Point(231, 44);
-            this.cond2_type.Name = "cond2_type";
-            this.cond2_type.Size = new System.Drawing.Size(75, 21);
-            this.cond2_type.TabIndex = 6;
-            // 
-            // cond2_what
-            // 
-            this.cond2_what.Enabled = false;
-            this.cond2_what.Location = new System.Drawing.Point(83, 46);
-            this.cond2_what.Name = "cond2_what";
-            this.cond2_what.Size = new System.Drawing.Size(142, 20);
-            this.cond2_what.TabIndex = 5;
-            this.cond2_what.Text = "";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(20, 25);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(30, 13);
-            this.label27.TabIndex = 0;
-            this.label27.Text = "...if...";
-            // 
-            // cond1_cond
-            // 
-            this.cond1_cond.Location = new System.Drawing.Point(312, 17);
-            this.cond1_cond.Name = "cond1_cond";
-            this.cond1_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond1_cond.TabIndex = 3;
-            // 
-            // cond1_type
-            // 
-            this.cond1_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond1_type.FormattingEnabled = true;
-            this.cond1_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond1_type.Location = new System.Drawing.Point(231, 17);
-            this.cond1_type.Name = "cond1_type";
-            this.cond1_type.Size = new System.Drawing.Size(75, 21);
-            this.cond1_type.TabIndex = 2;
-            // 
-            // cond1_what
-            // 
-            this.cond1_what.Location = new System.Drawing.Point(83, 19);
-            this.cond1_what.Name = "cond1_what";
-            this.cond1_what.Size = new System.Drawing.Size(142, 20);
-            this.cond1_what.TabIndex = 1;
-            this.cond1_what.Text = "";
-            // 
-            // viewStepGroupLbl
-            // 
-            this.viewStepGroupLbl.AutoSize = true;
-            this.viewStepGroupLbl.Location = new System.Drawing.Point(133, 35);
-            this.viewStepGroupLbl.Name = "viewStepGroupLbl";
-            this.viewStepGroupLbl.Size = new System.Drawing.Size(49, 13);
-            this.viewStepGroupLbl.TabIndex = 1;
-            this.viewStepGroupLbl.Text = "group By";
-            // 
-            // viewStepGroupByTextBox
-            // 
-            this.viewStepGroupByTextBox.Location = new System.Drawing.Point(188, 32);
-            this.viewStepGroupByTextBox.Name = "viewStepGroupByTextBox";
-            this.viewStepGroupByTextBox.Size = new System.Drawing.Size(108, 20);
-            this.viewStepGroupByTextBox.TabIndex = 2;
-            // 
-            // viewStepType
-            // 
-            this.viewStepType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.viewStepType.FormattingEnabled = true;
-            this.viewStepType.Items.AddRange(new object[] {
-            "group",
-            "series",
-            "season",
-            "episode"});
-            this.viewStepType.Location = new System.Drawing.Point(6, 32);
-            this.viewStepType.Name = "viewStepType";
-            this.viewStepType.Size = new System.Drawing.Size(121, 21);
-            this.viewStepType.TabIndex = 0;
-            this.viewStepType.SelectedIndexChanged += new System.EventHandler(this.viewStepType_SelectedIndexChanged);
-            // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.checkCurViewEnabled);
-            this.groupBox9.Controls.Add(this.button7);
             this.groupBox9.Controls.Add(this.label25);
-            this.groupBox9.Controls.Add(this.button2);
-            this.groupBox9.Controls.Add(this.button4);
             this.groupBox9.Controls.Add(this.button5);
             this.groupBox9.Controls.Add(this.button6);
             this.groupBox9.Controls.Add(this.view_selStepsList);
@@ -3370,16 +2916,6 @@ namespace WindowPlugins.GUITVSeries
             this.checkCurViewEnabled.UseVisualStyleBackColor = true;
             this.checkCurViewEnabled.CheckedChanged += new System.EventHandler(this.checkCurViewEnabled_CheckedChanged);
             // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(158, 56);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(23, 23);
-            this.button7.TabIndex = 9;
-            this.button7.Text = "Paste all at once";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Visible = false;
-            // 
             // label25
             // 
             this.label25.AutoSize = true;
@@ -3388,26 +2924,6 @@ namespace WindowPlugins.GUITVSeries
             this.label25.Size = new System.Drawing.Size(52, 13);
             this.label25.TabIndex = 3;
             this.label25.Text = "Hierarchy";
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(153, 108);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(28, 29);
-            this.button2.TabIndex = 5;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
-            // 
-            // button4
-            // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(153, 143);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(28, 29);
-            this.button4.TabIndex = 6;
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Visible = false;
             // 
             // button5
             // 
@@ -3436,7 +2952,6 @@ namespace WindowPlugins.GUITVSeries
             this.view_selStepsList.Name = "view_selStepsList";
             this.view_selStepsList.Size = new System.Drawing.Size(190, 186);
             this.view_selStepsList.TabIndex = 4;
-            this.view_selStepsList.SelectedIndexChanged += new System.EventHandler(this.view_selStepsList_SelectedIndexChanged);
             // 
             // view_selectedName
             // 
@@ -3505,23 +3020,23 @@ namespace WindowPlugins.GUITVSeries
             // 
             // btnRemoveView
             // 
-            this.btnRemoveView.Enabled = false;
             this.btnRemoveView.Location = new System.Drawing.Point(49, 276);
             this.btnRemoveView.Name = "btnRemoveView";
             this.btnRemoveView.Size = new System.Drawing.Size(69, 23);
             this.btnRemoveView.TabIndex = 4;
             this.btnRemoveView.Text = "Remove";
             this.btnRemoveView.UseVisualStyleBackColor = true;
+            this.btnRemoveView.Click += new System.EventHandler(this.btnRemoveView_Click);
             // 
             // btnAddView
             // 
-            this.btnAddView.Enabled = false;
             this.btnAddView.Location = new System.Drawing.Point(124, 276);
             this.btnAddView.Name = "btnAddView";
             this.btnAddView.Size = new System.Drawing.Size(75, 23);
             this.btnAddView.TabIndex = 5;
             this.btnAddView.Text = "Add";
             this.btnAddView.UseVisualStyleBackColor = true;
+            this.btnAddView.Click += new System.EventHandler(this.btnAddView_Click);
             // 
             // _availViews
             // 
@@ -3531,43 +3046,6 @@ namespace WindowPlugins.GUITVSeries
             this._availViews.Size = new System.Drawing.Size(189, 251);
             this._availViews.TabIndex = 0;
             this._availViews.SelectedIndexChanged += new System.EventHandler(this._availViews_SelectedIndexChanged);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(8, 695);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(426, 30);
-            this.listBox1.TabIndex = 5;
-            this.listBox1.Visible = false;
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(234, 667);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 3;
-            this.numericUpDown1.Visible = false;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(360, 664);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Visible = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(8, 623);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(426, 35);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.Visible = false;
             // 
             // tabLogoRules
             // 
@@ -4687,6 +4165,11 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4748,15 +4231,10 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.PerformLayout();
             this.tab_view.ResumeLayout(false);
             this.tab_view.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox11.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabLogoRules.ResumeLayout(false);
             this.tabLogoRules.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -4861,10 +4339,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
         private System.Windows.Forms.TabPage tab_view;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button btnAddView;
         private System.Windows.Forms.ListBox _availViews;
@@ -4874,46 +4348,10 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.TextBox view_selectedName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ListBox view_selStepsList;
-        private System.Windows.Forms.GroupBox groupBox11;
-        private System.Windows.Forms.Label viewStepGroupLbl;
-        private System.Windows.Forms.TextBox viewStepGroupByTextBox;
-        private System.Windows.Forms.ComboBox viewStepType;
-        private System.Windows.Forms.ComboBox comboBox7;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.ComboBox comboBox8;
-        private System.Windows.Forms.RichTextBox richTextBox4;
-        private System.Windows.Forms.ComboBox comboBox9;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.ComboBox comboBox10;
-        private System.Windows.Forms.RichTextBox richTextBox5;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.ComboBox comboBox6;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.ComboBox _23_link;
-        private System.Windows.Forms.TextBox cond3_cond;
-        private System.Windows.Forms.ComboBox cond3_type;
-        private System.Windows.Forms.RichTextBox cond3_what;
-        private System.Windows.Forms.ComboBox _12_link;
-        private System.Windows.Forms.TextBox cond2_cond;
-        private System.Windows.Forms.ComboBox cond2_type;
-        private System.Windows.Forms.RichTextBox cond2_what;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox cond1_cond;
-        private System.Windows.Forms.ComboBox cond1_type;
-        private System.Windows.Forms.RichTextBox cond1_what;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox comboLanguage;
         private System.Windows.Forms.CheckBox checkCurViewEnabled;
@@ -5137,6 +4575,9 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_AutoUpdateEpisodeRatings;
         private System.Windows.Forms.CheckBox checkBox_AutoDownloadMissingArtwork;
         private System.Windows.Forms.LinkLabel linkExParsingExpressions;
-        private System.Windows.Forms.LinkLabel linkImpParsingExpressions;
+		private System.Windows.Forms.LinkLabel linkImpParsingExpressions;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

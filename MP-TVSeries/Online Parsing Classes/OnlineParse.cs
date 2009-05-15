@@ -652,6 +652,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cCurrentBannerFileName:
                                 case DBOnlineSeries.cCurrentPosterFileName:
                                 case DBOnlineSeries.cMyRating:
+                                case DBOnlineSeries.cViewTags:
                                     break;
                                 case DBOnlineSeries.cEpisodeOrders:
                                     if (bUpdateNewSeries)

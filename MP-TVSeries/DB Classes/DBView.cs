@@ -32,7 +32,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBView : DBTable
     {
         public const String cTableName = "Views";
-        public const int cDBVersion = 3;
+        public const int cDBVersion = 4;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -40,6 +40,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cTransToken = "TransToken";
         public const String cPrettyName = "PrettyName";
         public const String cViewConfig = "viewConfig";
+        public const String cTaggedView = "TaggedView";
 
         public DBView()
             : base(cTableName)
@@ -64,7 +65,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cSort, new DBField(DBField.cTypeInt));
             AddColumn(cTransToken, new DBField(DBField.cTypeString));
             AddColumn(cPrettyName, new DBField(DBField.cTypeString));
-            AddColumn(cViewConfig, new DBField(DBField.cTypeString));   
+            AddColumn(cViewConfig, new DBField(DBField.cTypeString));
+            AddColumn(cTaggedView, new DBField(DBField.cTypeInt));
         }
 
         public static void ClearAll()
@@ -103,9 +105,46 @@ namespace WindowPlugins.GUITVSeries
             return new DBView[0];
         }
 
+        public static DBView[] getTaggedViews() {
+            try {
+                // Make sure the table is created - create a dummy object
+                DBView dummy = new DBView();
+
+                // Only get Tagged Views                
+                String sqlQuery = "select * from " + cTableName + " where " + cTaggedView + " = 1";
+
+                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+                if (results.Rows.Count > 0) {
+                    DBView[] views = new DBView[results.Rows.Count];
+                    for (int index = 0; index < results.Rows.Count; index++) {
+                        views[index] = new DBView();
+                        views[index].Read(ref results, index);
+                    }
+                    return views;
+                }
+            }
+            catch (Exception ex) {
+                MPTVSeriesLog.Write("Error in retrieving Tagged Views (" + ex.Message + ").");
+            }
+            return new DBView[0];
+        }
+
         static DBView()
         {
             fillDefaults();
+        }
+
+        public static void AddView(int index, string name, string config, bool tagview) {
+            DBView view = new DBView();
+            view[cIndex] = index;
+            view[cEnabled] = "1";
+            view[cSort] = index + 1;
+            view[cTransToken] = name;
+            view[cPrettyName] = name;
+            view[cViewConfig] = config;
+            view[cTaggedView] = tagview;
+            view.Commit();
+            return;
         }
 
         public static void fillDefaults()
@@ -125,6 +164,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cViewConfig] = @"series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -136,6 +176,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -147,6 +188,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><;>" +
                                     "<nextStep>season<;>;;<;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -159,6 +201,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -171,6 +214,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -180,6 +224,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cTransToken] = "Latest";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -189,7 +234,34 @@ namespace WindowPlugins.GUITVSeries
                 view[cTransToken] = "RecentlyAdded";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
+                view[cTaggedView] = "0";
                 view.Commit();
+
+				view = new DBView();
+				view[cIndex] = "7";
+				view[cEnabled] = "1";
+				view[cSort] = "8";
+				view[cTransToken] = "ContentRating";
+				view[cPrettyName] = "";
+				view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
+                                    "<nextStep>series<;><;><;>" +
+                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
+				view.Commit();
+
+				view = new DBView();
+				view[cIndex] = "8";
+				view[cEnabled] = "1";
+				view[cSort] = "9";
+				view[cTransToken] = "ViewTags";
+				view[cPrettyName] = "";
+				view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
+									"<nextStep>series<;><;><;>" +
+									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                view[cTaggedView] = "0";
+				view.Commit();
 
             }
 
@@ -198,6 +270,9 @@ namespace WindowPlugins.GUITVSeries
 
             while (nUpgradeDBVersion != nCurrentDBVersion)
             {
+                // WARNING: as of version 4, we can now remove and add views. 
+                // Be particularly carefull if adding/Removing/Updating
+
                 // take care of the upgrade in the table
                 switch (nUpgradeDBVersion)
                 {
@@ -221,6 +296,36 @@ namespace WindowPlugins.GUITVSeries
                         view.Commit();
                         nUpgradeDBVersion++;
                         break;
+
+					case 3:
+						// Upgrade to version 4, new view 'Content Rating'
+						view = new DBView();
+						view[cIndex] = "7";
+						view[cEnabled] = "1";
+						view[cSort] = "8";
+						view[cTransToken] = "ContentRating";
+						view[cPrettyName] = "";
+						view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
+											"<nextStep>series<;><;><;>" +
+											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+						view.Commit();
+						
+						// New view 'View Tags'
+						view = new DBView();
+						view[cIndex] = "8";
+						view[cEnabled] = "1";
+						view[cSort] = "9";
+						view[cTransToken] = "ViewTags";
+						view[cPrettyName] = "";
+						view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
+											"<nextStep>series<;><;><;>" +
+											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+
+						view.Commit();
+						nUpgradeDBVersion++;
+						break;
    
                     default:
                         nUpgradeDBVersion = nCurrentDBVersion;
