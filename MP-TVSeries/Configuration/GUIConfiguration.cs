@@ -204,7 +204,7 @@ namespace WindowPlugins.GUITVSeries
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
             checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
-
+            checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
             checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
@@ -3989,6 +3989,10 @@ namespace WindowPlugins.GUITVSeries
 					LoadViews();
 				}
 			}
+        }
+
+        private void checkbox_SortSpecials_CheckedChanged(object sender, EventArgs e) {
+            DBOption.SetOptions(DBOption.cSortSpecials, checkbox_SortSpecials.Checked);
         }
 
     }
