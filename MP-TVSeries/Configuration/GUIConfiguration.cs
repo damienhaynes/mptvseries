@@ -209,6 +209,8 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
+			numericUpDownArtworkDelay.Value = DBOption.GetOptions(DBOption.cArtworkLoadingDelay);
+			numericUpDownBackdropDelay.Value = DBOption.GetOptions(DBOption.cBackdropLoadingDelay);
 
             int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
