@@ -475,7 +475,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cUseRegionalDateFormatString, 0);
 
 				if (GetOptions(cDefaultRating) == null)
-					SetOptions(cDefaultRating, 5);
+					SetOptions(cDefaultRating, 7);
 
 				if (GetOptions(cRatingDisplayStars) == null)
 					SetOptions(cRatingDisplayStars, 10);
