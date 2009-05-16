@@ -3938,6 +3938,9 @@ namespace WindowPlugins.GUITVSeries
             string message = string.Format("Are you sure you want to delete view \"{0}\"?",selectedView.prettyName);
             DialogResult result = MessageBox.Show(message, "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+			if (result == DialogResult.No)
+				return;
+
             // Get All current Views
             DBView[] views = DBView.getAll(true);
 
