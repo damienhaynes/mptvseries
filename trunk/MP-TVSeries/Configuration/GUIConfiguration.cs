@@ -212,6 +212,9 @@ namespace WindowPlugins.GUITVSeries
 			numericUpDownArtworkDelay.Value = DBOption.GetOptions(DBOption.cArtworkLoadingDelay);
 			numericUpDownBackdropDelay.Value = DBOption.GetOptions(DBOption.cBackdropLoadingDelay);
 
+			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
+				checkboxRatingDisplayStars.Checked = true;
+
             int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
@@ -4007,6 +4010,13 @@ namespace WindowPlugins.GUITVSeries
         private void numericUpDownArtworkDelay_ValueChanged(object sender, EventArgs e) {
             DBOption.SetOptions(DBOption.cArtworkLoadingDelay, (int)numericUpDownArtworkDelay.Value);
         }
+
+		private void checkboxRatingDisplayStars_CheckedChanged(object sender, EventArgs e) {
+			if (checkboxRatingDisplayStars.Checked)
+				DBOption.SetOptions(DBOption.cRatingDisplayStars, 5);
+			else
+				DBOption.SetOptions(DBOption.cRatingDisplayStars, 10);
+		}
 
     }
     
