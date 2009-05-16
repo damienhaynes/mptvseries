@@ -3981,7 +3981,7 @@ namespace WindowPlugins.GUITVSeries
 					int index = logicalView.getAll(true).Count;
 					string name = viewConfigDialog.ViewName;
 
-					string config = @"series<;><Series.ViewTags>;like;|" + name + "|<;><;>" +
+					string config = @"series<;><Series.ViewTags>;like;%|" + name + "|%<;><;>" +
 									 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
 									 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 	                

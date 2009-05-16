@@ -1954,7 +1954,7 @@ namespace WindowPlugins.GUITVSeries
                 // Add New View to database
                 // Ensure index is unique...assumes index is updated when deleting views                
                 int index = logicalView.getAll(true).Count;
-                string config = @"series<;><Series.ViewTags>;like;|" + selectedItem + "|<;><;>" +
+                string config = @"series<;><Series.ViewTags>;like;%|" + selectedItem + "|%<;><;>" +
                                  "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                  "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 
