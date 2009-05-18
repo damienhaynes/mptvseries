@@ -129,12 +129,7 @@ namespace WindowPlugins.GUITVSeries
         {   
             string skinSettings = null;
             string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");
-            
-            bool bGraphicsLoaded = false;
-            bool bFormattingLoaded = false;
-            bool bLogosLoaded = false;
-            bool bLayoutsLoaded = false;
-
+     
             XmlDocument doc = new XmlDocument();
             try
             {
@@ -158,7 +153,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 // Load Skin Settings if they exist
-                TVSeriesPlugin.LoadSkinSettings(skinSettings, out bGraphicsLoaded, out bFormattingLoaded, out bLogosLoaded, out bLayoutsLoaded); ;
+                SkinSettings.Load(skinSettings); ;
                 // Reload formatting rules
                 formattingConfiguration1.LoadFromDB();
             }
@@ -231,15 +226,15 @@ namespace WindowPlugins.GUITVSeries
             chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
             
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
-            richTextBox_seriesFormat_Col1.Enabled = !bLayoutsLoaded;
+            richTextBox_seriesFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
             richTextBox_seriesFormat_Col2.Tag = new FieldTag(DBOption.cView_Series_Col2, FieldTag.Level.Series);
-            richTextBox_seriesFormat_Col2.Enabled = !bLayoutsLoaded;
+            richTextBox_seriesFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col2);
 
             richTextBox_seriesFormat_Col3.Tag = new FieldTag(DBOption.cView_Series_Col3, FieldTag.Level.Series);
-            richTextBox_seriesFormat_Col3.Enabled = !bLayoutsLoaded;
+            richTextBox_seriesFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col3);
 
             richTextBox_seriesFormat_Title.Tag = new FieldTag(DBOption.cView_Series_Title, FieldTag.Level.Series);
@@ -252,15 +247,15 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_seriesFormat_Main);          
 
             richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
-            richTextBox_seasonFormat_Col1.Enabled = !bLayoutsLoaded;
+            richTextBox_seasonFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col1);
 
             richTextBox_seasonFormat_Col2.Tag = new FieldTag(DBOption.cView_Season_Col2, FieldTag.Level.Season);
-            richTextBox_seasonFormat_Col2.Enabled = !bLayoutsLoaded;
+            richTextBox_seasonFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col2);
 
             richTextBox_seasonFormat_Col3.Tag = new FieldTag(DBOption.cView_Season_Col3, FieldTag.Level.Season);
-            richTextBox_seasonFormat_Col3.Enabled = !bLayoutsLoaded;
+            richTextBox_seasonFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col3);
 
             richTextBox_seasonFormat_Title.Tag = new FieldTag(DBOption.cView_Season_Title, FieldTag.Level.Season);
@@ -273,15 +268,15 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_seasonFormat_Main);
 
             richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cView_Episode_Col1, FieldTag.Level.Episode);
-            richTextBox_episodeFormat_Col1.Enabled = !bLayoutsLoaded;
+            richTextBox_episodeFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col1);
 
             richTextBox_episodeFormat_Col2.Tag = new FieldTag(DBOption.cView_Episode_Col2, FieldTag.Level.Episode);
-            richTextBox_episodeFormat_Col2.Enabled = !bLayoutsLoaded;
+            richTextBox_episodeFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col2);
 
             richTextBox_episodeFormat_Col3.Tag = new FieldTag(DBOption.cView_Episode_Col3, FieldTag.Level.Episode);
-            richTextBox_episodeFormat_Col3.Enabled = !bLayoutsLoaded;
+            richTextBox_episodeFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col3);
 
             richTextBox_episodeFormat_Title.Tag = new FieldTag(DBOption.cView_Episode_Title, FieldTag.Level.Episode);
@@ -297,7 +292,7 @@ namespace WindowPlugins.GUITVSeries
             qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
             qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
             qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
-            if (bGraphicsLoaded)
+            if (SkinSettings.ImportGraphics)
             {
                 qualitySeries.Enabled = false;
                 qualitySeason.Enabled = false;
