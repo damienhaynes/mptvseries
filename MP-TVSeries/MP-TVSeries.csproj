@@ -205,6 +205,9 @@
     <Compile Include="Configuration\AddImportPathPopup.designer.cs">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
     </Compile>
+	<Compile Include="Configuration\ViewsConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
 	<Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
