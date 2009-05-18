@@ -475,10 +475,10 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cUseRegionalDateFormatString, 0);
 
 				if (GetOptions(cDefaultRating) == null)
-					SetOptions(cDefaultRating, 7);
+					SetOptions(cDefaultRating, 7); // Scale 1 - 10
 
 				if (GetOptions(cRatingDisplayStars) == null)
-					SetOptions(cRatingDisplayStars, 10);
+					SetOptions(cRatingDisplayStars, 10); // 5 or 10 Stars
 
                 if (GetOptions(cSortSpecials) == null)
                     SetOptions(cSortSpecials, 1);

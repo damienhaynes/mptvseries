@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
 
             string xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
-            TVSeriesPlugin.analyseSkinForWantedFields(xmlSkin);
+            SkinSettings.GetSkinProperties(xmlSkin);
 
             return Load(xmlSkin);            
         }

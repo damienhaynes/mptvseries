@@ -166,8 +166,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Threading.Timer m_scanTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
-        private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
-        private static List<string> m_SupportedLayouts = new List<string>();
+        private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();        
 
         private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
@@ -337,12 +336,7 @@ namespace WindowPlugins.GUITVSeries
             }
           
             string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
-
-            bool bGraphicsLoaded = false;
-            bool bFormattingLoaded = false;
-            bool bLogosLoaded = false;
-            bool bLayoutsLoaded = false;
-            LoadSkinSettings(xmlSkinSettings, out bGraphicsLoaded, out bFormattingLoaded, out bLogosLoaded, out bLayoutsLoaded);
+            SkinSettings.Load(xmlSkinSettings);
 
             // init display format strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
@@ -382,7 +376,7 @@ namespace WindowPlugins.GUITVSeries
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
-            analyseSkinForWantedFields(xmlSkin);
+            SkinSettings.GetSkinProperties(xmlSkin);
 
             return Load(xmlSkin);
         }
@@ -2457,7 +2451,7 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
                     
-                    if (GetLayoutCount(this.listLevel) > 1)
+                    if (SkinSettings.GetLayoutCount(this.listLevel.ToString()) > 1)
                     {
                         pItem = new GUIListItem(Translation.ChangeLayout + " ...");
                         dlg.Add(pItem);
@@ -3581,140 +3575,7 @@ namespace WindowPlugins.GUITVSeries
                     return "List";
             }
         }
-
-        private static bool IsLayoutSupported(Listlevel listLevel)
-        {
-            bool supported = false;
-            string currentLayout = string.Empty;
-            List<String> layouts = null;
-
-            // Get List of layouts for View
-            layouts = GetViewLayouts(listLevel);
-            if (layouts == null || layouts.Count == 0)
-                return false;
-            
-            // Check if Current Layout is supported
-            switch (listLevel)
-            {
-                case Listlevel.Group:
-                    {
-                        if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
-                            currentLayout = "SmallIcons";
-                        else
-                            currentLayout = "List";
-
-                        if (layouts.Contains(currentLayout))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Series:
-                    {
-                        if (layouts.Contains(DBOption.GetOptions(DBOption.cView_Series_ListFormat)))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Season:
-                    {
-                       if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
-                            currentLayout = "Filmstrip";
-                        else
-                            currentLayout = "List";
-
-                        if (layouts.Contains(currentLayout))
-                            supported = true;
-                    }
-                    break;
-
-                case Listlevel.Episode:
-                    {
-                        if (layouts.Contains("List"))
-                            supported = true;
-                    }
-                    break;
-            }
-            return supported;            
-        }
-
-        private static List<string> GetViewLayouts(Listlevel listLevel)
-        {
-            List<String> layouts = new List<string>();
-            foreach (string layout in m_SupportedLayouts)
-            {
-                switch (listLevel)
-                {
-                    case Listlevel.Group:
-                        {
-                            if (layout.StartsWith("Group"))
-                                layouts.Add(layout.Substring(5));
-                        }
-                        break;
-
-                    case Listlevel.Series:
-                        {
-                            if (layout.StartsWith("Series"))
-                                layouts.Add(layout.Substring(6));
-                        }
-                        break;
-
-                    case Listlevel.Season:
-                        {
-                            if (layout.StartsWith("Season"))
-                                layouts.Add(layout.Substring(6));
-                        }
-                        break;
-
-                    case Listlevel.Episode:
-                        {
-                            if (layout.StartsWith("Episode"))
-                                layouts.Add(layout.Substring(7));
-                        }
-                        break;
-                }
-            }
-            return layouts;
-        }
-
-        private static int GetLayoutCount(Listlevel listLevel)
-        {
-            int count = 0;
-            foreach (string layout in m_SupportedLayouts)
-            {
-                switch (listLevel)
-                {
-                    case Listlevel.Group:
-                        {
-                            if (layout.StartsWith("Group"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Series:
-                        {
-                            if (layout.StartsWith("Series"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Season:
-                        {
-                            if (layout.StartsWith("Season"))
-                                count++;
-                        }
-                        break;
-
-                    case Listlevel.Episode:
-                        {
-                            if (layout.StartsWith("Episode"))
-                                count++;
-                        }
-                        break;
-                }
-            }
-            return count;
-        }
-        
+                
         private void ShowLayoutMenu()
         {
             string currentLayout = GetCurrentLayout();
@@ -3727,7 +3588,7 @@ namespace WindowPlugins.GUITVSeries
             string item = string.Empty;
 
             // Get Available Layouts for Skin
-            foreach (string layout in m_SupportedLayouts)
+            foreach (string layout in SkinSettings.SupportedLayouts)
             {
                 switch (this.listLevel)
                 {
@@ -4456,401 +4317,35 @@ namespace WindowPlugins.GUITVSeries
             m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
             m_watcherUpdater.StartFolderWatch();
         }
-
-        static Dictionary<string, List<string>> _allFieldsForSkin = new Dictionary<string, List<string>>();
+        
         public static void pushFieldsToSkin(DBTable item, string pre)
         {
             if (item == null) return;
             List<string> fieldsRequestedForPre = null;
 
-            if (_allFieldsForSkin.ContainsKey(pre))
+            if (SkinSettings.SkinProperties.ContainsKey(pre))
             {
-                fieldsRequestedForPre = _allFieldsForSkin[pre];
+                fieldsRequestedForPre = SkinSettings.SkinProperties[pre];
                 for (int i = 0; i < fieldsRequestedForPre.Count; i++)
                 {
                     pushFieldToSkin(item, pre, fieldsRequestedForPre[i]);
                 }
             }
-
         }
+
         private static void pushFieldToSkin(DBTable item, string pre, string field)
         {
             string t = pre + "." + field;
             setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
         }
+
         public static void clearFieldsForskin(string pre)
         {
-            if (_allFieldsForSkin.ContainsKey(pre))
+            if (SkinSettings.SkinProperties.ContainsKey(pre))
             {
-                List<string> fields = _allFieldsForSkin[pre];
+                List<string> fields = SkinSettings.SkinProperties[pre];
                 for (int i = 0; i < fields.Count; i++)
                     clearGUIProperty(pre + "." + fields[i]);
-            }
-        }
-
-        public static void LoadSkinSettings(string skinSettings, out bool bGraphicsLoaded, out bool bFormattingLoaded, out bool bLogosLoaded, out bool bLayoutsLoaded)
-        {
-            bGraphicsLoaded = false;
-            bFormattingLoaded = false;
-            bLogosLoaded = false;
-            bLayoutsLoaded = false;
-
-            // Check if File Exist
-            if (!System.IO.File.Exists(skinSettings))
-                return;                      
-
-            XmlDocument doc = new XmlDocument();
-            try
-            {
-                doc.Load(skinSettings);
-            }
-            catch (XmlException e)
-            {            
-                MPTVSeriesLog.Write("Cannot Load skin settings xml file: ", MPTVSeriesLog.LogLevel.Normal);
-                MPTVSeriesLog.Write(e.Message);               
-                return;
-            }
-            
-            XmlNode node = null;
-            XmlNode innerNode = null;
-                        
-            string layout = null;                        
-
-            // Read Version if defined
-            node = doc.DocumentElement.SelectSingleNode("/settings/version");
-            if (node != null)
-                MPTVSeriesLog.Write("Loading Skin Settings: v" + node.InnerText);
-            
-            // Load Supported Layouts
-            // Skin Designers can choose to add these settings so there users can change layouts
-            // from with-in MediaPortals GUI
-            node = doc.DocumentElement.SelectSingleNode("/settings/layouts");
-            if (node != null)
-            {
-                MPTVSeriesLog.Write("Loading Supported Layouts Skin Settings");
-
-                innerNode = node.SelectSingleNode("group");
-                if (innerNode != null)
-                {
-                    // Possible type are List and SmallIcons
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupList");
-
-                    if (innerNode.Attributes.GetNamedItem("SmallIcons") != null)
-                        if (innerNode.Attributes.GetNamedItem("SmallIcons").Value.ToLower() == "true") m_SupportedLayouts.Add("GroupSmallIcons");    
-                }
-
-                innerNode = node.SelectSingleNode("series");
-                if (innerNode != null)
-                {
-                    // Possible type are ListPosters, ListBanners, WideBanners and Filmstrip
-                    if (innerNode.Attributes.GetNamedItem("ListPosters") != null)
-                        if (innerNode.Attributes.GetNamedItem("ListPosters").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListPosters");
-
-                    if (innerNode.Attributes.GetNamedItem("ListBanners") != null)
-                        if (innerNode.Attributes.GetNamedItem("ListBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesListBanners");
-
-                    if (innerNode.Attributes.GetNamedItem("WideBanners") != null)
-                        if (innerNode.Attributes.GetNamedItem("WideBanners").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesWideBanners");
-
-                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
-                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeriesFilmstrip");
-                    
-                }
-
-                innerNode = node.SelectSingleNode("season");
-                if (innerNode != null)
-                {
-                    // Possible type are List and Filmstrip
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonList");
-
-                    if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
-                        if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") m_SupportedLayouts.Add("SeasonFilmstrip");
-                }
-
-                innerNode = node.SelectSingleNode("episode");
-                if (innerNode != null)
-                {
-                    // Possible type are List
-                    if (innerNode.Attributes.GetNamedItem("List") != null)
-                        if (innerNode.Attributes.GetNamedItem("List").Value.ToLower() == "true") m_SupportedLayouts.Add("EpisodeList");
-                }
-            }
-
-            // Read View Settings and Import into Database
-            node = doc.DocumentElement.SelectSingleNode("/settings/views");
-            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
-            {                
-                bLayoutsLoaded = true;
-                List<string> layouts = null;
-
-                // Append First Logo/Image to List
-                try
-                {
-                    if (node.Attributes.GetNamedItem("AppendlmageToList").Value.ToLower() == "true")
-                        DBOption.SetOptions(DBOption.cAppendFirstLogoToList, "1");
-                    else
-                        DBOption.SetOptions(DBOption.cAppendFirstLogoToList, "0");
-                }
-                catch
-                {
-                    MPTVSeriesLog.Write("Error reading AppendlmageToList skin setting");
-                }
-
-                // Group View Settings
-                innerNode = node.SelectSingleNode("group");
-                if (innerNode != null)
-                {
-                    MPTVSeriesLog.Write("Loading Skin Group View Settings", MPTVSeriesLog.LogLevel.Normal);
-
-                    // Dont override default Layout if skin can change from GUI
-                    if (GetLayoutCount(Listlevel.Group) == 0)
-                    {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "list":
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                                break;
-
-                            case "smallicons":
-                            case "bigicons":
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "1");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Group) > 0 && !IsLayoutSupported(Listlevel.Group))
-                    {
-                        // Set First Supported Type
-                        layouts = GetViewLayouts(Listlevel.Group);
-                        if (layouts == null || layouts.Count == 0)
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, "0");
-                        else
-                            DBOption.SetOptions(DBOption.cGraphicalGroupView, layouts[0]);
-                        
-                    }
-    
-                }
-
-                // Series View Settings
-                innerNode = node.SelectSingleNode("series");
-                if (innerNode != null) 
-                {
-                    MPTVSeriesLog.Write("Loading Skin Series View Settings", MPTVSeriesLog.LogLevel.Normal);
-
-                    if (GetLayoutCount(Listlevel.Series) == 0)
-                    {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "listposters":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");
-                                break;
-
-                            case "listbanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");
-                                break;
-
-                            case "filmstrip":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");
-                                break;
-
-                            case "widebanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Series) > 0 && !IsLayoutSupported(Listlevel.Series))
-                    {
-                        // Set First Supported Type                        
-                        layouts = GetViewLayouts(Listlevel.Series);
-                        if (layouts == null || layouts.Count == 0)
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
-                        else
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, layouts[0]);
-
-                    }
-                }
-
-                innerNode = node.SelectSingleNode("series/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col1, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("series/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col2, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("series/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
-                
-
-                // Season View Settings
-                innerNode = node.SelectSingleNode("season");
-                if (innerNode != null)
-                {
-                    MPTVSeriesLog.Write("Loading Skin Season View Settings", MPTVSeriesLog.LogLevel.Normal);
-
-                    if (GetLayoutCount(Listlevel.Season) == 0)
-                    {
-                        layout = innerNode.Attributes.GetNamedItem("layout").Value;
-                        switch (layout.ToLower())
-                        {
-                            case "list":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                                break;
-
-                            case "smallicons":
-                            case "bigicons":
-                            case "filmstrip":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
-                                break;
-
-                            default:
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                                break;
-                        }
-                    }
-                    // Confirm that the current layout is really supported
-                    // May have come from another skin that used an unsupported layout for this skin
-                    if (GetLayoutCount(Listlevel.Season) > 0 && !IsLayoutSupported(Listlevel.Season))
-                    {
-                        // Set First Supported Type
-                        layouts = GetViewLayouts(Listlevel.Season);
-                        if (layouts == null || layouts.Count == 0)
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-                        else
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, layouts[0]);
-                        
-                    }
-                }
-
-                innerNode = node.SelectSingleNode("season/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col1, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("season/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col2, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("season/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col3, innerNode.InnerText.Trim());
-
-                MPTVSeriesLog.Write("Loading Skin Episode View Settings", MPTVSeriesLog.LogLevel.Normal);
-
-                // Episode View Settings
-                innerNode = node.SelectSingleNode("episode/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col1, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("episode/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col2, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("episode/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col3, innerNode.InnerText.Trim());
-            }            
-
-            // Read Formatting Rules and Import into Database
-            node = doc.DocumentElement.SelectSingleNode("/settings/formatting");
-            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
-            {
-                MPTVSeriesLog.Write("Loading Skin Formatting Rules", MPTVSeriesLog.LogLevel.Normal);
-
-                DBFormatting.ClearAll();
-                long id = 0;
-                foreach (string rule in node.InnerText.Split('\n'))
-                {                    
-                    string[] seperators = new string[] { "<Enabled>", "<Format>", "<FormatAs>" };
-                    string[] properties = rule.Trim('\r').Split(seperators, StringSplitOptions.RemoveEmptyEntries);
-                    if (properties.Length == 3)
-                    {
-                        DBFormatting dbf = new DBFormatting(id);
-                        dbf[DBFormatting.cEnabled] = properties[0];
-                        dbf[DBFormatting.cReplace] = properties[1];
-                        dbf[DBFormatting.cWith] = properties[2];
-                        
-                        dbf.Commit();
-                        id++;
-                    }                    
-                }
-                bFormattingLoaded = true;
-            }
-
-            // Read Logo Rules and Import into Database
-            node = doc.DocumentElement.SelectSingleNode("/settings/logos");
-            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
-            {
-                MPTVSeriesLog.Write("Loading Skin Logo Rules", MPTVSeriesLog.LogLevel.Normal);
-
-                DBOption.SetOptions("logoConfig", "");
-                List<string> logos = new List<string>();
-                foreach (string rule in node.InnerText.Split('\n'))
-                {
-                    logos.Add(rule.Trim());
-                }
-                localLogos.saveToDB(logos);
-                bLogosLoaded = true;
-            }
-            
-            // Read Graphics Quality and Import into Database
-            node = doc.DocumentElement.SelectSingleNode("/settings/graphicsquality");            
-            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true")
-            {
-                MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
-
-                innerNode = node.SelectSingleNode("seriesbanners");                
-                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("seriesposters");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesPosters, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("seasonbanners");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeasonBanners, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("episodethumbs");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cQualityEpisodeImages, innerNode.InnerText.Trim());
-
-                bGraphicsLoaded = true;
-            }
-
-        }
-
-        public static void analyseSkinForWantedFields(string skinfile)
-        {
-            string content = string.Empty;
-            using (System.IO.StreamReader r = new System.IO.StreamReader(skinfile))
-            {
-                content = r.ReadToEnd();
-            }
-            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(@"#TVSeries\..+?(?=[\s<])");
-            System.Text.RegularExpressions.MatchCollection matches = reg.Matches(content);
-            MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Normal);
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string pre = string.Empty;
-                string remove = string.Empty;
-                if (matches[i].Value.Contains((remove = "#TVSeries.Episode.")))
-                    pre = "Episode";
-                else if (matches[i].Value.Contains((remove = "#TVSeries.Season.")))
-                    pre = "Season";
-                else if (matches[i].Value.Contains((remove = "#TVSeries.Series.")))
-                    pre = "Series";
-                string value = matches[i].Value.Trim().Replace(remove, string.Empty);
-                if (pre.Length > 0)
-                {
-                    MPTVSeriesLog.Write(matches[i].Value);
-                    if (_allFieldsForSkin.ContainsKey(pre))
-                    {
-                        if (!_allFieldsForSkin[pre].Contains(value))
-                        {
-                            _allFieldsForSkin[pre].Add(value);
-                        }
-                    }
-                    else
-                    {
-                        List<string> v = new List<string>();
-                        v.Add(value);
-                        _allFieldsForSkin.Add(pre, v);
-                    }
-                }
             }
         }
 

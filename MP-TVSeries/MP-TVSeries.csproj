@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cache.cs" />
+	<Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,7 +223,7 @@
     <Compile Include="feedback.cs" />
     <Compile Include="FieldGetter.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="imageAllocator.cs" />
+    <Compile Include="imageAllocator.cs" />	
     <Compile Include="Local Parsing Classes\LocalParse.cs" />
     <Compile Include="Local Parsing Classes\ManualParseDialog.cs">
       <SubType>Form</SubType>
