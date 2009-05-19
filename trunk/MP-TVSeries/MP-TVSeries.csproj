@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -130,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cache.cs" />
-	<Compile Include="SkinSettings.cs" />
+    <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -193,22 +193,22 @@
     <Compile Include="Configuration\DBOptionCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
-	 <Compile Include="Configuration\MemoryBox.cs">
+    <Compile Include="Configuration\MemoryBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\MemoryBox.designer.cs">
       <DependentUpon>MemoryBox.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\AddImportPathPopup.cs">
+    <Compile Include="Configuration\AddImportPathPopup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\AddImportPathPopup.designer.cs">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\ViewsConfiguration.cs">
+    <Compile Include="Configuration\ViewsConfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
-	<Compile Include="Configuration\ViewsConfiguration.Designer.cs">
+    <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
@@ -226,7 +226,7 @@
     <Compile Include="feedback.cs" />
     <Compile Include="FieldGetter.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="imageAllocator.cs" />	
+    <Compile Include="imageAllocator.cs" />
     <Compile Include="Local Parsing Classes\LocalParse.cs" />
     <Compile Include="Local Parsing Classes\ManualParseDialog.cs">
       <SubType>Form</SubType>
@@ -294,7 +294,7 @@
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
-	<Compile Include="GUIUserRating.cs" />
+    <Compile Include="GUIUserRating.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
@@ -341,14 +341,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>ManualParseDialog.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\MemoryBox.resx">
+    <EmbeddedResource Include="Configuration\MemoryBox.resx">
       <DependentUpon>MemoryBox.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
+    <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
+    <EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -417,9 +417,9 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "%25MP_XBMC_BIN%25\plugins\windows" /Y
-
-
+    <PostBuildEvent>cd $(TargetDir)
+call "merge.bat
+xcopy "MP-TVSeries.dll" "%25PROGRAMFILES%25\Team MediaPortal\MediaPortal\plugins\Windows" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
