@@ -955,9 +955,15 @@ namespace WindowPlugins.GUITVSeries
             int seriesEpsUnWatched = 0;
             int epsTotal = 0;
             int epsUnWatched = 0;
-            
+
             // Update for each season in series and add each to total series count
-            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
+            SQLCondition condition = new SQLCondition();
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems)) {
+                //don't include hidden seasons unless the ShowHiddenItems option is set
+                condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+            }
+
+            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID], condition);
             foreach (DBSeason season in Seasons)
             {
                 epsTotal = 0;
@@ -966,15 +972,19 @@ namespace WindowPlugins.GUITVSeries
                 DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
                 season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
                 season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
-                if (epsUnWatched == 0) season[DBSeason.cUnwatchedItems] = false;
-                else season[DBSeason.cUnwatchedItems] = true;
+                if (epsUnWatched == 0)
+                    season[DBSeason.cUnwatchedItems] = false;
+                else
+                    season[DBSeason.cUnwatchedItems] = true;
                 season.Commit();
             }
 
             series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
-            if (seriesEpsUnWatched == 0) series[DBOnlineSeries.cUnwatchedItems] = false;
-            else series[DBOnlineSeries.cUnwatchedItems] = true;
+            if (seriesEpsUnWatched == 0)
+                series[DBOnlineSeries.cUnwatchedItems] = false;
+            else
+                series[DBOnlineSeries.cUnwatchedItems] = true;
             series.Commit();
         }
 
