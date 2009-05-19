@@ -332,7 +332,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             }
-
+            
             //WaitForCompletion()
             //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
             //if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
@@ -347,7 +347,7 @@ namespace WindowPlugins.GUITVSeries
 
             
             // lets save the updateTimestamp
-            if (updates != null &&  updates.OnlineTimeStamp > 0)
+            if (updates != null && updates.OnlineTimeStamp > 0)
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, updates.OnlineTimeStamp);
 
             
@@ -1734,20 +1734,20 @@ namespace WindowPlugins.GUITVSeries
             condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
                             + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and "
                             + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 "   + ")");
-            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason); //takes forever
 
             SQLCondition condSeries = new SQLCondition();
             condSeries.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
                             + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) +
                             " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 " + ")");
-            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries);
+            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries); //takes about 1/4 of the time of above
         }
 
         private void ParseLocal(List<PathPair> files)
         {
             MPTVSeriesLog.Write(bigLogMessage("Gathering Local Information"));
             List<parseResult> parsedFiles = LocalParse.Parse(files, false);
-            
+
             // don't process those already in DB
             List<string> dbEps = new List<string>();
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute("select episodefilename from local_episodes");
@@ -1769,7 +1769,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            UpdateStatus(updateStatusEps);
+            UpdateStatus(updateStatusEps); //this is what takes the most time for initial parsing of episode.
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
