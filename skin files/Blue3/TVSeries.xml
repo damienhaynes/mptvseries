@@ -115,7 +115,7 @@
 		<posY>114</posY>
 		<width>292</width>
 		<height>442</height>
-		<texture>#TVSeries.SeriesBanner</texture>
+		<texture>#TVSeries.SeriesPoster</texture>
 		<visible>[Control.IsVisible(1237)|Control.IsVisible(1238)]+Control.IsVisible(1235)+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
     </control>	
 	<!-- Season View List Layout -->

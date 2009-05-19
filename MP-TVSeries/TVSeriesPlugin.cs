@@ -62,6 +62,10 @@ namespace WindowPlugins.GUITVSeries
             seriesbanner.Property = "#TVSeries.SeriesBanner";
             seriesbanner.Delay = artworkDelay;
 
+            seriesposter = new AsyncImageResource();
+            seriesposter.Property = "#TVSeries.SeriesPoster";
+            seriesposter.Delay = artworkDelay;
+
             seasonbanner = new AsyncImageResource();
             seasonbanner.Property = "#TVSeries.SeasonBanner";
             seasonbanner.Delay = artworkDelay;
@@ -142,6 +146,7 @@ namespace WindowPlugins.GUITVSeries
 
         private ImageSwapper backdrop;
         private AsyncImageResource seriesbanner = null;
+        private AsyncImageResource seriesposter = null;
         private AsyncImageResource seasonbanner = null;
 
         private Listlevel listLevel = Listlevel.Series;
@@ -847,6 +852,7 @@ namespace WindowPlugins.GUITVSeries
                     clearGUIProperty(guiProperty.Description);
                     
                     clearGUIProperty(guiProperty.SeriesBanner);
+                    clearGUIProperty(guiProperty.SeriesPoster);
                     clearGUIProperty(guiProperty.SeasonBanner);
                     clearGUIProperty(guiProperty.EpisodeImage);
                     clearGUIProperty(guiProperty.Logos);
@@ -973,7 +979,8 @@ namespace WindowPlugins.GUITVSeries
                     case Listlevel.Series:
                         {
                             string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
-                                              
+                            
+                            // We dont need to load thumbnails in the facade if using List View types
                             if (!sSeriesDisplayMode.Contains("List"))
                             {
                                 // reinit the itemsList
@@ -1315,7 +1322,7 @@ namespace WindowPlugins.GUITVSeries
 
                 PerfWatcher.GetNamedWatch("FacadeLoading getting/reporting items").Stop();
 
-                #region DelayedImageLoading
+                #region Delayed Image Loading
                 if (delayedImageLoading && seriesList != null)
                 {
                     PerfWatcher.GetNamedWatch("FacadeLoading BG Thread - Del. Img Loading").Start();
@@ -1325,17 +1332,20 @@ namespace WindowPlugins.GUITVSeries
                     // and img sizes the user has selected in config
                     int done = 0;                   // we need to know later when all threads are done
                     ThreadPool.SetMinThreads(8, 8); // seems to default to 2 (avail. cores?)
-                    try
-                    {                                            
+                    try {
                         // we know which one was selected, lets be smart and try to first load those around it
-                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex)
-                        {
-                            if (!bg.CancellationPending)
-                            {
+                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex) {
+                            if (!bg.CancellationPending) {
                                 // now foreach series, queue up the banner loading in the threadpool
-                                ThreadPool.QueueUserWorkItem(delegate(object state)
-                                {
-                                    string img = ImageAllocator.GetSeriesBanner(series);
+                                ThreadPool.QueueUserWorkItem(delegate(object state) {
+                                    string img = string.Empty;
+                                    
+                                    // Load Series Banners if WideBanners otherwise load Posters for Filmstrip
+                                    if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
+                                        img = ImageAllocator.GetSeriesPoster(series);
+                                    else
+                                        img = ImageAllocator.GetSeriesBanner(series);
+
                                     ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, currIndex, img);
                                     Interlocked.Increment(ref done);
                                 });
@@ -1344,19 +1354,20 @@ namespace WindowPlugins.GUITVSeries
                         });
 
                     }
-                    catch (Exception exs) { MPTVSeriesLog.Write("Delayed ImgLoad Exception: " + exs.Message); }
+                    catch (Exception exs) {
+                        MPTVSeriesLog.Write("Delayed ImgLoad Exception: " + exs.Message);
+                    }
 
                     // we now need to wait until all are done, because we are already on a different thread
                     // and the workitems themselves call our bg worker's progresschanged method to display the imgs
                     // on the gui's thread, and if we exit to early we cannot do that
                     while (done < seriesList.Count) // let's hope we don't get an exception in a background thread or we will never finish
                         Thread.Sleep(15);           // this no. can use some tweaking
+                    
                     PerfWatcher.GetNamedWatch("FacadeLoading BG Thread - Del. Img Loading").Stop();
                 }
                 #endregion
-
             }
-
             catch (Exception e)
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
@@ -1548,6 +1559,7 @@ namespace WindowPlugins.GUITVSeries
             NextView,
             LastView,
             SeriesBanner,
+            SeriesPoster,
             SeasonBanner,
             EpisodeImage,
             Logos,
@@ -2360,38 +2372,32 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         if (this.listLevel == Listlevel.Series)
-                        {
-                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" ||
-                                DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters")
+                        {                      
+                            if (selectedSeries.PosterList.Count > 1)
                             {
-                                if (selectedSeries.PosterList.Count > 1)
-                                {
-                                    pItem = new GUIListItem(Translation.Cycle_Banner);
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.cycleSeriesPoster;
-                                }
+                                pItem = new GUIListItem(Translation.CycleSeriesPoster);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.cycleSeriesPoster;
                             }
-                            else
+                     
+                            if (selectedSeries.BannerList.Count > 1)
                             {
-                                if (selectedSeries.BannerList.Count > 1)
-                                {
-                                    pItem = new GUIListItem(Translation.Cycle_Banner);
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
-                                }
+                                pItem = new GUIListItem(Translation.CycleSeriesBanner);
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.cycleSeriesBanner;
                             }
-
+                     
                             pItem = new GUIListItem(Translation.Force_Online_Match);
                             dlg.Add(pItem);
-                            pItem.ItemId = (int)eContextItems.forceSeriesQuery;
-                        
+                            pItem.ItemId = (int)eContextItems.forceSeriesQuery;                        
                         }
 
+                        // Season View may not be available so show cycle season banner at episode level as well
                         if (this.listLevel == Listlevel.Season || this.listLevel == Listlevel.Episode)
                         {
                             if (selectedSeason.BannerList.Count > 1)
                             {
-                                pItem = new GUIListItem(Translation.Cycle_Banner);
+                                pItem = new GUIListItem(Translation.CycleSeasonBanner);
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
                             }
@@ -3920,16 +3926,14 @@ namespace WindowPlugins.GUITVSeries
             
             clearGUIProperty(guiProperty.EpisodeImage);
             seasonbanner.Filename = "";
-            //clearGUIProperty(guiProperty.SeasonBanner);          
-            //clearGUIProperty(guiProperty.SeriesBanner); // seem to need to do this if we exit and re-enter!
 
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeriesTitle, series));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeriesSubtitle, series));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeriesMain, series));
 
-            // Delayed Image Loading of Series Banners            
+            // Delayed Image Loading of Series Banners/Posters            
             seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
-            //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(series));            
+            seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(series);               
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
@@ -3974,11 +3978,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 // it is the case
                 m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
-                if (m_SelectedSeries != null)
+                if (m_SelectedSeries != null) {
                     seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
-                    //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
-                else 
+                    seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                }
+                else {
                     clearGUIProperty(guiProperty.SeriesBanner);
+                    clearGUIProperty(guiProperty.SeriesPoster);
+                }
             }
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
@@ -4021,14 +4028,15 @@ namespace WindowPlugins.GUITVSeries
                 m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
                 m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
-                if (m_SelectedSeries != null)
-                {
-                    //setGUIProperty(guiProperty.SeriesBanner, ImageAllocator.GetSeriesBanner(m_SelectedSeries));
+                if (m_SelectedSeries != null) {
                     seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
-                    pushFieldsToSkin(m_SelectedSeries, "Series");                    
+                    seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                    pushFieldsToSkin(m_SelectedSeries, "Series");
                 }
-                else 
+                else {
                     clearGUIProperty(guiProperty.SeriesBanner);
+                    clearGUIProperty(guiProperty.SeriesPoster);
+                }
 
                 if (m_SelectedSeason != null)
                 {

@@ -124,13 +124,13 @@
     </control>
     <control>
       <type>image</type>
-      <description>Season image ( season image background )</description>
+      <description>series poster ( series poster background )</description>
       <id>46</id>
       <posX>41</posX>
       <posY>88</posY>
       <width>350</width>
       <height>506</height>
-      <texture>#TVSeries.SeriesBanner</texture>
+      <texture>#TVSeries.SeriesPoster</texture>
       <visible>Control.IsVisible(1237)+Control.IsVisible(1235)+Control.IsVisible(1242)</visible>
     </control>
 	
@@ -149,7 +149,7 @@
     </control>
     <control>
       <type>image</type>
-      <description>Season image ( season image background )</description>
+      <description>Series Banner ( series banner background )</description>
       <id>46</id>
       <posX>33</posX>
       <posY>95</posY>
