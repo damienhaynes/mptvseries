@@ -2075,6 +2075,7 @@ namespace WindowPlugins.GUITVSeries
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView_Library.ContextMenuStrip = this.contextMenuStrip_DetailsTree;
 			this.treeView_Library.ForeColor = System.Drawing.SystemColors.WindowText;
+            //this.treeView_Library.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.treeView_Library.FullRowSelect = true;
 			this.treeView_Library.HideSelection = false;
 			this.treeView_Library.Location = new System.Drawing.Point(0, 0);
