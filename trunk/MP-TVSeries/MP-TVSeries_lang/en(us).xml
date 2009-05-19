@@ -66,8 +66,7 @@
 	<string Field="RatingStar" Original="Star">Star</string>
 	<string Field="RatingStars" Original="Stars">Stars</string>
 	<string Field="ChangeView" Original="Change View">Change View</string>
-	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">Cycle Banner</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>	
 	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">List all Fanart for this Series</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Download Fanart and Use</string>
@@ -162,4 +161,7 @@
 	<string Field="AddViewTag" Original="Add Series to View Tag">Add Series to Tag</string>
 	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from Tag</string>
 	<string Field="NewViewTag" Original="New Tag">New Tag</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Cycle Series Banner</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Cycle Season Banner</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Cycle Series Poster</string>
 </strings>

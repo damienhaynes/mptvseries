@@ -82,8 +82,7 @@ namespace WindowPlugins.GUITVSeries
         public static string wrongSkin = "Wrong Skin file";
         public static string special = "Special";
         public static string specials = "Specials";
-        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
-        public static string Cycle_Banner = "Cycle Banner";
+        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";        
         public static string Force_Online_Match = "Force Online Match";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
@@ -110,7 +109,10 @@ namespace WindowPlugins.GUITVSeries
         public static string DeleteFromDatabase = "Delete from Database";     
         public static string DeleteFromFileDatabase = "Delete from Disk and Database";
 		public static string RateDialogLabel = "Select Your Rating for {0}";
-
+        public static string CycleSeriesBanner = "Cycle Series Banner";
+        public static string CycleSeriesPoster = "Cycle Series Poster";
+        public static string CycleSeasonBanner = "Cycle Season Banner";
+        
         // Views
         public static string Genres = "Genres";
         public static string All = "All";
