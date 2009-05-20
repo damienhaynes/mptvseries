@@ -1782,6 +1782,7 @@ namespace WindowPlugins.GUITVSeries
                 if (progress.success)
                 {
                     DBSeries series = null;
+                    DBSeason season = null;
                     if (progress.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
                     {
                         // series first
@@ -1802,7 +1803,7 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
 
                         // season now
-                        DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
+                        season = new DBSeason(series[DBSeries.cID], nSeason);
                         season[DBSeason.cHasLocalFilesTemp] = true;
                         season[DBSeason.cHasEpisodes] = true;
                         season.Commit();
@@ -1833,8 +1834,7 @@ namespace WindowPlugins.GUITVSeries
                     // then episode
                     DBEpisode episode = new DBEpisode(progress.full_filename, true);
                     bool bNewFile = false;
-                    if (episode[DBEpisode.cImportProcessed] != 2)
-                    {
+                    if (episode[DBEpisode.cImportProcessed] != 2) {
                         m_bDataUpdated = true;
                         bNewFile = true;
                     }
@@ -1845,6 +1845,15 @@ namespace WindowPlugins.GUITVSeries
                     {
                         episode[DBEpisode.cEpisodeIndex2] = progress.parser.Matches[DBEpisode.cEpisodeIndex2];
                         episode[DBEpisode.cCompositeID2] = episode[DBEpisode.cSeriesID] + "_" + nSeason + "x" + episode[DBEpisode.cEpisodeIndex2];
+
+                        if (bNewFile) {
+                            //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
+                            DBOnlineEpisode doubleEp = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], nSeason, episode[DBEpisode.cEpisodeIndex2]);
+                            if (doubleEp[DBOnlineEpisode.cID] > 0 && doubleEp[DBOnlineEpisode.cHidden] == 1) {
+                                doubleEp[DBOnlineEpisode.cHidden] = 0;
+                                doubleEp.Commit();
+                            }
+                        }
                     }
 
                     episode[DBEpisode.cAvailableSubtitles] = episode.checkHasSubtitles();
@@ -1858,8 +1867,13 @@ namespace WindowPlugins.GUITVSeries
                                 episode[match.Key] = match.Value;
                         }
                     }
-                    episode.Commit();
 
+                    //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
+                    if (bNewFile && episode[DBOnlineEpisode.cID] > 0) {
+                        episode[DBOnlineEpisode.cHidden] = 0;
+                    }
+
+                    episode.Commit();
                 }
             }
 
@@ -1883,6 +1897,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                     season[DBSeason.cUnwatchedItems] = false;
 
+                season[DBSeason.cHidden] = 0;
                 season.Commit();
             }
 
@@ -1894,6 +1909,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                     series[DBOnlineSeries.cUnwatchedItems] = false;
 
+                series[DBSeries.cHidden] = 0;
                 series.Commit();
             }
         }
