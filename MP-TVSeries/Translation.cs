@@ -111,7 +111,7 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
-        public static string CycleSeasonBanner = "Cycle Season Banner";
+        public static string CycleSeasonBanner = "Cycle Season Banner";        
         
         // Views
         public static string Genres = "Genres";
@@ -149,6 +149,14 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartMenuEnable = "Enable Fanart";
         public static string FanartMenuDisable = "Disable Fanart";
         public static string ShowSeriesFanart = "Show Fanart in Series View";
+        public static string FanartRandomInterval = "Fanart Timer Interval";
+        
+        public static string FanartIntervalFiveSeconds = "5 Seconds";
+        public static string FanartIntervalTenSeconds = "10 Seconds";
+        public static string FanartIntervalFifteenSeconds = "15 Seconds";
+        public static string FanartIntervalThirtySeconds = "30 Seconds";
+        public static string FanartIntervalFortyFiveSeconds = "45 Seconds";
+        public static string FanartIntervalSixtySeconds = "60 Seconds";
 
         // Layouts
         public static string LayoutList = "List";
