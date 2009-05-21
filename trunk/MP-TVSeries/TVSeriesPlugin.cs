@@ -68,9 +68,9 @@ namespace WindowPlugins.GUITVSeries
 
             seasonbanner = new AsyncImageResource();
             seasonbanner.Property = "#TVSeries.SeasonBanner";
-            seasonbanner.Delay = artworkDelay;
-
+            seasonbanner.Delay = artworkDelay;	
         }
+
         #region ISetupForm Members
 
         // Returns the name of the plugin which is shown in the plugin menu
@@ -149,10 +149,12 @@ namespace WindowPlugins.GUITVSeries
         private AsyncImageResource seriesposter = null;
         private AsyncImageResource seasonbanner = null;
 
-        private Listlevel listLevel = Listlevel.Series;
-        private DBSeries m_SelectedSeries;
+        private Listlevel listLevel = Listlevel.Series;        
+		private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
         private DBEpisode m_SelectedEpisode;
+		
+		private DBTable m_FanartItem;
         private VideoHandler m_VideoHandler;
         List<logicalView> m_allViews = new List<logicalView>();
         private logicalView m_CurrLView = null;
@@ -169,6 +171,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
+		private System.Threading.Timer m_FanartTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();        
@@ -212,6 +215,8 @@ namespace WindowPlugins.GUITVSeries
         private static bool m_bQuickSelect = false;
         public static PlayListPlayer _playlistPlayer;
         public static bool m_bOnActionProcessed = false;
+        private string m_prevSeriesID = string.Empty;
+        private bool m_bFanartTimerDisabled = false;
 
         #region Skin Variables
 
@@ -339,11 +344,12 @@ namespace WindowPlugins.GUITVSeries
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
-          
+            
+            // Import Skin Settings
             string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
             SkinSettings.Load(xmlSkinSettings);
 
-            // init display format strings
+            #region Display Format Strings
             m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
             m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
             m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
@@ -364,6 +370,7 @@ namespace WindowPlugins.GUITVSeries
             m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
             m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
             m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            #endregion
 
             try
             {
@@ -378,6 +385,10 @@ namespace WindowPlugins.GUITVSeries
             m_timerDelegate = new TimerCallback(Clock);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
             m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
+
+            // Setup Random Fanart Timer
+            m_FanartTimer = new System.Threading.Timer(new TimerCallback(FanartTimerEvent), null, Timeout.Infinite, Timeout.Infinite);
+            m_bFanartTimerDisabled = true;
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
@@ -559,6 +570,7 @@ namespace WindowPlugins.GUITVSeries
                 bg.RunWorkerAsync();
             }
         }
+
         bool bFacadeEmpty = true;
         void prepareLoadFacade()
         {
@@ -604,25 +616,6 @@ namespace WindowPlugins.GUITVSeries
 
                 }
                 setNewListLevelOfCurrView(m_CurrViewStep);
-
-                switch (this.listLevel)
-                {
-                    case Listlevel.Series:
-                        if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
-                            loadFanart(m_SelectedSeries);
-                        else
-                            DisableFanart();                       
-                        break;                            
-                    case Listlevel.Season:
-                        loadFanart(m_SelectedSeries);
-                        break;
-                    case Listlevel.Episode:
-                        loadFanart(m_SelectedSeason);
-                        break;
-                    default:
-                        DisableFanart();
-                        break;
-                }
 
             }
             catch (Exception ex)
@@ -1546,6 +1539,10 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnPageDestroy(int new_windowId)
         {
+            // Disable Random Fanart Timer
+            m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            m_bFanartTimerDisabled = true;
+
             base.OnPageDestroy(new_windowId);
         }
 
@@ -1845,8 +1842,16 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.optionsAskToRate:
                         DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
                         break;
-                    case (int)eContextItems.optionsFanartRandom:
+                    case (int)eContextItems.optionsFanartRandom:                        
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
+                        if (!DBOption.GetOptions(DBOption.cFanartRandom)) {
+                            // Disable Timer
+                            m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                            m_bFanartTimerDisabled = true;
+                        }
+                        // Update Fanart Displayed - may need to restore default artwork
+                        Series_OnItemSelected(m_Facade.SelectedListItem);
+
                         break;
                     case (int)eContextItems.optionsSeriesFanart:
                         DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
@@ -2365,7 +2370,7 @@ namespace WindowPlugins.GUITVSeries
                             if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
                                 m_SelectedSeries[DBOnlineSeries.cID] > 0)
                             {
-                                pItem = new GUIListItem(Translation.FanArt);
+                                pItem = new GUIListItem(Translation.FanArt + " ...");
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.showFanartChooser;
                             }
@@ -2710,7 +2715,12 @@ namespace WindowPlugins.GUITVSeries
 
                             selectedSeries.Banner = selectedSeries.BannerList[nCurrent];
                             selectedSeries.Commit();
-                            LoadFacade();
+
+                            // No need to re-load the facade for non-graphical layouts
+                            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                                seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(selectedSeries); 
+                            else
+                                LoadFacade();
                         }
                         break;
 
@@ -2723,7 +2733,12 @@ namespace WindowPlugins.GUITVSeries
 
                             selectedSeries.Poster = selectedSeries.PosterList[nCurrent];
                             selectedSeries.Commit();
-                            LoadFacade();
+
+                            // No need to re-load the facade for non-graphical layouts
+                            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                                seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(selectedSeries);
+                            else
+                                LoadFacade();
                         }
                         break;
 
@@ -2737,7 +2752,12 @@ namespace WindowPlugins.GUITVSeries
                             selectedSeason.Banner = selectedSeason.BannerList[nCurrent];
                             selectedSeason.Commit();
                             m_bUpdateBanner = true;
-                            LoadFacade();
+
+                            // No need to re-load the facade for non-graphical layouts
+                            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                                seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(selectedSeason);
+                            else
+                                LoadFacade();
                         }
                         break;
                     #endregion
@@ -3418,8 +3438,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+		private void FanartTimerEvent(object state) {			
+            loadFanart(m_FanartItem);
+            m_bFanartTimerDisabled = false;
+		}
+
         void DisableFanart()
         {
+            // Disable Random Fanart Timer
+            m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            m_bFanartTimerDisabled = true;
+
             if (FanartBackground == null)
             {
                 // Fanart not supported by skin, exit now
@@ -3898,9 +3927,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), this.m_Facade.SelectedListItem.Label, logosHeight, logosWidth));
 
             clearGUIProperty(guiProperty.EpisodeImage);
-            //clearGUIProperty(guiProperty.SeriesBanner);
-            //clearGUIProperty(guiProperty.SeasonBanner);
-
+          
             DisableFanart();
         }
 
@@ -3917,7 +3944,7 @@ namespace WindowPlugins.GUITVSeries
 
             DBSeries series = item.TVTag as DBSeries;
             if (series == null) return;
-
+      			
             m_SelectedSeries = series;
                     
             // set watched/unavailable flag
@@ -3938,9 +3965,23 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref series, logosHeight, logosWidth));
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
-           
-            if (DBOption.GetOptions(DBOption.cShowSeriesFanart) && FanartBackground != null)                        
-                loadFanart(m_SelectedSeries);
+
+			// Load Fanart
+			if (DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
+				// Re-initialize timer for random fanart
+				m_FanartItem = m_SelectedSeries;
+                if (DBOption.GetOptions(DBOption.cFanartRandom)) {
+                    // We should update fanart as soon as new series is selected or
+                    // if timer was disabled (e.g. fullscreen playback)
+                    if (m_SelectedSeries[DBSeries.cID].ToString() != m_prevSeriesID || m_bFanartTimerDisabled)
+                        m_FanartTimer.Change(0, DBOption.GetOptions(DBOption.cRandomFanartInterval));
+                }
+                else
+                    loadFanart(m_FanartItem);
+			}
+
+            // Remember last series, so we dont re-initialize random fanart timer
+            m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
 
         private void Season_OnItemSelected(GUIListItem item)
@@ -3976,7 +4017,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
             {
-                // it is the case
+                // it is the case    
                 m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null) {
                     seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
@@ -3990,8 +4031,19 @@ namespace WindowPlugins.GUITVSeries
 
             pushFieldsToSkin(m_SelectedSeason, "Season");
 
-            loadFanart(m_SelectedSeason);
-
+			// Load Fanart			
+			m_FanartItem = m_SelectedSeason;
+			if (DBOption.GetOptions(DBOption.cFanartRandom)) {
+                // We should update fanart as soon as new series is selected or
+                // if timer was disabled (e.g. fullscreen playback)
+                if (m_SelectedSeries[DBSeries.cID].ToString() != m_prevSeriesID || m_bFanartTimerDisabled)
+                    m_FanartTimer.Change(0, DBOption.GetOptions(DBOption.cRandomFanartInterval));
+			}
+			else
+				loadFanart(m_FanartItem);
+            
+            // Remember last series, so we dont re-initialize random fanart timer
+            m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
 
         private void Episode_OnItemSelected(GUIListItem item)
@@ -4024,7 +4076,7 @@ namespace WindowPlugins.GUITVSeries
             // thus its desirable to display the series_banner and season banner on hover)
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep) || m_bUpdateBanner)
             {
-                // it is the case
+                // it is the case			
                 m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
                 m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
@@ -4039,8 +4091,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (m_SelectedSeason != null)
-                {
-                    //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(m_SelectedSeason, false));
+                {                    
                     seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(m_SelectedSeason);
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
@@ -4051,8 +4102,19 @@ namespace WindowPlugins.GUITVSeries
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
 
-            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest
-            loadFanart(m_SelectedSeries);
+            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest		
+			m_FanartItem = m_SelectedSeries;
+			if (DBOption.GetOptions(DBOption.cFanartRandom)) {
+                // We should update fanart as soon as new series is selected or
+                // if timer was disabled (e.g. fullscreen playback)
+                if (m_SelectedSeries[DBSeries.cID].ToString() != m_prevSeriesID || m_bFanartTimerDisabled)
+                    m_FanartTimer.Change(0, DBOption.GetOptions(DBOption.cRandomFanartInterval));				
+			}
+			else
+				loadFanart(m_FanartItem);
+
+            // Remember last series, so we dont re-initialize random fanart timer
+            m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
         
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
@@ -4575,7 +4637,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         ~TVSeriesPlugin()
-        {
+        {            
             // so that locallogos can clean up its stuff
             if (null != this.m_Logos_Image)
             {

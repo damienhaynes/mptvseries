@@ -158,10 +158,17 @@
 	<string Field="RateTenStarTen" Original="Perfect">Perfect</string>
 	<string Field="ContentRating" Original="Content Rating">Content Rating</string>
 	<string Field="ViewTags" Original="View Tags">View Tags</string>
-	<string Field="AddViewTag" Original="Add Series to View Tag">Add Series to Tag</string>
-	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from Tag</string>
-	<string Field="NewViewTag" Original="New Tag">New Tag</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Add Series to View</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from View</string>
+	<string Field="NewViewTag" Original="New Tag">New View</string>
 	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Cycle Series Banner</string>
 	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Cycle Season Banner</string>
 	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Cycle Series Poster</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
+	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 Seconds</string>
+	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 Seconds</string>
+	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 Seconds</string>
+	<string Field="FanartIntervalThirtySeconds" Original="30 Seconds">30 Seconds</string>
+	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Seconds</string>
+	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Seconds</string>	
 </strings>

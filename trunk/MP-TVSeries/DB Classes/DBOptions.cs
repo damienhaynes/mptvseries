@@ -186,6 +186,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSortSpecials = "SortSpecials";
         public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
+        public const String cRandomFanartInterval = "RandomFanartInterval";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -467,10 +468,6 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cFanartCurrentView) == null)
                     SetOptions(cFanartCurrentView, 2); // Large Icons
 
-                //if (GetOptions(cDateFormatString) == null) {
-                //    SetOptions(cDateFormatString, System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
-                //}
-
                 if (GetOptions(cUseRegionalDateFormatString) == null)
                     SetOptions(cUseRegionalDateFormatString, 0);
 
@@ -484,11 +481,13 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cSortSpecials, 1);
 
                 if (GetOptions(cBackdropLoadingDelay) == null)
-                    SetOptions(cBackdropLoadingDelay, 250);
+                    SetOptions(cBackdropLoadingDelay, 250); //milliseconds
 
                 if (GetOptions(cArtworkLoadingDelay) == null)
-                    SetOptions(cArtworkLoadingDelay, 250);
+                    SetOptions(cArtworkLoadingDelay, 250); //milliseconds
 
+                if (GetOptions(cRandomFanartInterval) == null)
+                    SetOptions(cRandomFanartInterval, 30000); //milliseconds
 
             }
             catch (Exception ex)
