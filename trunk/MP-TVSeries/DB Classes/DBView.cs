@@ -186,7 +186,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cTransToken] = "Unwatched";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><;>" +
-                                    "<nextStep>season<;>;;<;><Season.seasonIndex>;asc<;>" +
+                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
                 view.Commit();
@@ -217,10 +217,36 @@ namespace WindowPlugins.GUITVSeries
                 view[cTaggedView] = "0";
                 view.Commit();
 
+				view = new DBView();
+				view[cIndex] = "5";
+				view[cEnabled] = "1";
+				view[cSort] = "6";
+				view[cTransToken] = "ContentRating";
+				view[cPrettyName] = "";
+				view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
+									"<nextStep>series<;><;><;>" +
+									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+				view[cTaggedView] = "0";
+				view.Commit();
+
+				view = new DBView();
+				view[cIndex] = "6";
+				view[cEnabled] = "1";
+				view[cSort] = "7";
+				view[cTransToken] = "ViewTags";
+				view[cPrettyName] = "";
+				view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
+									"<nextStep>series<;><;><;>" +
+									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+				view[cTaggedView] = "0";
+				view.Commit();
+
                 view = new DBView();
-                view[cIndex] = "5";
+                view[cIndex] = "7";
                 view[cEnabled] = "1";
-                view[cSort] = "6";
+                view[cSort] = "8";
                 view[cTransToken] = "Latest";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
@@ -228,40 +254,14 @@ namespace WindowPlugins.GUITVSeries
                 view.Commit();
 
                 view = new DBView();
-                view[cIndex] = "6";
+                view[cIndex] = "8";
                 view[cEnabled] = "1";
-                view[cSort] = "7";
+                view[cSort] = "9";
                 view[cTransToken] = "RecentlyAdded";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
                 view[cTaggedView] = "0";
                 view.Commit();
-
-				view = new DBView();
-				view[cIndex] = "7";
-				view[cEnabled] = "1";
-				view[cSort] = "8";
-				view[cTransToken] = "ContentRating";
-				view[cPrettyName] = "";
-				view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
-                                    "<nextStep>series<;><;><;>" +
-                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                view[cTaggedView] = "0";
-				view.Commit();
-
-				view = new DBView();
-				view[cIndex] = "8";
-				view[cEnabled] = "1";
-				view[cSort] = "9";
-				view[cTransToken] = "ViewTags";
-				view[cPrettyName] = "";
-				view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
-									"<nextStep>series<;><;><;>" +
-									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                view[cTaggedView] = "0";
-				view.Commit();
 
             }
 
