@@ -104,6 +104,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ChangeLayout = "Change Layout";
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";
+		public static string NoPlaylistsFound = "No Playlists found in:";
         public static string SortByStrings = "the|a|an";
         public static string DeleteFromDisk = "Delete from Disk";       
         public static string DeleteFromDatabase = "Delete from Database";     
