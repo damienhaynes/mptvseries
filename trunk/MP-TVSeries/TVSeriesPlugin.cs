@@ -1401,7 +1401,7 @@ namespace WindowPlugins.GUITVSeries
 		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
 			if (control == this.viewMenuButton) {
 				showViewSwitchDialog();
-				viewMenuButton.Focus = false;
+				viewMenuButton.Focus = false;				
 				return;
 			}
 
@@ -1414,6 +1414,7 @@ namespace WindowPlugins.GUITVSeries
 			if (control == this.OptionsMenuButton) {
 				ShowOptionsMenu();
 				OptionsMenuButton.Focus = false;
+				m_Facade.Focus = true;
 				return;
 			}
 
@@ -1422,6 +1423,7 @@ namespace WindowPlugins.GUITVSeries
 					m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
 				}
 				ImportButton.Focus = false;
+				m_Facade.Focus = true;
 				return;
 			}
 
@@ -1486,8 +1488,6 @@ namespace WindowPlugins.GUITVSeries
 			}
 			base.OnClicked(controlId, control, actionType);
 		}
-
-
 		#endregion
 
 		void m_VideoHandler_RateRequestOccured(DBEpisode episode)
