@@ -4417,6 +4417,15 @@ namespace WindowPlugins.GUITVSeries
             if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
                 itemlist.RemoveAt(0);
 
+			if (itemlist.Count == 0) {
+				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+				dlgOK.SetHeading(983);
+				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
+				dlgOK.SetLine(2, _directory);
+				dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+				return;
+			}
+
             GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
                 return;
@@ -4427,16 +4436,11 @@ namespace WindowPlugins.GUITVSeries
             {
                 MediaPortal.Util.Utils.SetDefaultIcons(item);
                 dlg.Add(item);
-            }
+            }			
 
             dlg.DoModal(GetID);
-
-			if (dlg.SelectedLabel == -1) {				        
-				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-				dlgOK.SetHeading(983);
-				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
-				dlgOK.SetLine(2, _directory);
-				dlgOK.DoModal(GUIWindowManager.ActiveWindow);        
+						
+			if (dlg.SelectedLabel == -1) {				
 				return;
 			}
 
