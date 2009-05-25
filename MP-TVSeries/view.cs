@@ -498,13 +498,17 @@ namespace WindowPlugins.GUITVSeries
 
                     conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
                 }
-                else
+				else if (lType == typeof(DBOnlineEpisode))
                 {
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
                     fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                     //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                     conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                 }
+				else if (lType == typeof(DBEpisode)) {
+					fullSubCond.AddCustom(DBEpisode.Q(tableField), condition, condtype, true);
+					conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
+				}
             }
             else if (logicalViewStep.type.season == Type && lType != typeof(DBSeason))
             {
@@ -515,7 +519,7 @@ namespace WindowPlugins.GUITVSeries
                     fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype, true);
                     conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
                 }
-                else if (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode))
+                else if (lType == typeof(DBOnlineEpisode))
                 {
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
@@ -524,6 +528,12 @@ namespace WindowPlugins.GUITVSeries
                     // we rely on the join in dbseason for this (much, much faster)
                     conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                 }
+				else if (lType == typeof(DBEpisode)) {
+					fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBEpisode.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+				}
             }
             else if (logicalViewStep.type.episode == Type && (lType != typeof(DBEpisode) && lType != typeof(DBOnlineEpisode)))
             {
