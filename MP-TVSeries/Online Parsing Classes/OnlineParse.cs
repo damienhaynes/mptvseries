@@ -1622,7 +1622,7 @@ namespace WindowPlugins.GUITVSeries
                         string localstring;
                         double localcomp;
                         localstring = (localEp.ToString() + "." + localEp2.ToString());
-                        localcomp = Convert.ToDouble(localstring);
+                        localcomp = Convert.ToDouble(localstring, provider);
                         if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_episodenumber"]) && (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp))) {
                             /*check that the vital parts exist DVD_season and DVD_episodenumber, then check to see if we have a match either for the full
                              possible online format of X.Y via the use of localcomp and some string combinations, or through the default style of X.0 
