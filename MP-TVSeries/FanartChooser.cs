@@ -357,15 +357,20 @@ namespace WindowPlugins.GUITVSeries
                     // Work around for Filmstrip not allowing to programmatically select item
                     if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                     {
-                        m_bQuickSelect = true;
+                        /*m_bQuickSelect = true;
                         for (int i = 0; i < m_PreviousSelectedItem; i++)
                         {
                             OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
                         }
-                        m_bQuickSelect = false;
-                    }
+                        m_bQuickSelect = false;*/
+                        // Note: this is better way, but Scroll offset wont work after set
+                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, m_PreviousSelectedItem, 0, null);
+                        GUIGraphicsContext.SendMessage(msg);
+                        MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.", MPTVSeriesLog.LogLevel.Debug);
+                    }                   
                     m_PreviousSelectedItem = -1;
                 }
+
 
                 DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
                 if (selectedFanart != null)
