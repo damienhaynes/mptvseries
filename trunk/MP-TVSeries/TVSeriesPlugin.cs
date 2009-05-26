@@ -2419,20 +2419,20 @@ namespace WindowPlugins.GUITVSeries
                                 // now foreach series, queue up the banner loading in the threadpool
                                 ThreadPool.QueueUserWorkItem(delegate(object state) {
                                     string img = string.Empty;
-                                    
+                                    DBSeries stateSeries = state as DBSeries;
+
                                     // Load Series Banners if WideBanners otherwise load Posters for Filmstrip
                                     if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
-                                        img = ImageAllocator.GetSeriesPoster(series);
+                                        img = ImageAllocator.GetSeriesPoster(stateSeries);
                                     else
-                                        img = ImageAllocator.GetSeriesBanner(series);
+                                        img = ImageAllocator.GetSeriesBanner(stateSeries);
 
                                     ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, currIndex, img);
                                     Interlocked.Increment(ref done);
-                                });
+                                }, series);
                             }
                             else done++;
                         });
-
                     }
                     catch (Exception exs) {
                         MPTVSeriesLog.Write("Delayed ImgLoad Exception: " + exs.Message);
@@ -4417,15 +4417,6 @@ namespace WindowPlugins.GUITVSeries
             if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
                 itemlist.RemoveAt(0);
 
-			if (itemlist.Count == 0) {
-				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-				dlgOK.SetHeading(983);
-				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
-				dlgOK.SetLine(2, _directory);
-				dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-				return;
-			}
-
             GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
                 return;
@@ -4436,11 +4427,16 @@ namespace WindowPlugins.GUITVSeries
             {
                 MediaPortal.Util.Utils.SetDefaultIcons(item);
                 dlg.Add(item);
-            }			
+            }
 
             dlg.DoModal(GetID);
-						
-			if (dlg.SelectedLabel == -1) {				
+
+			if (dlg.SelectedLabel == -1) {				        
+				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+				dlgOK.SetHeading(983);
+				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
+				dlgOK.SetLine(2, _directory);
+				dlgOK.DoModal(GUIWindowManager.ActiveWindow);        
 				return;
 			}
 
