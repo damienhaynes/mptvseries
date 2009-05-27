@@ -173,6 +173,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoDownloadFanart = "AutoDownloadFanart";
         public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
+        public const String cAutoDownloadFanartSeriesNames = "AutoDownloadFanartSeriesNames";
 
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
@@ -488,6 +489,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cRandomFanartInterval) == null)
                     SetOptions(cRandomFanartInterval, 30000); //milliseconds
+
+                if (GetOptions(cAutoDownloadFanartSeriesNames) == null)
+                    SetOptions(cAutoDownloadFanartSeriesNames, 0);
 
             }
             catch (Exception ex)

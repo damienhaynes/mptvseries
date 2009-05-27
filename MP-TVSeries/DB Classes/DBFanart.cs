@@ -43,6 +43,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cColors = "Colors"; // online
         public const String cResolution = "BannerType2"; // online
         public const String cDisabled = "Disabled";
+        public const String cSeriesName = "SeriesName"; // online
 
         enum FanartResolution
         {
@@ -77,6 +78,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cThumbnailPath, new DBField(DBField.cTypeString));
             AddColumn(cColors, new DBField(DBField.cTypeString));
             AddColumn(cDisabled, new DBField(DBField.cTypeString));
+            AddColumn(cSeriesName, new DBField(DBField.cTypeString));
         }
 
         public static void ClearAll()
@@ -178,12 +180,15 @@ namespace WindowPlugins.GUITVSeries
     
             // Get Preferred Resolution
             int res = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
+            bool getSeriesNameFanart = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
             if (res == (int)FanartResolution.HD)
                 sqlQuery += " and " + cResolution + " = " + "\"1280x720\"";
             if (res == (int)FanartResolution.FULLHD)
                 sqlQuery += " and " + cResolution + " = " + "\"1920x1080\"";
-
+            if (!getSeriesNameFanart)
+                sqlQuery += " and " + cSeriesName + " != " + "\"true\"";
+            
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
 
             if (results.Rows.Count > 0)
@@ -216,6 +221,18 @@ namespace WindowPlugins.GUITVSeries
             return _FanartsToDownload;
           
         } List<DBFanart> _FanartsToDownload = new List<DBFanart>();
+
+        /// <summary>
+        /// Checks if a Series Fanart contains a Series Name
+        /// </summary>
+        public bool HasSeriesName {
+            get {
+                if (this[cSeriesName] = "true")
+                    return true;
+                else
+                    return false;
+            }            
+        }
 
         public bool Chosen
         {

@@ -223,6 +223,7 @@ namespace WindowPlugins.GUITVSeries
             chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
             cboFanartResolution.SelectedIndex = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
             spinMaxFanarts.Value = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
+            checkboxAutoDownloadFanartSeriesName.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);            
             
@@ -4130,6 +4131,10 @@ namespace WindowPlugins.GUITVSeries
 			else
 				DBOption.SetOptions(DBOption.cRatingDisplayStars, 10);
 		}
+
+        private void checkboxAutoDownloadFanartSeriesName_CheckedChanged(object sender, EventArgs e) {
+            DBOption.SetOptions(DBOption.cAutoDownloadFanartSeriesNames, checkboxAutoDownloadFanartSeriesName.Checked);
+        }
 
     }
     
