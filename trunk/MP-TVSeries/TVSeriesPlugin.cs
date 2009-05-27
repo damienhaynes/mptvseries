@@ -4410,43 +4410,56 @@ namespace WindowPlugins.GUITVSeries
 
         protected void OnShowSavedPlaylists(string _directory)
         {            
+            // Set TVSeries Playlist Extension
             VirtualDirectory _virtualDirectory = new VirtualDirectory();
             _virtualDirectory.AddExtension(".tvsplaylist");
 
+            // Get All Playlists found in Directory
             List<GUIListItem> itemlist = _virtualDirectory.GetDirectoryExt(_directory);
             if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
                 itemlist.RemoveAt(0);
 
+            // If no playlists found, show a Message to user and then exit
+            if (itemlist.Count == 0) {
+                GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                dlgOK.SetHeading(983);
+                dlgOK.SetLine(1, Translation.NoPlaylistsFound);
+                dlgOK.SetLine(2, _directory);
+                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                return;
+            }
+
+            // Create Playist Menu Dialog
             GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
                 return;
             dlg.Reset();
             dlg.SetHeading(983); // Saved Playlists
-
+            
+            // Add all playlists found to Menu for selection
             foreach (GUIListItem item in itemlist)
             {
                 MediaPortal.Util.Utils.SetDefaultIcons(item);
                 dlg.Add(item);
             }
 
+            // Show Plaulist Menu Dialog
             dlg.DoModal(GetID);
 
-			if (dlg.SelectedLabel == -1) {				        
-				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-				dlgOK.SetHeading(983);
-				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
-				dlgOK.SetLine(2, _directory);
-				dlgOK.DoModal(GUIWindowManager.ActiveWindow);        
-				return;
-			}
+            // Nothing was selected e.g. BACK
+			if (dlg.SelectedLabel == -1)
+				return;			
 
             GUIListItem selectItem = itemlist[dlg.SelectedLabel];
+            
+            // If Item selected was a Folder, re-curse to show contents
             if (selectItem.IsFolder)
             {
                 OnShowSavedPlaylists(selectItem.Path);
                 return;
             }
-
+            
+            // Load the Selected Playlist
             GUIWaitCursor.Show();
             LoadPlayList(selectItem.Path);
             GUIWaitCursor.Hide();
