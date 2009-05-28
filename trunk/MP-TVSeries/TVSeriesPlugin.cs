@@ -2413,23 +2413,24 @@ namespace WindowPlugins.GUITVSeries
                     int done = 0;                   // we need to know later when all threads are done
                     ThreadPool.SetMinThreads(8, 8); // seems to default to 2 (avail. cores?)
                     try {
-                        // we know which one was selected, lets be smart and try to first load those around it
-                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex) {
+                        // we know which one was selected, lets be smart and try to first load those around it                        
+                        Helper.ProximityForEach(seriesList, selectedIndex, delegate(DBSeries series, int currIndex) {                            
                             if (!bg.CancellationPending) {
                                 // now foreach series, queue up the banner loading in the threadpool
+                                KeyValuePair<int, DBSeries> keySeriesValue = new KeyValuePair<int, DBSeries>(currIndex, series);
                                 ThreadPool.QueueUserWorkItem(delegate(object state) {
                                     string img = string.Empty;
-                                    DBSeries stateSeries = state as DBSeries;
+                                    KeyValuePair<int, DBSeries> stateSeries = (KeyValuePair<int, DBSeries>)state;
 
                                     // Load Series Banners if WideBanners otherwise load Posters for Filmstrip
                                     if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
-                                        img = ImageAllocator.GetSeriesPoster(stateSeries);
+                                        img = ImageAllocator.GetSeriesPoster(stateSeries.Value);
                                     else
-                                        img = ImageAllocator.GetSeriesBanner(stateSeries);
+                                        img = ImageAllocator.GetSeriesBanner(stateSeries.Value);
 
-                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, currIndex, img);
+                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Key, img);
                                     Interlocked.Increment(ref done);
-                                }, series);
+                                }, keySeriesValue);
                             }
                             else done++;
                         });
