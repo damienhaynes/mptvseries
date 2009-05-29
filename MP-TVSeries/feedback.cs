@@ -75,8 +75,9 @@ namespace WindowPlugins.GUITVSeries.Feedback
 
     public class GetStringFromUserDescriptor
     {
-        public String m_sText = string.Empty;
-        public bool m_bShiftEnabled = false;
+		public String Text { get; set; }
+        public bool ShiftEnabled { get; set; }
+		public bool IsPassword { get; set; }
     }
 
     public enum DialogButtons
