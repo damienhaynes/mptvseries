@@ -3060,8 +3060,8 @@ namespace WindowPlugins.GUITVSeries
             string selectedItem = string.Empty;
             if (dlg.SelectedId == (int)eContextItems.viewAddToNewView) {
                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
-                Keyboard.m_bShiftEnabled = true;
-                Keyboard.m_sText = string.Empty;                
+				Keyboard.Text = string.Empty;
+                Keyboard.ShiftEnabled = true;                
                 bool viewExists = true;
 
                 while (viewExists) {
@@ -3497,8 +3497,8 @@ namespace WindowPlugins.GUITVSeries
 
                 while (pinInCorrect) {
                     GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
-                    Keyboard.m_sText = string.Empty;
-                    Keyboard.m_bShiftEnabled = false;
+					Keyboard.Text = string.Empty;
+					Keyboard.IsPassword = true;                    
                     string enteredPinCode = string.Empty;
                     string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
                     if (pinMasterCode.Length == 0) break;
@@ -4274,8 +4274,9 @@ namespace WindowPlugins.GUITVSeries
                     return ReturnCode.Cancel;
 
                 keyboard.Reset();
-                keyboard.Text = descriptor.m_sText;
-                keyboard._shiftTurnedOn = descriptor.m_bShiftEnabled;
+                keyboard.Text = descriptor.Text;
+                keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
+				keyboard._password = descriptor.IsPassword;
                 keyboard.DoModal(GUIWindowManager.ActiveWindow);
 
                 if (keyboard.IsConfirmed)

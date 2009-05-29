@@ -1448,10 +1448,10 @@ namespace WindowPlugins.GUITVSeries
 
                             // Show the Virtual Keyboard to manual enter in name to search                            
                             if (selectedSeries == null && !Settings.isConfig) {
-                                GetStringFromUserDescriptor GetStringDesc = new GetStringFromUserDescriptor();
-                                GetStringDesc.m_sText = nameToSearch;
+                                GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+								Keyboard.Text = nameToSearch;
 
-                                if (feedback.GetStringFromUser(GetStringDesc, out nameToSearch) == ReturnCode.OK) {
+								if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK) {
                                     // Search again using manually entered name
                                     bKeepTrying = false;
                                 } else {
