@@ -3415,6 +3415,7 @@ namespace WindowPlugins.GUITVSeries
                 selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
                 view_selectedName.Text = selectedView.prettyName;
                 checkCurViewEnabled.Checked = selectedView.m_Enabled;
+                checkBoxParentalControl.Checked = selectedView.ParentalControl;
                 //btnRemoveView.Enabled = selectedView.IsTaggedView;
 
                 foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.m_steps))
@@ -3507,17 +3508,17 @@ namespace WindowPlugins.GUITVSeries
                 {
                     selectedView.prettyName = view_selectedName.Text;
                     selectedView.m_Enabled = checkCurViewEnabled.Checked;
+                    selectedView.ParentalControl = checkBoxParentalControl.Checked;
                     selectedView.saveToDB();
                     LoadViews();
-                    for (int i = 0; i < availViews.Count; i++)
-                        if (availViews[i].m_uniqueID == selectedView.m_uniqueID)
-                        {
+                    for (int i = 0; i < availViews.Count; i++) {
+                        if (availViews[i].m_uniqueID == selectedView.m_uniqueID) {
                             pauseViewConfigSave = true;
                             _availViews.SelectedIndex = i;
                             pauseViewConfigSave = false;
                             break;
                         }
-
+                    }
                 }
             }
         }
@@ -4134,6 +4135,24 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkboxAutoDownloadFanartSeriesName_CheckedChanged(object sender, EventArgs e) {
             DBOption.SetOptions(DBOption.cAutoDownloadFanartSeriesNames, checkboxAutoDownloadFanartSeriesName.Checked);
+        }
+
+        private void buttonEditView_Click(object sender, EventArgs e) {
+
+        }
+
+        private void checkBoxParentalControl_CheckedChanged(object sender, EventArgs e) {
+            viewChanged();
+        }
+
+        private void buttonPinCode_Click(object sender, EventArgs e) {
+            PinCode pinCodeDlg = new PinCode();
+            pinCodeDlg.Pin = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+            DialogResult result = pinCodeDlg.ShowDialog();
+            
+            // Save Pin Code to Options Table
+            if  (result == DialogResult.OK)
+                DBOption.SetOptions(DBOption.cParentalControlPinCode, pinCodeDlg.Pin);
         }
 
     }

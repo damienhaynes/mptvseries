@@ -112,8 +112,8 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
-        public static string CycleSeasonBanner = "Cycle Season Banner";        
-        
+        public static string CycleSeasonBanner = "Cycle Season Banner";                
+
         // Views
         public static string Genres = "Genres";
         public static string All = "All";
@@ -130,6 +130,11 @@ namespace WindowPlugins.GUITVSeries
 		public static string RemoveViewTag = "Remove Series from View";
 		public static string NewViewTag = "Create New View";        
         public static string ViewTagExistsMessage = "The view \"{0}\" already exists";
+        public static string PinCode = "Pin Code";
+        public static string PinCodeIncorrectLine1 = "The entered pin code is incorrect";
+        public static string PinCodeIncorrectLine2 = "Press OK to try again";
+        public static string ParentalControlLocked = "Lock Views";
+        public static string ViewIsLocked  = "View Locked";
 
         // Fanart
         public static string FanArt = "Fanart";
@@ -298,10 +303,16 @@ namespace WindowPlugins.GUITVSeries
         public static string Get(string Field)
         {
             if (TranslatedStrings != null && TranslatedStrings.ContainsKey(Field)) return TranslatedStrings[Field];
-            else if(Field != null && Field.Length > 0)
-            {
-                return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));
-            } else return string.Empty;
+            else if(Field != null && Field.Length > 0) {
+                try {
+                    return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));
+                }
+                catch {
+                    MPTVSeriesLog.Write(string.Format("Unable to translate field: {0}", Field));
+                    return string.Empty; }
+            } 
+            else 
+                return string.Empty;
         }
 
         public static List<string> getSupportedLangs()

@@ -189,6 +189,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
         public const String cRandomFanartInterval = "RandomFanartInterval";
 
+        public const String cParentalControlPinCode = "ParentalControlPinCode";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -493,6 +495,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cAutoDownloadFanartSeriesNames) == null)
                     SetOptions(cAutoDownloadFanartSeriesNames, 0);
 
+                if (GetOptions(cParentalControlPinCode) == null)
+                    SetOptions(cParentalControlPinCode, string.Empty);
+
             }
             catch (Exception ex)
             {
@@ -557,7 +562,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-//                UpdateTable();
+                // UpdateTable();
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
                 if (optionsCache.ContainsKey(convertedProperty)) return optionsCache[convertedProperty];

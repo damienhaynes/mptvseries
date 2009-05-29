@@ -318,6 +318,7 @@ namespace WindowPlugins.GUITVSeries
 			actionLocalScan,
 			actionFullRefresh,
 			actionPlayRandom,
+            actionLockViews,
 			optionsOnlyShowLocal,
 			optionsPreventSpoilers,
 			optionsPreventSpoilerThumbnail,
@@ -403,6 +404,9 @@ namespace WindowPlugins.GUITVSeries
             m_VideoHandler = new VideoHandler();
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+
+            // Lock for Parental Control
+            logicalView.IsLocked = true;
 
             if (DBOption.GetOptions("doFolderWatch"))
             {
@@ -824,6 +828,12 @@ namespace WindowPlugins.GUITVSeries
 								pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionPlayRandom;
+
+                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode))) {
+                                    pItem = new GUIListItem(Translation.ParentalControlLocked);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionLockViews;
+                                }
 
 								dlg.DoModal(GUIWindowManager.ActiveWindow);
 								if (dlg.SelectedId != -1)
@@ -1271,9 +1281,15 @@ namespace WindowPlugins.GUITVSeries
 						playRandomEp();
 						break;
 					#endregion
-					#endregion
 
-				}
+                    #region Lock Views
+                    case (int)eContextItems.actionLockViews:
+                        logicalView.IsLocked = true;
+                        break;
+                    #endregion
+                    #endregion
+
+                }
 				#endregion
 			}
 			catch (Exception ex) {
@@ -1501,6 +1517,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
+                logicalView.IsLocked = true;
 
                 // event is only registered if watch folder option is ticked, so no need to check again here
                 // we have to reregister the folder watches
@@ -2858,9 +2875,14 @@ namespace WindowPlugins.GUITVSeries
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0 && !m_allViews[dlg.SelectedId].Equals(m_CurrLView))
             {
-                switchView(m_allViews[dlg.SelectedId]);
-                LoadFacade();
-                return true;
+                bool viewSwitched = false;
+                viewSwitched = switchView(m_allViews[dlg.SelectedId]);
+                if (viewSwitched) {
+                    LoadFacade();
+                    return true;
+                }
+                else 
+                    return false;
             }
             return false;
 		}
@@ -3037,12 +3059,13 @@ namespace WindowPlugins.GUITVSeries
             #region Add a New Tagged View
             string selectedItem = string.Empty;
             if (dlg.SelectedId == (int)eContextItems.viewAddToNewView) {
-                GetStringFromUserDescriptor GetStringDesc = new GetStringFromUserDescriptor();                                
-                GetStringDesc.m_sText = string.Empty;                
+                GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+                Keyboard.m_bShiftEnabled = true;
+                Keyboard.m_sText = string.Empty;                
                 bool viewExists = true;
 
                 while (viewExists) {
-                    if (this.GetStringFromUser(GetStringDesc, out selectedItem) == ReturnCode.OK) {
+                    if (this.GetStringFromUser(Keyboard, out selectedItem) == ReturnCode.OK) {
                         // Create View if it doesnt exist
                         viewExists = false;
                         foreach (DBView view in views) {
@@ -3457,9 +3480,49 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Error displaying view names....check your skin file");
             }
         }
-        void switchView(logicalView view)
+
+        private bool switchView(logicalView view)
         {
             if (view == null) view = m_allViews[0]; // view was removed or something
+
+            bool pinInCorrect = true;            
+            
+            // Check if View has Parental Control enabled
+            if (view.ParentalControl && logicalView.IsLocked) {
+                // Update Ugly Current View Property if not yet set
+                if (TVSeriesPlugin.getGUIProperty(guiProperty.CurrentView.ToString()).Length == 0) {
+                    setGUIProperty(guiProperty.CurrentView, Translation.ViewIsLocked);
+                    setGUIProperty(guiProperty.SimpleCurrentView, Translation.ViewIsLocked);
+                }
+
+                while (pinInCorrect) {
+                    GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+                    Keyboard.m_sText = string.Empty;
+                    Keyboard.m_bShiftEnabled = false;
+                    string enteredPinCode = string.Empty;
+                    string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+                    if (pinMasterCode.Length == 0) break;
+
+                    if (this.GetStringFromUser(Keyboard, out enteredPinCode) == ReturnCode.OK) {
+                        // Check if PinCode is correct
+                        if (enteredPinCode != pinMasterCode) {
+                            ShowPinCodeIncorrectMessage();
+                            pinInCorrect = true;
+                        }
+                        else {
+                            // Cease to prompt for PinCode for remainder of session
+                            logicalView.IsLocked = false;
+                            pinInCorrect = false;
+                        }
+                    }
+                    else {
+                        // Prompt to choose UnProtected View
+                        showViewSwitchDialog();
+                        return false;
+                    }
+                }
+            }
+            
             MPTVSeriesLog.Write("Switching view to " + view.Name);
             m_CurrLView = view;
 
@@ -3476,6 +3539,15 @@ namespace WindowPlugins.GUITVSeries
             setViewLabels();
 
             DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
+            return true;
+        }
+
+        private void ShowPinCodeIncorrectMessage() {
+            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+            dlgOK.SetHeading(Translation.PinCode);
+            dlgOK.SetLine(1, Translation.PinCodeIncorrectLine1);
+            dlgOK.SetLine(2, Translation.PinCodeIncorrectLine2);
+            dlgOK.DoModal(GUIWindowManager.ActiveWindow);
         }
 
         void setNewListLevelOfCurrView(int step)
@@ -4203,7 +4275,7 @@ namespace WindowPlugins.GUITVSeries
 
                 keyboard.Reset();
                 keyboard.Text = descriptor.m_sText;
-                keyboard._shiftTurnedOn = true;
+                keyboard._shiftTurnedOn = descriptor.m_bShiftEnabled;
                 keyboard.DoModal(GUIWindowManager.ActiveWindow);
 
                 if (keyboard.IsConfirmed)
