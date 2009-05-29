@@ -41,6 +41,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cPrettyName = "PrettyName";
         public const String cViewConfig = "viewConfig";
         public const String cTaggedView = "TaggedView";
+        public const String cParentalControl = "ParentalControl";
 
         public DBView()
             : base(cTableName)
@@ -67,6 +68,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cPrettyName, new DBField(DBField.cTypeString));
             AddColumn(cViewConfig, new DBField(DBField.cTypeString));
             AddColumn(cTaggedView, new DBField(DBField.cTypeInt));
+            AddColumn(cParentalControl, new DBField(DBField.cTypeInt));
         }
 
         public static void ClearAll()
@@ -143,6 +145,7 @@ namespace WindowPlugins.GUITVSeries
             view[cPrettyName] = name;
             view[cViewConfig] = config;
             view[cTaggedView] = tagview;
+            view[cParentalControl] = "0";
             view.Commit();
             return;
         }
@@ -165,6 +168,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -177,6 +181,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -189,6 +194,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -202,6 +208,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -215,6 +222,7 @@ namespace WindowPlugins.GUITVSeries
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
                                     "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
 				view = new DBView();
@@ -228,6 +236,7 @@ namespace WindowPlugins.GUITVSeries
 									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
 									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 				view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
 				view.Commit();
 
 				view = new DBView();
@@ -241,6 +250,7 @@ namespace WindowPlugins.GUITVSeries
 									"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
 									"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 				view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
 				view.Commit();
 
                 view = new DBView();
@@ -251,6 +261,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
@@ -261,8 +272,8 @@ namespace WindowPlugins.GUITVSeries
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
                 view[cTaggedView] = "0";
+                view[cParentalControl] = "0";
                 view.Commit();
-
             }
 
             int nCurrentDBVersion = cDBVersion;
@@ -309,6 +320,7 @@ namespace WindowPlugins.GUITVSeries
 											"<nextStep>series<;><;><;>" +
 											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
 											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                        view[cParentalControl] = "0";
 						view.Commit();
 						
 						// New view 'View Tags'
@@ -322,7 +334,7 @@ namespace WindowPlugins.GUITVSeries
 											"<nextStep>series<;><;><;>" +
 											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
 											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-
+                        view[cParentalControl] = "0";
 						view.Commit();
 						nUpgradeDBVersion++;
 						break;

@@ -33,6 +33,9 @@ namespace WindowPlugins.GUITVSeries
         string m_name = string.Empty;
         string m_prettyName = null;
         public static bool s_cachePrettyName = true;
+
+        public static bool IsLocked { get; set; }
+        
         //public bool isGroupType = false;
         public string groupedInfo(int step)
         {
@@ -53,6 +56,7 @@ namespace WindowPlugins.GUITVSeries
         public string m_uniqueID = string.Empty;
         public bool m_Enabled = true;
         public bool IsTaggedView { get; set; }
+        public bool ParentalControl { get; set; }        
 
         DBView m_toUpdateForConfig = null;
 
@@ -340,6 +344,7 @@ namespace WindowPlugins.GUITVSeries
             this.m_uniqueID = fromDB[DBView.cIndex];
             this.m_Enabled = fromDB[DBView.cEnabled];
             this.IsTaggedView = fromDB[DBView.cTaggedView];
+            this.ParentalControl = fromDB[DBView.cParentalControl];
 
             if (Settings.isConfig) m_toUpdateForConfig = fromDB;
 
@@ -376,6 +381,7 @@ namespace WindowPlugins.GUITVSeries
             m_toUpdateForConfig[DBView.cEnabled] = m_Enabled;
             m_toUpdateForConfig[DBView.cTransToken] = m_name;
             m_toUpdateForConfig[DBView.cPrettyName] = m_prettyName != Translation.Get(m_name) ? prettyName : string.Empty;
+            m_toUpdateForConfig[DBView.cParentalControl] = ParentalControl;
             m_toUpdateForConfig.Commit();
         }
     }

@@ -173,4 +173,9 @@
 	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Seconds</string>
 	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Seconds</string>
 	<string Field="NoPlaylistsFound" Original="No Playlists found in:">No Playlists found in:</string>
+	<string Field="PinCode" Original="Pin Code">Pin Code</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">The entered pin code is incorrect</string>
+	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Press OK to try again</string>
+	<string Field="ParentalControlLocked" Original="Lock Views">Lock Views</string>
+	<string Field="ViewIsLocked" Original="View Locked">View Locked</string>
 </strings>
