@@ -23,84 +23,86 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.okButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pincodeTextBox = new System.Windows.Forms.TextBox();
-            this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Location = new System.Drawing.Point(15, 55);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(179, 2);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // cancelButton
-            // 
-            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(119, 64);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 10;
-            this.cancelButton.Text = "&Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
-            // 
-            // okButton
-            // 
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(38, 64);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 9;
-            this.okButton.Text = "&OK";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "&Enter a Pin Code:";
-            // 
-            // pincodeTextBox
-            // 
-            this.pincodeTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.pincodeTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.pincodeTextBox.Location = new System.Drawing.Point(15, 28);
-            this.pincodeTextBox.Name = "pincodeTextBox";
-            this.pincodeTextBox.Size = new System.Drawing.Size(179, 20);
-            this.pincodeTextBox.TabIndex = 7;
-            this.pincodeTextBox.UseSystemPasswordChar = true;
-            // 
-            // PinCode
-            // 
-            this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(205, 95);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.okButton);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pincodeTextBox);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "PinCode";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Pin Code";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.cancelButton = new System.Windows.Forms.Button();
+			this.okButton = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this.pincodeTextBox = new System.Windows.Forms.TextBox();
+			this.SuspendLayout();
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Location = new System.Drawing.Point(15, 33);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(179, 2);
+			this.groupBox1.TabIndex = 8;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "groupBox1";
+			// 
+			// cancelButton
+			// 
+			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancelButton.Location = new System.Drawing.Point(119, 42);
+			this.cancelButton.Name = "cancelButton";
+			this.cancelButton.Size = new System.Drawing.Size(75, 23);
+			this.cancelButton.TabIndex = 10;
+			this.cancelButton.Text = "&Cancel";
+			this.cancelButton.UseVisualStyleBackColor = true;
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+			// 
+			// okButton
+			// 
+			this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.okButton.Location = new System.Drawing.Point(38, 42);
+			this.okButton.Name = "okButton";
+			this.okButton.Size = new System.Drawing.Size(75, 23);
+			this.okButton.TabIndex = 9;
+			this.okButton.Text = "&OK";
+			this.okButton.UseVisualStyleBackColor = true;
+			this.okButton.Click += new System.EventHandler(this.okButton_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(12, 9);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(114, 13);
+			this.label1.TabIndex = 6;
+			this.label1.Text = "&Enter 4 Digit Pin Code:";
+			// 
+			// pincodeTextBox
+			// 
+			this.pincodeTextBox.Location = new System.Drawing.Point(141, 6);
+			this.pincodeTextBox.MaxLength = 4;
+			this.pincodeTextBox.Name = "pincodeTextBox";
+			this.pincodeTextBox.Size = new System.Drawing.Size(55, 20);
+			this.pincodeTextBox.TabIndex = 7;
+			this.pincodeTextBox.UseSystemPasswordChar = true;
+			this.pincodeTextBox.TextChanged += new System.EventHandler(this.pincodeTextBox_TextChanged);
+			this.pincodeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.pincodeTextBox_KeyPress);
+			// 
+			// PinCode
+			// 
+			this.AcceptButton = this.okButton;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.cancelButton;
+			this.ClientSize = new System.Drawing.Size(205, 73);
+			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.cancelButton);
+			this.Controls.Add(this.okButton);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.pincodeTextBox);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "PinCode";
+			this.ShowIcon = false;
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Text = "Pin Code";
+			this.Load += new System.EventHandler(this.PinCode_Load);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 

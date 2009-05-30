@@ -135,6 +135,9 @@ namespace WindowPlugins.GUITVSeries
         public static string PinCodeIncorrectLine2 = "Press OK to try again";
         public static string ParentalControlLocked = "Lock Views";
         public static string ViewIsLocked  = "View Locked";
+		public static string PinCodeDlgLabel1 = "The view \"{0}\" is locked";
+		public static string PinCodeDlgLabel2 = "Enter in 4 Digit Pin Code to proceed:";
+		public static string PinCodeMessageIncorrect = "Pin Incorrect";
 
         // Fanart
         public static string FanArt = "Fanart";
