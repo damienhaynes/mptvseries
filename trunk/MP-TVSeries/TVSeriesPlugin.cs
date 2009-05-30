@@ -3493,34 +3493,58 @@ namespace WindowPlugins.GUITVSeries
                 if (TVSeriesPlugin.getGUIProperty(guiProperty.CurrentView.ToString()).Length == 0) {
                     setGUIProperty(guiProperty.CurrentView, Translation.ViewIsLocked);
                     setGUIProperty(guiProperty.SimpleCurrentView, Translation.ViewIsLocked);
-                }
+				}
 
-                while (pinInCorrect) {
-                    GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
-					Keyboard.Text = string.Empty;
-					Keyboard.IsPassword = true;                    
-                    string enteredPinCode = string.Empty;
-                    string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
-                    if (pinMasterCode.Length == 0) break;
+				// Check if Graphical PinCode dialog exists
+				if (System.IO.File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.PinCodeDialog.xml")) {
+					GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
+					pinCodeDlg.Reset();
 
-                    if (this.GetStringFromUser(Keyboard, out enteredPinCode) == ReturnCode.OK) {
-                        // Check if PinCode is correct
-                        if (enteredPinCode != pinMasterCode) {
-                            ShowPinCodeIncorrectMessage();
-                            pinInCorrect = true;
-                        }
-                        else {
-                            // Cease to prompt for PinCode for remainder of session
-                            logicalView.IsLocked = false;
-                            pinInCorrect = false;
-                        }
-                    }
-                    else {
-                        // Prompt to choose UnProtected View
-                        showViewSwitchDialog();
-                        return false;
-                    }
-                }
+					// Initialize Dialog
+					pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+					pinCodeDlg.EnteredPinCode = string.Empty;
+					pinCodeDlg.SetHeading(Translation.PinCode);
+					pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, view.prettyName));
+					pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
+					pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
+					pinCodeDlg.DoModal(pinCodeDlg.GetID);
+					if (!pinCodeDlg.IsCorrect) {
+						// Prompt to choose UnProtected View
+						showViewSwitchDialog();
+						return false;
+					}
+					else
+						logicalView.IsLocked = false;
+				}
+				else {
+					// Use Virtual Keyboard if skin doesnt exist
+					while (pinInCorrect) {
+						GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+						Keyboard.Text = string.Empty;
+						Keyboard.IsPassword = true;
+						string enteredPinCode = string.Empty;
+						string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+						if (pinMasterCode.Length == 0) break;
+
+						if (this.GetStringFromUser(Keyboard, out enteredPinCode) == ReturnCode.OK) {
+							// Check if PinCode is correct
+							if (enteredPinCode != pinMasterCode) {
+								ShowPinCodeIncorrectMessage();
+								pinInCorrect = true;
+							}
+							else {
+								// Cease to prompt for PinCode for remainder of session
+								logicalView.IsLocked = false;
+								pinInCorrect = false;
+							}
+						}
+						else {
+							// Prompt to choose UnProtected View
+							showViewSwitchDialog();
+							return false;
+						}
+					}
+				}
             }
             
             MPTVSeriesLog.Write("Switching view to " + view.Name);

@@ -4148,7 +4148,7 @@ namespace WindowPlugins.GUITVSeries
         private void buttonPinCode_Click(object sender, EventArgs e) {
             PinCode pinCodeDlg = new PinCode();
             pinCodeDlg.Pin = DBOption.GetOptions(DBOption.cParentalControlPinCode);
-            DialogResult result = pinCodeDlg.ShowDialog();
+            DialogResult result = pinCodeDlg.ShowDialog(this);
             
             // Save Pin Code to Options Table
             if  (result == DialogResult.OK)

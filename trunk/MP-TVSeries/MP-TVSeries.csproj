@@ -128,7 +128,7 @@
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>	
     <Compile Include="cache.cs" />
     <Compile Include="Configuration\PinCode.cs">
       <SubType>Form</SubType>
@@ -301,6 +301,7 @@
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
     <Compile Include="GUIUserRating.cs" />
+	<Compile Include="GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
