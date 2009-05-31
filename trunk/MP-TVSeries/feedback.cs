@@ -75,9 +75,31 @@ namespace WindowPlugins.GUITVSeries.Feedback
 
     public class GetStringFromUserDescriptor
     {
+		public enum KeyboardStyles {
+			KEYBOARD,
+			SMS
+		}
+		
+		/// <summary>
+		/// Text to display when invoking the keyboard
+		/// </summary>
 		public String Text { get; set; }
+
+		/// <summary>
+		/// Set to TRUE to enable the Shift button 
+		/// </summary>
         public bool ShiftEnabled { get; set; }
+
+		/// <summary>
+		/// Set to TRUE to Mask the Input		
+		/// </summary>
 		public bool IsPassword { get; set; }
+
+		/// <summary>
+		/// Set Keyboard style to NORMAL or SMS Style
+		/// </summary>
+		public KeyboardStyles KeyboardStyle { get; set; }
+			
     }
 
     public enum DialogButtons

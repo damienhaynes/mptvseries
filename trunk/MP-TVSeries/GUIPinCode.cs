@@ -169,7 +169,7 @@ namespace WindowPlugins.GUITVSeries {
 			// Show Feedback to user that PinCode is incorrect
 			// otherwise nothing more to do, exit
 			if (EnteredPinCode != MasterCode) {
-				labelFeedback.Label = Message;
+				if (labelFeedback != null) labelFeedback.Label = Message;
 			} else {
 				IsCorrect = true;
 				PageDestroy();
