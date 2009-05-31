@@ -191,6 +191,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cParentalControlPinCode = "ParentalControlPinCode";
 
+		public const String cKeyboardStyle = "KeyboardStyle";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -497,6 +499,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cParentalControlPinCode) == null)
                     SetOptions(cParentalControlPinCode, string.Empty);
+
+				if (GetOptions(cKeyboardStyle) == null)
+					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
 
             }
             catch (Exception ex)

@@ -1449,6 +1449,7 @@ namespace WindowPlugins.GUITVSeries
                             // Show the Virtual Keyboard to manual enter in name to search                            
                             if (selectedSeries == null && !Settings.isConfig) {
                                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+								Keyboard.KeyboardStyle = (GetStringFromUserDescriptor.KeyboardStyles)(int)DBOption.GetOptions(DBOption.cKeyboardStyle);
 								Keyboard.Text = nameToSearch;
 
 								if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK) {

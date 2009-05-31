@@ -3061,7 +3061,8 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId == (int)eContextItems.viewAddToNewView) {
                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
 				Keyboard.Text = string.Empty;
-                Keyboard.ShiftEnabled = true;                
+                Keyboard.ShiftEnabled = true;
+				Keyboard.KeyboardStyle = (GetStringFromUserDescriptor.KeyboardStyles)(int)DBOption.GetOptions(DBOption.cKeyboardStyle);
                 bool viewExists = true;
 
                 while (viewExists) {
@@ -3522,13 +3523,22 @@ namespace WindowPlugins.GUITVSeries
 						GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
 						Keyboard.Text = string.Empty;
 						Keyboard.IsPassword = true;
+						// Force Keyboard Style to SMS Style as we dont want people to see what code is entered
+						Keyboard.KeyboardStyle = GetStringFromUserDescriptor.KeyboardStyles.SMS;
 						string enteredPinCode = string.Empty;
 						string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
 						if (pinMasterCode.Length == 0) break;
 
 						if (this.GetStringFromUser(Keyboard, out enteredPinCode) == ReturnCode.OK) {
+							// Convert SMS Input to Numbers							
+							string smsCode = string.Empty;
+							if (enteredPinCode.Length == 4) {								
+								for (int i = 0; i < 4; i++) {
+									smsCode += Helper.ConvertSMSInputToPinCode(enteredPinCode[i].ToString());
+								}
+							}
 							// Check if PinCode is correct
-							if (enteredPinCode != pinMasterCode) {
+							if (smsCode != pinMasterCode) {
 								ShowPinCodeIncorrectMessage();
 								pinInCorrect = true;
 							}
@@ -3564,7 +3574,7 @@ namespace WindowPlugins.GUITVSeries
 
             DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
             return true;
-        }
+        }		
 
         private void ShowPinCodeIncorrectMessage() {
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
@@ -4293,14 +4303,20 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 m_sUserInput = String.Empty;
-                VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_VIRTUAL_KEYBOARD);
+				VirtualKeyboard keyboard;
+				if (descriptor.KeyboardStyle == GetStringFromUserDescriptor.KeyboardStyles.SMS) {
+					keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_SMS_KEYBOARD);
+				}
+				else {
+					keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_KEYBOARD);
+				}
                 if (null == keyboard)
                     return ReturnCode.Cancel;
 
                 keyboard.Reset();
                 keyboard.Text = descriptor.Text;
                 keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
-				keyboard._password = descriptor.IsPassword;
+				keyboard.Password = descriptor.IsPassword;				
                 keyboard.DoModal(GUIWindowManager.ActiveWindow);
 
                 if (keyboard.IsConfirmed)
