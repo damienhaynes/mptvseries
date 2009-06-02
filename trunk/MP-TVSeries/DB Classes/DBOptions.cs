@@ -177,8 +177,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
-
-        //public const String cDateFormatString = "DateFormatString";
+       
         public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
 
 		public const String cDefaultRating = "DefaultRating";
@@ -509,6 +508,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
             }
         }
+
         private static void UpdateTable()
         {
             try
