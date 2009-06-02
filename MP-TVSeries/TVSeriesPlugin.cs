@@ -408,17 +408,17 @@ namespace WindowPlugins.GUITVSeries
             // Lock for Parental Control
             logicalView.IsLocked = true;
 
+			System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
+			Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+
             if (DBOption.GetOptions("doFolderWatch"))
             {
-                System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
-
                 setUpFolderWatches();
 
                 // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
                 if (DBOption.GetOptions("ScanOnStartup"))
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-                    Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));                    
                 }
             }
             else
@@ -479,9 +479,10 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
 		}
 
-		protected override void OnPageLoad() {
-			if (m_Facade == null) // wrong skin file
+		protected override void OnPageLoad() {			
+			if (m_Facade == null) 
             {
+				// Most likely the skin does not exist
 				GUIDialogOK dlg = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
 				dlg.Reset();
 				dlg.SetHeading(Translation.wrongSkin);
@@ -503,25 +504,44 @@ namespace WindowPlugins.GUITVSeries
 			clearGUIProperty(guiProperty.NextView);
 			clearGUIProperty(guiProperty.LastView);
 
-			if (m_CurrLView == null) {
+			bool viewSwitched = false;
+
+            // Initialize View, also check if current view is locked after exiting and re-entering plugin
+			if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked)) {
 				localLogos.appendEpImage = m_Episode_Image == null ? true : false;
-				// get views
-				m_allViews = logicalView.getAll(false); // hardcoded until configuration is set up!
+				// Get available Views
+				m_allViews = logicalView.getAll(false);
 				if (m_allViews.Count > 0) {
-					try { switchView((string)DBOption.GetOptions("lastView")); }
-					catch (Exception) { }
+					try {
+						viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+					}
+					catch {
+						viewSwitched = false;
+						MPTVSeriesLog.Write("Error when switching view");
+					}
 				}
-				else MPTVSeriesLog.Write("Error, cannot display items because: No Views have been found!");
+				else {
+					viewSwitched = false;
+					MPTVSeriesLog.Write("Error, cannot display items because no Views have been found!");
+				}
 			}
-			else
+			else {
+				viewSwitched = true;
 				setViewLabels();
+			}
+
+			// If unable to load view, exit
+			if (!viewSwitched) {
+				GUIWindowManager.ShowPreviousWindow();
+				return;
+			}
 
 			backdrop.GUIImageOne = FanartBackground;
 			backdrop.GUIImageTwo = FanartBackground2;
 			backdrop.LoadingImage = loadingImage;
-
+						
 			LoadFacade();
-			m_Facade.Focus = true;
+			m_Facade.Focus = true;			
 
 			// Update Button Labels with translations
 			if (viewMenuButton != null)
@@ -626,14 +646,14 @@ namespace WindowPlugins.GUITVSeries
 							pItem.ItemId = (int)eContextItems.toggleWatched;
 
 							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
-								pItem = new GUIListItem(Translation.RateEpisode);
+								pItem = new GUIListItem(Translation.RateEpisode + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;
 							}
 						}
 						else if (this.listLevel != Listlevel.Group) {
 							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
-								pItem = new GUIListItem(Translation.RateSeries);
+                                pItem = new GUIListItem(Translation.RateSeries + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;
 							}
@@ -804,7 +824,7 @@ namespace WindowPlugins.GUITVSeries
 									pItem.ItemId = (int)eContextItems.actionHide;
 
 									if (DBOption.GetOptions(DBOption.cShowDeleteMenu)) {
-										pItem = new GUIListItem(Translation.Delete);
+										pItem = new GUIListItem(Translation.Delete + " ...");
 										dlg.Add(pItem);
 										pItem.ItemId = (int)eContextItems.actionDelete;
 									}
@@ -1517,11 +1537,29 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
+                
+                // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
 
-                // event is only registered if watch folder option is ticked, so no need to check again here
-                // we have to reregister the folder watches
-                setUpFolderWatches();
+                // Prompt for PinCode if last view before standby had Parental Controls enabled
+				// If the window is not active, we handle on page load
+				if (GUIWindowManager.ActiveWindow == GetID) {
+					if (m_CurrLView != null) {
+						bool viewSwitched = false;
+						if (m_CurrLView.ParentalControl) {							
+							viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+							// Exit if no view changed, otherwise reload the facade
+							if (!viewSwitched)
+								GUIWindowManager.ShowPreviousWindow();
+							else
+								LoadFacade();
+						}
+					}
+				}
+
+				if (DBOption.GetOptions("doFolderWatch")) {
+					setUpFolderWatches();
+				}
 
                 // lets do a full folder scan since we might have network shares which could have been updated
                 if (DBOption.GetOptions("ScanOnStartup"))
@@ -3440,16 +3478,22 @@ namespace WindowPlugins.GUITVSeries
 
 		List<string> sviews = new List<string>();
 
-        void switchView(int offset) //else previous
+        private void switchView(int offset) 
         {
+			// Switch to previous view
             switchView(Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
         }
 
-        void switchView(string viewName)
+		private bool switchView(string viewName)
         {
-            if (Helper.String.IsNullOrEmpty(viewName)) viewName = Translation.All;
-            switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
+			// If view does not exist, default to 'ALL' internal view
+			// If 'ALL' view does not exist use first view
+            if (Helper.String.IsNullOrEmpty(viewName))
+				viewName = Translation.All;
+
+           return switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
         }
+
         void setCurPositionLabel()
         {
             string prettyCurrPosition = m_CurrLView.prettyName;
@@ -3459,6 +3503,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.CurrentView, prettyCurrPosition);
             setGUIProperty(guiProperty.SimpleCurrentView, m_CurrLView.prettyName);
         }
+
         void setViewLabels()
         {
             try
@@ -3484,38 +3529,72 @@ namespace WindowPlugins.GUITVSeries
 
         private bool switchView(logicalView view)
         {
-            if (view == null) view = m_allViews[0]; // view was removed or something
-
-            bool pinInCorrect = true;            
+            // Handle if view has been removed
+            if (view == null) view = m_allViews[0]; 
             
-            // Check if View has Parental Control enabled
-            if (view.ParentalControl && logicalView.IsLocked) {
+			// Check if View has Parental Control enabled
+			if (!CheckParentalControls(view)) {
+				// Prompt to choose UnProtected View
+				return showViewSwitchDialog();				
+			}
+			
+            MPTVSeriesLog.Write("Switching view to " + view.Name);
+            m_CurrLView = view;
+
+            if (fanartSet) DisableFanart();
+
+            m_CurrViewStep = 0; // we always start out at step 0
+            m_stepSelection = null;
+            m_stepSelections = new List<string[]>();
+            m_stepSelections.Add(new string[] { null });
+            setNewListLevelOfCurrView(0);
+
+            // set the skin labels
+            m_stepSelectionPretty.Clear();
+            setViewLabels();
+
+            DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
+            return true;
+        }
+
+		private bool CheckParentalControls(logicalView view) {
+			bool pinInCorrect = true;
+
+			if (view.ParentalControl && logicalView.IsLocked) {
                 // Update Ugly Current View Property if not yet set
                 if (TVSeriesPlugin.getGUIProperty(guiProperty.CurrentView.ToString()).Length == 0) {
                     setGUIProperty(guiProperty.CurrentView, Translation.ViewIsLocked);
                     setGUIProperty(guiProperty.SimpleCurrentView, Translation.ViewIsLocked);
 				}
 
+                MPTVSeriesLog.Write(string.Format("View: {0} is locked, prompting for PinCode", view.prettyName));
+
 				// Check if Graphical PinCode dialog exists
 				if (System.IO.File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.PinCodeDialog.xml")) {
-					GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
-					pinCodeDlg.Reset();
+					try {
+						GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
+						pinCodeDlg.Reset();
 
-					// Initialize Dialog
-					pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
-					pinCodeDlg.EnteredPinCode = string.Empty;
-					pinCodeDlg.SetHeading(Translation.PinCode);
-					pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, view.prettyName));
-					pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
-					pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
-					pinCodeDlg.DoModal(pinCodeDlg.GetID);
-					if (!pinCodeDlg.IsCorrect) {
-						// Prompt to choose UnProtected View
-						showViewSwitchDialog();
+						// Initialize Dialog
+						pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+						pinCodeDlg.EnteredPinCode = string.Empty;
+						pinCodeDlg.SetHeading(Translation.PinCode);
+						pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, view.prettyName));
+						pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
+						pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
+						pinCodeDlg.DoModal(pinCodeDlg.GetID);
+						if (!pinCodeDlg.IsCorrect) {
+							// Prompt to choose UnProtected View
+                            MPTVSeriesLog.Write("PinCode entered was incorrect, showing Views Menu");							
+							return false;
+						}
+						else
+							logicalView.IsLocked = false;
+					}
+					catch (Exception ex) {
+						MPTVSeriesLog.Write(string.Format("An Error occurred in the PinCode Dialog: {0}",ex.Message));
 						return false;
 					}
-					else
-						logicalView.IsLocked = false;
 				}
 				else {
 					// Use Virtual Keyboard if skin doesnt exist
@@ -3548,33 +3627,14 @@ namespace WindowPlugins.GUITVSeries
 								pinInCorrect = false;
 							}
 						}
-						else {
-							// Prompt to choose UnProtected View
-							showViewSwitchDialog();
+						else {							
 							return false;
 						}
 					}
 				}
             }
-            
-            MPTVSeriesLog.Write("Switching view to " + view.Name);
-            m_CurrLView = view;
-
-            if (fanartSet) DisableFanart();
-
-            m_CurrViewStep = 0; // we always start out at step 0
-            m_stepSelection = null;
-            m_stepSelections = new List<string[]>();
-            m_stepSelections.Add(new string[] { null });
-            setNewListLevelOfCurrView(0);
-
-            // set the skin labels
-            m_stepSelectionPretty.Clear();
-            setViewLabels();
-
-            DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
-            return true;
-        }		
+			return true;
+		}
 
         private void ShowPinCodeIncorrectMessage() {
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
