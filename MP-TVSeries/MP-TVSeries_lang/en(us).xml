@@ -181,4 +181,14 @@
 	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">The view "{0}" is locked</string>
 	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Enter in 4 Digit Pin Code to proceed:</string>
 	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin Incorrect</string>
+	<!-- View Templates -->
+	<string Field="ViewContinuing" Original="Continuing Series">Continuing Series</string>
+	<string Field="ViewEnded" Original="Ended Series">Ended Series</string>
+	<string Field="ViewHighDefinition" Original="High Definition">High Definition</string>
+	<string Field="ViewStandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="ViewTop10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="ViewTop10User" Original="Top 10 (User)">Top 10 (User)</string>
+	<string Field="ViewSubtitles" Original="Subtitles">Subtitles</string>
+	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
+	
 </strings>

@@ -3582,7 +3582,7 @@ namespace WindowPlugins.GUITVSeries
 						pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, view.prettyName));
 						pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
 						pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
-						pinCodeDlg.DoModal(pinCodeDlg.GetID);
+						pinCodeDlg.DoModal(pinCodeDlg.GetID); //should this be (GUIWindowManager.ActiveWindow)?
 						if (!pinCodeDlg.IsCorrect) {
 							// Prompt to choose UnProtected View
                             MPTVSeriesLog.Write("PinCode entered was incorrect, showing Views Menu");							
