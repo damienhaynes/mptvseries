@@ -138,6 +138,14 @@ namespace WindowPlugins.GUITVSeries
 		public static string PinCodeDlgLabel1 = "The view \"{0}\" is locked";
 		public static string PinCodeDlgLabel2 = "Enter in 4 Digit Pin Code to proceed:";
 		public static string PinCodeMessageIncorrect = "Pin Incorrect";
+		public static string ViewContinuing = "Continuing Series";
+		public static string ViewEnded = "Ended Series";
+		public static string ViewTop10User = "Top 10 (User)";
+		public static string ViewTop10Online = "Top 10 (Online)";		
+		public static string ViewHighDefinition = "High Definition";
+		public static string ViewStandardDefinition = "Standard Defintion";
+		public static string ViewSubtitles = "Subtitles";
+		public static string ViewMultiAudio = "Multiple Audio Tracks";
 
         // Fanart
         public static string FanArt = "Fanart";

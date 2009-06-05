@@ -401,8 +401,6 @@ namespace WindowPlugins.GUITVSeries
             textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
             textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
 
-
-
             LoadTorrentSearches();
 
             lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
@@ -423,13 +421,17 @@ namespace WindowPlugins.GUITVSeries
             }
             
             LoadViews();
+			// Select First Item in list
+			if (_availViews.Items.Count > 0)
+				_availViews.SelectedIndex = 0;
 
             txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
 
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
-            LoadNewsSearches();
+            
+			LoadNewsSearches();
         }
 
         private void LoadViews()
@@ -439,9 +441,6 @@ namespace WindowPlugins.GUITVSeries
             _availViews.Items.Clear();
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
-
-			if (availViews.Count > 0)
-				_availViews.SelectedIndex = 0;
 
             if (DBOption.GetOptions(DBOption.cOnlineFavourites))
                 chkOnlineFavourites.Checked = true;
@@ -3499,7 +3498,7 @@ namespace WindowPlugins.GUITVSeries
 
         bool pauseViewConfigSave = false;
 
-        void viewChanged()
+        private void viewChanged()
         {
             if (!pauseViewConfigSave)
             {
@@ -4079,13 +4078,18 @@ namespace WindowPlugins.GUITVSeries
                     newView[DBView.cPrettyName] = view[DBView.cPrettyName];
                     newView[DBView.cViewConfig] = view[DBView.cViewConfig];
                     newView[DBView.cTaggedView] = view[DBView.cTaggedView];
+					newView[DBView.cParentalControl] = view[DBView.cParentalControl];
                     newView.Commit();
                     index++;
                 }
             }
             
             // Reload List and available Views
-            LoadViews();            
+            LoadViews();
+            
+			// Select First Item in list
+			if (_availViews.Items.Count > 0)
+				_availViews.SelectedIndex = 0;
         }
 
         private void btnAddView_Click(object sender, EventArgs e) {
@@ -4153,6 +4157,24 @@ namespace WindowPlugins.GUITVSeries
             // Save Pin Code to Options Table
             if  (result == DialogResult.OK)
                 DBOption.SetOptions(DBOption.cParentalControlPinCode, pinCodeDlg.Pin);
+        }
+
+        private void buttonViewTemplates_Click(object sender, EventArgs e) {
+            ViewTemplates dialog = new ViewTemplates();
+            DialogResult result = dialog.ShowDialog(this);
+
+            if (result == DialogResult.OK) {
+                int index = logicalView.getAll(true).Count;
+
+                string name = dialog.SelectedItem.name;
+                string config = dialog.SelectedItem.configuration;
+
+                // Add Template to Views
+                DBView.AddView(index, name, config, false);
+
+                // Reload List and available Views
+                LoadViews();
+            }
         }
 
     }

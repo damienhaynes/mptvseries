@@ -30,7 +30,7 @@ namespace WindowPlugins.GUITVSeries {
 		public bool IsCorrect { get; set; }
 
 		/// <summary>
-		/// Message reported to use when Pin is incorrect
+		/// Message reported to user when Pin is incorrect
 		/// </summary>
 		public string Message { get; set; }
 
