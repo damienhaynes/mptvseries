@@ -72,7 +72,21 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 			template.name = Translation.ViewTop10User;
             template.description = "Filters your personal Top 10 highest rated series, in descending order.";
 			template.configuration = @"series<;><Series.myRating>;!=;<;><Series.myRating>;desc<;>10<nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-            templates.Add(template);            
+            templates.Add(template);
+
+			// Top 25 (Online)
+			template = new ViewTemplate();
+			template.name = Translation.ViewTop25Online;
+			template.description = "Filters theTVDB Top 25 highest ratings series, in descending order.";
+			template.configuration = @"series<;><Series.Rating>;!=;<;><Series.Rating>;desc<;>25<nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+			templates.Add(template);
+
+			// Top 25 (User)
+			template = new ViewTemplate();
+			template.name = Translation.ViewTop25User;
+			template.description = "Filters your personal Top 25 highest rated series, in descending order.";
+			template.configuration = @"series<;><Series.myRating>;!=;<;><Series.myRating>;desc<;>25<nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+			templates.Add(template); 
 
             // Subtitles Episodes
             template = new ViewTemplate();

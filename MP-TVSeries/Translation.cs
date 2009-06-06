@@ -141,7 +141,9 @@ namespace WindowPlugins.GUITVSeries
 		public static string ViewContinuing = "Continuing Series";
 		public static string ViewEnded = "Ended Series";
 		public static string ViewTop10User = "Top 10 (User)";
-		public static string ViewTop10Online = "Top 10 (Online)";		
+		public static string ViewTop10Online = "Top 10 (Online)";
+		public static string ViewTop25User = "Top 25 (User)";
+		public static string ViewTop25Online = "Top 25 (Online)";
 		public static string ViewHighDefinition = "High Definition";
 		public static string ViewStandardDefinition = "Standard Defintion";
 		public static string ViewSubtitles = "Subtitles";
