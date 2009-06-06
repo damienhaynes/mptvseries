@@ -188,6 +188,8 @@
 	<string Field="ViewStandardDefinition" Original="Standard Defintion">Standard Defintion</string>
 	<string Field="ViewTop10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
 	<string Field="ViewTop10User" Original="Top 10 (User)">Top 10 (User)</string>
+	<string Field="ViewTop25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="ViewTop25User" Original="Top 25 (User)">Top 25(User)</string>
 	<string Field="ViewSubtitles" Original="Subtitles">Subtitles</string>
 	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
 	
