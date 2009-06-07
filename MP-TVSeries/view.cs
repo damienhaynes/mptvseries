@@ -358,9 +358,14 @@ namespace WindowPlugins.GUITVSeries
                 {
                     foreach (string condsToInh in this.m_steps[i - 1].conditionsToInherit)
                     {
-                        this.m_steps[i].addInheritedConditions(condsToInh);
+						// Don't inherit series conditions in season/episode view
+						// 50 Times slower getting episode list if you do!!
+						if (!(condsToInh.Contains("<Series") && hasSeriesBeforeIt)) {
+							this.m_steps[i].addInheritedConditions(condsToInh);
+						}
                     }
                 }
+
                 // so lists can query if they'll have to append the seriesname in episode view (when no series was selected, eg. Flat View
                 if (this.m_steps[i].Type == logicalViewStep.type.series)
                     hasSeriesBeforeIt = true;
