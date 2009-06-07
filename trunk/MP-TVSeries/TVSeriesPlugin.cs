@@ -2143,6 +2143,8 @@ namespace WindowPlugins.GUITVSeries
                             }
 
                             if (bg.CancellationPending) return;
+							
+							// Get list of series for current view
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
                             if (seriesList.Count == 0)
@@ -2334,7 +2336,13 @@ namespace WindowPlugins.GUITVSeries
                         {
                             bool bFindNext = false;
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
-                            List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
+                            
+							// Get a list of Episode to display for current view
+							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Start();
+							List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
+							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Stop();
+							//MPTVSeriesLog.Write(aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Info);
+
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
 
