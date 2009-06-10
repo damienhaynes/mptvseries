@@ -2692,34 +2692,41 @@ namespace WindowPlugins.GUITVSeries
 				dlg.Reset();
 				dlg.SetHeading(dlgHeading + ": " + item.ToString());
 
-				pItem = new GUIListItem(Translation.ResetRating);
-				dlg.Add(pItem);
-				pItem.ItemId = 0;
-
-				pItem = new GUIListItem("1 " + Translation.RatingStar);
+                // List Rating 1 Star to 10 Stars
+                // Re-use existing menu labels to represent star value
+				pItem = new GUIListItem(Translation.RatingStar);
 				dlg.Add(pItem);
 				pItem.ItemId = 1;
 
 				for (int i = 2; i < 11; i++) {
-					pItem = new GUIListItem(i.ToString() + " " + Translation.RatingStars);
+					pItem = new GUIListItem(Translation.RatingStars);
 					dlg.Add(pItem);
 					pItem.ItemId = i;
 				}
 
+                // Reset Rating (Rate = 0)
+                pItem = new GUIListItem(Translation.ResetRating);
+                dlg.Add(pItem);
+                pItem.ItemId = 11;
+                
 				if (auto) {
 					pItem = new GUIListItem(Translation.DontAskToRate);
 					dlg.Add(pItem);
-					pItem.ItemId = 11;
+					pItem.ItemId = 12;
 				}
 
 				dlg.DoModal(GUIWindowManager.ActiveWindow);
 
-				if (dlg.SelectedId == -1 || dlg.SelectedId > 11) return; // cancelled
-				if (dlg.SelectedId == 11 && auto) {
+				if (dlg.SelectedId == -1 || dlg.SelectedId > 12) return; // cancelled
+                if (dlg.SelectedLabelText == Translation.DontAskToRate && auto) {
 					DBOption.SetOptions(DBOption.cAskToRate, false);
 					return;
 				}
+                // Get Rating Value
 				value = dlg.SelectedId.ToString();
+                // Reset rating
+                if (dlg.SelectedLabelText == Translation.ResetRating)
+                    value = "0";
 			}
 			
 			string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);
@@ -3578,6 +3585,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(string.Format("View: {0} is locked, prompting for PinCode", view.prettyName));
 
 				// Check if Graphical PinCode dialog exists
+                
 				if (System.IO.File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.PinCodeDialog.xml")) {
 					try {
 						GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
