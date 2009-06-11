@@ -360,6 +360,7 @@ namespace WindowPlugins.GUITVSeries
                     {
 						// Don't inherit series conditions in season/episode view
 						// 50 Times slower getting episode list if you do!!
+						// There is no need to inherit at the Episode step if Series step exists
 						if (!(condsToInh.Contains("<Series") && hasSeriesBeforeIt)) {
 							this.m_steps[i].addInheritedConditions(condsToInh);
 						}

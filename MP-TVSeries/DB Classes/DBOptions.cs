@@ -187,10 +187,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
         public const String cRandomFanartInterval = "RandomFanartInterval";
-
         public const String cParentalControlPinCode = "ParentalControlPinCode";
-
 		public const String cKeyboardStyle = "KeyboardStyle";
+		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -501,6 +500,9 @@ namespace WindowPlugins.GUITVSeries
 
 				if (GetOptions(cKeyboardStyle) == null)
 					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
+
+				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
+					SetOptions(cMarkRatedEpisodeAsWatched, 0);
 
             }
             catch (Exception ex)
