@@ -117,14 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTipHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="radioSimple.ToolTip" xml:space="preserve">
-    <value>Select Simple View if you want to manually add series to a view. You may select which series from the
-Add Series button below.
-
-You can also add/remove Series to a Tagged View from the plugins context menu with-in MediaPortal, 
-and from the Details tab in configuration (Right Click on series in tree view).</value>
-  </data>
 </root>

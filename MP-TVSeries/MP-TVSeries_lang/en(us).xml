@@ -192,5 +192,6 @@
 	<string Field="ViewTop25User" Original="Top 25 (User)">Top 25(User)</string>
 	<string Field="ViewSubtitles" Original="Subtitles">Subtitles</string>
 	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Online Favourites</string>
 	
 </strings>

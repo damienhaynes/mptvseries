@@ -579,7 +579,7 @@ namespace WindowPlugins.GUITVSeries
 			try {
 				GUIListItem currentitem = this.m_Facade.SelectedListItem;
 				if (currentitem == null) return;
-
+				
 				IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
 				if (dlg == null) return;
 
@@ -648,7 +648,7 @@ namespace WindowPlugins.GUITVSeries
 							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
 								pItem = new GUIListItem(Translation.RateEpisode + " ...");
 								dlg.Add(pItem);
-								pItem.ItemId = (int)eContextMenus.rate;
+								pItem.ItemId = (int)eContextMenus.rate;								
 							}
 						}
 						else if (this.listLevel != Listlevel.Group) {
@@ -715,7 +715,7 @@ namespace WindowPlugins.GUITVSeries
 							}
 						}
 
-						if (listLevel != Listlevel.Group) {
+						/*if (listLevel != Listlevel.Group) {
 							// Fav. handling
 							DBSeries currentSeries;
 							if (listLevel == Listlevel.Series)
@@ -730,7 +730,7 @@ namespace WindowPlugins.GUITVSeries
 
 							dlg.Add(pItem);
 							pItem.ItemId = (int)eContextItems.actionToggleFavorite;
-						}
+						}*/
 
 						// Can always add to existing or new view
 						if (listLevel == Listlevel.Series) {
@@ -1197,14 +1197,14 @@ namespace WindowPlugins.GUITVSeries
 					#endregion
 
 					#region Favourites
-					case (int)eContextItems.actionToggleFavorite: {
+					/*case (int)eContextItems.actionToggleFavorite: {
 							// Toggle Favourites
 							m_SelectedSeries.toggleFavourite();
 
 							// If we are in favourite view we need to reload to remove the series
 							LoadFacade();
 							break;
-						}
+						}*/
 					#endregion
 
 					#region Actions
@@ -3003,16 +3003,20 @@ namespace WindowPlugins.GUITVSeries
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
                         LoadFacade();
                         break;
+
                     case (int)eContextItems.optionsPreventSpoilerThumbnail:
                         DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail));
                         LoadFacade();
                         break;
+
                     case (int)eContextItems.optionsFastViewSwitch:
                         DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
                         break;
+
                     case (int)eContextItems.optionsAskToRate:
                         DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
                         break;
+
                     case (int)eContextItems.optionsFanartRandom:                        
                         DBOption.SetOptions(DBOption.cFanartRandom, !DBOption.GetOptions(DBOption.cFanartRandom));
                         if (!DBOption.GetOptions(DBOption.cFanartRandom)) {
@@ -3022,8 +3026,8 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // Update Fanart Displayed - may need to restore default artwork
                         Series_OnItemSelected(m_Facade.SelectedListItem);
-
                         break;
+
                     case (int)eContextItems.optionsSeriesFanart:
                         DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
                         if (this.listLevel == Listlevel.Series)
@@ -3036,7 +3040,7 @@ namespace WindowPlugins.GUITVSeries
                                 DisableFanart();
                         }
                         break;
-                    case (int)eContextItems.optionsUseOnlineFavourites:
+                    /*case (int)eContextItems.optionsUseOnlineFavourites:
                         DBOption.SetOptions(DBOption.cOnlineFavourites, !DBOption.GetOptions(DBOption.cOnlineFavourites));
                         // Update Views                        
                         DBView view = new DBView(1);
@@ -3055,6 +3059,7 @@ namespace WindowPlugins.GUITVSeries
                         view.Commit();
                         LoadFacade();
                         break;
+                     */
                 }
             }
 		}
@@ -3078,10 +3083,9 @@ namespace WindowPlugins.GUITVSeries
 
             // Add Menu items
             if (add) {
-                // List available tag views, no need for translation
-                // these are user created strings                
+                // List available tag views                       
                 foreach (DBView view in views) {
-                    string viewname = view[DBView.cPrettyName];
+                    string viewname = view[DBView.cTransToken];
                     // We dont want to add it to the list if its already a member                    
                     if (!currTags.Contains("|" + viewname + "|")) {
                         pItem = new GUIListItem(viewname);
@@ -3123,7 +3127,7 @@ namespace WindowPlugins.GUITVSeries
                         // Create View if it doesnt exist
                         viewExists = false;
                         foreach (DBView view in views) {
-                            if (selectedItem.Equals(view[DBView.cPrettyName], StringComparison.CurrentCultureIgnoreCase)) {
+                            if (selectedItem.Equals(view[DBView.cTransToken], StringComparison.CurrentCultureIgnoreCase)) {
                                 ShowViewExistsMessage(selectedItem);
                                 viewExists = true;
                                 break;
@@ -3139,9 +3143,7 @@ namespace WindowPlugins.GUITVSeries
                 // Add New View to database
                 // Ensure index is unique...assumes index is updated when deleting views                
                 int index = logicalView.getAll(true).Count;
-                string config = @"series<;><Series.ViewTags>;like;%|" + selectedItem + "|%<;><;>" +
-                                 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                string config = DBView.GetTaggedViewConfigString(selectedItem);
 
                 MPTVSeriesLog.Write(string.Format("Creating New Tagged View: {0}", selectedItem));
                 DBView.AddView(index, selectedItem, config, true);
@@ -3153,39 +3155,15 @@ namespace WindowPlugins.GUITVSeries
             // Get Selected Item if not a new Tag
             if (dlg.SelectedId != (int)eContextItems.viewAddToNewView)
                 selectedItem = dlg.SelectedLabelText;
-
-            // Add/Remove Tag to/from Series
-            bool tagExists = false;                                   
-
+            
+            // Add / Remove Tag from series
             if (add) {
                 MPTVSeriesLog.Write(string.Format("Adding new Tag \"{0}\" to series: {1}", selectedItem, series.ToString()));
-
-                if (Helper.String.IsNullOrEmpty(currTags)) {
-                    newTags = "|" + selectedItem + "|";
-                }
-                else {
-                    // Check if the series is already tagged with selected series                    
-                    foreach (String tag in splitTags) {
-                        if (tag.Equals(selectedItem, StringComparison.CurrentCultureIgnoreCase)) {
-                            tagExists = true;
-                            newTags = currTags;
-                            break;
-                        }
-                    }
-                    // Add tag to series if it doesnt exist
-                    if (!tagExists) 
-                        newTags = currTags + selectedItem + "|";                    
-                }
+                newTags = Helper.GetSeriesViewTags(series, true, selectedItem);
             }
             else {
                 MPTVSeriesLog.Write(string.Format("Removing Tag \"{0}\" from series: {1}", selectedItem, series.ToString()));
-     
-                foreach (String tag in splitTags) {
-                    if (!tag.Equals(selectedItem, StringComparison.CurrentCultureIgnoreCase))
-                        newTags += "|" + tag;
-                }
-                if (!Helper.String.IsNullOrEmpty(newTags)) 
-                    newTags += "|";                               
+                newTags = Helper.GetSeriesViewTags(series, false, selectedItem);                          
             }
             
             // Update Main View List
@@ -3194,6 +3172,23 @@ namespace WindowPlugins.GUITVSeries
             // Commit changes to database
             series[DBOnlineSeries.cViewTags] = newTags;
             series.Commit();
+
+            // Special case to handle online favourites
+            // We need to add/remove from online database
+            if (selectedItem == DBView.cOnlineFavouriteTransToken) {
+                string account = DBOption.GetOptions(DBOption.cOnlineUserID);
+                if (Helper.String.IsNullOrEmpty(account)) {
+                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+                    dlgOK.SetHeading(Translation.OnlineFavourites);
+                    dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
+                    dlgOK.SetLine(2, Translation.TVDB_INFO_ACCOUNTID_2);
+                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                    MPTVSeriesLog.Write("Cannot submit online favourite, make sure you have your Account identifier set!");                    
+                }
+                else {
+                    Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(add, account, series[DBOnlineSeries.cID]);
+                }
+            }
 
             // Load Facade to reflect changes
             // We only need to reload when removing from a View that is active
@@ -3843,7 +3838,7 @@ namespace WindowPlugins.GUITVSeries
             m_bFanartTimerDisabled = false;
 		}
 
-        void DisableFanart()
+        private void DisableFanart()
         {
             // Disable Random Fanart Timer
             m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);

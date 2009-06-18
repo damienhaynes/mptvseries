@@ -223,6 +223,12 @@
     <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
+	<Compile Include="Configuration\SeriesSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\SeriesSelect.Designer.cs">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
     <Compile Include="DB Classes\DBFormatting.cs" />
     <Compile Include="DB Classes\DBNewzbin.cs" />
@@ -370,6 +376,9 @@
     </EmbeddedResource>
 	<EmbeddedResource Include="Configuration\ViewTemplates.resx">
       <DependentUpon>ViewTemplates.cs</DependentUpon>
+    </EmbeddedResource>	
+	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>

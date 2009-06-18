@@ -442,8 +442,8 @@ namespace WindowPlugins.GUITVSeries
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
 
-            if (DBOption.GetOptions(DBOption.cOnlineFavourites))
-                chkOnlineFavourites.Checked = true;
+            //if (DBOption.GetOptions(DBOption.cOnlineFavourites))
+            //    chkOnlineFavourites.Checked = true;
         }
 
         private void LoadTorrentSearches()
@@ -2830,11 +2830,11 @@ namespace WindowPlugins.GUITVSeries
                     subMenu.Items.Clear();
 					foreach (DBView view in views) {                        
                         ToolStripMenuItem item = new ToolStripMenuItem();						
-                        item.Name = view[DBView.cPrettyName];
-						item.Text = view[DBView.cPrettyName];
+                        item.Name = view[DBView.cTransToken];
+                        item.Text = view[DBView.cTransToken];
 						item.Tag = view;
                         // Check View if already a member                                                
-                        string viewTag = "|" + view[DBView.cPrettyName] + "|";
+                        string viewTag = "|" + view[DBView.cTransToken] + "|";
                         if (viewTags.Contains(viewTag))
                             item.Checked = true;
 
@@ -2872,53 +2872,33 @@ namespace WindowPlugins.GUITVSeries
 
             // Get Selected View
             DBView view = (DBView)e.ClickedItem.Tag;
-            string selectedView = view[DBView.cPrettyName];            
+            string selectedView = view[DBView.cTransToken];
+            string newTags = string.Empty;
+
+            bool add = !item.Checked;
 
             // Get Current View Tags for series
             DBSeries series = (DBSeries)node.Tag;
-            string currTags = series[DBOnlineSeries.cViewTags];
-            String[] splitTags = currTags.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            string newTags = string.Empty;
-
-            bool tagExists = false;
-
+            
             // Add Series to view if unchecked
             // Remove Series from view if checked            
-            if (item.Checked) {
-                MPTVSeriesLog.Write(string.Format("Removing Tag \"{0}\" from series: {1}", selectedView, series.ToString()));
-
-                foreach (String tag in splitTags) {
-                    if (!tag.Equals(selectedView, StringComparison.CurrentCultureIgnoreCase))
-                        newTags += "|" + tag;
-                }
-                if (!Helper.String.IsNullOrEmpty(newTags))
-                    newTags += "|";          
-
+            if (!add) {
+                MPTVSeriesLog.Write(string.Format("Removing series \"{0}\" from \"{1}\"", series.ToString(), selectedView));
+                newTags = Helper.GetSeriesViewTags(series, false, selectedView);          
             }
             else {
-                MPTVSeriesLog.Write(string.Format("Adding Tag \"{0}\" to series: {1}", selectedView, series.ToString()));
-
-                if (Helper.String.IsNullOrEmpty(currTags)) {
-                    newTags = "|" + selectedView + "|";
-                }
-                else {
-                    // Check if the series is already tagged with selected series                    
-                    foreach (String tag in splitTags) {
-                        if (tag.Equals(selectedView, StringComparison.CurrentCultureIgnoreCase)) {
-                            tagExists = true;
-                            newTags = currTags;
-                            break;
-                        }
-                    }
-                    // Add tag to series if it doesnt exist
-                    if (!tagExists)
-                        newTags = currTags + selectedView + "|";
-                }
-            }
-
+                MPTVSeriesLog.Write(string.Format("Adding series \"{0}\" to \"{1}\"", series.ToString(), selectedView));
+                newTags = Helper.GetSeriesViewTags(series, true, selectedView);
+            }       
+ 
             // Commit changes to database
             series[DBOnlineSeries.cViewTags] = newTags;
             series.Commit();
+
+            // Add to online database
+            if (selectedView == DBView.cOnlineFavouriteTransToken) {
+                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(add, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+            }
                       
 		}
 
@@ -3414,38 +3394,22 @@ namespace WindowPlugins.GUITVSeries
                 selectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, availViews);
                 view_selectedName.Text = selectedView.prettyName;
                 checkCurViewEnabled.Checked = selectedView.m_Enabled;
-                checkBoxParentalControl.Checked = selectedView.ParentalControl;
-                //btnRemoveView.Enabled = selectedView.IsTaggedView;
+                checkBoxParentalControl.Checked = selectedView.ParentalControl;             
 
                 foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.m_steps))
                     view_selStepsList.Items.Add(step);
                 
                 pauseViewConfigSave = false;
+
+                // Enable 'Edit' button for Simple Views
+                // TODO: allow editing of advanced views when conditional GUI is complete
+                if (selectedView.IsTaggedView) {
+                    buttonEditView.Enabled = true;
+                } else {
+                    buttonEditView.Enabled = false;
+                }
             }
         }
-
-        /*private void view_selStepsList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // disable for now
-            
-            selectedViewStep = selectedView.steps[view_selStepsList.SelectedIndex];
-            this.viewStepType.SelectedItem = selectedViewStep.Type.ToString();           
-        }*/
-
-        /*private void viewStepType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ((string)viewStepType.SelectedItem == "group")
-            {
-                viewStepGroupLbl.Visible = true;
-                viewStepGroupByTextBox.Visible = true;
-            }
-            else
-            {
-                viewStepGroupLbl.Visible = false;
-                viewStepGroupByTextBox.Visible = false;
-                viewStepGroupByTextBox.Text = "";
-            }
-        }*/
 
         ~ConfigurationForm()
         {
@@ -3975,7 +3939,7 @@ namespace WindowPlugins.GUITVSeries
             System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/");
         }
 
-        private void chkOnlineFavourites_CheckedChanged(object sender, EventArgs e)
+        /*private void chkOnlineFavourites_CheckedChanged(object sender, EventArgs e)
         {
             DBView view = new DBView(1);
             if (!chkOnlineFavourites.Checked)
@@ -3992,7 +3956,7 @@ namespace WindowPlugins.GUITVSeries
             }
             view.Commit();
             DBOption.SetOptions(DBOption.cOnlineFavourites, chkOnlineFavourites.Checked);
-        }
+        }*/
 
         private void chkAutoDownloadFanart_CheckedChanged(object sender, EventArgs e)
         {
@@ -4101,21 +4065,101 @@ namespace WindowPlugins.GUITVSeries
 			DialogResult result = viewConfigDialog.ShowDialog(this);
 			if (result == DialogResult.OK) {
 				// Add New view
-				if (viewConfigDialog.Type == ViewsConfiguration.ViewType.SIMPLE) {										
-					// Ensure index is unique...assumes index is updated when deleting views
-					int index = logicalView.getAll(true).Count;
-					string name = viewConfigDialog.ViewName;
+				if (viewConfigDialog.Type == ViewsConfiguration.ViewType.SIMPLE) {
+					// Get List of current views
+					List<logicalView> views = logicalView.getAll(true);
 
-					string config = @"series<;><Series.ViewTags>;like;%|" + name + "|%<;><;>" +
-									 "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-									 "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-	                
+					// Ensure index is unique...assumes index is updated when deleting views
+					int index = views.Count;
+					string name = viewConfigDialog.ViewName;
+                    
+                    // Check if view already exists
+                    foreach (logicalView view in views) {
+                        if (view.Name == name) {
+                            MessageBox.Show(string.Format("The view \"{0}\" already exists, you must enter in a unique name.",name),"Views",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                            return;
+                        }
+                    }
+
+                    string config = DBView.GetTaggedViewConfigString(name);
+                    
+	                // Add new 'Simple' view                    
 					DBView.AddView(index, name, config, true);
 
-					// Reload List and available Views
-					LoadViews();
+                    // Add / Remove series from view                    
+                    if (viewConfigDialog.SeriesToAdd != null && viewConfigDialog.SeriesToRemove != null) {                                                                        
+                        // Add series to view
+                        foreach (DBSeries series in viewConfigDialog.SeriesToAdd) {
+                            MPTVSeriesLog.Write(string.Format("Adding series \"{0}\" to \"{1}\"", series.ToString(), name));
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, name);                            
+                            series.Commit();
+                            
+                            // Add from online database
+                            if (name == DBView.cOnlineFavouriteTransToken) {
+                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            }
+                        }
+
+                        // Remove series from view
+                        foreach (DBSeries series in viewConfigDialog.SeriesToRemove) {
+                            MPTVSeriesLog.Write(string.Format("Removing series \"{0}\" from \"{1}\"", series.ToString(), name));                            
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series,false,name);
+                            series.Commit();
+
+                            // Remove from online database
+                            if (name == DBView.cOnlineFavouriteTransToken) {
+                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            }
+                        }
+                    }					
 				}
+
+                // Reload List and available Views
+                LoadViews();
 			}
+        }
+
+        private void buttonEditView_Click(object sender, EventArgs e) {
+            ViewsConfiguration viewConfigDialog = new ViewsConfiguration();
+
+            viewConfigDialog.ViewName = _availViews.SelectedItem.ToString();
+            viewConfigDialog.Type = ViewsConfiguration.ViewType.SIMPLE;
+            viewConfigDialog.Edit = true;
+
+            DialogResult result = viewConfigDialog.ShowDialog(this);
+            if (result == DialogResult.OK) {
+                // Add New view
+                if (viewConfigDialog.Type == ViewsConfiguration.ViewType.SIMPLE) {
+                    string name = viewConfigDialog.ViewName;
+
+                    // Add / Remove series from view                    
+                    if (viewConfigDialog.SeriesToAdd != null && viewConfigDialog.SeriesToRemove != null) {
+                        // Add series to view
+                        foreach (DBSeries series in viewConfigDialog.SeriesToAdd) {
+                            MPTVSeriesLog.Write(string.Format("Adding series \"{0}\" to \"{1}\"", series.ToString(), name));
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, name);
+                            series.Commit();
+
+                            // Add from online database
+                            if (name == DBView.cOnlineFavouriteTransToken) {
+                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            }
+                        }
+
+                        // Remove series from view
+                        foreach (DBSeries series in viewConfigDialog.SeriesToRemove) {
+                            MPTVSeriesLog.Write(string.Format("Removing series \"{0}\" from \"{1}\"", series.ToString(), name));
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, false, name);
+                            series.Commit();
+
+                            // Remove from online database
+                            if (name == DBView.cOnlineFavouriteTransToken) {
+                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void checkbox_SortSpecials_CheckedChanged(object sender, EventArgs e) {
@@ -4139,10 +4183,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkboxAutoDownloadFanartSeriesName_CheckedChanged(object sender, EventArgs e) {
             DBOption.SetOptions(DBOption.cAutoDownloadFanartSeriesNames, checkboxAutoDownloadFanartSeriesName.Checked);
-        }
-
-        private void buttonEditView_Click(object sender, EventArgs e) {
-
         }
 
         private void checkBoxParentalControl_CheckedChanged(object sender, EventArgs e) {

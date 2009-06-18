@@ -61,6 +61,8 @@
             this.viewStepGroupByTextBox = new System.Windows.Forms.TextBox();
             this.viewStepType = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSeriesSelect = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtViewName = new System.Windows.Forms.TextBox();
             this.radioSimple = new System.Windows.Forms.RadioButton();
@@ -73,7 +75,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(330, 373);
+            this.btnOK.Location = new System.Drawing.Point(324, 407);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -84,7 +86,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(411, 373);
+            this.btnCancel.Location = new System.Drawing.Point(405, 407);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -99,7 +101,7 @@
             this.groupBoxAdvanced.Controls.Add(this.viewStepGroupByTextBox);
             this.groupBoxAdvanced.Controls.Add(this.viewStepType);
             this.groupBoxAdvanced.Enabled = false;
-            this.groupBoxAdvanced.Location = new System.Drawing.Point(12, 90);
+            this.groupBoxAdvanced.Location = new System.Drawing.Point(12, 124);
             this.groupBoxAdvanced.Name = "groupBoxAdvanced";
             this.groupBoxAdvanced.Size = new System.Drawing.Size(468, 277);
             this.groupBoxAdvanced.TabIndex = 1;
@@ -511,21 +513,42 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonSeriesSelect);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtViewName);
             this.groupBox1.Controls.Add(this.radioSimple);
             this.groupBox1.Controls.Add(this.radioAdvanced);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(468, 72);
+            this.groupBox1.Size = new System.Drawing.Size(468, 106);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Type";
             // 
+            // buttonSeriesSelect
+            // 
+            this.buttonSeriesSelect.Location = new System.Drawing.Point(79, 67);
+            this.buttonSeriesSelect.Name = "buttonSeriesSelect";
+            this.buttonSeriesSelect.Size = new System.Drawing.Size(128, 23);
+            this.buttonSeriesSelect.TabIndex = 5;
+            this.buttonSeriesSelect.Text = "Add/Remove Series...";
+            this.buttonSeriesSelect.UseVisualStyleBackColor = true;
+            this.buttonSeriesSelect.Click += new System.EventHandler(this.buttonSeriesSelect_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(21, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(305, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Select \'Simple\' to manually choose what series is added to view";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 21);
+            this.label1.Location = new System.Drawing.Point(21, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 0;
@@ -533,10 +556,11 @@
             // 
             // txtViewName
             // 
-            this.txtViewName.Location = new System.Drawing.Point(17, 40);
+            this.txtViewName.Location = new System.Drawing.Point(66, 40);
             this.txtViewName.Name = "txtViewName";
-            this.txtViewName.Size = new System.Drawing.Size(191, 20);
+            this.txtViewName.Size = new System.Drawing.Size(142, 20);
             this.txtViewName.TabIndex = 1;
+            this.txtViewName.TextChanged += new System.EventHandler(this.txtViewName_TextChanged);
             // 
             // radioSimple
             // 
@@ -581,7 +605,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(494, 404);
+            this.ClientSize = new System.Drawing.Size(494, 438);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxAdvanced);
             this.Controls.Add(this.btnCancel);
@@ -648,5 +672,7 @@
         private System.Windows.Forms.RadioButton radioSimple;
         private System.Windows.Forms.RadioButton radioAdvanced;
         private System.Windows.Forms.ToolTip toolTipHelp;
+		private System.Windows.Forms.Button buttonSeriesSelect;
+		private System.Windows.Forms.Label label2;
     }
 }

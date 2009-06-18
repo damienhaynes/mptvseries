@@ -542,7 +542,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-//                UpdateTable();
+				// UpdateTable();
                 if (!optionsCache.ContainsKey(property) || optionsCache[property] != value)
                 {
                     String convertedProperty = property;

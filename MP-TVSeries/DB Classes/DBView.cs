@@ -32,7 +32,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBView : DBTable
     {
         public const String cTableName = "Views";
-        public const int cDBVersion = 4;
+        public const int cDBVersion = 5;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -42,6 +42,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cViewConfig = "viewConfig";
         public const String cTaggedView = "TaggedView";
         public const String cParentalControl = "ParentalControl";
+
+        public static String cFavouriteTransToken = "Favourites";
+        public static String cOnlineFavouriteTransToken = "OnlineFavourites";
 
         public DBView()
             : base(cTableName)
@@ -131,6 +134,12 @@ namespace WindowPlugins.GUITVSeries
             return new DBView[0];
         }
 
+        public static string GetTaggedViewConfigString(string name) {
+		    return @"series<;><Series.ViewTags>;like;%|" + name + "|%<;><;>" +
+			        "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+			        "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+        }
+
         static DBView()
         {
             fillDefaults();
@@ -174,20 +183,29 @@ namespace WindowPlugins.GUITVSeries
                 view = new DBView();
                 view[cIndex] = "1";
                 view[cEnabled] = "1";
-                view[cSort] = "3";
-                view[cTransToken] = "Favourites";
+                view[cSort] = "2";
+                view[cTransToken] = cFavouriteTransToken;
                 view[cPrettyName] = "";
-                view[cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
-                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                view[cTaggedView] = "0";
+                view[cViewConfig] = GetTaggedViewConfigString(DBView.cFavouriteTransToken);
+                view[cTaggedView] = "1";
                 view[cParentalControl] = "0";
                 view.Commit();
 
                 view = new DBView();
                 view[cIndex] = "2";
                 view[cEnabled] = "1";
-                view[cSort] = "2";
+                view[cSort] = "3";
+                view[cTransToken] = cOnlineFavouriteTransToken;
+                view[cPrettyName] = "";
+                view[cViewConfig] = GetTaggedViewConfigString(DBView.cOnlineFavouriteTransToken);
+                view[cTaggedView] = "1";
+                view[cParentalControl] = "0";
+                view.Commit();
+
+                view = new DBView();
+                view[cIndex] = "3";
+                view[cEnabled] = "1";
+                view[cSort] = "4";
                 view[cTransToken] = "Unwatched";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><;>" +
@@ -198,9 +216,9 @@ namespace WindowPlugins.GUITVSeries
                 view.Commit();
 
                 view = new DBView();
-                view[cIndex] = "3";
+                view[cIndex] = "4";
                 view[cEnabled] = "1";
-                view[cSort] = "4";
+                view[cSort] = "5";
                 view[cTransToken] = "Channels";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Network><;><;><;>" +
@@ -212,9 +230,9 @@ namespace WindowPlugins.GUITVSeries
                 view.Commit();
 
                 view = new DBView();
-                view[cIndex] = "4";
+                view[cIndex] = "5";
                 view[cEnabled] = "1";
-                view[cSort] = "5";
+                view[cSort] = "6";
                 view[cTransToken] = "Genres";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Genre><;><;><;>" +
@@ -226,9 +244,9 @@ namespace WindowPlugins.GUITVSeries
                 view.Commit();
 
 				view = new DBView();
-				view[cIndex] = "5";
+				view[cIndex] = "6";
 				view[cEnabled] = "1";
-				view[cSort] = "6";
+				view[cSort] = "7";
 				view[cTransToken] = "ContentRating";
 				view[cPrettyName] = "";
 				view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
@@ -240,9 +258,9 @@ namespace WindowPlugins.GUITVSeries
 				view.Commit();
 
 				view = new DBView();
-				view[cIndex] = "6";
+				view[cIndex] = "7";
 				view[cEnabled] = "1";
-				view[cSort] = "7";
+				view[cSort] = "8";
 				view[cTransToken] = "ViewTags";
 				view[cPrettyName] = "";
 				view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
@@ -254,9 +272,9 @@ namespace WindowPlugins.GUITVSeries
 				view.Commit();
 
                 view = new DBView();
-                view[cIndex] = "7";
+                view[cIndex] = "8";
                 view[cEnabled] = "1";
-                view[cSort] = "8";
+                view[cSort] = "9";
                 view[cTransToken] = "Latest";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
@@ -265,9 +283,9 @@ namespace WindowPlugins.GUITVSeries
                 view.Commit();
 
                 view = new DBView();
-                view[cIndex] = "8";
+                view[cIndex] = "9";
                 view[cEnabled] = "1";
-                view[cSort] = "9";
+                view[cSort] = "10";
                 view[cTransToken] = "RecentlyAdded";
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
@@ -338,7 +356,37 @@ namespace WindowPlugins.GUITVSeries
 						view.Commit();
 						nUpgradeDBVersion++;
 						break;
-   
+                    
+                    case 4:
+                        // Get All current Views
+                        DBView[] viewList = DBView.getAll(true);
+
+                        // Update old Favourite View to Tagged View
+                        foreach (DBView v in viewList) {
+                            if (v[DBView.cTransToken] == cFavouriteTransToken) {
+                                v[cTaggedView] = "1";
+                                v[cTransToken] = cFavouriteTransToken;
+                                v[cPrettyName] = "";
+                                v[cViewConfig] = GetTaggedViewConfigString(cFavouriteTransToken);
+                                v.Commit();
+                            }
+                        }
+                        
+                        // Add Online Favourites as Taqged View
+                        view = new DBView();
+                        view[cIndex] = viewList.Length;
+                        view[cEnabled] = "1";
+                        view[cSort] = viewList.Length + 1;
+                        view[cTransToken] = cOnlineFavouriteTransToken;
+                        view[cPrettyName] = "";
+                        view[cViewConfig] = GetTaggedViewConfigString(cOnlineFavouriteTransToken);
+                        view[cParentalControl] = "0";
+                        view[cTaggedView] = "1";
+                        view.Commit();                        
+
+                        nUpgradeDBVersion++;
+                        break;
+
                     default:
                         nUpgradeDBVersion = nCurrentDBVersion;
                         break;
