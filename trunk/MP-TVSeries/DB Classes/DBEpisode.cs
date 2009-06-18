@@ -186,13 +186,13 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                        return base[fieldName];
-                }
+                return base[fieldName];
+            }
             set
             {
-                            base[fieldName] = value;
-                        }
-                }
+                base[fieldName] = value;
+            }
+        }
 
         /// <summary>
         /// Returns a pretty String representation of this DBOnlineEpisode (Series - 1x01 - Pilot)

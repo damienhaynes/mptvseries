@@ -118,6 +118,7 @@ namespace WindowPlugins.GUITVSeries.Feedback
         Ignore,
         NotReady
     }
+
     public interface IFeedback
     {
         ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected);

@@ -81,7 +81,7 @@ namespace WindowPlugins.GUITVSeries
 
 		public const String cViewTags = "ViewTags";
 
-        public const int cDBVersion = 2;
+        public const int cDBVersion = 3;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -112,46 +112,7 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("SortName", cSortName);            
 
             // make sure the table is created on first run
-            DBOnlineSeries dummy = new DBOnlineSeries();
-
-            int nCurrentDBVersion = cDBVersion;
-            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBOnlineSeriesVersion);
-
-            while (nUpgradeDBVersion != nCurrentDBVersion)
-            {                
-                List<DBOnlineSeries> AllSeries = getAllSeries();
-
-                // take care of the upgrade in the table    
-                switch (nUpgradeDBVersion)
-                {
-                    case 1:                        
-                        nUpgradeDBVersion++;
-                        break;
-
-                    default:                        
-                        if (AllSeries.Count > 0)
-                        {
-                            foreach (DBOnlineSeries series in AllSeries)
-                            {
-                                // Migrate old cBannerFileNames and cCurrentBannerFileName to cPosterFileNames and cCurrentPosterFileName
-                                // if were using posters previously
-                                if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("-posters"))
-                                {
-                                    series[DBOnlineSeries.cCurrentPosterFileName] = series[DBOnlineSeries.cCurrentBannerFileName];
-                                    series[DBOnlineSeries.cPosterFileNames] = series[DBOnlineSeries.cBannerFileNames];
-                                    // clear old ones
-                                    series[DBOnlineSeries.cCurrentBannerFileName] = string.Empty;
-                                    series[DBOnlineSeries.cBannerFileNames] = string.Empty;
-                                    series.Commit();
-                                }                                                                
-                            }
-                        }
-                        // new DB, nothing special to do
-                        nUpgradeDBVersion = nCurrentDBVersion;
-                        break;
-                }
-            }
-            DBOption.SetOptions(DBOption.cDBOnlineSeriesVersion, nCurrentDBVersion);
+            DBOnlineSeries dummy = new DBOnlineSeries();           
 
         }
 
@@ -308,7 +269,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 11;
+        public const int cDBVersion = 12;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -423,6 +384,36 @@ namespace WindowPlugins.GUITVSeries
                             series[DBOnlineSeries.cSortName] = Helper.GetSortByName(series[DBOnlineSeries.cPrettyName]);
                             series.Commit();
                         }
+                        nUpgradeDBVersion++;
+                        break;
+                    
+                    case 11:
+                        // Migrate isFavourite to new Tagged View
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
+                        seriesList = DBSeries.Get(conditions);
+
+                        MPTVSeriesLog.Write("Migrating Favourite Series");
+                        foreach (DBSeries series in seriesList) {
+                            // Tagged view are seperated with the pipe "|" character
+                            string tagName = "|" + DBView.cFavouriteTransToken + "|";                      
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
+                            series.Commit();                            
+                        }
+
+                        // Migrate isOnlineFavourite to new TaggedView
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
+                        seriesList = DBSeries.Get(conditions);
+
+                        MPTVSeriesLog.Write("Migrating Online Favourite Series");
+                        foreach (DBSeries series in seriesList) {
+                            // Tagged view are seperated with the pipe "|" character
+                            string tagName = "|" + DBView.cOnlineFavouriteTransToken + "|";
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
+                            series.Commit();                            
+                        }
+
                         nUpgradeDBVersion++;
                         break;
 
@@ -762,7 +753,7 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
-        public void toggleFavourite()
+        /*public void toggleFavourite()
         {
             if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
             if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
@@ -780,7 +771,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (dbSeriesUpdateOccured != null)
                 dbSeriesUpdateOccured(this);
-        }
+        }*/
 
         public static void Clear(SQLCondition conditions)
         {

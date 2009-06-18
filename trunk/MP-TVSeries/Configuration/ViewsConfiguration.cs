@@ -39,13 +39,44 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 
 		public string ViewName { get; set; }
 		public ViewType Type { get; set; }
+        public bool Edit { get; set; }
+
+        public List<DBSeries> SeriesToAdd {
+            get {
+                return _seriesToAdd;
+            }
+            set {
+                _seriesToAdd = value;
+            }
+        } private List<DBSeries> _seriesToAdd = null;
+
+        public List<DBSeries> SeriesToRemove {
+            get {
+                return _seriesToRemove;
+            }
+            set {
+                _seriesToRemove = value;
+            }
+        } private List<DBSeries> _seriesToRemove = null;
 
 		public ViewsConfiguration() {
-            InitializeComponent();
-
-			txtViewName.Text = ViewName;
-			radioAdvanced.Checked = (Type == ViewType.ADVANCED);
+            InitializeComponent();			
         }
+
+		protected override void OnLoad(EventArgs e) {
+            txtViewName.Text = ViewName;
+            radioAdvanced.Checked = (Type == ViewType.ADVANCED);
+
+			if (ViewName.Length == 0 && Type == ViewType.SIMPLE)
+				buttonSeriesSelect.Enabled = false;
+
+            if (Edit) {
+                // we can edit the name outside in the main form                
+                txtViewName.Enabled = false;                
+            }
+
+			base.OnLoad(e);
+		}
 
 		private void btnOK_Click(object sender, EventArgs e) {
 			ViewName = txtViewName.Text;
@@ -67,11 +98,39 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 		private void radioSimple_Click(object sender, EventArgs e) {
 			Type = ViewType.SIMPLE;
 			groupBoxAdvanced.Enabled = false;
+			if (ViewName.Length > 0) buttonSeriesSelect.Enabled = true;
 		}
 
 		private void radioAdvanced_Click(object sender, EventArgs e) {
 			Type = ViewType.ADVANCED;
 			groupBoxAdvanced.Enabled = true;
+			buttonSeriesSelect.Enabled = false;
+		}
+
+		private void buttonSeriesSelect_Click(object sender, EventArgs e) {												
+			SeriesSelect SeriesSelectDlg = new SeriesSelect();
+			
+            // Set Current View
+            SeriesSelectDlg.ViewTag = "|" + txtViewName.Text + "|"; ;
+
+            // Show series list dialog
+			DialogResult result = SeriesSelectDlg.ShowDialog(this);
+
+            if (result == DialogResult.OK) {
+                SeriesToAdd = SeriesSelectDlg.CheckedItems;
+                SeriesToRemove = SeriesSelectDlg.UnCheckedItems;
+            }            
+		}
+
+		private void txtViewName_TextChanged(object sender, EventArgs e) {
+			if (txtViewName.Text.Length > 0)
+				buttonSeriesSelect.Enabled = true;
+			else
+				buttonSeriesSelect.Enabled = false;
+
+            // Clear Series List so we are forced to re-query
+            SeriesToAdd = null;
+            SeriesToRemove = null;
 		}
     }
 }

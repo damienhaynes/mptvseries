@@ -104,6 +104,18 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     
     static public XmlNode ConfigureFavourites(bool bAdd, String sAccountID, String sSeriesID)
     {
+        if (sAccountID.Length == 0) {
+            MPTVSeriesLog.Write("Cannot submit online favourite, make sure you have your Account identifier is set!");
+            return null;
+        }
+
+        if (bAdd) {
+            MPTVSeriesLog.Write(string.Format("Adding favourite series \"{0}\" to online database (theTVDB.com)", Helper.getCorrespondingSeries(int.Parse(sSeriesID))));
+        } 
+        else {
+            MPTVSeriesLog.Write(string.Format("Removing favourite series \"{0}\" from online database (theTVDB.com)", Helper.getCorrespondingSeries(int.Parse(sSeriesID))));
+        }
+
         string url = String.Format(apiURIs.ConfigureFavourites, sAccountID, (bAdd?"add":"remove"),sSeriesID);
         return Generic(url, true, false, Format.NoExtension);
     }
@@ -130,11 +142,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
         return false;
       }
+
       if (itemId == "0" || rating < 0 || rating > 10)
       {
         MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
         return false;
       }
+
       if (!DBOnlineMirror.IsMirrorsAvailable)
       {
         // Server maybe available now.

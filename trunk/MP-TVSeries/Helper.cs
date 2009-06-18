@@ -260,7 +260,12 @@ namespace WindowPlugins.GUITVSeries
             }
             return path;
         }
-
+        
+        /// <summary>
+        /// Removes 'the' and other common words from the beginning of a series
+        /// </summary>
+        /// <param name="sName"></param>
+        /// <returns></returns>
         public static string GetSortByName(string sName)
         {
             string SortBy = sName;
@@ -280,6 +285,11 @@ namespace WindowPlugins.GUITVSeries
             return SortBy;
         }
 
+        /// <summary>
+        /// Converts a string of letters to corresponding numbers
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 		public static string ConvertSMSInputToPinCode(string input) {
 			switch (input.ToLower()) {
 				case "a":
@@ -329,6 +339,51 @@ namespace WindowPlugins.GUITVSeries
 
 			}
 		}
+
+        /// <summary>
+        /// Builds a string of pipe seperated tagged views for a series
+        /// </summary>
+        /// <param name="series">Series object</param>
+        /// <param name="addView">Set to true if adding a view to series</param>
+        /// <param name="viewName">Name of view</param>
+        /// <returns></returns>
+        public static string GetSeriesViewTags(DBSeries series, bool addView, string viewName) {                                   
+            // Get Current tags in series
+            string newTags = string.Empty;
+            string currTags = series[DBOnlineSeries.cViewTags].ToString().Trim();
+            string[] splitTags = currTags.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);            
+
+            if (addView) {
+                // If no view tags exists, add it
+                if (currTags.Length == 0) {
+                    newTags = "|" + viewName + "|";
+                }
+                else {
+                    // Check if view tag already exists, ignoring case. If not add it
+                    bool tagExists = false;
+                    foreach (string tag in splitTags) {
+                        if (tag.Equals(viewName, StringComparison.CurrentCultureIgnoreCase)) {
+                            tagExists = true;
+                            newTags = currTags;
+                            break;
+                        }
+                    }
+                    // Add view tag to series if it doesnt exist
+                    if (!tagExists)
+                        newTags = currTags + viewName + "|";
+                }
+            }
+            else {
+                // Remove tag if its exists
+                foreach (string tag in splitTags) {
+                    if (!tag.Equals(viewName, StringComparison.CurrentCultureIgnoreCase))
+                        newTags += "|" + tag;
+                }
+                if (newTags.Length > 0)
+                    newTags += "|";
+            }
+            return newTags;
+        }
 
         #endregion
     }

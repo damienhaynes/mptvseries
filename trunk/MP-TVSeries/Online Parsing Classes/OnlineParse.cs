@@ -1134,14 +1134,12 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
-					bool MarkWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
-
                     foreach (DBOnlineSeries series in seriesList)
                     {
                         MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
                         GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
 
-                        // Set Series Ratings
+                        // Set Series Rating
                         series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
                         series.Commit();
 
@@ -1149,15 +1147,10 @@ namespace WindowPlugins.GUITVSeries
                         condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
                         List<DBEpisode> episodes = DBEpisode.Get(condition);
 
-						// Set Episode Ratings
                         foreach (DBEpisode episode in episodes)
                         {
-							if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID])) {
-								episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
-								// If episode has been rated online, mark as watched
-								if (MarkWatched)
-									episode[DBOnlineEpisode.cWatched] = true;
-							}
+                            if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID]))
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
                             episode.Commit();
                         }
                     }
@@ -1179,9 +1172,6 @@ namespace WindowPlugins.GUITVSeries
             
         }
 
-
-
-
         public void UpdateUserFavourites()
         {
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
@@ -1191,22 +1181,21 @@ namespace WindowPlugins.GUITVSeries
 
                 GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
 
-                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
-                foreach (DBOnlineSeries series in seriesList) {
+                SQLCondition conditions = new SQLCondition();
+                List<DBSeries> seriesList = DBSeries.Get(conditions);
+                
+                foreach (DBSeries series in seriesList) {
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
                         MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                        series[DBOnlineSeries.cIsOnlineFavourite] = "1";
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cOnlineFavouriteTransToken);
                         series.Commit();
                     } else {
-                        series[DBOnlineSeries.cIsOnlineFavourite] = "0";
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, false, DBView.cOnlineFavouriteTransToken);
                         series.Commit();
                     }
                 }
             }
         }
-
-
-
 
         public void UpdateEpisodeThumbNails()
         {

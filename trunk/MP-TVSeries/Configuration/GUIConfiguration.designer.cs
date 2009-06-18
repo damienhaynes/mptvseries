@@ -199,9 +199,9 @@ namespace WindowPlugins.GUITVSeries
 			this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
 			this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
 			this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
-			this.chkOnlineFavourites = new System.Windows.Forms.CheckBox();
 			this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
 			this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
 			this.splitMain_Log = new System.Windows.Forms.SplitContainer();
 			this.tabControl_Details = new System.Windows.Forms.TabControl();
 			this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -259,7 +259,6 @@ namespace WindowPlugins.GUITVSeries
 			this.label26 = new System.Windows.Forms.Label();
 			this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
 			this.dbOptionCheckBoxSMSKeyboard = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
 			this.label76 = new System.Windows.Forms.Label();
 			this.label75 = new System.Windows.Forms.Label();
@@ -1988,19 +1987,6 @@ namespace WindowPlugins.GUITVSeries
 					"right click on this textbox to bring up a menu of available fields from the data" +
 					"base.\r\n\r\nDefault: Empty");
 			// 
-			// chkOnlineFavourites
-			// 
-			this.chkOnlineFavourites.AutoSize = true;
-			this.chkOnlineFavourites.Location = new System.Drawing.Point(25, 351);
-			this.chkOnlineFavourites.Name = "chkOnlineFavourites";
-			this.chkOnlineFavourites.Size = new System.Drawing.Size(250, 17);
-			this.chkOnlineFavourites.TabIndex = 22;
-			this.chkOnlineFavourites.Text = "Use Favourites defined online in Favourite View";
-			this.toolTip_InfoHelp.SetToolTip(this.chkOnlineFavourites, "Enable this option to use your favourites that you have defined online at thetvdb" +
-					".com in your Favourite view.");
-			this.chkOnlineFavourites.UseVisualStyleBackColor = true;
-			this.chkOnlineFavourites.CheckedChanged += new System.EventHandler(this.chkOnlineFavourites_CheckedChanged);
-			// 
 			// checkBox_Episode_HideUnwatchedThumbnail
 			// 
 			this.checkBox_Episode_HideUnwatchedThumbnail.AutoSize = true;
@@ -2029,6 +2015,19 @@ namespace WindowPlugins.GUITVSeries
 					"ve watched an episodes which hasn\'t been rated yet.");
 			this.optionAsk2Rate.UseVisualStyleBackColor = true;
 			this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+			// 
+			// dbOptionCheckBoxMarkRatedEpsAsWatched
+			// 
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 240);
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 31;
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
+			this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
 			// 
 			// splitMain_Log
 			// 
@@ -2887,19 +2886,6 @@ namespace WindowPlugins.GUITVSeries
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "General Settings";
 			// 
-			// dbOptionCheckBoxMarkRatedEpsAsWatched
-			// 
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 240);
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 31;
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
-			this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
-			this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
-			// 
 			// dbOptionCheckBoxSMSKeyboard
 			// 
 			this.dbOptionCheckBoxSMSKeyboard.AutoSize = true;
@@ -3072,7 +3058,6 @@ namespace WindowPlugins.GUITVSeries
 			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox8.Controls.Add(this.chkOnlineFavourites);
 			this.groupBox8.Controls.Add(this.buttonViewTemplates);
 			this.groupBox8.Controls.Add(this.buttonPinCode);
 			this.groupBox8.Controls.Add(this.buttonEditView);
@@ -4701,8 +4686,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel linkAccountID;
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.Label label70;
-        private System.Windows.Forms.LinkLabel linkExpressionHelp;
-        private System.Windows.Forms.CheckBox chkOnlineFavourites;
+		private System.Windows.Forms.LinkLabel linkExpressionHelp;
         private System.Windows.Forms.Label label71;
         private System.Windows.Forms.ComboBox cboFanartResolution;
         private System.Windows.Forms.CheckBox chkAutoDownloadFanart;

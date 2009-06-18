@@ -121,6 +121,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Channels = "Channels";
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
+        public static string OnlineFavourites = "Online Favourites";
         public static string RecentlyAdded = "Recently Added";
 		public static string ContentRating = "Content Rating";
         public static string ChangeView = "Change View";
@@ -321,8 +322,9 @@ namespace WindowPlugins.GUITVSeries
                     return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));
                 }
                 catch {
-                    MPTVSeriesLog.Write(string.Format("Unable to translate field: {0}", Field));
-                    return string.Empty; }
+                    //MPTVSeriesLog.Write(string.Format("Unable to translate field: {0}", Field));
+                    return string.Empty; 
+                }
             } 
             else 
                 return string.Empty;
