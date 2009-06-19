@@ -1187,10 +1187,10 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBSeries series in seriesList) {
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
                         MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cOnlineFavouriteTransToken);
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cTranslateTokenOnlineFavourite);
                         series.Commit();
                     } else {
-                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, false, DBView.cOnlineFavouriteTransToken);
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, false, DBView.cTranslateTokenOnlineFavourite);
                         series.Commit();
                     }
                 }

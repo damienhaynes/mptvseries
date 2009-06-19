@@ -42,9 +42,29 @@ namespace WindowPlugins.GUITVSeries
         public const String cViewConfig = "viewConfig";
         public const String cTaggedView = "TaggedView";
         public const String cParentalControl = "ParentalControl";
-
-        public static String cFavouriteTransToken = "Favourites";
-        public static String cOnlineFavouriteTransToken = "OnlineFavourites";
+        
+        // Translation Tokens defined in Translation.cs
+        public const String cTranslateTokenAll = "All";        
+        public const String cTranslateTokenFavourite = "Favourites";
+        public const String cTranslateTokenOnlineFavourite = "OnlineFavourites";
+        public const String cTranslateTokenUnwatched = "Unwatched";
+        public const String cTranslateTokenChannels = "Channels";
+        public const String cTranslateTokenGenres = "Genres";
+        public const String cTranslateTokenContentRating = "ContentRating";
+        public const String cTranslateTokenViewTags = "ViewTags";
+        public const String cTranslateTokenActors = "Actors";
+        public const String cTranslateTokenLatest = "Latest";
+        public const String cTranslateTokenRecentlyAdded = "RecentlyAdded";
+        public const String cTranslateTokenContinuing = "Continuing";
+        public const String cTranslateTokenEnded = "Ended";
+        public const String cTranslateTokenTop10User = "Top10User";
+        public const String cTranslateTokenTop10Online = "Top10Online";
+        public const String cTranslateTokenTop25User = "Top25User";
+        public const String cTranslateTokenTop25Online = "Top25Online";
+        public const String cTranslateTokenHighDefinition = "HighDefinition";
+        public const String cTranslateTokenStandardDefinition = "StandardDefinition";
+        public const String cTranslateTokenSubtitles = "Subtitles";
+        public const String cTranslateTokenMultiAudio = "MultiAudio";        
 
         public DBView()
             : base(cTableName)
@@ -145,13 +165,24 @@ namespace WindowPlugins.GUITVSeries
             fillDefaults();
         }
 
+        /// <summary>
+        /// Adds new view, Pretty Name is defined using Translation Engine
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="name"></param>
+        /// <param name="config"></param>
+        /// <param name="tagview"></param>
         public static void AddView(int index, string name, string config, bool tagview) {
+            AddView(index, name, string.Empty, config, tagview);
+        }
+
+        public static void AddView(int index, string name, string prettyname, string config, bool tagview) {
             DBView view = new DBView();
             view[cIndex] = index;
             view[cEnabled] = "1";
             view[cSort] = index + 1;
             view[cTransToken] = name;
-            view[cPrettyName] = name;
+            view[cPrettyName] = prettyname;
             view[cViewConfig] = config;
             view[cTaggedView] = tagview;
             view[cParentalControl] = "0";
@@ -171,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "0";
                 view[cEnabled] = "1";
                 view[cSort] = "1";
-                view[cTransToken] = "All";
+                view[cTransToken] = cTranslateTokenAll;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"series<;><;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
@@ -184,9 +215,9 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "1";
                 view[cEnabled] = "1";
                 view[cSort] = "2";
-                view[cTransToken] = cFavouriteTransToken;
+                view[cTransToken] = cTranslateTokenFavourite;
                 view[cPrettyName] = "";
-                view[cViewConfig] = GetTaggedViewConfigString(DBView.cFavouriteTransToken);
+                view[cViewConfig] = GetTaggedViewConfigString(cTranslateTokenFavourite);
                 view[cTaggedView] = "1";
                 view[cParentalControl] = "0";
                 view.Commit();
@@ -195,9 +226,9 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "2";
                 view[cEnabled] = "1";
                 view[cSort] = "3";
-                view[cTransToken] = cOnlineFavouriteTransToken;
+                view[cTransToken] = cTranslateTokenOnlineFavourite;
                 view[cPrettyName] = "";
-                view[cViewConfig] = GetTaggedViewConfigString(DBView.cOnlineFavouriteTransToken);
+                view[cViewConfig] = GetTaggedViewConfigString(cTranslateTokenOnlineFavourite);
                 view[cTaggedView] = "1";
                 view[cParentalControl] = "0";
                 view.Commit();
@@ -206,7 +237,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "3";
                 view[cEnabled] = "1";
                 view[cSort] = "4";
-                view[cTransToken] = "Unwatched";
+                view[cTransToken] = cTranslateTokenUnwatched;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"series<;><Episode.Watched>;=;0<;><;>" +
                                     "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
@@ -219,7 +250,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "4";
                 view[cEnabled] = "1";
                 view[cSort] = "5";
-                view[cTransToken] = "Channels";
+                view[cTransToken] = cTranslateTokenChannels;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Network><;><;><;>" +
                                     "<nextStep>series<;><;><;>" +
@@ -233,7 +264,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "5";
                 view[cEnabled] = "1";
                 view[cSort] = "6";
-                view[cTransToken] = "Genres";
+                view[cTransToken] = cTranslateTokenGenres;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"group:<Series.Genre><;><;><;>" +
                                     "<nextStep>series<;><;><;>" +
@@ -247,7 +278,7 @@ namespace WindowPlugins.GUITVSeries
 				view[cIndex] = "6";
 				view[cEnabled] = "1";
 				view[cSort] = "7";
-				view[cTransToken] = "ContentRating";
+				view[cTransToken] = cTranslateTokenContentRating;
 				view[cPrettyName] = "";
 				view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
 									"<nextStep>series<;><;><;>" +
@@ -261,7 +292,7 @@ namespace WindowPlugins.GUITVSeries
 				view[cIndex] = "7";
 				view[cEnabled] = "1";
 				view[cSort] = "8";
-				view[cTransToken] = "ViewTags";
+				view[cTransToken] = cTranslateTokenViewTags;
 				view[cPrettyName] = "";
 				view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
 									"<nextStep>series<;><;><;>" +
@@ -275,7 +306,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "8";
                 view[cEnabled] = "1";
                 view[cSort] = "9";
-                view[cTransToken] = "Latest";
+                view[cTransToken] = cTranslateTokenLatest;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><;><Episode.FirstAired>;desc<;>";
                 view[cTaggedView] = "0";
@@ -286,7 +317,7 @@ namespace WindowPlugins.GUITVSeries
                 view[cIndex] = "9";
                 view[cEnabled] = "1";
                 view[cSort] = "10";
-                view[cTransToken] = "RecentlyAdded";
+                view[cTransToken] = cTranslateTokenRecentlyAdded;
                 view[cPrettyName] = "";
                 view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
                 view[cTaggedView] = "0";
@@ -319,7 +350,7 @@ namespace WindowPlugins.GUITVSeries
                         view[cIndex] = "6";
                         view[cEnabled] = "1";
                         view[cSort] = "7";
-                        view[cTransToken] = "RecentlyAdded";
+                        view[cTransToken] = cTranslateTokenRecentlyAdded;
                         view[cPrettyName] = "";
                         view[cViewConfig] = @"episode<;><Episode.FileDateCreated>;>=;<today-7><;><Episode.FileDateCreated>;desc<;>";
                         view.Commit();
@@ -332,7 +363,7 @@ namespace WindowPlugins.GUITVSeries
 						view[cIndex] = "7";
 						view[cEnabled] = "1";
 						view[cSort] = "8";
-						view[cTransToken] = "ContentRating";
+						view[cTransToken] = cTranslateTokenContentRating;
 						view[cPrettyName] = "";
 						view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
 											"<nextStep>series<;><;><;>" +
@@ -346,7 +377,7 @@ namespace WindowPlugins.GUITVSeries
 						view[cIndex] = "8";
 						view[cEnabled] = "1";
 						view[cSort] = "9";
-						view[cTransToken] = "ViewTags";
+						view[cTransToken] = cTranslateTokenViewTags;
 						view[cPrettyName] = "";
 						view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
 											"<nextStep>series<;><;><;>" +
@@ -363,11 +394,11 @@ namespace WindowPlugins.GUITVSeries
 
                         // Update old Favourite View to Tagged View
                         foreach (DBView v in viewList) {
-                            if (v[DBView.cTransToken] == cFavouriteTransToken) {
+                            if (v[DBView.cTransToken] == cTranslateTokenFavourite) {
                                 v[cTaggedView] = "1";
-                                v[cTransToken] = cFavouriteTransToken;
+                                v[cTransToken] = cTranslateTokenFavourite;
                                 v[cPrettyName] = "";
-                                v[cViewConfig] = GetTaggedViewConfigString(cFavouriteTransToken);
+                                v[cViewConfig] = GetTaggedViewConfigString(cTranslateTokenFavourite);
                                 v.Commit();
                             }
                         }
@@ -377,9 +408,9 @@ namespace WindowPlugins.GUITVSeries
                         view[cIndex] = viewList.Length;
                         view[cEnabled] = "1";
                         view[cSort] = viewList.Length + 1;
-                        view[cTransToken] = cOnlineFavouriteTransToken;
+                        view[cTransToken] = cTranslateTokenOnlineFavourite;
                         view[cPrettyName] = "";
-                        view[cViewConfig] = GetTaggedViewConfigString(cOnlineFavouriteTransToken);
+                        view[cViewConfig] = GetTaggedViewConfigString(cTranslateTokenOnlineFavourite);
                         view[cParentalControl] = "0";
                         view[cTaggedView] = "1";
                         view.Commit();                        

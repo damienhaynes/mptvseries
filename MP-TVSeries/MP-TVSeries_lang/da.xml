@@ -185,16 +185,16 @@
     <string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Forkert kode</string>
 
 	<!-- View Templates -->
-	<string Field="ViewContinuing" Original="Continuing Series">Forsættende serie</string>
-	<string Field="ViewEnded" Original="Ended Series">Afsluttet serie</string>
-	<string Field="ViewHighDefinition" Original="High Definition">High Definition</string>
-	<string Field="ViewStandardDefinition" Original="Standard Defintion">Standard Defintion</string>
-	<string Field="ViewTop10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
-	<string Field="ViewTop10User" Original="Top 10 (User)">Top 10 (Brugere)</string>
-	<string Field="ViewTop25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
-	<string Field="ViewTop25User" Original="Top 25 (User)">Top 25 (Brugere)</string>
-	<string Field="ViewSubtitles" Original="Subtitles">Undertekster</string>
-	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Flere lydsport</string>
+	<string Field="Continuing" Original="Continuing Series">Forsættende serie</string>
+	<string Field="Ended" Original="Ended Series">Afsluttet serie</string>
+	<string Field="HighDefinition" Original="High Definition">High Definition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (Brugere)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25 (Brugere)</string>
+	<string Field="Subtitles" Original="Subtitles">Undertekster</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Flere lydsport</string>
 
 	
 </strings>

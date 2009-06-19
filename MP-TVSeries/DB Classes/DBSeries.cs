@@ -396,7 +396,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Migrating Favourite Series");
                         foreach (DBSeries series in seriesList) {
                             // Tagged view are seperated with the pipe "|" character
-                            string tagName = "|" + DBView.cFavouriteTransToken + "|";                      
+                            string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
                             series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
                             series.Commit();                            
                         }
@@ -409,7 +409,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Migrating Online Favourite Series");
                         foreach (DBSeries series in seriesList) {
                             // Tagged view are seperated with the pipe "|" character
-                            string tagName = "|" + DBView.cOnlineFavouriteTransToken + "|";
+                            string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
                             series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
                             series.Commit();                            
                         }
