@@ -180,18 +180,18 @@
 	<string Field="ViewIsLocked" Original="View Locked">View Locked</string>
 	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">The view "{0}" is locked</string>
 	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Enter in 4 Digit Pin Code to proceed:</string>
-	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin Incorrect</string>
-	<!-- View Templates -->
-	<string Field="ViewContinuing" Original="Continuing Series">Continuing Series</string>
-	<string Field="ViewEnded" Original="Ended Series">Ended Series</string>
-	<string Field="ViewHighDefinition" Original="High Definition">High Definition</string>
-	<string Field="ViewStandardDefinition" Original="Standard Defintion">Standard Defintion</string>
-	<string Field="ViewTop10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
-	<string Field="ViewTop10User" Original="Top 10 (User)">Top 10 (User)</string>
-	<string Field="ViewTop25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
-	<string Field="ViewTop25User" Original="Top 25 (User)">Top 25(User)</string>
-	<string Field="ViewSubtitles" Original="Subtitles">Subtitles</string>
-	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
-	<string Field="OnlineFavourites" Original="Online Favourites">Online Favourites</string>
+	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin Incorrect</string>=	
+	<string Field="Continuing" Original="Continuing Series">Continuing Series</string>
+	<string Field="Ended" Original="Ended Series">Ended Series</string>
+	<string Field="HighDefinition" Original="High Definition">High Definition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (User)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25(User)</string>
+	<string Field="Subtitles" Original="Subtitles">Subtitles</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Online Favourites</string>	
+	<string Field="Actors" Original="Actors">Actors</string>
 	
 </strings>

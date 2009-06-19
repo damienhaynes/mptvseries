@@ -2896,7 +2896,7 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
 
             // Add to online database
-            if (selectedView == DBView.cOnlineFavouriteTransToken) {
+            if (selectedView == DBView.cTranslateTokenOnlineFavourite) {
                 Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(add, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
             }
                       
@@ -4084,7 +4084,7 @@ namespace WindowPlugins.GUITVSeries
                     string config = DBView.GetTaggedViewConfigString(name);
                     
 	                // Add new 'Simple' view                    
-					DBView.AddView(index, name, config, true);
+					DBView.AddView(index, name, name, config, true);
 
                     // Add / Remove series from view                    
                     if (viewConfigDialog.SeriesToAdd != null && viewConfigDialog.SeriesToRemove != null) {                                                                        
@@ -4095,7 +4095,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
                             
                             // Add from online database
-                            if (name == DBView.cOnlineFavouriteTransToken) {
+                            if (name == DBView.cTranslateTokenOnlineFavourite) {
                                 Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
                             }
                         }
@@ -4107,7 +4107,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Remove from online database
-                            if (name == DBView.cOnlineFavouriteTransToken) {
+                            if (name == DBView.cTranslateTokenOnlineFavourite) {
                                 Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
                             }
                         }
@@ -4141,7 +4141,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Add from online database
-                            if (name == DBView.cOnlineFavouriteTransToken) {
+                            if (name == DBView.cTranslateTokenOnlineFavourite) {
                                 Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
                             }
                         }
@@ -4153,7 +4153,7 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Remove from online database
-                            if (name == DBView.cOnlineFavouriteTransToken) {
+                            if (name == DBView.cTranslateTokenOnlineFavourite) {
                                 Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
                             }
                         }
@@ -4208,9 +4208,10 @@ namespace WindowPlugins.GUITVSeries
 
                 string name = dialog.SelectedItem.name;
                 string config = dialog.SelectedItem.configuration;
+                bool tagview = dialog.SelectedItem.tagview;
 
                 // Add Template to Views
-                DBView.AddView(index, name, config, false);
+                DBView.AddView(index, name, config, tagview);
 
                 // Reload List and available Views
                 LoadViews();

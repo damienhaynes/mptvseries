@@ -3146,7 +3146,7 @@ namespace WindowPlugins.GUITVSeries
                 string config = DBView.GetTaggedViewConfigString(selectedItem);
 
                 MPTVSeriesLog.Write(string.Format("Creating New Tagged View: {0}", selectedItem));
-                DBView.AddView(index, selectedItem, config, true);
+                DBView.AddView(index, selectedItem, selectedItem, config, true);
             }
             #endregion
 
@@ -3175,7 +3175,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Special case to handle online favourites
             // We need to add/remove from online database
-            if (selectedItem == DBView.cOnlineFavouriteTransToken) {
+            if (selectedItem == DBView.cTranslateTokenOnlineFavourite) {
                 string account = DBOption.GetOptions(DBOption.cOnlineUserID);
                 if (Helper.String.IsNullOrEmpty(account)) {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
