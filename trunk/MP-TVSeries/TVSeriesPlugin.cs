@@ -1747,6 +1747,10 @@ namespace WindowPlugins.GUITVSeries
                 switch (this.listLevel)
                 {
                     case Listlevel.Series:
+						if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
+							DisableFanart();
+						}
+						goto case Listlevel.Group;
                     case Listlevel.Group:
                         clearFieldsForskin("Season");
                         clearFieldsForskin("Series");
