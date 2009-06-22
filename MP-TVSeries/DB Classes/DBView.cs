@@ -168,10 +168,10 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Adds new view, Pretty Name is defined using Translation Engine
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="name"></param>
-        /// <param name="config"></param>
-        /// <param name="tagview"></param>
+        /// <param name="index">Unique index for view</param>
+        /// <param name="name">Name of view defined internally</param>
+        /// <param name="config">Configuration for view, defines, conditions and hierachy</param>
+        /// <param name="tagview">Set to TRUE if this is a simple view, where you can assign series manually to view</param>
         public static void AddView(int index, string name, string config, bool tagview) {
             AddView(index, name, string.Empty, config, tagview);
         }
