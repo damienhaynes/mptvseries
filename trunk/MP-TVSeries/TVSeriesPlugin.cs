@@ -42,8 +42,9 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback
-    {
+    public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback {
+
+        #region Constructor
         public TVSeriesPlugin()
         {
             m_stepSelections.Add(new string[] { null });
@@ -68,8 +69,9 @@ namespace WindowPlugins.GUITVSeries
 
             seasonbanner = new AsyncImageResource();
             seasonbanner.Property = "#TVSeries.SeasonBanner";
-            seasonbanner.Delay = artworkDelay;	
+            seasonbanner.Delay = artworkDelay;
         }
+        #endregion
 
         #region ISetupForm Members
 
