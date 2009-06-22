@@ -2,7 +2,6 @@
 <!-- MP-TV-Series translation file -->
 <!-- Russian(RU) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-
 <strings>
 	<string Field="Series" Original="Series">Сериал</string>
 	<string Field="Series_Plural" Original="Series (Plr)">Сериалы</string> <!-- plural -->
@@ -116,7 +115,7 @@
 	<string Field="FanartDisableLabel" Original="Disabled">Отключено</string>
 	<string Field="FanartMenuEnable" Original="Enable">Включить фанарт</string>
 	<string Field="FanartMenuDisable" Original="Disable">Отключить фанарт</string>
-<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
 	<string Field="LayoutList" Original="List">Список</string>
 	<string Field="LayoutListBanners" Original="List Banners">Список и баннеры</string>
 	<string Field="LayoutListPosters" Original="List Posters">Список и постеры</string>
@@ -135,4 +134,62 @@
 	<string Field="LabelChosen" Original="Chosen:">Выбрано:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Отключено:</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Сбросить выбор пользователя</string>
+	<string Field="DeleteFromDisk" Original="Delete from Disk">Удалить с диска</string>
+	<string Field="DeleteFromDatabase" Original="Delete from Database">Удалить из базы данных</string>
+	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Удалитиь с диска из БД</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">выберите свой рейтинг для {0}</string>
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Скрыть миниатюры-спойлеры</string>	
+	<!-- Rate Descriptions - 5 stars-->
+	<string Field="RateFiveStarOne" Original="Terrible">Ужасно</string>
+	<string Field="RateFiveStarTwo" Original="">Средне</string>
+	<string Field="RateFiveStarThree" Original="">Хорошо</string>
+	<string Field="RateFiveStarFour" Original="">Супер</string>
+	<string Field="RateFiveStarFive" Original="">Превосходно</string>
+	<!-- Rate Descriptions - 10 Stars-->
+	<string Field="RateTenStarOne" Original="Abysmal">Отстой</string>
+	<string Field="RateTenStarTwo" Original="Terrible">Ужасно</string>
+	<string Field="RateTenStarThree" Original="Bad">Плохо</string>
+	<string Field="RateTenStarFour" Original="Poor">Неважно</string>
+	<string Field="RateTenStarFive" Original="Mediocre">Средне</string>
+	<string Field="RateTenStarSix" Original="Fair">Ничего</string>
+	<string Field="RateTenStarSeven" Original="Good">Хорошо</string>
+	<string Field="RateTenStarEight" Original="Great">Замечательно</string>
+	<string Field="RateTenStarNine" Original="Superb">Супер</string>
+	<string Field="RateTenStarTen" Original="Perfect">Превосходно</string>
+	<string Field="ContentRating" Original="Content Rating">Рейтинг содержания</string>
+	<string Field="ViewTags" Original="View Tags">Теги отображений</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Добавить сериал к отображению</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Убрать сериал из отображения</string>
+	<string Field="NewViewTag" Original="New Tag">Новое отображение</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Прокрутить баннер сериала</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Прокрутить баннер сезона</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Прокрутить постер сериала</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Интервал таймера фанарта</string>
+	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 секунд</string>
+	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 секунд</string>
+	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 секунд</string>
+	<string Field="FanartIntervalThirtySeconds" Original="30 Seconds">30 секунд</string>
+	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 секунд</string>
+	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 секунд</string>
+	<string Field="NoPlaylistsFound" Original="No Playlists found in:">Не найдено плейлистов в папке:</string>
+	<string Field="PinCode" Original="Pin Code">Пин-код</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Ввведен неверный пин-код</string>
+	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Нажмите ОК, чтобы попробовать еще</string>
+	<string Field="ParentalControlLocked" Original="Lock Views">Заблокировать отображение</string>
+	<string Field="ViewIsLocked" Original="View Locked">Отображение заблокировано</string>
+	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Отображение "{0}" заблокировано</string>
+	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Ввведите 4-значный пин-код для продолжения:</string>
+	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Неверный пин-код</string>
+	<string Field="Continuing" Original="Continuing Series">Продолжающийся сериал</string>
+	<string Field="Ended" Original="Ended Series">Закончившийся сериал</string>
+	<string Field="HighDefinition" Original="High Definition">Высокая четкость</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Стандартная четкость</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Топ 10 (Онлайн)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Топ 10 (Пользователь)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Топ 25 (Онлайн)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Топ 25(Пользователь)</string>
+	<string Field="Subtitles" Original="Subtitles">Субтитры</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Несколько звуковых дорожек</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Онлайн избранное</string>	
+	<string Field="Actors" Original="Actors">Актеры</string>	
 </strings>
