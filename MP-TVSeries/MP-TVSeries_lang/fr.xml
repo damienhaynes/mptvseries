@@ -182,16 +182,16 @@
 	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Entrer le code Pin:</string>
 	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Code Pin incorrect</string>
 	<!-- View Templates -->
-	<string Field="ViewContinuing" Original="Continuing Series">Séries en Cours</string>
-	<string Field="ViewEnded" Original="Ended Series">Séries Terminées</string>
-	<string Field="ViewHighDefinition" Original="High Definition">Haute définition</string>
-	<string Field="ViewStandardDefinition" Original="Standard Defintion">Définition Standart</string>
-	<string Field="ViewTop10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
-	<string Field="ViewTop10User" Original="Top 10 (User)">Top 10 (Utilisateur)</string>
-	<string Field="ViewTop25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
-	<string Field="ViewTop25User" Original="Top 25 (User)">Top 25(Utilisateur)</string>
-	<string Field="ViewSubtitles" Original="Subtitles">Sous-Titres</string>
-	<string Field="ViewMultiAudio" Original="Multiple Audio Tracks">Plusieurs Pistes Audio</string>
+	<string Field="Continuing" Original="Continuing Series">Séries en Cours</string>
+	<string Field="Ended" Original="Ended Series">Séries Terminées</string>
+	<string Field="HighDefinition" Original="High Definition">Haute définition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Définition Standart</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (Utilisateur)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25(Utilisateur)</string>
+	<string Field="Subtitles" Original="Subtitles">Sous-Titres</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Plusieurs Pistes Audio</string>
 	<string Field="OnlineFavourites" Original="Online Favourites">Favoris en ligne</string>
 	<string Field="Actors" Original="Actors">Acteurs</string>
 </strings>
