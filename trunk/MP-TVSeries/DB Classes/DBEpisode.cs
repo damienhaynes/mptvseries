@@ -67,6 +67,8 @@ namespace WindowPlugins.GUITVSeries
         
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
+        
+        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Writer", "Director", "GuestStars" });
 
         static DBOnlineEpisode()
         {
