@@ -193,5 +193,7 @@
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
 	<string Field="OnlineFavourites" Original="Online Favourites">Online Favourites</string>	
 	<string Field="Actors" Original="Actors">Actors</string>
+	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
+	<string Field="LocalMedia" Original="Local Media">Local Media</string>
 	
 </strings>

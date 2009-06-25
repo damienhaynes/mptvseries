@@ -150,6 +150,8 @@ namespace WindowPlugins.GUITVSeries
 		public static string Subtitles = "Subtitles";
 		public static string MultiAudio = "Multiple Audio Tracks";
         public static string Actors = "Actors";
+        public static string RemovableMedia = "Removable Media";
+        public static string LocalMedia = "Local Media";
 
         // Fanart
         public static string FanArt = "Fanart";

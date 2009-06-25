@@ -237,6 +237,26 @@ namespace WindowPlugins.GUITVSeries.Configuration {
                 templates.Add(template);
             }
 
+            // Removable Media
+            if (!viewNames.Contains(DBView.cTranslateRemovableMedia)) {
+                ViewTemplate template = new ViewTemplate();
+                template.name = DBView.cTranslateRemovableMedia;
+                template.prettyname = Translation.RemovableMedia;
+                template.description = "Displays all Episodes found in pathes where the 'Removable' option is enabled e.g. DVD Drive, USB Drive.";
+                template.configuration = @"series<;><Episode.Removable>;=;1<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                templates.Add(template);
+            }
+
+            // Local Media
+            if (!viewNames.Contains(DBView.cTranslateLocalMedia)) {
+                ViewTemplate template = new ViewTemplate();
+                template.name = DBView.cTranslateLocalMedia;
+                template.prettyname = Translation.LocalMedia;
+                template.description = "Displays all Episodes found in pathes where the 'Removable' option is disabled e.g. Internal Hard Drives, Network Drive.";
+                template.configuration = @"series<;><Episode.Removable>;=;0<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                templates.Add(template);
+            }
+
             // Subtitles Episodes
             if (!viewNames.Contains(DBView.cTranslateTokenSubtitles)) {
                 ViewTemplate template = new ViewTemplate();
