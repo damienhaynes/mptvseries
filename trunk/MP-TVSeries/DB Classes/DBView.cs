@@ -64,7 +64,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cTranslateTokenHighDefinition = "HighDefinition";
         public const String cTranslateTokenStandardDefinition = "StandardDefinition";
         public const String cTranslateTokenSubtitles = "Subtitles";
-        public const String cTranslateTokenMultiAudio = "MultiAudio";        
+        public const String cTranslateTokenMultiAudio = "MultiAudio";
+        public const String cTranslateRemovableMedia = "RemovableMedia";
+        public const String cTranslateLocalMedia = "LocalMedia";
 
         public DBView()
             : base(cTableName)
