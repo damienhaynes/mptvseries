@@ -204,17 +204,18 @@ namespace WindowPlugins.GUITVSeries
 
         #region Other Public Methods
 
-        static List<string> nonExistingFiles = new List<string>();
+        /// <summary>
+        /// Removes non-existant files from a list of filenames
+        /// </summary>
+        /// <param name="filenames"></param>
+        /// <returns></returns>
         public static List<string> filterExistingFiles(List<string> filenames)
         {
-            for (int f = 0; f < filenames.Count; f++)
-            {
+            for (int f = 0; f < filenames.Count; f++) {
                 bool wasCached = false;
-                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f]))
-                {
-                    if (!wasCached)
-                    {
-                        MPTVSeriesLog.Write("This Logofile does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f])) {
+                    if (!wasCached) {
+                        MPTVSeriesLog.Write("This file does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
                         nonExistingFiles.Add(filenames[f]);
                     }
                     filenames.RemoveAt(f);
@@ -222,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             return filenames;
-        }
+        } static List<string> nonExistingFiles = new List<string>();
 
         /// <summary>
         /// Convertes a given amount of Milliseconds into humanly readable MM:SS format
@@ -242,24 +243,31 @@ namespace WindowPlugins.GUITVSeries
             else { return t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00"); }
         }
 
-        public static string PathCombine(string path1, string path2)
-        {
+        /// <summary>
+        /// Joins two parts of a path
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <returns></returns>
+        public static string PathCombine(string path1, string path2) {
             if (path1 == null && path2 == null) return string.Empty;
             if (path1 == null) return path2;
             if (path2 == null) return path1;
             if (path2.Length > 0 && (path2[0] == '\\' || path2[0] == '/')) path2 = path2.Substring(1);
             return System.IO.Path.Combine(path1, path2);
         }
-
-        const char invalidCharReplacement = '_';
-        public static string cleanLocalPath(string path)
-        {
-            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-            {
+        
+        /// <summary>
+        /// Cleans the path by removing invalid characters
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string cleanLocalPath(string path) {
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars()) {
                 path = path.Replace(c, invalidCharReplacement);                
             }
             return path;
-        }
+        } const char invalidCharReplacement = '_';
         
         /// <summary>
         /// Removes 'the' and other common words from the beginning of a series
@@ -383,6 +391,33 @@ namespace WindowPlugins.GUITVSeries
                     newTags += "|";
             }
             return newTags;
+        }
+
+        /// <summary>
+        /// Removes duplicate items from a list
+        /// </summary>
+        /// <param name="inputList"></param>
+        /// <returns>A list with unique items</returns>
+        public static List<string> RemoveDuplicates(List<string> inputList) {
+            Dictionary<string, int> uniqueStore = new Dictionary<string, int>();
+            List<string> finalList = new List<string>();
+            foreach (string currValue in inputList) {
+                if (!uniqueStore.ContainsKey(currValue)) {
+                    uniqueStore.Add(currValue, 0);
+                    finalList.Add(currValue);
+                }
+            }
+            return finalList;
+        }
+
+        /// <summary>
+        /// Returns a limited list of items
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="limit"></param>
+        public static void LimitList(ref List<string> list, int limit) {
+            if (limit >= list.Count) return;
+            list.RemoveRange(list.Count - (list.Count - limit), (list.Count - limit));
         }
 
         #endregion

@@ -238,26 +238,30 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string tmpItem = results.Rows[index].fields[0];
                     // assume we now have a list of all distinct ones
-                    if (step.groupedBy.attempSplit)
-                    {
+                    if (step.groupedBy.attempSplit) {
                         // we want to try to split by "|" eg. for actors/genres
                         string[] split = DBOnlineEpisode.splitField(tmpItem);
-                        foreach (string item in split)
-                            if (item.Trim().Length == 0)
+                        foreach (string item in split) {
+                            if (item.Trim().Length == 0) {
+                                // display "Unknown" if field is empty"
                                 items.Add(Translation.Unknown);
-                            else
+                            }
+                            else {
                                 items.Add(item.Trim());
+                            }
+                        }
                     }
-                    else
+                    else {
                         if (tmpItem.Trim().Length == 0)
                             items.Add(Translation.Unknown);
                         else
                             items.Add(tmpItem.Trim());
+                    }
                 }
                 if (step.groupedBy.attempSplit)
                 {
                     // have to check for dups (because we split eg. Drama|Action so "Action" might be in twice
-                    items = removeDuplicates(items);
+                    items = Helper.RemoveDuplicates(items);
                 }
                 // now we have to sort them again (Unknown/splitting above)
                 items.Sort();
@@ -265,7 +269,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // and limit in memory here (again because those splits are hard to deal with)
                     if (step.limitItems > 0)
-                        limitList(ref items, step.limitItems);
+                        Helper.LimitList(ref items, step.limitItems);
                 }
             }
             MPTVSeriesLog.Write("View: GetGroupItems: Complete", MPTVSeriesLog.LogLevel.Debug);
@@ -287,7 +291,8 @@ namespace WindowPlugins.GUITVSeries
                         if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
                             conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
                         else 
-                            if(m_steps[stepIndex - 1].groupedBy.attempSplit) // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
+                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) 
+                                // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
                                 conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
                             else
                                 conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
@@ -311,27 +316,6 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             }
-        }
-
-        public static List<string> removeDuplicates(List<string> inputList)
-        {
-            Dictionary<string, int> uniqueStore = new Dictionary<string, int>();
-            List<string> finalList = new List<string>();
-            foreach (string currValue in inputList)
-            {
-                if (!uniqueStore.ContainsKey(currValue))
-                {
-                    uniqueStore.Add(currValue, 0);
-                    finalList.Add(currValue);
-                }
-            }
-            return finalList;
-        }
-
-        static void limitList(ref List<string> list, int limit)
-        {
-            if(limit >= list.Count) return;
-            list.RemoveRange(list.Count - (list.Count - limit), (list.Count - limit));
         }
 
         public logicalView(DBView fromDB)
@@ -448,7 +432,9 @@ namespace WindowPlugins.GUITVSeries
                 groupedBy.PrettyName = typeString.Split(':')[1];
                 getTableFieldname(typeString.Split(':')[1], out groupedBy.table, out groupedBy.rawFieldname);
                 groupedBy.tableField = getQTableNameFromUnknownType(groupedBy.table, groupedBy.rawFieldname);
-                groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);// RequiringSplit; //groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
+                // DBFields Requiring Split
+                groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname) 
+                                     || DBOnlineEpisode.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);
             }
             else if (typeString == type.series.ToString())
                 this.Type = type.series;
@@ -456,13 +442,13 @@ namespace WindowPlugins.GUITVSeries
                 this.Type = type.season;
             else if (typeString == type.episode.ToString())
                 this.Type = type.episode;
-            else this.Type = type.series; // this should never happen!
+            else 
+                this.Type = type.series; // this should never happen!
         }
 
         public void addSQLCondition(string what, string type, string condition)
         {
             if ((!what.Contains("<") || !what.Contains(".")) && !what.Contains("custom:")) return;
-
 
             SQLConditionType condtype;
             switch (type)
@@ -511,10 +497,8 @@ namespace WindowPlugins.GUITVSeries
                     conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
                 }
 				else if (lType == typeof(DBOnlineEpisode))
-                {
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
-                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                {                    
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);                 
                     conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                 }
 				else if (lType == typeof(DBEpisode)) {
@@ -532,11 +516,7 @@ namespace WindowPlugins.GUITVSeries
                     conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
                 }
                 else if (lType == typeof(DBOnlineEpisode))
-                {
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
-                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                {                    
                     // we rely on the join in dbseason for this (much, much faster)
                     conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                 }
