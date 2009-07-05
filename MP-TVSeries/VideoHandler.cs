@@ -142,7 +142,7 @@ namespace WindowPlugins.GUITVSeries
         /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
         /// We want to update this after that happens so the correct info is there.
         /// Clears properties if (EventArgs.Argument == true)
-        /// </summary>ippiiiifmp4ipimippiiiiipi8mipps
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -169,14 +169,18 @@ namespace WindowPlugins.GUITVSeries
 
             if (m_currentEpisode == null) return;
 
+			// Show Plot in OSD or Hide Spoilers
             if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || m_currentEpisode[DBOnlineEpisode.cWatched])
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);                
             else
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
 
+			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
 			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
 				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
-
+			else
+				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : series.Poster);
+			
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
