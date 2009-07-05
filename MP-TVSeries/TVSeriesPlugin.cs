@@ -4702,10 +4702,16 @@ namespace WindowPlugins.GUITVSeries
 
             // if we got a playlist
             if (_playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Count > 0)
-            {
-                // then get 1st item
+            {                
                 playlist = _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
-                PlayListItem item = playlist[0];                
+
+				// autoshuffle on load
+				if (_playlistPlayer.PlaylistAutoShuffle) {
+					playlist.Shuffle();
+				}
+
+				// then get 1st item
+				PlayListItem item = playlist[0];                
 
                 // and activate the playlist window
                 ShowPlaylistWindow();
