@@ -33,6 +33,7 @@ using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
+using MediaPortal.Configuration;
 using System.Windows.Forms;
 using SQLite.NET;
 using WindowPlugins.GUITVSeries;
@@ -131,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
         private void InitSettingsTreeAndPanes()
         {   
             string skinSettings = null;
-            string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");
+			string MediaPortalConfig = Path.Combine(Config.GetFolder(Config.Dir.Config), "MediaPortal.xml");
      
             XmlDocument doc = new XmlDocument();
             try
@@ -148,7 +149,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (skinNode.Attributes.Item(0).Value == "name")
                             {
-                                skinSettings = Path.Combine(Directory.GetCurrentDirectory(), "skin\\" + skinNode.InnerText + "\\TVSeries.SkinSettings.xml");
+                                skinSettings = Path.Combine(Config.GetFolder(Config.Dir.Skin), skinNode.InnerText + "\\TVSeries.SkinSettings.xml");
                                 break;
                             }
                         }
