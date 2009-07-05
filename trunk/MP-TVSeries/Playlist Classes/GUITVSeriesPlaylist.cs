@@ -223,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 btnAutoPlay.Selected = playlistPlayer.PlaylistAutoPlay;
                 btnAutoPlay.Label = Translation.ButtonAutoPlay;
-            }            
+            }
             
         }
 
@@ -817,7 +817,18 @@ namespace WindowPlugins.GUITVSeries
                 string playListPath = string.Empty;              
                 playListPath = DBOption.GetOptions(DBOption.cPlaylistPath);
                 playListPath = MediaPortal.Util.Utils.RemoveTrailingSlash(playListPath);
-           
+				
+				// check if Playlist folder exists, create it if not
+				if (!Directory.Exists(playListPath)){
+					try {
+						Directory.CreateDirectory(playListPath);						
+					}
+					catch (Exception e){
+						MPTVSeriesLog.Write("Error: Unable to create Playlist path: " + e.Message);
+						return;
+					}
+				}
+				
                 string fullPlayListPath = Path.GetFileNameWithoutExtension(playlistFileName);
 
                 fullPlayListPath += ".tvsplaylist";
@@ -846,6 +857,16 @@ namespace WindowPlugins.GUITVSeries
             List<GUIListItem> itemlist = _virtualDirectory.GetDirectoryExt(_directory);
             if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
                 itemlist.RemoveAt(0);
+
+			// If no playlists found, show a Message to user and then exit
+			if (itemlist.Count == 0) {
+				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+				dlgOK.SetHeading(983);
+				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
+				dlgOK.SetLine(2, _directory);
+				dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+				return;
+			}
 
             GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
@@ -915,9 +936,15 @@ namespace WindowPlugins.GUITVSeries
 
             // if we got a playlist
             if (playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Count > 0)
-            {
-                // then get 1st item
+            {				
                 playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
+
+				// autoshuffle on load
+				if (playlistPlayer.PlaylistAutoShuffle) {
+					playlist.Shuffle();
+				}
+
+				// then get 1st item
                 PlayListItem item = playlist[0];
 
                 // and start playing it

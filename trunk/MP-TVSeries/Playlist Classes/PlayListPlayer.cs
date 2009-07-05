@@ -114,8 +114,9 @@ namespace WindowPlugins.GUITVSeries
         PlayListType _currentPlayList = PlayListType.PLAYLIST_NONE;
         PlayList _tvseriesPlayList = new PlayList();        
         PlayList _emptyPlayList = new PlayList();    
-        bool _repeatPlayList = true;
-        bool _playlistAutoPlay = true;
+        bool _repeatPlayList = DBOption.GetOptions(DBOption.cRepeatPlaylist);
+        bool _playlistAutoPlay = DBOption.GetOptions(DBOption.cPlaylistAutoPlay);
+		bool _playlistAutoShuffle = DBOption.GetOptions(DBOption.cPlaylistAutoShuffle);
         string _currentPlaylistName = string.Empty;
 
         public PlayListPlayer()
@@ -526,5 +527,11 @@ namespace WindowPlugins.GUITVSeries
             get { return _playlistAutoPlay; }
             set { _playlistAutoPlay = value; }
         }
+
+		public bool PlaylistAutoShuffle {
+			get { return _playlistAutoShuffle; }
+			set { _playlistAutoShuffle = value; }
+		}
+
     }
 }

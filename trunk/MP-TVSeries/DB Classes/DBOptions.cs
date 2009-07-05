@@ -164,6 +164,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cPlaylistPath = "PlayListPath";
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
+		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
 
         public const String cScanOnStartup = "ScanOnStartup";
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
@@ -443,6 +444,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPlaylistAutoPlay) == null)
                     SetOptions(cPlaylistAutoPlay, true);
+
+				if (GetOptions(cPlaylistAutoShuffle) == null)
+					SetOptions(cPlaylistAutoShuffle, false);
 
                 if (GetOptions(cScanOnStartup) == null)
                     SetOptions(cScanOnStartup, true);

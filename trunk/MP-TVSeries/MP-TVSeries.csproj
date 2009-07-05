@@ -130,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>	
     <Compile Include="cache.cs" />
+	<Compile Include="Configuration\PlaylistSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\PlaylistSettings.Designer.cs">
+      <DependentUpon>PlaylistSettings.cs</DependentUpon>
+    </Compile>
 	<Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -379,6 +385,9 @@
     </EmbeddedResource>	
 	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
       <DependentUpon>SeriesSelect.cs</DependentUpon>
+    </EmbeddedResource>	
+	<EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+      <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
