@@ -53,11 +53,11 @@
 			// 
 			// textBoxBrowse
 			// 
-			this.textBoxBrowse.Location = new System.Drawing.Point(398, 30);
+			this.textBoxBrowse.Location = new System.Drawing.Point(398, 28);
 			this.textBoxBrowse.Name = "textBoxBrowse";
 			this.textBoxBrowse.Size = new System.Drawing.Size(75, 23);
 			this.textBoxBrowse.TabIndex = 2;
-			this.textBoxBrowse.Text = "Browse...";
+			this.textBoxBrowse.Text = "&Browse...";
 			this.textBoxBrowse.UseVisualStyleBackColor = true;
 			this.textBoxBrowse.Click += new System.EventHandler(this.textBoxBrowse_Click);
 			// 
@@ -78,7 +78,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(74, 13);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Playlist Folder:";
+			this.label1.Text = "Playlist &Folder:";
 			// 
 			// dbOptCheckBoxAutoShuffle
 			// 
@@ -88,7 +88,7 @@
 			this.dbOptCheckBoxAutoShuffle.Option = "PlaylistAutoShuffle";
 			this.dbOptCheckBoxAutoShuffle.Size = new System.Drawing.Size(180, 17);
 			this.dbOptCheckBoxAutoShuffle.TabIndex = 5;
-			this.dbOptCheckBoxAutoShuffle.Text = "Auto shuffle playlist when loaded";
+			this.dbOptCheckBoxAutoShuffle.Text = "Auto &shuffle playlist when loaded";
 			this.dbOptCheckBoxAutoShuffle.ToolTip = "";
 			this.dbOptCheckBoxAutoShuffle.UseVisualStyleBackColor = true;
 			// 
@@ -102,7 +102,7 @@
 			this.dbOptCheckBoxAutoPlayList.Option = "PlaylistAutoPlay";
 			this.dbOptCheckBoxAutoPlayList.Size = new System.Drawing.Size(168, 17);
 			this.dbOptCheckBoxAutoPlayList.TabIndex = 4;
-			this.dbOptCheckBoxAutoPlayList.Text = "Auto play playlist when loaded";
+			this.dbOptCheckBoxAutoPlayList.Text = "A&uto play playlist when loaded";
 			this.dbOptCheckBoxAutoPlayList.ToolTip = "";
 			this.dbOptCheckBoxAutoPlayList.UseVisualStyleBackColor = true;
 			// 
@@ -114,7 +114,7 @@
 			this.dbOptCheckBoxRepeatPlaylist.Option = "RepeatPlaylist";
 			this.dbOptCheckBoxRepeatPlaylist.Size = new System.Drawing.Size(180, 17);
 			this.dbOptCheckBoxRepeatPlaylist.TabIndex = 3;
-			this.dbOptCheckBoxRepeatPlaylist.Text = "Repeat/Loop episodes in playlist";
+			this.dbOptCheckBoxRepeatPlaylist.Text = "Repeat/&Loop episodes in playlist";
 			this.dbOptCheckBoxRepeatPlaylist.ToolTip = "";
 			this.dbOptCheckBoxRepeatPlaylist.UseVisualStyleBackColor = true;
 			// 

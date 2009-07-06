@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 // Load Skin Settings if they exist
-                SkinSettings.Load(skinSettings); ;
+                SkinSettings.Load(skinSettings);
                 // Reload formatting rules
                 formattingConfiguration1.LoadFromDB();
             }
