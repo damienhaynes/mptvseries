@@ -152,64 +152,7 @@ namespace WindowPlugins.GUITVSeries
                     default:
                         {
                             // no replacements in the db => put the default ones
-                            replacement[DBReplacements.cIndex] = "0";
-                            replacement[DBReplacements.cEnabled] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "0";
-                            replacement[DBReplacements.cBefore] = "0";
-                            replacement[DBReplacements.cToReplace] = ".";
-                            replacement[DBReplacements.cWith] = @"<space>";
-                            replacement.Commit();
-
-                            replacement[DBReplacements.cIndex] = "1";
-                            replacement[DBReplacements.cEnabled] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "0";
-                            replacement[DBReplacements.cBefore] = "0";
-                            replacement[DBReplacements.cToReplace] = "_";
-                            replacement[DBReplacements.cWith] = @"<space>";
-                            replacement.Commit();
-
-                            replacement[DBReplacements.cIndex] = "2";
-                            replacement[DBReplacements.cEnabled] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "0";
-                            replacement[DBReplacements.cBefore] = "0";
-                            replacement[DBReplacements.cToReplace] = "-<space>";
-                            replacement[DBReplacements.cWith] = @"<empty>";
-                            replacement.Commit();
-                                                        
-                            /*replacement[DBReplacements.cIndex] = "3";
-                            replacement[DBReplacements.cBefore] = "0";
-                            replacement[DBReplacements.cToReplace] = "<space>s<space>";
-                            replacement[DBReplacements.cWith] = @"'s<space>";
-                            replacement.Commit();*/
-
-                            // to avoid being parsed as second episode 20/80
-                            replacement[DBReplacements.cIndex] = "3";
-                            replacement[DBReplacements.cBefore] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "1";
-                            replacement[DBReplacements.cToReplace] = "720p";
-                            replacement[DBReplacements.cWith] = @"<empty>";
-                            replacement.Commit();
-
-                            replacement[DBReplacements.cIndex] = "4";
-                            replacement[DBReplacements.cBefore] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "1";
-                            replacement[DBReplacements.cToReplace] = "1080i";
-                            replacement[DBReplacements.cWith] = @"<empty>";
-                            replacement.Commit();
-
-                            replacement[DBReplacements.cIndex] = "5";
-                            replacement[DBReplacements.cBefore] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "1";
-                            replacement[DBReplacements.cToReplace] = "1080p";
-                            replacement[DBReplacements.cWith] = @"<empty>";
-                            replacement.Commit();
-
-                            replacement[DBReplacements.cIndex] = "6";
-                            replacement[DBReplacements.cBefore] = "1";
-                            replacement[DBReplacements.cTagEnabled] = "1";
-                            replacement[DBReplacements.cToReplace] = "x264";
-                            replacement[DBReplacements.cWith] = @"<empty>";
-                            replacement.Commit();
+                            AddDefaults();
 
                             nUpgradeDBVersion=3;
                         }
@@ -218,6 +161,64 @@ namespace WindowPlugins.GUITVSeries
             }
 
             DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
+        }
+
+        public static void AddDefaults() {
+
+            DBReplacements replacement = new DBReplacements();
+            
+            replacement[DBReplacements.cIndex] = "0";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "0";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = ".";
+            replacement[DBReplacements.cWith] = @"<space>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "1";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "0";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "_";
+            replacement[DBReplacements.cWith] = @"<space>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "2";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "0";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "-<space>";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
+            // to avoid being parsed as second episode 20/80
+            replacement[DBReplacements.cIndex] = "3";
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cToReplace] = "720p";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "4";
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cToReplace] = "1080i";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "5";
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cToReplace] = "1080p";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "6";
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cToReplace] = "x264";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
         }
 
         public static String PrettyFieldName(String sFieldName)
