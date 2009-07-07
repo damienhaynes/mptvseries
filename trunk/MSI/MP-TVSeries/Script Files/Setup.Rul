@@ -73,6 +73,8 @@ prototype BOOL 		GetInstalledVersion(STRING,BYREF STRING);
 prototype VOID		SetInstallationDirectories();
 prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
 prototype VOID 		UpdateSettings();
+prototype VOID		BackupDatabase(STRING);
+prototype STRING	GetMPTVSeriesDBPath();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -85,7 +87,8 @@ STRING g_sThumbsDir;
 STRING g_sCacheDir; 
 STRING g_sPluginsDir;
 STRING g_sConfigDir;
-STRING g_sSkinsDir;
+STRING g_sSkinsDir; 
+STRING g_sDatabaseDir;
 
 //---------------------------------------------------------------------------
 // OnBegin
@@ -235,6 +238,14 @@ begin
 	    // Append thumbs to program data dir    
 		g_sThumbsDir = svValue^"thumbs";
 	endif;
+		
+	if GetMediaPortalDirs("Database",g_sDatabaseDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+	    // Append database to program data dir    
+		g_sDatabaseDir = svValue^"Database";
+	endif;
 	
 	if GetMediaPortalDirs("Cache",g_sCacheDir) < 0 then
 		if GetMediaPortalConfigDir(svValue) < 0 then;
@@ -371,7 +382,7 @@ end;
 //---------------------------------------------------------------------------
 function OnFirstUIBefore()
     NUMBER nResult, nSetupType, nvSize, nUser;
-    STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile;
+    STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile, szFileName;
     STRING szLicenseFile;
 	BOOL bCustom, bIgnore1, bIgnore2;
 begin	   			   
@@ -421,7 +432,13 @@ Dlg_SdStartCopy:
 
     // Added in IS 2009 - Set appropriate StatusEx static text.
     SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_FIRSTUI ) );
-
+    
+    // Backup Database before installing new version
+    szFileName = GetMPTVSeriesDBPath();
+    if Is(FILE_EXISTS,szFileName) then
+    	BackupDatabase(szFileName);
+    endif;
+    
     // setup default status
     Enable(STATUSEX);
       
@@ -821,4 +838,81 @@ begin
 	// as this is setting is enabled by default for MediaPortal
 	SetMPXMLProperty("general","animations","yes");	
 	
+end;
+
+function STRING GetMPTVSeriesDBPath()
+	STRING szKey, svValue;
+	NUMBER nvType, nvSize;
+begin
+	
+	// The MP-TVSeries database location can optionally be overridden by the user in configuration
+	// This location is stored in the Users Registry Hive
+	RegDBSetDefaultRoot(HKEY_CURRENT_USER);
+	
+	szKey = "SOFTWARE\\MPTVSeries";
+	if (RegDBKeyExist(szKey)) then
+		RegDBGetKeyValueEx(szKey,"DBFile",nvType,svValue,nvSize);		
+	endif;
+	
+	// Confirm DB File exists, and return if found.
+	if StrLength(svValue) > 0 then
+		if (Is(FILE_EXISTS,svValue)) then
+			return svValue;
+		endif;
+	endif;
+	
+	// If not found above, check the default location
+	// Use MediaPortals DB location to find file
+	return g_sDatabaseDir ^ "TVSeriesDatabase4.db3";
+			
+end;
+
+function VOID BackupDatabase(sFileName)
+	STRING sDestinationFolder, svResult, sErrorMsg;   
+	NUMBER nResult;
+begin
+ 	
+ 	Disable(LOGGING);
+	
+	// Get Current Date
+	GetSystemInfo ( DATE, nResult, svResult );
+	
+	// Set Destination Folder to Personal Directory
+	sDestinationFolder = PersonalFolder ^ "MP-TVSeries\\Backup" ^ svResult;
+	
+	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
+	if nResult < 0 goto err;
+	
+	Enable(LOGGING);
+	return;
+	
+err:
+	if (nResult < 0) then
+	    
+	    sErrorMsg = "Unable to backup tvseries database file to:\n" + sDestinationFolder + "\n\nError Message: ";
+	    
+		switch (nResult)
+			
+			case COPY_ERR_CREATEDIR:
+				MessageBox(sErrorMsg + "Unable to create Destination Directory", INFORMATION);
+			
+			case COPY_ERR_MEMORY:
+				MessageBox(sErrorMsg + "Unable to allocate enough memory to copy file", INFORMATION);
+				
+			case COPY_ERR_NODISKSPACE:
+				MessageBox(sErrorMsg + "Not enough Disk Space", INFORMATION);
+				
+			case COPY_ERR_OPENINPUT:
+				MessageBox(sErrorMsg + "Unable to open file", INFORMATION);
+				
+			case COPY_ERR_OPENOUTPUT:
+				MessageBox(sErrorMsg + "Unable to copy file", INFORMATION);
+				
+			case COPY_ERR_TARGETREADONLY:
+				MessageBox(sErrorMsg + "Target Directory is Read Only!", INFORMATION);
+				
+		endswitch;
+	
+	endif;	
+
 end;
