@@ -1281,9 +1281,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-
-
-
         public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             // Update Episode counts
@@ -1296,8 +1293,6 @@ namespace WindowPlugins.GUITVSeries
             tEpisodeCounts.DoWork += new DoWorkEventHandler(asyncEpisodeCounts);
             tEpisodeCounts.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncEpisodeCountsCompleted);
             tEpisodeCounts.RunWorkerAsync(AllSeries);
-
-
         }
 
         void asyncEpisodeCountsCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1314,37 +1309,30 @@ namespace WindowPlugins.GUITVSeries
             //e.Result = series.Count;
         }
 
-
-
-
         public void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
-            cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);
+            cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);            
+            // Playtime decrements by one every failed attempt, dont attempt future scans if done more than Maximum attempts
+            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.maxMIAttempts*-1), SQLConditionType.GreaterThan); 
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
-            /*
-            List<DBEpisode> todoeps = new List<DBEpisode>();
-            // only get episodes without mediaInfo
-            for (int i = 0; i < episodes.Count; i++)
-                if (!episodes[i].mediaInfoIsSet)
-                    todoeps.Add(episodes[i]);
-            episodes = todoeps;
-            */
+            
             if (episodes.Count > 0)
             {
                 MPTVSeriesLog.Write("Updating MediaInfo...Running in the background (threaded)!  Only errors will be shown.");
                 MPTVSeriesLog.Write("Note: MediaInfo processing may not be completed until after Parsing is finished.  "
                                     + "Please wait until MediaInfo completes before you close the config.");
-                //BackgroundWorker resReader = new BackgroundWorker();
+                
                 tMediaInfo.DoWork += new DoWorkEventHandler(asyncReadResolutions);
                 tMediaInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 tMediaInfo.RunWorkerAsync(episodes);
 
             }
-            else MPTVSeriesLog.Write("No Episodes found that need updating");
+            else 
+                MPTVSeriesLog.Write("No Episodes found that need updating");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)

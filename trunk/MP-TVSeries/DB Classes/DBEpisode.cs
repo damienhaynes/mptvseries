@@ -267,7 +267,7 @@ namespace WindowPlugins.GUITVSeries
         public List<string> cachedLogoResults = null;
         public string cachedFirstLogo = null;
 
-        const int maxMIAttempts = 6;
+        public const int maxMIAttempts = 6;
 
         private static bool m_bUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
 
