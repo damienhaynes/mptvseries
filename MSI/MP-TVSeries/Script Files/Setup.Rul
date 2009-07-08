@@ -67,7 +67,7 @@ prototype NUMBER	LaunchBrowser(STRING);
 prototype BOOL 		IsMajorUpgrade(BYREF STRING, BYREF STRING, BYREF BOOL);
 prototype VOID		MajorUpgradeCleanup();
 prototype VOID		GetCachedInstallDir();  
-prototype VOID		UninstallCleanup();       
+prototype VOID		UninstallCleanup(BOOL, BOOL);       
 prototype NUMBER 	SHFolder.SHGetFolderPathA(HWND,NUMBER,NUMBER,NUMBER,BYREF STRING);
 prototype BOOL 		GetInstalledVersion(STRING,BYREF STRING);
 prototype VOID		SetInstallationDirectories();
@@ -90,7 +90,8 @@ STRING g_sPluginsDir;
 STRING g_sConfigDir;
 STRING g_sSkinsDir; 
 STRING g_sDatabaseDir;
-
+STRING g_sLogsDir; 
+ 
 //---------------------------------------------------------------------------
 // OnBegin
 //
@@ -202,7 +203,6 @@ begin
 		
 end;
 
-
 function void SetInstallationDirectories()
 	STRING svValue;	
 begin
@@ -259,7 +259,14 @@ begin
 	    endif;
 		g_sCacheDir = svValue^"Cache";
 	endif;
-   	
+   
+   	if GetMediaPortalDirs("Log",g_sLogsDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then;
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+		g_sLogsDir = svValue^"log";
+	endif;
+		
    	// Set MSI Dirs as properties   	   	
    	MsiSetProperty(ISMSI_HANDLE,"MPLANGUAGESDIR",g_sLanguageDir);
    	MsiSetProperty(ISMSI_HANDLE,"MPSKINSDIR",g_sSkinsDir);
@@ -565,7 +572,7 @@ begin
 	Disable(STATUSEX);
 
 	bOpt1   = FALSE;
-    bOpt2   = FALSE;    
+    bOpt2   = TRUE;    
 
     if ( BATCH_INSTALL ) then
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
@@ -603,9 +610,7 @@ begin
     CleanCache("Blue3");
     CleanCache("Blue3Wide");
     
-    if ( REMOVEALLMODE ) then
-    	UninstallCleanup();
-    else
+    if ( !REMOVEALLMODE ) then    	    
     	UpdateSettings();
     endif;
     
@@ -624,8 +629,17 @@ begin
 
     if ( BATCH_INSTALL ) then
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
-    else    
+    else
+    	if ( REMOVEALLMODE ) then
+    		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
+    		szOpt2 = "Delete database, all settings will be lost.";
+    	endif;
+        
        	SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+       	
+       	if (REMOVEALLMODE) then
+       		UninstallCleanup(bOpt1, bOpt2);
+       	endif;
     endif;
 end;
 
@@ -722,8 +736,37 @@ begin
                        
 end; 
 
-function VOID UninstallCleanup()	
-begin         
+function VOID UninstallCleanup(bDeleteArtwork, bDeleteDatabase)	
+	STRING szFile, szFolder, szMsg;
+begin
+         
+	// Remove Logs
+	szFile = g_sLogsDir ^ "MP-TVSeries.*";
+	DeleteFile(szFile);
+	
+	// Remove TVSeries Database
+    if bDeleteDatabase then    
+	    szFile = g_sDatabaseDir ^ "TVSeriesDatabase4.db3";
+		DeleteFile(szFile);
+    endif;    
+    
+	szMsg = "Removing TVSeries artwork from computer...";
+	SdShowMsg ( szMsg, TRUE );
+		
+	if bDeleteArtwork then
+	    
+	    // Remove Series Artwork (Posters & Banners), Season Banners & Episode Thumbs, 
+		szFolder = g_sThumbsDir ^ "MPTVSeriesBanners";
+		DeleteDir(szFolder, ALLCONTENTS);
+		
+	    // Remove Fanart Folder
+	    szFolder = g_sThumbsDir ^ "Fan Art";
+		DeleteDir(szFolder, ALLCONTENTS);
+	    
+	endif;
+    
+    SdShowMsg ( szMsg, FALSE );
+
 end;
      
 function NUMBER LaunchBrowser(szSite)
@@ -922,7 +965,6 @@ err:
 	endif;	
 
 end;
-
 
 function VOID CheckFilesInUse()
 	STRING szIsData, szMessage;
