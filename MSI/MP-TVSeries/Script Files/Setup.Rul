@@ -746,15 +746,15 @@ begin
 	
 	// Remove TVSeries Database
     if bDeleteDatabase then    
-	    szFile = g_sDatabaseDir ^ "TVSeriesDatabase4.db3";
+	    szFile = GetMPTVSeriesDBPath();
 		DeleteFile(szFile);
     endif;    
-    
-	szMsg = "Removing TVSeries artwork from computer...";
-	SdShowMsg ( szMsg, TRUE );
-		
+  
 	if bDeleteArtwork then
-	    
+	 	// Show Msg, this operation may take a while...   
+	    szMsg = "Removing TVSeries artwork from computer...";
+		SdShowMsg ( szMsg, TRUE );
+	
 	    // Remove Series Artwork (Posters & Banners), Season Banners & Episode Thumbs, 
 		szFolder = g_sThumbsDir ^ "MPTVSeriesBanners";
 		DeleteDir(szFolder, ALLCONTENTS);
@@ -762,11 +762,11 @@ begin
 	    // Remove Fanart Folder
 	    szFolder = g_sThumbsDir ^ "Fan Art";
 		DeleteDir(szFolder, ALLCONTENTS);
-	    
+	   
+	   	SdShowMsg ( szMsg, FALSE );
+	   	
 	endif;
     
-    SdShowMsg ( szMsg, FALSE );
-
 end;
      
 function NUMBER LaunchBrowser(szSite)
