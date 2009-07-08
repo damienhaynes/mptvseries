@@ -75,6 +75,7 @@ prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
 prototype VOID 		UpdateSettings();
 prototype VOID		BackupDatabase(STRING);
 prototype STRING	GetMPTVSeriesDBPath();
+prototype VOID		CheckFilesInUse();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -101,7 +102,7 @@ function OnBegin()
 	NUMBER nResult;
 	BOOL bUpgradeSupported; 
 begin 
- 	
+ 	 	
 	// See if older version is installed
 	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
 	if g_bMajorUpgrade then
@@ -120,8 +121,13 @@ begin
 			abort;							   
 		endif;
 	endif; 
-	                                                              
-	SetDefaults();	
+	
+	// Configure Setup Defaults                                                              
+	SetDefaults();             
+	
+	// Check if files are in use that may interupt setup
+	CheckFilesInUse();
+ 		
 end;           
 
 function BOOL IsMajorUpgrade(sMajorUpgradeVersion, sMajorUpgradeGUID, bUpgradeSupported)
@@ -915,4 +921,50 @@ err:
 	
 	endif;	
 
+end;
+
+
+function VOID CheckFilesInUse()
+	STRING szIsData, szMessage;
+	BOOL bFileLocked;
+	NUMBER nvType, nvValue, nvExitCode, nReturn;
+	LIST OpenFilesList;
+begin
+
+FilesInUse:
+	bFileLocked = FALSE;
+	
+	OpenFilesList = ListCreate(STRINGLIST);
+	
+	// Determine if files are running
+    szIsData = g_sMediaPortalProgramDir ^ "MediaPortal.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal [MediaPortal.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;
+
+	szIsData = g_sMediaPortalProgramDir ^ "Configuration.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Configuration [Configuration.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif; 
+		 	
+	if (bFileLocked) then
+						
+		nReturn = SdFilesInUse("", szMessage, "", OpenFilesList);		
+		
+		ListDestroy(OpenFilesList);
+	
+		// Retry Pressed
+		if nReturn = 1 goto FilesInUse;
+        
+        // Exit Pressed
+        if nReturn = 2 then 
+        	Do (EXIT);        	
+        endif;
+        
+	endif;
+	
+	ListDestroy(OpenFilesList);
+	
 end;
