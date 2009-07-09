@@ -75,7 +75,8 @@ prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
 prototype VOID 		UpdateSettings();
 prototype VOID		BackupDatabase(STRING);
 prototype STRING	GetMPTVSeriesDBPath();
-prototype VOID		CheckFilesInUse();
+prototype VOID		CheckFilesInUse();    
+prototype VOID		VerifyPluginCount();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -564,6 +565,9 @@ begin
     // Update Settings
 	UpdateSettings();
 	
+	// Confirm only one running instance of plugin
+ 	VerifyPluginCount();
+	
     // Major Upgrade Cleanup
     if g_bMajorUpgrade then
     	MajorUpgradeCleanup();
@@ -612,6 +616,10 @@ begin
     
     if ( !REMOVEALLMODE ) then    	    
     	UpdateSettings();
+    	
+    	// Confirm only one running instance of plugin
+ 		VerifyPluginCount();
+ 	
     endif;
     
 	Disable(STATUSEX);
@@ -1008,5 +1016,72 @@ FilesInUse:
 	endif;
 	
 	ListDestroy(OpenFilesList);
+	
+end;
+
+////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Confirm there is only one instance of the  TVSeries plugin
+///
+////////////////////////////////////////////////////////////////////////
+function VOID VerifyPluginCount()
+	STRING szDir, szFileName, svResult, szMessage, szPlugin, szFiles;
+	LIST listDuplicateFiles;
+	NUMBER nResult;
+begin
+	
+	listDuplicateFiles = ListCreate(STRINGLIST);
+	
+	szDir = g_sPluginsDir ^ "windows";
+	szFileName = "*MP-TVSeries*.dll";
+	
+	// Find Match
+	nResult = FindAllFiles ( szDir, szFileName, svResult, RESET );
+	while (nResult = 0)
+	
+		// Ignore the real plugin
+		szPlugin = szDir ^ "MP-TVSeries.dll";
+		
+		if (svResult != szPlugin) then        
+        	// Build list of duplicate plugins
+        	ListAddString(listDuplicateFiles,svResult,AFTER);			
+		endif;
+	 	
+ 		// Continue Search
+		nResult = FindAllFiles ( szDir, szFileName, svResult, CONTINUE );				
+	 	
+	endwhile;
+   	
+   	if ListCount(listDuplicateFiles) = 0 then
+   		return;
+   	endif;
+   	   	
+   	// Inform user that there is a problem as duplicates were detected
+   	nResult = ListGetFirstString(listDuplicateFiles,svResult);
+   	
+   	while (nResult != END_OF_LIST)
+   	
+   		szFiles = szFiles + "\n" + svResult;
+   		nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   	endwhile;
+   	
+   	// Match Found, inform user there is going to be a problem
+	szMessage = "Setup has detected that there is multiple instances of the plugin installed:\n";
+	szMessage = szMessage + szFiles + "\n\n";
+	szMessage = szMessage + "It's recommended for the correct operation of the plugin to \n";
+	szMessage = szMessage + "delete these files. Would you like setup to delete these files now?";
+		
+	if (AskYesNo ( szMessage, YES ) = YES) then
+		// Delete Files
+		nResult = ListGetFirstString(listDuplicateFiles,svResult);
+		while (nResult != END_OF_LIST)
+   	
+   			DeleteFile(svResult);
+   			nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   		endwhile;
+	
+	endif;
 	
 end;
