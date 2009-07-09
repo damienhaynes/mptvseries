@@ -1314,8 +1314,8 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);            
-            // Playtime decrements by one every failed attempt, dont attempt future scans if done more than Maximum attempts
-            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.maxMIAttempts*-1), SQLConditionType.GreaterThan); 
+            // Playtime decrements by one every failed attempt(0,-1,-2,..,-5), dont attempt future scans if done more than Maximum attempts
+            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.maxMIAttempts*-1), SQLConditionType.GreaterEqualThan); 
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);

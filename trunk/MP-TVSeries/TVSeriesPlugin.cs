@@ -24,6 +24,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
@@ -220,6 +221,10 @@ namespace WindowPlugins.GUITVSeries
         public static bool m_bOnActionProcessed = false;
         private string m_prevSeriesID = string.Empty;
         private bool m_bFanartTimerDisabled = false;
+        private bool m_bPluginLoaded = false;
+        private bool m_bShowLastActiveModule = false;
+        private int m_iLastActiveModule = 0;
+        
 		#endregion
 
 		#region Skin Variables
@@ -478,6 +483,13 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
             SkinSettings.GetSkinProperties(xmlSkin);
 
+            // Check if MediaPortal will Show TVSeries Plugin when restarting
+            // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
+            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) {
+                m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
+                m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
+            }
+
             return Load(xmlSkin);
 		}
 
@@ -492,7 +504,8 @@ namespace WindowPlugins.GUITVSeries
 				GUIWindowManager.ShowPreviousWindow();
 				return;
 			}
-			ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
+            
+            ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
 			// For some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
 			// the labels don't display, unless we somehow call them like so
@@ -506,11 +519,12 @@ namespace WindowPlugins.GUITVSeries
 			clearGUIProperty(guiProperty.NextView);
 			clearGUIProperty(guiProperty.LastView);
 
+            localLogos.appendEpImage = m_Episode_Image == null ? true : false;
+
 			bool viewSwitched = false;
 
             // Initialize View, also check if current view is locked after exiting and re-entering plugin
-			if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked)) {
-				localLogos.appendEpImage = m_Episode_Image == null ? true : false;
+			if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked)) {				
 				// Get available Views
 				m_allViews = logicalView.getAll(false);
 				if (m_allViews.Count > 0) {
@@ -530,7 +544,7 @@ namespace WindowPlugins.GUITVSeries
 			else {
 				viewSwitched = true;
 				setViewLabels();
-			}
+			}            
 
 			// If unable to load view, exit
 			if (!viewSwitched) {
@@ -566,6 +580,7 @@ namespace WindowPlugins.GUITVSeries
 				logosWidth = m_Logos_Image.Width;
 			}
 
+            m_bPluginLoaded = true;
 		}
 
 		protected override void OnPageDestroy(int new_windowId) {
@@ -3526,6 +3541,13 @@ namespace WindowPlugins.GUITVSeries
             
 			// Check if View has Parental Control enabled
 			if (!CheckParentalControls(view)) {
+                // We can't show a dialog on top when there is no main window
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID)) {
+                    MPTVSeriesLog.Write("Unable to Show PinCode Dialog, MediaPortal not ready, returning to Home screen");
+                    m_bPluginLoaded = true;
+                    return false;
+                }
+
 				// Prompt to choose UnProtected View
 				return showViewSwitchDialog();				
 			}
@@ -3553,6 +3575,11 @@ namespace WindowPlugins.GUITVSeries
 			bool pinInCorrect = true;
 
 			if (view.ParentalControl && logicalView.IsLocked) {
+                // We can't show a dialog on top when there is no main window
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID)) {
+                    return false;
+                }
+
                 // Update Ugly Current View Property if not yet set
                 if (TVSeriesPlugin.getGUIProperty(guiProperty.CurrentView.ToString()).Length == 0) {
                     setGUIProperty(guiProperty.CurrentView, Translation.ViewIsLocked);
