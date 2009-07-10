@@ -157,6 +157,28 @@ namespace WindowPlugins.GUITVSeries.Configuration {
                 templates.Add(template);
             }
 
+            // Adult Shows
+            // Only AND conditions are currently supported
+            if (!viewNames.Contains(DBView.cTranslateTokenAdultSeries)) {
+                ViewTemplate template = new ViewTemplate();
+                template.name = DBView.cTranslateTokenAdultSeries;
+                template.prettyname = Translation.AdultSeries;
+                template.description = "Filters series that are suitable for Mature Audiences or recommend Parental Consent ie. series that have a Content Rating of TV-PG, TV-14 and TV-MA. This will also show unrated Series, if a series is unrated please update the online database at: http://theTVDB.com";
+                template.configuration = @"series<;><Series.ContentRating>;!=;TV-Y<cond><Series.ContentRating>;!=;TV-Y7<cond><Series.ContentRating>;!=;TV-G<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                templates.Add(template);
+            }
+
+            // Kids Shows
+            // Only AND conditions are currently supported
+            if (!viewNames.Contains(DBView.cTranslateTokenKidsSeries)) {
+                ViewTemplate template = new ViewTemplate();
+                template.name = DBView.cTranslateTokenKidsSeries;
+                template.prettyname = Translation.KidsSeries;
+                template.description = "Filters series that are suitable for children ie. series that have a Content Rating of TV-Y, TV-Y7 and TV-G.";
+                template.configuration = @"series<;><Series.ContentRating>;!=;TV-PG<cond><Series.ContentRating>;!=;TV-14<cond><Series.ContentRating>;!=;TV-MA<cond><Series.ContentRating>;!=;<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                templates.Add(template);
+            }
+
             // Contining Series
             if (!viewNames.Contains(DBView.cTranslateTokenContinuing)) {
                 ViewTemplate template = new ViewTemplate();
@@ -238,9 +260,9 @@ namespace WindowPlugins.GUITVSeries.Configuration {
             }
 
             // Removable Media
-            if (!viewNames.Contains(DBView.cTranslateRemovableMedia)) {
+            if (!viewNames.Contains(DBView.cTranslateTokenRemovableMedia)) {
                 ViewTemplate template = new ViewTemplate();
-                template.name = DBView.cTranslateRemovableMedia;
+                template.name = DBView.cTranslateTokenRemovableMedia;
                 template.prettyname = Translation.RemovableMedia;
                 template.description = "Displays all Episodes found in pathes where the 'Removable' option is enabled e.g. DVD Drive, USB Drive.";
                 template.configuration = @"series<;><Episode.Removable>;=;1<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
@@ -248,9 +270,9 @@ namespace WindowPlugins.GUITVSeries.Configuration {
             }
 
             // Local Media
-            if (!viewNames.Contains(DBView.cTranslateLocalMedia)) {
+            if (!viewNames.Contains(DBView.cTranslateTokenLocalMedia)) {
                 ViewTemplate template = new ViewTemplate();
-                template.name = DBView.cTranslateLocalMedia;
+                template.name = DBView.cTranslateTokenLocalMedia;
                 template.prettyname = Translation.LocalMedia;
                 template.description = "Displays all Episodes found in pathes where the 'Removable' option is disabled e.g. Internal Hard Drives, Network Drive.";
                 template.configuration = @"series<;><Episode.Removable>;=;0<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
