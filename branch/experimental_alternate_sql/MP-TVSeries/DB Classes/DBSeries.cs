@@ -80,7 +80,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFirstAired = "FirstAired";
 
-        public const int cDBVersion = 2;
+		public const String cViewTags = "ViewTags";
+
+        public const int cDBVersion = 3;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -113,46 +115,7 @@ namespace WindowPlugins.GUITVSeries
             // make sure the table is created on first run
             DBOnlineSeries dummy = new DBOnlineSeries();
 
-            int nCurrentDBVersion = cDBVersion;
-            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBOnlineSeriesVersion);
-
-            while (nUpgradeDBVersion != nCurrentDBVersion)
-            {                
-                List<DBOnlineSeries> AllSeries = getAllSeries();
-
-                // take care of the upgrade in the table    
-                switch (nUpgradeDBVersion)
-                {
-                    case 1:                        
-                        nUpgradeDBVersion++;
-                        break;
-
-                    default:                        
-                        if (AllSeries.Count > 0)
-                        {
-                            foreach (DBOnlineSeries series in AllSeries)
-                            {
-                                // Migrate old cBannerFileNames and cCurrentBannerFileName to cPosterFileNames and cCurrentPosterFileName
-                                // if were using posters previously
-                                if (series[DBOnlineSeries.cCurrentBannerFileName].ToString().Contains("-posters"))
-                                {
-                                    series[DBOnlineSeries.cCurrentPosterFileName] = series[DBOnlineSeries.cCurrentBannerFileName];
-                                    series[DBOnlineSeries.cPosterFileNames] = series[DBOnlineSeries.cBannerFileNames];
-                                    // clear old ones
-                                    series[DBOnlineSeries.cCurrentBannerFileName] = string.Empty;
-                                    series[DBOnlineSeries.cBannerFileNames] = string.Empty;
-                                    series.Commit();
                                 }                                                                
-                            }
-                        }
-                        // new DB, nothing special to do
-                        nUpgradeDBVersion = nCurrentDBVersion;
-                        break;
-                }
-            }
-            DBOption.SetOptions(DBOption.cDBOnlineSeriesVersion, nCurrentDBVersion);
-
-        }
 
         // returns a list of all series with information stored in the database. 
         public static List<DBOnlineSeries> getAllSeries() {
@@ -209,6 +172,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -285,9 +249,9 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                        base[fieldName] = value;
-                }
+				base[fieldName] = value;
             }
+        }
 
         /// <summary>
         /// Returns PrettyName
@@ -306,7 +270,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 11;
+        public const int cDBVersion = 12;
 
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
@@ -315,7 +279,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
 
         private DBOnlineSeries m_onlineSeries = null;
-        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network" });
+		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
 
@@ -421,6 +385,36 @@ namespace WindowPlugins.GUITVSeries
                             series[DBOnlineSeries.cSortName] = Helper.GetSortByName(series[DBOnlineSeries.cPrettyName]);
                             series.Commit();
                         }
+                        nUpgradeDBVersion++;
+                        break;
+
+                    case 11:
+                        // Migrate isFavourite to new Tagged View
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
+                        seriesList = DBSeries.Get(conditions);
+
+                        MPTVSeriesLog.Write("Migrating Favourite Series");
+                        foreach (DBSeries series in seriesList) {
+                            // Tagged view are seperated with the pipe "|" character
+                            string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
+                            series.Commit();                            
+                        }
+
+                        // Migrate isOnlineFavourite to new TaggedView
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
+                        seriesList = DBSeries.Get(conditions);
+
+                        MPTVSeriesLog.Write("Migrating Online Favourite Series");
+                        foreach (DBSeries series in seriesList) {
+                            // Tagged view are seperated with the pipe "|" character
+                            string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
+                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
+                            series.Commit();                            
+                        }
+
                         nUpgradeDBVersion++;
                         break;
 
@@ -760,7 +754,7 @@ namespace WindowPlugins.GUITVSeries
             return base.Commit();
         }
 
-        public void toggleFavourite()
+        /*public void toggleFavourite()
         {
             if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
             if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
@@ -778,7 +772,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (dbSeriesUpdateOccured != null)
                 dbSeriesUpdateOccured(this);
-        }
+        }*/
 
         public static void Clear(SQLCondition conditions)
         {
@@ -956,7 +950,13 @@ namespace WindowPlugins.GUITVSeries
             int epsUnWatched = 0;
             
             // Update for each season in series and add each to total series count
-            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID]);
+            SQLCondition condition = new SQLCondition();
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems)) {
+                //don't include hidden seasons unless the ShowHiddenItems option is set
+                condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+            }
+
+            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID], condition);
             foreach (DBSeason season in Seasons)
             {
                 epsTotal = 0;
@@ -965,11 +965,19 @@ namespace WindowPlugins.GUITVSeries
                 DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
                 season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
                 season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
+                if (epsUnWatched == 0)
+                    season[DBSeason.cUnwatchedItems] = false;
+                else
+                    season[DBSeason.cUnwatchedItems] = true;
                 season.Commit();
             }
 
             series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
+            if (seriesEpsUnWatched == 0)
+                series[DBOnlineSeries.cUnwatchedItems] = false;
+            else
+                series[DBOnlineSeries.cUnwatchedItems] = true;
             series.Commit();
         }
 

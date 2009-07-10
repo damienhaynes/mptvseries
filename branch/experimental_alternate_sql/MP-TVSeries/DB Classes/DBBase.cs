@@ -838,6 +838,7 @@ namespace WindowPlugins.GUITVSeries
         GreaterThan,
         GreaterEqualThan,
         Like,
+		NotLike,
         In,
         NotIn,
     };
@@ -897,7 +898,7 @@ namespace WindowPlugins.GUITVSeries
         public void AddSubQuery(string field, DBTable table, SQLCondition innerConditions, DBValue value, SQLConditionType type)
         {
             string sValue = value;
-            if (type == SQLConditionType.Like)
+			if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
                 sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
             else
                 sValue = ((String)value).Replace("'", "''");
@@ -915,7 +916,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case DBField.cTypeString:
-                        if (type == SQLConditionType.Like)
+                        if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
                             sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
                         else
                             sValue = "'" + ((String)value).Replace("'", "''") + "'";
@@ -971,7 +972,6 @@ namespace WindowPlugins.GUITVSeries
 
         public void AddCustom(string what, string value, SQLConditionType type)
         {
-
             String sType = String.Empty;
             switch (type) {
                 case SQLConditionType.Equal:
@@ -981,21 +981,31 @@ namespace WindowPlugins.GUITVSeries
                 case SQLConditionType.NotEqual:
                     sType = " != ";
                     break;
-                case SQLConditionType.LessThan:
+                
+				case SQLConditionType.LessThan:
                     sType = " < ";
                     break;
+            
                 case SQLConditionType.LessEqualThan:
                     sType = " <= ";
                     break;
-                case SQLConditionType.GreaterThan:
+                
+				case SQLConditionType.GreaterThan:
                     sType = " > ";
                     break;
+            
                 case SQLConditionType.GreaterEqualThan:
                     sType = " >= ";
                     break;
+            
                 case SQLConditionType.Like:
                     sType = " like ";
                     break;
+
+				case SQLConditionType.NotLike:
+					sType = " not like ";
+					break;
+
                 case SQLConditionType.In:
                     sType = " in ";
                     break;
@@ -1004,6 +1014,7 @@ namespace WindowPlugins.GUITVSeries
                     sType = " not in ";
                     break;
             }
+
             if (SQLConditionType.In == type || SQLConditionType.NotIn == type) // reverse
                 AddCustom(value + sType + "(" + what + ")");
             else
@@ -1189,14 +1200,6 @@ namespace WindowPlugins.GUITVSeries
     {
         public SQLClientProvider(string connectionString)
         {
-            //DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            //builder.Add("Persist Security Info", true);
-            //builder.Add("USER ID", "sa");                       //username
-            //builder.Add("Password", "mediaportal");             //password
-            //builder.Add("Initial Catalog", "MpTvSeriesDb4");    //database name
-            //builder.Add("Data Source", "localhost\SQLEXPRESS");    //computer name
-            //builder.Add("Connection Timeout", 300);
-
             m_sConnectionString = connectionString;
         }
 

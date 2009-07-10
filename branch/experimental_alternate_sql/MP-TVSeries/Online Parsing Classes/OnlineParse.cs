@@ -49,26 +49,25 @@ namespace WindowPlugins.GUITVSeries
         GetOnlineUpdates,
         UpdateSeries,
         UpdateEpisodes,
+        UpdateEpisodeCounts,
+        UpdateUserRatings,
         UpdateBanners,
         UpdateFanart,
 
         GetNewBanners,
         GetNewFanArt,
         UpdateEpisodeThumbNails,
-        UpdateUserRatings,
-        UpdateUserFavourites,
-
-        UpdateEpisodeCounts,
-        WaitForCompletion
+        UpdateUserFavourites
     }
 
     class CParsingParameters
     {
-        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo, ParsingAction.UpdateEpisodeCounts, ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
-        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, 
-            ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
+        private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { ParsingAction.LocalScan, ParsingAction.MediaInfo,
+            ParsingAction.IdentifyNewSeries, ParsingAction.IdentifyNewEpisodes };
+        private static List<ParsingAction> UpdateActions = new List<ParsingAction> { ParsingAction.GetOnlineUpdates, ParsingAction.UpdateSeries, 
+            ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeCounts, ParsingAction.UpdateUserRatings, ParsingAction.UpdateBanners, ParsingAction.UpdateFanart};
         private static List<ParsingAction> LastLocalScanActions = new List<ParsingAction> { ParsingAction.GetNewBanners, ParsingAction.GetNewFanArt, ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserRatings, ParsingAction.UpdateUserFavourites/*, ParsingAction.UpdateEpisodeCounts*/, ParsingAction.WaitForCompletion };
+            ParsingAction.UpdateUserFavourites };
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 
@@ -222,7 +221,8 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.IsResumeFromStandby = false;           
 
             BackgroundWorker tMediaInfo = null;
-            BackgroundWorker tEpisodeCount = null;
+            BackgroundWorker tEpisodeCounts = null;
+            BackgroundWorker tUserRatings = null;
 
             bool online = DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1 && DBOnlineMirror.IsMirrorsAvailable;
             Online_Parsing_Classes.GetUpdates updates = null;
@@ -306,7 +306,8 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.GetNewFanArt:
                         if (online)
-                            UpdateFanart(true, null);// update all series for fanart - todo: only scan for series with missing fanart - mirror how banners does it.
+                            UpdateFanart(true, null);// updates ALL series for fanart - todo: only scan for series with missing fanart since we got new ones from thetvdb.com above...
+                                                     //                                       mirror how banners does it.
                         break;
 
                     case ParsingAction.UpdateEpisodeThumbNails:
@@ -316,7 +317,8 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.UpdateUserRatings:
                         if (online)
-                UpdateUserRatings();
+                            tUserRatings = new BackgroundWorker();
+                            UpdateUserRatings(tUserRatings);
                         break;
 
                     case ParsingAction.UpdateUserFavourites:
@@ -326,28 +328,30 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.UpdateEpisodeCounts:
                         //Threaded processing of episode counts - goes straight to next task
-                        tMediaInfo = new BackgroundWorker();
-                        UpdateEpisodeCounts(tMediaInfo);
+                        tEpisodeCounts = new BackgroundWorker();
+                        UpdateEpisodeCounts(tEpisodeCounts);
                         break;
+                }
+            }
 
-                    case ParsingAction.WaitForCompletion:
+            //WaitForCompletion()
                         //SLEEP UNTIL MEDIAINFO OR ANY OTHER THREADS ARE DONE - avoids user thinking scan is completed
-                        if (tMediaInfo == null && tEpisodeCount == null) break;
+            //if (tMediaInfo == null && tEpisodeCounts == null && tUserRatings == null) continue;
                         if (tMediaInfo.IsBusy) MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
-                        if (tEpisodeCount.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
+                        if (tEpisodeCounts.IsBusy) MPTVSeriesLog.Write("*******************    Episode Count Still Going   ************************");
+                        if (tUserRatings.IsBusy) MPTVSeriesLog.Write("*******************    User Ratings Still Going    ************************");
                         do
                         {
                             Thread.Sleep(1000);
             }
-                        while (tMediaInfo.IsBusy || tEpisodeCount.IsBusy);
-                        break;
-                }
-            }
+                        while (tMediaInfo.IsBusy || tEpisodeCounts.IsBusy || tUserRatings.IsBusy);
+            
             
             // lets save the updateTimestamp
             if (updates != null &&  updates.OnlineTimeStamp > 0)
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, updates.OnlineTimeStamp);
 
+            
             Online_Parsing_Classes.OnlineAPI.ClearBuffer();
             // and we are done, the backgroundworker is going to notify so
             MPTVSeriesLog.Write("***************************************************************************");
@@ -649,6 +653,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cCurrentBannerFileName:
                                 case DBOnlineSeries.cCurrentPosterFileName:
                                 case DBOnlineSeries.cMyRating:
+                                case DBOnlineSeries.cViewTags:
                                     break;
                                 case DBOnlineSeries.cEpisodeOrders:
                                     if (bUpdateNewSeries)
@@ -1044,7 +1049,7 @@ namespace WindowPlugins.GUITVSeries
             if (!DBOption.GetOptions(DBOption.cAutoDownloadFanart))
                 return;
 
-            //MPTVSeriesLog.Write(bigLogMessage("Get Series Fanart"));
+            if (bUpdateNewSeries && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart)) return;
 
             SQLCondition condition = new SQLCondition();            
             condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
@@ -1064,8 +1069,6 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
-                    return;
                 MPTVSeriesLog.Write(bigLogMessage("Checking for all Fanart"));
             }
 
@@ -1102,15 +1105,34 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateUserRatings()
+
+
+
+        public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {            
+            MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
+            List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
+
+            tUserRatings.DoWork += new DoWorkEventHandler(asyncUserRatings);
+            tUserRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncUserRatingsCompleted);
+            tUserRatings.RunWorkerAsync(seriesList);
+        }
+
+        void asyncUserRatingsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write("*****************   User Ratings Updated in Database    *******************");
+        }
+
+        void asyncUserRatings(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
 
-            if (!Helper.String.IsNullOrEmpty(sAccountID)) {
-                MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
+            List<DBOnlineSeries> seriesList = (List<DBOnlineSeries>)e.Argument;
 
-                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
-
+            if (!Helper.String.IsNullOrEmpty(sAccountID))
+            {
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
                     foreach (DBOnlineSeries series in seriesList)
@@ -1148,6 +1170,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+            
         }
 
         public void UpdateUserFavourites()
@@ -1159,14 +1182,16 @@ namespace WindowPlugins.GUITVSeries
 
                 GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
 
-                List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
-                foreach (DBOnlineSeries series in seriesList) {
+                SQLCondition conditions = new SQLCondition();
+                List<DBSeries> seriesList = DBSeries.Get(conditions);
+                
+                foreach (DBSeries series in seriesList) {
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
                         MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                        series[DBOnlineSeries.cIsOnlineFavourite] = "1";
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cTranslateTokenOnlineFavourite);
                         series.Commit();
                     } else {
-                        series[DBOnlineSeries.cIsOnlineFavourite] = "0";
+                        series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, false, DBView.cTranslateTokenOnlineFavourite);
                         series.Commit();
                     }
                 }
@@ -1251,6 +1276,9 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+
+
+
         public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             // Update Episode counts
@@ -1280,6 +1308,9 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries.UpdatedEpisodeCounts(series);
             //e.Result = series.Count;
         }
+
+
+
 
         public void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
@@ -1408,10 +1439,11 @@ namespace WindowPlugins.GUITVSeries
 
                             // Show the Virtual Keyboard to manual enter in name to search                            
                             if (selectedSeries == null && !Settings.isConfig) {
-                                GetStringFromUserDescriptor GetStringDesc = new GetStringFromUserDescriptor();
-                                GetStringDesc.m_sText = nameToSearch;
+                                GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
+								Keyboard.KeyboardStyle = (GetStringFromUserDescriptor.KeyboardStyles)(int)DBOption.GetOptions(DBOption.cKeyboardStyle);
+								Keyboard.Text = nameToSearch;
 
-                                if (feedback.GetStringFromUser(GetStringDesc, out nameToSearch) == ReturnCode.OK) {
+								if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK) {
                                     // Search again using manually entered name
                                     bKeepTrying = false;
                                 } else {
@@ -1582,7 +1614,7 @@ namespace WindowPlugins.GUITVSeries
                         string localstring;
                         double localcomp;
                         localstring = (localEp.ToString() + "." + localEp2.ToString());
-                        localcomp = Convert.ToDouble(localstring);
+                        localcomp = Convert.ToDouble(localstring, provider);
                         if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_episodenumber"]) && (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp))) {
                             /*check that the vital parts exist DVD_season and DVD_episodenumber, then check to see if we have a match either for the full
                              possible online format of X.Y via the use of localcomp and some string combinations, or through the default style of X.0 
@@ -1694,13 +1726,13 @@ namespace WindowPlugins.GUITVSeries
             condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
                             + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and "
                             + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 "   + ")");
-            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason); //takes forever
 
             SQLCondition condSeries = new SQLCondition();
             condSeries.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
                             + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) +
                             " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 " + ")");
-            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries);
+            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries); //takes about 1/4 of the time of above
         }
 
         private void ParseLocal(List<PathPair> files)
@@ -1729,7 +1761,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            UpdateStatus(updateStatusEps);
+            UpdateStatus(updateStatusEps); //this is what takes the most time for initial parsing of episode.
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
@@ -1742,6 +1774,7 @@ namespace WindowPlugins.GUITVSeries
                 if (progress.success)
                 {
                     DBSeries series = null;
+                    DBSeason season = null;
                     if (progress.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
                     {
                         // series first
@@ -1762,7 +1795,7 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
 
                         // season now
-                        DBSeason season = new DBSeason(series[DBSeries.cID], nSeason);
+                        season = new DBSeason(series[DBSeries.cID], nSeason);
                         season[DBSeason.cHasLocalFilesTemp] = true;
                             season[DBSeason.cHasEpisodes] = true;
                             season.Commit();
@@ -1793,8 +1826,7 @@ namespace WindowPlugins.GUITVSeries
                     // then episode
                     DBEpisode episode = new DBEpisode(progress.full_filename, true);
                     bool bNewFile = false;
-                    if (episode[DBEpisode.cImportProcessed] != 2)
-                    {
+                    if (episode[DBEpisode.cImportProcessed] != 2) {
                         m_bDataUpdated = true;
                         bNewFile = true;
                                 }
@@ -1805,7 +1837,16 @@ namespace WindowPlugins.GUITVSeries
                     {
                         episode[DBEpisode.cEpisodeIndex2] = progress.parser.Matches[DBEpisode.cEpisodeIndex2];
                         episode[DBEpisode.cCompositeID2] = episode[DBEpisode.cSeriesID] + "_" + nSeason + "x" + episode[DBEpisode.cEpisodeIndex2];
+
+                        if (bNewFile) {
+                            //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
+                            DBOnlineEpisode doubleEp = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], nSeason, episode[DBEpisode.cEpisodeIndex2]);
+                            if (doubleEp[DBOnlineEpisode.cID] > 0 && doubleEp[DBOnlineEpisode.cHidden] == 1) {
+                                doubleEp[DBOnlineEpisode.cHidden] = 0;
+                                doubleEp.Commit();
                             }
+                        }
+                    }
 
                     episode[DBEpisode.cAvailableSubtitles] = episode.checkHasSubtitles();
                     
@@ -1818,10 +1859,15 @@ namespace WindowPlugins.GUITVSeries
                                 episode[match.Key] = match.Value;
                         }
                     }
-                    episode.Commit();
 
+                    //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
+                    if (bNewFile && episode[DBOnlineEpisode.cID] > 0) {
+                        episode[DBOnlineEpisode.cHidden] = 0;
                 }
-            }            
+
+                    episode.Commit();
+                }
+            }
 
             //now make DBOnlineEpisodes for each unmatched double episode
             //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
@@ -1843,6 +1889,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                     season[DBSeason.cUnwatchedItems] = false;
 
+                season[DBSeason.cHidden] = 0;
                 season.Commit();
             }
 
@@ -1854,6 +1901,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                     series[DBOnlineSeries.cUnwatchedItems] = false;
 
+                series[DBSeries.cHidden] = 0;
                 series.Commit();
             }
         }

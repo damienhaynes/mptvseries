@@ -132,8 +132,21 @@
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>	
     <Compile Include="cache.cs" />
+	<Compile Include="Configuration\ViewTemplates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ViewTemplates.Designer.cs">
+      <DependentUpon>ViewTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PinCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\PinCode.Designer.cs">
+      <DependentUpon>PinCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,17 +215,29 @@
     <Compile Include="Configuration\DBOptionCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
-	 <Compile Include="Configuration\MemoryBox.cs">
+    <Compile Include="Configuration\MemoryBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\MemoryBox.designer.cs">
       <DependentUpon>MemoryBox.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\AddImportPathPopup.cs">
+    <Compile Include="Configuration\AddImportPathPopup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\AddImportPathPopup.designer.cs">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ViewsConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
+    </Compile>
+	<Compile Include="Configuration\SeriesSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\SeriesSelect.Designer.cs">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
     <Compile Include="DB Classes\DBFormatting.cs" />
@@ -297,6 +322,8 @@
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
+    <Compile Include="GUIUserRating.cs" />
+	<Compile Include="GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
@@ -343,16 +370,29 @@
       <SubType>Designer</SubType>
       <DependentUpon>ManualEpisodeManagementPane.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PinCode.resx">
+      <DependentUpon>PinCode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ManualParseDialog.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\MemoryBox.resx">
+    <EmbeddedResource Include="Configuration\MemoryBox.resx">
       <DependentUpon>MemoryBox.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
+    <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+	<EmbeddedResource Include="Configuration\ViewTemplates.resx">
+      <DependentUpon>ViewTemplates.cs</DependentUpon>
+    </EmbeddedResource>	
+	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -420,9 +460,9 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "%25MP_XBMC_BIN%25\plugins\windows" /Y
-
-
+    <PostBuildEvent>cd $(TargetDir)
+call "merge.bat
+xcopy "MP-TVSeries.dll" "%25PROGRAMFILES%25\Team MediaPortal\MediaPortal\plugins\Windows" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

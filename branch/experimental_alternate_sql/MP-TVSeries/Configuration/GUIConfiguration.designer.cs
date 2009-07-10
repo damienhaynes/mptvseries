@@ -81,11 +81,16 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_DetailsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.watchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.unWatchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.getSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.torrentThToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newzbinThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ResetUserSelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip_InsertFields = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
@@ -166,6 +171,10 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoUpdateEpisodeRatings = new System.Windows.Forms.CheckBox();
             this.linkImpParsingExpressions = new System.Windows.Forms.LinkLabel();
             this.linkExParsingExpressions = new System.Windows.Forms.LinkLabel();
+			this.checkbox_SortSpecials = new System.Windows.Forms.CheckBox();
+			this.checkboxRatingDisplayStars = new System.Windows.Forms.CheckBox();
+			this.checkboxAutoDownloadFanartSeriesName = new System.Windows.Forms.CheckBox();
+			this.buttonViewTemplates = new System.Windows.Forms.Button();
             this.chkUseRegionalDateFormatString = new System.Windows.Forms.CheckBox();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
@@ -188,9 +197,9 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
-            this.chkOnlineFavourites = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -247,6 +256,13 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.dbOptionCheckBoxSMSKeyboard = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+			this.label76 = new System.Windows.Forms.Label();
+			this.label75 = new System.Windows.Forms.Label();
+			this.numericUpDownArtworkDelay = new System.Windows.Forms.NumericUpDown();
+			this.label74 = new System.Windows.Forms.Label();
+			this.label27 = new System.Windows.Forms.Label();
+			this.numericUpDownBackdropDelay = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.comboLogLevel = new System.Windows.Forms.ComboBox();
             this.chkShowSeriesFanart = new System.Windows.Forms.CheckBox();
@@ -255,61 +271,19 @@ namespace WindowPlugins.GUITVSeries
             this.label32 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.tab_view = new System.Windows.Forms.TabPage();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.comboBox7 = new System.Windows.Forms.ComboBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.comboBox8 = new System.Windows.Forms.ComboBox();
-            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
-            this.comboBox9 = new System.Windows.Forms.ComboBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.comboBox10 = new System.Windows.Forms.ComboBox();
-            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this._23_link = new System.Windows.Forms.ComboBox();
-            this.cond3_cond = new System.Windows.Forms.TextBox();
-            this.cond3_type = new System.Windows.Forms.ComboBox();
-            this.cond3_what = new System.Windows.Forms.RichTextBox();
-            this._12_link = new System.Windows.Forms.ComboBox();
-            this.cond2_cond = new System.Windows.Forms.TextBox();
-            this.cond2_type = new System.Windows.Forms.ComboBox();
-            this.cond2_what = new System.Windows.Forms.RichTextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.cond1_cond = new System.Windows.Forms.TextBox();
-            this.cond1_type = new System.Windows.Forms.ComboBox();
-            this.cond1_what = new System.Windows.Forms.RichTextBox();
-            this.viewStepGroupLbl = new System.Windows.Forms.Label();
-            this.viewStepGroupByTextBox = new System.Windows.Forms.TextBox();
-            this.viewStepType = new System.Windows.Forms.ComboBox();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.checkCurViewEnabled = new System.Windows.Forms.CheckBox();
-            this.button7 = new System.Windows.Forms.Button();
-            this.label25 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.view_selStepsList = new System.Windows.Forms.ListBox();
-            this.view_selectedName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+			this.buttonPinCode = new System.Windows.Forms.Button();
+			this.buttonEditView = new System.Windows.Forms.Button();
+			this.checkBoxParentalControl = new System.Windows.Forms.CheckBox();
+			this.label25 = new System.Windows.Forms.Label();
+			this.checkCurViewEnabled = new System.Windows.Forms.CheckBox();
             this.lnkResetView = new System.Windows.Forms.LinkLabel();
-            this.btnViewUp = new System.Windows.Forms.Button();
-            this.btnViewDown = new System.Windows.Forms.Button();
             this.btnRemoveView = new System.Windows.Forms.Button();
+			this.view_selStepsList = new System.Windows.Forms.ListBox();
             this.btnAddView = new System.Windows.Forms.Button();
             this._availViews = new System.Windows.Forms.ListBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.button3 = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.view_selectedName = new System.Windows.Forms.TextBox();
             this.tabLogoRules = new System.Windows.Forms.TabPage();
             this.label65 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -450,12 +424,10 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownArtworkDelay)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBackdropDelay)).BeginInit();
             this.tab_view.SuspendLayout();
-            this.groupBox10.SuspendLayout();
-            this.groupBox11.SuspendLayout();
-            this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabLogoRules.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabFormattingRules.SuspendLayout();
@@ -511,12 +483,17 @@ namespace WindowPlugins.GUITVSeries
             this.hideToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.updateToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.watchedToolStripMenuItem,
+            this.unWatchedToolStripMenuItem,
+            this.toolStripSeparator1,
             this.getSubtitlesToolStripMenuItem,
             this.torrentThToolStripMenuItem,
             this.newzbinThisToolStripMenuItem,
-            this.ResetUserSelToolStripMenuItem});
+            this.ResetUserSelToolStripMenuItem,
+            this.toolStripSeparator3});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 158);
+			this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 220);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
@@ -534,13 +511,37 @@ namespace WindowPlugins.GUITVSeries
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete";
             // 
-            // updateToolStripMenuItem
-            // 
-            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.updateToolStripMenuItem.Tag = "update";
-            this.updateToolStripMenuItem.Text = "Update";
-            // 
+			// updateToolStripMenuItem
+			// 
+			this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+			this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+			this.updateToolStripMenuItem.Tag = "update";
+			this.updateToolStripMenuItem.Text = "Update";
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+			// 
+			// watchedToolStripMenuItem
+			// 
+			this.watchedToolStripMenuItem.Name = "watchedToolStripMenuItem";
+			this.watchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+			this.watchedToolStripMenuItem.Tag = "watched";
+			this.watchedToolStripMenuItem.Text = "Set As Watched";
+			// 
+			// unWatchedToolStripMenuItem
+			// 
+			this.unWatchedToolStripMenuItem.Name = "unWatchedToolStripMenuItem";
+			this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+			this.unWatchedToolStripMenuItem.Tag = "unwatched";
+			this.unWatchedToolStripMenuItem.Text = "Set As Un-Watched";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+			// 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
@@ -569,6 +570,11 @@ namespace WindowPlugins.GUITVSeries
             this.ResetUserSelToolStripMenuItem.Tag = "resetUserSelections";
             this.ResetUserSelToolStripMenuItem.Text = "Reset User Selections";
             // 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+			// 
             // contextMenuStrip_InsertFields
             // 
             this.contextMenuStrip_InsertFields.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
@@ -718,10 +724,10 @@ namespace WindowPlugins.GUITVSeries
             // linkMediaInfoUpdate
             // 
             this.linkMediaInfoUpdate.AutoSize = true;
-            this.linkMediaInfoUpdate.Location = new System.Drawing.Point(166, 442);
+			this.linkMediaInfoUpdate.Location = new System.Drawing.Point(165, 454);
             this.linkMediaInfoUpdate.Name = "linkMediaInfoUpdate";
             this.linkMediaInfoUpdate.Size = new System.Drawing.Size(95, 13);
-            this.linkMediaInfoUpdate.TabIndex = 27;
+			this.linkMediaInfoUpdate.TabIndex = 28;
             this.linkMediaInfoUpdate.TabStop = true;
             this.linkMediaInfoUpdate.Text = "Update Media Info";
             this.toolTip_Help.SetToolTip(this.linkMediaInfoUpdate, "Click here to force the plug-in to read the media information for local files aga" +
@@ -800,10 +806,10 @@ namespace WindowPlugins.GUITVSeries
             // linkDelUpdateTime
             // 
             this.linkDelUpdateTime.AutoSize = true;
-            this.linkDelUpdateTime.Location = new System.Drawing.Point(19, 442);
+			this.linkDelUpdateTime.Location = new System.Drawing.Point(18, 454);
             this.linkDelUpdateTime.Name = "linkDelUpdateTime";
             this.linkDelUpdateTime.Size = new System.Drawing.Size(128, 13);
-            this.linkDelUpdateTime.TabIndex = 26;
+			this.linkDelUpdateTime.TabIndex = 27;
             this.linkDelUpdateTime.TabStop = true;
             this.linkDelUpdateTime.Text = "Clear Update Timestamps";
             this.toolTip_Help.SetToolTip(this.linkDelUpdateTime, "Click here to reset Timestamps for the last date-time data for series was updated" +
@@ -1060,7 +1066,7 @@ namespace WindowPlugins.GUITVSeries
             this.linkExWatched.Location = new System.Drawing.Point(401, 101);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
-            this.linkExWatched.TabIndex = 19;
+			this.linkExWatched.TabIndex = 25;
             this.linkExWatched.TabStop = true;
             this.linkExWatched.Text = "Export Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkExWatched, "Export the \'Watched\' Status of all episodes to file");
@@ -1072,7 +1078,7 @@ namespace WindowPlugins.GUITVSeries
             this.linkImpWatched.Location = new System.Drawing.Point(401, 78);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
-            this.linkImpWatched.TabIndex = 20;
+			this.linkImpWatched.TabIndex = 24;
             this.linkImpWatched.TabStop = true;
             this.linkImpWatched.Text = "Import Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkImpWatched, "Import the \'Watched\' Status of all episodes from file");
@@ -1083,7 +1089,7 @@ namespace WindowPlugins.GUITVSeries
             this.chkAllowDeletes.Location = new System.Drawing.Point(11, 307);
             this.chkAllowDeletes.Name = "chkAllowDeletes";
             this.chkAllowDeletes.Size = new System.Drawing.Size(417, 17);
-            this.chkAllowDeletes.TabIndex = 18;
+			this.chkAllowDeletes.TabIndex = 19;
             this.chkAllowDeletes.Text = "Allow user to delete &files from the GUI context menu";
             this.toolTip_Help.SetToolTip(this.chkAllowDeletes, "Enable this option to allow users to delete items using the context menu from wit" +
                     "h-in Media Portal");
@@ -1095,7 +1101,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_doFolderWatch.Location = new System.Drawing.Point(11, 284);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(417, 17);
-            this.checkBox_doFolderWatch.TabIndex = 17;
+			this.checkBox_doFolderWatch.TabIndex = 18;
             this.checkBox_doFolderWatch.Text = "Watch my &Import folders for changes automatically";
             this.toolTip_Help.SetToolTip(this.checkBox_doFolderWatch, "Enable this option to allow the plug-in to monitor import folders for new, delete" +
                     "d and modified TV Series and update the database accordingly.\r\nThis option only " +
@@ -1108,7 +1114,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_DontClearMissingLocalFiles.Location = new System.Drawing.Point(11, 261);
             this.checkBox_DontClearMissingLocalFiles.Name = "checkBox_DontClearMissingLocalFiles";
             this.checkBox_DontClearMissingLocalFiles.Size = new System.Drawing.Size(417, 17);
-            this.checkBox_DontClearMissingLocalFiles.TabIndex = 16;
+			this.checkBox_DontClearMissingLocalFiles.TabIndex = 17;
             this.checkBox_DontClearMissingLocalFiles.Text = "&Keep reference to files that are no longer available on computer";
             this.toolTip_Help.SetToolTip(this.checkBox_DontClearMissingLocalFiles, "Enable this option to keep a reference to files that are no longer available duri" +
                     "ng scan e.g. series stored on an offline fileserver");
@@ -1121,7 +1127,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Series_UseSortName.Location = new System.Drawing.Point(11, 238);
             this.checkBox_Series_UseSortName.Name = "checkBox_Series_UseSortName";
             this.checkBox_Series_UseSortName.Size = new System.Drawing.Size(304, 17);
-            this.checkBox_Series_UseSortName.TabIndex = 15;
+			this.checkBox_Series_UseSortName.TabIndex = 16;
             this.checkBox_Series_UseSortName.Text = "So&rt Series using the Sort Name instead of the Pretty Name";
             this.toolTip_Help.SetToolTip(this.checkBox_Series_UseSortName, "Enable to sort Series names using the Sort (Original) Name found in the Details t" +
                     "ab");
@@ -1130,12 +1136,17 @@ namespace WindowPlugins.GUITVSeries
             // 
             // nudWatchedAfter
             // 
-            this.nudWatchedAfter.Location = new System.Drawing.Point(159, 48);
+			this.nudWatchedAfter.Location = new System.Drawing.Point(159, 46);
             this.nudWatchedAfter.Name = "nudWatchedAfter";
-            this.nudWatchedAfter.Size = new System.Drawing.Size(36, 20);
+			this.nudWatchedAfter.Size = new System.Drawing.Size(44, 20);
             this.nudWatchedAfter.TabIndex = 3;
             this.toolTip_Help.SetToolTip(this.nudWatchedAfter, "Enter the percentage of the episode that has been viewed to consider it as watche" +
                     "d.\r\nEpisode foreground color will change to indicated that it is watched");
+			this.nudWatchedAfter.Value = new decimal(new int[] {
+            95,
+            0,
+            0,
+            0});
             this.nudWatchedAfter.ValueChanged += new System.EventHandler(this.nudWatchedAfter_ValueChanged);
             // 
             // comboLanguage
@@ -1145,7 +1156,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboLanguage.Location = new System.Drawing.Point(402, 19);
             this.comboLanguage.Name = "comboLanguage";
             this.comboLanguage.Size = new System.Drawing.Size(119, 21);
-            this.comboLanguage.TabIndex = 6;
+			this.comboLanguage.TabIndex = 21;
             this.toolTip_Help.SetToolTip(this.comboLanguage, "Select the language that the plugin user interface will be displayed in Media Por" +
                     "tal.\r\nThis does not control the language of downloaded data from the online data" +
                     "base");
@@ -1154,10 +1165,10 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_RandBanner
             // 
             this.checkBox_RandBanner.AutoSize = true;
-            this.checkBox_RandBanner.Location = new System.Drawing.Point(11, 77);
+			this.checkBox_RandBanner.Location = new System.Drawing.Point(404, 146);
             this.checkBox_RandBanner.Name = "checkBox_RandBanner";
             this.checkBox_RandBanner.Size = new System.Drawing.Size(261, 17);
-            this.checkBox_RandBanner.TabIndex = 9;
+			this.checkBox_RandBanner.TabIndex = 27;
             this.checkBox_RandBanner.Text = "&Display random Artwork in series and season view";
             this.toolTip_Help.SetToolTip(this.checkBox_RandBanner, "Enable this option to display a random banner when entering series/season view");
             this.checkBox_RandBanner.UseVisualStyleBackColor = true;
@@ -1599,13 +1610,64 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.linkExParsingExpressions, "Export Parsing Expressions to a file");
             this.linkExParsingExpressions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExParsingExpressions_LinkClicked);
             // 
+			// checkbox_SortSpecials
+			// 
+			this.checkbox_SortSpecials.AutoSize = true;
+			this.checkbox_SortSpecials.Location = new System.Drawing.Point(404, 123);
+			this.checkbox_SortSpecials.Name = "checkbox_SortSpecials";
+			this.checkbox_SortSpecials.Size = new System.Drawing.Size(155, 17);
+			this.checkbox_SortSpecials.TabIndex = 26;
+			this.checkbox_SortSpecials.Text = "Sort Specials in Episode list";
+			this.toolTip_Help.SetToolTip(this.checkbox_SortSpecials, "Enable this option to sort specials in the main episode list by their correspondi" +
+					"ng air date");
+			this.checkbox_SortSpecials.UseVisualStyleBackColor = true;
+			this.checkbox_SortSpecials.CheckedChanged += new System.EventHandler(this.checkbox_SortSpecials_CheckedChanged);
+			// 
+			// checkboxRatingDisplayStars
+			// 
+			this.checkboxRatingDisplayStars.AutoSize = true;
+			this.checkboxRatingDisplayStars.Location = new System.Drawing.Point(11, 146);
+			this.checkboxRatingDisplayStars.Name = "checkboxRatingDisplayStars";
+			this.checkboxRatingDisplayStars.Size = new System.Drawing.Size(143, 17);
+			this.checkboxRatingDisplayStars.TabIndex = 12;
+			this.checkboxRatingDisplayStars.Text = "Show 5 Star Rate Dialog";
+			this.toolTip_Help.SetToolTip(this.checkboxRatingDisplayStars, "Enable this option to dislay a 5 Star Rate Dialog instead of 10 Stars, theTVDB.co" +
+					"m accepts 10 Stars\r\nso 5 Stars will be rounded up");
+			this.checkboxRatingDisplayStars.UseVisualStyleBackColor = true;
+			this.checkboxRatingDisplayStars.CheckedChanged += new System.EventHandler(this.checkboxRatingDisplayStars_CheckedChanged);
+			// 
+			// checkboxAutoDownloadFanartSeriesName
+			// 
+			this.checkboxAutoDownloadFanartSeriesName.AutoSize = true;
+			this.checkboxAutoDownloadFanartSeriesName.Location = new System.Drawing.Point(33, 425);
+			this.checkboxAutoDownloadFanartSeriesName.Name = "checkboxAutoDownloadFanartSeriesName";
+			this.checkboxAutoDownloadFanartSeriesName.Size = new System.Drawing.Size(227, 17);
+			this.checkboxAutoDownloadFanartSeriesName.TabIndex = 26;
+			this.checkboxAutoDownloadFanartSeriesName.Text = "Download Fanart containing Series Names";
+			this.toolTip_Help.SetToolTip(this.checkboxAutoDownloadFanartSeriesName, "Enable to automatically downlod Fanart that contain series names in artwork, user" +
+					"s can\r\nstill choose Fanart that contain series names from the Fanart Chooser win" +
+					"dow.");
+			this.checkboxAutoDownloadFanartSeriesName.UseVisualStyleBackColor = true;
+			this.checkboxAutoDownloadFanartSeriesName.CheckedChanged += new System.EventHandler(this.checkboxAutoDownloadFanartSeriesName_CheckedChanged);
+			// 
+			// buttonViewTemplates
+			// 
+			this.buttonViewTemplates.Location = new System.Drawing.Point(26, 292);
+			this.buttonViewTemplates.Name = "buttonViewTemplates";
+			this.buttonViewTemplates.Size = new System.Drawing.Size(75, 23);
+			this.buttonViewTemplates.TabIndex = 9;
+			this.buttonViewTemplates.Text = "&Templates...";
+			this.toolTip_Help.SetToolTip(this.buttonViewTemplates, "Click to select a pre-defined View Filter from a list.");
+			this.buttonViewTemplates.UseVisualStyleBackColor = true;
+			this.buttonViewTemplates.Click += new System.EventHandler(this.buttonViewTemplates_Click);
+			// 
             // chkUseRegionalDateFormatString
             // 
             this.chkUseRegionalDateFormatString.AutoSize = true;
             this.chkUseRegionalDateFormatString.Location = new System.Drawing.Point(11, 215);
             this.chkUseRegionalDateFormatString.Name = "chkUseRegionalDateFormatString";
             this.chkUseRegionalDateFormatString.Size = new System.Drawing.Size(211, 17);
-            this.chkUseRegionalDateFormatString.TabIndex = 14;
+			this.chkUseRegionalDateFormatString.TabIndex = 15;
             this.chkUseRegionalDateFormatString.Text = "&Use Regional Settings to Display Dates";
             this.toolTip_InfoHelp.SetToolTip(this.chkUseRegionalDateFormatString, "Enable this option to convert all date formats yyyy-MM-dd to format defined in th" +
                     "e Windows Control Panel\r\nunder Regional and Language options.");
@@ -1624,10 +1686,10 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_Episode_HideUnwatchedSummary
             // 
             this.checkBox_Episode_HideUnwatchedSummary.AutoSize = true;
-            this.checkBox_Episode_HideUnwatchedSummary.Location = new System.Drawing.Point(11, 146);
+			this.checkBox_Episode_HideUnwatchedSummary.Location = new System.Drawing.Point(11, 169);
             this.checkBox_Episode_HideUnwatchedSummary.Name = "checkBox_Episode_HideUnwatchedSummary";
             this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(335, 17);
-            this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 12;
+			this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 13;
             this.checkBox_Episode_HideUnwatchedSummary.Text = "&Hide episode overview/summary on episodes that are unwatched";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, "Enable this option to disable the thumbnail for episodes that haven\'t been watche" +
                     "d yet.\r\nThis option is recommended to prevent spoilers\r\n\r\nThis setting can also " +
@@ -1638,10 +1700,10 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_Episode_OnlyShowLocalFiles
             // 
             this.checkBox_Episode_OnlyShowLocalFiles.AutoSize = true;
-            this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(11, 100);
+			this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(404, 169);
             this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
             this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(266, 17);
-            this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 10;
+			this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 28;
             this.checkBox_Episode_OnlyShowLocalFiles.Text = "&Only show episodes that are available on computer";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
@@ -1898,26 +1960,13 @@ namespace WindowPlugins.GUITVSeries
                     "right click on this textbox to bring up a menu of available fields from the data" +
                     "base.\r\n\r\nDefault: Empty");
             // 
-            // chkOnlineFavourites
-            // 
-            this.chkOnlineFavourites.AutoSize = true;
-            this.chkOnlineFavourites.Location = new System.Drawing.Point(46, 353);
-            this.chkOnlineFavourites.Name = "chkOnlineFavourites";
-            this.chkOnlineFavourites.Size = new System.Drawing.Size(250, 17);
-            this.chkOnlineFavourites.TabIndex = 22;
-            this.chkOnlineFavourites.Text = "Use Favourites defined online in Favourite View";
-            this.toolTip_InfoHelp.SetToolTip(this.chkOnlineFavourites, "Enable this option to use your favourites that you have defined online at thetvdb" +
-                    ".com in your Favourite view.");
-            this.chkOnlineFavourites.UseVisualStyleBackColor = true;
-            this.chkOnlineFavourites.CheckedChanged += new System.EventHandler(this.chkOnlineFavourites_CheckedChanged);
-            // 
             // checkBox_Episode_HideUnwatchedThumbnail
             // 
             this.checkBox_Episode_HideUnwatchedThumbnail.AutoSize = true;
-            this.checkBox_Episode_HideUnwatchedThumbnail.Location = new System.Drawing.Point(11, 169);
+			this.checkBox_Episode_HideUnwatchedThumbnail.Location = new System.Drawing.Point(11, 192);
             this.checkBox_Episode_HideUnwatchedThumbnail.Name = "checkBox_Episode_HideUnwatchedThumbnail";
             this.checkBox_Episode_HideUnwatchedThumbnail.Size = new System.Drawing.Size(291, 17);
-            this.checkBox_Episode_HideUnwatchedThumbnail.TabIndex = 21;
+			this.checkBox_Episode_HideUnwatchedThumbnail.TabIndex = 14;
             this.checkBox_Episode_HideUnwatchedThumbnail.Text = "Hide episode &thumbnail on episodes that are unwatched";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedThumbnail, "Enable this option to disable the summary for episodes that haven\'t been watched " +
                     "yet.\r\nThis option is recommended to prevent spoilers\r\n\r\nThis setting can also be" +
@@ -1931,15 +1980,28 @@ namespace WindowPlugins.GUITVSeries
             this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
             this.optionAsk2Rate.Name = "optionAsk2Rate";
             this.optionAsk2Rate.Option = "askToRate";
-            this.optionAsk2Rate.Size = new System.Drawing.Size(318, 17);
+			this.optionAsk2Rate.Size = new System.Drawing.Size(234, 17);
             this.optionAsk2Rate.TabIndex = 11;
-            this.optionAsk2Rate.Text = "&Popup Ratings Dialog after episode is watched and not Rated";
+			this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
             this.optionAsk2Rate.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
                     "ve watched an episodes which hasn\'t been rated yet.");
             this.optionAsk2Rate.UseVisualStyleBackColor = true;
             this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
             // 
+			// dbOptionCheckBoxMarkRatedEpsAsWatched
+			// 
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 240);
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 31;
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
+			this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
+			this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
+			// 
             // splitMain_Log
             // 
             this.splitMain_Log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2159,7 +2221,6 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_BannerSelection.Size = new System.Drawing.Size(460, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
             this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
-            this.comboBox_BannerSelection.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox_BannerSelection_KeyPress);
             // 
             // panDBLocation
             // 
@@ -2173,13 +2234,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             // EmptyDatabaseButton
             // 
-            this.EmptyDatabaseButton.Location = new System.Drawing.Point(446, 0);
-            this.EmptyDatabaseButton.Name = "EmptyDatabaseButton";
-            this.EmptyDatabaseButton.Size = new System.Drawing.Size(101, 23);
-            this.EmptyDatabaseButton.TabIndex = 4;
-            this.EmptyDatabaseButton.Text = "Empty Database";
-            this.EmptyDatabaseButton.UseVisualStyleBackColor = true;
-            this.EmptyDatabaseButton.Click += new System.EventHandler(this.button8_Click);
+            //this.EmptyDatabaseButton.Location = new System.Drawing.Point(446, 0);
+            //this.EmptyDatabaseButton.Name = "EmptyDatabaseButton";
+            //this.EmptyDatabaseButton.Size = new System.Drawing.Size(101, 23);
+            //this.EmptyDatabaseButton.TabIndex = 4;
+            //this.EmptyDatabaseButton.Text = "Empty Database";
+            //this.EmptyDatabaseButton.UseVisualStyleBackColor = true;
+            //this.EmptyDatabaseButton.Click += new System.EventHandler(this.button8_Click);
             // 
             // tabPage_Import
             // 
@@ -2551,6 +2612,7 @@ namespace WindowPlugins.GUITVSeries
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OnlineData.AutoScroll = true;
+			this.panel_OnlineData.Controls.Add(this.checkboxAutoDownloadFanartSeriesName);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoDownloadMissingArtwork);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoUpdateAllFanart);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoUpdateEpisodeRatings);
@@ -2746,6 +2808,16 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.dbOptionCheckBoxMarkRatedEpsAsWatched);
+			this.groupBox1.Controls.Add(this.dbOptionCheckBoxSMSKeyboard);
+			this.groupBox1.Controls.Add(this.checkboxRatingDisplayStars);
+			this.groupBox1.Controls.Add(this.label76);
+			this.groupBox1.Controls.Add(this.label75);
+			this.groupBox1.Controls.Add(this.numericUpDownArtworkDelay);
+			this.groupBox1.Controls.Add(this.label74);
+			this.groupBox1.Controls.Add(this.label27);
+			this.groupBox1.Controls.Add(this.numericUpDownBackdropDelay);
+			this.groupBox1.Controls.Add(this.checkbox_SortSpecials);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.comboLogLevel);
             this.groupBox1.Controls.Add(this.linkExWatched);
@@ -2771,16 +2843,100 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(754, 340);
-            this.groupBox1.TabIndex = 0;
+			this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
             // 
+			// dbOptionCheckBoxSMSKeyboard
+			// 
+			this.dbOptionCheckBoxSMSKeyboard.AutoSize = true;
+			this.dbOptionCheckBoxSMSKeyboard.Location = new System.Drawing.Point(404, 216);
+			this.dbOptionCheckBoxSMSKeyboard.Name = "dbOptionCheckBoxSMSKeyboard";
+			this.dbOptionCheckBoxSMSKeyboard.Option = "KeyboardStyle";
+			this.dbOptionCheckBoxSMSKeyboard.Size = new System.Drawing.Size(305, 17);
+			this.dbOptionCheckBoxSMSKeyboard.TabIndex = 30;
+			this.dbOptionCheckBoxSMSKeyboard.Text = "Show SMS Style keyboard when requesting input from user";
+			this.dbOptionCheckBoxSMSKeyboard.ToolTip = "";
+			this.dbOptionCheckBoxSMSKeyboard.UseVisualStyleBackColor = true;
+			// 
+			// label76
+			// 
+			this.label76.AutoSize = true;
+			this.label76.Location = new System.Drawing.Point(209, 99);
+			this.label76.Name = "label76";
+			this.label76.Size = new System.Drawing.Size(20, 13);
+			this.label76.TabIndex = 10;
+			this.label76.Text = "ms";
+			// 
+			// label75
+			// 
+			this.label75.AutoSize = true;
+			this.label75.Location = new System.Drawing.Point(209, 74);
+			this.label75.Name = "label75";
+			this.label75.Size = new System.Drawing.Size(20, 13);
+			this.label75.TabIndex = 7;
+			this.label75.Text = "ms";
+			// 
+			// numericUpDownArtworkDelay
+			// 
+			this.numericUpDownArtworkDelay.Location = new System.Drawing.Point(159, 96);
+			this.numericUpDownArtworkDelay.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+			this.numericUpDownArtworkDelay.Name = "numericUpDownArtworkDelay";
+			this.numericUpDownArtworkDelay.Size = new System.Drawing.Size(44, 20);
+			this.numericUpDownArtworkDelay.TabIndex = 9;
+			this.numericUpDownArtworkDelay.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+			this.numericUpDownArtworkDelay.ValueChanged += new System.EventHandler(this.numericUpDownArtworkDelay_ValueChanged);
+			// 
+			// label74
+			// 
+			this.label74.AutoSize = true;
+			this.label74.Location = new System.Drawing.Point(9, 99);
+			this.label74.Name = "label74";
+			this.label74.Size = new System.Drawing.Size(117, 13);
+			this.label74.TabIndex = 8;
+			this.label74.Text = "Artwork Loading Delay:";
+			// 
+			// label27
+			// 
+			this.label27.AutoSize = true;
+			this.label27.Location = new System.Drawing.Point(9, 74);
+			this.label27.Name = "label27";
+			this.label27.Size = new System.Drawing.Size(127, 13);
+			this.label27.TabIndex = 5;
+			this.label27.Text = "Backdrop Loading Delay:";
+			// 
+			// numericUpDownBackdropDelay
+			// 
+			this.numericUpDownBackdropDelay.Location = new System.Drawing.Point(159, 71);
+			this.numericUpDownBackdropDelay.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+			this.numericUpDownBackdropDelay.Name = "numericUpDownBackdropDelay";
+			this.numericUpDownBackdropDelay.Size = new System.Drawing.Size(44, 20);
+			this.numericUpDownBackdropDelay.TabIndex = 6;
+			this.numericUpDownBackdropDelay.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+			this.numericUpDownBackdropDelay.ValueChanged += new System.EventHandler(this.numericUpDownBackdropDelay_ValueChanged);
+			// 
             // label11
             // 
             this.label11.Location = new System.Drawing.Point(328, 52);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(68, 13);
-            this.label11.TabIndex = 7;
+			this.label11.TabIndex = 22;
             this.label11.Text = "Lo&g Level:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -2795,16 +2951,16 @@ namespace WindowPlugins.GUITVSeries
             this.comboLogLevel.Location = new System.Drawing.Point(402, 47);
             this.comboLogLevel.Name = "comboLogLevel";
             this.comboLogLevel.Size = new System.Drawing.Size(119, 21);
-            this.comboLogLevel.TabIndex = 8;
+			this.comboLogLevel.TabIndex = 23;
             this.comboLogLevel.SelectedIndexChanged += new System.EventHandler(this.comboLogLevel_SelectedIndexChanged);
             // 
             // chkShowSeriesFanart
             // 
             this.chkShowSeriesFanart.AutoSize = true;
-            this.chkShowSeriesFanart.Location = new System.Drawing.Point(11, 192);
+			this.chkShowSeriesFanart.Location = new System.Drawing.Point(404, 192);
             this.chkShowSeriesFanart.Name = "chkShowSeriesFanart";
             this.chkShowSeriesFanart.Size = new System.Drawing.Size(154, 17);
-            this.chkShowSeriesFanart.TabIndex = 13;
+			this.chkShowSeriesFanart.TabIndex = 29;
             this.chkShowSeriesFanart.Text = "&Show Fanart in Series view";
             this.chkShowSeriesFanart.UseVisualStyleBackColor = true;
             this.chkShowSeriesFanart.CheckedChanged += new System.EventHandler(this.chkShowSeriesFanart_CheckedChanged);
@@ -2812,7 +2968,7 @@ namespace WindowPlugins.GUITVSeries
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(198, 52);
+			this.label39.Location = new System.Drawing.Point(209, 50);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(15, 13);
             this.label39.TabIndex = 4;
@@ -2821,7 +2977,7 @@ namespace WindowPlugins.GUITVSeries
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(9, 52);
+			this.label38.Location = new System.Drawing.Point(9, 50);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(141, 13);
             this.label38.TabIndex = 2;
@@ -2832,7 +2988,7 @@ namespace WindowPlugins.GUITVSeries
             this.label32.Location = new System.Drawing.Point(329, 23);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(67, 13);
-            this.label32.TabIndex = 5;
+			this.label32.TabIndex = 20;
             this.label32.Text = "&Language:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -2848,669 +3004,158 @@ namespace WindowPlugins.GUITVSeries
             // tab_view
             // 
             this.tab_view.AutoScroll = true;
-            this.tab_view.Controls.Add(this.chkOnlineFavourites);
-            this.tab_view.Controls.Add(this.groupBox10);
-            this.tab_view.Controls.Add(this.groupBox9);
             this.tab_view.Controls.Add(this.groupBox8);
-            this.tab_view.Controls.Add(this.listBox1);
-            this.tab_view.Controls.Add(this.numericUpDown1);
-            this.tab_view.Controls.Add(this.button3);
-            this.tab_view.Controls.Add(this.richTextBox1);
             this.tab_view.ImageIndex = 2;
             this.tab_view.Location = new System.Drawing.Point(4, 31);
             this.tab_view.Name = "tab_view";
             this.tab_view.Padding = new System.Windows.Forms.Padding(3);
             this.tab_view.Size = new System.Drawing.Size(766, 513);
             this.tab_view.TabIndex = 7;
-            this.tab_view.Text = "Views";
+			this.tab_view.Text = "Views/Filters";
             this.tab_view.UseVisualStyleBackColor = true;
             // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.groupBox11);
-            this.groupBox10.Controls.Add(this.viewStepGroupLbl);
-            this.groupBox10.Controls.Add(this.viewStepGroupByTextBox);
-            this.groupBox10.Controls.Add(this.viewStepType);
-            this.groupBox10.Location = new System.Drawing.Point(40, 397);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(482, 273);
-            this.groupBox10.TabIndex = 1;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "configure Hierarchy Step";
-            this.groupBox10.Visible = false;
-            // 
-            // groupBox11
-            // 
-            this.groupBox11.Controls.Add(this.comboBox7);
-            this.groupBox11.Controls.Add(this.textBox5);
-            this.groupBox11.Controls.Add(this.comboBox8);
-            this.groupBox11.Controls.Add(this.richTextBox4);
-            this.groupBox11.Controls.Add(this.comboBox9);
-            this.groupBox11.Controls.Add(this.textBox6);
-            this.groupBox11.Controls.Add(this.comboBox10);
-            this.groupBox11.Controls.Add(this.richTextBox5);
-            this.groupBox11.Controls.Add(this.comboBox3);
-            this.groupBox11.Controls.Add(this.textBox3);
-            this.groupBox11.Controls.Add(this.comboBox4);
-            this.groupBox11.Controls.Add(this.richTextBox2);
-            this.groupBox11.Controls.Add(this.comboBox5);
-            this.groupBox11.Controls.Add(this.textBox4);
-            this.groupBox11.Controls.Add(this.comboBox6);
-            this.groupBox11.Controls.Add(this.richTextBox3);
-            this.groupBox11.Controls.Add(this._23_link);
-            this.groupBox11.Controls.Add(this.cond3_cond);
-            this.groupBox11.Controls.Add(this.cond3_type);
-            this.groupBox11.Controls.Add(this.cond3_what);
-            this.groupBox11.Controls.Add(this._12_link);
-            this.groupBox11.Controls.Add(this.cond2_cond);
-            this.groupBox11.Controls.Add(this.cond2_type);
-            this.groupBox11.Controls.Add(this.cond2_what);
-            this.groupBox11.Controls.Add(this.label27);
-            this.groupBox11.Controls.Add(this.cond1_cond);
-            this.groupBox11.Controls.Add(this.cond1_type);
-            this.groupBox11.Controls.Add(this.cond1_what);
-            this.groupBox11.Location = new System.Drawing.Point(6, 62);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(455, 205);
-            this.groupBox11.TabIndex = 3;
-            this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Step Conditions";
-            // 
-            // comboBox7
-            // 
-            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox7.Enabled = false;
-            this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox7.Location = new System.Drawing.Point(20, 177);
-            this.comboBox7.Name = "comboBox7";
-            this.comboBox7.Size = new System.Drawing.Size(57, 21);
-            this.comboBox7.TabIndex = 24;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Enabled = false;
-            this.textBox5.Location = new System.Drawing.Point(312, 175);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(130, 20);
-            this.textBox5.TabIndex = 27;
-            // 
-            // comboBox8
-            // 
-            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox8.Enabled = false;
-            this.comboBox8.FormattingEnabled = true;
-            this.comboBox8.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox8.Location = new System.Drawing.Point(231, 175);
-            this.comboBox8.Name = "comboBox8";
-            this.comboBox8.Size = new System.Drawing.Size(75, 21);
-            this.comboBox8.TabIndex = 26;
-            // 
-            // richTextBox4
-            // 
-            this.richTextBox4.Enabled = false;
-            this.richTextBox4.Location = new System.Drawing.Point(83, 177);
-            this.richTextBox4.Name = "richTextBox4";
-            this.richTextBox4.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox4.TabIndex = 25;
-            this.richTextBox4.Text = "";
-            // 
-            // comboBox9
-            // 
-            this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox9.Enabled = false;
-            this.comboBox9.FormattingEnabled = true;
-            this.comboBox9.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox9.Location = new System.Drawing.Point(20, 151);
-            this.comboBox9.Name = "comboBox9";
-            this.comboBox9.Size = new System.Drawing.Size(57, 21);
-            this.comboBox9.TabIndex = 20;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Enabled = false;
-            this.textBox6.Location = new System.Drawing.Point(312, 149);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(130, 20);
-            this.textBox6.TabIndex = 23;
-            // 
-            // comboBox10
-            // 
-            this.comboBox10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox10.Enabled = false;
-            this.comboBox10.FormattingEnabled = true;
-            this.comboBox10.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox10.Location = new System.Drawing.Point(231, 149);
-            this.comboBox10.Name = "comboBox10";
-            this.comboBox10.Size = new System.Drawing.Size(75, 21);
-            this.comboBox10.TabIndex = 22;
-            // 
-            // richTextBox5
-            // 
-            this.richTextBox5.Enabled = false;
-            this.richTextBox5.Location = new System.Drawing.Point(83, 151);
-            this.richTextBox5.Name = "richTextBox5";
-            this.richTextBox5.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox5.TabIndex = 21;
-            this.richTextBox5.Text = "";
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.Enabled = false;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox3.Location = new System.Drawing.Point(20, 125);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(57, 21);
-            this.comboBox3.TabIndex = 16;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(312, 123);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(130, 20);
-            this.textBox3.TabIndex = 19;
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.Enabled = false;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox4.Location = new System.Drawing.Point(231, 123);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(75, 21);
-            this.comboBox4.TabIndex = 18;
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Enabled = false;
-            this.richTextBox2.Location = new System.Drawing.Point(83, 125);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox2.TabIndex = 17;
-            this.richTextBox2.Text = "";
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.Enabled = false;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this.comboBox5.Location = new System.Drawing.Point(20, 99);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(57, 21);
-            this.comboBox5.TabIndex = 12;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(312, 97);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(130, 20);
-            this.textBox4.TabIndex = 15;
-            // 
-            // comboBox6
-            // 
-            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox6.Enabled = false;
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.comboBox6.Location = new System.Drawing.Point(231, 97);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(75, 21);
-            this.comboBox6.TabIndex = 14;
-            // 
-            // richTextBox3
-            // 
-            this.richTextBox3.Enabled = false;
-            this.richTextBox3.Location = new System.Drawing.Point(83, 99);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(142, 20);
-            this.richTextBox3.TabIndex = 13;
-            this.richTextBox3.Text = "";
-            // 
-            // _23_link
-            // 
-            this._23_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._23_link.Enabled = false;
-            this._23_link.FormattingEnabled = true;
-            this._23_link.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this._23_link.Location = new System.Drawing.Point(20, 72);
-            this._23_link.Name = "_23_link";
-            this._23_link.Size = new System.Drawing.Size(57, 21);
-            this._23_link.TabIndex = 8;
-            // 
-            // cond3_cond
-            // 
-            this.cond3_cond.Enabled = false;
-            this.cond3_cond.Location = new System.Drawing.Point(312, 70);
-            this.cond3_cond.Name = "cond3_cond";
-            this.cond3_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond3_cond.TabIndex = 11;
-            // 
-            // cond3_type
-            // 
-            this.cond3_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond3_type.Enabled = false;
-            this.cond3_type.FormattingEnabled = true;
-            this.cond3_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond3_type.Location = new System.Drawing.Point(231, 70);
-            this.cond3_type.Name = "cond3_type";
-            this.cond3_type.Size = new System.Drawing.Size(75, 21);
-            this.cond3_type.TabIndex = 10;
-            // 
-            // cond3_what
-            // 
-            this.cond3_what.Enabled = false;
-            this.cond3_what.Location = new System.Drawing.Point(83, 72);
-            this.cond3_what.Name = "cond3_what";
-            this.cond3_what.Size = new System.Drawing.Size(142, 20);
-            this.cond3_what.TabIndex = 9;
-            this.cond3_what.Text = "";
-            // 
-            // _12_link
-            // 
-            this._12_link.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._12_link.Enabled = false;
-            this._12_link.FormattingEnabled = true;
-            this._12_link.Items.AddRange(new object[] {
-            "AND",
-            "OR"});
-            this._12_link.Location = new System.Drawing.Point(20, 46);
-            this._12_link.Name = "_12_link";
-            this._12_link.Size = new System.Drawing.Size(57, 21);
-            this._12_link.TabIndex = 4;
-            // 
-            // cond2_cond
-            // 
-            this.cond2_cond.Enabled = false;
-            this.cond2_cond.Location = new System.Drawing.Point(312, 44);
-            this.cond2_cond.Name = "cond2_cond";
-            this.cond2_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond2_cond.TabIndex = 7;
-            // 
-            // cond2_type
-            // 
-            this.cond2_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond2_type.Enabled = false;
-            this.cond2_type.FormattingEnabled = true;
-            this.cond2_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond2_type.Location = new System.Drawing.Point(231, 44);
-            this.cond2_type.Name = "cond2_type";
-            this.cond2_type.Size = new System.Drawing.Size(75, 21);
-            this.cond2_type.TabIndex = 6;
-            // 
-            // cond2_what
-            // 
-            this.cond2_what.Enabled = false;
-            this.cond2_what.Location = new System.Drawing.Point(83, 46);
-            this.cond2_what.Name = "cond2_what";
-            this.cond2_what.Size = new System.Drawing.Size(142, 20);
-            this.cond2_what.TabIndex = 5;
-            this.cond2_what.Text = "";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(20, 25);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(30, 13);
-            this.label27.TabIndex = 0;
-            this.label27.Text = "...if...";
-            // 
-            // cond1_cond
-            // 
-            this.cond1_cond.Location = new System.Drawing.Point(312, 17);
-            this.cond1_cond.Name = "cond1_cond";
-            this.cond1_cond.Size = new System.Drawing.Size(130, 20);
-            this.cond1_cond.TabIndex = 3;
-            // 
-            // cond1_type
-            // 
-            this.cond1_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cond1_type.FormattingEnabled = true;
-            this.cond1_type.Items.AddRange(new object[] {
-            "=",
-            "!=",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "contains",
-            "!contains"});
-            this.cond1_type.Location = new System.Drawing.Point(231, 17);
-            this.cond1_type.Name = "cond1_type";
-            this.cond1_type.Size = new System.Drawing.Size(75, 21);
-            this.cond1_type.TabIndex = 2;
-            // 
-            // cond1_what
-            // 
-            this.cond1_what.Location = new System.Drawing.Point(83, 19);
-            this.cond1_what.Name = "cond1_what";
-            this.cond1_what.Size = new System.Drawing.Size(142, 20);
-            this.cond1_what.TabIndex = 1;
-            this.cond1_what.Text = "";
-            // 
-            // viewStepGroupLbl
-            // 
-            this.viewStepGroupLbl.AutoSize = true;
-            this.viewStepGroupLbl.Location = new System.Drawing.Point(133, 35);
-            this.viewStepGroupLbl.Name = "viewStepGroupLbl";
-            this.viewStepGroupLbl.Size = new System.Drawing.Size(49, 13);
-            this.viewStepGroupLbl.TabIndex = 1;
-            this.viewStepGroupLbl.Text = "group By";
-            // 
-            // viewStepGroupByTextBox
-            // 
-            this.viewStepGroupByTextBox.Location = new System.Drawing.Point(188, 32);
-            this.viewStepGroupByTextBox.Name = "viewStepGroupByTextBox";
-            this.viewStepGroupByTextBox.Size = new System.Drawing.Size(108, 20);
-            this.viewStepGroupByTextBox.TabIndex = 2;
-            // 
-            // viewStepType
-            // 
-            this.viewStepType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.viewStepType.FormattingEnabled = true;
-            this.viewStepType.Items.AddRange(new object[] {
-            "group",
-            "series",
-            "season",
-            "episode"});
-            this.viewStepType.Location = new System.Drawing.Point(6, 32);
-            this.viewStepType.Name = "viewStepType";
-            this.viewStepType.Size = new System.Drawing.Size(121, 21);
-            this.viewStepType.TabIndex = 0;
-            this.viewStepType.SelectedIndexChanged += new System.EventHandler(this.viewStepType_SelectedIndexChanged);
-            // 
-            // groupBox9
-            // 
-            this.groupBox9.Controls.Add(this.checkCurViewEnabled);
-            this.groupBox9.Controls.Add(this.button7);
-            this.groupBox9.Controls.Add(this.label25);
-            this.groupBox9.Controls.Add(this.button2);
-            this.groupBox9.Controls.Add(this.button4);
-            this.groupBox9.Controls.Add(this.button5);
-            this.groupBox9.Controls.Add(this.button6);
-            this.groupBox9.Controls.Add(this.view_selStepsList);
-            this.groupBox9.Controls.Add(this.view_selectedName);
-            this.groupBox9.Controls.Add(this.label1);
-            this.groupBox9.Location = new System.Drawing.Point(263, 23);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(208, 315);
-            this.groupBox9.TabIndex = 0;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Define View";
+			// groupBox8
+            // 
+			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox8.Controls.Add(this.buttonViewTemplates);
+			this.groupBox8.Controls.Add(this.buttonPinCode);
+			this.groupBox8.Controls.Add(this.buttonEditView);
+			this.groupBox8.Controls.Add(this.checkBoxParentalControl);
+			this.groupBox8.Controls.Add(this.label25);
+			this.groupBox8.Controls.Add(this.checkCurViewEnabled);
+			this.groupBox8.Controls.Add(this.lnkResetView);
+			this.groupBox8.Controls.Add(this.btnRemoveView);
+			this.groupBox8.Controls.Add(this.view_selStepsList);
+			this.groupBox8.Controls.Add(this.btnAddView);
+			this.groupBox8.Controls.Add(this._availViews);
+			this.groupBox8.Controls.Add(this.label1);
+			this.groupBox8.Controls.Add(this.view_selectedName);
+			this.groupBox8.Location = new System.Drawing.Point(3, 6);
+			this.groupBox8.Name = "groupBox8";
+			this.groupBox8.Size = new System.Drawing.Size(755, 501);
+			this.groupBox8.TabIndex = 0;
+			this.groupBox8.TabStop = false;
+			this.groupBox8.Text = "Views \\ Filters";
+            // 
+			// buttonPinCode
+            // 
+			this.buttonPinCode.Location = new System.Drawing.Point(260, 227);
+			this.buttonPinCode.Name = "buttonPinCode";
+			this.buttonPinCode.Size = new System.Drawing.Size(75, 23);
+			this.buttonPinCode.TabIndex = 8;
+			this.buttonPinCode.Text = "Pin &Code...";
+			this.buttonPinCode.UseVisualStyleBackColor = true;
+			this.buttonPinCode.Click += new System.EventHandler(this.buttonPinCode_Click);
+            // 
+			// buttonEditView
+            // 
+			this.buttonEditView.Enabled = false;
+			this.buttonEditView.Location = new System.Drawing.Point(429, 113);
+			this.buttonEditView.Name = "buttonEditView";
+			this.buttonEditView.Size = new System.Drawing.Size(75, 23);
+			this.buttonEditView.TabIndex = 7;
+			this.buttonEditView.Text = "&Edit";
+			this.buttonEditView.UseVisualStyleBackColor = true;
+			this.buttonEditView.Click += new System.EventHandler(this.buttonEditView_Click);
+            // 
+			// checkBoxParentalControl
+            // 
+			this.checkBoxParentalControl.AutoSize = true;
+			this.checkBoxParentalControl.Location = new System.Drawing.Point(240, 204);
+			this.checkBoxParentalControl.Name = "checkBoxParentalControl";
+			this.checkBoxParentalControl.Size = new System.Drawing.Size(215, 17);
+			this.checkBoxParentalControl.TabIndex = 6;
+			this.checkBoxParentalControl.Text = "&Prompt for Pin Code when entering view";
+			this.checkBoxParentalControl.UseVisualStyleBackColor = true;
+			this.checkBoxParentalControl.CheckedChanged += new System.EventHandler(this.checkBoxParentalControl_CheckedChanged);
+            // 
+			// label25
+            // 
+			this.label25.AutoSize = true;
+			this.label25.Location = new System.Drawing.Point(237, 65);
+			this.label25.Name = "label25";
+			this.label25.Size = new System.Drawing.Size(52, 13);
+			this.label25.TabIndex = 3;
+			this.label25.Text = "Hierarchy";
             // 
             // checkCurViewEnabled
             // 
             this.checkCurViewEnabled.AutoSize = true;
-            this.checkCurViewEnabled.Location = new System.Drawing.Point(138, 30);
+			this.checkCurViewEnabled.Location = new System.Drawing.Point(240, 180);
             this.checkCurViewEnabled.Name = "checkCurViewEnabled";
-            this.checkCurViewEnabled.Size = new System.Drawing.Size(64, 17);
+			this.checkCurViewEnabled.Size = new System.Drawing.Size(164, 17);
             this.checkCurViewEnabled.TabIndex = 2;
-            this.checkCurViewEnabled.Text = "enabled";
+			this.checkCurViewEnabled.Text = "&View is available for selection";
             this.checkCurViewEnabled.UseVisualStyleBackColor = true;
             this.checkCurViewEnabled.CheckedChanged += new System.EventHandler(this.checkCurViewEnabled_CheckedChanged);
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(158, 56);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(23, 23);
-            this.button7.TabIndex = 9;
-            this.button7.Text = "Paste all at once";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Visible = false;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(9, 66);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(52, 13);
-            this.label25.TabIndex = 3;
-            this.label25.Text = "Hierarchy";
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(153, 108);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(28, 29);
-            this.button2.TabIndex = 5;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
-            // 
-            // button4
-            // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(153, 143);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(28, 29);
-            this.button4.TabIndex = 6;
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Visible = false;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(45, 276);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "Remove";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Visible = false;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(124, 276);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 8;
-            this.button6.Text = "Add";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Visible = false;
-            // 
-            // view_selStepsList
-            // 
-            this.view_selStepsList.FormattingEnabled = true;
-            this.view_selStepsList.Location = new System.Drawing.Point(9, 84);
-            this.view_selStepsList.Name = "view_selStepsList";
-            this.view_selStepsList.Size = new System.Drawing.Size(190, 186);
-            this.view_selStepsList.TabIndex = 4;
-            this.view_selStepsList.SelectedIndexChanged += new System.EventHandler(this.view_selStepsList_SelectedIndexChanged);
-            // 
-            // view_selectedName
-            // 
-            this.view_selectedName.Location = new System.Drawing.Point(50, 28);
-            this.view_selectedName.Name = "view_selectedName";
-            this.view_selectedName.Size = new System.Drawing.Size(82, 20);
-            this.view_selectedName.TabIndex = 1;
-            this.view_selectedName.TextChanged += new System.EventHandler(this.view_selectedName_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Name:";
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.lnkResetView);
-            this.groupBox8.Controls.Add(this.btnViewUp);
-            this.groupBox8.Controls.Add(this.btnViewDown);
-            this.groupBox8.Controls.Add(this.btnRemoveView);
-            this.groupBox8.Controls.Add(this.btnAddView);
-            this.groupBox8.Controls.Add(this._availViews);
-            this.groupBox8.Location = new System.Drawing.Point(40, 23);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(208, 315);
-            this.groupBox8.TabIndex = 0;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Available Views";
             // 
             // lnkResetView
             // 
             this.lnkResetView.AutoSize = true;
-            this.lnkResetView.Location = new System.Drawing.Point(7, 281);
+			this.lnkResetView.Location = new System.Drawing.Point(126, 297);
             this.lnkResetView.Name = "lnkResetView";
-            this.lnkResetView.Size = new System.Drawing.Size(35, 13);
+			this.lnkResetView.Size = new System.Drawing.Size(89, 13);
             this.lnkResetView.TabIndex = 3;
             this.lnkResetView.TabStop = true;
-            this.lnkResetView.Text = "Reset";
+			this.lnkResetView.Text = "Reset to Defaults";
             this.lnkResetView.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkResetView_LinkClicked);
-            // 
-            // btnViewUp
-            // 
-            this.btnViewUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnViewUp.Enabled = false;
-            this.btnViewUp.Location = new System.Drawing.Point(156, 108);
-            this.btnViewUp.Name = "btnViewUp";
-            this.btnViewUp.Size = new System.Drawing.Size(28, 29);
-            this.btnViewUp.TabIndex = 1;
-            this.btnViewUp.UseVisualStyleBackColor = true;
-            this.btnViewUp.Visible = false;
-            // 
-            // btnViewDown
-            // 
-            this.btnViewDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnViewDown.Enabled = false;
-            this.btnViewDown.Location = new System.Drawing.Point(156, 143);
-            this.btnViewDown.Name = "btnViewDown";
-            this.btnViewDown.Size = new System.Drawing.Size(28, 29);
-            this.btnViewDown.TabIndex = 2;
-            this.btnViewDown.UseVisualStyleBackColor = true;
-            this.btnViewDown.Visible = false;
             // 
             // btnRemoveView
             // 
-            this.btnRemoveView.Enabled = false;
-            this.btnRemoveView.Location = new System.Drawing.Point(49, 276);
+			this.btnRemoveView.Location = new System.Drawing.Point(429, 142);
             this.btnRemoveView.Name = "btnRemoveView";
-            this.btnRemoveView.Size = new System.Drawing.Size(69, 23);
+			this.btnRemoveView.Size = new System.Drawing.Size(75, 23);
             this.btnRemoveView.TabIndex = 4;
-            this.btnRemoveView.Text = "Remove";
+			this.btnRemoveView.Text = "&Remove";
             this.btnRemoveView.UseVisualStyleBackColor = true;
+			this.btnRemoveView.Click += new System.EventHandler(this.btnRemoveView_Click);
             // 
+			// view_selStepsList
+			// 
+			this.view_selStepsList.Enabled = false;
+			this.view_selStepsList.FormattingEnabled = true;
+			this.view_selStepsList.Location = new System.Drawing.Point(240, 83);
+			this.view_selStepsList.Name = "view_selStepsList";
+			this.view_selStepsList.Size = new System.Drawing.Size(173, 82);
+			this.view_selStepsList.TabIndex = 4;
+			// 
             // btnAddView
             // 
-            this.btnAddView.Enabled = false;
-            this.btnAddView.Location = new System.Drawing.Point(124, 276);
+			this.btnAddView.Location = new System.Drawing.Point(429, 83);
             this.btnAddView.Name = "btnAddView";
             this.btnAddView.Size = new System.Drawing.Size(75, 23);
             this.btnAddView.TabIndex = 5;
-            this.btnAddView.Text = "Add";
+			this.btnAddView.Text = "&Add";
             this.btnAddView.UseVisualStyleBackColor = true;
+			this.btnAddView.Click += new System.EventHandler(this.btnAddView_Click);
             // 
             // _availViews
             // 
             this._availViews.FormattingEnabled = true;
-            this._availViews.Location = new System.Drawing.Point(10, 19);
+			this._availViews.Location = new System.Drawing.Point(26, 35);
             this._availViews.Name = "_availViews";
             this._availViews.Size = new System.Drawing.Size(189, 251);
             this._availViews.TabIndex = 0;
             this._availViews.SelectedIndexChanged += new System.EventHandler(this._availViews_SelectedIndexChanged);
             // 
-            // listBox1
+			// label1
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(8, 695);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(426, 30);
-            this.listBox1.TabIndex = 5;
-            this.listBox1.Visible = false;
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(237, 35);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(38, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Name:";
             // 
-            // numericUpDown1
+			// view_selectedName
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(234, 667);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 3;
-            this.numericUpDown1.Visible = false;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(360, 664);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Visible = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(8, 623);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(426, 35);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.Visible = false;
+			this.view_selectedName.Location = new System.Drawing.Point(289, 32);
+			this.view_selectedName.Name = "view_selectedName";
+			this.view_selectedName.Size = new System.Drawing.Size(124, 20);
+			this.view_selectedName.TabIndex = 1;
+			this.view_selectedName.TextChanged += new System.EventHandler(this.view_selectedName_TextChanged);
             // 
             // tabLogoRules
             // 
@@ -4698,17 +4343,11 @@ namespace WindowPlugins.GUITVSeries
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownArtworkDelay)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBackdropDelay)).EndInit();
             this.tab_view.ResumeLayout(false);
-            this.tab_view.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox11.PerformLayout();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabLogoRules.ResumeLayout(false);
             this.tabLogoRules.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -4790,7 +4429,14 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_DetailsTree;
         private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem watchedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unWatchedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getSubtitlesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem torrentThToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newzbinThisToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem resetUserSelectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ResetUserSelToolStripMenuItem;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button_uTorrentBrowse;
         private System.Windows.Forms.TextBox textBox_uTorrentPath;
@@ -4800,66 +4446,20 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ToolStripMenuItem torrentThToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox_TorrentDetailsUrl;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox_TorrentDetailsRegex;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
         private System.Windows.Forms.TabPage tab_view;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button btnAddView;
         private System.Windows.Forms.ListBox _availViews;
-        private System.Windows.Forms.Button btnViewUp;
-        private System.Windows.Forms.Button btnViewDown;
         private System.Windows.Forms.Button btnRemoveView;
-        private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.TextBox view_selectedName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ListBox view_selStepsList;
-        private System.Windows.Forms.GroupBox groupBox11;
-        private System.Windows.Forms.Label viewStepGroupLbl;
-        private System.Windows.Forms.TextBox viewStepGroupByTextBox;
-        private System.Windows.Forms.ComboBox viewStepType;
-        private System.Windows.Forms.ComboBox comboBox7;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.ComboBox comboBox8;
-        private System.Windows.Forms.RichTextBox richTextBox4;
-        private System.Windows.Forms.ComboBox comboBox9;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.ComboBox comboBox10;
-        private System.Windows.Forms.RichTextBox richTextBox5;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.ComboBox comboBox6;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.ComboBox _23_link;
-        private System.Windows.Forms.TextBox cond3_cond;
-        private System.Windows.Forms.ComboBox cond3_type;
-        private System.Windows.Forms.RichTextBox cond3_what;
-        private System.Windows.Forms.ComboBox _12_link;
-        private System.Windows.Forms.TextBox cond2_cond;
-        private System.Windows.Forms.ComboBox cond2_type;
-        private System.Windows.Forms.RichTextBox cond2_what;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox cond1_cond;
-        private System.Windows.Forms.ComboBox cond1_type;
-        private System.Windows.Forms.RichTextBox cond1_what;
         private System.Windows.Forms.ComboBox comboLanguage;
         private System.Windows.Forms.CheckBox checkCurViewEnabled;
         private System.Windows.Forms.SplitContainer splitContainer_treeextra;
@@ -4882,7 +4482,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.TextBox textbox_NewzbinPassword;
         private System.Windows.Forms.TextBox textBox_NewzbinLogin;
-        private System.Windows.Forms.ToolStripMenuItem newzbinThisToolStripMenuItem;
         private System.Windows.Forms.Button button_NewsDownloadPathBrowse;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox textBox_NewsDownloadPath;
@@ -4930,8 +4529,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel lnkResetView;
         private System.Windows.Forms.TabPage tabAbout;
         private About aboutScreen;
-        //private System.Windows.Forms.ToolStripMenuItem resetUserSelectionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ResetUserSelToolStripMenuItem;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
         private System.Windows.Forms.Panel panel_seriessubs;
         private System.Windows.Forms.CheckBox checkBox_seriessubsEnable;
@@ -5056,7 +4653,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.LinkLabel linkExpressionHelp;
-        private System.Windows.Forms.CheckBox chkOnlineFavourites;
         private System.Windows.Forms.Label label71;
         private System.Windows.Forms.ComboBox cboFanartResolution;
         private System.Windows.Forms.CheckBox chkAutoDownloadFanart;
@@ -5083,7 +4679,24 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_AutoDownloadMissingArtwork;
         private System.Windows.Forms.LinkLabel linkExParsingExpressions;
         private System.Windows.Forms.LinkLabel linkImpParsingExpressions;
-        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.CheckBox checkbox_SortSpecials;
+        private System.Windows.Forms.NumericUpDown numericUpDownBackdropDelay;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.NumericUpDown numericUpDownArtworkDelay;
+        private System.Windows.Forms.Label label76;
+		private System.Windows.Forms.Label label75;
+		private System.Windows.Forms.CheckBox checkboxRatingDisplayStars;
+        private System.Windows.Forms.CheckBox checkboxAutoDownloadFanartSeriesName;
+        private System.Windows.Forms.Button buttonEditView;
+        private System.Windows.Forms.CheckBox checkBoxParentalControl;
+		private System.Windows.Forms.Button buttonPinCode;
+		private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionCheckBoxSMSKeyboard;
+        private System.Windows.Forms.Button buttonViewTemplates;
+		private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionCheckBoxMarkRatedEpsAsWatched;
         private System.Windows.Forms.Button EmptyDatabaseButton;
         private System.Windows.Forms.Button ConfigureDatabaseButton;
     }

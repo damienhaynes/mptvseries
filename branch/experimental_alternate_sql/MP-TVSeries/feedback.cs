@@ -75,7 +75,31 @@ namespace WindowPlugins.GUITVSeries.Feedback
 
     public class GetStringFromUserDescriptor
     {
-        public String m_sText = string.Empty;
+		public enum KeyboardStyles {
+			KEYBOARD,
+			SMS
+		}
+		
+		/// <summary>
+		/// Text to display when invoking the keyboard
+		/// </summary>
+		public String Text { get; set; }
+
+		/// <summary>
+		/// Set to TRUE to enable the Shift button 
+		/// </summary>
+        public bool ShiftEnabled { get; set; }
+
+		/// <summary>
+		/// Set to TRUE to Mask the Input		
+		/// </summary>
+		public bool IsPassword { get; set; }
+
+		/// <summary>
+		/// Set Keyboard style to NORMAL or SMS Style
+		/// </summary>
+		public KeyboardStyles KeyboardStyle { get; set; }
+			
     }
 
     public enum DialogButtons
@@ -94,6 +118,7 @@ namespace WindowPlugins.GUITVSeries.Feedback
         Ignore,
         NotReady
     }
+
     public interface IFeedback
     {
         ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected);

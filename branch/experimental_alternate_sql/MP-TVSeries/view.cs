@@ -34,6 +34,9 @@ namespace WindowPlugins.GUITVSeries
         string m_name = string.Empty;
         string m_prettyName = null;
         public static bool s_cachePrettyName = true;
+
+        public static bool IsLocked { get; set; }
+        
         //public bool isGroupType = false;
         public string groupedInfo(int step)
         {
@@ -53,6 +56,8 @@ namespace WindowPlugins.GUITVSeries
         }
         public string m_uniqueID = string.Empty;
         public bool m_Enabled = true;
+        public bool IsTaggedView { get; set; }
+        public bool ParentalControl { get; set; }        
 
         DBView m_toUpdateForConfig = null;
 
@@ -234,26 +239,30 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string tmpItem = results.Rows[index][0].ToString();
                     // assume we now have a list of all distinct ones
-                    if (step.groupedBy.attempSplit)
-                    {
+                    if (step.groupedBy.attempSplit) {
                         // we want to try to split by "|" eg. for actors/genres
                         string[] split = DBOnlineEpisode.splitField(tmpItem);
-                        foreach (string item in split)
-                            if (item.Trim().Length == 0)
+                        foreach (string item in split) {
+                            if (item.Trim().Length == 0) {
+                                // display "Unknown" if field is empty"
                                 items.Add(Translation.Unknown);
-                            else
+                            }
+                            else {
                                 items.Add(item.Trim());
+                            }
+                        }
                     }
-                    else
+                    else {
                         if (tmpItem.Trim().Length == 0)
                             items.Add(Translation.Unknown);
                         else
                             items.Add(tmpItem.Trim());
+                    }
                 }
                 if (step.groupedBy.attempSplit)
                 {
                     // have to check for dups (because we split eg. Drama|Action so "Action" might be in twice
-                    items = removeDuplicates(items);
+                    items = Helper.RemoveDuplicates(items);
                 }
                 // now we have to sort them again (Unknown/splitting above)
                 items.Sort();
@@ -261,7 +270,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // and limit in memory here (again because those splits are hard to deal with)
                     if (step.limitItems > 0)
-                        limitList(ref items, step.limitItems);
+                        Helper.LimitList(ref items, step.limitItems);
                 }
             }
             MPTVSeriesLog.Write("View: GetGroupItems: Complete", MPTVSeriesLog.LogLevel.Debug);
@@ -283,7 +292,8 @@ namespace WindowPlugins.GUITVSeries
                         if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
                             conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
                         else 
-                            if(m_steps[stepIndex - 1].groupedBy.attempSplit) // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
+                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) 
+                                // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
                                 conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
                             else
                                 conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
@@ -297,35 +307,16 @@ namespace WindowPlugins.GUITVSeries
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.nextIsOr = true;
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
-                        conditions.nextIsOr = false;
+                        if (DBOption.GetOptions(DBOption.cSortSpecials)) {
+                            conditions.nextIsOr = true;
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
+                            conditions.nextIsOr = false;
+                        }
                         conditions.endGroup();
                         break;
                 }
             }
-        }
-
-        public static List<string> removeDuplicates(List<string> inputList)
-        {
-            Dictionary<string, int> uniqueStore = new Dictionary<string, int>();
-            List<string> finalList = new List<string>();
-            foreach (string currValue in inputList)
-            {
-                if (!uniqueStore.ContainsKey(currValue))
-                {
-                    uniqueStore.Add(currValue, 0);
-                    finalList.Add(currValue);
-                }
-            }
-            return finalList;
-        }
-
-        static void limitList(ref List<string> list, int limit)
-        {
-            if(limit >= list.Count) return;
-            list.RemoveRange(list.Count - (list.Count - limit), (list.Count - limit));
         }
 
         public logicalView(DBView fromDB)
@@ -337,6 +328,8 @@ namespace WindowPlugins.GUITVSeries
             this.m_prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this.m_name) : (String)fromDB[DBView.cPrettyName];
             this.m_uniqueID = fromDB[DBView.cIndex];
             this.m_Enabled = fromDB[DBView.cEnabled];
+            this.IsTaggedView = fromDB[DBView.cTaggedView];
+            this.ParentalControl = fromDB[DBView.cParentalControl];
 
             if (Settings.isConfig) m_toUpdateForConfig = fromDB;
 
@@ -350,9 +343,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     foreach (string condsToInh in this.m_steps[i - 1].conditionsToInherit)
                     {
-                        this.m_steps[i].addInheritedConditions(condsToInh);
+						// Don't inherit series conditions in season/episode view
+						// 50 Times slower getting episode list if you do!!
+						// There is no need to inherit at the Episode step if Series step exists
+						if (!(condsToInh.Contains("<Series") && hasSeriesBeforeIt)) {
+							this.m_steps[i].addInheritedConditions(condsToInh);
+						}
                     }
                 }
+
                 // so lists can query if they'll have to append the seriesname in episode view (when no series was selected, eg. Flat View
                 if (this.m_steps[i].Type == logicalViewStep.type.series)
                     hasSeriesBeforeIt = true;
@@ -373,6 +372,7 @@ namespace WindowPlugins.GUITVSeries
             m_toUpdateForConfig[DBView.cEnabled] = m_Enabled;
             m_toUpdateForConfig[DBView.cTransToken] = m_name;
             m_toUpdateForConfig[DBView.cPrettyName] = m_prettyName != Translation.Get(m_name) ? prettyName : string.Empty;
+            m_toUpdateForConfig[DBView.cParentalControl] = ParentalControl;
             m_toUpdateForConfig.Commit();
         }
     }
@@ -433,7 +433,9 @@ namespace WindowPlugins.GUITVSeries
                 groupedBy.PrettyName = typeString.Split(':')[1];
                 getTableFieldname(typeString.Split(':')[1], out groupedBy.table, out groupedBy.rawFieldname);
                 groupedBy.tableField = getQTableNameFromUnknownType(groupedBy.table, groupedBy.rawFieldname);
-                groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);// RequiringSplit; //groupedBy.tableField.ToLower() == "online_series.genre" || groupedBy.tableField.ToLower() == "online_series.actors";
+                // DBFields Requiring Split
+                groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname) 
+                                     || DBOnlineEpisode.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);
             }
             else if (typeString == type.series.ToString())
                 this.Type = type.series;
@@ -441,13 +443,13 @@ namespace WindowPlugins.GUITVSeries
                 this.Type = type.season;
             else if (typeString == type.episode.ToString())
                 this.Type = type.episode;
-            else this.Type = type.series; // this should never happen!
+            else 
+                this.Type = type.series; // this should never happen!
         }
 
         public void addSQLCondition(string what, string type, string condition)
         {
             if ((!what.Contains("<") || !what.Contains(".")) && !what.Contains("custom:")) return;
-
 
             SQLConditionType condtype;
             switch (type)
@@ -470,6 +472,9 @@ namespace WindowPlugins.GUITVSeries
                 case "!=":
                     condtype = SQLConditionType.NotEqual;
                     break;
+				case "like":
+					condtype = SQLConditionType.Like;
+					break;
                 default:
                     condtype = SQLConditionType.Equal;
                     break;
@@ -492,13 +497,15 @@ namespace WindowPlugins.GUITVSeries
 
                     conds.AddCustom(" exists( " + DBSeason.stdGetSQL(fullSubCond, false) + " )");
                 }
-                else
-                {
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
-                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+				else if (lType == typeof(DBOnlineEpisode))
+                {                    
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);                 
                     conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                 }
+				else if (lType == typeof(DBEpisode)) {
+					fullSubCond.AddCustom(DBEpisode.Q(tableField), condition, condtype, true);
+					conds.AddCustom(" online_series.id in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
+				}
             }
             else if (logicalViewStep.type.season == Type && lType != typeof(DBSeason))
             {
@@ -509,15 +516,17 @@ namespace WindowPlugins.GUITVSeries
                     fullSubCond.AddCustom(DBOnlineSeries.Q(tableField), condition, condtype, true);
                     conds.AddCustom(" exists( " + DBSeries.stdGetSQL(fullSubCond, false) + " )");
                 }
-                else if (lType == typeof(DBEpisode) || lType == typeof(DBOnlineEpisode))
-                {
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
-                    //fullSubCond.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype);
-                    //conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+                else if (lType == typeof(DBOnlineEpisode))
+                {                    
                     // we rely on the join in dbseason for this (much, much faster)
                     conds.AddCustom(DBOnlineEpisode.Q(tableField), condition, condtype, true);
                 }
+				else if (lType == typeof(DBEpisode)) {
+					fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
+                    fullSubCond.AddCustom(DBEpisode.Q(tableField), condition, condtype);
+                    conds.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
+				}
             }
             else if (logicalViewStep.type.episode == Type && (lType != typeof(DBEpisode) && lType != typeof(DBOnlineEpisode)))
             {

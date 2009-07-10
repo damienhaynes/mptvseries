@@ -174,12 +174,23 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoDownloadFanart = "AutoDownloadFanart";
         public const String cAutoDownloadFanartCount = "AutoDownloadFanartCount";
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
+        public const String cAutoDownloadFanartSeriesNames = "AutoDownloadFanartSeriesNames";
 
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
 
-        //public const String cDateFormatString = "DateFormatString";
         public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
+
+		public const String cDefaultRating = "DefaultRating";
+		public const String cRatingDisplayStars = "RatingDisplayStars";
+
+        public const String cSortSpecials = "SortSpecials";
+        public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
+        public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
+        public const String cRandomFanartInterval = "RandomFanartInterval";
+        public const String cParentalControlPinCode = "ParentalControlPinCode";
+		public const String cKeyboardStyle = "KeyboardStyle";
+		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -458,18 +469,45 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cFanartCurrentView) == null)
                     SetOptions(cFanartCurrentView, 2); // Large Icons
 
-                //if (GetOptions(cDateFormatString) == null) {
-                //    SetOptions(cDateFormatString, System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
-                //}
-
                 if (GetOptions(cUseRegionalDateFormatString) == null)
                     SetOptions(cUseRegionalDateFormatString, 0);
+				if (GetOptions(cDefaultRating) == null)
+					SetOptions(cDefaultRating, 7); // Scale 1 - 10
+
+				if (GetOptions(cRatingDisplayStars) == null)
+					SetOptions(cRatingDisplayStars, 10); // 5 or 10 Stars
+
+                if (GetOptions(cSortSpecials) == null)
+                    SetOptions(cSortSpecials, 1);
+
+                if (GetOptions(cBackdropLoadingDelay) == null)
+                    SetOptions(cBackdropLoadingDelay, 250); //milliseconds
+
+                if (GetOptions(cArtworkLoadingDelay) == null)
+                    SetOptions(cArtworkLoadingDelay, 250); //milliseconds
+
+                if (GetOptions(cRandomFanartInterval) == null)
+                    SetOptions(cRandomFanartInterval, 30000); //milliseconds
+
+                if (GetOptions(cAutoDownloadFanartSeriesNames) == null)
+                    SetOptions(cAutoDownloadFanartSeriesNames, 0);
+
+                if (GetOptions(cParentalControlPinCode) == null)
+                    SetOptions(cParentalControlPinCode, string.Empty);
+
+				if (GetOptions(cKeyboardStyle) == null)
+					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
+
+				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
+					SetOptions(cMarkRatedEpisodeAsWatched, 0);
+
             }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
             }
         }
+
         private static void UpdateTable()
         {
             try {
@@ -518,7 +556,7 @@ namespace WindowPlugins.GUITVSeries
         public static DBValue GetOptions(String property)
         {
             try {
-                //                UpdateTable();
+                // UpdateTable();
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
                 if (optionsCache.ContainsKey(convertedProperty))

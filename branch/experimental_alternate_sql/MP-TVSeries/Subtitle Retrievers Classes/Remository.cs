@@ -557,25 +557,30 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                 //add other versions
                 foreach (Match match in matches)
                 {
-                    Choices.Add(new Feedback.CItem(match.Groups[2].Value.Trim(), String.Empty, match.Groups[1].Value));
+                    Choices.Add(new Feedback.CItem(match.Groups[2].Value.Trim(), String.Empty, new String[]{match.Groups[1].Value,match.Groups[2].Value.Trim()}));
                 }
 
 
                 if (m_feedback.ChooseFromSelection(versionSelector, out selectedVersion) == Feedback.ReturnCode.OK)
                 {
-                    sSelectedVersionTag = selectedVersion.m_Tag as String;
+                    String[] splittedTag = selectedVersion.m_Tag as String[];
+                    sSelectedVersionTag = splittedTag[1];
+                    seasonUrl = splittedTag[0];
                 }
             }
             else
             {
-                if (sSelectedVersionTag == null) sSelectedVersionTag = seasonUrl;
+                if (sSelectedVersionTag == null)
+                {
+                    sSelectedVersionTag = "";
+                }
             }
 
-            MPTVSeriesLog.Write("Episode Version selected: (Episode = " + sSelectedVersionTag + ")");
-            if (sSelectedVersionTag != url && userSelection != null)
+            MPTVSeriesLog.Write("Episode Version selected: (Episode = " + seasonUrl + ")");
+            if (seasonUrl != url && userSelection != null)
             {
                 //load custom file version page
-                Stream data = client.OpenRead(selectedVersion.m_Tag as String);
+                Stream data = client.OpenRead(seasonUrl as String);
                 StreamReader reader = new StreamReader(data);
                 sPage = reader.ReadToEnd().Replace('\0', ' ');
                 fileMatches = EpisodeEngine.Matches(sPage);

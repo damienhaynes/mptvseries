@@ -66,8 +66,7 @@
 	<string Field="RatingStar" Original="Star">Star</string>
 	<string Field="RatingStars" Original="Stars">Stars</string>
 	<string Field="ChangeView" Original="Change View">Change View</string>
-	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">Cycle Banner</string>
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Immediately Change Views</string>	
 	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">List all Fanart for this Series</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Download Fanart and Use</string>
@@ -138,4 +137,63 @@
 	<string Field="DeleteFromDisk" Original="Delete from Disk">Delete from Disk</string>
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Delete from Database</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Delete from Disk and Database</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Select Your Rating for {0}</string>
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Hide Spoiler Thumbnails</string>	
+	<!-- Rate Descriptions - 5 Stars-->
+	<string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
+	<string Field="RateFiveStarTwo" Original="">Mediocre</string>
+	<string Field="RateFiveStarThree" Original="">Good</string>
+	<string Field="RateFiveStarFour" Original="">Superb</string>
+	<string Field="RateFiveStarFive" Original="">Perfect</string>
+	<!-- Rate Descriptions - 10 Stars-->
+	<string Field="RateTenStarOne" Original="Abysmal">Abysmal</string>
+	<string Field="RateTenStarTwo" Original="Terrible">Terrible</string>
+	<string Field="RateTenStarThree" Original="Bad">Bad</string>
+	<string Field="RateTenStarFour" Original="Poor">Poor</string>
+	<string Field="RateTenStarFive" Original="Mediocre">Mediocre</string>
+	<string Field="RateTenStarSix" Original="Fair">Fair</string>
+	<string Field="RateTenStarSeven" Original="Good">Good</string>
+	<string Field="RateTenStarEight" Original="Great">Great</string>
+	<string Field="RateTenStarNine" Original="Superb">Superb</string>
+	<string Field="RateTenStarTen" Original="Perfect">Perfect</string>
+	
+	<string Field="ContentRating" Original="Content Rating">Content Rating</string>
+	<string Field="ViewTags" Original="View Tags">View Tags</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Add Series to View</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from View</string>
+	<string Field="NewViewTag" Original="New Tag">New View</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Cycle Series Banner</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Cycle Season Banner</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Cycle Series Poster</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
+	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 Seconds</string>
+	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 Seconds</string>
+	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 Seconds</string>
+	<string Field="FanartIntervalThirtySeconds" Original="30 Seconds">30 Seconds</string>
+	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Seconds</string>
+	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Seconds</string>
+	<string Field="NoPlaylistsFound" Original="No Playlists found in:">No Playlists found in:</string>
+	<string Field="PinCode" Original="Pin Code">Pin Code</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">The entered pin code is incorrect</string>
+	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Press OK to try again</string>
+	<string Field="ParentalControlLocked" Original="Lock Views">Lock Views</string>
+	<string Field="ViewIsLocked" Original="View Locked">View Locked</string>
+	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">The view "{0}" is locked</string>
+	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Enter in 4 Digit Pin Code to proceed:</string>
+	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin Incorrect</string>=	
+	<string Field="Continuing" Original="Continuing Series">Continuing Series</string>
+	<string Field="Ended" Original="Ended Series">Ended Series</string>
+	<string Field="HighDefinition" Original="High Definition">High Definition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (User)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25(User)</string>
+	<string Field="Subtitles" Original="Subtitles">Subtitles</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Online Favourites</string>	
+	<string Field="Actors" Original="Actors">Actors</string>
+	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
+	<string Field="LocalMedia" Original="Local Media">Local Media</string>
+	
 </strings>

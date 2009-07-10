@@ -129,16 +129,72 @@
 	<string Field="ButtonOptions" Original="Options">Indstillinger</string>
 	<string Field="FanArtFilter" Original="Filter">Filter</string>
 	<string Field="FanArtFilterAll" Original="All">Alle</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">Tilfældig Fanart</string>	
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Tilfældig Fanart</string>
 	<string Field="LabelResolution" Original="Resolution:">Opløsning:</string>
 	<string Field="LabelChosen" Original="Chosen:">Valgt:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Ikke aktiv:</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Nustil bruger valg</string>
-	<string Field="FanArtFilter" Original="Filter">Filter</string>
-	<string Field="FanArtFilterAll" Original="All">Alle</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">TilfÃ¦ldig Fanart</string>	
-	<string Field="LabelResolution" Original="Resolution:">OplÃ¸sning:</string>
-	<string Field="LabelChosen" Original="Chosen:">Valgt:</string>
-	<string Field="LabelDisabled" Original="Disabled:">Ikke aktiv:</string>
-	<string Field="ResetUserSelections" Original="Reset User Selections">Nustil bruger Reset valgt</string>
+	<string Field="DeleteFromDisk" Original="Delete from Disk">Slet permanent</string>
+	<string Field="DeleteFromDatabase" Original="Delete from Database">Fjern fra databasen</string>
+	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Slet permanent og fjern fra databasen</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Vurder {0}</string>
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Gem spoiler miniatureportræter</string>	
+	<!-- Rate Movie Descriptions - 5 Stars-->
+	<string Field="RateFiveStarOne" Original="Terrible">Forfærdelig</string>
+	<string Field="RateFiveStarTwo" Original="">Middelmådig</string>
+	<string Field="RateFiveStarThree" Original="">God</string>
+	<string Field="RateFiveStarFour" Original="">Fortrinlig</string>
+	<string Field="RateFiveStarFive" Original="">Perfekt</string>
+	<!-- Rate Movie Descriptions - 10 Stars-->
+	<string Field="RateTenStarOne" Original="Abysmal">Rædselsfuld</string>
+	<string Field="RateTenStarTwo" Original="Terrible">Forfærdelig</string>
+	<string Field="RateTenStarThree" Original="Bad">Dårlig</string>
+	<string Field="RateTenStarFour" Original="Poor">Ringe</string>
+	<string Field="RateTenStarFive" Original="Mediocre">Middelmådig</string>
+	<string Field="RateTenStarSix" Original="Fair">Rimelig</string>
+	<string Field="RateTenStarSeven" Original="Good">God</string>
+	<string Field="RateTenStarEight" Original="Great">Meget god</string>
+	<string Field="RateTenStarNine" Original="Superb">Fortrinlig</string>
+	<string Field="RateTenStarTen" Original="Perfect">Perfekt</string>
+	
+	<string Field="ContentRating" Original="Content Rating">Indhold vurdering</string>
+	<string Field="ViewTags" Original="View Tags">Vis etiketter</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Tilføj serie til overblikket</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Fjern serie fra overbliket</string>
+	<string Field="NewViewTag" Original="New Tag">Nyt overblik</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Roter Serie banner</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Roter sæson banner</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Roter serie plakat</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
+	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 sekunder</string>
+	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 sekunder</string>
+	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 sekunder</string>
+	<string Field="FanartIntervalThirtySeconds" Original="30 Seconds">30 sekunder</string>
+	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 sekunder</string>
+	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 sekunder</string>
+	<string Field="NoPlaylistsFound" Original="No Playlists found in:">Ingen afspilningsliste blev fundet i:</string>
+	<string Field="PinCode" Original="Pin Code">Adgangskode</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Den indtastede kode er forkert</string>
+	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Tryk OK for at prøve igen</string>
+	<string Field="ParentalControlLocked" Original="Lock Views">Lås overbliket</string>
+	<string Field="ViewIsLocked" Original="View Locked">Vis låst overblik</string>
+	
+	<string Field="ViewTags" Original="View Tags">Vis </string>
+    <string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Overblikket "{0}" er låst</string>
+    <string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Skriv den 4 ciffrede kode for at fortsætte:</string>
+    <string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Forkert kode</string>
+
+	<!-- View Templates -->
+	<string Field="Continuing" Original="Continuing Series">Forsættende serie</string>
+	<string Field="Ended" Original="Ended Series">Afsluttet serie</string>
+	<string Field="HighDefinition" Original="High Definition">High Definition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (Brugere)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25 (Brugere)</string>
+	<string Field="Subtitles" Original="Subtitles">Undertekster</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Flere lydsport</string>
+
+	
 </strings>

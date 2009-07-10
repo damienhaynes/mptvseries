@@ -61,7 +61,8 @@ namespace WindowPlugins.GUITVSeries
             optionRandom,
             disable,
             enable,
-            filters
+            filters,
+            interval
         }
 
         enum menuFilterAction
@@ -69,6 +70,15 @@ namespace WindowPlugins.GUITVSeries
             all,
             hd,
             fullhd
+        }
+
+        enum menuIntervalAction {
+            FiveSeconds,
+            TenSeconds,
+            FifteenSeconds,
+            ThirtySeconds,
+            FortyFiveSeconds,
+            SixtySeconds
         }
 
         public enum View
@@ -347,15 +357,20 @@ namespace WindowPlugins.GUITVSeries
                     // Work around for Filmstrip not allowing to programmatically select item
                     if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                     {
-                        m_bQuickSelect = true;
+                        /*m_bQuickSelect = true;
                         for (int i = 0; i < m_PreviousSelectedItem; i++)
                         {
                             OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
                         }
-                        m_bQuickSelect = false;
-                    }
+                        m_bQuickSelect = false;*/
+                        // Note: this is better way, but Scroll offset wont work after set
+                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, m_PreviousSelectedItem, 0, null);
+                        GUIGraphicsContext.SendMessage(msg);
+                        MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.", MPTVSeriesLog.LogLevel.Debug);
+                    }                   
                     m_PreviousSelectedItem = -1;
                 }
+
 
                 DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
                 if (selectedFanart != null)
@@ -384,6 +399,7 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty("FanArt.PageTitle", Title);
         }
 
+        #region Context Menu
         protected override void OnShowContextMenu()
         {
             try
@@ -448,10 +464,14 @@ namespace WindowPlugins.GUITVSeries
                 // Dont allowing filtering until DB has all data
                 if (!loadingWorker.IsBusy)
                 {
-                    pItem = new GUIListItem(Translation.FanArtFilter + " >>");
+                    pItem = new GUIListItem(Translation.FanArtFilter + " ...");
                     dlg.Add(pItem);
                     pItem.ItemId = (int)menuAction.filters;
                 }
+
+                pItem = new GUIListItem(Translation.FanartRandomInterval + " ...");
+                dlg.Add(pItem);
+                pItem.ItemId = (int)menuAction.interval;
 
                 // lets show it
                 dlg.DoModal(GUIWindowManager.ActiveWindow);
@@ -501,6 +521,11 @@ namespace WindowPlugins.GUITVSeries
                         dlg.Reset();
                         ShowFiltersMenu();
                         break;
+                    case (int)menuAction.interval:
+                        dlg.Reset();
+                        ShowIntervalMenu();
+                        break;
+
                 }
             }
             catch (Exception ex)
@@ -509,7 +534,67 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
         }
+        #endregion
 
+        #region Context Menu - Random Fanart Interval
+        private void ShowIntervalMenu() {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlg == null) return;
+
+            dlg.Reset();
+            dlg.SetHeading(Translation.FanartRandomInterval);
+
+            GUIListItem pItem = new GUIListItem(Translation.FanartIntervalFiveSeconds);            
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.FiveSeconds;
+
+            pItem = new GUIListItem(Translation.FanartIntervalTenSeconds);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.TenSeconds;
+
+            pItem = new GUIListItem(Translation.FanartIntervalFifteenSeconds);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.FifteenSeconds;
+
+            pItem = new GUIListItem(Translation.FanartIntervalThirtySeconds);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.ThirtySeconds;
+
+            pItem = new GUIListItem(Translation.FanartIntervalFortyFiveSeconds);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.FortyFiveSeconds;
+
+            pItem = new GUIListItem(Translation.FanartIntervalSixtySeconds);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)menuIntervalAction.SixtySeconds;
+
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId >= 0) {
+                switch (dlg.SelectedId) {
+                    case (int)menuIntervalAction.FiveSeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "5000");
+                        break;
+                    case (int)menuIntervalAction.TenSeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "10000");
+                        break;
+                    case (int)menuIntervalAction.FifteenSeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "15000");
+                        break;
+                    case (int)menuIntervalAction.ThirtySeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "30000");
+                        break;
+                    case (int)menuIntervalAction.FortyFiveSeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "45000");
+                        break;
+                    case (int)menuIntervalAction.SixtySeconds:
+                        DBOption.SetOptions(DBOption.cRandomFanartInterval, "60000");
+                        break;                    
+                }               
+            }
+        }
+        #endregion
+
+        #region Context Menu - Filters
         private void ShowFiltersMenu()
         {
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
@@ -553,6 +638,7 @@ namespace WindowPlugins.GUITVSeries
                 loadingWorker.RunWorkerAsync(SeriesID);                   
             }
         }
+        #endregion
 
         int totalFanart;
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
