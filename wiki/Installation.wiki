@@ -14,25 +14,61 @@ Below is a list of pre-requisites that must be met before you can proceed to ins
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
-== Installation ==
+= Installation =
 
 Before you begin, download the latest setup package from the [http://code.google.com/p/mptvseries/downloads/list download] section.
 To Start the Installation, open or double click on the setup.exe (Setup requires administrative privileges so you may be prompted to enter in credentials). 
 
-The MP-TVSeries setup wizard shows the Welcome screen similar to this:
+The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupInstallStart.jpg
 
-1. Click the *Next* button to continue. The Feature Select Dialog screen is shown.
-   http://mptvseries.googlecode.com/svn/wiki/Images/SetupFeatureSelect.jpg
+ * Click the *Next* button to continue. The Feature Select Dialog screen is shown.
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupFeatureSelect.jpg
 
-The Select Features screen is used to select the different features and components you want to install.
+The *Feature Select* screen is used to select the different features and components you want to install.
  
-2. Click to select or de-select any features you want to install
-3. Click the *Next* button to continue. The Begin Installation screen is shown.
- 
-The Begin Installation screen allows you to click Back to review settings or Proceed with installation.
+ * Click to select or de-select any features you want to install
+ * Click the *Next* button to continue. The Begin Installation screen is shown.
  http://mptvseries.googlecode.com/svn/wiki/Images/setupInstallReady.jpg
 
+The *Begin Installation* screen allows you to click Back to review settings or Proceed with installation.
+
+ * If you want to change any settings, click the *Back* button.
+ * If you want the setup wizard to start the installation, click the *Install* button to continue.
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupInstallCopying.jpg
+
+When the installation is finished, the *Complete* screen is shown.
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupInstallFinished.jpg
+
+The *Complete* screen notifies you that the setup has been finished successfully.
+
+ * Click to select or de-select any post installation tasks.
+
+= Maintenance =
+After MP-TVSeries is installed, if the setup.exe is run again or MP-TVSeries is selected from the Windows Control Panel *Add/Remove Programs* applet, the *Maintenance Welcome* screen is shown similar to the following:
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupModifyWelcome.jpg
+
+Select one of the following radio buttons:
+ * *Modify*: To change the current setup selections e.g. add or remove different features
+ * *Repair*: To re-install the current setup features. You cannot change the setup features here.
+ * *Uninstall*: To uninstall the MP-TVSeries plugin and components. 
+
+Click the *Next* button to continue. Depending on what you have selected in the previous step, see the corresponding section below.
+
+== Modify ==
+If Modify is selected, you can go through the setup process again. It shows you the *Select Features* screen. You can modify the settings in all these screens and change your setup accordingly.
+
+== Repair ==
+Repair should be used when MP-TVSeries is not working due to missing files. This can be caused by files that have been deleted or corrupted accidentally. Repair makes sure files and registry settings are copied and set correctly again. However, it does not allow you select or change features of the install. It will use the default setup settings initially and may reset installation parameters, a Modify should be run afterwards to re-configure the plugin.
+
+== Uninstall ==
+When you select the Remove option, the setup wizard will prompt to confirm that you want to un-install:
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupRemovePrompt.jpg
+
+To continue un-installing, click the *Yes* button. The setup wizard then starts to remove all the relevant files and registry settings. When it is completed, the Uninstall Complete screen is shown.
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupUninstallComplete.jpg
+
+ * Click to select or de-select any post un-installation tasks.
 
 
 === Post Install Tasks ===
