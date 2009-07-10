@@ -3,7 +3,7 @@
 =Introduction=
 This guide is intended to guide you through your first experience with the MP-TVSeries plugin. It will take you through the most common steps to configure before you can start browsing your collection in MediaPortal. It does not cover any advanced configurations such as custom Regular Expressions.
 
-=Configuration 
+=Configuration=
 Before you launch MediaPortal, the plugin needs to be configured. This is handled from with MediaPortal's configuration utility. 
 
  * Launch Configuration from your desktop shortcut if not already open
