@@ -1,5 +1,5 @@
 #summary Getting Started with MP-TVSeries plugin.
-
+<wiki:toc max_depth="3" />
 = Introduction =
 This guide is intended to guide you through your first experience with the MP-TVSeries plugin. It will take you through the most common steps to configure before you can start browsing your collection in MediaPortal. It does not cover any advanced configurations such as custom Regular Expressions.
 
@@ -16,7 +16,7 @@ Before you launch MediaPortal, the plugin needs to be configured. This is handle
 The configuration will first take you to the *Import* tab.
  * You now need to enter in the locations where your TVSeries collections are.
  * Click on *Path* box in the the Import Paths Grid.
- * Enter in the path to your TV Shows in the textbox provided:
+ * Enter in the path to your TV Shows in the text box provided:
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginAddImportPath.jpg
 
 In this example I have chosen a Folder on my local hard drive.
@@ -34,7 +34,7 @@ If your Media is stored on a Removable Drive, then enable the checkbox *Removabl
 Once you have setup your import paths, check that your episodes were picked up by plugins parsing engine. This can be illustrated by the following image:
  http://mptvseries.googlecode.com/svn/wiki/Images/ParsingFailure.jpg
 
-If the plugin fails to parse your episodes they will be highlighted and moved to the top of the list. As you can see in this diagram, the parser failed to recognize the episode *Alias\Season 1\Alias.avi*. The plugin's parser requires at a minimum three items in the path:
+If the plugin fails to parse your episodes they will be highlighted and moved to the top of the list. As you can see in this diagram, the parser failed to recognize the episode *Alias\Season 1\Alias.avi*. The plug-in's parser requires at a minimum three items in the path:
  # Series Name
  # Season Number
  # Episode Number
@@ -59,14 +59,14 @@ If you are not a registered user online then you sign-up [http://thetvdb.com/?ta
  * Enable _Download episode information for whole series_ if you like to see information on every episode for your series even if its not local on disk. This option only downloads the extra information, another setting is used to view all data.
  * Click on the *General Settings* tab, to configure general plugin settings
 
-== General Settings  ==
+== General Settings ==
 Use General Settings to configure behaviour of the plugin when browsing your collection in MediaPortal. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
  * Select your Language from the dropdown box, this is a localization setting for all plugin data displayed to the user in MediaPortal. It does not translate the data retrieved online.
  * Enable _Popup Rate dialog after episode is watched_ if you like to contribute to the online database and store your episode ratings immediately after watching an episode. If this option is not enabled you also have the choice of manually invoking the rate dialog.
 * Click on the *Import* tab, to get ready to import data from online.
 
-== Import  ==
+== Import ==
 The Import Tab is used to initially download all the data from online for your series collection. 
 
  * Click the *arrow* at the bottom of the tab to expand the log window, this will allow you to see the progress of the Import.
@@ -79,7 +79,7 @@ The Import Tab is used to initially download all the data from online for your s
  *  The Importing is complete when the Progress Bar is 100% and the Log window reports *Completed*
  * Click on the *Views/Filters* tab, to configure the available views.
 
-== View/Filters  ==
+== View/Filters ==
 Use Views/Filters to better categorize your collection when browsing in MediaPortal. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
  * Click on the *Templates* button, browse the list of default templates not already in the list that may suit you and click *OK*
@@ -94,5 +94,84 @@ Use Views/Filters to better categorize your collection when browsing in MediaPor
 
 Thats It! You have now have completely gone through all the basic configuration parameters of the plugin, sure there is much more to learn but this should get you going for now. Exit the plugin Configuration (All Information is saved in the database as soon as you change something configuration) and Press *OK* to close and save MediaPortals Configuration.
 
+
 = MediaPortal =
-This guide will guide you for first time use of the plugin from with-in MediaPortal.
+Now that we have configured the plugin, lets take a tour with-in MediaPortal. 
+
+ * Open MediaPortal, you are presented with the Home screen and a list of Plugins to choose from.
+ * Select My TVSeries to enter the plugin. At first you will be presented with a listing of all your Series (View: All):
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginSeriesListView.jpg
+
+== Navigating ==
+Take a minute and examine the image to get familiar with some of the terms used. You can interact with the plugin using the Remote / Keyboard to select different series or enter a series. When you enter a series, you will be presented with list of seasons / episodes available:
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginEpisodeView.jpg
+
+ * To play an episode, select OK/ENTER on the Remote / Keyboard and the episode will automatically play.
+
+== Context Menu ==
+With-in each view heirachy (groups, series, seasons, episodes), you have access to a number of options / actions. Some are these are context sensitive e.g. Rate an Episode. To access these options you need to invoke the menu.
+
+ * Select an item on the facade e.g. a series or an episode
+ * Press *Info* or press *F9* on the remote to invoke the menu
+ * Browse the list of possibilities presented, the list generated depends on what was selected.
+ * Try selecting a series, invoke the menu. Now repeat when selecting an episode.
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginSeriesMenu.jpg
+
+Here is a quick list of items that you can do through the menu system:
+ * *Series*:
+  * Rate the series
+  * Mark All Episodes as Watched / Unwatched
+  * Add All Episodes of selected series to a Playlist
+  * Choose a different Fanart for the background
+  * Cycle through and change the Artwork
+ * *Episode*
+  * Rate the episode
+  * Toggle the watched status of the episode
+  * Add the episode to a playlist
+
+== Views System ==
+You can access the view menu to filter the content of your collection. The Views menu can be accessed from anywhere.
+
+ * Press *Info* or press *F9* on the remote to invoke the menu
+ * Select *Change View...*
+ * Select a view from the list
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginChangeViewMenu.jpg
+
+When you have selected a view, the facade will filter accordingly. If you select a *Group* view, the series will be organized into groups e.g. By Network, By Actor, By Genre
+
+Some views are protected using a 4-Digit Pin Code, if the view is protected then you will be prompted to enter pin code before the series are displayed:
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginPinCodeDialog.jpg
+
+If the PinCode entered is in-correct, you will be prompted. Press *Left* or *Delete* on keyboard to clear the pins.
+
+== Playlists ==
+Playlists are a special type of view, when you play from a playlist the next episode immediately plays and so on. You also have options to *Repeat* or *Shuffle* the list.
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginPlaylistView.jpg
+
+=== Create ===
+To Create a playlist, follow these directions:
+ * Select an episode from the list
+ * Press *Info* or press *F9* on the remote to invoke the menu
+ * Select *Add to Playlist*
+ * Repeat for all episodes you want in the playlist, if you to add all episodes of a series in 1 step then you can *Add to playlist* at the series level.
+ 
+=== View ===
+To View the current playlist you first need to access the Hidden menu, follow these directions:
+ * If you are in List or Banners layout, navigate *Left* or away from the facade
+ * If you are in Filmstrip layout, navigate *Up*
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginHiddenMenu.jpg
+ * Select *Current Playlist*
+ * To open a saved playlist, select *My Playlists*
+
+=== Control ===
+There are several actions you can do when in playlist view such as:
+ * Move an item up or down (navigate right on the facade, and select the arrow)
+ * Delete an item (navigate right on the facade, and select the cross)
+ * Invoke the Hidden Menu (navigate left on the facade)
+  * Shuffle items
+  * Auto Play playlists when loaded (not to be confused with created)
+  * Clear all items
+  * Save a playlist to disk
+  * Load a playlist from disk
+  * Skip forward / next when playing an item (while playing an item you can click *Back* on the remote or *ESC* on the keyboard to enter the facade)
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginPlaylistHiddenMenu.jpg
