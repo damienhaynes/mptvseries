@@ -1,0 +1,98 @@
+#summary Getting Started with MP-TVSeries plugin.
+
+= Introduction =
+This guide is intended to guide you through your first experience with the MP-TVSeries plugin. It will take you through the most common steps to configure before you can start browsing your collection in MediaPortal. It does not cover any advanced configurations such as custom Regular Expressions.
+
+= Configuration =
+Before you launch MediaPortal, the plugin needs to be configured. This is handled from with MediaPortal's configuration utility. 
+
+ * Launch Configuration from your desktop shortcut if not already open
+ * Select *Plugins* from tree list
+ * Right Click on *MP-TVSeries*
+ http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu.jpg
+ * Select *Configuration*
+
+== Import Paths ==
+The configuration will first take you to the *Import* tab.
+ * You now need to enter in the locations where your TVSeries collections are.
+ * Click on *Path* box in the the Import Paths Grid.
+ * Enter in the path to your TV Shows in the textbox provided:
+ http://mptvseries.googlecode.com/svn/wiki/Images/PluginAddImportPath.jpg
+
+In this example I have chosen a Folder on my local hard drive.
+ * Press *OK* to save
+ * Ensure that the *Enabled* checkbox is checked for each path you want added.
+
+If your Media is stored on a Removable Drive, then enable the checkbox *Removable*. Here is a table of recommended setting for different media:
+|| *Type* || *Removable)* ||
+|| DVD DRIVE|| YES ||
+|| USB HDD|| YES ||
+|| LOCAL HDD || NO ||
+|| NETWORK SHARE || NO ||
+
+== Parsing ==
+Once you have setup your import paths, check that your episodes were picked up by plugins parsing engine. This can be illustrated by the following image:
+ http://mptvseries.googlecode.com/svn/wiki/Images/ParsingFailure.jpg
+
+If the plugin fails to parse your episodes they will be highlighted and moved to the top of the list. As you can see in this diagram, the parser failed to recognize the episode *Alias\Season 1\Alias.avi*. The plugin's parser requires at a minimum three items in the path:
+ # Series Name
+ # Season Number
+ # Episode Number
+
+We can see that _Alias.avi_ does not contain a *Season No.* and an *Episode No*. This can easily be modified by editing the file to include these items e.g. _Alias s01e01.avi_. Here is an illustration of how you can store your Media and be confident that they will parse correctly:
+ http://mptvseries.googlecode.com/svn/wiki/Images/BestPracticesPathStructure.jpg
+
+Note: there are many ways in which you can organize your media, this is just one example. To find out more and receive help you can visit the [http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/ Parsing Expressions] topic in the TVSeries forums.
+
+ * Click on the *Online Data* tab, to configure online settings
+== Online Data Settings  ==
+The Online Data tab allows you configure the plugins behaviour when communicating to the [http://thetvdb.com/ Online Database]. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
+
+ * Add in your unique theTVDB Account Identifier into the Account ID text field, this allows you download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
+ http://mptvseries.googlecode.com/svn/wiki/Images/theTVDBAccountIdentifier.jpg
+
+If you are not a registered user online then you sign-up [http://thetvdb.com/?tab=register here].
+
+ * Set the *Language* for the data online (english is the most up to date)
+ * To speed the import progress and avoid prompts for each series, its recommended to enable _Automatically choose Series when an exact match is found online_
+ * For most users, enable _Automatically choose Aired when multiple orders are found online_. If you have got a collection of episodes that rely on different episode orders e.g. DVD Order then dont select this option. The DVD Order is sometimes not complete for some series online, so be sure that your series is entered correctly online when choosing DVD Order when prompted during import.
+ * Enable _Download episode information for whole series_ if you like to see information on every episode for your series even if its not local on disk. This option only downloads the extra information, another setting is used to view all data.
+ * Click on the *General Settings* tab, to configure general plugin settings
+
+== General Settings  ==
+Use General Settings to configure behaviour of the plugin when browsing your collection in MediaPortal. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
+
+ * Select your Language from the dropdown box, this is a localization setting for all plugin data displayed to the user in MediaPortal. It does not translate the data retrieved online.
+ * Enable _Popup Rate dialog after episode is watched_ if you like to contribute to the online database and store your episode ratings immediately after watching an episode. If this option is not enabled you also have the choice of manually invoking the rate dialog.
+* Click on the *Import* tab, to get ready to import data from online.
+
+== Import  ==
+The Import Tab is used to initially download all the data from online for your series collection. 
+
+ * Click the *arrow* at the bottom of the tab to expand the log window, this will allow you to see the progress of the Import.
+ * Click the *Start Import* button
+ * If a series can not be matching online, the _Unable to find matching series_ dialog appears:
+ http://mptvseries.googlecode.com/svn/wiki/Images/UnableToFindMatchDialog.jpg 
+ * If a match does not appear in the menu you can type in a new search string and search again.
+ * When Series matching has finished, the importer will download the information for each series, you may be prompted to choose the Order for the series. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection.
+ http://mptvseries.googlecode.com/svn/wiki/Images/MultipleOrdering.jpg 
+ *  The Importing is complete when the Progress Bar is 100% and the Log window reports *Completed*
+ * Click on the *Views/Filters* tab, to configure the available views.
+
+== View/Filters  ==
+Use Views/Filters to better categorize your collection when browsing in MediaPortal. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
+
+ * Click on the *Templates* button, browse the list of default templates not already in the list that may suit you and click *OK*
+ * If you would like to manually configure a *View* that contains only the series you like, then click the *Add* button.
+ * Enter in a name for your view and then click the *Add/Remove series* button:
+ http://mptvseries.googlecode.com/svn/wiki/Images/ViewsAddRemoveSeries.jpg
+ * Press *OK* to close the Add/Remove series dialog
+ * Press *OK* to close the View Configuration dialog and commit the view and series selection to the database.
+ * Repeat these steps for any other custom views you may wish to create, these will be presented to you in a *Views* menu from with-in MediaPortal.
+ * If you would like to *Lock* a particular view or multiple views select the view from the list and enable _Prompt for Pin Code when entering view_. This will allow you to lock down the view from prying eyes unless they know your PinCode.
+ * Click the *Pin Code* button to enter in a Four-Digit Pin Code to protect your views.
+
+Thats It! You have now have completely gone through all the basic configuration parameters of the plugin, sure there is much more to learn but this should get you going for now. Exit the plugin Configuration (All Information is saved in the database as soon as you change something configuration) and Press *OK* to close and save MediaPortals Configuration.
+
+= MediaPortal =
+This guide will guide you for first time use of the plugin from with-in MediaPortal.
