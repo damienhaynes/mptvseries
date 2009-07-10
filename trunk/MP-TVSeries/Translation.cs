@@ -152,6 +152,8 @@ namespace WindowPlugins.GUITVSeries
         public static string Actors = "Actors";
         public static string RemovableMedia = "Removable Media";
         public static string LocalMedia = "Local Media";
+        public static string AdultSeries = "Adult Series";
+        public static string KidsSeries = "Kids Series";
 
         // Fanart
         public static string FanArt = "Fanart";
