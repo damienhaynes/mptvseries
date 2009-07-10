@@ -65,18 +65,16 @@ Repair should be used when MP-TVSeries is not working due to missing files. This
 When you select the Remove option, the setup wizard will prompt to confirm that you want to un-install:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupRemovePrompt.jpg
 
-To continue un-installing, click the *Yes* button. The setup wizard then starts to remove all the relevant files and registry settings. When it is completed, the Uninstall Complete screen is shown.
+To continue un-installing, click the *Yes* button. The setup wizard then starts to remove all the relevant files and registry settings. When it is completed, the *Uninstall Complete* screen is shown.
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupUninstallComplete.jpg
 
  * Click to select or de-select any post un-installation tasks.
 
-
-=== Post Install Tasks ===
- # Open !MediaPortal Configuration Utility
- # Select General from tree list
- # Ensure that "Enable Animations / Transitions" are enabled 
- # Select Plugins from tree list
- # Right Click on MP-TVSeries
- # Ensure that "Enabled" is checked
- # Optionally enable "Listed in Home" for plugin to appear in Home menu when you open !MediaPortal
- # Select "Configuration" to configure and [http://mptvseries.googlecode.com/svn/wiki/GettingStarted#GettingStarted Get Started]
+= Post Installation Tasks =
+ * Open !MediaPortal Configuration Utility 
+ * Select *Plugins* from tree list
+ * Right Click on *MP-TVSeries*
+ http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu.jpg
+ * Ensure that *Enabled* is checked
+ * Optionally enable *Listed in Home* for plugin to appear in the Home menu when you open !MediaPortal
+ * Select *Configuration* to configure and [http://mptvseries.googlecode.com/svn/wiki/GettingStarted#GettingStarted Get Started]
