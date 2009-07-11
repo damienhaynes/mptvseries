@@ -49,7 +49,7 @@ Note: there are many ways in which you can organize your media, this is just one
 ==Online Data Settings==
 The Online Data tab allows you configure the plugins behaviour when communicating to the [http://thetvdb.com/ Online Database]. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
- * Add in your unique Account Identifier into the Account ID text field, this allows you download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
+ * Add in your unique Account Identifier into the Account ID text field, this allows you to download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
  http://mptvseries.googlecode.com/svn/wiki/Images/theTVDBAccountIdentifier.jpg
 
 If you are not a registered user online then you can sign-up [http://thetvdb.com/?tab=register here].
@@ -65,7 +65,7 @@ Use General Settings to configure behaviour of the plugin when browsing your col
 
  * Select your *Language* from the dropdown box, this is a localization setting for all plugin data displayed to the user in MediaPortal. It does not translate the data retrieved online.
  * Enable _Popup Rate dialog after episode is watched_ if you like to contribute to the online database and store your episode ratings immediately after watching an episode. If this option is not enabled you also have the choice of manually invoking the rate dialog.
-* Click on the *Import* tab, to get ready to import data from online.
+ * Click on the *Import* tab, to get ready to import data from online.
 
 ==Import==
 The Import Tab is used to initially download all the data from online for your series collection. 
