@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
+<!-- Last Updated: 11th July 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -195,5 +196,6 @@
 	<string Field="Actors" Original="Actors">Actors</string>
 	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
 	<string Field="LocalMedia" Original="Local Media">Local Media</string>
-	
+	<string Field="AdultSeries" Original="Adult Series">Adult Series</string>
+	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>	
 </strings>
