@@ -2,29 +2,29 @@
 #labels Featured
 <wiki:toc max_depth="3" />
 =Introduction=
-This guide is intended to guide you through your first experience with the MP-TVSeries plugin. It will take you through the most common steps to configure before you can start browsing your collection in MediaPortal. It does not cover any advanced configurations such as custom Regular Expressions.
+This guide is intended to guide you through your first experience with the MP-TVSeries plugin. It will take you through the most common steps of the configuration before you can start browsing your collection in MediaPortal. It does not cover any advanced configurations such as custom Regular Expressions.
 
 =Configuration=
 Before you launch MediaPortal, the plugin needs to be configured. This is handled from with MediaPortal's configuration utility. 
 
- * Launch Configuration from your desktop shortcut if not already open
- * Select *Plugins* from tree list
- * Right Click on *MP-TVSeries*
+ * Launch MediaPortal Configuration from your desktop shortcut if not already open
+ * Select *Plugins* from the tree list.
+ * Right Click on the *MP-TVSeries* icon.
  http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu.jpg
- * Select *Configuration*
+ * Select *Configuration* from the menu.
 
 ==Import Paths==
 The configuration will first take you to the *Import* tab.
  * You now need to enter in the locations where your TVSeries collections are.
- * Click on *Path* box in the the Import Paths Grid.
- * Enter in the path to your TV Shows in the text box provided:
+ * Click on the *Path* box in the the Import Paths Grid.
+ * Enter in the path to your TV Shows in the text box provided, or click on the *Browse* button to select a location:
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginAddImportPath.jpg
 
 In this example I have chosen a Folder on my local hard drive.
  * Press *OK* to save
  * Ensure that the *Enabled* checkbox is checked for each path you want added.
 
-If your Media is stored on a Removable Drive, then enable the checkbox *Removable*. Here is a table of recommended setting for different media:
+If your Media is stored on a Removable Drive, then enable the checkbox *Removable*. Here is a table of recommended settings for different media storage types:
 || *Type* || *Removable)* ||
 || DVD DRIVE|| YES ||
 || USB HDD|| YES ||
@@ -32,10 +32,10 @@ If your Media is stored on a Removable Drive, then enable the checkbox *Removabl
 || NETWORK SHARE || NO ||
 
 ==Parsing==
-Once you have setup your import paths, check that your episodes were picked up by plugins parsing engine. This can be illustrated by the following image:
+Once you have setup your import paths, check that your episodes were picked up by the plugins parsing engine. This is illustrated in the following image:
  http://mptvseries.googlecode.com/svn/wiki/Images/ParsingFailure.jpg
 
-If the plugin fails to parse your episodes they will be highlighted and moved to the top of the list. As you can see in this diagram, the parser failed to recognize the episode *Alias\Season 1\Alias.avi*. The plug-in's parser requires at a minimum three items in the path:
+If the plugin fails to parse any of your episodes they will be highlighted and moved to the top of the list. As you can see in this image, the parser failed to recognize one of the episodes *Alias\Season 1\Alias.avi*. The parser requires at a minimum three items in the path for it to successfully download the necessary information from the online database, these are:
  # Series Name
  # Season Number
  # Episode Number
@@ -49,13 +49,13 @@ Note: there are many ways in which you can organize your media, this is just one
 ==Online Data Settings==
 The Online Data tab allows you configure the plugins behaviour when communicating to the [http://thetvdb.com/ Online Database]. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
- * Add in your unique theTVDB Account Identifier into the Account ID text field, this allows you download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
+ * Add in your unique Account Identifier into the Account ID text field, this allows you download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
  http://mptvseries.googlecode.com/svn/wiki/Images/theTVDBAccountIdentifier.jpg
 
-If you are not a registered user online then you sign-up [http://thetvdb.com/?tab=register here].
+If you are not a registered user online then you can sign-up [http://thetvdb.com/?tab=register here].
 
  * Set the *Language* for the data online (english is the most up to date)
- * To speed the import progress and avoid prompts for each series, its recommended to enable _Automatically choose Series when an exact match is found online_
+ * To speed the initial import process and avoid prompts for each series, its recommended to enable _Automatically choose Series when an exact match is found online_
  * For most users, enable _Automatically choose Aired when multiple orders are found online_. If you have got a collection of episodes that rely on different episode orders e.g. DVD Order then dont select this option. The DVD Order is sometimes not complete for some series online, so be sure that your series is entered correctly online when choosing DVD Order when prompted during import.
  * Enable _Download episode information for whole series_ if you like to see information on every episode for your series even if its not local on disk. This option only downloads the extra information, another setting is used to view all data.
  * Click on the *General Settings* tab, to configure general plugin settings
@@ -63,7 +63,7 @@ If you are not a registered user online then you sign-up [http://thetvdb.com/?ta
 ==General Settings==
 Use General Settings to configure behaviour of the plugin when browsing your collection in MediaPortal. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
- * Select your Language from the dropdown box, this is a localization setting for all plugin data displayed to the user in MediaPortal. It does not translate the data retrieved online.
+ * Select your *Language* from the dropdown box, this is a localization setting for all plugin data displayed to the user in MediaPortal. It does not translate the data retrieved online.
  * Enable _Popup Rate dialog after episode is watched_ if you like to contribute to the online database and store your episode ratings immediately after watching an episode. If this option is not enabled you also have the choice of manually invoking the rate dialog.
 * Click on the *Import* tab, to get ready to import data from online.
 
@@ -77,7 +77,7 @@ The Import Tab is used to initially download all the data from online for your s
  * If a match does not appear in the menu you can type in a new search string and search again.
  * When Series matching has finished, the importer will download the information for each series, you may be prompted to choose the Order for the series. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection.
  http://mptvseries.googlecode.com/svn/wiki/Images/MultipleOrdering.jpg 
- *  The Importing is complete when the Progress Bar is 100% and the Log window reports *Completed*
+ *  The Importing is complete when the Progress Bar is 100% and the Log window reports *Completed*. The initial import process can take anywhere between a couple of minutes to an hour, it highly depends on the number of series and episodes in your collection.
  * Click on the *Views/Filters* tab, to configure the available views.
 
 ==View/Filters==
@@ -90,23 +90,26 @@ Use Views/Filters to better categorize your collection when browsing in MediaPor
  * Press *OK* to close the Add/Remove series dialog
  * Press *OK* to close the View Configuration dialog and commit the view and series selection to the database.
  * Repeat these steps for any other custom views you may wish to create, these will be presented to you in a *Views* menu from with-in MediaPortal.
- * If you would like to *Lock* a particular view or multiple views select the view from the list and enable _Prompt for Pin Code when entering view_. This will allow you to lock down the view from prying eyes unless they know your PinCode.
- * Click the *Pin Code* button to enter in a Four-Digit Pin Code to protect your views.
+ * If you would like to *Lock* a particular view or multiple views select the view from the list and enable _Prompt for Pin Code when entering view_. This will allow you to lock down the view unless they know your PinCode. This is useful for protecting younger family members where the content is unsuitable e.g. Series with a Content Rating of TV-14 or TV-MA.
+ * Click the *Pin Code* button to enter in a 4-Digit Pin Code to protect your views.
 
-Thats It! You have now have completely gone through all the basic configuration parameters of the plugin, sure there is much more to learn but this should get you going for now. Exit the plugin Configuration (All Information is saved in the database as soon as you change something configuration) and Press *OK* to close and save MediaPortals Configuration.
+Thats It! You have now completely gone through all the basic configuration parameters of the plugin, sure there is much more to learn but this should get you going for now. Exit the plugin configuration (all Information is saved in the database as soon as you change something in configuration)
+ * Press *OK* to close and save MediaPortals Configuration.
 
 =Mediaportal=
-Now that we have configured the plugin, lets take a tour with-in MediaPortal. 
+Now that we have configured the plugin, lets take a tour of the plugin from with-in MediaPortal. 
 
  * Open MediaPortal, you are presented with the Home screen and a list of Plugins to choose from.
  * Select My TVSeries to enter the plugin. At first you will be presented with a listing of all your Series (View: All):
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginSeriesListView.jpg
 
+The series list can be presented to you in a different number of layouts e.g. List Posters (as shown above), List Banners, Wide Banners thumbs and Filmstrip. The look of the interface is controlled by the skin, in this example I have chosen the skin [http://code.google.com/p/streamedmp/downloads/list StreamedMP].
+
 ==Navigating==
-Take a minute and examine the image to get familiar with some of the terms used. You can interact with the plugin using the Remote / Keyboard to select different series or enter a series. When you enter a series, you will be presented with list of seasons / episodes available:
+Take a minute and examine the image above to get familiar with some of the terms used. You can interact with the plugin using the Remote / Keyboard to select different series or enter a series. When you enter a series, you will be presented with list of seasons / episodes available:
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginEpisodeView.jpg
 
- * To play an episode, select OK/ENTER on the Remote / Keyboard and the episode will automatically play.
+ * To play an episode, select *OK/ENTER* on the Remote / Keyboard and the episode will automatically play.
 
 ==Context Menu==
 With-in each view heirachy (groups, series, seasons, episodes), you have access to a number of options / actions. Some are these are context sensitive e.g. Rate an Episode. To access these options you need to invoke the menu.
@@ -117,11 +120,11 @@ With-in each view heirachy (groups, series, seasons, episodes), you have access 
  * Try selecting a series, invoke the menu. Now repeat when selecting an episode.
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginSeriesMenu.jpg
 
-Here is a quick list of items that you can do through the menu system:
+Here is a list of some of the items that you can do through the menu system:
  * *Series*:
   * Rate the series
-  * Mark All Episodes as Watched / Unwatched
-  * Add All Episodes of selected series to a Playlist
+  * Mark all Episodes as Watched / Unwatched
+  * Add all Episodes of selected series to a Playlist
   * Choose a different Fanart for the background
   * Cycle through and change the Artwork
  * *Episode*
@@ -139,10 +142,10 @@ You can access the view menu to filter the content of your collection. The Views
 
 When you have selected a view, the facade will filter accordingly. If you select a *Group* view, the series will be organized into groups e.g. By Network, By Actor, By Genre
 
-Some views are protected using a 4-Digit Pin Code, if the view is protected then you will be prompted to enter pin code before the series are displayed:
+Some views are protected using a 4-Digit Pin Code, if the view is protected then you will be prompted to enter a pin code before the series facade is displayed:
  http://mptvseries.googlecode.com/svn/wiki/Images/PluginPinCodeDialog.jpg
 
-If the PinCode entered is in-correct, you will be prompted. Press *Left* or *Delete* on keyboard to clear the pins.
+If the Pin Code entered is in-correct, you will be prompted in the dialog. Press *Left* or *Delete* on the keyboard to clear the pin code and try again.
 
 ==Playlists==
 Playlists are a special type of view, when you play from a playlist the next episode immediately plays and so on. You also have options to *Repeat* or *Shuffle* the list.
@@ -153,7 +156,7 @@ To Create a playlist, follow these directions:
  * Select an episode from the list
  * Press *Info* or press *F9* on the remote to invoke the menu
  * Select *Add to Playlist*
- * Repeat for all episodes you want in the playlist, if you to add all episodes of a series in 1 step then you can *Add to playlist* at the series level.
+ * Repeat for all episodes you want in the playlist, if you want to add all episodes of a series/season in 1 step then you can *Add to playlist* at the series/season level.
  
 ===View===
 To View the current playlist you first need to access the Hidden menu, follow these directions:
