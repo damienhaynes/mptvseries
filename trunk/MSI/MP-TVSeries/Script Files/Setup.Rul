@@ -77,6 +77,7 @@ prototype VOID		BackupDatabase(STRING);
 prototype STRING	GetMPTVSeriesDBPath();
 prototype VOID		CheckFilesInUse();    
 prototype VOID		VerifyPluginCount();
+prototype VOID		RemoveNonMSIPlugin();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -453,6 +454,9 @@ Dlg_SdStartCopy:
     	BackupDatabase(szFileName);
     endif;
     
+    // MSI cleanup
+    RemoveNonMSIPlugin();
+    
     // setup default status
     Enable(STATUSEX);
       
@@ -619,7 +623,7 @@ begin
     	
     	// Confirm only one running instance of plugin
  		VerifyPluginCount();
- 	
+ 
     endif;
     
 	Disable(STATUSEX);
@@ -747,6 +751,9 @@ end;
 function VOID UninstallCleanup(bDeleteArtwork, bDeleteDatabase)	
 	STRING szFile, szFolder, szMsg;
 begin
+    
+    // MSI Cleanup
+    RemoveNonMSIPlugin();
          
 	// Remove Logs
 	szFile = g_sLogsDir ^ "MP-TVSeries.*";
@@ -1084,4 +1091,44 @@ begin
 	
 	endif;
 	
+end;
+
+///////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Remove non-msi installation so file is not reference counted
+///
+///////////////////////////////////////////////////////////////////////////
+function void RemoveNonMSIPlugin()
+	STRING szKey, szName, szFile, svValue;
+	NUMBER nvSize, nvType;
+begin
+    
+    // If the plugin exists, check that the file is reference countered
+    // if the file is not reference countered then it was probably 
+    // previously installed by a manual method, its safe to cleanup
+    // We do this so when the product is removed, the file is also removed
+    // If we dont, the file will be reference countered and left behind
+    Disable(LOGGING);
+    RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+    	
+	szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SharedDLLs";
+	  
+    // Check if file exists
+    szFile = g_sPluginsDir ^ "windows\\mp-tvseries.dll";   
+    szName = szFile;
+    
+    if (Is(FILE_EXISTS, szFile)) then
+    	// If the file exists, check if file is reference countered    	    
+    	if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) < 0 then
+    		// Reference counter doesnt exist, delete file
+    		DeleteFile(szFile);
+    	endif;	
+	else
+		//If the file doesnt exist, then ensure reference counter also doesnt exist
+		if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) = 0 then
+    		// Reference counter doesnt exist, clean registry
+    		RegDBDeleteValue(szKey, szName);
+    	endif;		    
+    endif;    
+    Enable(LOGGING);
 end;
