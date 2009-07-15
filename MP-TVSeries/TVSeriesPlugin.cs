@@ -275,12 +275,6 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(1234)]
         protected GUILabelControl dummyIsLightFanartLoaded = null;
 
-        [SkinControlAttribute(1235)]
-        protected GUILabelControl dummyFacadeListMode = null;
-
-        [SkinControlAttribute(1236)]
-        protected GUILabelControl dummyThumbnailGraphicalMode = null;
-        
         [SkinControlAttribute(1237)]
         protected GUILabelControl dummyIsSeries = null;
 
@@ -581,6 +575,16 @@ namespace WindowPlugins.GUITVSeries
 			}
 
             m_bPluginLoaded = true;
+
+            // Ask to Rate Episode, onPageLoad is triggered after returning from player
+            if (ask2Rate != null) {
+                showRatingsDialog(ask2Rate, true);
+                ask2Rate = null;
+                // Refresh the facade if we want to see the submitted rating
+                if (this.listLevel == Listlevel.Episode) {
+                    LoadFacade();
+                }
+            }
 		}
 
 		protected override void OnPageDestroy(int new_windowId) {
@@ -1667,9 +1671,7 @@ namespace WindowPlugins.GUITVSeries
             if (mode == GUIFacadeControl.ViewMode.List)
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
-                this.m_Facade.View = mode;
-                if (this.dummyThumbnailGraphicalMode != null) dummyThumbnailGraphicalMode.Visible = false;
-                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = true;
+                this.m_Facade.View = mode;                
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Stop();
             }
             else
@@ -1703,9 +1705,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
                     }
                 }
-                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();
-                if (this.dummyThumbnailGraphicalMode != null) this.dummyThumbnailGraphicalMode.Visible = true;
-                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = false;                
+                PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();                   
             }            
         }
         
@@ -2022,12 +2022,12 @@ namespace WindowPlugins.GUITVSeries
                     OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                 }
             }
-            if (ask2Rate != null)
+            /*if (ask2Rate != null)
             {
                 showRatingsDialog(ask2Rate, true);
                 ask2Rate = null;
                 LoadFacade();
-            }
+            }*/
             if (skipSeasonIfOne_DirectionDown && SkipSeasonCode == SkipSeasonCodes.SkipSeasonDown)
             {
                 OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
@@ -3671,43 +3671,6 @@ namespace WindowPlugins.GUITVSeries
                 dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
                                              || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
                 dummyIsSeriesPosters.UpdateVisibility();
-            }
-
-            if (dummyThumbnailGraphicalMode != null)
-            {
-                if (this.listLevel == Listlevel.Series)
-                    dummyThumbnailGraphicalMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip"
-                                                        || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners");
-
-                if (this.listLevel == Listlevel.Season)
-                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) != "0";
-
-
-                if (this.listLevel == Listlevel.Episode)
-                    dummyFacadeListMode.Visible = false;
-
-                if (this.listLevel == Listlevel.Group)                                               
-                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "1";
-
-                dummyThumbnailGraphicalMode.UpdateVisibility();
-            }
-
-            if (dummyFacadeListMode != null)
-            {
-                if (this.listLevel == Listlevel.Series)
-                    dummyFacadeListMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
-                                                || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListBanners");
-                                            
-                if (this.listLevel == Listlevel.Season)
-                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "0";
-
-                if (this.listLevel == Listlevel.Episode)
-                    dummyFacadeListMode.Visible = true;
-
-                if (this.listLevel == Listlevel.Group)
-                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "0";
-
-                dummyFacadeListMode.UpdateVisibility();
             }
 
             resetListLevelDummies();
