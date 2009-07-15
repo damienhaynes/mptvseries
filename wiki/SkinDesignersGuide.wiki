@@ -1,0 +1,302 @@
+#summary Skin Designers Guide for MP-TVSeries plugin.
+
+= Introduction =
+
+The purpose of this document is to help you understand how exactly MP-TVSeries interacts with the skin you will be/are creating. In this document you're going to find a general overview of how the plug-in is structured, the components that you, as a skinner should be interested in, and a list of available fields that you can use.
+
+For skinning MP-TVSeries, you are welcome to use whatever skin you like as a base, but we recommend you start with the Blue3wide skin that is installed with the release. It is written by the same people that write the plug-in, so if you are having trouble getting something to work right, refer to this skin.
+
+If you are new to skinning, please check out the [http://www.team-mediaportal.com/manual/MediaPortal1_Development/SkinArchitecture Skin Designer's Guide] on the MediaPortal wiki. 
+
+= Skinner's Change Log =
+
+== v2.2 - v2.3 ==
+
+ * Series Posters and Series Banners are now exposed to the skin as two separate properties: 
+
+|| *Property* || *Description* ||
+||#TVSeries.SeriesPoster||Push's the current selected series Poster to the skin ||
+||#TVSeries.SeriesBanner||Push's the current selected series Wide Banner to the skin||
+
+ * PlayList View now has a new Episode Count property:
+|| *Property* || *Description* ||
+||#TVSeries.Playlist.Count||Push's the current number of items in the playlist to skin ||
+
+ * Two new skin dialogs for User Ratings and Parental Control input:
+
+|| *Skin ID* || *Filename* || *Description* ||
+||9814||TVSeries.RatingDialog.xml ||Displays a rating dialog to the user||
+||9815||TVSeries.PinCodeDialog.xml||Displays a pin-code entry dialog to the user||
+
+ * Dummy Label controls *1235* and *1236* have been removed, skinner should use *facadeview.list* and *!facadeview.list* instead.
+
+= Skin Files =
+The plugin requires several skin files if you wish to expose all functionality of the plugin. Not all skin files are mandatory but its recommended that all are included with Skin releases. The table below describes each skin file and controls used:
+
+== Main ==
+This is the main skin file of the plugin. It must exist otherwise a skin error dialog will be shown to the user.
+=== Skin File ===
+|| *ID* || *Filename* ||
+|| 9811 || TVSeries.xml ||
+
+=== Controls ===
+This table illustrates the skin controls used by the main plugin
+
+|| *Control Type* || *ID* || *Description* ||
+|| Button || 2 || Displays list of available database views ||
+|| Button || 3 || Displays list of available layouts set by skin ||
+|| Button || 4 || Displays list of options that change the behaviour of plugin ||
+|| Button || 5 || Runs a Local scan of the import paths and a Full update from online ||
+|| Button || 9 || Displays a list of saved playlists for load ||
+|| Facade || 50 || The main facade control used by all views ||
+|| Animation || 51 || An Import Animation that gets displayed when the plugin is working ||
+|| Image || 66 || Displays a single image of all logos that were evaluated by the Logo Rules ||
+|| Image || 67 || Displays a thumbnail for selected episode ||
+|| Image || 524 || Fanart Background #1||
+|| Image || 525 || Fanart Background #2, used for Fanart Fading Transitions||
+
+=== Dummy Controls ===
+Dummy Controls are used so the plugin can force changes in the skin. This is done by changing the visible property. Since these are just dummy controls, they can be defined off screen.
+
+|| *ID* || *Description* ||
+|| 1232 || Visible when fanart is loaded for selected series||
+|| 1237 || Visible when Series view is loaded ||
+|| 1238 || Visible when Season view is loaded ||
+|| 1239 || Visible when Episode view is loaded ||
+|| 1240 || Visible when Group view is loaded ||
+|| 1241 || Visible when Fanart has colour properties defined ||
+|| 1242 || Visible when Series Posters are used e.g. List Poster layout ||
+|| 1243 || Visible when the selected item is Watched, applied to all views except groups ||
+|| 1244 || Visible when the selected item is not available, applied to all views except groups ||
+
+
+== Fanart Chooser ==
+This is the skin file that the plugin uses to show a list of Fanart that the user has downloaded and available online to download.
+
+=== Skin File ===
+|| *ID* || *Filename* ||
+|| 9812 || TVSeries.FanArt.xml ||
+
+=== Controls ===
+This table illustrates the skin controls used by the fanart chooser:
+
+|| *Control Type* || *ID* || *Description* ||
+|| Button || 2 || Displays list of available layouts ||
+|| Label || 11 || Localized static label for Resolution property ||
+|| Button || 12 || Displays list of Resolutions to filter the Fanart by ||
+|| ToggleButton || 13 || Toggles Random Fanart mode ||
+|| Label || 14 || Localized static label for Disabled property ||
+|| Label || 15 || Localized static label for Default property ||
+
+== Playlist ==
+This is the skin file that the plugin uses to show the current playlist loaded.
+
+=== Skin File ===
+|| *ID* || *Filename* ||
+|| 9813 || TVSeries.Playlist.xml ||
+
+=== Controls ===
+This table illustrates the skin controls used by the Playlist window:
+
+|| *Control Type* || *ID* || *Description* ||
+|| Button || 2 || Displays list of available layouts ||
+|| Button || 9 || Displays list of saved playlists to load ||
+|| Button || 20 || Shuffles the items in the current playlist ||
+|| Button || 21 || Prompts to save the current playlist to disk ||
+|| Button || 23 || Plays the current playlist ||
+|| Button || 24 || Skips forwards to the next item in the playlist ||
+|| Button || 25 || Skips backward to the next item in the playlist ||
+|| ToggleButton || 30 || Toggles Playlist repeat behaviour when playlist has finished playing||
+|| ToggleButton || 30 || Toggles Playlist Auto Play when playlist is loaded||
+|| Facade || 50 || Main facade for the playlist window ||
+
+== Rating Dialog ==
+This is the skin file that the plugin uses to show a Rate Dialog for episodes and series.
+
+=== Skin File ===
+|| *ID* || *Filename* ||
+|| 9814 || TVSeries.RatingDialog.xml ||
+
+=== Controls ===
+This table illustrates the skin controls used by the Rating dialog:
+
+|| *Control Type* || *ID* || *Description* ||
+|| Label || 7 || Displays the current select rating value ||
+|| ToggleButton || 9 || Displays list of saved playlists to load ||
+|| ToggleButton || 100 || Active when Rate Stars equals One ||
+|| ToggleButton || 101 || Active when Rate Stars equals Two ||
+|| ToggleButton || 102 || Active when Rate Stars equals Three ||
+|| ToggleButton || 103 || Active when Rate Stars equals Four ||
+|| ToggleButton || 104 || Active when Rate Stars equals Five ||
+|| ToggleButton || 105 || Active when Rate Stars equals Six ||
+|| ToggleButton || 106 || Active when Rate Stars equals Seven ||
+|| ToggleButton || 107 || Active when Rate Stars equals Eight ||
+|| ToggleButton || 108 || Active when Rate Stars equals Nine ||
+|| ToggleButton || 109 || Active when Rate Stars equals Ten ||
+
+== Pin Code Dialog ==
+This is the skin file that the plugin uses to show a Pin Code Dialog for Parental Controls.
+
+=== Skin File ===
+|| *ID* || *Filename* ||
+|| 9815 || TVSeries.PinCodeDialog.xml ||
+
+=== Controls ===
+This table illustrates the skin controls used by the Pin Code dialog:
+
+|| *Control Type* || *ID* || *Description* ||
+|| Label || 6 || Displays feedback to the user if the Pin Code entered in incorrect ||
+|| Image || 100 || Visible when 1st pin is entered ||
+|| Image || 101 || Visible when 2nd pin is entered ||
+|| Image || 102 || Visible when 3rd pin is entered ||
+|| Image || 103 || Visible when 4th pin is entered ||
+
+= Skin Properties =
+Each skin has its own unique set of properties that can be used, see the table below for more information:
+
+== Main Plugin ==
+|| *Property* || *Description* ||
+||#TVSeries.Title  ||  ||
+||#TVSeries.Subtitle  ||  ||
+||#TVSeries.Description  ||  ||
+||#TVSeries.SimpleCurrentView  ||  ||
+||#TVSeries.CurrentView  ||  ||
+||#TVSeries.SeriesBanner  ||  ||
+||#TVSeries.SeriesPoster  ||  ||
+||#TVSeries.EpisodeImage  ||  ||
+||#TVSeries.Logos  ||  ||
+||#TVSeries.Fanart.1  ||  ||
+||#TVSeries.Fanart.2  ||  ||
+||#TVSeries.SeriesCount  ||  ||
+||#TVSeries.GroupCount  ||  ||
+
+== Fanart Chooser ==
+|| *Property* || *Description* ||
+||#TVSeries.FanArt.Colors.LightAccent  ||  ||
+||#TVSeries.FanArt.Colors.DarkAccent  ||  ||
+||#TVSeries.FanArt.Colors.Neutral Midtone  ||  ||
+||#TVSeries.FanArt.SelectedFanartResolution  ||  ||
+||#TVSeries.FanArt.SelectedFanartInfo  ||  ||
+||#TVSeries.FanArt.SelectedPreview  ||  ||
+||#TVSeries.FanArt.LoadingStatus  ||  ||
+||#TVSeries.FanArt.DownloadingStatus  ||  ||
+||#TVSeries.FanArt.PageTitle  ||  ||
+||#TVSeries.FanArt.SelectedFanartColors  ||  ||
+||#TVSeries.FanArt.SelectedFanartIsChosen  ||  ||
+||#TVSeries.FanArt.SelectedFanartIsDisabled  ||  ||
+
+
+= View Hierarchy =
+The plugin consists of several hierarchical views, these being Groups, Series, Seasons and Episodes. Each view has a dummy label control associated with it to determine which one is currently visible on the screen. By using the visible condition of the label you can change your skin layout accordingly.
+
+|| *Control ID* || *Description* ||
+|| 1237 || skin control is visible when *series* view is visible ||
+|| 1238 || skin control is visible when *season* view is visible ||
+|| 1239 || skin control is visible when *episode* view is visible ||
+|| 1240 || skin control is visible when *group* view is visible ||
+
+= Layout Types =
+The plugin exposes all layouts provided by MediaPortal, these being List, Small Thumbs, Large Thumbs and Filmstrip. Some of these layout types are not available in all views.
+
+== Series View Layouts ==
+The plugin allows several layout types in series view:
+
+ * List with Posters
+ * List with Banners
+ * Wide Banner Thumbs
+ * Filmstrip
+
+The plugin loads the appropriate image into graphical view e.g. In Wide Banners, the series wide banner is loaded as the default icon. 
+
+Since there are two List views, the plugin needs to distinguish between the two when a users selects one. This is done with a dummy label control with ID: 1242. We set this dummy label visible property to *True* when we select List with Posters and False otherwise. Here is a table illustrating their use:
+
+|| *Layout* || *Facade Type* || *Default Icon* || * Series Poster Dummy Label * ||
+|| List Banners || facadeview.list || N/A || false ||
+|| List Posters || facadeview.list || N/A || true ||
+|| Wide Banners || facadeview.largeicons || Series Banners || N/A ||
+|| Filmstrip || facadeview.filmstrip || Series Posters || N/A ||
+
+Here is an example case of wanting to push a label to the skin when the user is in List Poster Layout:
+
+{{{
+<control>
+  <type>label</type>
+  <id>0</id>
+  <posX>10</posX>
+  <posY>10</posY>
+  <label>this is a test</label>
+  <visible>facadeview.list+Control.IsVisible(1242)</visible>
+</control>
+}}}
+
+of course this only works if the skin has a definition for the dummy label control, typically this will set off screen:
+{{{
+<control>
+  <type>label</type>
+  <description>Dummy Label for Series Posters</description>
+  <id>1242</id>
+  <posX>-50</posX>
+  <posY>-50</posY>
+  <label></label>
+  <visible>false</visible>
+</control>
+}}}
+
+== Season View Layouts ==
+The Season view exposes two layouts:
+
+ * List
+ * Filmstrip
+
+The Filmstrip layout will load the *Series Posters* into the default icon.
+
+== Episode View Layouts ==
+The Episode view currently only exposes the *List* facade. 
+
+== Group View Layouts ==
+The Group view exposes two layouts:
+
+ * List
+ * Small Icons
+
+The default icon loaded into the Small Icon facade is the first logo defined for the currently selected item. This depends on Logo Rules defined, see Logo Rules for more details.
+
+== Available Layouts ==
+The skin can control what layouts it supports and consequently what the available layouts there are to choose from with-in the plugin. This is defined in a special skin file called *TVSeries.SkinSettings.xml*.
+
+The layouts the skin supports are defined like so:
+{{{
+<layouts>
+  <group List="true" SmallIcons="true"/>
+  <series ListPosters="true" ListBanners="true" Filmstrip="true" WideBanners="true"/>
+  <season List="true" Filmstrip="true"/>
+  <episode List="true"/>
+</layouts>
+}}}
+If your skin does not support a particular layout in a view, then this should be reflected in the Skin Settings file.
+
+== Layout Content ==
+The *List* layout in views, allow you to set the three item labels on the facade. The plugin reads the Skin Settings file to determine what to display. This is illustrated in the below example:
+{{{
+<views import="true" AppendlmageToList="false">		
+  <group layout="List"></group>
+  <series layout="ListPosters">			
+    <item1></item1>
+    <item2><![CDATA[<Series.Pretty_Name>]]></item2>			
+    <item3></item3>
+  </series>
+  <season layout="List">	
+    <item1></item1>
+    <item2><![CDATA[Season <Season.SeasonIndex>]]></item2>		
+    <item3></item3>
+  </season>
+  <episode>	
+    <item1><![CDATA[<Episode.FirstAired>]]></item1>
+    <item2><![CDATA[<Episode.EpisodeIndex>: <Episode.LocalEpisodeName>]]></item2>			
+    <item3></item3>
+  </episode>
+</views>
+}}}
+
+The item labels using angled brackets are database fields in the plugin, a list of useful fields can be found here. These fields should also be wrapped in a CDATA section so that the XML document can be read correctly by the XML parser. You are not limited to database fields, you can also type in any string or even create a Formatting Rule and use that when you need to format the data e.g. Episode Counts
+
