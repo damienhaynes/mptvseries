@@ -567,9 +567,13 @@ function OnFirstUIAfter()
     NUMBER bOpt1, bOpt2;
 begin
 
-	// Clean Cache Folder
-    CleanCache("Blue3");
-    CleanCache("Blue3Wide");
+	// Clean Cache Folder, old skin may conflict with new changes
+	if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
+    	CleanCache("Blue3");
+    endif;
+    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
+    	CleanCache("Blue3Wide");
+    endif;
     
     // Update Settings
 	UpdateSettings();
@@ -621,17 +625,21 @@ function OnMaintUIAfter()
     STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2;
     NUMBER bOpt1, bOpt2;
 begin
-	
-	// Clean Cache Folder
-    CleanCache("Blue3");
-    CleanCache("Blue3Wide");
-    
+	    
     if ( !REMOVEALLMODE ) then    	    
     	UpdateSettings();
     	
     	// Confirm only one running instance of plugin
  		VerifyPluginCount();
- 
+        
+        // Clean Cache Folder, old skin may conflict with new changes
+		if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
+	    	CleanCache("Blue3");
+	    endif;
+	    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
+	    	CleanCache("Blue3Wide");
+	    endif;
+    
     endif;
     
 	Disable(STATUSEX);
