@@ -42,7 +42,7 @@
 
 // Version Defines
 #define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.2.0"
-#define MEDIAPORTAL_MIN_VERSION				"1.0.1.0" // MP 1.0.0 does not contain MediaInfo.dll	
+#define MEDIAPORTAL_MIN_VERSION				"1.0.1.0" // MediaInfo.dll was introduced into MP 1.0.1
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
@@ -92,7 +92,8 @@ STRING g_sPluginsDir;
 STRING g_sConfigDir;
 STRING g_sSkinsDir; 
 STRING g_sDatabaseDir;
-STRING g_sLogsDir; 
+STRING g_sLogsDir;
+STRING g_sTVSeriesPluginFileName; 
  
 //---------------------------------------------------------------------------
 // OnBegin
@@ -221,6 +222,8 @@ begin
 	endif;	
 	INSTALLDIR = g_sPluginsDir;
 	
+	g_sTVSeriesPluginFileName = g_sPluginsDir ^ "Windows\\MP-TVSeries.dll";
+	
 	if GetMediaPortalDirs("Skin",g_sSkinsDir) < 0 then
 		g_sSkinsDir = CommonAppDataFolder^"Team MediaPortal\\MediaPortal\\skin";
 	endif;	
@@ -272,10 +275,12 @@ begin
    	// Set MSI Dirs as properties   	   	
    	MsiSetProperty(ISMSI_HANDLE,"MPLANGUAGESDIR",g_sLanguageDir);
    	MsiSetProperty(ISMSI_HANDLE,"MPSKINSDIR",g_sSkinsDir);
+   	MsiSetProperty(ISMSI_HANDLE,"MPPROGRAMDIR",g_sMediaPortalProgramDir);
    	   	
 	// Set Installation Directories used by MSI		
 	FeatureSetTarget(MEDIA,"<MPLANGUAGESDIR>",g_sLanguageDir);
 	FeatureSetTarget(MEDIA,"<MPSKINSDIR>",g_sSkinsDir);	
+	FeatureSetTarget(MEDIA,"<MPPROGRAMDIR>",g_sMediaPortalProgramDir);
 
 end;
 
@@ -558,7 +563,7 @@ end;
 // completed successfully.
 //---------------------------------------------------------------------------
 function OnFirstUIAfter()
-    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite;
+    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite, szFileName, szParams;
     NUMBER bOpt1, bOpt2;
 begin
 
@@ -596,7 +601,10 @@ begin
 	    endif;
 	    
 	    if bOpt2 then
-	    	LaunchApp(g_sMediaPortalProgramDir^"Configuration.exe", "");	    
+	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
+	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
+	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName;
+	    	LaunchApp(szFileName, szParams);	    
 	    endif;
 	endif;
 end; 
@@ -1003,6 +1011,12 @@ FilesInUse:
 	szIsData = g_sMediaPortalProgramDir ^ "Configuration.exe";	    
     if Is(FILE_LOCKED, szIsData) then
     	ListAddString(OpenFilesList,"MediaPortal Configuration [Configuration.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;  
+ 	
+ 	szIsData = g_sMediaPortalProgramDir ^ "PluginConfigLoader.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Plugin Configuration Loader [PluginConfigLoader.exe]",AFTER);	 		
  		bFileLocked = TRUE;
  	endif; 
 		 	
