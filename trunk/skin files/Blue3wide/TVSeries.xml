@@ -1041,17 +1041,7 @@
           <height>250</height>
           <IconXOff>10</IconXOff>
           <IconYOff>1</IconYOff>
-          <spaceBetweenItems>2</spaceBetweenItems>
-          <remoteColor>FFa6c3e1</remoteColor>
-          <!-- Watched color -->
-          <downloadColor>d4d2d2</downloadColor>
-          <!-- not watched color (normal) -->
-          <textcolor>FF78ace0</textcolor>
-          <!-- local file not present color -->
-          <textcolor2>FF78ace0</textcolor2>
-          <!-- local file not present color  column 2-->
-          <textcolor3>FF78ace0</textcolor3>
-          <!-- local file not present color column 3-->
+          <spaceBetweenItems>2</spaceBetweenItems>          
           <textureFocus>tvseries_banner_focus2.png</textureFocus>
           <textureNoFocus>osd_bg.png</textureNoFocus>
           <spinWidth>10</spinWidth>
@@ -1086,17 +1076,7 @@
           <font>font10</font>
           <selectedColor>00ffffff</selectedColor>
           <textcolor>ffffffff</textcolor>
-          <colordiffuse>ffffffff</colordiffuse>
-          <remoteColor>FF868686</remoteColor>
-          <!-- watched color -->
-          <downloadColor>FFFFFFFF</downloadColor>
-          <!-- not watched color (normal) -->
-          <textcolor>FFC14E4A</textcolor>
-          <!-- local file not present color -->
-          <textcolor2>FFC14E4A</textcolor2>
-          <!-- local file not present color  column 2-->
-          <textcolor3>FFC14E4A</textcolor3>
-          <!-- local file not present color column 3-->
+          <colordiffuse>ffffffff</colordiffuse>          
           <suffix>|</suffix>		  
           <itemWidthBig>412</itemWidthBig>
           <itemHeightBig>86</itemHeightBig>
@@ -1184,18 +1164,13 @@
 		  <IconYOff>7</IconYOff>
 		  <itemWidth>100</itemWidth>
 		  <itemHeight>20</itemHeight>
-          <spaceBetweenItems>1</spaceBetweenItems>
-          <!-- Text -->
-          <downloadColor>ffffffff</downloadColor>
-          <!-- not watched color (normal) -->
-          <remoteColor>ffffffff</remoteColor>
-          <!-- watched color -->
-          <textcolor>ffffffff</textcolor>
-          <!-- local file not present color -->
-          <textcolor2>ffffffff</textcolor2>
-          <!-- local file not present colorcolumn 2-->
-          <textcolor3>ffffffff</textcolor3>
-          <!-- local file not present color column 3-->
+          <spaceBetweenItems>1</spaceBetweenItems> 
+		  <!-- Uncomment to override List colors -->
+          <!--<playedColor>ffffffff</playedColor>-->         
+          <!--<remoteColor>ffffffff</remoteColor>-->
+          <!--<textcolor>ffffffff</textcolor>-->
+          <!--<textcolor2>ffffffff</textcolor2>-->
+          <!--<textcolor3>ffffffff</textcolor3>-->
         </control>
       </control>
     </control>

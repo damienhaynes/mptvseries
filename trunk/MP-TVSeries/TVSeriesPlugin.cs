@@ -2088,9 +2088,7 @@ namespace WindowPlugins.GUITVSeries
                                 item = new GUIListItem(items[index]);
                                 if (item.Label.Length == 0) item.Label = Translation.Unknown;
                                 item.TVTag = items[index];
-                                item.IsRemote = true;
-                                item.IsDownloading = true;
-
+  
                                 if (graphical || DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                 {
                                     // also display fist logo in list directly
@@ -2205,10 +2203,20 @@ namespace WindowPlugins.GUITVSeries
                                         LoadWatchedFlag(item, bWatched, bAvailable);                                        
                                     }
                                     item.TVTag = series;
-                                    // Has no local files in series
-                                    item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
-                                    // Has atleast one unwatched episode in series - no IsWatched property
-                                    item.IsDownloading = int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) != 0;
+                                    
+                                    #region List Colors
+                                    item.IsRemote = false;
+                                    item.IsPlayed = false;
+
+                                    // Set IsRemote property to true, if there are no episodes local on disk for season
+                                    if (!series[DBOnlineSeries.cHasLocalFiles]) {
+                                        item.IsRemote = true;
+                                    }
+                                    // Set IsPlayed property to true, if all episodes in season have been watched
+                                    else if (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0) {
+                                        item.IsPlayed = true;
+                                    }
+                                    #endregion
 
                                     if (this.m_SelectedSeries != null)
                                     {
@@ -2289,12 +2297,21 @@ namespace WindowPlugins.GUITVSeries
                                                     // if skins want to display the logo in the textual list, users need to set the option (expensive)
                                                     item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
                                                 }
-                                            }                                                                                                                                    
+                                            }
                                         }
-                                        // Has no local files in season
-                                        item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                        // Has atleast one unwatched episode in season - no IsWatched property
-                                        item.IsDownloading = int.Parse(season[DBSeason.cEpisodesUnWatched]) != 0;
+                                        #region List Colors
+                                        item.IsRemote = false;
+                                        item.IsPlayed = false;
+                                        
+                                        // Set IsRemote property to true, if there are no episodes local on disk for season
+                                        if (!season[DBSeason.cHasLocalFiles]) {
+                                            item.IsRemote = true;
+                                        }
+                                        // Set IsPlayed property to true, if all episodes in season have been watched
+                                        else if (int.Parse(season[DBSeason.cEpisodesUnWatched]) == 0) {
+                                            item.IsPlayed = true;
+                                        }
+                                        #endregion
                                     }
                                     else item = new GUIListItem();
                                     item.TVTag = season;
@@ -2405,15 +2422,24 @@ namespace WindowPlugins.GUITVSeries
                                         // we came from series on top, only display index/title
                                         item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
                                     }
-
+                                    
                                     item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);
                                     item.Label3 = FieldGetter.resolveDynString(m_sFormatEpisodeCol1, episode);
-                                    
-                                    // File is local
-                                    item.IsRemote = episode[DBEpisode.cFilename].ToString().Length > 0;
-                                    // Unwatched
-                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;                                    
-                                    
+
+                                    #region List Colors
+                                    item.IsRemote = false;
+                                    item.IsPlayed = false;
+
+                                    // Set IsRemote property to true, if the episode is not local on disk
+                                    if (episode[DBEpisode.cFilename].ToString().Length == 0) {
+                                        item.IsRemote = true;
+                                    }
+                                    // Set IsPlayed property to true, if episode is has been watched
+                                    else if (episode[DBOnlineEpisode.cWatched]) {
+                                        item.IsPlayed = true;
+                                    }
+                                    #endregion
+
                                     item.TVTag = episode;
 
                                     if (this.m_SelectedEpisode != null)

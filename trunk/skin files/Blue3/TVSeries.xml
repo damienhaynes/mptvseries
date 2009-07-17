@@ -366,17 +366,7 @@
 				<height>250</height>
 				<IconXOff>10</IconXOff>
 				<IconYOff>1</IconYOff>
-				<spaceBetweenItems>2</spaceBetweenItems>
-				<remoteColor>FFa6c3e1</remoteColor>
-				<!-- Watched color -->
-				<downloadColor>d4d2d2</downloadColor>
-				<!-- not watched color (normal) -->
-				<textcolor>FF78ace0</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>FF78ace0</textcolor2>
-				<!-- local file not present color  column 2-->
-				<textcolor3>FF78ace0</textcolor3>
-				<!-- local file not present color column 3-->
+				<spaceBetweenItems>2</spaceBetweenItems>				
 				<spinWidth>10</spinWidth>
 				<spinHeight>10</spinHeight>
 				<spinPosX>580</spinPosX>
@@ -446,19 +436,8 @@
 				<spinColor>ffffffff</spinColor>
 				<!-- Textures -->
 				<!-- Text -->
-				<font>font12</font>
-				<selectedColor>00ffffff</selectedColor>
-				<textcolor>ffffffff</textcolor>
-				<colordiffuse>ffffffff</colordiffuse>
-				<remoteColor>FF868686</remoteColor>
-				<!-- watched color -->
-				<downloadColor>FFFFFFFF</downloadColor>
-				<!-- not watched color (normal) -->
-				<textcolor>FFC14E4A</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>FFC14E4A</textcolor2>
-				<!-- local file not present color  column 2-->
-				<textcolor3>FFC14E4A</textcolor3>
+				<font>font12</font>				
+				<colordiffuse>ffffffff</colordiffuse>				
 				<!-- local file not present color column 3-->
 				<suffix>|</suffix>
 				<itemWidthBig>350</itemWidthBig>
@@ -508,17 +487,12 @@
 				<textXOff3>300</textXOff3>
 				<textYOff3>4</textYOff3>
 				<spaceBetweenItems>1</spaceBetweenItems>
-				<!-- Text -->
-				<downloadColor>ffffffff</downloadColor>
-				<!-- not watched color (normal) -->
-				<remoteColor>ffffffff</remoteColor>
-				<!-- watched color -->
-				<textcolor>ffffffff</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>ffffffff</textcolor2>
-				<!-- local file not present colorcolumn 2-->
-				<textcolor3>ffffffff</textcolor3>
-				<!-- local file not present color column 3-->
+				<!-- Uncomment to override List colors -->
+				<!--<playedColor>ffffffff</playedColor>-->         
+				<!--<remoteColor>ffffffff</remoteColor>-->
+				<!--<textcolor>ffffffff</textcolor>-->
+				<!--<textcolor2>ffffffff</textcolor2>-->
+				<!--<textcolor3>ffffffff</textcolor3>-->
 				<enableFocusZoom>yes</enableFocusZoom>
 				<zoomXPixels>20</zoomXPixels>
 				<zoomYPixels>20</zoomYPixels>
