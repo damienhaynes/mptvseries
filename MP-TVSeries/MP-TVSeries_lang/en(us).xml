@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 11th July 2009 -->
+<!-- Last Updated: 21st July 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -164,7 +164,7 @@
 	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Remove Series from View</string>
 	<string Field="NewViewTag" Original="New Tag">New View</string>
 	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Cycle Series Banner</string>
-	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Cycle Season Banner</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Cycle Season Poster</string>
 	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Cycle Series Poster</string>
 	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
 	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 Seconds</string>

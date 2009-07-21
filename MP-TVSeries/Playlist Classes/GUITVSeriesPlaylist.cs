@@ -652,28 +652,7 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
             TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Logos.ToString(), localLogos.getLogos(ref episode, TVSeriesPlugin.logosHeight, TVSeriesPlugin.logosWidth));
-
-            //DBSeason selectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            //DBSeries selectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-
-            //if (selectedSeries != null)
-            //{
-            //    TVSeriesPlugin.setGUIProperty(guiProperty.SeriesBanner.ToString(), ImageAllocator.GetSeriesBanner(selectedSeries));
-            //    //seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(selectedSeries);
-            //    TVSeriesPlugin.pushFieldsToSkin(selectedSeries, "Series");
-            //}
-            //else
-            //    TVSeriesPlugin.clearGUIProperty(guiProperty.SeriesBanner.ToString());
-
-            //if (selectedSeason != null)
-            //{
-            //    TVSeriesPlugin.setGUIProperty(guiProperty.SeasonBanner.ToString(), ImageAllocator.GetSeasonBanner(selectedSeason, false));
-            //    //seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(selectedSeason);
-            //    TVSeriesPlugin.pushFieldsToSkin(selectedSeason, "Season");
-            //}
-            //else
-            //    TVSeriesPlugin.clearGUIProperty(guiProperty.SeasonBanner.ToString());
-
+          
             TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
             
             // Some strange issues with logos when using mouse and hovering over current item
@@ -687,10 +666,7 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
-            TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());
-            //TVSeriesPlugin.clearGUIProperty(guiProperty.SeasonBanner.ToString());
-            //TVSeriesPlugin.clearGUIProperty(guiProperty.SeriesBanner.ToString());
-           
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());            
             TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 
