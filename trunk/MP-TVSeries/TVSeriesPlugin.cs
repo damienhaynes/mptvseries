@@ -69,7 +69,7 @@ namespace WindowPlugins.GUITVSeries
             seriesposter.Delay = artworkDelay;
 
             seasonbanner = new AsyncImageResource();
-            seasonbanner.Property = "#TVSeries.SeasonBanner";
+            seasonbanner.Property = "#TVSeries.SeasonPoster";
             seasonbanner.Delay = artworkDelay;
         }
         #endregion
@@ -306,7 +306,7 @@ namespace WindowPlugins.GUITVSeries
 			toggleWatched,
 			cycleSeriesBanner,
 			cycleSeriesPoster,
-			cycleSeasonBanner,
+			cycleSeasonPoster,
 			forceSeriesQuery,
 			downloadSubtitle,
 			downloadviaTorrent,
@@ -377,7 +377,7 @@ namespace WindowPlugins.GUITVSeries
 			LastView,
 			SeriesBanner,
 			SeriesPoster,
-			SeasonBanner,
+			SeasonPoster,
 			EpisodeImage,
 			Logos,
 			SeriesCount,
@@ -732,7 +732,7 @@ namespace WindowPlugins.GUITVSeries
 							if (selectedSeason.BannerList.Count > 1) {
 								pItem = new GUIListItem(Translation.CycleSeasonBanner);
 								dlg.Add(pItem);
-								pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
+								pItem.ItemId = (int)eContextItems.cycleSeasonPoster;
 							}
 						}
 
@@ -1054,7 +1054,7 @@ namespace WindowPlugins.GUITVSeries
 						}
 						break;
 
-					case (int)eContextItems.cycleSeasonBanner: {
+					case (int)eContextItems.cycleSeasonPoster: {
 							int nCurrent = selectedSeason.BannerList.IndexOf(selectedSeason.Banner);
 							nCurrent++;
 							if (nCurrent >= selectedSeason.BannerList.Count)
@@ -2010,7 +2010,7 @@ namespace WindowPlugins.GUITVSeries
                     
                     clearGUIProperty(guiProperty.SeriesBanner);
                     clearGUIProperty(guiProperty.SeriesPoster);
-                    clearGUIProperty(guiProperty.SeasonBanner);
+                    clearGUIProperty(guiProperty.SeasonPoster);
                     clearGUIProperty(guiProperty.EpisodeImage);
                     clearGUIProperty(guiProperty.Logos);
 
@@ -4101,8 +4101,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
             // Delayed Image Loading of Season Banners            
-            seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
-            //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
+            seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);            
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
@@ -4191,7 +4190,7 @@ namespace WindowPlugins.GUITVSeries
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
                 else
-                    clearGUIProperty(guiProperty.SeasonBanner);
+                    clearGUIProperty(guiProperty.SeasonPoster);
 
                 m_bUpdateBanner = false;
             }

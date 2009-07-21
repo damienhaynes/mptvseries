@@ -105,7 +105,7 @@
       <posY>88</posY>
       <width>350</width>
       <height>506</height>
-      <texture>#TVSeries.SeasonBanner</texture>
+      <texture>#TVSeries.SeasonPoster</texture>
       <visible>[Control.IsVisible(1238)|Control.IsVisible(1239)]+facadeview.list</visible>
     </control>
 	
