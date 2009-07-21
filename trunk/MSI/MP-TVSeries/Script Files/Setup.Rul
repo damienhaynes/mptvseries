@@ -102,24 +102,35 @@ STRING g_sTVSeriesPluginFileName;
 // initializes.
 //---------------------------------------------------------------------------
 function OnBegin()
-	STRING szVersion, szUpgradeMessage;
+	STRING szVersion, szUpgradeMessage, svResult;
 	NUMBER nResult;
 	BOOL bUpgradeSupported; 
-begin 
- 	 	
+	
+	//OBJECT colors, myObject;
+begin  	
+    
+	/*set colors = CoCreateObject( "System.Collections.ArrayList");
+	
+	colors.Add( "RED" );
+	colors.Add( "WHITE" );
+	colors.Add( "BLUE" );
+	
+	set myObject = CoCreateObjectDotNet("D:\\Development\\InstallShield.Net\\Sample\\bin\\Release\\Sample.dll", "Sample.Colors" );
+	myObject.MyMethod( colors);*/
+	
 	// See if older version is installed
 	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
 	if g_bMajorUpgrade then
 		// check if version supports upgrades
 		if bUpgradeSupported then
-			szUpgradeMessage = "Setup is about to perform a Major Upgrade from: v" + szVersion + "\nThe previous installation will " +
+			szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
 							   "be removed, Do you wish to continue?";
 			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
 			if (nResult != IDYES) then
 				abort;
 			endif;
 		else
-		 	szUpgradeMessage = "Setup cannot perform an Upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
+		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
 							   "and run setup again.";
 			MessageBox(szUpgradeMessage,INFORMATION);
 			abort;							   
@@ -948,15 +959,21 @@ begin
 end;
 
 function VOID BackupDatabase(sFileName)
-	STRING sDestinationFolder, svResult, sErrorMsg;   
+	STRING sDestinationFolder, svResult, sErrorMsg, svResultDate, svResultTime;   
 	NUMBER nResult;
 begin
  	
  	Disable(LOGGING);
 	
 	// Get Current Date
-	GetSystemInfo ( DATE, nResult, svResult );
+	GetSystemInfo ( DATE, nResult, svResultDate );
 	
+	// Get Current Time and remove colons so we can make a valid path
+	GetSystemInfo ( TIME, nResult, svResultTime ); 
+ 	StrReplace ( svResult, ":", "", 0 ); 
+ 	
+ 	svResult = svResultDate + "_" + svResultTime;
+ 	
 	// Set Destination Folder to Personal Directory
 	sDestinationFolder = PersonalFolder ^ "MP-TVSeries\\Backup" ^ svResult;
 	
