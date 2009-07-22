@@ -3288,20 +3288,17 @@ namespace WindowPlugins.GUITVSeries
 
             switch (this.listLevel) {
                 case Listlevel.Series:
-                    // Always delete from Local episode/series table if deleting from disk or database
+                    // Always delete from Local episode table if deleting from disk or database
+					// we shouldnt delete from Local series table as then we will not be able to see in MediaPortal
                     condition = new SQLCondition();
                     condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);                    
 
                     if (dlg.SelectedId != (int)DeleteMenuItems.database)                           
                         epsDeletion.AddRange(DBEpisode.Get(condition, false));
 										
-					DBEpisode.Clear(condition);
+					DBEpisode.Clear(condition);                    
 
-                    condition = new SQLCondition();
-                    condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                    DBSeries.Clear(condition);
-
-                    // Delete from online episode table
+                    // Delete from online tables and season/series tables
                     if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
@@ -3310,6 +3307,10 @@ namespace WindowPlugins.GUITVSeries
                         condition = new SQLCondition();
                         condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                         DBSeason.Clear(condition);
+
+						condition = new SQLCondition();
+						condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+						DBSeries.Clear(condition);
 
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
