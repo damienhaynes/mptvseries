@@ -34,6 +34,8 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 
  * Season Artwork property has been renamed from #TVSeries.SeasonBanner to #TVSeries.SeasonPoster
 
+ * Added new filtered episode count property #TVSeries.FilteredEpisodeCount. This accurately reports the number of items in Episode View
+
 = Skin Files =
 The plugin requires several skin files if you wish to expose all functionality of the plugin. Not all skin files are mandatory but its recommended that all are included with Skin releases. The table below describes each skin file and controls used:
 
@@ -170,11 +172,12 @@ Each skin has its own unique set of properties that can be used, see the table b
 ||#TVSeries.SeriesBanner  || The Filename of the current Series Wide Banner ||
 ||#TVSeries.SeasonPoster  || The Filename of the current Season Poster ||
 ||#TVSeries.EpisodeImage  || The Filename of the current Episode Thumbnail ||
-||#TVSeries.Logos  || The Filename of the dynamically created Logos   ||
+||#TVSeries.Logos  || The Filename of the dynamically created Logos ||
 ||#TVSeries.Fanart.1  || The 1st Fanart used in the Fanart Fading Logic ||
 ||#TVSeries.Fanart.2  || The 2nd Fanart used in the Fanart Fading Logic ||
 ||#TVSeries.SeriesCount  || The current number of Series displayed in the Facade ||
 ||#TVSeries.GroupCount  || The current number of Groups displayed in the Facade ||
+||#TVSeries.FilteredEpisodeCount || This accurately reports the number of items in Episode View ||
 
 *Note:* Title, Sub-Title and Description properties can be overridden by the user in the MP-TVSeries configuration under the *Layout* tab.
 
@@ -376,4 +379,3 @@ Logo Rules allow you to create a Single Image on the skin which consists of mult
 </logos>
 }}}
 Logo Rules can be easily configured in the plugins configuration and then copied into the Skin Settings xml.
-
