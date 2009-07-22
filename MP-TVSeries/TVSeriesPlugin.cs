@@ -381,7 +381,8 @@ namespace WindowPlugins.GUITVSeries
 			EpisodeImage,
 			Logos,
 			SeriesCount,
-			GroupCount
+			GroupCount,
+            FilteredEpisodeCount
 		}
 		#endregion
 
@@ -512,6 +513,9 @@ namespace WindowPlugins.GUITVSeries
 			clearGUIProperty(guiProperty.SimpleCurrentView);
 			clearGUIProperty(guiProperty.NextView);
 			clearGUIProperty(guiProperty.LastView);
+            clearGUIProperty(guiProperty.SeriesCount);
+            clearGUIProperty(guiProperty.GroupCount);
+            clearGUIProperty(guiProperty.FilteredEpisodeCount);
 
             localLogos.appendEpImage = m_Episode_Image == null ? true : false;
 
@@ -2376,11 +2380,12 @@ namespace WindowPlugins.GUITVSeries
                             bool bFindNext = false;
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
                             
-							// Get a list of Episode to display for current view
-							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Start();
-							List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Stop();
-							//MPTVSeriesLog.Write(aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Info);
+							// Get a list of Episode to display for current view							
+							List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);							
+
+                            // Update Filtered Episode Count Property, this acurately displays the number of items on the facade
+                            // #TVSeries.Series.EpisodeCount is not desirable in some views e.g. Recently Added or views that filter by episode fields
+                            setGUIProperty(guiProperty.FilteredEpisodeCount, episodesToDisplay.Count.ToString());
 
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
@@ -2660,12 +2665,12 @@ namespace WindowPlugins.GUITVSeries
 
         void clearGUIProperty(guiProperty which)
         {
-            setGUIProperty(which, string.Empty);
+            clearGUIProperty(which.ToString());
         }
 
         public static void clearGUIProperty(string which)
         {
-            setGUIProperty(which, "-"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+            setGUIProperty(which, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }        
 
         internal static void showRatingsDialog(DBTable item, bool auto)
