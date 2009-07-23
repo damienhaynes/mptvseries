@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("MP-TVSeries")]
 [assembly: AssemblyDescription("Build 2.3")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("Stable")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
 [assembly: AssemblyCopyright("Copyright © 2009")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.3.*")]
-//[assembly: AssemblyFileVersion("2.3.0.0")]
+[assembly: AssemblyVersion("2.3.3491.0")]
+[assembly: AssemblyFileVersion("2.3.3491.0")]

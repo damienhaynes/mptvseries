@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Readme</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+.main_title { 
+	color: #0E5899;
+	font-family: verdana;
+	font-size: 18px;
+	font-weight: bold;
+	height: 22px;
+	padding-bottom: 10px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tab_text {
+	color: #ffffff;
+	background-color: #6699CC;
+	min-width: 100px;
+	height: 15px;
+	padding: 3px 15px 3px 10px;
+	font-family: verdana;
+	font-size: 12px;
+	font-weight: bold;
+	float: left;
+}
+.tab_img {
+	width: 21px;
+	height: 21px;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-image: url("tri.gif");
+	float: left;
+}
+.tab_bar {
+	clear: both;
+	float: left;
+	width: 100%;
+	border-bottom: 2px solid #6699CC;
+}
+.tab_content {
+	clear: both;
+	margin: 0 auto;
+	padding: 10px;
+}
+p {
+	font-family: verdana;
+	font-size: 12px;
+	margin: 0 auto;
+	padding: 0;
+	margin-bottom: 10px;
+}
+ul {
+	list-style-image: url('bullet.jpg');
+}
+</style>
+</head>
+<body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
+	<div style="width: 100%;height: 100%;overflow: auto;">
+
+	<div class="main_title">TVSeries v2.3 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Views System</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>The views system has been upgraded to support several new features:</strong></p>
+		
+		<p>The user can now create tagged views, this allows you to add any series to a defined view e.g.
+			Documentaries, Kids Shows, Adults Shows etc...
+		</p>
+		<p>Tagged Views can be created when adding a series to a <b>new</b> view from the plugins context menu with-in
+			MediaPortal or from the Views tab in Configuration. The Configuration program allows you to quickly
+			multi-select a range of Series to add to a particular view using the Add/Edit view dialog.
+		</p>
+		<p>Several new Built-in views have been added, some of which include: Actors, Adult Series, Kids Series,
+			Continuing Series, Ended Series, Top 10 etc. These views are available for selection in the Views
+			Configuration using the <b>Templates</b> dialog.
+		</p>
+		<p>Parental Control support, you can now protect views from the configuration views tab. After you have
+			locked down your views, enter a 4-Digit Pin in the Pin Code dialog. When a protected view is selected
+			from the plugin in MediaPortal you will be prompted to insert your Pin Code, if the pin entered is
+			correct you will see the contents of the protected view. If you have correctly entered a pin code and
+			then re-enter the view you will not be prompted unless you restart/resume or manually lock views from
+			the context menu.
+		</p>			
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Rate Series/Episodes</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>A few new features have been added to enhance the users experience when rating episodes or series:</strong></p>
+		<p>Supported skins will now show a Graphical Rating dialog, this will also help you rate an episode or series by giving you
+			a meaningful description for the score e.g. Mediocre, Good, Great. Thanks goes to the MovingPictures team for
+			sharing the dialog.
+		</p>
+		<p>The User can choose between a 5 Star or a 10 Star rate dialog from Configuration under General Settings.</p>
+		<p>Fixed an issue where on occasion the episode list will disappear after rating an episode.</p>
+			
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import Settings</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>The Online Data settings in configuration have been updated to provide several new features:</strong></p>
+		<p>You can now turn off Import when starting/resuming MediaPortal, this is of particular interest to 
+			people experiencing performance issues or have slow/non-existant internet connections. To completely turn off
+			automatic imports you also need to disable Updates.
+		</p>
+		<p>Downloading of user ratings can be disabled, when disabled the import will be faster but your episode ratings
+			will not be synced with the online database.
+		</p>
+		<p>Downloading of missing artwork can be disabled, during import the plugin will check if any series or season has 
+			no artwork available. If no artwork is found then an attempt will be done to check if any is available online and
+			download them. Import will be faster when disabling, time difference is neglible on smaller databases.
+		</p>
+		<p>During import the plugin checks all series fanart and updates the local database with any missing or new fanarts.
+			You can now disable this option for a faster import if you only want check for updates.
+		</p>
+		<p>You can now check for updates for episode(s) and series from Details tab in configuration. This will only do the updates
+			on the selected item, it will not do a full import.
+		</p>
+		<p>Automatic download of Fanart that contain Series Names/Logos is now optional, this is turned off by default.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Installer Package</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>An Installer has been created to help with deployment of the plugin, it has the following features:</strong></p>
+		<p>Support for all platforms supported by MediaPortal and is also compatible with the latest MediaPortal 1.1.0 release.</p>
+		<p>Custom directories defined in MediaPortalDirs.xml will be recognised and used for all components e.g. plugin, languages, skins etc</p>
+		<p>The installer supports upgrades for future releases.</p>
+		<p>The plugin and all of its components can be uninstalled from the Add\Remove programs in the Windows Control Panel.</p>
+		<p>During Installation the database is backed up the users documents directory: %USERPROFILE%\Documents\MP-TVSeries.</p>
+		<p>Options to remove artwork and database after an Uninstall to help keep your system clean.</p>
+		<p>Checks for multiple instances of the plugin after installation, this is to ensure that there is no erratic behaviour or conflicts.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Misc Changes and Fixes</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 		
+		<ul>
+			<li><p>Series Poster and Series Banner are now exposed to the skin as seperate properties.</p></li>
+			<li><p>Colours used in the List facade of skins which indicate Watched and Unavailable status have been changed to <b>playedColor</b> and <b>remoteColor</b>.
+					The Unwatched colour uses <b>textColor</b>.</p></li>
+			<li><p>New Delete options available, user can now delete from disk, database or both. Shortcut to menu can be invoked by pressing Zero on the Remote Control.
+					Delete menu is hidden unless enabled from with-in Configuration.</p></li>			
+			<li><p>SMS Style Virtual Keyboard support, option can be turned on from with-in Configuration.</p></li>
+			<li><p>Sorting of Specials in episode view can now be disabled from with-in Configuration.</p></li>
+			<li><p>Hide Spoilers option has been enhanced so you can Hide Overview and/or Episode Thumbnails. When episode thumbnails are hidden the Video OSD will show
+					the Series Poster instead. These options can be changed from with-in Configuration or the Context menu of the plugin.</p></li>
+			<li><p>Artwork Loading Delay can now be changed from with-in Configuration. Its recommended that defaults be left unless you know what you are doing.</p></li>
+			<li><p>Added ability to mark episodes as watched or unwatched in the Configuration Details tab.</p></li>
+			<li><p>The plugin now supports the latest <a href="http://mediainfo.sourceforge.net/en/Download/Windows">MediaInfo</a> library, this is no longer included in package. As of MediaPortal 1.0.1, 
+					MediaPortal ships mediainfo library as part of its release.</p></li>
+			<li><p>The Import Path section in Configuration now supports UNC path names e.g. \\server\\share</p></li>
+			<li><p>The Random Fanart function now cycles fanart on a configurable timer, this can be changed from the default 30secs from the Fanart Chooser window.</p></li>
+			<li><p>Added Import/Export of Parsing Expressions and String Replacements.</p></li>
+			<li><p>Added options to configure Playlists in Configuration Views tab e.g. Playlist Path. Also added new Auto-Shuffle on load property.</p></li>
+			<li><p>Fixed <b>DVD</b> order for regions using a comma as the default decimal separator, thanks freddan85</p></li>
+			<li><p>Fixed incorrect remository url when retrieving subtitles, thanks Gabe01</p></li>
+			<li><p>Fixed <b>Now Playing</b> OSD information not being set when playing from playlist view.</p></li>
+			<li><p>Fixed missing Hover image on Home Screen for Blue3 and Blue3 Wide skins.</p></li>
+			<li><p>Much faster episode count calculation when switching to and from 'Show all local files' in options menu.</p></li>
+			<li><p>Faster importing, some tasks that previously took a long time such as MediaInfo retrieval and Episode Counts are now done in the background.</p></li>		
+		</ul>
+		<p><strong>Note:</strong> there have been several updates (some of which are mentioned above) to the plugin which affect the skin, as a result all skins will need to be updated. See <a href="http://code.google.com/p/mptvseries/wiki/SkinDesignersGuide">Skin Designer's Guide</a> for more details on what
+			has changed. Please don't raise any issues with out dated skins.
+		</p>
+	</div>
+</div>
+</body>
+</html>
