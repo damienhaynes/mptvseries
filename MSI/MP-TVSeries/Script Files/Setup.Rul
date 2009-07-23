@@ -41,14 +41,18 @@
 #define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
 
 // Version Defines
-#define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.2.0"
-#define MEDIAPORTAL_MIN_VERSION				"1.0.1.0" // MediaInfo.dll was introduced into MP 1.0.1
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.1.0" // MediaInfo.dll was introduced into MP 1.0.1
+#define MEDIAPORTAL_MIN_VERSION				"1.0.0.0" // Use at your own risk, for most part should work
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
 #define RES_PBUT_CLOSE		  			2     			// ID of the (X) button
 #define RES_PBUT_CANCEL       			9   			// ID of Cancel button
 #define RES_PBUT_BACK        			12   			// ID of Back button
+
+#define RES_TEXT_RELEASENOTES			1301 			// Placeholder text label to load release notes
+
+#define RES_DLG_RELEASENOTES			14000			// Release Notes dialog
 
 // CSIDL values
 #ifndef CSIDL_PROFILE
@@ -78,6 +82,9 @@ prototype STRING	GetMPTVSeriesDBPath();
 prototype VOID		CheckFilesInUse();    
 prototype VOID		VerifyPluginCount();
 prototype VOID		RemoveNonMSIPlugin();
+
+// Custom Dialogs
+prototype NUMBER 	ShowReleaseNotesDlg();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -124,7 +131,9 @@ begin
 		// check if version supports upgrades
 		if bUpgradeSupported then
 			szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
-							   "be removed, Do you wish to continue?";
+							   "be removed during the upgrade, Do you wish to continue?\n\nNote: No user data or artwork downloaded from online will be removed, " + 
+							   "for a full uninstall go to the Add\\Remove programs and select Uninstall.";
+							  
 			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
 			if (nResult != IDYES) then
 				abort;
@@ -443,12 +452,16 @@ Dlg_SdWelcome:
 	svName    = "";
     svCompany = "";
 
+Dlg_ReleaseNotes:
+	nResult = ShowReleaseNotesDlg();
+	if (nResult = BACK) goto Dlg_SdWelcome;
+
 Dlg_SdFeatureTree: 
     szTitle    = "";
     szMsg      = "";
     if (nSetupType = TYPICAL) then
 		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
-		if (nResult = BACK) goto Dlg_SdWelcome;  
+		if (nResult = BACK) goto Dlg_ReleaseNotes;  
     endif;
 
 
@@ -606,7 +619,7 @@ begin
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
     else
     	szOpt1 = "&Launch Home Page in default Browser";
-    	szOpt2 = "Launch &MediaPortal Configuration";
+    	szOpt2 = "Launch &MP-TV-Series Configuration";
 	    SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
 	    
 	    if bOpt1 then
@@ -970,7 +983,7 @@ begin
 	
 	// Get Current Time and remove colons so we can make a valid path
 	GetSystemInfo ( TIME, nResult, svResultTime ); 
- 	StrReplace ( svResult, ":", "", 0 ); 
+ 	StrReplace ( svResultTime, ":", "", 0 ); 
  	
  	svResult = svResultDate + "_" + svResultTime;
  	
@@ -1138,7 +1151,7 @@ end;
 ///
 ///////////////////////////////////////////////////////////////////////////
 function void RemoveNonMSIPlugin()
-	STRING szKey, szName, szFile, svValue;
+	STRING szKey, szName, szFile, svValue, szFiles;
 	NUMBER nvSize, nvType;
 begin
     
@@ -1152,7 +1165,7 @@ begin
     	
 	szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SharedDLLs";
 	  
-    // Check if file exists
+    // Check if plugin file exists
     szFile = g_sPluginsDir ^ "windows\\mp-tvseries.dll";   
     szName = szFile;
     
@@ -1168,6 +1181,70 @@ begin
     		// Reference counter doesnt exist, clean registry
     		RegDBDeleteValue(szKey, szName);
     	endif;		    
-    endif;    
+    endif;
+    
+    // Delete skin file(s) if they exist (no shared pacakges for these)
+    szFiles = g_sSkinsDir ^ "Blue3\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
+    szFiles = g_sSkinsDir ^ "Blue3Wide\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
     Enable(LOGGING);
+end;
+
+function number ShowReleaseNotesDlg()
+	STRING szDialogName, szFileName;
+	NUMBER nCmdValue;
+	BOOL bDone;
+begin
+
+	szDialogName = "ReleaseNotes";
+   	bDone = FALSE;
+      	                         	                     
+    EzDefineDialog(szDialogName,"","",RES_DLG_RELEASENOTES);
+
+Dlg_Wait:  
+    // Loop unitl done
+    repeat
+    	nCmdValue = WaitOnDialog(szDialogName);
+
+	    switch (nCmdValue)
+	    	
+	    	case DLG_CLOSE:
+	            // The user clicked the window's close button.
+	            Do (EXIT);
+	            
+	        case DLG_ERR:
+	            MessageBox ("Unable to display Release Notes dialog. Setup canceled.", SEVERE);
+	            abort;
+	            
+	        case DLG_INIT:
+	        	// Load Release Notes
+	        	szFileName = SUPPORTDIR ^ "ReleaseNote.html";	        	     			     			     			
+	        	//szFileName = "c:/releasenote.html";
+ 				CtrlSetText(szDialogName, RES_TEXT_RELEASENOTES, "[html]file://" + szFileName);
+ 				         		      
+			case RES_PBUT_BACK:
+				bDone = TRUE;	 	        
+	   	        	   	        	   	        
+	        case RES_PBUT_NEXT:
+	            bDone = TRUE;	        
+	        
+	        case RES_PBUT_CANCEL:
+	        	Do (EXIT);
+	        	
+	        case RES_PBUT_CLOSE:
+	        	Do (EXIT);
+	        	
+	     endswitch;
+    
+    until bDone;       
+		
+	bDone = FALSE;	
+		
+    EndDialog (szDialogName);
+    ReleaseDialog (szDialogName);
+        
+   	return nCmdValue;
 end;
