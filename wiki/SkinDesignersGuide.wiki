@@ -36,6 +36,8 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 
  * Added new filtered episode count property #TVSeries.FilteredEpisodeCount. This accurately reports the number of items in Episode View
 
+ * The Colors used on the facade have changed. Watched Color is now represented by *<playedColor>*, non-local files use *<remoteColor>* and the default unwatched color uses *<textColor>*.
+
 = Skin Files =
 The plugin requires several skin files if you wish to expose all functionality of the plugin. Not all skin files are mandatory but its recommended that all are included with Skin releases. The table below describes each skin file and controls used:
 
