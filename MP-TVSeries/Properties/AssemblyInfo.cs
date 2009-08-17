@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MP-TVSeries")]
-[assembly: AssemblyDescription("Build 2.3")]
-[assembly: AssemblyConfiguration("Stable")]
+[assembly: AssemblyDescription("Build 2.4")]
+[assembly: AssemblyConfiguration("Test")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
 [assembly: AssemblyCopyright("Copyright © 2009")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.3.3491.0")]
-[assembly: AssemblyFileVersion("2.3.3491.0")]
+[assembly: AssemblyVersion("2.4.*")]
+//[assembly: AssemblyFileVersion("2.4.0.0")]
