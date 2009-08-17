@@ -266,7 +266,8 @@ namespace WindowPlugins.GUITVSeries
             foreach (char c in System.IO.Path.GetInvalidFileNameChars()) {
                 path = path.Replace(c, invalidCharReplacement);                
             }
-            return path;
+            // Also remove trailing dots and spaces            
+            return path.TrimEnd(new char[] { '.' }).Trim();
         } const char invalidCharReplacement = '_';
         
         /// <summary>
