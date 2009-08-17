@@ -211,6 +211,8 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnPageLoad()
         {
+			AllocResources();
+			
             loadingWorker = new BackgroundWorker();            
             loadingWorker.WorkerReportsProgress = true;
             loadingWorker.WorkerSupportsCancellation = true;
