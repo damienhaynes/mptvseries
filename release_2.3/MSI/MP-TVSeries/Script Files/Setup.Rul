@@ -111,33 +111,22 @@ STRING g_sTVSeriesPluginFileName;
 function OnBegin()
 	STRING szVersion, szUpgradeMessage, svResult;
 	NUMBER nResult;
-	BOOL bUpgradeSupported; 
-	
-	//OBJECT colors, myObject;
+	BOOL bUpgradeSupported;
 begin  	
-    
-	/*set colors = CoCreateObject( "System.Collections.ArrayList");
-	
-	colors.Add( "RED" );
-	colors.Add( "WHITE" );
-	colors.Add( "BLUE" );
-	
-	set myObject = CoCreateObjectDotNet("D:\\Development\\InstallShield.Net\\Sample\\bin\\Release\\Sample.dll", "Sample.Colors" );
-	myObject.MyMethod( colors);*/
-	
+
 	// See if older version is installed
 	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
 	if g_bMajorUpgrade then
 		// check if version supports upgrades
 		if bUpgradeSupported then
-			szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
+			/*szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
 							   "be removed during the upgrade, Do you wish to continue?\n\nNote: No user data or artwork downloaded from online will be removed, " + 
 							   "for a full uninstall go to the Add\\Remove programs and select Uninstall.";
 							  
 			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
 			if (nResult != IDYES) then
 				abort;
-			endif;
+			endif;*/
 		else
 		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
 							   "and run setup again.";
