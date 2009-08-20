@@ -57,80 +57,80 @@
 	<string Field="Channels" Specials="Channels">ערוצים</string>
 	<string Field="Unwatched" Specials="Unwatched">לא נצפו</string>
 	<string Field="Favourites" Specials="Favourites">מועדפים</string>
-	<string Field="updateMI" Specials="Update Mediainfo of local file">עדכן מידע</string>
-	<string Field="RateSeries" Original="Rate this Series">דרג סדרה</string>
-	<string Field="RateEpisode" Original="Rate this Episode">דרג פרק</string>
-	<string Field="ResetRating" Original="Reset Rating">אפס דירוג</string>
-	<string Field="AskToRate" Original="Ask me to rate unrated episodes">בקש ממני לדרג פרקים שלא דורגו</string>
-	<string Field="DontAskToRate" Original="Don't ask me to rate again">אל תבקש ממני לדרג שוב</string>
-	<string Field="RatingStar" Original="Star">כוכב</string>
-	<string Field="RatingStars" Original="Stars">כוכבים</string>
-	<string Field="ChangeView" Original="Change View">שנה תצוגה</string>
-	<string Field="ChangeViewFast" Original="Immediatly Change Views">שנה תצוגות באופן מיידי</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">החלף באנר</string>
+	<string Field="updateMI" Specials="Update Mediainfo of local file">עדכן מידע של קובץ מקומי(s)</string>
+	<string Field="Cycle_Banner" Specials="Cycle Banner">שנה תמונה</string>
+	<string Field="RateSeries" Specials="Rate this Series">דרג סדרה</string>
+	<string Field="RateEpisode" Specials="Rate this Episode">דרג פרק</string>
+	<string Field="AskToRate" Specials="Ask me to rate unrated episodes">בקש ממני לדרג פרקים לא מדורגים</string>
+	<string Field="DontAskToRate" Specials="Don't ask me to rate again">אל תבקש ממני לדרג שוב</string>
+	<string Field="RatingStar" Specials="Star">כוכב</string>
+	<string Field="RatingStars" Specials="Stars">כוכבים</string>
+	<string Field="ChangeView" Specials="Change View">שנה תצוגה</string>
+	<string Field="ChangeViewFast" Specials="Immediatly Change Views">שנה תצוגה באופן מיידי</string>
+	<string Field="Cycle_Banner" Original="Cycle Banner">הבאנר הבא</string>
 	<string Field="FanArt" Original="Fanart">תמונת רקע</string>
-	<string Field="FanListAll" Original="List all Fanart for this Series">הצג את כל תמונות הרקע עבור סדרה זו</string>
-	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">הורד והחלף תמונת רקע</string>
+	<string Field="FanListAll" Original="List all Fanart for this Series">רשימת כל תמונות הרקע לסדרה זו</string>
+	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">הורד תמונת רקע והשתמש בו</string>
 	<string Field="FanArtGet" Original="Download Fanart">הורד תמונת רקע</string>
 	<string Field="FanArtUse" Original="Set Fanart as Default">קבע תמונת רקע כברירת מחדל</string>
 	<string Field="FanArtDelete" Original="Delete Fanart">מחק תמונת רקע</string>
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">מוריד {0} תמונות רקע...</string>
-	<string Field="FanArtLocal" Original="Available locally">זמין באופן מקומי</string>
-	<string Field="FanArtOnline" Original="Available for downloading">זמין להורדה</string>
+	<string Field="FanArtLocal" Original="Available locally">זמין מקומית</string>
+	<string Field="FanArtOnline" Original="Available for downloading">זמין להורדה מהרשת</string>
 	<string Field="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">טוען {0} מתוך {1} תמונות רקע...</string>
-	<string Field="FanArtRandom" Original="Display random Fanart">הצג תמונות רקע באופן אקראי</string>
+	<string Field="FanArtRandom" Original="Display random Fanart">הצג תמונת רקע אקראית</string>
 	<string Field="FanArtNoneFound" Original="No Fanart could be found">לא נמצאו תמונות רקע</string>
 	<string Field="CFS_Choose_Item" Original="Choose item">בחר פריט</string>
-	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">בחר פריט:</string>
+	<string Field="CFS_Select_Matching_Item" Original="Select matching item:">בחר פריט מתאים:</string>
 	<string Field="CFS_Search_Again" Original="Search again">חפש שוב</string>
-	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">בחר כתוביות</string>
+	<string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">בחר קובץ כתוביות מתאים</string>
 	<string Field="CFS_Subtitle_Episode" Original="Choose item">פרק:</string>
 	<string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">כתוביות מתאימות</string>
-	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">בחר סדרה</string>
+	<string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">בחר בסדרה המתאימה</string>
 	<string Field="CFS_Available_Series" Original="Available Series">סדרות זמינות</string>
-	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">בחר גירסת תרגום רצויה</string>
-	<string Field="CFS_Select_Version" Original="Version:">גירסה:</string>
-	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">בחר פרק</string>
-	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">אינדקס של פרק מקומי:</string>
+	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">בחר בגרסת הכתוביות הרצויה</string>
+	<string Field="CFS_Select_Version" Original="Version:">גרסה:</string>
+	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">בחר פרק מתאים</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">אינדקס פרקים מקומי:</string>
 	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">רשימת פרקים זמינים:</string>
 	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">בחר אתר חיפוש:</string>
 	<string Field="CFS_List_Search_Site" Original="List of search sites:">רשימת אתרי חיפוש:</string>
-	<string Field="CFS_Found_Torrents" Original="Found torrents:">טורנטים שנמצאו:</string>
-	<string Field="CFS_Looking_For" Original="Looking for:">מחפש את:</string>
-	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">בחר עונה</string>
-	<string Field="CFS_Local_Season_Index" Original="Local Season index:">אינדקס עונה מקומית:</string>
-	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">רשימת סדרות זמינות:</string>
-	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">החלף קובץ כתוביות</string>
-	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">קיימות כבר כתוביות: להחליף?</string>
-	<string Field="RecentlyAdded" Original="Recently Added">נוספו לאחרונה</string>
-	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB שגיאת</string>
-	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
-	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">מזהה חשבון לא מוגדר</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">הכנס את מזהה החשבון בהגדרות הפלאגין</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">אתר המידע אינו זמין כרגע, אנא נסה מאוחר יותר</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">החיבור לאינטרנט אינו זמין, אנא בדוק את החיבור ונסה שנית</string>
+	<string Field="CFS_Found_Torrents" Original="Found torrents:">נמצאו קבצי טורנט:</string>
+	<string Field="CFS_Looking_For" Original="Looking for:">מחפש:</string>
+	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">בחר עונה מתאימה</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">אינדקס עונות מקומי:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">רשימת עונות זמינות:</string>
+	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">החלפת קובץ כתוביות</string>
+	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">קובץ כתוביות ישן נמצא: האם להחליפו?</string>
+	<string Field="RecentlyAdded" Original="Recently Added">נוסף לאחרונה</string>
+	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">שגיאת אתר TheTVDB</string>
+	<string Field="TVDB_INFO_TITLE" Original="theTVDB">אתר TheTVDB</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">לא הוזן מזהה חשבון</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">הכנס את מזהה החשבון שלך במסך התצורה</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">אתר TheTVDB.com לא זמין כעת, נסה מאוחר יותר</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">החיבור לרשת אינו זמין, בדוק את החיבור ונסה שוב</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">הצג תמונות רקע בתצוגת סדרות</string>
-	<string Field="ChangeLayout" Original="Change Layout">שנה ממשק</string>
-	<string Field="UseOnlineFavourites" Original="Use Online Favourites">השתמש במועדפים מהרשת</string>
-	<string Field="AddToPlaylist" Original="Add To Playlist">הוסף לרשימה נגינה</string>
+	<string Field="ChangeLayout" Original="Change Layout">שנה סידור</string>
+	<string Field="UseOnlineFavourites" Original="Use Online Favourites">השתמש במועדפים ברשת</string>
+	<string Field="AddToPlaylist" Original="Add To Playlist">הוסף לרשימת ניגון</string>
 	<string Field="FanartDisableLabel" Original="Disabled">מבוטל</string>
-	<string Field="FanartMenuEnable" Original="Enable Fanart">אפשר הצגת תמונות רקע</string>
-	<string Field="FanartMenuDisable" Original="Disable Fanart">בטל הצגת תמונות רקע</string>
+	<string Field="FanartMenuEnable" Original="Enable Fanart">אפשר תמונות רקע</string>
+	<string Field="FanartMenuDisable" Original="Disable Fanart">בטל תמונות רקע</string>
 	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string><!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
 	<string Field="LayoutList" Original="List">רשימה</string>
 	<string Field="LayoutListBanners" Original="List Banners">רשימת באנרים</string>
 	<string Field="LayoutListPosters" Original="List Posters">רשימת פוסטרים</string>
 	<string Field="LayoutWideBanners" Original="Wide Banners">באנרים רחבים</string>
-	<string Field="LayoutFilmstrip" Original="Filmstrip">תצוגת שקופיות</string>
+	<string Field="LayoutFilmstrip" Original="Filmstrip">רצועת שקופיות</string>
 	<string Field="LayoutSmallIcons" Original="Small Icons">אייקונים קטנים</string>
 	<string Field="ButtonAutoPlay" Original="Auto Play">ניגון אוטומטי</string>
-	<string Field="ButtonSwitchView" Original="Switch View">שנה תצוגה</string>
-	<string Field="ButtonRunImport" Original="Run Import">הורד מידע</string>
-	<string Field="ButtonChangeLayout" Original="Change Layout">שנה ממשק</string>
+	<string Field="ButtonSwitchView" Original="Switch View">שנה מבט</string>
+	<string Field="ButtonRunImport" Original="Run Import">בצע יבוא</string>
+	<string Field="ButtonChangeLayout" Original="Change Layout">שנה סידור</string>
 	<string Field="ButtonOptions" Original="Options">אפשרויות</string>	
-	<string Field="FanArtFilter" Original="Filter">סינון</string>
+	<string Field="FanArtFilter" Original="Filter">מסנן</string>
 	<string Field="FanArtFilterAll" Original="All">הכל</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">תמונת רקע רנדומאלית</string>	
+	<string Field="ButtonRandomFanart" Original="Random Fanart">תמונת רקע אקראית</string>	
 	<string Field="LabelResolution" Original="Resolution:">רזולוציה:</string>
 	<string Field="LabelChosen" Original="Chosen:">נבחר:</string>
 	<string Field="LabelDisabled" Original="Disabled:">מבוטל:</string>

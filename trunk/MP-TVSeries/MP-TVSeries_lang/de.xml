@@ -135,4 +135,67 @@
 	<string Field="LabelChosen" Original="Chosen:">Gewählt:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Deaktiviert:</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Nutzerauswahl zurücksetzen</string>
+	<string Field="DeleteFromDisk" Original="Delete from Disk">Von Festplatte löschen</string>
+	<string Field="DeleteFromDatabase" Original="Delete from Database">Au Datenbank löschen</string>
+	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Von Datenbank und Festplatte löschen</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Wähle Bewertung für {0}</string>
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verstecke Thumbnails</string>	
+	<!-- Rate Descriptions - 5 Stars-->
+	<string Field="RateFiveStarOne" Original="Terrible">Grausam</string>
+	<string Field="RateFiveStarTwo" Original="">Mittelmäßig</string>
+	<string Field="RateFiveStarThree" Original="">Gut</string>
+	<string Field="RateFiveStarFour" Original="">Super</string>
+	<string Field="RateFiveStarFive" Original="">Perfekt</string>
+	<!-- Rate Descriptions - 10 Stars-->
+	<string Field="RateTenStarOne" Original="Abysmal">Indiskutable</string>
+	<string Field="RateTenStarTwo" Original="Terrible">Grausam</string>
+	<string Field="RateTenStarThree" Original="Bad">Sehr Schlecht</string>
+	<string Field="RateTenStarFour" Original="Poor">Schlecht</string>
+	<string Field="RateTenStarFive" Original="Mediocre">Mittelmäßig</string>
+	<string Field="RateTenStarSix" Original="Fair">In Ordnung</string>
+	<string Field="RateTenStarSeven" Original="Good">Gut</string>
+	<string Field="RateTenStarEight" Original="Great">Großartig</string>
+	<string Field="RateTenStarNine" Original="Superb">Super</string>
+	<string Field="RateTenStarTen" Original="Perfect">Perfekt</string>
+	
+	<string Field="ContentRating" Original="Content Rating">Inhaltsbewertung</string>
+	<string Field="ViewTags" Original="View Tags">Zeige Tags</string>
+	<string Field="AddViewTag" Original="Add Series to View Tag">Serie zu Ansicht hinzufügen</string>
+	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Serie von Ansicht entfernen</string>
+	<string Field="NewViewTag" Original="New Tag">NNeue Ansicht</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Wechsel Serien Banner</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Wechsel Staffel Poster</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Wechsel Serien Poster</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
+	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 Sekunden</string>
+	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 Sekunden</string>
+	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 Sekunden</string>
+	<string Field="FanartIntervalThirtySeconds" Original="30 Seconds">30 Sekunden</string>
+	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Sekunden</string>
+	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Sekunden</string>
+	<string Field="NoPlaylistsFound" Original="No Playlists found in:">Keine Playliste gefunden:</string>
+	<string Field="PinCode" Original="Pin Code">Pin Code</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Der eingegebene PIN ist falsch</string>
+	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Drücke OK und versuche es erneut</string>
+	<string Field="ParentalControlLocked" Original="Lock Views">Sperre Ansicht</string>
+	<string Field="ViewIsLocked" Original="View Locked">Ansicht gesperrt</string>
+	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Die Ansicht "{0}" ist gesperrt</string>
+	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Enter in 4 Digit Pin Code to proceed:</string>
+	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin falsch</string>=	
+	<string Field="Continuing" Original="Continuing Series">Fortgesetzte Serien</string>
+	<string Field="Ended" Original="Ended Series">Beendete Serien</string>
+	<string Field="HighDefinition" Original="High Definition">High Definition</string>
+	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
+	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (User)</string>
+	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25(User)</string>
+	<string Field="Subtitles" Original="Subtitles">Untertitel</string>
+	<string Field="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Online Favoriten</string>	
+	<string Field="Actors" Original="Actors">Darsteller</string>
+	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
+	<string Field="LocalMedia" Original="Local Media">Local Media</string>
+	<string Field="AdultSeries" Original="Adult Series">Erwachsen Serie</string>
+	<string Field="KidsSeries" Original="Kids Series">Kinder Serie</string>	
 </strings>
