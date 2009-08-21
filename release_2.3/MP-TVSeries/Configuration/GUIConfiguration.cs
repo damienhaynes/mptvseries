@@ -535,8 +535,8 @@ namespace WindowPlugins.GUITVSeries
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
-            // load them up in the datagrid
-
+            
+            
             if (dataGridView_Expressions.Columns.Count == 0)
             {
                 DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
@@ -559,9 +559,19 @@ namespace WindowPlugins.GUITVSeries
                 columnExpression.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Expressions.Columns.Add(columnExpression);
             }
-            dataGridView_Expressions.Rows.Clear();
+            
+            // check if there were no valid expression returned
+            // this shouldnt happen as the constructor should add defaults if null
+            if (expressions == null) {
+                DBExpression.AddDefaults();
+                expressions = DBExpression.GetAll();                
+                if (expressions == null) return;
+            }
+            
+            dataGridView_Expressions.Rows.Clear();            
             dataGridView_Expressions.Rows.Add(expressions.Length);
 
+            // load each expression into the grid
             foreach (DBExpression expression in expressions)
             {
                 DataGridViewRow row = dataGridView_Expressions.Rows[expression[DBExpression.cIndex]];
@@ -616,9 +626,14 @@ namespace WindowPlugins.GUITVSeries
                 columnWith.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnWith);
             }
-            dataGridView_Replace.Rows.Clear();
 
-            if (replacements == null) return;
+            if (replacements == null) {
+                DBReplacements.AddDefaults();
+                replacements = DBReplacements.GetAll();
+                if (replacements == null) return;                
+            }
+
+            dataGridView_Replace.Rows.Clear();
             dataGridView_Replace.Rows.Add(replacements.Length);
 
             foreach (DBReplacements replacement in replacements)
@@ -3557,13 +3572,17 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkExParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            DBExpression[] expressions = DBExpression.GetAll();
+            if (expressions == null || expressions.Length == 0) {
+                MessageBox.Show("No vaild expressions to export!");
+                return;
+            }
+
             SaveFileDialog fd = new SaveFileDialog();
             fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
             if (fd.ShowDialog() == DialogResult.OK)
             {
-                StreamWriter w = new StreamWriter(fd.FileName);
-                DBExpression[] expressions = DBExpression.GetAll();
-
+                StreamWriter w = new StreamWriter(fd.FileName);                
                 foreach (DBExpression expression in expressions)
                 {
                     String val = "";
@@ -4221,11 +4240,16 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void linkLabelExportStringReplacements_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            DBReplacements[] replacements = DBReplacements.GetAll();
+            if (replacements == null || replacements.Length == 0) {
+                MessageBox.Show("No valid string replacements to export!");
+                return;
+            }
+            
             SaveFileDialog fd = new SaveFileDialog();
             fd.Filter = "Exported String Replacements (*.strrep)|*.strrep";
             if (fd.ShowDialog() == DialogResult.OK) {
-                StreamWriter w = new StreamWriter(fd.FileName);
-                DBReplacements[] replacements = DBReplacements.GetAll();
+                StreamWriter w = new StreamWriter(fd.FileName);                
 
                 foreach (DBReplacements replacement in replacements) {
                     String val = "";
