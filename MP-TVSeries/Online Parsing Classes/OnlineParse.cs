@@ -1104,9 +1104,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-
-
-
         public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {
             MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
@@ -1142,7 +1139,10 @@ namespace WindowPlugins.GUITVSeries
                         GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
 
                         // Set Series Ratings
-                        series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
+                        // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
+                        // Series/Episodes that have rating changes.
+                        series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRating;
+                        series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRating;
                         series.Commit();
 
                         SQLCondition condition = new SQLCondition();
@@ -1152,15 +1152,31 @@ namespace WindowPlugins.GUITVSeries
                         // Set Episode Ratings
                         foreach (DBEpisode episode in episodes)
                         {
-                            if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID])) {
-                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
+                            if (userRatings.EpisodeUserRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeUserRatings[episode[DBOnlineEpisode.cID]];
 
-                                // If episode has been rated online, mark as watched
+                                // If user has rated episode then mark as watched
                                 if (MarkWatched)
                                     episode[DBOnlineEpisode.cWatched] = true;
 
                                 episode.Commit();
+                            }                            
+                            if (userRatings.EpisodeCommunityRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeCommunityRatings[episode[DBOnlineEpisode.cID]];
+                                episode.Commit();
                             }
+
+                            // Is this better?
+                            /*if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].UserRating;
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
+                                
+                                if (MarkWatched)
+                                    episode[DBOnlineEpisode.cWatched] = true;
+
+                                episode.Commit();
+                            }*/
+
                         }
                     }
                 }
@@ -1169,10 +1185,15 @@ namespace WindowPlugins.GUITVSeries
                     GetUserRatings userRatings = new GetUserRatings(null, sAccountID);
                     foreach (DBOnlineSeries series in seriesList)
                     {
-                        if (userRatings.AllSeriesRatings.ContainsKey(series[DBOnlineSeries.cID]))
+                        if (userRatings.AllSeriesUserRatings.ContainsKey(series[DBOnlineSeries.cID]))
                         {
                             MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                            series[DBOnlineSeries.cMyRating] = userRatings.AllSeriesRatings[series[DBOnlineSeries.cID]];
+                            series[DBOnlineSeries.cMyRating] = userRatings.AllSeriesUserRatings[series[DBOnlineSeries.cID]];
+                            series.Commit();
+                        }
+                        if (userRatings.AllSeriesCommunityRatings.ContainsKey(series[DBOnlineSeries.cID])) {
+                            MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                            series[DBOnlineSeries.cRating] = userRatings.AllSeriesCommunityRatings[series[DBOnlineSeries.cID]];
                             series.Commit();
                         }
                     }
