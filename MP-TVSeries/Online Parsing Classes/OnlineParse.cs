@@ -1278,6 +1278,7 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
+								webClient.Headers.Add("referer", "http://thetvdb.com/");
                                 string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
                                 try {
                                     Directory.CreateDirectory(Path.GetDirectoryName(completePath));
@@ -1287,6 +1288,7 @@ namespace WindowPlugins.GUITVSeries
                                         episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
                                         episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
                                     } else {
+										MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
                                         webClient.DownloadFile(url, completePath);
                                     }
                                     episode.Commit();
