@@ -200,19 +200,21 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
         string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
         webClient.Headers.Add("user-agent", Settings.UserAgent);
+        webClient.Headers.Add("referer", "http://thetvdb.com/");
         try
         {
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
             if (!System.IO.File.Exists(fullLocalPath) // only if the file doesn't exist
                 || ImageAllocator.LoadImageFastFromFile(fullLocalPath) == null) // or the file is damaged
             {
+                MPTVSeriesLog.Write("Downloading new Image from: " + fullURL,MPTVSeriesLog.LogLevel.Debug);
                 webClient.DownloadFile(fullURL, fullLocalPath);
             }
             return true;
         }
         catch (WebException)
         {
-            MPTVSeriesLog.Write("Banner download failed (" + fullURL + ") to " + fullLocalPath);
+            MPTVSeriesLog.Write("Banner download failed (" + fullURL + ") to " + fullLocalPath);           
             return false;
         }
     }
@@ -386,7 +388,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         // Note: some network proxies require the useragent string to be set or they will deny the http request
         // this is true for instance for EVERY thailand internet connection (also needs to be set for banners/episodethumbs and any other http request we send)
         request.UserAgent = Settings.UserAgent;
-        request.Timeout = 20000;
+        request.Timeout = 20000;        
         response = (HttpWebResponse)request.GetResponse();
 
         if (response != null) // Get the stream associated with the response.
