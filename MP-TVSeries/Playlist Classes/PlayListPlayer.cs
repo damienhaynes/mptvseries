@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
@@ -117,7 +118,8 @@ namespace WindowPlugins.GUITVSeries
         bool _repeatPlayList = DBOption.GetOptions(DBOption.cRepeatPlaylist);
         bool _playlistAutoPlay = DBOption.GetOptions(DBOption.cPlaylistAutoPlay);
 		bool _playlistAutoShuffle = DBOption.GetOptions(DBOption.cPlaylistAutoShuffle);
-        string _currentPlaylistName = string.Empty;
+        string _currentPlaylistName = string.Empty;		
+		private bool listenToExternalPlayerEvents = false;
 
         public PlayListPlayer()
         {
@@ -137,6 +139,11 @@ namespace WindowPlugins.GUITVSeries
         public void Init()
         {
             GUIWindowManager.Receivers += new SendMessageHandler(this.OnMessage);
+
+			// external player handlers
+			MediaPortal.Util.Utils.OnStartExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStartExternal);
+			MediaPortal.Util.Utils.OnStopExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStopExternal);
+
         }
 
         public void OnMessage(GUIMessage message)
@@ -390,8 +397,10 @@ namespace WindowPlugins.GUITVSeries
                     playlist.ResetStatus();
                 }
 
-                bool playResult = false;                
+                bool playResult = false;
+				listenToExternalPlayerEvents = true;
                 playResult = g_Player.Play(item.FileName);
+				listenToExternalPlayerEvents = false;
                 if (!playResult)
                 {
                     //	Count entries in current playlist
@@ -532,6 +541,31 @@ namespace WindowPlugins.GUITVSeries
 			get { return _playlistAutoShuffle; }
 			set { _playlistAutoShuffle = value; }
 		}
+
+		#region External Player Event Handlers
+		private void onStartExternal(Process proc, bool waitForExit) {
+			// If we were listening for external player events
+			if (listenToExternalPlayerEvents) {
+				MPTVSeriesLog.Write("Playback Started in External Player");
+			}
+		}
+
+		private void onStopExternal(Process proc, bool waitForExit) {
+			if (!listenToExternalPlayerEvents)
+				return;
+
+			MPTVSeriesLog.Write("Playback Stopped in External Player");
+			SetAsWatched();
+			PlayNext();
+			if (!g_Player.Playing) {
+				g_Player.Release();
+
+				// Clear focus when playback ended
+				GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS, 0, 0, 0, -1, 0, null);
+				GUIGraphicsContext.SendMessage(msg);
+			}			
+		}
+		#endregion
 
     }
 }
