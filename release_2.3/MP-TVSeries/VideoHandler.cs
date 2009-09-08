@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Text;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
@@ -46,6 +47,8 @@ namespace WindowPlugins.GUITVSeries
         public delegate void rateRequest(DBEpisode episode);
         public event rateRequest RateRequestOccured;
         private bool m_bIsExternalPlayer = false;
+        private bool m_bIsExternalDVDPlayer = false;
+        private bool m_bIsImageFile = false;
 		private bool listenToExternalPlayerEvents = false;
         #endregion
 
@@ -56,10 +59,9 @@ namespace WindowPlugins.GUITVSeries
 
             // Check if External Player is being used
             MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"));
-            if (!xmlreader.GetValueAsBool("movieplayer", "internal", true)) {
-                m_bIsExternalPlayer = true;
-            }
-
+            m_bIsExternalPlayer = !xmlreader.GetValueAsBool("movieplayer", "internal", true);
+            m_bIsExternalDVDPlayer = !xmlreader.GetValueAsBool("dvdplayer", "internal", true);
+            
 			// external player handlers
 			MediaPortal.Util.Utils.OnStartExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStartExternal);
 			MediaPortal.Util.Utils.OnStopExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStopExternal);
@@ -86,6 +88,10 @@ namespace WindowPlugins.GUITVSeries
                 m_currentEpisode = episode;
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 
+                // Check if file is an Image e.g. ISO
+                string filename = m_currentEpisode[DBEpisode.cFilename];
+                m_bIsImageFile = Helper.IsImageFile(filename);                               
+                
                 #region Removable Media Handling
                 bool isOnRemovable = false;
                 if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
@@ -117,29 +123,33 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
 
                 #region Ask user to Resume
-				// skip this if we are using an External Player
-                if (!m_bIsExternalPlayer && timeMovieStopped > 0)
-                {
+
+                // skip this if we are using an External Player                
+                bool bExternalPlayer = m_bIsImageFile ? m_bIsExternalDVDPlayer : m_bIsExternalPlayer;
+                
+                if (timeMovieStopped > 0 && !bExternalPlayer) {                                       
                     MPTVSeriesLog.Write("Asking user to resume episode from: " + Utils.SecondsToHMSString(timeMovieStopped));
                     GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                    
-                    if (null != dlgYesNo)
-                    {
+
+                    if (null != dlgYesNo) {
                         dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
                         dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
                         dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
                         dlgYesNo.SetDefaultToYes(true);
                         dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                        if (!dlgYesNo.IsConfirmed) // reset resume data in DB
-                        {
+                        // reset resume data in DB
+                        if (!dlgYesNo.IsConfirmed) {
                             timeMovieStopped = 0;
                             m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                             m_currentEpisode.Commit();
-                            MPTVSeriesLog.Write("User selected to start episode from beginning",MPTVSeriesLog.LogLevel.Debug);
+                            MPTVSeriesLog.Write("User selected to start episode from beginning", MPTVSeriesLog.LogLevel.Debug);
                         }
-                        else MPTVSeriesLog.Write("User selected to resume episode",MPTVSeriesLog.LogLevel.Debug);
-                    }                    
+                        else {
+                            MPTVSeriesLog.Write("User selected to resume episode", MPTVSeriesLog.LogLevel.Debug);
+                        }
+                    }                
                 }
+
                 #endregion
 
                 Play(timeMovieStopped);
@@ -153,6 +163,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        #region Private Methods
         /// <summary>        
         /// Updates the movie metadata on the playback screen (for when the user clicks info). 
         /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
@@ -237,23 +248,32 @@ namespace WindowPlugins.GUITVSeries
                 // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
                 // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)                
                 GUIGraphicsContext.IsFullScreenVideo = true;
-                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);				
 
-				listenToExternalPlayerEvents = true;
-				
-				result = g_Player.Play(m_currentEpisode[DBEpisode.cFilename], g_Player.MediaType.Video);
-
+                // If the file is an image file, it should be mounted before playing
+                string filename = m_currentEpisode[DBEpisode.cFilename];
+                if (m_bIsImageFile) { 
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {                        
+                        return false;
+                    }
+                }
+                
+                // Start Listening to any External Player Events
+                listenToExternalPlayerEvents = true;
+                
+                // Play File
+                result = g_Player.Play(filename, g_Player.MediaType.Video);
+                
+                // Stope Listening to any External Player Events
 				listenToExternalPlayerEvents = false;
 
-                // tell player where to resume
-				if (!m_bIsExternalPlayer) {
-					if (g_Player.Playing && timeMovieStopped > 0) {
-						MPTVSeriesLog.Write("Setting seek position at: " + timeMovieStopped, MPTVSeriesLog.LogLevel.Debug);
-						GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
-						msg.Param1 = (int)timeMovieStopped;
-						GUIGraphicsContext.SendMessage(msg);
-					}
-				}
+                // tell player where to resume                
+				if (g_Player.Playing && timeMovieStopped > 0) {
+					MPTVSeriesLog.Write("Setting seek position at: " + timeMovieStopped, MPTVSeriesLog.LogLevel.Debug);
+					GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
+					msg.Param1 = (int)timeMovieStopped;
+					GUIGraphicsContext.SendMessage(msg);
+				}			
 
             }
             catch (Exception e)
@@ -263,6 +283,7 @@ namespace WindowPlugins.GUITVSeries
             }
             return result;
         }
+        #endregion
 
         #region Playback Event Handlers
         void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
@@ -375,7 +396,8 @@ namespace WindowPlugins.GUITVSeries
         void LogPlayBackOp(string OperationType, string filename)
         {
             MPTVSeriesLog.Write(string.Format("Playback {0} for: {1}", OperationType, filename), MPTVSeriesLog.LogLevel.Normal);
-        }
+        }        
+
         #endregion
     }
 }
