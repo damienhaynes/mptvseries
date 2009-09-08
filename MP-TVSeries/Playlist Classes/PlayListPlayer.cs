@@ -27,6 +27,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Util;
 using MediaPortal.Player;
 using MediaPortal.Playlists;
@@ -398,9 +399,24 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 bool playResult = false;
+
+                // If the file is an image file, it should be mounted before playing
+                string filename = item.FileName;
+                if (Helper.IsImageFile(filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                        return false;
+                    }
+                }
+
+                // Start Listening to any External Player Events
 				listenToExternalPlayerEvents = true;
-                playResult = g_Player.Play(item.FileName);
+                
+                // Play File
+                playResult = g_Player.Play(filename);
+
+                // Stope Listening to any External Player Events
 				listenToExternalPlayerEvents = false;
+
                 if (!playResult)
                 {
                     //	Count entries in current playlist

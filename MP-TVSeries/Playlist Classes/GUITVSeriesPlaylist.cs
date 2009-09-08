@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.IO;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Playlists;
 using MediaPortal.Util;
@@ -890,9 +891,18 @@ namespace WindowPlugins.GUITVSeries
             if (playlist.Count == 1 && playlistPlayer.PlaylistAutoPlay)
             {
                 MPTVSeriesLog.Write(string.Format("GUITVSeriesPlaylist: play single playlist item - {0}", playlist[0].FileName));
-                if (g_Player.Play(playlist[0].FileName))
+
+                // If the file is an image file, it should be mounted before playing
+                string filename = playlist[0].FileName;
+                if (Helper.IsImageFile(filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                        return;
+                    }
+                }
+
+                if (g_Player.Play(filename))
                 {
-                    if (MediaPortal.Util.Utils.IsVideo(playlist[0].FileName))
+                    if (MediaPortal.Util.Utils.IsVideo(filename))
                     {
                         g_Player.ShowFullScreenWindow();
                     }

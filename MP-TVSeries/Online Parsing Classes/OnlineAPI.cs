@@ -200,7 +200,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
         string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
         webClient.Headers.Add("user-agent", Settings.UserAgent);
-        webClient.Headers.Add("referer", "http://thetvdb.com/");
+        //webClient.Headers.Add("referer", "http://thetvdb.com/");
         try
         {
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
