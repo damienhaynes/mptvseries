@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -171,6 +172,32 @@ namespace WindowPlugins.GUITVSeries
         {
             // no cache for now for series
             return new Fanart(seriesID, seasonIndex);
+        }
+
+        /// <summary>
+        /// Deletes all cached thumbs for a Series Fanart
+        /// Sometimes fanarts get deleted online but we still have the old
+        /// thumbs cached. This allows the user to clear the cache and re-download the thumbs
+        /// </summary>
+        /// <param name="seriesID"></param>
+        public static void ClearFanartCache(int seriesID) {                    
+            string searchPattern = seriesID.ToString() + "*.jpg";
+            string cachePath = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), @"_cache\fanart\original\");
+            string[] fileList = Directory.GetFiles(cachePath, searchPattern);
+
+            foreach (string file in fileList) {
+                MPTVSeriesLog.Write("Deleting Cached Fanart Thumbnail: " + file);
+                FileInfo fileInfo = new FileInfo(file);                
+                try {
+                    fileInfo.Delete();
+                }
+                catch (Exception ex) {
+                    MPTVSeriesLog.Write("Failed to Delete Cached Fanart Thumbnail: " + file + ": " + ex.Message);
+                }
+            }
+
+            // Clear DB and Clear Cache
+            DBFanart.ClearDB(seriesID);
         }
 
         #endregion
