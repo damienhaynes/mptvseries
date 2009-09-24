@@ -62,7 +62,8 @@ namespace WindowPlugins.GUITVSeries
             disable,
             enable,
             filters,
-            interval
+            interval,
+            clearcache
         }
 
         enum menuFilterAction
@@ -249,10 +250,10 @@ namespace WindowPlugins.GUITVSeries
 
             setDownloadStatus();
 
-            MPTVSeriesLog.Write("Fanart Chooser Window initializing");
-
+            MPTVSeriesLog.Write("Fanart Chooser Window initializing");            
+               
             fetchList(SeriesID);
-            loadingWorker.RunWorkerAsync(SeriesID);
+            loadingWorker.RunWorkerAsync(SeriesID);            
 
             downloadingWorker.ProgressChanged += new ProgressChangedEventHandler(downloadingWorker_ProgressChanged);            
             
@@ -475,6 +476,12 @@ namespace WindowPlugins.GUITVSeries
                 dlg.Add(pItem);
                 pItem.ItemId = (int)menuAction.interval;
 
+                if (!loadingWorker.IsBusy) {
+                    pItem = new GUIListItem(Translation.ClearFanartCache);
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)menuAction.clearcache;
+                }
+
                 // lets show it
                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                 switch (dlg.SelectedId) // what was chosen?
@@ -526,6 +533,13 @@ namespace WindowPlugins.GUITVSeries
                     case (int)menuAction.interval:
                         dlg.Reset();
                         ShowIntervalMenu();
+                        break;
+                    case (int)menuAction.clearcache:
+                        dlg.Reset();
+                        Fanart.ClearFanartCache(SeriesID);                                               
+                        m_Facade.Clear();                                  
+                        fetchList(SeriesID);
+                        loadingWorker.RunWorkerAsync(SeriesID);
                         break;
 
                 }
@@ -872,10 +886,11 @@ namespace WindowPlugins.GUITVSeries
 
         void fetchList(int seriesID)
         {
-            // let's fetch a fresh list online and save info about them to the db   
+            // Fetch a fresh list online and save info about them to the db 
             GetFanart gf = new GetFanart(seriesID);
-            foreach (DBFanart f in gf.Fanart)
+            foreach (DBFanart f in gf.Fanart) {
                 f.Commit();
+            }
         }
 
         void loadThumbnails(int seriesID)
@@ -1017,5 +1032,6 @@ namespace WindowPlugins.GUITVSeries
                       
             TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
         }
+
     }
 }

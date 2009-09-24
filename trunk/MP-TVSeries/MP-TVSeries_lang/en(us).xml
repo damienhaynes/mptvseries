@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 21st July 2009 -->
+<!-- Last Updated: 24th Sep 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -75,8 +75,8 @@
 	<string Field="FanArtUse" Original="Set Fanart as Default">Set Fanart as Default</string>
 	<string Field="FanArtDelete" Original="Delete Fanart">Delete Fanart</string>
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Downloading {0} Fanart...</string>
-	<string Field="FanArtLocal" Original="Available locally">Available locally</string>
-	<string Field="FanArtOnline" Original="Available for downloading">Available for downloading</string>
+	<string Field="FanArtLocal" Original="Local">Local</string>
+	<string Field="FanArtOnline" Original="Remote">Remote</string>
 	<string Field="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Loading {0} of {1} Fanart...</string>
 	<string Field="FanArtRandom" Original="Display random Fanart">Display random Fanart</string>
 	<string Field="FanArtNoneFound" Original="No Fanart could be found">No Fanart could be found</string>
@@ -197,5 +197,6 @@
 	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
 	<string Field="LocalMedia" Original="Local Media">Local Media</string>
 	<string Field="AdultSeries" Original="Adult Series">Adult Series</string>
-	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>	
+	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>
+	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Clear Fanart Cache</string>
 </strings>
