@@ -31,43 +31,65 @@ namespace WindowPlugins.GUITVSeries
 {
     class GetUserRatings
     {               
+        /*public class Ratings {
+            public string CommunityRating { get; set; }                
+            public string UserRating { get; set; }
+
+            public Ratings(string userRating, string communityRating) {
+                UserRating = userRating;
+                CommunityRating = communityRating;
+            }
+        }*/
+    
         # region properties
         
-        public Dictionary<string, string> EpisodeRating
-        {
-            get
-            {
-                return _episoderatings; 
+        public Dictionary<string, string> EpisodeCommunityRatings {
+            get {
+                return _episodeCommunityRatings;
             }
-            set
-            {
-                _episoderatings = value;
+            set {
+                _episodeCommunityRatings = value;
             }
-        } private Dictionary<string, string> _episoderatings = new Dictionary<string, string>();
+        } private Dictionary<string, string> _episodeCommunityRatings = new Dictionary<string, string>();
 
-        public string SeriesRating
-        {
-            get 
-            {
-                return _seriesRating; 
+        public Dictionary<string, string> EpisodeUserRatings {
+            get {
+                return _episodeUserRatings;
             }
-            set
-            {
-                _seriesRating = value;
+            set {
+                _episodeUserRatings = value;
             }
-        } private string _seriesRating;
+        } private Dictionary<string, string> _episodeUserRatings = new Dictionary<string, string>();
 
-        public Dictionary<string, string> AllSeriesRatings
-        {
-            get
-            {
-                return _allseriesratings;
+        /*public Dictionary<string, Ratings> EpisodeRatings {
+            get {
+                return _episodeRatings;
             }
-            set
-            {
-                _allseriesratings = value;
+            set {
+                _episodeRatings = value;
             }
-        } private Dictionary<string, string> _allseriesratings = new Dictionary<string, string>();
+        } private Dictionary<string, Ratings> _episodeRatings = new Dictionary<string, Ratings>();*/
+
+        public string SeriesCommunityRating { get; set; }            
+        public string SeriesUserRating { get; set; }
+
+        public Dictionary<string, string> AllSeriesUserRatings {
+            get {
+                return _allSeriesUserRatings;
+            }
+            set {
+                _allSeriesUserRatings = value;
+            }
+        } private Dictionary<string, string> _allSeriesUserRatings = new Dictionary<string, string>();
+
+        public Dictionary<string, string> AllSeriesCommunityRatings {
+            get {
+                return _allSeriesCommunityRatings;
+            }
+            set {
+                _allSeriesCommunityRatings = value;
+            }
+        } private Dictionary<string, string> _allSeriesCommunityRatings = new Dictionary<string, string>();
 
         # endregion properties
 
@@ -82,52 +104,53 @@ namespace WindowPlugins.GUITVSeries
 
             if (node != null)
             {
-                if (sSeriesID != null)
-                {
-                    foreach (XmlNode itemNode in node.ChildNodes)
-                    {
-                        if (itemNode.Name == "Episode")
-                        {
+                if (sSeriesID != null) {
+                    foreach (XmlNode itemNode in node.ChildNodes) {
+                        if (itemNode.Name == "Episode") {
                             string id = string.Empty;
-                            string rating = string.Empty;
+                            string userRating = string.Empty;
+                            string communityRating = string.Empty;
 
-                            foreach (XmlNode episodeNode in itemNode)
-                            {
+                            foreach (XmlNode episodeNode in itemNode) {
                                 if (episodeNode.Name == "id")
                                     id = episodeNode.InnerText;
                                 if (episodeNode.Name == "UserRating")
-                                    rating = episodeNode.InnerText;
+                                    userRating = episodeNode.InnerText;
+                                if (episodeNode.Name == "CommunityRating")
+                                    communityRating = episodeNode.InnerText;
                             }
-                            EpisodeRating.Add(id, rating);
+                            EpisodeUserRatings.Add(id, userRating);
+                            EpisodeCommunityRatings.Add(id, communityRating);
+                            //EpisodeRatings.Add(id, new Ratings(userRating, communityRating));
                         }
-                        else if (itemNode.Name == "Series")
-                        {
-                            foreach (XmlNode seriesNode in itemNode)
-                            {
+                        else if (itemNode.Name == "Series") {
+                            foreach (XmlNode seriesNode in itemNode) {
                                 if (seriesNode.Name == "UserRating")
-                                    SeriesRating = seriesNode.InnerText;
+                                    SeriesUserRating = seriesNode.InnerText;
+                                if (seriesNode.Name == "CommunityRating")
+                                    SeriesCommunityRating = seriesNode.InnerText;
                             }
                         }
                     }
                 }
-                else
-                {
+                else {
                     //only update series ratings, not individual episode ratings (quicker b/c we can pull them all in one query
-                    foreach (XmlNode itemNode in node.ChildNodes)
-                    {
-                        if (itemNode.Name == "Series")
-                        {
+                    foreach (XmlNode itemNode in node.ChildNodes) {
+                        if (itemNode.Name == "Series") {
                             string id = string.Empty;
-                            string rating = string.Empty;
+                            string userRating = string.Empty;
+                            string communityRating = string.Empty;
 
-                            foreach (XmlNode seriesNode in itemNode)
-                            {
+                            foreach (XmlNode seriesNode in itemNode) {
                                 if (seriesNode.Name == "seriesid")
                                     id = seriesNode.InnerText;
                                 if (seriesNode.Name == "UserRating")
-                                    rating = seriesNode.InnerText;
+                                    userRating = seriesNode.InnerText;
+                                if (seriesNode.Name == "CommunityRating")
+                                    communityRating = seriesNode.InnerText;
                             }
-                            AllSeriesRatings.Add(id, rating);
+                            AllSeriesUserRatings.Add(id, userRating);
+                            AllSeriesCommunityRatings.Add(id, communityRating);
                         }
                     }
                 }

@@ -41,14 +41,18 @@
 #define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
 
 // Version Defines
-#define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.2.0"
-#define MEDIAPORTAL_MIN_VERSION				"1.0.1.0"	
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.1.0" // MediaInfo.dll was introduced into MP 1.0.1
+#define MEDIAPORTAL_MIN_VERSION				"1.0.0.0" // Use at your own risk, for most part should work
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
 #define RES_PBUT_CLOSE		  			2     			// ID of the (X) button
 #define RES_PBUT_CANCEL       			9   			// ID of Cancel button
 #define RES_PBUT_BACK        			12   			// ID of Back button
+
+#define RES_TEXT_RELEASENOTES			1301 			// Placeholder text label to load release notes
+
+#define RES_DLG_RELEASENOTES			14000			// Release Notes dialog
 
 // CSIDL values
 #ifndef CSIDL_PROFILE
@@ -67,12 +71,20 @@ prototype NUMBER	LaunchBrowser(STRING);
 prototype BOOL 		IsMajorUpgrade(BYREF STRING, BYREF STRING, BYREF BOOL);
 prototype VOID		MajorUpgradeCleanup();
 prototype VOID		GetCachedInstallDir();  
-prototype VOID		UninstallCleanup();       
+prototype VOID		UninstallCleanup(BOOL, BOOL);       
 prototype NUMBER 	SHFolder.SHGetFolderPathA(HWND,NUMBER,NUMBER,NUMBER,BYREF STRING);
 prototype BOOL 		GetInstalledVersion(STRING,BYREF STRING);
 prototype VOID		SetInstallationDirectories();
 prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
 prototype VOID 		UpdateSettings();
+prototype VOID		BackupDatabase(STRING);
+prototype STRING	GetMPTVSeriesDBPath();
+prototype VOID		CheckFilesInUse();    
+prototype VOID		VerifyPluginCount();
+prototype VOID		RemoveNonMSIPlugin();
+
+// Custom Dialogs
+prototype NUMBER 	ShowReleaseNotesDlg();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -86,6 +98,9 @@ STRING g_sCacheDir;
 STRING g_sPluginsDir;
 STRING g_sConfigDir;
 STRING g_sSkinsDir;
+STRING g_sDatabaseDir;
+STRING g_sLogsDir;
+STRING g_sTVSeriesPluginFileName; 
 
 //---------------------------------------------------------------------------
 // OnBegin
@@ -94,31 +109,49 @@ STRING g_sSkinsDir;
 // initializes.
 //---------------------------------------------------------------------------
 function OnBegin()
-	STRING szVersion, szUpgradeMessage;
+	STRING szVersion, szUpgradeMessage, svResult;
 	NUMBER nResult;
 	BOOL bUpgradeSupported; 
+	
+	//OBJECT colors, myObject;
 begin 
  	
+	/*set colors = CoCreateObject( "System.Collections.ArrayList");
+	
+	colors.Add( "RED" );
+	colors.Add( "WHITE" );
+	colors.Add( "BLUE" );
+	
+	set myObject = CoCreateObjectDotNet("D:\\Development\\InstallShield.Net\\Sample\\bin\\Release\\Sample.dll", "Sample.Colors" );
+	myObject.MyMethod( colors);*/
+	
 	// See if older version is installed
 	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
 	if g_bMajorUpgrade then
 		// check if version supports upgrades
 		if bUpgradeSupported then
-			szUpgradeMessage = "Setup is about to perform a Major Upgrade from: v" + szVersion + "\nThe previous installation will " +
-							   "be removed, Do you wish to continue?";
+			szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
+							   "be removed during the upgrade, Do you wish to continue?\n\nNote: No user data or artwork downloaded from online will be removed, " + 
+							   "for a full uninstall go to the Add\\Remove programs and select Uninstall.";
+							  
 			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
 			if (nResult != IDYES) then
 				abort;
 			endif;
 		else
-		 	szUpgradeMessage = "Setup cannot perform an Upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
+		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
 							   "and run setup again.";
 			MessageBox(szUpgradeMessage,INFORMATION);
 			abort;							   
 		endif;
 	endif; 
 	                                                              
+	// Configure Setup Defaults                                                              
 	SetDefaults();	
+	
+	// Check if files are in use that may interupt setup
+	CheckFilesInUse();
+ 		
 end;           
 
 function BOOL IsMajorUpgrade(sMajorUpgradeVersion, sMajorUpgradeGUID, bUpgradeSupported)
@@ -193,7 +226,6 @@ begin
 		
 end;
 
-
 function void SetInstallationDirectories()
 	STRING svValue;	
 begin
@@ -209,6 +241,8 @@ begin
 		g_sPluginsDir = g_sMediaPortalProgramDir^"plugins";
 	endif;	
 	INSTALLDIR = g_sPluginsDir;
+	
+	g_sTVSeriesPluginFileName = g_sPluginsDir ^ "Windows\\MP-TVSeries.dll";
 	
 	if GetMediaPortalDirs("Skin",g_sSkinsDir) < 0 then
 		g_sSkinsDir = CommonAppDataFolder^"Team MediaPortal\\MediaPortal\\skin";
@@ -236,6 +270,14 @@ begin
 		g_sThumbsDir = svValue^"thumbs";
 	endif;
 	
+	if GetMediaPortalDirs("Database",g_sDatabaseDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+	    // Append database to program data dir    
+		g_sDatabaseDir = svValue^"Database";
+	endif;
+	
 	if GetMediaPortalDirs("Cache",g_sCacheDir) < 0 then
 		if GetMediaPortalConfigDir(svValue) < 0 then;
 	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
@@ -243,13 +285,22 @@ begin
 		g_sCacheDir = svValue^"Cache";
 	endif;
    	
+   	if GetMediaPortalDirs("Log",g_sLogsDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then;
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+		g_sLogsDir = svValue^"log";
+	endif;
+		
    	// Set MSI Dirs as properties   	   	
    	MsiSetProperty(ISMSI_HANDLE,"MPLANGUAGESDIR",g_sLanguageDir);
    	MsiSetProperty(ISMSI_HANDLE,"MPSKINSDIR",g_sSkinsDir);
+   	MsiSetProperty(ISMSI_HANDLE,"MPPROGRAMDIR",g_sMediaPortalProgramDir);
    	   	
 	// Set Installation Directories used by MSI		
 	FeatureSetTarget(MEDIA,"<MPLANGUAGESDIR>",g_sLanguageDir);
 	FeatureSetTarget(MEDIA,"<MPSKINSDIR>",g_sSkinsDir);	
+	FeatureSetTarget(MEDIA,"<MPPROGRAMDIR>",g_sMediaPortalProgramDir);
 
 end;
 
@@ -371,7 +422,7 @@ end;
 //---------------------------------------------------------------------------
 function OnFirstUIBefore()
     NUMBER nResult, nSetupType, nvSize, nUser;
-    STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile;
+    STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile, szFileName;
     STRING szLicenseFile;
 	BOOL bCustom, bIgnore1, bIgnore2;
 begin	   			   
@@ -401,12 +452,16 @@ Dlg_SdWelcome:
 	svName    = "";
     svCompany = "";
 
+Dlg_ReleaseNotes:
+	nResult = ShowReleaseNotesDlg();
+	if (nResult = BACK) goto Dlg_SdWelcome;
+
 Dlg_SdFeatureTree: 
     szTitle    = "";
     szMsg      = "";
     if (nSetupType = TYPICAL) then
 		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
-		if (nResult = BACK) goto Dlg_SdWelcome;  
+		if (nResult = BACK) goto Dlg_ReleaseNotes;  
     endif;
 
 
@@ -422,6 +477,15 @@ Dlg_SdStartCopy:
     // Added in IS 2009 - Set appropriate StatusEx static text.
     SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_FIRSTUI ) );
 
+    // Backup Database before installing new version
+    szFileName = GetMPTVSeriesDBPath();
+    if Is(FILE_EXISTS,szFileName) then
+    	BackupDatabase(szFileName);
+    endif;
+    
+    // MSI cleanup
+    RemoveNonMSIPlugin();
+    
     // setup default status
     Enable(STATUSEX);
       
@@ -523,16 +587,23 @@ end;
 // completed successfully.
 //---------------------------------------------------------------------------
 function OnFirstUIAfter()
-    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite;
+    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite, szFileName, szParams;
     NUMBER bOpt1, bOpt2;
 begin
 
-	// Clean Cache Folder
+	// Clean Cache Folder, old skin may conflict with new changes
+	if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
     CleanCache("Blue3");
+    endif;
+    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
     CleanCache("Blue3Wide");
+    endif;
     
     // Update Settings
 	UpdateSettings();
+	
+	// Confirm only one running instance of plugin
+ 	VerifyPluginCount();
 	
     // Major Upgrade Cleanup
     if g_bMajorUpgrade then
@@ -542,13 +613,13 @@ begin
 	Disable(STATUSEX);
 
 	bOpt1   = FALSE;
-    bOpt2   = FALSE;    
+    bOpt2   = TRUE;    
 
     if ( BATCH_INSTALL ) then
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
     else
     	szOpt1 = "&Launch Home Page in default Browser";
-    	szOpt2 = "Launch &MediaPortal Configuration";
+    	szOpt2 = "Launch &MP-TV-Series Configuration";
 	    SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
 	    
 	    if bOpt1 then
@@ -558,7 +629,10 @@ begin
 	    endif;
 	    
 	    if bOpt2 then
-	    	LaunchApp(g_sMediaPortalProgramDir^"Configuration.exe", "");	    
+	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
+	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
+	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName;
+	    	LaunchApp(szFileName, szParams);	    
 	    endif;
 	endif;
 end; 
@@ -576,14 +650,20 @@ function OnMaintUIAfter()
     NUMBER bOpt1, bOpt2;
 begin
 	
-	// Clean Cache Folder
-    CleanCache("Blue3");
-    CleanCache("Blue3Wide");
-    
-    if ( REMOVEALLMODE ) then
-    	UninstallCleanup();
-    else
+    if ( !REMOVEALLMODE ) then    	    
     	UpdateSettings();
+    	
+    	// Confirm only one running instance of plugin
+ 		VerifyPluginCount();
+        
+        // Clean Cache Folder, old skin may conflict with new changes
+		if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
+    CleanCache("Blue3");
+	    endif;
+	    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
+    CleanCache("Blue3Wide");
+	    endif;
+    
     endif;
     
 	Disable(STATUSEX);
@@ -602,7 +682,16 @@ begin
     if ( BATCH_INSTALL ) then
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
     else    
+    	if ( REMOVEALLMODE ) then
+    		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
+    		szOpt2 = "Delete database, all settings will be lost.";
+    	endif;
+        
        	SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+       	
+       	if (REMOVEALLMODE) then
+       		UninstallCleanup(bOpt1, bOpt2);
+    endif;
     endif;
 end;
 
@@ -699,8 +788,40 @@ begin
                        
 end; 
 
-function VOID UninstallCleanup()	
+function VOID UninstallCleanup(bDeleteArtwork, bDeleteDatabase)	
+	STRING szFile, szFolder, szMsg;
 begin         
+    
+    // MSI Cleanup
+    RemoveNonMSIPlugin();
+         
+	// Remove Logs
+	szFile = g_sLogsDir ^ "MP-TVSeries.*";
+	DeleteFile(szFile);
+	
+	// Remove TVSeries Database
+    if bDeleteDatabase then    
+	    szFile = GetMPTVSeriesDBPath();
+		DeleteFile(szFile);
+    endif;    
+  
+	if bDeleteArtwork then
+	 	// Show Msg, this operation may take a while...   
+	    szMsg = "Removing TVSeries artwork from computer...";
+		SdShowMsg ( szMsg, TRUE );
+	
+	    // Remove Series Artwork (Posters & Banners), Season Banners & Episode Thumbs, 
+		szFolder = g_sThumbsDir ^ "MPTVSeriesBanners";
+		DeleteDir(szFolder, ALLCONTENTS);
+		
+	    // Remove Fanart Folder
+	    szFolder = g_sThumbsDir ^ "Fan Art";
+		DeleteDir(szFolder, ALLCONTENTS);
+	   
+	   	SdShowMsg ( szMsg, FALSE );
+	   	
+	endif;
+    
 end;
      
 function NUMBER LaunchBrowser(szSite)
@@ -821,4 +942,309 @@ begin
 	// as this is setting is enabled by default for MediaPortal
 	SetMPXMLProperty("general","animations","yes");	
 	
+end;
+
+function STRING GetMPTVSeriesDBPath()
+	STRING szKey, svValue;
+	NUMBER nvType, nvSize;
+begin
+	
+	// The MP-TVSeries database location can optionally be overridden by the user in configuration
+	// This location is stored in the Users Registry Hive
+	RegDBSetDefaultRoot(HKEY_CURRENT_USER);
+	
+	szKey = "SOFTWARE\\MPTVSeries";
+	if (RegDBKeyExist(szKey)) then
+		RegDBGetKeyValueEx(szKey,"DBFile",nvType,svValue,nvSize);		
+	endif;
+	
+	// Confirm DB File exists, and return if found.
+	if StrLength(svValue) > 0 then
+		if (Is(FILE_EXISTS,svValue)) then
+			return svValue;
+		endif;
+	endif;
+	
+	// If not found above, check the default location
+	// Use MediaPortals DB location to find file
+	return g_sDatabaseDir ^ "TVSeriesDatabase4.db3";
+			
+end;
+
+function VOID BackupDatabase(sFileName)
+	STRING sDestinationFolder, svResult, sErrorMsg, svResultDate, svResultTime;   
+	NUMBER nResult;
+begin
+ 	
+ 	Disable(LOGGING);
+	
+	// Get Current Date
+	GetSystemInfo ( DATE, nResult, svResultDate );
+	
+	// Get Current Time and remove colons so we can make a valid path
+	GetSystemInfo ( TIME, nResult, svResultTime ); 
+ 	StrReplace ( svResultTime, ":", "", 0 ); 
+ 	
+ 	svResult = svResultDate + "_" + svResultTime;
+ 	
+	// Set Destination Folder to Personal Directory
+	sDestinationFolder = PersonalFolder ^ "MP-TVSeries\\Backup" ^ svResult;
+	
+	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
+	if nResult < 0 goto err;
+	
+	Enable(LOGGING);
+	return;
+	
+err:
+	if (nResult < 0) then
+	    
+	    sErrorMsg = "Unable to backup tvseries database file to:\n" + sDestinationFolder + "\n\nError Message: ";
+	    
+		switch (nResult)
+			
+			case COPY_ERR_CREATEDIR:
+				MessageBox(sErrorMsg + "Unable to create Destination Directory", INFORMATION);
+			
+			case COPY_ERR_MEMORY:
+				MessageBox(sErrorMsg + "Unable to allocate enough memory to copy file", INFORMATION);
+				
+			case COPY_ERR_NODISKSPACE:
+				MessageBox(sErrorMsg + "Not enough Disk Space", INFORMATION);
+				
+			case COPY_ERR_OPENINPUT:
+				MessageBox(sErrorMsg + "Unable to open file", INFORMATION);
+				
+			case COPY_ERR_OPENOUTPUT:
+				MessageBox(sErrorMsg + "Unable to copy file", INFORMATION);
+				
+			case COPY_ERR_TARGETREADONLY:
+				MessageBox(sErrorMsg + "Target Directory is Read Only!", INFORMATION);
+				
+		endswitch;
+	
+	endif;	
+
+end;
+
+function VOID CheckFilesInUse()
+	STRING szIsData, szMessage;
+	BOOL bFileLocked;
+	NUMBER nvType, nvValue, nvExitCode, nReturn;
+	LIST OpenFilesList;
+begin
+
+FilesInUse:
+	bFileLocked = FALSE;
+	
+	OpenFilesList = ListCreate(STRINGLIST);
+	
+	// Determine if files are running
+    szIsData = g_sMediaPortalProgramDir ^ "MediaPortal.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal [MediaPortal.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;
+
+	szIsData = g_sMediaPortalProgramDir ^ "Configuration.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Configuration [Configuration.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;  
+ 	
+ 	szIsData = g_sMediaPortalProgramDir ^ "PluginConfigLoader.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Plugin Configuration Loader [PluginConfigLoader.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif; 
+		 	
+	if (bFileLocked) then
+						
+		nReturn = SdFilesInUse("", szMessage, "", OpenFilesList);		
+		
+		ListDestroy(OpenFilesList);
+	
+		// Retry Pressed
+		if nReturn = 1 goto FilesInUse;
+        
+        // Exit Pressed
+        if nReturn = 2 then 
+        	Do (EXIT);        	
+        endif;
+        
+	endif;
+	
+	ListDestroy(OpenFilesList);
+	
+end;
+
+////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Confirm there is only one instance of the  TVSeries plugin
+///
+////////////////////////////////////////////////////////////////////////
+function VOID VerifyPluginCount()
+	STRING szDir, szFileName, svResult, szMessage, szPlugin, szFiles;
+	LIST listDuplicateFiles;
+	NUMBER nResult;
+begin
+	
+	listDuplicateFiles = ListCreate(STRINGLIST);
+	
+	szDir = g_sPluginsDir ^ "windows";
+	szFileName = "*MP-TVSeries*.dll";
+	
+	// Find Match
+	nResult = FindAllFiles ( szDir, szFileName, svResult, RESET );
+	while (nResult = 0)
+	
+		// Ignore the real plugin
+		szPlugin = szDir ^ "MP-TVSeries.dll";
+		
+		if (svResult != szPlugin) then        
+        	// Build list of duplicate plugins
+        	ListAddString(listDuplicateFiles,svResult,AFTER);			
+		endif;
+	 	
+ 		// Continue Search
+		nResult = FindAllFiles ( szDir, szFileName, svResult, CONTINUE );				
+	 	
+	endwhile;
+   	
+   	if ListCount(listDuplicateFiles) = 0 then
+   		return;
+   	endif;
+   	   	
+   	// Inform user that there is a problem as duplicates were detected
+   	nResult = ListGetFirstString(listDuplicateFiles,svResult);
+   	
+   	while (nResult != END_OF_LIST)
+   	
+   		szFiles = szFiles + "\n" + svResult;
+   		nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   	endwhile;
+   	
+   	// Match Found, inform user there is going to be a problem
+	szMessage = "Setup has detected that there is multiple instances of the plugin installed:\n";
+	szMessage = szMessage + szFiles + "\n\n";
+	szMessage = szMessage + "It's recommended for the correct operation of the plugin to \n";
+	szMessage = szMessage + "delete these files. Would you like setup to delete these files now?";
+		
+	if (AskYesNo ( szMessage, YES ) = YES) then
+		// Delete Files
+		nResult = ListGetFirstString(listDuplicateFiles,svResult);
+		while (nResult != END_OF_LIST)
+   	
+   			DeleteFile(svResult);
+   			nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   		endwhile;
+	
+	endif;
+	
+end;
+
+///////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Remove non-msi installation so file is not reference counted
+///
+///////////////////////////////////////////////////////////////////////////
+function void RemoveNonMSIPlugin()
+	STRING szKey, szName, szFile, svValue, szFiles;
+	NUMBER nvSize, nvType;
+begin
+    
+    // If the plugin exists, check that the file is reference countered
+    // if the file is not reference countered then it was probably 
+    // previously installed by a manual method, its safe to cleanup
+    // We do this so when the product is removed, the file is also removed
+    // If we dont, the file will be reference countered and left behind
+    Disable(LOGGING);
+    RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+    	
+	szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SharedDLLs";
+	  
+    // Check if plugin file exists
+    szFile = g_sPluginsDir ^ "windows\\mp-tvseries.dll";   
+    szName = szFile;
+    
+    if (Is(FILE_EXISTS, szFile)) then
+    	// If the file exists, check if file is reference countered    	    
+    	if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) < 0 then
+    		// Reference counter doesnt exist, delete file
+    		DeleteFile(szFile);
+    	endif;	
+	else
+		//If the file doesnt exist, then ensure reference counter also doesnt exist
+		if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) = 0 then
+    		// Reference counter doesnt exist, clean registry
+    		RegDBDeleteValue(szKey, szName);
+    	endif;		    
+    endif;
+    
+    // Delete skin file(s) if they exist (no shared pacakges for these)
+    szFiles = g_sSkinsDir ^ "Blue3\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
+    szFiles = g_sSkinsDir ^ "Blue3Wide\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
+    Enable(LOGGING);
+end;
+
+function number ShowReleaseNotesDlg()
+	STRING szDialogName, szFileName;
+	NUMBER nCmdValue;
+	BOOL bDone;
+begin
+
+	szDialogName = "ReleaseNotes";
+   	bDone = FALSE;
+      	                         	                     
+    EzDefineDialog(szDialogName,"","",RES_DLG_RELEASENOTES);
+
+Dlg_Wait:  
+    // Loop unitl done
+    repeat
+    	nCmdValue = WaitOnDialog(szDialogName);
+
+	    switch (nCmdValue)
+	    	
+	    	case DLG_CLOSE:
+	            // The user clicked the window's close button.
+	            Do (EXIT);
+	            
+	        case DLG_ERR:
+	            MessageBox ("Unable to display Release Notes dialog. Setup canceled.", SEVERE);
+	            abort;
+	            
+	        case DLG_INIT:
+	        	// Load Release Notes
+	        	szFileName = SUPPORTDIR ^ "ReleaseNote.html";	        	     			     			     			
+	        	//szFileName = "c:/releasenote.html";
+ 				CtrlSetText(szDialogName, RES_TEXT_RELEASENOTES, "[html]file://" + szFileName);
+ 				         		      
+			case RES_PBUT_BACK:
+				bDone = TRUE;	 	        
+	   	        	   	        	   	        
+	        case RES_PBUT_NEXT:
+	            bDone = TRUE;	        
+	        
+	        case RES_PBUT_CANCEL:
+	        	Do (EXIT);
+	        	
+	        case RES_PBUT_CLOSE:
+	        	Do (EXIT);
+	        	
+	     endswitch;
+    
+    until bDone;       
+		
+	bDone = FALSE;	
+		
+    EndDialog (szDialogName);
+    ReleaseDialog (szDialogName);
+        
+   	return nCmdValue;
 end;

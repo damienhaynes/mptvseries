@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- MP-TV-Series translation file -->
-<!-- Spanish (ES) -->
+<!-- TVSeries translation file -->
+<!-- Spanish -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Traducido por Roberto Batres "pildo" pildogc@gmail.com. Actualizado por Pedernal74.-->
 <strings>
   	<string Field="Series" Original="Series">Serie</string>
   	<string Field="Series_Plural" Original="Series (Plr)">Series</string>
-  	<!-- plural -->
   	<string Field="Season" Original="Season">Temporada</string>
   	<string Field="Seasons" Original="Seasons">Temporadas</string>
   	<string Field="Episode" Original="Episode">Episodio</string>
@@ -27,8 +25,8 @@
   	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar resumen de los episodios no vistos</string>
   	<string Field="on" Original="on">on</string>
   	<string Field="off" Original="off">off</string>
-  	<string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir aleatoriamente un Episodio </string>
-  	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir aleatoriamente el primer Episodio no visto </string>
+  <string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir aleatoriamente un episodio </string>
+  <string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir aleatoriamente el primer episodio no visto </string>
   	<string Field="Delete_that_series" Original="Delete that series?">¿Borrar esta serie?</string>
   	<string Field="Delete_that_season" Original="Delete that season?">¿Borrar esta temporada?</string>
   	<string Field="Delete_that_episode" Original="Delete that episode?">¿Borrar este episodio?</string>
@@ -68,7 +66,6 @@
   	<string Field="RatingStars" Original="Stars">Estrellas</string>
   	<string Field="ChangeView" Original="Change View">Cambiar vista</string>
   	<string Field="ChangeViewFast" Original="Immediatly Change Views">Cambiar vista inmediatamente</string>
-  	<string Field="Cycle_Banner" Original="Cycle Banner">Alternar Banner</string>
   	<string Field="FanArt" Original="Fanart">Fanart</string>
   	<string Field="FanListAll" Original="List all Fanart for this Series">Mostrar todos los Fanart para esta serie</string>
   	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Descargar Fanart y Utilidad</string>
@@ -78,7 +75,7 @@
   	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Descargando {0} Fanart...</string>
   	<string Field="FanArtLocal" Original="Available locally">Disponible localmente</string>
   	<string Field="FanArtOnline" Original="Available for downloading">Disponible para descargar</string>
-  	<string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">cargando {0} de {1} Fanart...</string>
+  <string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">Cargando {0} de {1} Fanart...</string>
   	<string Field="FanArtRandom" Original="Display random Fanart">Mostrar Fanart aleatorio</string>
   	<string Field="FanArtNoneFound" Original="No Fanart could be found">No se encontró ningún Fanart</string>
   	<string Field="CFS_Choose_Item" Original="Choose item">Elige elemento</string>
@@ -117,8 +114,7 @@
   	<string Field="FanartDisableLabel" Original="Disabled">Desactivado</string>
   	<string Field="FanartMenuEnable" Original="Enable">Activar Fanart</string>
   	<string Field="FanartMenuDisable" Original="Disable">Desactivar Fanart</string>
-  	<string Field="SortByStrings" Original="SortByStrings">the|a|an</string>
-  	<!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string Field="SortByStrings" Original="SortByStrings">the|a|an|el|la|un|una</string>
   	<string Field="LayoutList" Original="List">Lista</string>
   	<string Field="LayoutListBanners" Original="List Banners">Lista de Banners</string>
   	<string Field="LayoutListPosters" Original="List Posters">Lista de Posters</string>
@@ -136,19 +132,17 @@
   	<string Field="LabelResolution" Original="Resolution:">Resolución:</string>
   	<string Field="LabelChosen" Original="Chosen:">Preferido:</string>
   	<string Field="LabelDisabled" Original="Disabled:">Desactivado:</string>
-  	<string Field="ResetUserSelections" Original="Reset User Selections">Restablecer Ajustes de Usuario</string>
+  <string Field="ResetUserSelections" Original="Reset User Selections">Restablecer ajustes de usuario</string>
   	<string Field="DeleteFromDisk" Original="Delete from Disk">Borrar del disco</string>
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Borrar de la base de datos</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Borrar del disco y de la base de datos</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Elija su calificación para {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Ocultar miniaturas de spoilers</string>	
-	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
 	<string Field="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
 	<string Field="RateFiveStarThree" Original="Good">Buena</string>
 	<string Field="RateFiveStarFour" Original="Superb">Magnífica</string>
 	<string Field="RateFiveStarFive" Original="Perfect">Perfecta</string>
-	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Pésima</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Terrible</string>
 	<string Field="RateTenStarThree" Original="Bad">Mala</string>
@@ -159,11 +153,10 @@
 	<string Field="RateTenStarEight" Original="Great">Estupenda</string>
 	<string Field="RateTenStarNine" Original="Superb">Magnífica</string>
 	<string Field="RateTenStarTen" Original="Perfect">Perfecta</string>
-	
 	<string Field="ContentRating" Original="Content Rating">Puntuación</string>
 	<string Field="ViewTags" Original="View Tags">Ver Etiquetas</string>
-	<string Field="AddViewTag" Original="Add Series to View Tag">Añadir Serie a la Vista</string>
-	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Quitar Serie de la Vista</string>
+  <string Field="AddViewTag" Original="Add Series to View Tag">Añadir Serie a la vista</string>
+  <string Field="RemoveViewTag" Original="Remove Series from View Tag">Quitar Serie de la vista</string>
 	<string Field="NewViewTag" Original="New Tag">Nueva Vista</string>
 	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Alternar Banner de Series</string>
 	<string Field="CycleSeasonBanner" Original="Cycle Season Banner">Alternar Banner de Temporada</string>
@@ -177,14 +170,13 @@
 	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Segundos</string>
 	<string Field="NoPlaylistsFound" Original="No Playlists found in:">No se encontraron listas de reproducción en:</string>
 	<string Field="PinCode" Original="Pin Code">Código PIN</string>
-	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">El código PIN introducido no es Correcto</string>
+  <string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">El código PIN introducido no es correcto</string>
 	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Pulse OK e inténtelo de nuevo</string>
 	<string Field="ParentalControlLocked" Original="Lock Views">Bloquear vistas</string>
 	<string Field="ViewIsLocked" Original="View Locked">Vista bloqueda</string>
 	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">La vista "{0}" está bloqueada</string>
 	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Introduzca el código PIN de 4 dígitos para proceder:</string>
 	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">PIN incorrecto</string>
-	<!-- View Templates -->
 	<string Field="Continuing" Original="Continuing Series">Series en curso</string>
 	<string Field="Ended" Original="Ended Series">Series finalizadas</string>
 	<string Field="HighDefinition" Original="High Definition">Alta Definición</string>
@@ -197,5 +189,8 @@
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Múltiples pistas de audio</string>
 	<string Field="OnlineFavourites" Original="Online Favourites">Favoritos Online</string>	
 	<string Field="Actors" Original="Actors">Actores</string>
-	
+  <string Field="RemovableMedia">Medios Extraíbles</string>
+  <string Field="LocalMedia">Medios Locales</string>
+  <string Field="AdultSeries">Series de Adultos</string>
+  <string Field="KidsSeries">Series Infantiles</string>
 </strings>

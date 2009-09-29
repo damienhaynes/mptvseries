@@ -33,6 +33,7 @@ using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
 using MediaPortal.Util;
+using MediaPortal.Configuration;
 using System.Windows.Forms;
 //using SQLite.NET;
 using WindowPlugins.GUITVSeries;
@@ -131,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
         private void InitSettingsTreeAndPanes()
         {   
             string skinSettings = null;
-            string MediaPortalConfig = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"Team MediaPortal\\MediaPortal\\MediaPortal.xml");
+			string MediaPortalConfig = Path.Combine(Config.GetFolder(Config.Dir.Config), "MediaPortal.xml");
             
             XmlDocument doc = new XmlDocument();
             try
@@ -148,7 +149,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (skinNode.Attributes.Item(0).Value == "name")
                             {
-                                skinSettings = Path.Combine(Directory.GetCurrentDirectory(), "skin\\" + skinNode.InnerText + "\\TVSeries.SkinSettings.xml");
+                                skinSettings = Path.Combine(Config.GetFolder(Config.Dir.Skin), skinNode.InnerText + "\\TVSeries.SkinSettings.xml");
                                 break;
                             }
                         }
@@ -156,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 // Load Skin Settings if they exist
-                SkinSettings.Load(skinSettings); ;
+                SkinSettings.Load(skinSettings);
                 // Reload formatting rules
                 formattingConfiguration1.LoadFromDB();
             }
@@ -532,8 +533,8 @@ namespace WindowPlugins.GUITVSeries
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
-            // load them up in the datagrid
 
+            
             if (dataGridView_Expressions.Columns.Count == 0)
             {
                 DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
@@ -556,9 +557,19 @@ namespace WindowPlugins.GUITVSeries
                 columnExpression.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Expressions.Columns.Add(columnExpression);
             }
+            
+            // check if there were no valid expression returned
+            // this shouldnt happen as the constructor should add defaults if null
+            if (expressions == null) {
+                DBExpression.AddDefaults();
+                expressions = DBExpression.GetAll();                
+                if (expressions == null) return;
+            }
+            
             dataGridView_Expressions.Rows.Clear();
             dataGridView_Expressions.Rows.Add(expressions.Length);
 
+            // load each expression into the grid
             foreach (DBExpression expression in expressions)
             {
                 DataGridViewRow row = dataGridView_Expressions.Rows[expression[DBExpression.cIndex]];
@@ -613,6 +624,13 @@ namespace WindowPlugins.GUITVSeries
                 columnWith.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnWith);
             }
+
+            if (replacements == null) {
+                DBReplacements.AddDefaults();
+                replacements = DBReplacements.GetAll();
+                if (replacements == null) return;                
+            }
+
             dataGridView_Replace.Rows.Clear();
             dataGridView_Replace.Rows.Add(replacements.Length);
 
@@ -3552,13 +3570,17 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkExParsingExpressions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            DBExpression[] expressions = DBExpression.GetAll();
+            if (expressions == null || expressions.Length == 0) {
+                MessageBox.Show("No vaild expressions to export!");
+                return;
+            }
+
             SaveFileDialog fd = new SaveFileDialog();
             fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter w = new StreamWriter(fd.FileName);
-                DBExpression[] expressions = DBExpression.GetAll();
-
                 foreach (DBExpression expression in expressions)
                 {
                     String val = "";
@@ -3630,7 +3652,6 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Parsing Expressions succesfully imported!");
                 
                 LoadExpressions();
-                LoadTree(); // reload tree so the changes are visible
             }
         }
 
@@ -4206,6 +4227,104 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void linkLabelExportStringReplacements_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            DBReplacements[] replacements = DBReplacements.GetAll();
+            if (replacements == null || replacements.Length == 0) {
+                MessageBox.Show("No valid string replacements to export!");
+                return;
+    }
+    
+            SaveFileDialog fd = new SaveFileDialog();
+            fd.Filter = "Exported String Replacements (*.strrep)|*.strrep";
+            if (fd.ShowDialog() == DialogResult.OK) {
+                StreamWriter w = new StreamWriter(fd.FileName);                
+
+                foreach (DBReplacements replacement in replacements) {
+                    String val = "";
+                    val += (int)replacement[DBReplacements.cEnabled];
+                    val += ";";
+                    val += (int)replacement[DBReplacements.cBefore];
+                    val += ";";
+                    val += (int)replacement[DBReplacements.cTagEnabled];
+                    val += ";";
+                    val += (String)replacement[DBReplacements.cToReplace];
+                    val += ";";
+                    val += (String)replacement[DBReplacements.cWith];                    
+                    
+                    try {
+                        w.WriteLine((string)val);
+                    }
+                    catch (IOException exception) {
+                        MPTVSeriesLog.Write("String Replacements NOT exported!  Error: " + exception.ToString());
+                        return;
+                    }
+                }
+                w.Close();
+                MPTVSeriesLog.Write("String Replacements succesfully exported!");
+            }
+        }
+
+        private void linkLabelImportStringReplacements_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Exported String Replacements (*.strrep)|*.strrep";
+            if (fd.ShowDialog() == DialogResult.OK && System.IO.File.Exists(fd.FileName)) {
+                StreamReader r = new StreamReader(fd.FileName);
+                DBReplacements replacement;
+
+                //Dialog box to make sure they want to clear out current replacements to import new ones.
+                if (DialogResult.Yes ==
+                    MessageBox.Show("You are about to delete all current string replacements," + Environment.NewLine +
+                        "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
+                        "Any current Replacements will be lost.  Would you like to proceed?", "Import Replacements", MessageBoxButtons.YesNo)) {
+                    dataGridView_Replace.Rows.Clear();
+                    DBReplacements.ClearAll();
+                    MPTVSeriesLog.Write("Replacements cleared");
+                }
+
+                string line = string.Empty;
+                string[] parts;
+                int index = 0;
+
+                // now set watched for all in file
+                while ((line = r.ReadLine()) != null) {
+                    char[] c = { ';' };
+                    parts = line.Split(c, 5);
+                    if (parts.Length != 5) continue;
+
+                    replacement = new DBReplacements();                   
+                    replacement[DBReplacements.cIndex] = index;
+                    
+                    if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) replacement[DBReplacements.cEnabled] = parts[0]; else continue;
+                    if (Convert.ToInt32(parts[1]) == 0 || Convert.ToInt32(parts[1]) == 1) replacement[DBReplacements.cBefore] = parts[1]; else continue;
+                    if (Convert.ToInt32(parts[2]) == 0 || Convert.ToInt32(parts[2]) == 1) replacement[DBReplacements.cTagEnabled] = parts[2]; else continue;
+
+                    replacement[DBReplacements.cToReplace] = parts[3];
+                    replacement[DBReplacements.cWith] = parts[4];
+
+                    if (replacement.Commit()) index++;
+                }
+
+                r.Close();
+                MPTVSeriesLog.Write("String Replacements succesfully imported!");
+
+                LoadReplacements();                
+            }
+        }
+
+        private void linkLabelResetStringReplacements_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            if (DialogResult.Yes ==
+                        MessageBox.Show("You are about to delete all string replacements, and replace" + Environment.NewLine +
+                                        "them with the plugin's defaults." + Environment.NewLine + Environment.NewLine +
+                                        "Any custom Replacements will be lost, would you like to proceed?", "Reset Replacements", MessageBoxButtons.YesNo)) {
+                dataGridView_Replace.Rows.Clear();
+
+                DBReplacements.ClearAll();
+                DBReplacements.AddDefaults();
+
+                LoadReplacements();
+                MPTVSeriesLog.Write("Replacements reset to defaults");
+            }           
+        }
     }
     
     public class BannerComboItem

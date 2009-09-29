@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using MediaPortal.GUI.Library;
+using MediaPortal.Util;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -266,7 +267,8 @@ namespace WindowPlugins.GUITVSeries
             foreach (char c in System.IO.Path.GetInvalidFileNameChars()) {
                 path = path.Replace(c, invalidCharReplacement);                
             }
-            return path;
+            // Also remove trailing dots and spaces            
+            return path.TrimEnd(new char[] { '.' }).Trim();
         } const char invalidCharReplacement = '_';
         
         /// <summary>
@@ -418,6 +420,16 @@ namespace WindowPlugins.GUITVSeries
         public static void LimitList(ref List<string> list, int limit) {
             if (limit >= list.Count) return;
             list.RemoveRange(list.Count - (list.Count - limit), (list.Count - limit));
+        }
+
+        /// <summary>
+        /// Checks if a filename is an Image file e.g. ISO
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns>Returns true if file is a image</returns>
+        public static bool IsImageFile(string filename) {
+            string extension = System.IO.Path.GetExtension(filename).ToLower();
+            return VirtualDirectory.IsImageFile(extension);
         }
 
         #endregion

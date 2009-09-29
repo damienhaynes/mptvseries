@@ -384,6 +384,7 @@ namespace WindowPlugins.GUITVSeries
         public const string s_stepSeperator = "<nextStep>";
         const string s_intSeperator = "<;>";
         const string s_condSeperator = "<cond>";
+        
         public enum type
         {
             group,
@@ -391,6 +392,7 @@ namespace WindowPlugins.GUITVSeries
             season,
             episode
         }
+
         public string Name
         {
             get
@@ -398,6 +400,7 @@ namespace WindowPlugins.GUITVSeries
                 return Type.ToString();
             }
         }
+
         public class grouped
         {
             public DBTable table;
@@ -407,6 +410,7 @@ namespace WindowPlugins.GUITVSeries
 
             public bool attempSplit = false;
         }
+
         public List<string> conditionsToInherit = new List<string>();
         public type Type;
         public int limitItems = 0;

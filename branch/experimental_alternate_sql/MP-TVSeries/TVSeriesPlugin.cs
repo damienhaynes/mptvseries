@@ -24,7 +24,9 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
@@ -68,7 +70,7 @@ namespace WindowPlugins.GUITVSeries
             seriesposter.Delay = artworkDelay;
 
             seasonbanner = new AsyncImageResource();
-            seasonbanner.Property = "#TVSeries.SeasonBanner";
+            seasonbanner.Property = "#TVSeries.SeasonPoster";
             seasonbanner.Delay = artworkDelay;
         }
         #endregion
@@ -220,6 +222,10 @@ namespace WindowPlugins.GUITVSeries
         public static bool m_bOnActionProcessed = false;
         private string m_prevSeriesID = string.Empty;
         private bool m_bFanartTimerDisabled = false;
+        private bool m_bPluginLoaded = false;
+        private bool m_bShowLastActiveModule = false;
+        private int m_iLastActiveModule = 0;
+        
 		#endregion
 
         #region Skin Variables
@@ -270,12 +276,6 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(1234)]
         protected GUILabelControl dummyIsLightFanartLoaded = null;
 
-        [SkinControlAttribute(1235)]
-        protected GUILabelControl dummyFacadeListMode = null;
-
-        [SkinControlAttribute(1236)]
-        protected GUILabelControl dummyThumbnailGraphicalMode = null;
-        
         [SkinControlAttribute(1237)]
         protected GUILabelControl dummyIsSeries = null;
 
@@ -307,7 +307,7 @@ namespace WindowPlugins.GUITVSeries
 			toggleWatched,
 			cycleSeriesBanner,
 			cycleSeriesPoster,
-			cycleSeasonBanner,
+			cycleSeasonPoster,
 			forceSeriesQuery,
 			downloadSubtitle,
 			downloadviaTorrent,
@@ -378,11 +378,12 @@ namespace WindowPlugins.GUITVSeries
 			LastView,
 			SeriesBanner,
 			SeriesPoster,
-			SeasonBanner,
+			SeasonPoster,
 			EpisodeImage,
 			Logos,
 			SeriesCount,
-			GroupCount
+			GroupCount,
+            FilteredEpisodeCount
 		}
 		#endregion
 
@@ -478,6 +479,13 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
             SkinSettings.GetSkinProperties(xmlSkin);
 
+            // Check if MediaPortal will Show TVSeries Plugin when restarting
+            // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
+            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) {
+                m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
+                m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
+            }
+
             return Load(xmlSkin);
         }
 
@@ -492,6 +500,7 @@ namespace WindowPlugins.GUITVSeries
 				GUIWindowManager.ShowPreviousWindow();
 				return;
 			}
+            
 			ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
 			// For some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
@@ -505,12 +514,16 @@ namespace WindowPlugins.GUITVSeries
 			clearGUIProperty(guiProperty.SimpleCurrentView);
 			clearGUIProperty(guiProperty.NextView);
 			clearGUIProperty(guiProperty.LastView);
+            clearGUIProperty(guiProperty.SeriesCount);
+            clearGUIProperty(guiProperty.GroupCount);
+            clearGUIProperty(guiProperty.FilteredEpisodeCount);
+
+            localLogos.appendEpImage = m_Episode_Image == null ? true : false;
 
 			bool viewSwitched = false;
 
             // Initialize View, also check if current view is locked after exiting and re-entering plugin
 			if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked)) {
-				localLogos.appendEpImage = m_Episode_Image == null ? true : false;
 				// Get available Views
 				m_allViews = logicalView.getAll(false);
 				if (m_allViews.Count > 0) {
@@ -566,6 +579,17 @@ namespace WindowPlugins.GUITVSeries
 				logosWidth = m_Logos_Image.Width;
 			}
 
+            m_bPluginLoaded = true;
+
+            // Ask to Rate Episode, onPageLoad is triggered after returning from player
+            if (ask2Rate != null) {
+                showRatingsDialog(ask2Rate, true);
+                ask2Rate = null;
+                // Refresh the facade if we want to see the submitted rating
+                if (this.listLevel == Listlevel.Episode) {
+                    LoadFacade();
+		}
+            }
 		}
 
 		protected override void OnPageDestroy(int new_windowId) {
@@ -713,7 +737,7 @@ namespace WindowPlugins.GUITVSeries
 							if (selectedSeason.BannerList.Count > 1) {
 								pItem = new GUIListItem(Translation.CycleSeasonBanner);
 								dlg.Add(pItem);
-								pItem.ItemId = (int)eContextItems.cycleSeasonBanner;
+								pItem.ItemId = (int)eContextItems.cycleSeasonPoster;
 							}
 						}
 
@@ -1035,7 +1059,7 @@ namespace WindowPlugins.GUITVSeries
 						}
 						break;
 
-					case (int)eContextItems.cycleSeasonBanner: {
+					case (int)eContextItems.cycleSeasonPoster: {
 							int nCurrent = selectedSeason.BannerList.IndexOf(selectedSeason.Banner);
 							nCurrent++;
 							if (nCurrent >= selectedSeason.BannerList.Count)
@@ -1602,7 +1626,7 @@ namespace WindowPlugins.GUITVSeries
             set { m_bIsNetworkAvailable = value; }
         }
 
-        void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
+        private void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
         {
             List<PathPair> filesAdded = new List<PathPair>();
             List<PathPair> filesRemoved = new List<PathPair>();
@@ -1642,8 +1666,9 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+		#region Facade Loading
         // this is expensive to do if changing mode......450 ms ???
-        void setFacadeMode(GUIFacadeControl.ViewMode mode)
+        private void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {
             if (this.m_Facade == null)
                 return;
@@ -1652,8 +1677,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
                 this.m_Facade.View = mode;
-                if (this.dummyThumbnailGraphicalMode != null) dummyThumbnailGraphicalMode.Visible = false;
-                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = true;
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Stop();
             }
             else
@@ -1688,14 +1711,12 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Stop();
-                if (this.dummyThumbnailGraphicalMode != null) this.dummyThumbnailGraphicalMode.Visible = true;
-                if (this.dummyFacadeListMode != null) this.dummyFacadeListMode.Visible = false;                
             }            
         }
         
         System.ComponentModel.BackgroundWorker bg = null;        
 
-        void LoadFacade()
+        private void LoadFacade()
         {
             if (bg == null)
             {
@@ -1722,7 +1743,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         bool bFacadeEmpty = true;
-        void prepareLoadFacade()
+        private void prepareLoadFacade()
         {
             try
             {
@@ -1780,7 +1801,7 @@ namespace WindowPlugins.GUITVSeries
 
         SkipSeasonCodes SkipSeasonCode = SkipSeasonCodes.none;
         List<GUIListItem> itemsForDelayedImgLoading = null;
-        void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             try
             {
@@ -1830,6 +1851,17 @@ namespace WindowPlugins.GUITVSeries
                                 string image = arg.Argument as string;
                                 itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
                             }
+                            /*if (itemsForDelayedImgLoading != null) {
+                                string image = arg.Argument as string;
+                                foreach (var item in itemsForDelayedImgLoading) {
+                                    DBSeries seriesOfListItem = item.TVTag as DBSeries;
+                                    if (seriesOfListItem != null && seriesOfListItem[DBSeries.cID] == arg.IndexArgument) {
+                                        //MPTVSeriesLog.Write(string.Format("series:{0}, image:{1}", Helper.getCorrespondingSeries(seriesOfListItem[DBSeries.cID]).ToString(), image));
+                                        item.IconImageBig = image;
+                                        break;
+                                    }
+                                }
+                            }*/
                             PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
                         }
                         break;
@@ -1942,7 +1974,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void bgFacadeDone(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             try
             {
@@ -1994,7 +2026,7 @@ namespace WindowPlugins.GUITVSeries
                     
                     clearGUIProperty(guiProperty.SeriesBanner);
                     clearGUIProperty(guiProperty.SeriesPoster);
-                    clearGUIProperty(guiProperty.SeasonBanner);
+                    clearGUIProperty(guiProperty.SeasonPoster);
                     clearGUIProperty(guiProperty.EpisodeImage);
                     clearGUIProperty(guiProperty.Logos);
 
@@ -2006,12 +2038,12 @@ namespace WindowPlugins.GUITVSeries
                     OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                 }
             }
-            if (ask2Rate != null)
+            /*if (ask2Rate != null)
             {
                 showRatingsDialog(ask2Rate, true);
                 ask2Rate = null;
                 LoadFacade();
-            }
+            }*/
             if (skipSeasonIfOne_DirectionDown && SkipSeasonCode == SkipSeasonCodes.SkipSeasonDown)
             {
                 OnClicked(m_Facade.GetID, m_Facade, Action.ActionType.ACTION_SELECT_ITEM);
@@ -2024,7 +2056,7 @@ namespace WindowPlugins.GUITVSeries
             skipSeasonIfOne_DirectionDown = true;
         }
 
-        void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             //facadeLoaded = false; // reset
             PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Start();
@@ -2037,7 +2069,7 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        void bgLoadFacade()
+        private void bgLoadFacade()
         {
             MPTVSeriesLog.Write("Begin LoadFacade", MPTVSeriesLog.LogLevel.Debug);
             try
@@ -2072,8 +2104,6 @@ namespace WindowPlugins.GUITVSeries
                                 item = new GUIListItem(items[index]);
                                 if (item.Label.Length == 0) item.Label = Translation.Unknown;
                                 item.TVTag = items[index];
-                                item.IsRemote = true;
-                                item.IsDownloading = true;
 
                                 if (graphical || DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                 {
@@ -2189,10 +2219,20 @@ namespace WindowPlugins.GUITVSeries
                                         LoadWatchedFlag(item, bWatched, bAvailable);                                        
                                     }
                                     item.TVTag = series;
-                                    // Has no local files in series
-                                    item.IsRemote = series[DBOnlineSeries.cHasLocalFiles] != 0;
-                                    // Has atleast one unwatched episode in series - no IsWatched property
-                                    item.IsDownloading = int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) != 0;
+
+                                    #region List Colors
+                                    item.IsRemote = false;
+                                    item.IsPlayed = false;
+
+                                    // Set IsRemote property to true, if there are no episodes local on disk for season
+                                    if (!series[DBOnlineSeries.cHasLocalFiles]) {
+                                        item.IsRemote = true;
+                                    }
+                                    // Set IsPlayed property to true, if all episodes in season have been watched
+                                    else if (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0) {
+                                        item.IsPlayed = true;
+                                    }
+                                    #endregion
 
                                     if (this.m_SelectedSeries != null)
                                     {
@@ -2275,10 +2315,19 @@ namespace WindowPlugins.GUITVSeries
                                                 }
                                             }                                                                                                                                    
                                         }
-                                        // Has no local files in season
-                                        item.IsRemote = season[DBSeason.cHasLocalFiles] != 0;
-                                        // Has atleast one unwatched episode in season - no IsWatched property
-                                        item.IsDownloading = int.Parse(season[DBSeason.cEpisodesUnWatched]) != 0;
+                                        #region List Colors
+                                        item.IsRemote = false;
+                                        item.IsPlayed = false;
+                                        
+                                        // Set IsRemote property to true, if there are no episodes local on disk for season
+                                        if (!season[DBSeason.cHasLocalFiles]) {
+                                            item.IsRemote = true;
+                                    }
+                                        // Set IsPlayed property to true, if all episodes in season have been watched
+                                        else if (int.Parse(season[DBSeason.cEpisodesUnWatched]) == 0) {
+                                            item.IsPlayed = true;
+                                        }
+                                        #endregion
                                     }
                                     else item = new GUIListItem();
                                     item.TVTag = season;
@@ -2344,10 +2393,11 @@ namespace WindowPlugins.GUITVSeries
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
                             
 							// Get a list of Episode to display for current view
-							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Start();
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
-							//aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Stop();
-							//MPTVSeriesLog.Write(aclib.Performance.PerfWatcher.GetNamedWatch("GetEpisodeList").Info);
+
+                            // Update Filtered Episode Count Property, this acurately displays the number of items on the facade
+                            // #TVSeries.Series.EpisodeCount is not desirable in some views e.g. Recently Added or views that filter by episode fields
+                            setGUIProperty(guiProperty.FilteredEpisodeCount, episodesToDisplay.Count.ToString());
 
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
@@ -2393,11 +2443,20 @@ namespace WindowPlugins.GUITVSeries
                                     item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);
                                     item.Label3 = FieldGetter.resolveDynString(m_sFormatEpisodeCol1, episode);
                                     
-                                    // File is local
-                                    item.IsRemote = episode[DBEpisode.cFilename].ToString().Length > 0;
-                                    // Unwatched
-                                    item.IsDownloading = episode[DBOnlineEpisode.cWatched] == 0;                                    
+                                    #region List Colors
+                                    item.IsRemote = false;
+                                    item.IsPlayed = false;
                                     
+                                    // Set IsRemote property to true, if the episode is not local on disk
+                                    if (episode[DBEpisode.cFilename].ToString().Length == 0) {
+                                        item.IsRemote = true;
+                                    }
+                                    // Set IsPlayed property to true, if episode is has been watched
+                                    else if (episode[DBOnlineEpisode.cWatched]) {
+                                        item.IsPlayed = true;
+                                    }
+                                    #endregion
+
                                     item.TVTag = episode;
 
                                     if (this.m_SelectedEpisode != null)
@@ -2496,7 +2555,7 @@ namespace WindowPlugins.GUITVSeries
                                         img = ImageAllocator.GetSeriesPoster(stateSeries.Value);
                                     else
                                         img = ImageAllocator.GetSeriesBanner(stateSeries.Value);
-
+                                    //ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Value[DBSeries.cID], img);
                                     ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Key, img);
                                     Interlocked.Increment(ref done);
                                 }, keySeriesValue);
@@ -2523,6 +2582,19 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
             }
         }
+
+		private void ReportFacadeLoadingProgress(BackGroundLoadingArgumentType type, int indexArgument, object state) {
+			if (!bg.CancellationPending) {
+				BackgroundFacadeLoadingArgument Arg = new BackgroundFacadeLoadingArgument();
+				Arg.Type = type;
+				Arg.IndexArgument = indexArgument;
+				Arg.Argument = state;
+
+				bg.ReportProgress(0, Arg);
+			}
+		}
+
+		#endregion
 
         private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable)
         {          
@@ -2583,46 +2655,6 @@ namespace WindowPlugins.GUITVSeries
             return true;
         }
 
-        void ReportFacadeLoadingProgress(BackGroundLoadingArgumentType type, int indexArgument, object state)
-        {
-            if (!bg.CancellationPending)
-            {
-                BackgroundFacadeLoadingArgument Arg = new BackgroundFacadeLoadingArgument();
-                Arg.Type = type;
-                Arg.IndexArgument = indexArgument;
-                Arg.Argument = state;
-
-                bg.ReportProgress(0, Arg);
-            }
-        }
-
-        // triggered when a selection change was made on the facade
-        private void onFacadeItemSelected(GUIListItem item, GUIControl parent)
-        {
-            // if this is not a message from the facade, exit
-            if (parent != m_Facade && parent != m_Facade.FilmstripView &&
-                parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
-                return;
-
-            switch (this.listLevel)
-            {
-                case Listlevel.Group:
-                    Group_OnItemSelected(m_Facade.SelectedListItem);
-                    break;
-                case Listlevel.Series:
-                    Series_OnItemSelected(m_Facade.SelectedListItem);
-                    break;
-
-                case Listlevel.Season:
-                    Season_OnItemSelected(m_Facade.SelectedListItem);
-                    break;
-
-                case Listlevel.Episode:
-                    Episode_OnItemSelected(m_Facade.SelectedListItem);
-                    break;
-            }
-        }
-
         string getGUIProperty(guiProperty which)
         {
           return getGUIProperty(which.ToString());
@@ -2645,12 +2677,12 @@ namespace WindowPlugins.GUITVSeries
 
         void clearGUIProperty(guiProperty which)
         {
-            setGUIProperty(which, string.Empty);
+            clearGUIProperty(which.ToString());
         }
 
         public static void clearGUIProperty(string which)
         {
-            setGUIProperty(which, "-"); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+            setGUIProperty(which, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
 
         internal static void showRatingsDialog(DBTable item, bool auto)
@@ -3199,7 +3231,7 @@ namespace WindowPlugins.GUITVSeries
             // Load Facade to reflect changes
             // We only need to reload when removing from a View that is active
             if (!add) {
-                if (m_CurrLView.prettyName.Equals(selectedItem, StringComparison.CurrentCultureIgnoreCase) || 
+                if (m_CurrLView.Name.Equals(selectedItem, StringComparison.CurrentCultureIgnoreCase) || 
                     m_CurrLView.gettypeOfStep(0) == logicalViewStep.type.group)
                     LoadFacade();
             }
@@ -3268,7 +3300,8 @@ namespace WindowPlugins.GUITVSeries
 
             switch (this.listLevel) {
                 case Listlevel.Series:
-                    // Always delete from Local episode/series table if deleting from disk or database
+                    // Always delete from Local episode table if deleting from disk or database
+					// we shouldnt delete from Local series table as then we will not be able to see in MediaPortal
                     condition = new SQLCondition();
                     condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);                    
 
@@ -3277,11 +3310,7 @@ namespace WindowPlugins.GUITVSeries
 										
 					DBEpisode.Clear(condition);
 
-                    condition = new SQLCondition();
-                    condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                    DBSeries.Clear(condition);
-
-                    // Delete from online episode table
+                    // Delete from online tables and season/series tables
                     if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
@@ -3290,6 +3319,10 @@ namespace WindowPlugins.GUITVSeries
                         condition = new SQLCondition();
                         condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                         DBSeason.Clear(condition);
+
+                        condition = new SQLCondition();
+						condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+						DBSeries.Clear(condition);
 
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
@@ -3420,6 +3453,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+		#region Download Event Handllers
         void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
             if (m_ImportAnimation != null)
@@ -3491,6 +3525,7 @@ namespace WindowPlugins.GUITVSeries
             setProcessAnimationStatus(false);
             torrentWorking = false;
         }
+		#endregion
 
       List<string> sviews = new List<string>();
 
@@ -3550,6 +3585,13 @@ namespace WindowPlugins.GUITVSeries
             
 			// Check if View has Parental Control enabled
 			if (!CheckParentalControls(view)) {
+                // We can't show a dialog on top when there is no main window
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID)) {
+                    MPTVSeriesLog.Write("Unable to Show PinCode Dialog, MediaPortal not ready, returning to Home screen");
+                    m_bPluginLoaded = true;
+                    return false;
+                }
+
 				// Prompt to choose UnProtected View
 				return showViewSwitchDialog();				
 			}
@@ -3577,6 +3619,11 @@ namespace WindowPlugins.GUITVSeries
 			bool pinInCorrect = true;
 
 			if (view.ParentalControl && logicalView.IsLocked) {
+                // We can't show a dialog on top when there is no main window
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID)) {
+                    return false;
+                }
+
                 // Update Ugly Current View Property if not yet set
                 if (TVSeriesPlugin.getGUIProperty(guiProperty.CurrentView.ToString()).Length == 0) {
                     setGUIProperty(guiProperty.CurrentView, Translation.ViewIsLocked);
@@ -3668,43 +3715,6 @@ namespace WindowPlugins.GUITVSeries
                 dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
                                              || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
                 dummyIsSeriesPosters.UpdateVisibility();
-            }
-
-            if (dummyThumbnailGraphicalMode != null)
-            {
-                if (this.listLevel == Listlevel.Series)
-                    dummyThumbnailGraphicalMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip"
-                                                        || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners");
-
-                if (this.listLevel == Listlevel.Season)
-                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) != "0";
-
-
-                if (this.listLevel == Listlevel.Episode)
-                    dummyFacadeListMode.Visible = false;
-
-                if (this.listLevel == Listlevel.Group)                                               
-                    dummyThumbnailGraphicalMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "1";
-
-                dummyThumbnailGraphicalMode.UpdateVisibility();
-            }
-
-            if (dummyFacadeListMode != null)
-            {
-                if (this.listLevel == Listlevel.Series)
-                    dummyFacadeListMode.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
-                                                || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListBanners");
-                                            
-                if (this.listLevel == Listlevel.Season)
-                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "0";
-
-                if (this.listLevel == Listlevel.Episode)
-                    dummyFacadeListMode.Visible = true;
-
-                if (this.listLevel == Listlevel.Group)
-                    dummyFacadeListMode.Visible = DBOption.GetOptions(DBOption.cGraphicalGroupView) == "0";
-
-                dummyFacadeListMode.UpdateVisibility();
             }
 
             resetListLevelDummies();
@@ -3939,6 +3949,33 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+		#region Facade Item Selected
+		// triggered when a selection change was made on the facade
+		private void onFacadeItemSelected(GUIListItem item, GUIControl parent) {
+			// if this is not a message from the facade, exit
+			if (parent != m_Facade && parent != m_Facade.FilmstripView &&
+				parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
+				return;
+
+			switch (this.listLevel) {
+				case Listlevel.Group:
+					Group_OnItemSelected(m_Facade.SelectedListItem);
+					break;
+				case Listlevel.Series:
+					Series_OnItemSelected(m_Facade.SelectedListItem);
+					break;
+
+				case Listlevel.Season:
+					Season_OnItemSelected(m_Facade.SelectedListItem);
+					break;
+
+				case Listlevel.Episode:
+					Episode_OnItemSelected(m_Facade.SelectedListItem);
+					break;
+			}
+		}
+
+		#region Group Item Selected
         private void Group_OnItemSelected(GUIListItem item)
         {
             m_SelectedSeries = null;
@@ -4000,7 +4037,9 @@ namespace WindowPlugins.GUITVSeries
 
             DisableFanart();
         }
+		#endregion
 
+		#region Series Item Selected
         private void Series_OnItemSelected(GUIListItem item)
         {           
             if (m_bQuickSelect) return;
@@ -4053,7 +4092,9 @@ namespace WindowPlugins.GUITVSeries
             // Remember last series, so we dont re-initialize random fanart timer
             m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
+		#endregion
 
+		#region Season Item Selected
         private void Season_OnItemSelected(GUIListItem item)
         {
             if (m_bQuickSelect) return;
@@ -4079,7 +4120,6 @@ namespace WindowPlugins.GUITVSeries
 
             // Delayed Image Loading of Season Banners            
             seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
-            //setGUIProperty(guiProperty.SeasonBanner, ImageAllocator.GetSeasonBanner(season, false));
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
@@ -4115,7 +4155,9 @@ namespace WindowPlugins.GUITVSeries
             // Remember last series, so we dont re-initialize random fanart timer
             m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
+		#endregion
 
+		#region Episode Item Selected
         private void Episode_OnItemSelected(GUIListItem item)
         {
             if (item == null || item.TVTag == null)
@@ -4166,7 +4208,7 @@ namespace WindowPlugins.GUITVSeries
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
                 else
-                    clearGUIProperty(guiProperty.SeasonBanner);
+                    clearGUIProperty(guiProperty.SeasonPoster);
 
                 m_bUpdateBanner = false;
             }
@@ -4186,7 +4228,10 @@ namespace WindowPlugins.GUITVSeries
             // Remember last series, so we dont re-initialize random fanart timer
             m_prevSeriesID = m_SelectedSeries[DBSeries.cID];
         }
+		#endregion
+		#endregion
         
+		#region Feedback
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
         private CItem m_selected;
         public ReturnCode ChooseFromSelection(ChooseFromSelectionDescriptor descriptor, out CItem selected)
@@ -4415,6 +4460,7 @@ namespace WindowPlugins.GUITVSeries
                 this.m_Facade.Focus = true;
             }
         }
+		#endregion
 
         private void playRandomEp()
         {
@@ -4538,6 +4584,7 @@ namespace WindowPlugins.GUITVSeries
             GUIWindowManager.ActivateWindow(fc.GetID, false);
         }
 
+		#region Playlist Actions
         GUITVSeriesPlayList TVSeriesPlaylist = null;
         public void ShowPlaylistWindow()
         {         
@@ -4679,10 +4726,18 @@ namespace WindowPlugins.GUITVSeries
 
             if (playlist.Count == 1 && _playlistPlayer.PlaylistAutoPlay)
             {
+                // If the file is an image file, it should be mounted before playing
+                string filename = playlist[0].FileName;
+                if (Helper.IsImageFile(filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                        return;
+                    }
+                }
+
                 MPTVSeriesLog.Write(string.Format("GUITVSeriesPlaylist: play single playlist item - {0}", playlist[0].FileName));
-                if (g_Player.Play(playlist[0].FileName))
+                if (g_Player.Play(filename))
                 {
-                    if (MediaPortal.Util.Utils.IsVideo(playlist[0].FileName))
+                    if (MediaPortal.Util.Utils.IsVideo(filename))
                     {
                         g_Player.ShowFullScreenWindow();
                     }
@@ -4703,8 +4758,14 @@ namespace WindowPlugins.GUITVSeries
             // if we got a playlist
             if (_playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Count > 0)
             {
-                // then get 1st item
                 playlist = _playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
+
+				// autoshuffle on load
+				if (_playlistPlayer.PlaylistAutoShuffle) {
+					playlist.Shuffle();
+				}
+
+                // then get 1st item
                 PlayListItem item = playlist[0];                
 
                 // and activate the playlist window
@@ -4719,6 +4780,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+		#endregion
 
         private void TellUserSomethingWentWrong()
         {

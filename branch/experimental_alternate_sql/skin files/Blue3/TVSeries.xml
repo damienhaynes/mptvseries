@@ -62,7 +62,7 @@
 	<control>
 		<description>group element</description>
 		<type>group</type>
-		<visible>Control.IsVisible(1237)+Control.IsVisible(1236)+!Control.IsVisible(1242)</visible>
+		<visible>Control.IsVisible(1237)+!facadeview.list+!Control.IsVisible(1242)</visible>
 		<control>
 			<type>image</type>
 			<posX>20</posX>
@@ -106,7 +106,7 @@
 		<width>308</width>
 		<height>453</height>
 		<texture>Picture_cover.png</texture>
-		<visible>Control.IsVisible(1237)+Control.IsVisible(1235)+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
+		<visible>Control.IsVisible(1237)+facadeview.list+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
     </control>
 	<control>
 		<type>image</type>
@@ -116,7 +116,7 @@
 		<width>292</width>
 		<height>442</height>
 		<texture>#TVSeries.SeriesPoster</texture>
-		<visible>[Control.IsVisible(1237)|Control.IsVisible(1238)]+Control.IsVisible(1235)+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
+		<visible>[Control.IsVisible(1237)|Control.IsVisible(1238)]+facadeview.list+Control.IsVisible(1242)+Control.HasFocus(50)</visible>
     </control>	
 	<!-- Season View List Layout -->
 	<control>
@@ -127,7 +127,7 @@
 		<width>308</width>
 		<height>453</height>
 		<texture>Picture_cover.png</texture>
-		<visible>Control.IsVisible(1238)+Control.IsVisible(1235)+Control.HasFocus(50)</visible>
+		<visible>Control.IsVisible(1238)+facadeview.list+Control.HasFocus(50)</visible>
     </control>
 	<control>
 		<type>image</type>
@@ -136,8 +136,8 @@
 		<posY>114</posY>
 		<width>292</width>
 		<height>442</height>
-		<texture>#TVSeries.SeasonBanner</texture>
-		<visible>Control.IsVisible(1238)+Control.IsVisible(1235)+Control.HasFocus(50)</visible>
+		<texture>#TVSeries.SeasonPoster</texture>
+		<visible>Control.IsVisible(1238)+facadeview.list+Control.HasFocus(50)</visible>
     </control>
 	
 	<!-- Series Banner in List View-->	
@@ -152,7 +152,7 @@
 		<textureFocus>Backslide.png</textureFocus>
 		<textureNoFocus>Backslide.png</textureNoFocus>
 		<colorDiffuse>fffffffff</colorDiffuse>
-		<visible>Control.IsVisible(1235)+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
+		<visible>facadeview.list+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
 		<onleft>50</onleft>
 		<onright>50</onright>
 		<onup>969</onup>
@@ -166,7 +166,7 @@
 		<width>308</width>
 		<height>57</height>
 		<texture>Picture_cover.png</texture>
-		<visible>Control.IsVisible(1235)+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
+		<visible>facadeview.list+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
     </control>
 	<control>
 		<type>image</type>
@@ -176,12 +176,12 @@
 		<width>292</width>
 		<height>49</height>
 		<texture>#TVSeries.SeriesBanner</texture>
-		<visible>Control.IsVisible(1235)+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
+		<visible>facadeview.list+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>
     </control>
 	<control>
 		<description>group element</description>
 		<type>group</type>
-		<visible>Control.IsVisible(1235)+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>		
+		<visible>facadeview.list+!Control.IsVisible(1242)+Control.IsVisible(1237)+Control.HasFocus(50)</visible>		
 		<control>
 			<type>textboxscrollup</type>
 			<description>Description (eplist)</description>
@@ -367,16 +367,6 @@
 				<IconXOff>10</IconXOff>
 				<IconYOff>1</IconYOff>
 				<spaceBetweenItems>2</spaceBetweenItems>
-				<remoteColor>FFa6c3e1</remoteColor>
-				<!-- Watched color -->
-				<downloadColor>d4d2d2</downloadColor>
-				<!-- not watched color (normal) -->
-				<textcolor>FF78ace0</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>FF78ace0</textcolor2>
-				<!-- local file not present color  column 2-->
-				<textcolor3>FF78ace0</textcolor3>
-				<!-- local file not present color column 3-->
 				<spinWidth>10</spinWidth>
 				<spinHeight>10</spinHeight>
 				<spinPosX>580</spinPosX>
@@ -447,18 +437,7 @@
 				<!-- Textures -->
 				<!-- Text -->
 				<font>font12</font>
-				<selectedColor>00ffffff</selectedColor>
-				<textcolor>ffffffff</textcolor>
 				<colordiffuse>ffffffff</colordiffuse>
-				<remoteColor>FF868686</remoteColor>
-				<!-- watched color -->
-				<downloadColor>FFFFFFFF</downloadColor>
-				<!-- not watched color (normal) -->
-				<textcolor>FFC14E4A</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>FFC14E4A</textcolor2>
-				<!-- local file not present color  column 2-->
-				<textcolor3>FFC14E4A</textcolor3>
 				<!-- local file not present color column 3-->
 				<suffix>|</suffix>
 				<itemWidthBig>350</itemWidthBig>
@@ -508,17 +487,12 @@
 				<textXOff3>300</textXOff3>
 				<textYOff3>4</textYOff3>
 				<spaceBetweenItems>1</spaceBetweenItems>
-				<!-- Text -->
-				<downloadColor>ffffffff</downloadColor>
-				<!-- not watched color (normal) -->
-				<remoteColor>ffffffff</remoteColor>
-				<!-- watched color -->
-				<textcolor>ffffffff</textcolor>
-				<!-- local file not present color -->
-				<textcolor2>ffffffff</textcolor2>
-				<!-- local file not present colorcolumn 2-->
-				<textcolor3>ffffffff</textcolor3>
-				<!-- local file not present color column 3-->
+				<!-- Uncomment to override List colors -->
+				<!--<playedColor>ffffffff</playedColor>-->         
+				<!--<remoteColor>ffffffff</remoteColor>-->
+				<!--<textcolor>ffffffff</textcolor>-->
+				<!--<textcolor2>ffffffff</textcolor2>-->
+				<!--<textcolor3>ffffffff</textcolor3>-->
 				<enableFocusZoom>yes</enableFocusZoom>
 				<zoomXPixels>20</zoomXPixels>
 				<zoomYPixels>20</zoomYPixels>
@@ -579,7 +553,7 @@
 	            <label>Switch View</label>
 				<onleft>50</onleft>
 	            <onright>50</onright>
-	            <onup>30</onup>
+	            <onup>21</onup>
 				<ondown>3</ondown>
             </control> 
 			<control>
@@ -682,12 +656,12 @@
 		<height>473</height>
 		<texture>Backslide.png</texture>
 		<colordiffuse>f5fefaff</colordiffuse>
-		<visible>Control.IsVisible(1237)+Control.IsVisible(1236)+Control.IsVisible(1242)</visible>
+		<visible>Control.IsVisible(1237)+!facadeview.list+Control.IsVisible(1242)</visible>
 	</control>
 	<control>
 		<description>group element</description>
 		<type>group</type>
-		<visible>Control.IsVisible(1237)+Control.IsVisible(1236)+Control.IsVisible(1242)</visible>
+		<visible>Control.IsVisible(1237)+!facadeview.list+Control.IsVisible(1242)</visible>
 		<control>
 			<type>label</type>
 			<description>Series Title</description>
@@ -773,12 +747,12 @@
 		<height>473</height>
 		<texture>Backslide.png</texture>
 		<colordiffuse>f5fefaff</colordiffuse>
-		<visible>Control.IsVisible(1238)+Control.IsVisible(1236)</visible>
+		<visible>Control.IsVisible(1238)+!facadeview.list</visible>
 	</control>
 	<control>
 		<description>group element</description>
 		<type>group</type>
-		<visible>Control.IsVisible(1238)+Control.IsVisible(1236)</visible>
+		<visible>Control.IsVisible(1238)+!facadeview.list</visible>
 		<control>
 			<type>label</type>
 			<description>Text: Season</description>

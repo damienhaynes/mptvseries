@@ -112,7 +112,8 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
-        public static string CycleSeasonBanner = "Cycle Season Banner";                
+        public static string CycleSeriesThumb = "Cycle Series Panel";
+        public static string CycleSeasonBanner = "Cycle Season Poster";                
 
         // Views
         public static string Genres = "Genres";
@@ -152,6 +153,8 @@ namespace WindowPlugins.GUITVSeries
         public static string Actors = "Actors";
         public static string RemovableMedia = "Removable Media";
         public static string LocalMedia = "Local Media";
+        public static string AdultSeries = "Adult Series";
+        public static string KidsSeries = "Kids Series";
 
         // Fanart
         public static string FanArt = "Fanart";
@@ -161,8 +164,8 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtUse = "Set Fanart as Default";
         public static string FanArtDelete = "Delete Fanart";
         public static string FanDownloadingStatus = "Downloading {0} Fanart...";        
-        public static string FanArtLocal = "Available locally";
-        public static string FanArtOnline = "Available for downloading";
+        public static string FanArtLocal = "Local";
+        public static string FanArtOnline = "Remote";
         public static string FanArtOnlineLoading = "Loading {0} of {1} Fanart...";
         public static string FanArtRandom = "Display random Fanart";
         public static string FanArtNoneFound = "No Fanart could be found";        
@@ -173,6 +176,7 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartMenuDisable = "Disable Fanart";
         public static string ShowSeriesFanart = "Show Fanart in Series View";
         public static string FanartRandomInterval = "Fanart Timer Interval";
+        public static string ClearFanartCache = "Clear Fanart Cache";
         
         public static string FanartIntervalFiveSeconds = "5 Seconds";
         public static string FanartIntervalTenSeconds = "10 Seconds";
@@ -187,6 +191,7 @@ namespace WindowPlugins.GUITVSeries
         public static string LayoutWideBanners = "Wide Banners";
         public static string LayoutListBanners = "List Banners";
         public static string LayoutListPosters = "List Posters";
+        public static string LayoutListThumbs = "List Panels";
         public static string LayoutFilmstrip = "Filmstrip";
 
         // Skin Controls

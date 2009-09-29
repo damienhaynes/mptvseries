@@ -1105,9 +1105,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-
-
-
         public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {            
             MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"));
@@ -1135,25 +1132,53 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
+                    bool MarkWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
+
                     foreach (DBOnlineSeries series in seriesList)
                     {
                     MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
                     GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
 
-                    // Set Series Rating
-                    series[DBOnlineSeries.cMyRating] = userRatings.SeriesRating;
+                        // Set Series Ratings
+                        // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
+                        // Series/Episodes that have rating changes.
+                        series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRating;
+                        series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRating;
                     series.Commit();
 
                     SQLCondition condition = new SQLCondition();
                     condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
                     List<DBEpisode> episodes = DBEpisode.Get(condition);
 
+                        // Set Episode Ratings
                         foreach (DBEpisode episode in episodes)
                         {
-                        if (userRatings.EpisodeRating.ContainsKey(episode[DBOnlineEpisode.cID]))
-                            episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRating[episode[DBOnlineEpisode.cID]];
+                            if (userRatings.EpisodeUserRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeUserRatings[episode[DBOnlineEpisode.cID]];
+
+                                // If user has rated episode then mark as watched
+                                if (MarkWatched)
+                                    episode[DBOnlineEpisode.cWatched] = true;
+
                         episode.Commit();
                         }
+                            if (userRatings.EpisodeCommunityRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeCommunityRatings[episode[DBOnlineEpisode.cID]];
+                                episode.Commit();
+                    }
+
+                            // Is this better?
+                            /*if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].UserRating;
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
+                                
+                                if (MarkWatched)
+                                    episode[DBOnlineEpisode.cWatched] = true;
+
+                                episode.Commit();
+                            }*/
+
+                }
                     }
                 }
                 else //update Series only, not Episodes -- workaround for not being able to pull up all series/episode ratings at once from theTVDB.com; saves time.
@@ -1161,14 +1186,19 @@ namespace WindowPlugins.GUITVSeries
                     GetUserRatings userRatings = new GetUserRatings(null, sAccountID);
                     foreach (DBOnlineSeries series in seriesList)
                     {
-                        if (userRatings.AllSeriesRatings.ContainsKey(series[DBOnlineSeries.cID]))
+                        if (userRatings.AllSeriesUserRatings.ContainsKey(series[DBOnlineSeries.cID]))
                         {
                             MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                            series[DBOnlineSeries.cMyRating] = userRatings.AllSeriesRatings[series[DBOnlineSeries.cID]];
+                            series[DBOnlineSeries.cMyRating] = userRatings.AllSeriesUserRatings[series[DBOnlineSeries.cID]];
                             series.Commit();
         }
+                        if (userRatings.AllSeriesCommunityRatings.ContainsKey(series[DBOnlineSeries.cID])) {
+                            MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                            series[DBOnlineSeries.cRating] = userRatings.AllSeriesCommunityRatings[series[DBOnlineSeries.cID]];
+                            series.Commit();
                     }
                 }
+            }
             }
             
         }
@@ -1243,6 +1273,7 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]));
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
+								//webClient.Headers.Add("referer", "http://thetvdb.com/");
                                 string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
                                 try {
                                     Directory.CreateDirectory(Path.GetDirectoryName(completePath));
@@ -1252,6 +1283,7 @@ namespace WindowPlugins.GUITVSeries
                                         episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
                                         episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
                                     } else {
+										MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
                                         webClient.DownloadFile(url, completePath);                                        
                                     }
                                     episode.Commit();
@@ -1276,9 +1308,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-
-
-
         public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             // Update Episode counts
@@ -1291,8 +1320,6 @@ namespace WindowPlugins.GUITVSeries
             tEpisodeCounts.DoWork += new DoWorkEventHandler(asyncEpisodeCounts);
             tEpisodeCounts.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncEpisodeCountsCompleted);
             tEpisodeCounts.RunWorkerAsync(AllSeries);
-
-
         }
 
         void asyncEpisodeCountsCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1309,37 +1336,30 @@ namespace WindowPlugins.GUITVSeries
             //e.Result = series.Count;
         }
 
-
-
-
         public void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
             SQLCondition cond = new SQLCondition();
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);
+            // Playtime decrements by one every failed attempt(0,-1,-2,..,-5), dont attempt future scans if done more than Maximum attempts
+            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.maxMIAttempts*-1), SQLConditionType.GreaterEqualThan); 
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
-            /*
-            List<DBEpisode> todoeps = new List<DBEpisode>();
-            // only get episodes without mediaInfo
-            for (int i = 0; i < episodes.Count; i++)
-                if (!episodes[i].mediaInfoIsSet)
-                    todoeps.Add(episodes[i]);
-            episodes = todoeps;
-            */
+            
             if (episodes.Count > 0)
             {
                 MPTVSeriesLog.Write("Updating MediaInfo...Running in the background (threaded)!  Only errors will be shown.");
                 MPTVSeriesLog.Write("Note: MediaInfo processing may not be completed until after Parsing is finished.  "
                                     + "Please wait until MediaInfo completes before you close the config.");
-                //BackgroundWorker resReader = new BackgroundWorker();
+                
                 tMediaInfo.DoWork += new DoWorkEventHandler(asyncReadResolutions);
                 tMediaInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 tMediaInfo.RunWorkerAsync(episodes);
 
             }
-            else MPTVSeriesLog.Write("No Episodes found that need updating");
+            else 
+                MPTVSeriesLog.Write("No Episodes found that need updating");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)

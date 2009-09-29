@@ -266,6 +266,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
               String sDownloadUrl = m_sBaseUrl + selected.Groups[1].Value;
               sDownloadUrl = sDownloadUrl.Replace("/subtitle", "/download");
 
+			  client.Headers.Add("referer", m_sBaseUrl);
               // we need to download those somewhere, unpack, remove the entry from the list & replace it with the files in the archive
               client.DownloadFile(sDownloadUrl, System.IO.Path.GetTempPath() + "temp_subs.zip");
 

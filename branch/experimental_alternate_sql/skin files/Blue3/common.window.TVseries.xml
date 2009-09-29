@@ -31,19 +31,6 @@
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
-    <!--<control>
-      <description>Number of Files Label</description>
-      <type>label</type>
-      <id>1</id>
-      <posX>365</posX>
-      <posY>545</posY>
-      <label>Series: #TVSeries.SeriesCount</label>
-      <align>left</align>
-      <textcolor>White</textcolor>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-	  <visible>Control.IsVisible(1235)+Control.IsVisible(1237)</visible>
-    </control>-->
     <control>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>

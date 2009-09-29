@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.IO;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Playlists;
 using MediaPortal.Util;
@@ -653,27 +654,6 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Logos.ToString(), localLogos.getLogos(ref episode, TVSeriesPlugin.logosHeight, TVSeriesPlugin.logosWidth));
 
-            //DBSeason selectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            //DBSeries selectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-
-            //if (selectedSeries != null)
-            //{
-            //    TVSeriesPlugin.setGUIProperty(guiProperty.SeriesBanner.ToString(), ImageAllocator.GetSeriesBanner(selectedSeries));
-            //    //seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(selectedSeries);
-            //    TVSeriesPlugin.pushFieldsToSkin(selectedSeries, "Series");
-            //}
-            //else
-            //    TVSeriesPlugin.clearGUIProperty(guiProperty.SeriesBanner.ToString());
-
-            //if (selectedSeason != null)
-            //{
-            //    TVSeriesPlugin.setGUIProperty(guiProperty.SeasonBanner.ToString(), ImageAllocator.GetSeasonBanner(selectedSeason, false));
-            //    //seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(selectedSeason);
-            //    TVSeriesPlugin.pushFieldsToSkin(selectedSeason, "Season");
-            //}
-            //else
-            //    TVSeriesPlugin.clearGUIProperty(guiProperty.SeasonBanner.ToString());
-
             TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
             
             // Some strange issues with logos when using mouse and hovering over current item
@@ -688,9 +668,6 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());
-            //TVSeriesPlugin.clearGUIProperty(guiProperty.SeasonBanner.ToString());
-            //TVSeriesPlugin.clearGUIProperty(guiProperty.SeriesBanner.ToString());
-           
             TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 
@@ -818,6 +795,17 @@ namespace WindowPlugins.GUITVSeries
                 playListPath = DBOption.GetOptions(DBOption.cPlaylistPath);
                 playListPath = MediaPortal.Util.Utils.RemoveTrailingSlash(playListPath);
            
+				// check if Playlist folder exists, create it if not
+				if (!Directory.Exists(playListPath)){
+					try {
+						Directory.CreateDirectory(playListPath);						
+					}
+					catch (Exception e){
+						MPTVSeriesLog.Write("Error: Unable to create Playlist path: " + e.Message);
+						return;
+					}
+				}
+				
                 string fullPlayListPath = Path.GetFileNameWithoutExtension(playlistFileName);
 
                 fullPlayListPath += ".tvsplaylist";
@@ -846,6 +834,16 @@ namespace WindowPlugins.GUITVSeries
             List<GUIListItem> itemlist = _virtualDirectory.GetDirectoryExt(_directory);
             if (_directory == DBOption.GetOptions(DBOption.cPlaylistPath))
                 itemlist.RemoveAt(0);
+
+			// If no playlists found, show a Message to user and then exit
+			if (itemlist.Count == 0) {
+				GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+				dlgOK.SetHeading(983);
+				dlgOK.SetLine(1, Translation.NoPlaylistsFound);
+				dlgOK.SetLine(2, _directory);
+				dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+				return;
+			}
 
             GUIDialogMenu dlg = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
@@ -893,9 +891,18 @@ namespace WindowPlugins.GUITVSeries
             if (playlist.Count == 1 && playlistPlayer.PlaylistAutoPlay)
             {
                 MPTVSeriesLog.Write(string.Format("GUITVSeriesPlaylist: play single playlist item - {0}", playlist[0].FileName));
-                if (g_Player.Play(playlist[0].FileName))
+
+                // If the file is an image file, it should be mounted before playing
+                string filename = playlist[0].FileName;
+                if (Helper.IsImageFile(filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                        return;
+                    }
+                }
+
+                if (g_Player.Play(filename))
                 {
-                    if (MediaPortal.Util.Utils.IsVideo(playlist[0].FileName))
+                    if (MediaPortal.Util.Utils.IsVideo(filename))
                     {
                         g_Player.ShowFullScreenWindow();
                     }
@@ -916,8 +923,14 @@ namespace WindowPlugins.GUITVSeries
             // if we got a playlist
             if (playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES).Count > 0)
             {
-                // then get 1st item
                 playlist = playlistPlayer.GetPlaylist(PlayListType.PLAYLIST_TVSERIES);
+
+				// autoshuffle on load
+				if (playlistPlayer.PlaylistAutoShuffle) {
+					playlist.Shuffle();
+				}
+
+                // then get 1st item
                 PlayListItem item = playlist[0];
 
                 // and start playing it

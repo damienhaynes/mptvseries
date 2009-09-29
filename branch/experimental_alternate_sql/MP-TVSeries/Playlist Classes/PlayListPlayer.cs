@@ -24,8 +24,10 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
 using MediaPortal.Util;
 using MediaPortal.Player;
 using MediaPortal.Playlists;
@@ -114,9 +116,11 @@ namespace WindowPlugins.GUITVSeries
         PlayListType _currentPlayList = PlayListType.PLAYLIST_NONE;
         PlayList _tvseriesPlayList = new PlayList();        
         PlayList _emptyPlayList = new PlayList();    
-        bool _repeatPlayList = true;
-        bool _playlistAutoPlay = true;
+        bool _repeatPlayList = DBOption.GetOptions(DBOption.cRepeatPlaylist);
+        bool _playlistAutoPlay = DBOption.GetOptions(DBOption.cPlaylistAutoPlay);
+		bool _playlistAutoShuffle = DBOption.GetOptions(DBOption.cPlaylistAutoShuffle);
         string _currentPlaylistName = string.Empty;
+		private bool listenToExternalPlayerEvents = false;
 
         public PlayListPlayer()
         {
@@ -136,6 +140,11 @@ namespace WindowPlugins.GUITVSeries
         public void Init()
         {
             GUIWindowManager.Receivers += new SendMessageHandler(this.OnMessage);
+
+			// external player handlers
+			MediaPortal.Util.Utils.OnStartExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStartExternal);
+			MediaPortal.Util.Utils.OnStopExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStopExternal);
+
         }
 
         public void OnMessage(GUIMessage message)
@@ -390,7 +399,24 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 bool playResult = false;                
-                playResult = g_Player.Play(item.FileName);
+
+                // If the file is an image file, it should be mounted before playing
+                string filename = item.FileName;
+                if (Helper.IsImageFile(filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                        return false;
+                    }
+                }
+
+                // Start Listening to any External Player Events
+				listenToExternalPlayerEvents = true;
+                
+                // Play File
+                playResult = g_Player.Play(filename);
+
+                // Stope Listening to any External Player Events
+				listenToExternalPlayerEvents = false;
+
                 if (!playResult)
                 {
                     //	Count entries in current playlist
@@ -526,5 +552,36 @@ namespace WindowPlugins.GUITVSeries
             get { return _playlistAutoPlay; }
             set { _playlistAutoPlay = value; }
         }
+
+		public bool PlaylistAutoShuffle {
+			get { return _playlistAutoShuffle; }
+			set { _playlistAutoShuffle = value; }
+    }
+
+		#region External Player Event Handlers
+		private void onStartExternal(Process proc, bool waitForExit) {
+			// If we were listening for external player events
+			if (listenToExternalPlayerEvents) {
+				MPTVSeriesLog.Write("Playback Started in External Player");
+}
+		}
+
+		private void onStopExternal(Process proc, bool waitForExit) {
+			if (!listenToExternalPlayerEvents)
+				return;
+
+			MPTVSeriesLog.Write("Playback Stopped in External Player");
+			SetAsWatched();
+			PlayNext();
+			if (!g_Player.Playing) {
+				g_Player.Release();
+
+				// Clear focus when playback ended
+				GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS, 0, 0, 0, -1, 0, null);
+				GUIGraphicsContext.SendMessage(msg);
+			}			
+		}
+		#endregion
+
     }
 }

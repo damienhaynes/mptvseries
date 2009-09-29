@@ -153,6 +153,21 @@ namespace WindowPlugins.GUITVSeries
                     default:
                         {
                             // no replacements in the db => put the default ones
+                            AddDefaults();
+
+                            nUpgradeDBVersion=3;
+                        }
+                        break;
+                }
+            }
+
+            DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
+        }
+
+        public static void AddDefaults() {
+
+            DBReplacements replacement = new DBReplacements();
+            
                             replacement[DBReplacements.cIndex] = "0";
                             replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cTagEnabled] = "0";
@@ -177,14 +192,9 @@ namespace WindowPlugins.GUITVSeries
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
                                                         
-                            /*replacement[DBReplacements.cIndex] = "3";
-                            replacement[DBReplacements.cBefore] = "0";
-                            replacement[DBReplacements.cToReplace] = "<space>s<space>";
-                            replacement[DBReplacements.cWith] = @"'s<space>";
-                            replacement.Commit();*/
-
                             // to avoid being parsed as second episode 20/80
                             replacement[DBReplacements.cIndex] = "3";
+            replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cBefore] = "1";
                             replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "720p";
@@ -192,6 +202,7 @@ namespace WindowPlugins.GUITVSeries
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "4";
+            replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cBefore] = "1";
                             replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "1080i";
@@ -199,6 +210,7 @@ namespace WindowPlugins.GUITVSeries
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "5";
+            replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cBefore] = "1";
                             replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "1080p";
@@ -206,19 +218,52 @@ namespace WindowPlugins.GUITVSeries
                             replacement.Commit();
 
                             replacement[DBReplacements.cIndex] = "6";
+            replacement[DBReplacements.cEnabled] = "1";
                             replacement[DBReplacements.cBefore] = "1";
                             replacement[DBReplacements.cTagEnabled] = "1";
                             replacement[DBReplacements.cToReplace] = "x264";
                             replacement[DBReplacements.cWith] = @"<empty>";
                             replacement.Commit();
 
-                            nUpgradeDBVersion=3;
-                        }
-                        break;
-                }
-            }
+            replacement[DBReplacements.cIndex] = "7";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "DSR";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
 
-            DBOption.SetOptions(DBOption.cDBReplacementsVersion, nCurrentDBVersion);
+            replacement[DBReplacements.cIndex] = "8";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "HR-HDTV";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "9";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "HR.HDTV";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "10";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "HDTV";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+            
+            replacement[DBReplacements.cIndex] = "11";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "DVDMux";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
         }
 
         public static String PrettyFieldName(String sFieldName)

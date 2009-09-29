@@ -47,7 +47,7 @@
                  dt:dt     (string|bin.base64) #IMPLIED
                  md5        CDATA #IMPLIED>
 ]>
-<msi version="2.0" xmlns:dt="urn:schemas-microsoft-com:datatypes">
+<msi version="2.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" codepage="65001">
 	
 	<summary>
 		<codepage>1252</codepage>
@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{BBC2FD2A-89D3-4D5F-903D-CF7BEFCAECE9}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 18:00</createdtm>
-		<lastsavedtm>07/14/2000 21:50</lastsavedtm>
+		<createdtm>06/21/1999 23:00</createdtm>
+		<lastsavedtm>07/15/2000 02:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -257,6 +257,7 @@
 		<row><td>NewBinary7</td><td/><td>&lt;ISPROJECTDIR&gt;\res\sidebanner.bmp</td></row>
 		<row><td>NewBinary8</td><td/><td>&lt;ISPROJECTDIR&gt;\res\sidebanner.bmp</td></row>
 		<row><td>NewBinary9</td><td/><td>&lt;ISPROJECTDIR&gt;\res\setupwatermark.bmp</td></row>
+		<row><td>SetAllUsers.dll</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\SetAllUsers.dll</td></row>
 	</table>
 
 	<table name="BindImage">
@@ -326,14 +327,15 @@
 		<row><td>Home</td><td>{D4B8B1AA-313B-4DE4-B17D-02AC11D72823}</td><td>WEB</td><td>8</td><td/><td>home.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{8A4BF4FA-0DB6-4387-B076-58F050BD0D62}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Issues</td><td>{8CCBDA0E-4673-4E6E-8650-D4F52E722867}</td><td>WEB</td><td>8</td><td/><td>issues.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Wiki</td><td>{B6C9EB8C-2048-45DA-801E-A45FB97B1837}</td><td>WEB</td><td>8</td><td/><td>wiki.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3Media</td><td>{CC2C416E-AD41-4A37-AECC-F5EFCDC1FB39}</td><td>MEDIA</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>skinBlue3XML</td><td>{092B6B62-8CFA-4A87-B026-C7AF7336A60A}</td><td>BLUE3</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>skinBlue3XML</td><td>{092B6B62-8CFA-4A87-B026-C7AF7336A60A}</td><td>BLUE3</td><td>8</td><td/><td>tvseries.xml1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -468,6 +470,13 @@
 		<row><td>DialogId_12071</td><td>ControlId_7</td><td>Text</td><td>3</td><td>222</td><td>45</td><td>13</td><td>2</td><td/><td/><td>ControlId_1300</td><td/><td>131072</td><td>7</td><td/><td/></row>
 		<row><td>DialogId_12071</td><td>ControlId_710</td><td>Text</td><td>19</td><td>49</td><td>333</td><td>31</td><td>131075</td><td/><td>##IDS__DialogId_12071_ControlId_710##</td><td>ControlId_1003</td><td/><td>131072</td><td>710</td><td/><td/></row>
 		<row><td>DialogId_12071</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12071_ControlId_9##</td><td>ControlId_1</td><td/><td>0</td><td>9</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_1##</td><td>ControlId_9</td><td/><td>131072</td><td>1</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_12##</td><td>ControlId_1300</td><td/><td>0</td><td>12</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_7</td><td/><td>131079</td><td>1300</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__NewDialog_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_7</td><td>Text</td><td>3</td><td>222</td><td>45</td><td>13</td><td>2</td><td/><td/><td>Text1</td><td/><td>131072</td><td>7</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_9##</td><td>ControlId_12</td><td/><td>0</td><td>9</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>Text1</td><td>Text</td><td>0</td><td>0</td><td>374</td><td>232</td><td>65539</td><td/><td>##NEW_STRING2##</td><td>ControlId_1</td><td/><td>2097152</td><td>1301</td><td/><td/></row>
 		<row><td>STATUSEX</td><td>Bitmap1</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1048577</td><td/><td/><td>ControlId_710</td><td/><td>0</td><td>17814</td><td/><td>NewBinary9</td></row>
 		<row><td>STATUSEX</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td/><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>STATUSEX</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>2</td><td>3</td><td/><td/><td/><td/><td>131088</td><td>1301</td><td/><td/></row>
@@ -522,6 +531,7 @@
 		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/><td/></row>
+		<row><td>ISSetAllUsers</td><td>257</td><td>SetAllUsers.dll</td><td>SetAllUsers</td><td/><td/></row>
 		<row><td>ISSetupFilesCleanup</td><td>257</td><td>ISSetupFilesHelper</td><td>SFCleanupEx</td><td/><td/></row>
 		<row><td>ISSetupFilesExtract</td><td>257</td><td>ISSetupFilesHelper</td><td>SFStartupEx</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
@@ -556,6 +566,7 @@
 		<row><td>DialogId_12060</td><td>0</td><td>0</td><td>374</td><td>266</td><td>1</td><td>##IDS__DialogId_12060##</td><td>ControlId_52</td><td>ControlId_1</td><td/><td/><td>MSSansSerif8</td><td>-2134900544</td><td>12060</td></row>
 		<row><td>DialogId_12068</td><td>0</td><td>0</td><td>374</td><td>266</td><td>1</td><td>##IDS__DialogId_12068##</td><td>ControlId_1</td><td>ControlId_1</td><td>ControlId_2</td><td/><td>MSSansSerif8</td><td>-2134376256</td><td>12068</td></row>
 		<row><td>DialogId_12071</td><td>0</td><td>0</td><td>374</td><td>266</td><td>1</td><td>##IDS__DialogId_12071##</td><td>ControlId_1301</td><td>ControlId_1</td><td>ControlId_2</td><td/><td>MSSansSerif8</td><td>-2134376256</td><td>12071</td></row>
+		<row><td>ReleaseNotes</td><td>0</td><td>0</td><td>374</td><td>266</td><td>1</td><td>##IDS__NewDialog##</td><td>ControlId_1</td><td>ControlId_1</td><td>ControlId_2</td><td/><td>MSSansSerif8</td><td>-2134376256</td><td>14000</td></row>
 		<row><td>STATUSEX</td><td>0</td><td>0</td><td>374</td><td>266</td><td>1</td><td>##IDS__DialogId_10305##</td><td>ControlId_710</td><td/><td>ControlId_2</td><td/><td>MSSansSerif8</td><td>-2134376256</td><td>10305</td></row>
 	</table>
 
@@ -587,6 +598,7 @@
 		<row><td>MEDIAPORTAL</td><td>TEAM_MEDIAPORTAL</td><td>MEDIAP~1|MediaPortal</td><td/><td>0</td><td/></row>
 		<row><td>MEDIAPORTAL1</td><td>TEAM_MEDIAPORTAL1</td><td>MEDIAP~1|MediaPortal</td><td/><td>0</td><td/></row>
 		<row><td>MPLANGUAGESDIR</td><td>TARGETDIR</td><td>MPLANG~1|MPLANGUAGESDIR</td><td/><td>0</td><td/></row>
+		<row><td>MPPROGRAMDIR</td><td>TARGETDIR</td><td>MPPROG~1|MPPROGRAMDIR</td><td/><td>0</td><td/></row>
 		<row><td>MPSKINSDIR</td><td>TARGETDIR</td><td>MPSKIN~1|MPSKINSDIR</td><td/><td>0</td><td/></row>
 		<row><td>MP_TVSERIES</td><td>MPLANGUAGESDIR</td><td>MP-TVS~1|MP-TVSeries</td><td/><td>0</td><td/></row>
 		<row><td>MP_TVSERIES1</td><td>MEDIAPORTAL1</td><td>MP-TVS~1|MP-TVSeries</td><td/><td>0</td><td/></row>
@@ -1290,7 +1302,7 @@
 		<row><td>Blue3</td><td>Skins</td><td>##ID_STRING10##</td><td>##ID_STRING13##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>Blue3Wide</td><td>Skins</td><td>##ID_STRING11##</td><td>##ID_STRING14##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td>##ID_STRING8##</td><td>##ID_STRING7##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>6</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1306,6 +1318,7 @@
 		<row><td>Main</td><td>Issues</td></row>
 		<row><td>Main</td><td>Languages</td></row>
 		<row><td>Main</td><td>MP_TVSeries.dll</td></row>
+		<row><td>Main</td><td>PluginConfigLoader</td></row>
 		<row><td>Main</td><td>Updates</td></row>
 		<row><td>Main</td><td>Wiki</td></row>
 	</table>
@@ -1322,10 +1335,40 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>common.window.tvseries.xml</td><td>skinBlue3XML</td><td>COMMON~1.XML|common.window.TVseries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\common.window.TVseries.xml</td><td>17</td><td/></row>
+		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>17</td><td/></row>
+		<row><td>de.xml</td><td>Languages</td><td>de.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\de.xml</td><td>17</td><td/></row>
+		<row><td>en_us_.xml</td><td>Languages</td><td>en(us).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\en(us).xml</td><td>17</td><td/></row>
+		<row><td>es.xml</td><td>Languages</td><td>es.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\es.xml</td><td>17</td><td/></row>
 		<row><td>forums.url</td><td>Forums</td><td>Forums.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Forums.url</td><td>1</td><td/></row>
+		<row><td>fr.xml</td><td>Languages</td><td>fr.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\fr.xml</td><td>17</td><td/></row>
+		<row><td>he.xml</td><td>Languages</td><td>he.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\he.xml</td><td>17</td><td/></row>
 		<row><td>home.url</td><td>Home</td><td>Home.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Home.url</td><td>1</td><td/></row>
 		<row><td>issues.url</td><td>Issues</td><td>Issues.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Issues.url</td><td>1</td><td/></row>
+		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>17</td><td/></row>
 		<row><td>mp_tvseries.dll</td><td>MP_TVSeries.dll</td><td>MP-TVS~1.DLL|MP-TVSeries.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BinDir&gt;\MP-TVSeries.dll</td><td>1</td><td/></row>
+		<row><td>nl_nl_.xml</td><td>Languages</td><td>nl(nl).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\nl(nl).xml</td><td>17</td><td/></row>
+		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>17</td><td/></row>
+		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>17</td><td/></row>
+		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>17</td><td/></row>
+		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;UtilsDir&gt;\pluginconfigloader\pluginconfigloader\bin\release\PluginConfigLoader.exe</td><td>1</td><td/></row>
+		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>17</td><td/></row>
+		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>17</td><td/></row>
+		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.dummy.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.fanart.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.FanArt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.FanArt.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.fanart.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.FanArt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.FanArt.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.pincodedialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.PinCodeDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.PinCodeDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.pincodedialog.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.PinCodeDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.PinCodeDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.playlist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Playlist.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Playlist.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.playlist.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.Playlist.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.Playlist.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.ratingdialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.RatingDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.RatingDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.ratingdialog.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.RatingDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.RatingDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.skinsettings.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SkinSettings.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SkinSettings.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.skinsettings.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.SkinSettings.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.SkinSettings.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.xml</td><td>skinBlue3WideXML</td><td>TVSeries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.xml1</td><td>skinBlue3XML</td><td>TVSeries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.xml</td><td>17</td><td/></row>
 		<row><td>updates.url</td><td>Updates</td><td>Updates.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Updates.url</td><td>1</td><td/></row>
 		<row><td>wiki.url</td><td>Wiki</td><td>Wiki.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Wiki.url</td><td>1</td><td/></row>
 	</table>
@@ -1443,7 +1486,7 @@
 		<col def="i4">Root</col>
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
-		<col def="S255">Value</col>
+		<col def="S0">Value</col>
 		<col def="i4">Processor</col>
 		<col def="i4">Platform</col>
 		<col def="i4">Overwrite</col>
@@ -1478,6 +1521,7 @@
 		<col def="S0">InstallProperties</col>
 		<col def="S0">RemoveProperties</col>
 		<col def="S255">ISReleaseFlags</col>
+		<col def="S72">DisplayName</col>
 	</table>
 
 	<table name="ISChainPackageData">
@@ -1580,6 +1624,7 @@
 		<row><td>Issues</td><td/><td/><td>_7F846ECC_7C21_4158_AB9A_FC4BE1131072_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Languages</td><td/><td/><td>_43676FB1_360E_4DBF_969B_179B371EB92A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MP_TVSeries.dll</td><td/><td/><td>_3D521D74_D0A4_40AB_8993_D9147023752A_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>PluginConfigLoader</td><td/><td/><td>_5B0A85B6_7138_45C5_A964_0E08743C61D3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Updates</td><td/><td/><td>_906420BA_C1A6_4D16_A4EE_0749D1E8796D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Wiki</td><td/><td/><td>_FA268EEB_795E_49F2_A65E_3688CE9B9ADC_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3Media</td><td/><td/><td>_D51CB0E0_168F_474F_B433_1699779B7DCF_FILTER</td><td/><td/><td/><td/></row>
@@ -1643,11 +1688,8 @@
 		<col def="S0">IncludeFiles</col>
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Languages</td><td>&lt;LanguageDir&gt;</td><td>4</td><td>*.xml</td><td/><td>8</td></row>
 		<row><td>skinBlue3Media</td><td>&lt;SkinDir&gt;\blue3\media</td><td>4</td><td>*.png</td><td/><td>10</td></row>
 		<row><td>skinBlue3WideMedia</td><td>&lt;SkinDir&gt;\blue3wide\media</td><td>4</td><td>*.png</td><td/><td>10</td></row>
-		<row><td>skinBlue3WideXML</td><td>&lt;SkinDir&gt;\blue3wide</td><td>4</td><td>*.xml</td><td/><td>8</td></row>
-		<row><td>skinBlue3XML</td><td>&lt;SkinDir&gt;\blue3</td><td>4</td><td>*.xml</td><td>TVSeries-animated.xml, TVSeries-simple.xml</td><td>8</td></row>
 	</table>
 
 	<table name="ISFeatureExtended">
@@ -1692,59 +1734,26 @@
 		<col key="yes" def="s72">Manifest_</col>
 	</table>
 
-	<table name="ISIISAppPool">
-		<col key="yes" def="s72">AppPool</col>
-		<col def="l72">Name</col>
-		<col def="s72">Component_</col>
-		<col def="I4">Attributes</col>
-		<col def="S72">User</col>
-		<col def="S72">UserPassword</col>
-		<col def="I4">RecycleMinutes</col>
-		<col def="I4">RecycleRequests</col>
-		<col def="S72">RecycleTimes</col>
-		<col def="I4">IdleTimeout</col>
-		<col def="I4">QueueLimit</col>
-		<col def="S72">CPUMon</col>
-		<col def="I4">MaxProc</col>
-	</table>
-
-	<table name="ISIISCommon">
-		<col key="yes" def="s50">ISIISCommon</col>
-		<col def="S50">ISIISCommon_Parent</col>
+	<table name="ISIISItem">
+		<col key="yes" def="s72">ISIISItem</col>
+		<col def="S72">ISIISItem_Parent</col>
 		<col def="L255">DisplayName</col>
-		<col def="s50">RootDir</col>
-		<col def="i4">Attributes</col>
-		<col def="L255">DefDoc</col>
-		<col def="I4">SessionTimeout</col>
-		<col def="I4">ScriptTimeout</col>
-		<col def="S255">AnonyUserName</col>
-		<col def="S255">AnonyPasswrd</col>
-		<col def="S0">CustomErrors</col>
-		<col def="L255">AppName</col>
-		<col def="S72">SSLCert</col>
-		<col def="L72">AppPool_</col>
-		<col def="S255">Aspversion</col>
-		<col def="S255">SslPassword</col>
-		<col def="S255">HostHeaderName</col>
+		<col def="i4">Type</col>
+		<col def="S72">Component_</col>
 	</table>
 
-	<table name="ISIISMetaData">
-		<col key="yes" def="s72">ISIISCommon_</col>
-		<col key="yes" def="I4">MetaDataProp</col>
+	<table name="ISIISProperty">
+		<col key="yes" def="s72">ISIISProperty</col>
+		<col key="yes" def="s72">ISIISItem_</col>
+		<col def="S0">Schema</col>
+		<col def="S255">FriendlyName</col>
+		<col def="I4">MetaDataProp</col>
 		<col def="I4">MetaDataType</col>
-		<col def="i4">MetaDataUserType</col>
-		<col def="i4">MetaDataAttributes</col>
-		<col def="i4">Order</col>
-		<col def="s0">MetaDataValue</col>
-	</table>
-
-	<table name="ISIISWebServiceExtension">
-		<col key="yes" def="s72">WebServiceExtension</col>
-		<col def="s0">Component_</col>
-		<col def="s72">File</col>
-		<col def="l72">Description</col>
-		<col def="s72">Group</col>
-		<col def="i4">Attributes</col>
+		<col def="I4">MetaDataUserType</col>
+		<col def="I4">MetaDataAttributes</col>
+		<col def="L0">MetaDataValue</col>
+		<col def="I4">Order</col>
+		<col def="I4">ISAttributes</col>
 	</table>
 
 	<table name="ISInstallScriptAction">
@@ -1764,8 +1773,8 @@
 		<col key="yes" def="s72">ISLinkerLibrary</col>
 		<col def="s255">Library</col>
 		<col def="i4">Order</col>
-		<row><td>Isrt.obl</td><td>&lt;ISProductFolder&gt;\Script\ISRT\Lib\isrt.obl</td><td>2</td></row>
-		<row><td>Iswi.obl</td><td>&lt;ISProductFolder&gt;\Script\ISWi\Lib\iswi.obl</td><td>1</td></row>
+		<row><td>isrt.obl</td><td>isrt.obl</td><td>2</td></row>
+		<row><td>iswi.obl</td><td>iswi.obl</td><td>1</td></row>
 	</table>
 
 	<table name="ISLocalControl">
@@ -1798,6 +1807,15 @@
 		<col def="i2">Y</col>
 		<col def="i2">Width</col>
 		<col def="i2">Height</col>
+	</table>
+
+	<table name="ISLockPermissions">
+		<col key="yes" def="s72">LockObject</col>
+		<col key="yes" def="s32">Table</col>
+		<col key="yes" def="S255">Domain</col>
+		<col key="yes" def="s255">User</col>
+		<col def="I4">Permission</col>
+		<col def="I4">Attributes</col>
 	</table>
 
 	<table name="ISLogicalDisk">
@@ -1926,6 +1944,7 @@
 		<row><td>SkinDir</td><td>&lt;TrunkDir&gt;\skin files</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>TrunkDir</td><td>MPTVSeriesTrunkDir</td><td/><td>4</td></row>
+		<row><td>UtilsDir</td><td>MPTVSeriesUtilsDir</td><td/><td>4</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
 
@@ -2016,7 +2035,7 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
-		<row><td>MP-TVSeries</td><td>Release</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td/><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>2</td><td>1033</td><td/><td/><td/><td/><td>528</td><td>3</td><td>16</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
+		<row><td>MP-TVSeries</td><td>Release</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td/><td>http://www.installengine.com/cert05/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>2</td><td>1033</td><td/><td/><td/><td/><td>1040</td><td>3</td><td>16</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 	</table>
 
 	<table name="ISReleaseProperty">
@@ -2160,6 +2179,26 @@
 		<row><td>&lt;ISProjectDataFolder&gt;\Script Files\Setup.Rul</td></row>
 	</table>
 
+	<table name="ISSearchReplace">
+		<col key="yes" def="s72">ISSearchReplace</col>
+		<col def="s72">ISSearchReplaceSet_</col>
+		<col def="S0">Search</col>
+		<col def="S0">Replace</col>
+		<col def="i2">Attributes</col>
+		<col def="i2">Order</col>
+	</table>
+
+	<table name="ISSearchReplaceSet">
+		<col key="yes" def="s72">ISSearchReplaceSet</col>
+		<col def="s72">Component_</col>
+		<col def="s72">Directory_</col>
+		<col def="S0">IncludeFiles</col>
+		<col def="S0">ExcludeFiles</col>
+		<col def="i2">Attributes</col>
+		<col def="i2">Order</col>
+		<col def="i2">CodePage</col>
+	</table>
+
 	<table name="ISSelfReg">
 		<col key="yes" def="s72">FileKey</col>
 		<col def="I2">Cost</col>
@@ -2175,6 +2214,9 @@
 		<col def="I2">Splash</col>
 		<col def="S0">Path</col>
 		<row><td>SetupFile1</td><td>splash.bmp</td><td/><td>0</td><td>1</td><td>&lt;ISPROJECTDIR&gt;\res\splash.bmp</td></row>
+		<row><td>SetupFile2</td><td>bullet.jpg</td><td/><td>0</td><td>0</td><td>&lt;TrunkDir&gt;\releasenotes\bullet.jpg</td></row>
+		<row><td>SetupFile3</td><td>ReleaseNote.html</td><td/><td>0</td><td>0</td><td>&lt;TrunkDir&gt;\releasenotes\ReleaseNote.html</td></row>
+		<row><td>SetupFile4</td><td>tri.gif</td><td/><td>0</td><td>0</td><td>&lt;TrunkDir&gt;\releasenotes\tri.gif</td></row>
 	</table>
 
 	<table name="ISSetupPrerequisites">
@@ -3017,6 +3059,7 @@
 		<row><td>IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>1033</td><td>Rolling back application pools...</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS_PROGMSG_IIS_ROLLBACKVROOTS</td><td>1033</td><td>Rolling back virtual directory and web site changes...</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>1033</td><td>Rolling back web service extensions...</td><td>0</td><td/><td>1386000544</td></row>
+		<row><td>IDS_PROGMSG_TEXTFILECHANGS_REPLACE</td><td>1033</td><td>Replacing %s with %s in %s...</td><td>0</td><td/><td/></row>
 		<row><td>IDS_PROGMSG_XML_COSTING</td><td>1033</td><td>Costing XML files...</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS_PROGMSG_XML_CREATE_FILE</td><td>1033</td><td>Creating XML file %s...</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS_PROGMSG_XML_FILES</td><td>1033</td><td>Performing XML file changes...</td><td>0</td><td/><td>1386000544</td></row>
@@ -3405,6 +3448,14 @@
 		<row><td>IDS__IsWelcomeDlg_InstallProductName</td><td>1033</td><td>The InstallShield(R) Wizard will install [ProductName] on your computer. To continue, click Next.</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS__IsWelcomeDlg_WarningCopyright</td><td>1033</td><td>WARNING: This program is protected by copyright law and international treaties.</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS__IsWelcomeDlg_WelcomeProductName</td><td>1033</td><td>{&amp;TahomaBold10}Welcome to the InstallShield Wizard for [ProductName]</td><td>0</td><td/><td>1386000544</td></row>
+		<row><td>IDS__NewDialog</td><td>1033</td><td>InstallShield Wizard</td><td>0</td><td/><td>278302730</td></row>
+		<row><td>IDS__NewDialog_ControlId_1</td><td>1033</td><td>&amp;Next &gt;</td><td>0</td><td/><td>278302730</td></row>
+		<row><td>IDS__NewDialog_ControlId_12</td><td>1033</td><td>&lt; &amp;Back</td><td>0</td><td/><td>278304778</td></row>
+		<row><td>IDS__NewDialog_ControlId_1200</td><td>1033</td><td>@10550,10551;1;0;;0,128,128   </td><td>0</td><td/><td>278302730</td></row>
+		<row><td>IDS__NewDialog_ControlId_2</td><td>1033</td><td>C</td><td>0</td><td/><td>278304778</td></row>
+		<row><td>IDS__NewDialog_ControlId_50</td><td>1033</td><td>Your Title Here</td><td>0</td><td/><td>278304778</td></row>
+		<row><td>IDS__NewDialog_ControlId_51</td><td>1033</td><td>Your Sub-Title Here</td><td>0</td><td/><td>278304778</td></row>
+		<row><td>IDS__NewDialog_ControlId_9</td><td>1033</td><td>Cancel</td><td>0</td><td/><td>278302730</td></row>
 		<row><td>IDS__TargetReq_DESC_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS__TargetReq_DESC_OS</td><td>1033</td><td>The operating system is not adequate for running [ProductName].</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>1386000544</td></row>
@@ -3426,6 +3477,8 @@
 		<row><td>ID_STRING21</td><td>1033</td><td>ISSUET~1|Issue Tracker</td><td>0</td><td/><td>463301810</td></row>
 		<row><td>ID_STRING22</td><td>1033</td><td>DOWNLO~1|Download Updates</td><td>0</td><td/><td>463330482</td></row>
 		<row><td>ID_STRING23</td><td>1033</td><td>Wiki</td><td>0</td><td/><td>463291602</td></row>
+		<row><td>ID_STRING24</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-1415723317</td></row>
+		<row><td>ID_STRING25</td><td>1033</td><td>This feature contains all the language translations for the MP-TVSeries plugin, if you want to create a custom language</td><td>0</td><td/><td>-1415764213</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>http://code.google.com/p/mptvseries/</td><td>0</td><td/><td>463326637</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://forum.team-mediaportal.com/my-tvseries-162/</td><td>0</td><td/><td>463295949</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>MediaPortal Forums</td><td>0</td><td/><td>463306189</td></row>
@@ -3438,6 +3491,7 @@
 		<row><td>MPNOTFOUND</td><td>1033</td><td>MediaPortal could not be found or is not installed correctly, please Install MP 1.0.2 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>463332337</td></row>
 		<row><td>MPOLDVERSION</td><td>1033</td><td>It appears your MediaPortal version is out of date, some features of TVSeries may not be available or not work correctly.</td><td>0</td><td/><td>463309841</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.</td><td>0</td><td/><td>463323411</td></row>
+		<row><td>NEW_STRING2</td><td>1033</td><td>Release Notes HTML goes here</td><td>0</td><td/><td>-1281533039</td></row>
 	</table>
 
 	<table name="ISTargetImage">
@@ -3460,30 +3514,6 @@
 		<col key="yes" def="s13">Name</col>
 		<col def="s0">MsiPath</col>
 		<col def="s8">Family</col>
-	</table>
-
-	<table name="ISVRoot">
-		<col key="yes" def="s50">VRootKey</col>
-		<col def="l255">VRootName</col>
-		<col def="s50">VRootDir</col>
-		<col def="i4">VRootProps</col>
-		<col def="S255">VRootAppName</col>
-		<col def="S255">VRootDefDoc</col>
-		<col def="S255">Condition</col>
-		<col def="I4">SessionTimeout</col>
-		<col def="I4">ScriptTimeout</col>
-		<col def="S255">AnonyUserName</col>
-		<col def="S255">AnonyPasswrd</col>
-		<col def="s72">Component_</col>
-	</table>
-
-	<table name="ISVRootAppMaps">
-		<col key="yes" def="s255">VRootKey</col>
-		<col key="yes" def="s255">VRootAppMapKey</col>
-		<col def="l50">Extension</col>
-		<col def="l255">ExecPath</col>
-		<col def="l255">Verb</col>
-		<col def="i4">AppMapProps</col>
 	</table>
 
 	<table name="ISVirtualDirectory">
@@ -3520,14 +3550,6 @@
 		<col key="yes" def="s72">Shortcut_</col>
 		<col key="yes" def="s72">Name</col>
 		<col def="s255">Value</col>
-	</table>
-
-	<table name="ISWebSite">
-		<col key="yes" def="s50">ISIISCommon_</col>
-		<col def="s50">Port</col>
-		<col def="S50">IP</col>
-		<col def="s50">SiteNumber</col>
-		<col def="I4">WebSiteProps</col>
 	</table>
 
 	<table name="ISXmlElement">
@@ -3619,7 +3641,8 @@
 		<row><td>ISPreventDowngrade</td><td>ISFOUNDNEWERPRODUCTVERSION</td><td>450</td><td>ISPreventDowngrade</td><td/></row>
 		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>6602</td><td/><td/></row>
+		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
+		<row><td>ISSetAllUsers</td><td>Not Installed</td><td>10</td><td/><td/></row>
 		<row><td>ISSetupFilesCleanup</td><td/><td>6603</td><td/><td/></row>
 		<row><td>ISSetupFilesExtract</td><td/><td>3</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
@@ -3709,14 +3732,14 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISUSSignature</td><td>{D2A75844-9FA4-451C-8155-CC78F63EDCD9}</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
 		<row><td>MsiLogFile</td><td/></row>
-		<row><td>OnUpgrade</td><td>1</td></row>
+		<row><td>OnUpgrade</td><td>0</td></row>
 		<row><td>Owner</td><td>ltfearme</td></row>
 		<row><td>PatchFamily</td><td>MyPatchFamily1</td></row>
 		<row><td>PatchSequence</td><td>1.0.0</td></row>
 		<row><td>SaveAsSchema</td><td/></row>
 		<row><td>SccEnabled</td><td>0</td></row>
 		<row><td>SccPath</td><td/></row>
-		<row><td>SchemaVersion</td><td>768</td></row>
+		<row><td>SchemaVersion</td><td>769</td></row>
 		<row><td>Script</td><td>1</td></row>
 		<row><td>Type</td><td>MSI</td></row>
 		<row><td>UseMSI45EmbeddedUI</td><td>0</td></row>
@@ -3736,6 +3759,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>FileCost</td><td/><td>900</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td/><td>430</td><td>FindRelatedProducts</td><td/></row>
 		<row><td>ISPreventDowngrade</td><td>ISFOUNDNEWERPRODUCTVERSION</td><td>450</td><td>ISPreventDowngrade</td><td/></row>
+		<row><td>ISSetAllUsers</td><td>Not Installed</td><td>10</td><td/><td/></row>
 		<row><td>ISSetupFilesCleanup</td><td/><td>1301</td><td/><td/></row>
 		<row><td>ISSetupFilesExtract</td><td/><td>3</td><td/><td/></row>
 		<row><td>ISVerifyScriptingRuntime</td><td>NOT AFTERREBOOT AND NOT ISSETUPDRIVEN</td><td>1</td><td>ISVerifyScriptingRuntime</td><td/></row>
@@ -3867,6 +3891,14 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<col def="i4">HashPart4</col>
 	</table>
 
+	<table name="MsiLockPermissionsEx">
+		<col key="yes" def="s72">MsiLockPermissionsEx</col>
+		<col def="s72">LockObject</col>
+		<col def="s32">Table</col>
+		<col def="s0">SDDLText</col>
+		<col def="S255">Condition</col>
+	</table>
+
 	<table name="MsiPackageCertificate">
 		<col key="yes" def="s72">PackageCertificate</col>
 		<col def="s72">DigitalCertificate_</col>
@@ -3901,6 +3933,34 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<col key="yes" def="S0">Target</col>
 		<col def="s0">Sequence</col>
 		<col def="i2">Supersede</col>
+	</table>
+
+	<table name="MsiServiceConfig">
+		<col key="yes" def="s72">MsiServiceConfig</col>
+		<col def="l72">Name</col>
+		<col def="i2">Event</col>
+		<col def="i4">ConfigType</col>
+		<col def="S0">Argument</col>
+		<col def="s72">Component_</col>
+	</table>
+
+	<table name="MsiServiceConfigFailureActions">
+		<col key="yes" def="s72">MsiServiceConfigFailureActions</col>
+		<col def="l72">Name</col>
+		<col def="i2">Event</col>
+		<col def="I4">ResetPeriod</col>
+		<col def="L255">RebootMessage</col>
+		<col def="L255">Command</col>
+		<col def="S0">Actions</col>
+		<col def="S0">DelayActions</col>
+		<col def="s72">Component_</col>
+	</table>
+
+	<table name="MsiShortcutProperty">
+		<col key="yes" def="s72">MsiShortcutProperty</col>
+		<col def="s72">Shortcut_</col>
+		<col def="s0">PropertyKey</col>
+		<col def="s0">PropVariantValue</col>
 	</table>
 
 	<table name="ODBCAttribute">
@@ -3982,6 +4042,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>IS_COMPLUS_PROGRESSTEXT_COST</td><td>##IDS_COMPLUS_PROGRESSTEXT_COST##</td><td/></row>
 		<row><td>IS_COMPLUS_PROGRESSTEXT_INSTALL</td><td>##IDS_COMPLUS_PROGRESSTEXT_INSTALL##</td><td/></row>
 		<row><td>IS_COMPLUS_PROGRESSTEXT_UNINSTALL</td><td>##IDS_COMPLUS_PROGRESSTEXT_UNINSTALL##</td><td/></row>
+		<row><td>IS_PROGMSG_TEXTFILECHANGS_REPLACE</td><td>##IDS_PROGMSG_TEXTFILECHANGS_REPLACE##</td><td/></row>
 		<row><td>IS_PROGMSG_XML_COSTING</td><td>##IDS_PROGMSG_XML_COSTING##</td><td/></row>
 		<row><td>IS_PROGMSG_XML_CREATE_FILE</td><td>##IDS_PROGMSG_XML_CREATE_FILE##</td><td/></row>
 		<row><td>IS_PROGMSG_XML_FILES</td><td>##IDS_PROGMSG_XML_FILES##</td><td/></row>
@@ -3994,7 +4055,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>IS_SQLSERVER_SERVER</td><td/><td/></row>
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>MPLANGUAGESDIR</td><td/><td/></row>
+		<row><td>MPPROGRAMDIR</td><td/><td/></row>
 		<row><td>MPSKINSDIR</td><td/><td/></row>
+		<row><td>MSIFASTINSTALL</td><td>3</td><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>MsiLogging</td><td>voicewarmupx</td><td/></row>
 		<row><td>NewProperty1</td><td>0</td><td/></row>
@@ -4021,12 +4084,12 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{5E065870-4494-47B0-A661-17BF29F7A6F7}</td><td/></row>
+		<row><td>ProductCode</td><td>{C490B4F8-03AB-4CF3-8A46-3D504FEC760B}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries 2.3</td><td/></row>
-		<row><td>ProductVersion</td><td>2.3.0</td><td/></row>
+		<row><td>ProductVersion</td><td>2.3.3491</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
-		<row><td>SecureCustomProperties</td><td>ISALWAYSINSTALLELEVATED;ISSETUPDRIVEN;ARPSYSTEMCOMPONENT;ARPNOMODIFY;ARPNOREMOVE;INSTALLDIR;ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;IS_SQLSERVER_LIST;IS_SQLSERVER_DATABASE;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_USERNAME;IS_SQLSERVER_SERVER;IS_SQLSERVER_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_PASSWORD;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_SERVER_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_CONFIRM;IS_NEW_USER_PASSWORD_TEXT;IS_NET_API_NEW_USER_SERVER;IS_NET_API_NEW_USER_GROUP;IS_NET_API_GROUP_LIST;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_USERNAME_TOKEN;SUPPORTDIR</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
 		<row><td>UpgradeCode</td><td>{F112F8C6-7A15-464D-8B3F-9329A61A647E}</td><td/></row>
 		<row><td>Yes__I_want_to_launch__p_now.</td><td>***DO_NOT_BUILD***</td><td/></row>
 		<row><td>Yes__I_want_to_restart_my_computer_now.</td><td>***DO_NOT_BUILD***</td><td/></row>
@@ -4039,7 +4102,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<col key="yes" def="s38">ComponentId</col>
 		<col key="yes" def="s255">Qualifier</col>
 		<col key="yes" def="s72">Component_</col>
-		<col def="L255">AppData</col>
+		<col def="L0">AppData</col>
 		<col def="s38">Feature_</col>
 	</table>
 
@@ -4210,6 +4273,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>Arial9</td><td>Arial</td><td>9</td><td/><td/></row>
 		<row><td>CourierNew8</td><td>Courier New</td><td>8</td><td/><td/></row>
 		<row><td>CourierNew9</td><td>Courier New</td><td>9</td><td/><td/></row>
+		<row><td>JPN_TextStyle</td><td>‚l‚r ‚oƒSƒVƒbƒN</td><td>8</td><td>0</td><td>0</td></row>
 		<row><td>MSGothic9</td><td>MS Gothic</td><td>9</td><td/><td/></row>
 		<row><td>MSSansBold8</td><td>Tahoma</td><td>8</td><td/><td>1</td></row>
 		<row><td>MSSansSerif8</td><td>MS Sans Serif</td><td>8</td><td/><td/></row>
@@ -4299,6 +4363,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<col def="S255">Remove</col>
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
+		<row><td>{F112F8C6-7A15-464D-8B3F-9329A61A647E}</td><td></td><td>***ALL_VERSIONS***</td><td></td><td>257</td><td/><td>MAJORUPGRADE_01</td><td>MajorUpgrade</td></row>
 	</table>
 
 	<table name="Verb">
@@ -4606,6 +4671,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISCEShtCut</td><td>Platform</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>ShtCutKey</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>Target</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISChainPackage</td><td>DisplayName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Display name for the chained package. Used only in the IDE.</td></row>
 		<row><td>ISChainPackage</td><td>ISReleaseFlags</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISChainPackage</td><td>InstallCondition</td><td>Y</td><td/><td/><td/><td/><td>Condition</td><td/><td/></row>
 		<row><td>ISChainPackage</td><td>InstallProperties</td><td>Y</td><td/><td/><td/><td/><td>Formatted</td><td/><td/></row>
@@ -4718,69 +4784,38 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISFeatureExtended</td><td>Uninstalling</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Name of the Features UnInstalling Event</td></row>
 		<row><td>ISFeatureMergeModuleExcludes</td><td>Feature_</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into Feature table.</td></row>
 		<row><td>ISFeatureMergeModuleExcludes</td><td>Language</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Foreign key into ISMergeModule table.</td></row>
-		<row><td>ISFeatureMergeModuleExcludes</td><td>ModuleID</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into ISMergeModule table.
-</td></row>
+		<row><td>ISFeatureMergeModuleExcludes</td><td>ModuleID</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into ISMergeModule table.</td></row>
 		<row><td>ISFeatureMergeModules</td><td>Feature_</td><td>N</td><td/><td/><td>Feature</td><td>1</td><td>Identifier</td><td/><td>Foreign key into Feature table.</td></row>
-		<row><td>ISFeatureMergeModules</td><td>ISMergeModule_</td><td>N</td><td/><td/><td>ISMergeModule</td><td>1</td><td>Text</td><td/><td>Foreign key into ISMergeModule table.
-</td></row>
+		<row><td>ISFeatureMergeModules</td><td>ISMergeModule_</td><td>N</td><td/><td/><td>ISMergeModule</td><td>1</td><td>Text</td><td/><td>Foreign key into ISMergeModule table.</td></row>
 		<row><td>ISFeatureMergeModules</td><td>Language_</td><td>N</td><td/><td/><td>ISMergeModule</td><td>2</td><td/><td/><td>Foreign key into ISMergeModule table.</td></row>
 		<row><td>ISFeatureSetupPrerequisites</td><td>Feature_</td><td>N</td><td/><td/><td>Feature</td><td>1</td><td>Identifier</td><td/><td>Foreign key into Feature table.</td></row>
 		<row><td>ISFeatureSetupPrerequisites</td><td>ISSetupPrerequisites_</td><td>N</td><td/><td/><td>ISSetupPrerequisites</td><td>1</td><td/><td/><td/></row>
 		<row><td>ISFileManifests</td><td>File_</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into File table.</td></row>
 		<row><td>ISFileManifests</td><td>Manifest_</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into File table.</td></row>
-		<row><td>ISIISAppPool</td><td>AppPool</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>Attributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>CPUMon</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Text</td><td/><td>Foreign key into Component table</td></row>
-		<row><td>ISIISAppPool</td><td>IdleTimeout</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>MaxProc</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Display Name</td></row>
-		<row><td>ISIISAppPool</td><td>QueueLimit</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>RecycleMinutes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>RecycleRequests</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>RecycleTimes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>User</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISAppPool</td><td>UserPassword</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISCommon</td><td>AnonyPasswrd</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Password for anonymous access</td></row>
-		<row><td>ISIISCommon</td><td>AnonyUserName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>User name for anonymous access</td></row>
-		<row><td>ISIISCommon</td><td>AppName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>AppName of this VRoot</td></row>
-		<row><td>ISIISCommon</td><td>AppPool_</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Application Pool Name</td></row>
-		<row><td>ISIISCommon</td><td>Aspversion</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>ASP .NET Version</td></row>
-		<row><td>ISIISCommon</td><td>Attributes</td><td>N</td><td/><td/><td/><td/><td>Number</td><td/><td>Attributes for this IIS node</td></row>
-		<row><td>ISIISCommon</td><td>CustomErrors</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Delimited list of custom errors</td></row>
-		<row><td>ISIISCommon</td><td>DefDoc</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Defeault Doc</td></row>
-		<row><td>ISIISCommon</td><td>DisplayName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Virtual Root Name</td></row>
-		<row><td>ISIISCommon</td><td>HostHeaderName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Host Header Name</td></row>
-		<row><td>ISIISCommon</td><td>ISIISCommon</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key used to identify a particular  record.</td></row>
-		<row><td>ISIISCommon</td><td>ISIISCommon_Parent</td><td>Y</td><td/><td/><td>ISIISCommon</td><td>1</td><td>Identifier</td><td/><td>This record's parent record.</td></row>
-		<row><td>ISIISCommon</td><td>RootDir</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Root directory for this IIS Node</td></row>
-		<row><td>ISIISCommon</td><td>SSLCert</td><td>Y</td><td/><td/><td>Binary</td><td>1</td><td>Identifier</td><td/><td>Foreign key into the binary table.</td></row>
-		<row><td>ISIISCommon</td><td>ScriptTimeout</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td/><td>ASP Script Timeout</td></row>
-		<row><td>ISIISCommon</td><td>SessionTimeout</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td/><td>Session Timeout</td></row>
-		<row><td>ISIISCommon</td><td>SslPassword</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Password for Ssl</td></row>
-		<row><td>ISIISMetaData</td><td>ISIISCommon_</td><td>N</td><td/><td/><td>ISIISCommon</td><td>1</td><td>Identifier</td><td/><td>Foreign key into ISIISCommon table</td></row>
-		<row><td>ISIISMetaData</td><td>MetaDataAttributes</td><td>N</td><td/><td/><td/><td/><td/><td/><td>This is the dwMDAttributes item in the METADATA_RECORD structure</td></row>
-		<row><td>ISIISMetaData</td><td>MetaDataProp</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>This is the dwMDIdentifier item in the METADATA_RECORD structure</td></row>
-		<row><td>ISIISMetaData</td><td>MetaDataType</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>This is the dwMDDataType item in the METADATA_RECORD structure</td></row>
-		<row><td>ISIISMetaData</td><td>MetaDataUserType</td><td>N</td><td/><td/><td/><td/><td/><td/><td>This is the dwMDUserType item in the METADATA_RECORD structure</td></row>
-		<row><td>ISIISMetaData</td><td>MetaDataValue</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>This is the pbMDData  item in the METADATA_RECORD structure</td></row>
-		<row><td>ISIISMetaData</td><td>Order</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Use this column to order the meta data properties.</td></row>
-		<row><td>ISIISWebServiceExtension</td><td>Attributes</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISWebServiceExtension</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Text</td><td/><td>Foreign key into Component table</td></row>
-		<row><td>ISIISWebServiceExtension</td><td>Description</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Description</td></row>
-		<row><td>ISIISWebServiceExtension</td><td>File</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISWebServiceExtension</td><td>Group</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISIISWebServiceExtension</td><td>WebServiceExtension</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISIISItem</td><td>Component_</td><td>Y</td><td/><td/><td>Component</td><td>1</td><td>Identifier</td><td/><td>Foreign key to Component table.</td></row>
+		<row><td>ISIISItem</td><td>DisplayName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Item Name.</td></row>
+		<row><td>ISIISItem</td><td>ISIISItem</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key for each item.</td></row>
+		<row><td>ISIISItem</td><td>ISIISItem_Parent</td><td>Y</td><td/><td/><td>ISIISItem</td><td>1</td><td>Identifier</td><td/><td>This record's parent record.</td></row>
+		<row><td>ISIISItem</td><td>Type</td><td>N</td><td/><td/><td/><td/><td/><td/><td>IIS resource type.</td></row>
+		<row><td>ISIISProperty</td><td>FriendlyName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>IIS property name.</td></row>
+		<row><td>ISIISProperty</td><td>ISAttributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Flags.</td></row>
+		<row><td>ISIISProperty</td><td>ISIISItem_</td><td>N</td><td/><td/><td>ISIISItem</td><td>1</td><td>Identifier</td><td/><td>Primary key for table, foreign key into ISIISItem.</td></row>
+		<row><td>ISIISProperty</td><td>ISIISProperty</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key for table.</td></row>
+		<row><td>ISIISProperty</td><td>MetaDataAttributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>IIS property attributes.</td></row>
+		<row><td>ISIISProperty</td><td>MetaDataProp</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>IIS property ID.</td></row>
+		<row><td>ISIISProperty</td><td>MetaDataType</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>IIS property data type.</td></row>
+		<row><td>ISIISProperty</td><td>MetaDataUserType</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>IIS property user data type.</td></row>
+		<row><td>ISIISProperty</td><td>MetaDataValue</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>IIS property value.</td></row>
+		<row><td>ISIISProperty</td><td>Order</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Order sequencing.</td></row>
+		<row><td>ISIISProperty</td><td>Schema</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>IIS7 schema information.</td></row>
 		<row><td>ISInstallScriptAction</td><td>EntryPoint</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>This is a foreign key to the target column in the CustomAction table</td></row>
 		<row><td>ISInstallScriptAction</td><td>Source</td><td>N</td><td/><td/><td/><td/><td>Formatted</td><td/><td>This is column points to the source file for the DLLWrapper Custom Action</td></row>
 		<row><td>ISInstallScriptAction</td><td>Target</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>The function signature</td></row>
 		<row><td>ISInstallScriptAction</td><td>Type</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Type</td></row>
 		<row><td>ISLanguage</td><td>ISLanguage</td><td>N</td><td/><td/><td/><td/><td>Language</td><td/><td>This is the language ID.</td></row>
 		<row><td>ISLanguage</td><td>Included</td><td>Y</td><td/><td/><td/><td/><td/><td>0;1</td><td>Specify whether this language should be included.</td></row>
-		<row><td>ISLinkerLibrary</td><td>ISLinkerLibrary</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Unique identifier for the link library.
-</td></row>
-		<row><td>ISLinkerLibrary</td><td>Library</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Full path of the object library (.obl file).
-</td></row>
+		<row><td>ISLinkerLibrary</td><td>ISLinkerLibrary</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Unique identifier for the link library.</td></row>
+		<row><td>ISLinkerLibrary</td><td>Library</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Full path of the object library (.obl file).</td></row>
 		<row><td>ISLinkerLibrary</td><td>Order</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Order of the Library</td></row>
 		<row><td>ISLocalControl</td><td>Attributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>A 32-bit word that specifies the attribute flags to be applied to this control.</td></row>
 		<row><td>ISLocalControl</td><td>Binary_</td><td>Y</td><td/><td/><td>Binary</td><td>1</td><td>Identifier</td><td/><td>External key to the Binary table.</td></row>
@@ -4805,6 +4840,12 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISLocalRadioButton</td><td>Width</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>The width of the button.</td></row>
 		<row><td>ISLocalRadioButton</td><td>X</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>The horizontal coordinate of the upper left corner of the bounding rectangle of the radio button.</td></row>
 		<row><td>ISLocalRadioButton</td><td>Y</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>The vertical coordinate of the upper left corner of the bounding rectangle of the radio button.</td></row>
+		<row><td>ISLockPermissions</td><td>Attributes</td><td>Y</td><td>-2147483647</td><td>2147483647</td><td/><td/><td/><td/><td>Permissions attributes mask, 1==Deny access; 2==No inherit</td></row>
+		<row><td>ISLockPermissions</td><td>Domain</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Domain name for user whose permissions are being set.</td></row>
+		<row><td>ISLockPermissions</td><td>LockObject</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into CreateFolder, Registry, or File table</td></row>
+		<row><td>ISLockPermissions</td><td>Permission</td><td>Y</td><td>-2147483647</td><td>2147483647</td><td/><td/><td/><td/><td>Permission Access mask.</td></row>
+		<row><td>ISLockPermissions</td><td>Table</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td>CreateFolder;File;Registry</td><td>Reference to another table name</td></row>
+		<row><td>ISLockPermissions</td><td>User</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>User for permissions to be set. This can be a property, hardcoded named, or SID string</td></row>
 		<row><td>ISLogicalDisk</td><td>Cabinet</td><td>Y</td><td/><td/><td/><td/><td>Cabinet</td><td/><td>If some or all of the files stored on the media are compressed in a cabinet, the name of that cabinet.</td></row>
 		<row><td>ISLogicalDisk</td><td>DiskId</td><td>N</td><td>1</td><td>32767</td><td/><td/><td/><td/><td>Primary key, integer to determine sort order for table.</td></row>
 		<row><td>ISLogicalDisk</td><td>DiskPrompt</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Disk name: the visible text actually printed on the disk.  This will be used to prompt the user when this disk needs to be inserted.</td></row>
@@ -4819,14 +4860,11 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISLogicalDiskFeatures</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.</td></row>
 		<row><td>ISLogicalDiskFeatures</td><td>ISRelease_</td><td>N</td><td/><td/><td>ISRelease</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISRelease table.</td></row>
 		<row><td>ISLogicalDiskFeatures</td><td>Sequence</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>File sequence number for the file for this media.</td></row>
-		<row><td>ISMergeModule</td><td>Destination</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Destination.
-</td></row>
+		<row><td>ISMergeModule</td><td>Destination</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Destination.</td></row>
 		<row><td>ISMergeModule</td><td>ISAttributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>This is used to store Installshield custom properties of a merge module.</td></row>
-		<row><td>ISMergeModule</td><td>ISMergeModule</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The GUID identifying the merge module.
-</td></row>
+		<row><td>ISMergeModule</td><td>ISMergeModule</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The GUID identifying the merge module.</td></row>
 		<row><td>ISMergeModule</td><td>Language</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Default decimal language of module.</td></row>
-		<row><td>ISMergeModule</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Name of the merge module.
-</td></row>
+		<row><td>ISMergeModule</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Name of the merge module.</td></row>
 		<row><td>ISMergeModuleCfgValues</td><td>Attributes</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Attributes (from configurable merge module)</td></row>
 		<row><td>ISMergeModuleCfgValues</td><td>ContextData</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>ContextData  (from configurable merge module)</td></row>
 		<row><td>ISMergeModuleCfgValues</td><td>DefaultValue</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>DefaultValue  (from configurable merge module)</td></row>
@@ -4882,25 +4920,16 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISPathVariable</td><td>TestValue</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>The test value of the path variable.</td></row>
 		<row><td>ISPathVariable</td><td>Type</td><td>N</td><td/><td/><td/><td/><td/><td>1;2;4;8</td><td>The type of the path variable.</td></row>
 		<row><td>ISPathVariable</td><td>Value</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>The value of the path variable.</td></row>
-		<row><td>ISProductConfiguration</td><td>GeneratePackageCode</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td>0;1</td><td>Indicates whether or not to generate a package code.
-</td></row>
-		<row><td>ISProductConfiguration</td><td>ISProductConfiguration</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The name of the product configuration.
-</td></row>
-		<row><td>ISProductConfiguration</td><td>ProductConfigurationFlags</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Product configuration (release) flags.
-</td></row>
-		<row><td>ISProductConfigurationInstance</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.
-</td></row>
+		<row><td>ISProductConfiguration</td><td>GeneratePackageCode</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td>0;1</td><td>Indicates whether or not to generate a package code.</td></row>
+		<row><td>ISProductConfiguration</td><td>ISProductConfiguration</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The name of the product configuration.</td></row>
+		<row><td>ISProductConfiguration</td><td>ProductConfigurationFlags</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Product configuration (release) flags.</td></row>
+		<row><td>ISProductConfigurationInstance</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.</td></row>
 		<row><td>ISProductConfigurationInstance</td><td>InstanceId</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>Identifies the instance number of this instance. This value is stored in the Property InstanceId.</td></row>
 		<row><td>ISProductConfigurationInstance</td><td>Property</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Product Congiuration property name</td></row>
 		<row><td>ISProductConfigurationInstance</td><td>Value</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>String value for property.</td></row>
-		<row><td>ISProductConfigurationProperty</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.
-</td></row>
+		<row><td>ISProductConfigurationProperty</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.</td></row>
 		<row><td>ISProductConfigurationProperty</td><td>Property</td><td>N</td><td/><td/><td>Property</td><td>1</td><td>Text</td><td/><td>Product Congiuration property name</td></row>
-		<row><td>ISProductConfigurationProperty</td><td>Value</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>String value for property. Never null or empty.
-
-
-
-</td></row>
+		<row><td>ISProductConfigurationProperty</td><td>Value</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>String value for property. Never null or empty.</td></row>
 		<row><td>ISRelease</td><td>Attributes</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Bitfield holding boolean values for various release attributes.</td></row>
 		<row><td>ISRelease</td><td>BuildLocation</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Build location.</td></row>
 		<row><td>ISRelease</td><td>CDBrowser</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Demoshield browser location.</td></row>
@@ -4914,8 +4943,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISRelease</td><td>DiskSpanning</td><td>N</td><td/><td/><td/><td/><td/><td>0;1;2</td><td>Disk spanning (automatic, enforce size, etc.).</td></row>
 		<row><td>ISRelease</td><td>DotNetBuildConfiguration</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Build Configuration for .NET solutions.</td></row>
 		<row><td>ISRelease</td><td>ISProductConfiguration_</td><td>N</td><td/><td/><td>ISProductConfiguration</td><td>1</td><td>Text</td><td/><td>Foreign key into the ISProductConfiguration table.</td></row>
-		<row><td>ISRelease</td><td>ISRelease</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The name of the release.
-</td></row>
+		<row><td>ISRelease</td><td>ISRelease</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>The name of the release.</td></row>
 		<row><td>ISRelease</td><td>ISSetupPrerequisiteLocation</td><td>Y</td><td/><td/><td/><td/><td/><td>0;1;2;3</td><td>Location the Setup Prerequisites will be placed in</td></row>
 		<row><td>ISRelease</td><td>MediaLocation</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Media location on disk.</td></row>
 		<row><td>ISRelease</td><td>MsiCommandLine</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Command line passed to the msi package from setup.exe</td></row>
@@ -5062,8 +5090,21 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISSQLScriptReplace</td><td>ISSQLScriptReplace</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key used to identify a particular ISSQLScriptReplace record.</td></row>
 		<row><td>ISSQLScriptReplace</td><td>Replace</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISSQLScriptReplace</td><td>Search</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISScriptFile</td><td>ISScriptFile</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>This is the full path of the script file. The path portion may be expressed in path variable form.
-</td></row>
+		<row><td>ISScriptFile</td><td>ISScriptFile</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>This is the full path of the script file. The path portion may be expressed in path variable form.</td></row>
+		<row><td>ISSearchReplace</td><td>Attributes</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplace</td><td>ISSearchReplace</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key used to identify a particular ISSearchReplace record.</td></row>
+		<row><td>ISSearchReplace</td><td>ISSearchReplaceSet_</td><td>N</td><td/><td/><td>ISSearchReplaceSet</td><td>1</td><td>Identifier</td><td/><td>Foreign key referencing ISSearchReplaceSet.</td></row>
+		<row><td>ISSearchReplace</td><td>Order</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplace</td><td>Replace</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplace</td><td>Search</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplaceSet</td><td>Attributes</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplaceSet</td><td>CodePage</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplaceSet</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Identifier</td><td/><td>Foreign key referencing Component that controls the text file change.</td></row>
+		<row><td>ISSearchReplaceSet</td><td>Directory_</td><td>N</td><td/><td/><td>Directory</td><td>1</td><td>Identifier</td><td/><td>Foreign key referencing Directory that contains the text files.</td></row>
+		<row><td>ISSearchReplaceSet</td><td>ExcludeFiles</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplaceSet</td><td>ISSearchReplaceSet</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key used to identify a particular ISSearchReplaceSet record.</td></row>
+		<row><td>ISSearchReplaceSet</td><td>IncludeFiles</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISSearchReplaceSet</td><td>Order</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISSelfReg</td><td>CmdLine</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISSelfReg</td><td>Cost</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISSelfReg</td><td>FileKey</td><td>N</td><td/><td/><td>File</td><td>1</td><td>Identifier</td><td/><td>Foreign key to the file table</td></row>
@@ -5107,24 +5148,6 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISUpgradedImage</td><td>Family</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Name of the image family</td></row>
 		<row><td>ISUpgradedImage</td><td>MsiPath</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Path to the upgraded image</td></row>
 		<row><td>ISUpgradedImage</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Name of the UpgradedImage</td></row>
-		<row><td>ISVRoot</td><td>AnonyPasswrd</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>AnonyUserName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Text</td><td/><td>Foreign key into Component table</td></row>
-		<row><td>ISVRoot</td><td>Condition</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to Component</td></row>
-		<row><td>ISVRoot</td><td>ScriptTimeout</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>SessionTimeout</td><td>Y</td><td/><td/><td/><td/><td/><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>VRootAppName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>AppName of this VRoot</td></row>
-		<row><td>ISVRoot</td><td>VRootDefDoc</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>VRootDir</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>VRootKey</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Foreign key into ISIISCommon table</td></row>
-		<row><td>ISVRoot</td><td>VRootName</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Obsolete column.  Moved to IISCommon</td></row>
-		<row><td>ISVRoot</td><td>VRootProps</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Properties of this VRoot</td></row>
-		<row><td>ISVRootAppMaps</td><td>AppMapProps</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISVRootAppMaps</td><td>ExecPath</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Exec Path</td></row>
-		<row><td>ISVRootAppMaps</td><td>Extension</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Extension</td></row>
-		<row><td>ISVRootAppMaps</td><td>VRootAppMapKey</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISVRootAppMaps</td><td>VRootKey</td><td>N</td><td/><td/><td>ISIISCommon</td><td>1</td><td/><td/><td/></row>
-		<row><td>ISVRootAppMaps</td><td>Verb</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Localizable Verb</td></row>
 		<row><td>ISVirtualDirectory</td><td>Directory_</td><td>N</td><td/><td/><td>Directory</td><td>1</td><td>Identifier</td><td/><td>Foreign key into Directory table.</td></row>
 		<row><td>ISVirtualDirectory</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Property name</td></row>
 		<row><td>ISVirtualDirectory</td><td>Value</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Property value</td></row>
@@ -5143,11 +5166,6 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISVirtualShortcut</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Property name</td></row>
 		<row><td>ISVirtualShortcut</td><td>Shortcut_</td><td>N</td><td/><td/><td>Shortcut</td><td>1</td><td>Identifier</td><td/><td>Foreign key into Shortcut table.</td></row>
 		<row><td>ISVirtualShortcut</td><td>Value</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Property value</td></row>
-		<row><td>ISWebSite</td><td>IP</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISWebSite</td><td>ISIISCommon_</td><td>N</td><td/><td/><td>ISIISCommon</td><td>1</td><td>Text</td><td/><td>Foreign key into ISIISCommon table</td></row>
-		<row><td>ISWebSite</td><td>Port</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISWebSite</td><td>SiteNumber</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>ISWebSite</td><td>WebSiteProps</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISXmlElement</td><td>Content</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Element contents</td></row>
 		<row><td>ISXmlElement</td><td>ISAttributes</td><td>Y</td><td/><td/><td/><td/><td>Number</td><td/><td>Internal XML element attributes</td></row>
 		<row><td>ISXmlElement</td><td>ISXmlElement</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized, internal token for Xml element</td></row>
@@ -5262,16 +5280,19 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>MsiEmbeddedUI</td><td>Data</td><td>N</td><td/><td/><td/><td/><td>Binary</td><td/><td>This column contains binary information.</td></row>
 		<row><td>MsiEmbeddedUI</td><td>FileName</td><td>N</td><td/><td/><td/><td/><td>Filename</td><td/><td>The name of the file that receives the binary information in the Data column.</td></row>
 		<row><td>MsiEmbeddedUI</td><td>ISBuildSourcePath</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td/></row>
-		<row><td>MsiEmbeddedUI</td><td>MessageFilter</td><td>Y</td><td>0</td><td>33587199</td><td/><td/><td>Integer</td><td/><td>Specifies the types of messages that are sent to the user interface DLL. This column is only relevant for rows with the msidbEmbeddedUI attribute.</td></row>
-		<row><td>MsiEmbeddedUI</td><td>MsiEmbeddedUI</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>The primary key for the table.
-
-</td></row>
+		<row><td>MsiEmbeddedUI</td><td>MessageFilter</td><td>Y</td><td>0</td><td>234913791</td><td/><td/><td>Integer</td><td/><td>Specifies the types of messages that are sent to the user interface DLL. This column is only relevant for rows with the msidbEmbeddedUI attribute.</td></row>
+		<row><td>MsiEmbeddedUI</td><td>MsiEmbeddedUI</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>The primary key for the table.</td></row>
 		<row><td>MsiFileHash</td><td>File_</td><td>N</td><td/><td/><td>File</td><td>1</td><td>Identifier</td><td/><td>Primary key, foreign key into File table referencing file with this hash</td></row>
 		<row><td>MsiFileHash</td><td>HashPart1</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Size of file in bytes (long integer).</td></row>
 		<row><td>MsiFileHash</td><td>HashPart2</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Size of file in bytes (long integer).</td></row>
 		<row><td>MsiFileHash</td><td>HashPart3</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Size of file in bytes (long integer).</td></row>
 		<row><td>MsiFileHash</td><td>HashPart4</td><td>N</td><td/><td/><td/><td/><td/><td/><td>Size of file in bytes (long integer).</td></row>
 		<row><td>MsiFileHash</td><td>Options</td><td>N</td><td>0</td><td>32767</td><td/><td/><td/><td/><td>Various options and attributes for this hash.</td></row>
+		<row><td>MsiLockPermissionsEx</td><td>Condition</td><td>Y</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Expression which must evaluate to TRUE in order for this set of permissions to be applied</td></row>
+		<row><td>MsiLockPermissionsEx</td><td>LockObject</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Foreign key into Registry, File, CreateFolder, or ServiceInstall table</td></row>
+		<row><td>MsiLockPermissionsEx</td><td>MsiLockPermissionsEx</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized token</td></row>
+		<row><td>MsiLockPermissionsEx</td><td>SDDLText</td><td>N</td><td/><td/><td/><td/><td>FormattedSDDLText</td><td/><td>String to indicate permissions to be applied to the LockObject</td></row>
+		<row><td>MsiLockPermissionsEx</td><td>Table</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td>CreateFolder;File;Registry;ServiceInstall</td><td>Reference to another table name</td></row>
 		<row><td>MsiPackageCertificate</td><td>DigitalCertificate_</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>A foreign key to the digital certificate table</td></row>
 		<row><td>MsiPackageCertificate</td><td>PackageCertificate</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>A unique identifier for the row</td></row>
 		<row><td>MsiPatchCertificate</td><td>DigitalCertificate_</td><td>N</td><td/><td/><td>MsiDigitalCertificate</td><td>1</td><td>Identifier</td><td/><td>A foreign key to the digital certificate table</td></row>
@@ -5290,6 +5311,25 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>MsiPatchSequence</td><td>Sequence</td><td>N</td><td/><td/><td/><td/><td>Version</td><td/><td>The version of this patch in this family</td></row>
 		<row><td>MsiPatchSequence</td><td>Supersede</td><td>N</td><td/><td/><td/><td/><td>Integer</td><td/><td>Supersede</td></row>
 		<row><td>MsiPatchSequence</td><td>Target</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Target product codes for this patch family</td></row>
+		<row><td>MsiServiceConfig</td><td>Argument</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Argument(s) for service configuration. Value depends on the content of the ConfigType field</td></row>
+		<row><td>MsiServiceConfig</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Identifier</td><td/><td>Required foreign key into the Component Table that controls the configuration of the service</td></row>
+		<row><td>MsiServiceConfig</td><td>ConfigType</td><td>N</td><td>-2147483647</td><td>2147483647</td><td/><td/><td/><td/><td>Service Configuration Option</td></row>
+		<row><td>MsiServiceConfig</td><td>Event</td><td>N</td><td>0</td><td>7</td><td/><td/><td/><td/><td>Bit field:   0x1 = Install, 0x2 = Uninstall, 0x4 = Reinstall</td></row>
+		<row><td>MsiServiceConfig</td><td>MsiServiceConfig</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized token.</td></row>
+		<row><td>MsiServiceConfig</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Name of a service. /, \, comma and space are invalid</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>Actions</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>A list of integer actions separated by [~] delimiters: 0 = SC_ACTION_NONE, 1 = SC_ACTION_RESTART, 2 = SC_ACTION_REBOOT, 3 = SC_ACTION_RUN_COMMAND. Terminate with [~][~]</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>Command</td><td>Y</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Command line of the process to CreateProcess function to execute</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>Component_</td><td>N</td><td/><td/><td>Component</td><td>1</td><td>Identifier</td><td/><td>Required foreign key into the Component Table that controls the configuration of the service</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>DelayActions</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>A list of delays (time in milli-seconds), separated by [~] delmiters, to wait before taking the corresponding Action. Terminate with [~][~]</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>Event</td><td>N</td><td>0</td><td>7</td><td/><td/><td/><td/><td>Bit field:   0x1 = Install, 0x2 = Uninstall, 0x4 = Reinstall</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>MsiServiceConfigFailureActions</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized token</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>Name</td><td>N</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Name of a service. /, \, comma and space are invalid</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>RebootMessage</td><td>Y</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Message to be broadcast to server users before rebooting</td></row>
+		<row><td>MsiServiceConfigFailureActions</td><td>ResetPeriod</td><td>Y</td><td>0</td><td>2147483647</td><td/><td/><td/><td/><td>Time in seconds after which to reset the failure count to zero. Leave blank if it should never be reset</td></row>
+		<row><td>MsiShortcutProperty</td><td>MsiShortcutProperty</td><td>N</td><td/><td/><td/><td/><td>Identifier</td><td/><td>Primary key, non-localized token</td></row>
+		<row><td>MsiShortcutProperty</td><td>PropVariantValue</td><td>N</td><td/><td/><td/><td/><td>Formatted</td><td/><td>String representation of the value in the property</td></row>
+		<row><td>MsiShortcutProperty</td><td>PropertyKey</td><td>N</td><td/><td/><td/><td/><td>Formatted</td><td/><td>Canonical string representation of the Property Key being set</td></row>
+		<row><td>MsiShortcutProperty</td><td>Shortcut_</td><td>N</td><td/><td/><td>Shortcut</td><td>1</td><td>Identifier</td><td/><td>Foreign key into the Shortcut table</td></row>
 		<row><td>ODBCAttribute</td><td>Attribute</td><td>N</td><td/><td/><td/><td/><td>Text</td><td/><td>Name of ODBC driver attribute</td></row>
 		<row><td>ODBCAttribute</td><td>Driver_</td><td>N</td><td/><td/><td>ODBCDriver</td><td>1</td><td>Identifier</td><td/><td>Reference to ODBC driver in ODBCDriver table</td></row>
 		<row><td>ODBCAttribute</td><td>Value</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Value for ODBC driver attribute</td></row>

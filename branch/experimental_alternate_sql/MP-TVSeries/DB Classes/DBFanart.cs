@@ -94,6 +94,12 @@ namespace WindowPlugins.GUITVSeries
             cache.Remove(Index);
         }
 
+        public static void ClearDB(int seriesID) {
+            DBFanart dummy = new DBFanart(seriesID);
+            Clear(dummy, new SQLCondition(dummy, DBFanart.cSeriesID, seriesID, SQLConditionType.Equal));
+            ClearAll();
+        }
+
         public void Delete()
         {
             // first let's delete the physical file

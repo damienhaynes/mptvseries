@@ -200,12 +200,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
         string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
         webClient.Headers.Add("user-agent", Settings.UserAgent);
+        //webClient.Headers.Add("referer", "http://thetvdb.com/");
         try
         {
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
             if (!System.IO.File.Exists(fullLocalPath) // only if the file doesn't exist
                 || ImageAllocator.LoadImageFastFromFile(fullLocalPath) == null) // or the file is damaged
             {
+                MPTVSeriesLog.Write("Downloading new Image from: " + fullURL,MPTVSeriesLog.LogLevel.Debug);
                 webClient.DownloadFile(fullURL, fullLocalPath);
             }
             return true;

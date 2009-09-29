@@ -226,6 +226,9 @@ namespace WindowPlugins.GUITVSeries
             this.button_MoveExpUp = new System.Windows.Forms.Button();
             this.button_MoveExpDown = new System.Windows.Forms.Button();
             this.panel_StringReplacements = new System.Windows.Forms.Panel();
+			this.linkLabelResetStringReplacements = new System.Windows.Forms.LinkLabel();
+			this.linkLabelImportStringReplacements = new System.Windows.Forms.LinkLabel();
+			this.linkLabelExportStringReplacements = new System.Windows.Forms.LinkLabel();
             this.label69 = new System.Windows.Forms.Label();
             this.panel_ImportPathes = new System.Windows.Forms.Panel();
             this.label68 = new System.Windows.Forms.Label();
@@ -271,6 +274,7 @@ namespace WindowPlugins.GUITVSeries
             this.label32 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.tab_view = new System.Windows.Forms.TabPage();
+			this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
 			this.buttonPinCode = new System.Windows.Forms.Button();
 			this.buttonEditView = new System.Windows.Forms.Button();
@@ -688,7 +692,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Replace.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Replace.RowTemplate.Height = 18;
             this.dataGridView_Replace.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_Replace.Size = new System.Drawing.Size(164, 64);
+			this.dataGridView_Replace.Size = new System.Drawing.Size(124, 77);
             this.dataGridView_Replace.StandardTab = true;
             this.dataGridView_Replace.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.dataGridView_Replace, "Strings that are to be replaced before or after parsing data to online database l" +
@@ -1691,9 +1695,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedSummary.Size = new System.Drawing.Size(335, 17);
 			this.checkBox_Episode_HideUnwatchedSummary.TabIndex = 13;
             this.checkBox_Episode_HideUnwatchedSummary.Text = "&Hide episode overview/summary on episodes that are unwatched";
-            this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, "Enable this option to disable the thumbnail for episodes that haven\'t been watche" +
-                    "d yet.\r\nThis option is recommended to prevent spoilers\r\n\r\nThis setting can also " +
-                    "be changed from within Media Portal");
+			this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedSummary, resources.GetString("checkBox_Episode_HideUnwatchedSummary.ToolTip"));
             this.checkBox_Episode_HideUnwatchedSummary.UseVisualStyleBackColor = true;
             this.checkBox_Episode_HideUnwatchedSummary.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedSummary_CheckedChanged);
             // 
@@ -1968,9 +1970,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedThumbnail.Size = new System.Drawing.Size(291, 17);
 			this.checkBox_Episode_HideUnwatchedThumbnail.TabIndex = 14;
             this.checkBox_Episode_HideUnwatchedThumbnail.Text = "Hide episode &thumbnail on episodes that are unwatched";
-            this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedThumbnail, "Enable this option to disable the summary for episodes that haven\'t been watched " +
-                    "yet.\r\nThis option is recommended to prevent spoilers\r\n\r\nThis setting can also be" +
-                    " changed from within Media Portal");
+			this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_HideUnwatchedThumbnail, resources.GetString("checkBox_Episode_HideUnwatchedThumbnail.ToolTip"));
             this.checkBox_Episode_HideUnwatchedThumbnail.UseVisualStyleBackColor = true;
             this.checkBox_Episode_HideUnwatchedThumbnail.CheckedChanged += new System.EventHandler(this.checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged);
             // 
@@ -2423,14 +2423,53 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_StringReplacements
             // 
+			this.panel_StringReplacements.Controls.Add(this.linkLabelResetStringReplacements);
+			this.panel_StringReplacements.Controls.Add(this.linkLabelImportStringReplacements);
+			this.panel_StringReplacements.Controls.Add(this.linkLabelExportStringReplacements);
             this.panel_StringReplacements.Controls.Add(this.label69);
             this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
             this.panel_StringReplacements.Location = new System.Drawing.Point(6, 167);
             this.panel_StringReplacements.Name = "panel_StringReplacements";
-            this.panel_StringReplacements.Size = new System.Drawing.Size(164, 139);
+			this.panel_StringReplacements.Size = new System.Drawing.Size(164, 152);
             this.panel_StringReplacements.TabIndex = 155;
             this.panel_StringReplacements.Tag = "String Replacements";
             // 
+			// linkLabelResetStringReplacements
+			// 
+			this.linkLabelResetStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelResetStringReplacements.AutoSize = true;
+			this.linkLabelResetStringReplacements.Location = new System.Drawing.Point(126, 128);
+			this.linkLabelResetStringReplacements.Name = "linkLabelResetStringReplacements";
+			this.linkLabelResetStringReplacements.Size = new System.Drawing.Size(35, 13);
+			this.linkLabelResetStringReplacements.TabIndex = 4;
+			this.linkLabelResetStringReplacements.TabStop = true;
+			this.linkLabelResetStringReplacements.Text = "Reset";
+			this.linkLabelResetStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelResetStringReplacements_LinkClicked);
+			// 
+			// linkLabelImportStringReplacements
+			// 
+			this.linkLabelImportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelImportStringReplacements.AutoSize = true;
+			this.linkLabelImportStringReplacements.Location = new System.Drawing.Point(126, 83);
+			this.linkLabelImportStringReplacements.Name = "linkLabelImportStringReplacements";
+			this.linkLabelImportStringReplacements.Size = new System.Drawing.Size(36, 13);
+			this.linkLabelImportStringReplacements.TabIndex = 3;
+			this.linkLabelImportStringReplacements.TabStop = true;
+			this.linkLabelImportStringReplacements.Text = "Import";
+			this.linkLabelImportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelImportStringReplacements_LinkClicked);
+			// 
+			// linkLabelExportStringReplacements
+			// 
+			this.linkLabelExportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelExportStringReplacements.AutoSize = true;
+			this.linkLabelExportStringReplacements.Location = new System.Drawing.Point(126, 106);
+			this.linkLabelExportStringReplacements.Name = "linkLabelExportStringReplacements";
+			this.linkLabelExportStringReplacements.Size = new System.Drawing.Size(37, 13);
+			this.linkLabelExportStringReplacements.TabIndex = 2;
+			this.linkLabelExportStringReplacements.TabStop = true;
+			this.linkLabelExportStringReplacements.Text = "Export";
+			this.linkLabelExportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelExportStringReplacements_LinkClicked);
+			// 
             // label69
             // 
             this.label69.AutoSize = true;
@@ -3004,6 +3043,7 @@ namespace WindowPlugins.GUITVSeries
             // tab_view
             // 
             this.tab_view.AutoScroll = true;
+			this.tab_view.Controls.Add(this.playlistSettings);
             this.tab_view.Controls.Add(this.groupBox8);
             this.tab_view.ImageIndex = 2;
             this.tab_view.Location = new System.Drawing.Point(4, 31);
@@ -3014,10 +3054,19 @@ namespace WindowPlugins.GUITVSeries
 			this.tab_view.Text = "Views/Filters";
             this.tab_view.UseVisualStyleBackColor = true;
             // 
+			// playlistSettings
+			// 
+			this.playlistSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.playlistSettings.AutoScroll = true;
+			this.playlistSettings.Location = new System.Drawing.Point(-1, 353);
+			this.playlistSettings.Name = "playlistSettings";
+			this.playlistSettings.Size = new System.Drawing.Size(761, 157);
+			this.playlistSettings.TabIndex = 1;
+			// 
 			// groupBox8
             // 
-			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
+			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox8.Controls.Add(this.buttonViewTemplates);
 			this.groupBox8.Controls.Add(this.buttonPinCode);
@@ -3034,10 +3083,10 @@ namespace WindowPlugins.GUITVSeries
 			this.groupBox8.Controls.Add(this.view_selectedName);
 			this.groupBox8.Location = new System.Drawing.Point(3, 6);
 			this.groupBox8.Name = "groupBox8";
-			this.groupBox8.Size = new System.Drawing.Size(755, 501);
+			this.groupBox8.Size = new System.Drawing.Size(755, 341);
 			this.groupBox8.TabIndex = 0;
 			this.groupBox8.TabStop = false;
-			this.groupBox8.Text = "Views \\ Filters";
+			this.groupBox8.Text = "Customize Views";
             // 
 			// buttonPinCode
             // 
@@ -4699,5 +4748,9 @@ namespace WindowPlugins.GUITVSeries
 		private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionCheckBoxMarkRatedEpsAsWatched;
         private System.Windows.Forms.Button EmptyDatabaseButton;
         private System.Windows.Forms.Button ConfigureDatabaseButton;
+		private WindowPlugins.GUITVSeries.Configuration.PlaylistSettings playlistSettings;
+        private System.Windows.Forms.LinkLabel linkLabelExportStringReplacements;
+        private System.Windows.Forms.LinkLabel linkLabelImportStringReplacements;
+        private System.Windows.Forms.LinkLabel linkLabelResetStringReplacements;
     }
 }
