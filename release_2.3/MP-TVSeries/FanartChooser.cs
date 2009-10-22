@@ -62,7 +62,8 @@ namespace WindowPlugins.GUITVSeries
             disable,
             enable,
             filters,
-            interval
+            interval,
+            clearcache
         }
 
         enum menuFilterAction
@@ -102,7 +103,7 @@ namespace WindowPlugins.GUITVSeries
 
         # region DownloadWorker
         static FanartChooser()
-        {
+        {         
             // lets set up the downloader            
             downloadingWorker.WorkerSupportsCancellation = true;
             downloadingWorker.WorkerReportsProgress = true;
@@ -210,9 +211,9 @@ namespace WindowPlugins.GUITVSeries
         }
 
         protected override void OnPageLoad()
-        {
-			AllocResources();
-			
+        {            
+            AllocResources();
+
             loadingWorker = new BackgroundWorker();            
             loadingWorker.WorkerReportsProgress = true;
             loadingWorker.WorkerSupportsCancellation = true;
@@ -227,7 +228,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     CurrentView = (View)defaultView;                    
                 }                
-                m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
+                m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;                
             }            
 
             base.OnPageLoad();
@@ -249,10 +250,10 @@ namespace WindowPlugins.GUITVSeries
 
             setDownloadStatus();
 
-            MPTVSeriesLog.Write("Fanart Chooser Window initializing");
-
+            MPTVSeriesLog.Write("Fanart Chooser Window initializing");            
+               
             fetchList(SeriesID);
-            loadingWorker.RunWorkerAsync(SeriesID);
+            loadingWorker.RunWorkerAsync(SeriesID);            
 
             downloadingWorker.ProgressChanged += new ProgressChangedEventHandler(downloadingWorker_ProgressChanged);            
             
@@ -359,16 +360,16 @@ namespace WindowPlugins.GUITVSeries
                     // Work around for Filmstrip not allowing to programmatically select item
                     if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                     {
-                        /*m_bQuickSelect = true;
+                        m_bQuickSelect = true;
                         for (int i = 0; i < m_PreviousSelectedItem; i++)
                         {
                             OnAction(new Action(Action.ActionType.ACTION_MOVE_RIGHT, 0, 0));
                         }
-                        m_bQuickSelect = false;*/
+                        m_bQuickSelect = false;
                         // Note: this is better way, but Scroll offset wont work after set
-                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, m_PreviousSelectedItem, 0, null);
-                        GUIGraphicsContext.SendMessage(msg);
-                        MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.", MPTVSeriesLog.LogLevel.Debug);
+                        //GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, m_PreviousSelectedItem, 0, null);
+                        //GUIGraphicsContext.SendMessage(msg);
+                        //MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.", MPTVSeriesLog.LogLevel.Debug);
                     }                   
                     m_PreviousSelectedItem = -1;
                 }
@@ -475,6 +476,12 @@ namespace WindowPlugins.GUITVSeries
                 dlg.Add(pItem);
                 pItem.ItemId = (int)menuAction.interval;
 
+                if (!loadingWorker.IsBusy) {
+                    pItem = new GUIListItem(Translation.ClearFanartCache);
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)menuAction.clearcache;
+                }
+
                 // lets show it
                 dlg.DoModal(GUIWindowManager.ActiveWindow);
                 switch (dlg.SelectedId) // what was chosen?
@@ -526,6 +533,13 @@ namespace WindowPlugins.GUITVSeries
                     case (int)menuAction.interval:
                         dlg.Reset();
                         ShowIntervalMenu();
+                        break;
+                    case (int)menuAction.clearcache:
+                        dlg.Reset();
+                        Fanart.ClearFanartCache(SeriesID);                                               
+                        m_Facade.Clear();                                  
+                        fetchList(SeriesID);
+                        loadingWorker.RunWorkerAsync(SeriesID);
                         break;
 
                 }
@@ -645,23 +659,25 @@ namespace WindowPlugins.GUITVSeries
         int totalFanart;
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (m_Facade != null)
-            {
-                GUIListItem loadedItem = e.UserState as GUIListItem;
-                if (loadedItem != null)
-                {
-                    m_Facade.Add(loadedItem);
-                    // we use this to tell the gui how many fanart we are loading
-                    TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, e.ProgressPercentage, totalFanart));
-                    TVSeriesPlugin.setGUIProperty("FanArt.Count", e.ProgressPercentage.ToString());
-                    if (m_Facade != null) this.m_Facade.Focus = true;
+            try {
+                if (m_Facade != null) {
+                    GUIListItem loadedItem = e.UserState as GUIListItem;
+                    if (loadedItem != null) {                        
+                        m_Facade.Add(loadedItem);                   
+                        // we use this to tell the gui how many fanart we are loading
+                        TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, e.ProgressPercentage, totalFanart));
+                        TVSeriesPlugin.setGUIProperty("FanArt.Count", e.ProgressPercentage.ToString());
+                        if (m_Facade != null) this.m_Facade.Focus = true;
+                    }
+                    else if (e.ProgressPercentage > 0) {
+                        // we use this to tell the gui how many fanart we are loading
+                        TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, 0, e.ProgressPercentage));
+                        totalFanart = e.ProgressPercentage;
+                    }
                 }
-                else if (e.ProgressPercentage > 0)
-                {
-                    // we use this to tell the gui how many fanart we are loading
-                    TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, 0, e.ProgressPercentage));
-                    totalFanart = e.ProgressPercentage;
-                }                
+            }
+            catch (Exception ex) {
+                MPTVSeriesLog.Write("Error: Fanart Chooser worker_ProgressChanged() experienced an error: " + ex.Message);               
             }
         }
 
@@ -682,19 +698,16 @@ namespace WindowPlugins.GUITVSeries
             switch (message.Message)
             {
                 // Can't use OnMessage when using Filmstrip - it doesn't work!!
-                //case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
-                //    {
-                //        int iControl = message.SenderControlId;
-                //        if (iControl == (int)m_Facade.GetID && m_Facade.SelectedListItem != null)
-                //        {
-                //            DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
-                //            if (selectedFanart != null)
-                //            {
-                //                setFanartPreviewBackground(selectedFanart);
-                //            }
-                //        }
-                //        return true;
-                //    } 
+                case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED: {
+                    int iControl = message.SenderControlId;
+                    if (iControl == (int)m_Facade.GetID && m_Facade.SelectedListItem != null) {
+                        DBFanart selectedFanart = m_Facade.SelectedListItem.TVTag as DBFanart;
+                        if (selectedFanart != null) {
+                            setFanartPreviewBackground(selectedFanart);
+                        }
+                    }
+                    return true;
+                } 
                 default:
                     return base.OnMessage(message);
             }
@@ -873,10 +886,11 @@ namespace WindowPlugins.GUITVSeries
 
         void fetchList(int seriesID)
         {
-            // let's fetch a fresh list online and save info about them to the db   
+            // Fetch a fresh list online and save info about them to the db 
             GetFanart gf = new GetFanart(seriesID);
-            foreach (DBFanart f in gf.Fanart)
+            foreach (DBFanart f in gf.Fanart) {
                 f.Commit();
+            }
         }
 
         void loadThumbnails(int seriesID)
@@ -925,8 +939,7 @@ namespace WindowPlugins.GUITVSeries
                         item = new GUIListItem(Translation.FanArtOnline);
                         item.IsRemote = false;
                         item.IsDownloading = true;
-                    }
-                    
+                    }                    
                     string filename = f[DBFanart.cThumbnailPath];
                     filename = filename.Replace("/", @"\");
                     string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + filename;
@@ -1019,5 +1032,6 @@ namespace WindowPlugins.GUITVSeries
                       
             TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
         }
+
     }
 }

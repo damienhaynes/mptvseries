@@ -163,8 +163,8 @@ namespace WindowPlugins.GUITVSeries
         public static string FanArtUse = "Set Fanart as Default";
         public static string FanArtDelete = "Delete Fanart";
         public static string FanDownloadingStatus = "Downloading {0} Fanart...";        
-        public static string FanArtLocal = "Available locally";
-        public static string FanArtOnline = "Available for downloading";
+        public static string FanArtLocal = "Local";
+        public static string FanArtOnline = "Remote";
         public static string FanArtOnlineLoading = "Loading {0} of {1} Fanart...";
         public static string FanArtRandom = "Display random Fanart";
         public static string FanArtNoneFound = "No Fanart could be found";        
@@ -175,6 +175,7 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartMenuDisable = "Disable Fanart";
         public static string ShowSeriesFanart = "Show Fanart in Series View";
         public static string FanartRandomInterval = "Fanart Timer Interval";
+        public static string ClearFanartCache = "Clear Fanart Cache";
         
         public static string FanartIntervalFiveSeconds = "5 Seconds";
         public static string FanartIntervalTenSeconds = "10 Seconds";

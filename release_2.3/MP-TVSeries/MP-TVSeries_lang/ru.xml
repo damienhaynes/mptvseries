@@ -192,4 +192,8 @@
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Несколько звуковых дорожек</string>
 	<string Field="OnlineFavourites" Original="Online Favourites">Онлайн избранное</string>	
 	<string Field="Actors" Original="Actors">Актеры</string>	
+	<string Field="RemovableMedia" Original="Removable Media">Съемный носитель</string>
+	<string Field="LocalMedia" Original="Local Media">Локальный носитель</string>
+	<string Field="AdultSeries" Original="Adult Series">Сериалы "для взрослых"</string>
+	<string Field="KidsSeries" Original="Kids Series">Сериалы для детей</string>	
 </strings>
