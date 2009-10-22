@@ -870,21 +870,38 @@ namespace WindowPlugins.GUITVSeries
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
             cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired"); 
             SQLiteResultSet results = DBTVSeries.Execute(query);
-            epsTotal = 0;
+            epsTotal = 0; // total episode means total *AIRED* episodes - I'm sure no-one's interested in counting unaired episodes
             int parseResult = 0;
             int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
-                if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-                    epsTotal += parseResult;
-                }
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-                    epsWatched += parseResult;
+                    epsWatched+= parseResult;
                 }
+
+                Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
+                Match match = r.Match(results.Rows[i].fields[2]);
+                DateTime firstAired;
+                if (match.Success) {
+                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value),Convert.ToInt32(match.Groups[2].Value),Convert.ToInt32(match.Groups[3].Value));
+                    if (firstAired < DateTime.Today)
+                        epsTotal++;
+                }
+//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
+//                     epsTotal += parseResult;
+//                 }
+//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
+//                     epsWatched += parseResult;
+//                 }
             }
             epsUnWatched = epsTotal - epsWatched;
+            // this happens if for some reasoon an episode is marked as watched, but firstaired is in the future 
+            // - or no firstaired provided
+            if (epsUnWatched < 0)
+                epsUnWatched = 0;
         }
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
@@ -892,19 +909,36 @@ namespace WindowPlugins.GUITVSeries
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
-            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
-                if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-                    epsTotal += parseResult;
-                }
-                if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
+                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
+                {
                     epsWatched += parseResult;
                 }
+
+                Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
+                Match match = r.Match(results.Rows[i].fields[2]);
+                DateTime firstAired;
+                if (match.Success)
+                {
+                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                    if (firstAired < DateTime.Today)
+                        epsTotal++;
+                }
+
+                
+//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
+//                     epsTotal += parseResult;
+//                 }
+//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
+//                     epsWatched += parseResult;
+//                 }
             }
             epsUnWatched = epsTotal - epsWatched;
         }

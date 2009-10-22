@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -102,41 +102,25 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core, Version=0.9.4.21896, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Databases, Version=0.9.4.21897, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
-    </Reference>
-    <Reference Include="Dialogs, Version=0.9.4.21898, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils, Version=2.2.6.21895, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <ItemGroup>	
+  <ItemGroup>
     <Compile Include="cache.cs" />
-	<Compile Include="Configuration\PlaylistSettings.cs">
+    <Compile Include="Configuration\PlaylistSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\ViewTemplates.cs">
+    <Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\ViewTemplates.Designer.cs">
@@ -148,6 +132,9 @@
     <Compile Include="Configuration\PinCode.Designer.cs">
       <DependentUpon>PinCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
+    <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
+    <Compile Include="DB Classes\DBIgnoreDownloadedFiles.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -229,7 +216,7 @@
     <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\SeriesSelect.cs">
+    <Compile Include="Configuration\SeriesSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\SeriesSelect.Designer.cs">
@@ -319,7 +306,7 @@
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
     <Compile Include="GUIUserRating.cs" />
-	<Compile Include="GUIPinCode.cs" />
+    <Compile Include="GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
@@ -380,13 +367,13 @@
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\ViewTemplates.resx">
+    <EmbeddedResource Include="Configuration\ViewTemplates.resx">
       <DependentUpon>ViewTemplates.cs</DependentUpon>
-    </EmbeddedResource>	
-	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\SeriesSelect.resx">
       <DependentUpon>SeriesSelect.cs</DependentUpon>
-    </EmbeddedResource>	
-	<EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
@@ -437,14 +424,29 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cornerstone.MP\Cornerstone.MP.csproj">
-      <Project>{77C78161-3206-45FD-A419-60218F3354C0}</Project>
-      <Name>Cornerstone.MP</Name>
+    <ProjectReference Include="..\..\mediaportal\Core\Core.csproj">
+      <Project>{02FFFC1F-2555-4B99-8B01-3432D0673855}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\mediaportal\Databases\Databases.csproj">
+      <Project>{C1BCEC3E-6074-4328-B5D9-391A457C8FFB}</Project>
+      <Name>Databases</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\mediaportal\Dialogs\Dialogs.csproj">
+      <Project>{396C5208-5D46-4A11-92C1-FD0F2F42D7DD}</Project>
+      <Name>Dialogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\mediaportal\Utils\Utils.csproj">
+      <Project>{6DA0E4DF-6230-4642-98B5-E690BB6942BB}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Mediaportal\WindowPlugins\WindowPlugins.csproj">
+      <Project>{B282C55B-A37B-4CEC-A4FC-00791069BF00}</Project>
+      <Name>WindowPlugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
-    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -454,9 +456,7 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>cd $(TargetDir)
-call "merge.bat
-xcopy "MP-TVSeries.dll" "%25PROGRAMFILES%25\Team MediaPortal\MediaPortal\plugins\Windows" /Y
+    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\..\mediaportal\xbmc\bin\debug\plugins\windows" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
