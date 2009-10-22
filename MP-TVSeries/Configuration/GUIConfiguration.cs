@@ -193,7 +193,23 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
-            checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
+            checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
+            checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImport_ScanRemoteShare);
+            nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse);
+            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
+
+            if (checkBox_doFolderWatch.Checked) {
+                checkBox_scanRemoteShares.Enabled = true;
+                if (checkBox_scanRemoteShares.Checked)
+                    nudScanRemoteShareFrequency.Enabled = true;
+                else
+                    nudScanRemoteShareFrequency.Enabled = false;
+            }
+            else {
+                checkBox_scanRemoteShares.Enabled = false;
+                nudScanRemoteShareFrequency.Enabled = false;
+            }
+
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
@@ -202,9 +218,9 @@ namespace WindowPlugins.GUITVSeries
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
+            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles);
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
-            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
@@ -214,11 +230,11 @@ namespace WindowPlugins.GUITVSeries
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
 
-            int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
+            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
-            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
             chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
@@ -1300,9 +1316,7 @@ namespace WindowPlugins.GUITVSeries
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
             m_parser = null;
-            // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
-            //            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
-            DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
+            DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
         }
@@ -1797,13 +1811,13 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cAutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
+            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
         }
 
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
         }
 
         private void HideNode(TreeNode nodeHidden)
@@ -2436,7 +2450,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cDontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
+            DBOption.SetOptions(DBOption.cImport_DontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
         }
 
         private void checkBox_ShowHidden_CheckedChanged(object sender, EventArgs e)
@@ -3332,7 +3346,27 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_doFolderWatch_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions("doFolderWatch", checkBox_doFolderWatch.Checked);
+            DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
+            if (checkBox_doFolderWatch.Checked) {
+                checkBox_scanRemoteShares.Enabled = true;
+                if (checkBox_scanRemoteShares.Checked)
+                    nudScanRemoteShareFrequency.Enabled = true;
+                else
+                    nudScanRemoteShareFrequency.Enabled = false;
+            }
+            else {
+                checkBox_scanRemoteShares.Enabled = false;
+                nudScanRemoteShareFrequency.Enabled = false;
+            }
+        }
+
+        private void checkBox_scanRemoteShares_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cImport_ScanRemoteShare, checkBox_scanRemoteShares.Checked);
+            if (checkBox_scanRemoteShares.Checked)
+                nudScanRemoteShareFrequency.Enabled = true;
+            else
+                nudScanRemoteShareFrequency.Enabled = false;
         }
 
         //List<logicalView> testViews = new List<logicalView>();
@@ -3454,9 +3488,7 @@ namespace WindowPlugins.GUITVSeries
             if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
-                DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
-                DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
                 MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
@@ -3465,9 +3497,6 @@ namespace WindowPlugins.GUITVSeries
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
             
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
@@ -4006,7 +4035,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cScanOnStartup, checkBox_ScanOnStartup.Checked);
+            DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
         }
 
         private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
@@ -4336,6 +4365,16 @@ namespace WindowPlugins.GUITVSeries
                 LoadReplacements();
                 MPTVSeriesLog.Write("Replacements reset to defaults");
             }           
+        }
+
+        private void nudScanRemoteShareFrequency_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cImport_ScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
+        }
+
+        private void checkBox_SubDownloadOnPlay_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cPlay_SubtitleDownloadOnPlay, checkBox_SubDownloadOnPlay.Checked);
         }
     }
     

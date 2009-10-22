@@ -49,31 +49,14 @@ namespace WindowPlugins.GUITVSeries
             int prev = 0;
             foreach (String path in listFolders)
             {
-                MPTVSeriesLog.Write("Searching for all supported videos files within " + path + " and it's subfolders");
                 filesInFolder(path, ref outList, path.Length);
-                MPTVSeriesLog.Write("Found " + (outList.Count - prev).ToString() + " supported video files");
                 prev = outList.Count;
             }
             return outList;
         }
 
-        static System.Text.RegularExpressions.Regex s_reg = null;
-        static void buildExtRegex()
-        {
-            string extPattern = string.Empty;
-            foreach (string ext in MediaPortal.Util.Utils.VideoExtensions)
-            {
-                if (extPattern.Length > 0)
-                    extPattern += '|';
-                extPattern += ext.Replace(".", "\\.");
-            }
-            s_reg = new System.Text.RegularExpressions.Regex(extPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
-        }
-
         private static bool filesInFolder(string folder, ref List<PathPair> outList, int importPathLength)
         {
-            // this is much faster than calling Directory.Getfiles for every extension (and even about twice as fast as the old recursive way, especially over network paths!
-            if (null == s_reg) buildExtRegex();
             try
             {
                 if (System.IO.Directory.Exists(folder))
@@ -81,7 +64,8 @@ namespace WindowPlugins.GUITVSeries
                     string[] sfiles = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
                     for (int i = 0; i < sfiles.Length; i++)
                     {
-                        if (s_reg.IsMatch(System.IO.Path.GetExtension(sfiles[i])))
+                        // ZEFLASH what's the point of using a regular expression to match an already existing list of strings? 
+                        if (MediaPortal.Util.Utils.VideoExtensions.Contains(System.IO.Path.GetExtension(sfiles[i])))
                         {
                             // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
                             outList.Add(new PathPair(sfiles[i].Substring(importPathLength).TrimStart('\\'), sfiles[i]));
@@ -100,8 +84,8 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception)
                 {
-                    // if we crash here it means the current folder itself is inacessable
-                    Console.WriteLine("Inacessable folder: " + folder);
+                    // if we crash here it means the current folder itself is inaccessible
+                    Console.WriteLine("Inaccessible folder: " + folder);
                     return false;
                 }
                 return false;
