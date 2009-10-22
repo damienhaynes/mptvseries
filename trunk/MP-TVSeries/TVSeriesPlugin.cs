@@ -2721,7 +2721,8 @@ namespace WindowPlugins.GUITVSeries
 				if (ratingDlg.IsSubmitted) {
 					if (ratingDlg.DisplayStars == GUIUserRating.StarDisplay.FIVE_STARS)
 						value = (ratingDlg.Rating * 2).ToString();
-					value = ratingDlg.Rating.ToString();
+					else
+						value = ratingDlg.Rating.ToString();
 				} 
 				else return;
 			} 

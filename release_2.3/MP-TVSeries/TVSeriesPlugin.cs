@@ -1851,6 +1851,17 @@ namespace WindowPlugins.GUITVSeries
                                 string image = arg.Argument as string;
                                 itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
                             }
+                            /*if (itemsForDelayedImgLoading != null) {
+                                string image = arg.Argument as string;
+                                foreach (var item in itemsForDelayedImgLoading) {
+                                    DBSeries seriesOfListItem = item.TVTag as DBSeries;
+                                    if (seriesOfListItem != null && seriesOfListItem[DBSeries.cID] == arg.IndexArgument) {
+                                        //MPTVSeriesLog.Write(string.Format("series:{0}, image:{1}", Helper.getCorrespondingSeries(seriesOfListItem[DBSeries.cID]).ToString(), image));
+                                        item.IconImageBig = image;
+                                        break;
+                                    }
+                                }
+                            }*/
                             PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
                         }
                         break;
@@ -2543,8 +2554,8 @@ namespace WindowPlugins.GUITVSeries
                                     if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
                                         img = ImageAllocator.GetSeriesPoster(stateSeries.Value);
                                     else
-                                        img = ImageAllocator.GetSeriesBanner(stateSeries.Value);
-
+                                        img = ImageAllocator.GetSeriesBanner(stateSeries.Value);                                    
+                                    //ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Value[DBSeries.cID], img);
                                     ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Key, img);
                                     Interlocked.Increment(ref done);
                                 }, keySeriesValue);
@@ -2710,7 +2721,8 @@ namespace WindowPlugins.GUITVSeries
 				if (ratingDlg.IsSubmitted) {
 					if (ratingDlg.DisplayStars == GUIUserRating.StarDisplay.FIVE_STARS)
 						value = (ratingDlg.Rating * 2).ToString();
-					value = ratingDlg.Rating.ToString();
+					else
+						value = ratingDlg.Rating.ToString();
 				} 
 				else return;
 			} 
