@@ -93,7 +93,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             worker.RunWorkerAsync();
         }
 
-        public abstract List<Subtitle> PerformSearch(string languageCode);
+        public abstract List<Subtitle> PerformSearch(string[] languageCodes);
 
         void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -104,7 +104,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-            List<Subtitle> subtitles = SearchSubtitles();
+            List<Subtitle> subtitles = PerformSearch(GetConfiguredLanguages());
 
             if (subtitles.Count > 0)
             {
@@ -161,25 +161,6 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             }
         }
 
-        private List<Subtitle> SearchSubtitles()
-        {
-            try
-            {
-                List<Subtitle> results = new List<Subtitle>();
-
-                foreach (string languageCode in GetConfiguredLanguages())
-                {
-                    results.AddRange(PerformSearch(languageCode));
-                }
-                return results;
-            }
-            catch (Exception ex)
-            {
-                _errorMessage = ex.Message;
-                throw;
-            }
-        }
-
         private CItem ChooseSubtitleDialog(string seriesName, int seasonIndex, int episodeIndex, List<CItem> choices)
         {
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
@@ -224,7 +205,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             return false;
         }
 
-        private List<String> GetConfiguredLanguages()
+        private string[] GetConfiguredLanguages()
         {
             List<String> result = new List<string>();
 
@@ -238,7 +219,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     result.Add(s);
             }
 
-            return result;
+            return result.ToArray();
         } 
     }
 }
