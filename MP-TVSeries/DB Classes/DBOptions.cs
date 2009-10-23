@@ -177,6 +177,9 @@ namespace WindowPlugins.GUITVSeries
 		public const String cKeyboardStyle = "KeyboardStyle";
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
 
+        public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
+        public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -255,6 +258,12 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
+
+                if (GetOptions(cSubtitleDownloaderEnabled) == null)
+                    SetOptions(cSubtitleDownloaderEnabled, false);
+
+                if (GetOptions(cSubtitleDownloaderLanguages) == null)
+                    SetOptions(cSubtitleDownloaderLanguages, "");
 
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default

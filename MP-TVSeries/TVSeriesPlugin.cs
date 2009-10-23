@@ -41,6 +41,7 @@ using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
+using WindowPlugins.GUITVSeries.Subtitles;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -169,6 +170,7 @@ namespace WindowPlugins.GUITVSeries
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
+        private bool subtitleDownloaderWorking = false;
         private bool torrentWorking = false;        
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
@@ -645,6 +647,7 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
+                    bool subtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
 					bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
 					bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
@@ -805,7 +808,7 @@ namespace WindowPlugins.GUITVSeries
                     #region Download menu - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList) {
                         // TODO: seco - if subtitledownloader is enabled
-                        if (newsEnable || torrentsEnable)
+                        if (subtitleDownloaderEnabled || newsEnable || torrentsEnable)
                         {
                             if (listLevel != Listlevel.Group)
                             {
@@ -828,11 +831,11 @@ namespace WindowPlugins.GUITVSeries
 								dlg.SetHeading(Translation.Download);
 
                                 // TODO: seco - if subtitledownloader is enabled
-								//if (tvSubtitlesEnable || seriesSubEnable || remositoryEnable) {
+								if (subtitleDownloaderEnabled) {
 									pItem = new GUIListItem(Translation.Retrieve_Subtitle);
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.downloadSubtitle;
-								//}
+								}
 
 								if (newsEnable) {
 									pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
@@ -1136,57 +1139,72 @@ namespace WindowPlugins.GUITVSeries
 								List<CItem> Choices = new List<CItem>();
 							    
                                 // TODO: seco - add subtitledownloader
-                                //Choices.Add(new CItem("TVSubtitles.Net", "TVSubtitles.Net", "TVSubtitles.Net"));
+                                Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
+                                Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
+                                Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
+                                Choices.Add(new CItem("SubtitleSource", "SubtitleSource", "SubtitleSource"));
+                                Choices.Add(new CItem("TVSubtitles", "TVSubtitles", "TVSubtitles"));
 
 								CItem selected = null;
-								switch (Choices.Count) {
-									case 0:
-										// none enable, do nothing
-										break;
 
-									case 1:
-										// only one enabled, don't bother showing the dialog
-										selected = Choices[0];
-										break;
+								ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+								descriptor.m_sTitle = "Get subtitles from?";
+								descriptor.m_sListLabel = "Enabled subtitle sites:";
+								descriptor.m_List = Choices;
+								descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-									default:
-										// more than 1 choice, show a feedback dialog
-										ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-										descriptor.m_sTitle = "Get subtitles from?";
-										descriptor.m_sListLabel = "Enabled subtitle sites:";
-										descriptor.m_List = Choices;
-										descriptor.m_sbtnIgnoreLabel = String.Empty;
-
-										bool bReady = false;
-										while (!bReady) {
-											ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-											switch (resultFeedback) {
-												case ReturnCode.NotReady: {
-														// we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-														Thread.Sleep(5000);
-													}
-													break;
-
-												case ReturnCode.OK: {
-														bReady = true;
-													}
-													break;
-
-												default: {
-														// exit too if cancelled
-														bReady = true;
-													}
-													break;
+								bool bReady = false;
+								while (!bReady) {
+									ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+									switch (resultFeedback) {
+										case ReturnCode.NotReady: {
+												// we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+												Thread.Sleep(5000);
 											}
-										}
-										break;
+											break;
+
+										case ReturnCode.OK: {
+												bReady = true;
+											}
+											break;
+
+										default: {
+												// exit too if cancelled
+												bReady = true;
+											}
+											break;
+									}
 								}
 
 								if (selected != null) {
+
+								    BaseSubtitleRetriever retriever = null;
+
 									switch ((String)selected.m_Tag) {
-										
+	
                                         // TODO: seco - add subtitledownloader
+                                        case "OpenSubtitles":
+                                            retriever = new OpenSubtitlesRetriever(this);
+                                            break;
+                                        case "Sublight":
+                                            retriever = new SublightRetriever(this);
+                                            break;
+                                        case "Subscene":
+                                            retriever = new SubsceneRetriever(this);
+                                            break;
+                                        case "SubtitleSource":
+                                            retriever = new SubtitleSourceRetriever(this);
+                                            break;
+                                        case "TVSubtitles":
+                                            retriever = new TvSubtitlesRetriever(this);
+                                            break;
 									}
+                                    if (retriever != null && !subtitleDownloaderWorking)
+								    {
+								        retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
+								        subtitleDownloaderWorking = true;
+								        retriever.GetSubs(episode);
+								    }
 								}
 							}
 						}
@@ -3644,6 +3662,34 @@ namespace WindowPlugins.GUITVSeries
             }
             else
                 if (m_Facade != null) LoadFacade();
+        }
+
+        void downloader_SubtitleRetrievalCompleted(bool bFound, string errorMessage)
+        {
+            setProcessAnimationStatus(false);
+            subtitleDownloaderWorking = false;
+            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+
+            if (bFound)
+            {
+                LoadFacade();
+                dlgOK.SetHeading(Translation.Completed);
+                dlgOK.SetLine(1, Translation.Subtitles_download_complete);
+                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+            }
+            else if (errorMessage != null)
+            {
+                GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
+                errorDialog.SetHeading("Unable to retrieve subtitles");
+                errorDialog.SetText(errorMessage);
+                errorDialog.DoModal(GUIWindowManager.ActiveWindow);
+            }
+            else
+            {
+                dlgOK.SetHeading(Translation.Completed);
+                dlgOK.SetLine(1, "No subtitles found or retrieved");
+                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+            }
         }
 
         void Load_TorrentLoadCompleted(bool bOK)

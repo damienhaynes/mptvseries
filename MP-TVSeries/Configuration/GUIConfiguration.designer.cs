@@ -348,6 +348,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
+            this.subtitleDownloader_enabled = new System.Windows.Forms.CheckBox();
             this.panel_torrentsearch = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -417,6 +418,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newssearch.SuspendLayout();
             this.panel_newsroot.SuspendLayout();
             this.panel_torrentroot.SuspendLayout();
+            this.panel_subtitleroot.SuspendLayout();
             this.panel_torrentsearch.SuspendLayout();
             this.tabAbout.SuspendLayout();
             this.SuspendLayout();
@@ -3849,11 +3851,23 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_subtitleroot
             // 
+            this.panel_subtitleroot.Controls.Add(this.subtitleDownloader_enabled);
             this.panel_subtitleroot.Location = new System.Drawing.Point(8, 12);
             this.panel_subtitleroot.Name = "panel_subtitleroot";
-            this.panel_subtitleroot.Size = new System.Drawing.Size(20, 17);
+            this.panel_subtitleroot.Size = new System.Drawing.Size(315, 147);
             this.panel_subtitleroot.TabIndex = 0;
             this.panel_subtitleroot.Tag = "Subtitles";
+            // 
+            // subtitleDownloader_enabled
+            // 
+            this.subtitleDownloader_enabled.AutoSize = true;
+            this.subtitleDownloader_enabled.Location = new System.Drawing.Point(12, 13);
+            this.subtitleDownloader_enabled.Name = "subtitleDownloader_enabled";
+            this.subtitleDownloader_enabled.Size = new System.Drawing.Size(154, 17);
+            this.subtitleDownloader_enabled.TabIndex = 0;
+            this.subtitleDownloader_enabled.Text = "Enable SubtitleDownloader";
+            this.subtitleDownloader_enabled.UseVisualStyleBackColor = true;
+            this.subtitleDownloader_enabled.CheckedChanged += new System.EventHandler(this.subtitleDownloader_enabled_CheckedChanged);
             // 
             // panel_torrentsearch
             // 
@@ -4053,6 +4067,8 @@ namespace WindowPlugins.GUITVSeries
             this.panel_newsroot.PerformLayout();
             this.panel_torrentroot.ResumeLayout(false);
             this.panel_torrentroot.PerformLayout();
+            this.panel_subtitleroot.ResumeLayout(false);
+            this.panel_subtitleroot.PerformLayout();
             this.panel_torrentsearch.ResumeLayout(false);
             this.panel_torrentsearch.PerformLayout();
             this.tabAbout.ResumeLayout(false);
@@ -4352,5 +4368,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.NumericUpDown nudScanRemoteShareFrequency;
         private System.Windows.Forms.Label label77;
         private System.Windows.Forms.CheckBox checkBox_SubDownloadOnPlay;
+        private System.Windows.Forms.CheckBox subtitleDownloader_enabled;
     }
 }

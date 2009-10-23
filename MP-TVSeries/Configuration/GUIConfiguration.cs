@@ -41,6 +41,7 @@ using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
+using SubtitleDownloader.Core;
 
 #if DEBUG
 using System.Diagnostics;
@@ -75,6 +76,8 @@ namespace WindowPlugins.GUITVSeries
 
 		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
 		private MemoryBox deleteFilesMemBox = new MemoryBox();
+
+        private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
         {
@@ -365,8 +368,6 @@ namespace WindowPlugins.GUITVSeries
                 pane.Visible = false;
             }
 
-            treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
-
             LoadTorrentSearches();
 
             lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
@@ -398,6 +399,8 @@ namespace WindowPlugins.GUITVSeries
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             
 			LoadNewsSearches();
+
+            DrawLanguageCheckBoxes();
         }
 
         private void LoadViews()
@@ -768,6 +771,50 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+        }
+
+        private void DrawLanguageCheckBoxes()
+        {
+            int counter = 0;
+            int languageCheckboxY = 60;
+            int languageCheckboxX = 12;
+
+            foreach (var languageName in Languages.GetLanguageNames())
+            {
+                var languageCheckbox = new System.Windows.Forms.CheckBox();
+                languageCheckbox.AutoSize = true;
+                languageCheckbox.Location = new System.Drawing.Point(languageCheckboxX, languageCheckboxY);
+                languageCheckbox.Name = "subtitleDownloader_" + languageName;
+                languageCheckbox.Text = languageName;
+                languageCheckbox.UseVisualStyleBackColor = true;
+                languageCheckbox.Tag = Languages.GetLanguageCode(languageName);
+                languageCheckbox.CheckedChanged += languageCheckBox_CheckedChanged;
+
+                this.subtitleDownloader_LanguageCheckBoxes.Add(languageCheckbox);
+                this.panel_subtitleroot.Controls.Add(languageCheckbox);
+                languageCheckboxX += 125;
+
+                if (counter % 3 == 0 && counter != 0)
+                {
+                    languageCheckboxY += 30;
+                    languageCheckboxX = 12;
+                }
+                counter++;
+            }
+        }
+
+        private void languageCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            string selectedLanguages = "";
+
+            foreach (var languageCheckbox in subtitleDownloader_LanguageCheckBoxes)
+            {
+                if (languageCheckbox.Checked)
+                {
+                    selectedLanguages += "|" + languageCheckbox.Tag;
+                }
+            }
+            DBOption.SetOptions(DBOption.cSubtitleDownloaderLanguages, selectedLanguages);
         }
 
         #endregion
@@ -4208,6 +4255,11 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_SubDownloadOnPlay_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cPlay_SubtitleDownloadOnPlay, checkBox_SubDownloadOnPlay.Checked);
+        }
+
+        private void subtitleDownloader_enabled_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
         }
     }
     
