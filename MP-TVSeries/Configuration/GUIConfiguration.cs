@@ -336,22 +336,10 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeRoot = null;
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
-            m_paneListExtra.Add(panel_tvsubtitles);
-            m_paneListExtra.Add(panel_seriessubs);
-            m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
             nodeRoot.Name = panel_subtitleroot.Name;
             treeView_Extra.Nodes.Add(nodeRoot);
-            nodeChild = new TreeNode(panel_tvsubtitles.Tag.ToString());
-            nodeChild.Name = panel_tvsubtitles.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-            nodeChild = new TreeNode(panel_seriessubs.Tag.ToString());
-            nodeChild.Name = panel_seriessubs.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-            nodeChild = new TreeNode(panel_remository.Tag.ToString());
-            nodeChild.Name = panel_remository.Name;
-            nodeRoot.Nodes.Add(nodeChild);
             m_paneListExtra.Add(panel_torrentroot);
             m_paneListExtra.Add(panel_torrentsearch);
 
@@ -378,45 +366,6 @@ namespace WindowPlugins.GUITVSeries
             }
 
             treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
-
-            checkBox_TVSubtitlesEnable.Checked = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
-            checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
-			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
-          
-          String sTVSubtitlesLanguageFilterList = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
-          if (sTVSubtitlesLanguageFilterList.IndexOf("en") != -1)
-            tvsub_en.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("fr") != -1)
-            tvsub_fr.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("es") != -1)
-            tvsub_es.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("de") != -1)
-            tvsub_de.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("br") != -1)
-            tvsub_br.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("ru") != -1)
-            tvsub_ru.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("it") != -1)
-            tvsub_it.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("gr") != -1)
-            tvsub_gr.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("ar") != -1)
-            tvsub_ar.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("hu") != -1)
-            tvsub_hu.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("pl") != -1)
-            tvsub_pl.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("tr") != -1)
-            tvsub_tr.Checked = true;
-
-            checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
-            textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
-            textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
-            textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
-            textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
-            textBox_RemositoryRegExSeries.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons);
-            textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
-            textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
 
             LoadTorrentSearches();
 
@@ -2419,11 +2368,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
         }
 
-		private void textBox_seriessubsBaseURL_TextChanged(object sender, EventArgs e)
-		{
-		  DBOption.SetOptions(DBOption.cSubs_SeriesSubs_BaseURL, textBox_seriessubsBaseURL.Text);
-		}
-
         private void log_window_changed()
         {
             this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
@@ -2728,12 +2672,9 @@ namespace WindowPlugins.GUITVSeries
                     DBEpisode episode = (DBEpisode)node.Tag;
 
                     List<CItem> Choices = new List<CItem>();
-                    if (checkBox_TVSubtitlesEnable.Checked)
-                      Choices.Add(new CItem("TVSubtitles.net", "TVSubtitles.net", "TVSubtitles.net"));
-                    if (checkBox_seriessubsEnable.Checked)
-					  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
-                    if (checkBox_remositoryEnable.Checked)
-					  Choices.Add(new CItem("Remository", "Remository", "Remository"));
+                    
+                    // TODO: seco - add subtitledownloader
+                    // Choices.Add(new CItem("TVSubtitles.net", "TVSubtitles.net", "TVSubtitles.net"));
 
                     CItem selected = null;
                     switch (Choices.Count)
@@ -2789,39 +2730,11 @@ namespace WindowPlugins.GUITVSeries
                     {
                         switch ((String)selected.m_Tag)
                         {
-                          case "TVSubtitles.net":
-                                Subtitles.TvSubtitles tvsubs = new Subtitles.TvSubtitles(this);
-                                tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
-                                tvsubs.GetSubs(episode);
-                                break;
-
-                            case "Series Subs":
-								Subtitles.SeriesSubs seriesSubs = new Subtitles.SeriesSubs(this);
-								seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
-								seriesSubs.GetSubs(episode);
-								break;
-
-                            case "Remository":
-                                Subtitles.Remository remository = new Subtitles.Remository(this);
-                                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-                                remository.GetSubs(episode);
-                                break;
+                          // TODO - seco : subtitledownloader here
                         }
                     }
                     break;
             }
-        }
-
-		void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
-		{
-		}
-
-        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
-        {
-        }
-
-        void remository_SubtitleRetrievalCompleted(bool bFound)
-        {
         }
 
         ToolStripMenuItem subMenuItem = null;
@@ -3803,86 +3716,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
             LoadTree();
         }
-
-        private void textBox_remositoryBaseURL_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_BaseURL, textBox_remositoryBaseURL.Text);
-        }
-
-        private void textBox_remositoryMainIdx_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_MainIdx, textBox_remositoryMainIdx.Text);
-        }
-
-        private void textbox_remositoryUserId_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_UserName, textBox_remositoryUserId.Text);
-        }
-
-        private void textbox_remositoryPassword_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_Password, textBox_remositoryPassword.Text);
-        }
-
-        private void textBox_RemositoryRegExSeries_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons, textBox_RemositoryRegExSeries.Text);
-        }
-
-        private void textBox_RemositoryRegexEpisode_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexEpisode, textBox_RemositoryRegexEpisode.Text);
-        }
-
-        private void textBox_RemositoryRegexDownload_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexDownload, textBox_RemositoryRegexDownload.Text);
-        }
-        private void checkbox_tvsubsEnable_checkedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_TVSubtitles_Enable, checkBox_TVSubtitlesEnable.Checked);
-        }
-
-        private void tvsub_CheckedChanged(object sender, EventArgs e)
-        {
-          String sFilterList = String.Empty;
-          if (tvsub_en.Checked)
-            sFilterList += "en";
-          if (tvsub_fr.Checked)
-            sFilterList += "|fr";
-          if (tvsub_es.Checked)
-            sFilterList += "|es";
-          if (tvsub_de.Checked)
-            sFilterList += "|de";
-          if (tvsub_br.Checked)
-            sFilterList += "|br";
-          if (tvsub_ru.Checked)
-            sFilterList += "|ru";
-          if (tvsub_it.Checked)
-            sFilterList += "|it";
-          if (tvsub_gr.Checked)
-            sFilterList += "|gr";
-          if (tvsub_ar.Checked)
-            sFilterList += "|ar";
-          if (tvsub_hu.Checked)
-            sFilterList += "|hu";
-          if (tvsub_pl.Checked)
-            sFilterList += "|pl";
-          if (tvsub_tr.Checked)
-            sFilterList += "|tr";
-
-          DBOption.SetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList, sFilterList);
-        }
-
-        private void checkBox_seriessubEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_SeriesSubs_Enable, checkBox_seriessubsEnable.Checked);
-        }
-
-        private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
-        }  
 
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
         {

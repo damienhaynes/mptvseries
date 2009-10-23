@@ -298,11 +298,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
-    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
-    <Compile Include="Subtitle Retrievers Classes\Remository.cs" />
-    <Compile Include="Subtitle Retrievers Classes\seriessubs.cs" />
-    <Compile Include="Subtitle Retrievers Classes\tvsubtitles.cs" />
-    <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
     <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
@@ -455,6 +450,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="Subtitle Retrievers Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
