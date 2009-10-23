@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -456,7 +456,7 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\..\mediaportal\xbmc\bin\debug\plugins\windows" /Y
+    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\debug\plugins\windows" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
