@@ -13,10 +13,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         }
 
-        public override List<Subtitle> PerformSearch(string languageCode)
+        public override List<Subtitle> PerformSearch(string[] languageCodes)
         {
             EpisodeSearchQuery query = new EpisodeSearchQuery(SeriesName, SeasonIndex, EpisodeIndex);
-            query.LanguageCode = languageCode;
+            query.LanguageCodes = languageCodes;
                 
             return Downloader.SearchSubtitles(query);
         }
