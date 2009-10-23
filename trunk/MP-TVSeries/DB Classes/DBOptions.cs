@@ -97,21 +97,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
 
-        public const String cSubs_TVSubtitles_Enable = "Subs_TVSubtitles_Enable";
-        public const String cSubs_TVSubtitles_LanguageFilterList = "Subs_TVSubtitles_LanguageFilterList";
-
-	    public const String cSubs_SeriesSubs_Enable = "Subs_Series_Enable";
-	    public const String cSubs_SeriesSubs_BaseURL = "Subs_SeriesSubs_BaseURL";
-
-        public const String cSubs_Remository_Enable = "Subs_Remository_Enable";
-        public const String cSubs_Remository_BaseURL = "Subs_Remository_BaseURL";
-        public const String cSubs_Remository_MainIdx = "Subs_Remository_MainIdx";
-        public const String cSubs_Remository_UserName = "Subs_Remository_UserName";
-        public const String cSubs_Remository_Password = "Subs_Remository_Password";
-        public const String cSubs_Remository_RegexSeriesSeasons = "Subs_Remository_RegEx_Series_Seasons";
-        public const String cSubs_Remository_RegexEpisode = "Subs_Remository_RegEx_Episode";
-        public const String cSubs_Remository_RegexDownload = "Subs_Remository_Download";
-
         public const String cUTorrentPath = "uTorrentPath";
         public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
         public const String cTorrentSearch = "TorrentSearch_Current";
@@ -351,27 +336,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
-
-		        if (GetOptions(cSubs_TVSubtitles_Enable) == null)
-		            SetOptions(cSubs_TVSubtitles_Enable, false);
-
-		        if (GetOptions(cSubs_SeriesSubs_Enable) == null)
-		            SetOptions(cSubs_SeriesSubs_Enable, false);
-
-		        if (GetOptions(cSubs_Remository_Enable) == null)
-		            SetOptions(cSubs_Remository_Enable, false);
-
-                if (GetOptions(cSubs_TVSubtitles_LanguageFilterList) == null)
-                  SetOptions(cSubs_TVSubtitles_LanguageFilterList, @"en");
-
-		        if (GetOptions(cSubs_SeriesSubs_BaseURL) == null)
-		            SetOptions(cSubs_SeriesSubs_BaseURL, @"http://www.seriessub.com/sous-titres/");
-
-                if (GetOptions(cSubs_Remository_BaseURL) == null)
-                    SetOptions(cSubs_Remository_BaseURL, @"http://www.italiansubs.net/");
-                
-                if (GetOptions(cSubs_Remository_MainIdx) == null)
-                    SetOptions(cSubs_Remository_MainIdx, "27");
 
                 if (GetOptions(cTorrentSearch) == null)
                     SetOptions(cTorrentSearch, String.Empty);
