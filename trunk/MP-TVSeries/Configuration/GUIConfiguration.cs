@@ -400,6 +400,11 @@ namespace WindowPlugins.GUITVSeries
             
 			LoadNewsSearches();
 
+            if (DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled))
+            {
+                subtitleDownloader_enabled.Checked = true;
+            }
+
             DrawLanguageCheckBoxes();
         }
 
@@ -788,6 +793,15 @@ namespace WindowPlugins.GUITVSeries
                 languageCheckbox.Text = languageName;
                 languageCheckbox.UseVisualStyleBackColor = true;
                 languageCheckbox.Tag = Languages.GetLanguageCode(languageName);
+
+                string checkedLanguages = 
+                    DBOption.GetOptions(DBOption.cSubtitleDownloaderLanguages);
+
+                if (checkedLanguages.Contains((String) languageCheckbox.Tag))
+                {
+                    languageCheckbox.Checked = true;
+                }
+
                 languageCheckbox.CheckedChanged += languageCheckBox_CheckedChanged;
 
                 this.subtitleDownloader_LanguageCheckBoxes.Add(languageCheckbox);
