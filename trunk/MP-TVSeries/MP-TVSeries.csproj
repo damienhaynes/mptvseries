@@ -481,7 +481,14 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\debug\plugins\windows" /Y
-</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
+copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
+xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
+xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
