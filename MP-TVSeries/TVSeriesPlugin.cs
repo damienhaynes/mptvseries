@@ -30,6 +30,7 @@ using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
+using Action = MediaPortal.GUI.Library.Action;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
 using System.Collections.Generic;
