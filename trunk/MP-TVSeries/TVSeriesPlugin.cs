@@ -42,6 +42,11 @@ using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Subtitles;
+using SubtitleDownloader.Implementations.OpenSubtitles;
+using SubtitleDownloader.Implementations.Sublight;
+using SubtitleDownloader.Implementations.Subscene;
+using SubtitleDownloader.Implementations.SubtitleSource;
+using SubtitleDownloader.Implementations.TVSubtitles;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -1456,26 +1461,26 @@ namespace WindowPlugins.GUITVSeries
             if (selected != null)
             {
 
-                BaseSubtitleRetriever retriever = null;
+                SubtitleRetriever retriever = null;
 
                 switch ((String)selected.m_Tag)
                 {
 
                     // TODO: seco - add subtitledownloader
                     case "OpenSubtitles":
-                        retriever = new OpenSubtitlesRetriever(this);
+                        retriever = new SubtitleRetriever(this, new OpenSubtitlesDownloader());
                         break;
                     case "Sublight":
-                        retriever = new SublightRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SublightDownloader());
                         break;
                     case "Subscene":
-                        retriever = new SubsceneRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SubsceneDownloader());
                         break;
                     case "SubtitleSource":
-                        retriever = new SubtitleSourceRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SubtitleSourceDownloaderV2());
                         break;
                     case "TVSubtitles":
-                        retriever = new TvSubtitlesRetriever(this);
+                        retriever = new SubtitleRetriever(this, new TvSubtitlesDownloader());
                         break;
                 }
                 if (retriever != null && !subtitleDownloaderWorking)
