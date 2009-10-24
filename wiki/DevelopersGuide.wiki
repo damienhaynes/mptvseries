@@ -23,7 +23,7 @@ So now that you have your tools setup, you will want to pull down the latest sou
 
 http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructure.jpg
 
-So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal and MP-TVSeries folders below that. These three are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
+So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal, Common-MP-TVE3 and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
 
 = Getting the MediaPortal Source Code =
 == Checking Out ==
@@ -40,6 +40,12 @@ Using the very latest code base from MediaPortal, may not be the best idea thoug
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/MediaPortal
+}}}
+
+MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". Right Click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
+{{{
+https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
+https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/Common-MP-TVE3
 }}}
 
 == Getting the MP-TVSeries Source Code ==
@@ -71,7 +77,7 @@ Now that you have created your solution you are almost done. All that is left is
 
 http://mptvseries.googlecode.com/svn/wiki/Images/AddNewSolnFolder.jpg
 
-Next, we want to add the MediaPortal.sln to the newly created folder above. To add the MediaPortal solution, select the new solution folder that you just created and select "Add Existing Project" from the right click menu. In the "Add Existing Project" dialog browse up the MediaPortal root directory. To load the MediaPortal solution, you first need to change the "Files of Type" dropdown box to "Solution Files (*.sln).
+Next, we want to add the MediaPortal.sln to the newly created folder above. To add the MediaPortal solution, select the new solution folder that you just created and select "Add Existing Project" from the right click menu. In the "Add Existing Project" dialog browse up the MediaPortal root directory. To load the MediaPortal solution, you first need to change the "Files of Type" dropdown box to "Solution Files (.sln).
 Once you have selected the MediaPortal.sln file to load you should see a solution explorer window similar to this:
 
 http://mptvseries.googlecode.com/svn/wiki/Images/FinalSolnExplorer.jpg
