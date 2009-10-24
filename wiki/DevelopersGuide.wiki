@@ -97,7 +97,17 @@ _Note: If you want to build the entire solution ie. All of the MediaPortal proje
 
 == Testing in MediaPortal ==
 
-If you want to test changes you have made in an actual MediaPortal install, you need to make sure that MP-TVSeries.dll is copied to your working windows\plugins directory. This can usually be done by modifying the Post-Build step of the MP-TVseries project. You should also be aware that MP-TVSeries depends on a 3rd Party Assembly "ICSharpcode.SharpZipLib.dll", this should also get copied to your working directory.
+If you want to test changes you have made in an actual MediaPortal install, you need to make sure that MP-TVSeries.dll is copied to your working windows\plugins directory and that all 3rd Party Assemblies are copied to MediaPortals binary directory. This can usually be done by modifying the Post-Build step of the MP-TVseries project. By default the Post Build step will copy to your MediaPortal development environment created above.
+
+== Debugging in MediaPortal ==
+
+To debug MP-TVSeries in MediaPortal you will need to configure the Debug properties for the project. Right Click on the MP-TVSeries project and select Properties. Now, select the Debug tab and enter the location to MediaPortal.exe in the "Start external program" field:
+
+http://mptvseries.googlecode.com/svn/wiki/Images/DebugSettings.jpg
+
+Similarly, you can enter in the path to Configuration.exe if you want to debug MP-TVSeries configuration.
+
+Before pressing F5 to debug, you will probably also want to set the MP-TVSeries project as the default. Do this by Right Clicking on the MP-TVSeries project and selecting "Set as Startup project".
 
 == Problems? ==
 
