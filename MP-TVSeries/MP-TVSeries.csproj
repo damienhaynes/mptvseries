@@ -315,12 +315,7 @@
     </Compile>
     <Compile Include="settings.cs" />
     <Compile Include="Downloaders\Torrent.cs" />
-    <Compile Include="Subtitle Retrievers Classes\BaseSubtitleRetriever.cs" />
-    <Compile Include="Subtitle Retrievers Classes\OpenSubtitlesRetriever.cs" />
-    <Compile Include="Subtitle Retrievers Classes\SublightRetriever.cs" />
-    <Compile Include="Subtitle Retrievers Classes\SubsceneRetriever.cs" />
-    <Compile Include="Subtitle Retrievers Classes\SubtitleSourceRetriever.cs" />
-    <Compile Include="Subtitle Retrievers Classes\TvSubtitlesRetriever.cs" />
+    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />

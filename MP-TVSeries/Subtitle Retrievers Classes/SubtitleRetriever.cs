@@ -32,7 +32,7 @@ using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries.Subtitles
 {
-    public abstract class BaseSubtitleRetriever
+    public class SubtitleRetriever
     {
         public delegate void SubtitleRetrievalCompletedHandler(bool bFound, string message);
 
@@ -62,7 +62,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         protected string EpisodeFileNameWithoutExtension;
 
-        public BaseSubtitleRetriever(IFeedback feedback, ISubtitleDownloader downloader)
+        public SubtitleRetriever(IFeedback feedback, ISubtitleDownloader downloader)
         {
             this.Downloader = downloader;
             this.feedback = feedback;
@@ -93,7 +93,13 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             worker.RunWorkerAsync();
         }
 
-        public abstract List<Subtitle> PerformSearch(string[] languageCodes);
+        public List<Subtitle> PerformSearch(string[] languageCodes)
+        {
+            EpisodeSearchQuery query = new EpisodeSearchQuery(SeriesName, SeasonIndex, EpisodeIndex);
+            query.LanguageCodes = languageCodes;
+
+            return Downloader.SearchSubtitles(query);   
+        }
 
         void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {

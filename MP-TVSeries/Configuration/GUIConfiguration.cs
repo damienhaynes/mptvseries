@@ -45,6 +45,12 @@ using System.Xml;
 using SubtitleDownloader.Core;
 using WindowPlugins.GUITVSeries.Subtitles;
 using MediaPortal.GUI.Library;
+using SubtitleDownloader.Implementations;
+using SubtitleDownloader.Implementations.OpenSubtitles;
+using SubtitleDownloader.Implementations.Sublight;
+using SubtitleDownloader.Implementations.Subscene;
+using SubtitleDownloader.Implementations.SubtitleSource;
+using SubtitleDownloader.Implementations.TVSubtitles;
 
 #if DEBUG
 using System.Diagnostics;
@@ -408,7 +414,7 @@ namespace WindowPlugins.GUITVSeries
                 subtitleDownloader_enabled.Checked = true;
             }
 
-            DrawLanguageCheckBoxes();
+            DrawSubtitleLanguageCheckBoxes();
         }
 
         private void LoadViews()
@@ -781,8 +787,10 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void DrawLanguageCheckBoxes()
+        private void DrawSubtitleLanguageCheckBoxes()
         {
+            // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
+
             int counter = 1;
             int languageCheckboxY = 60;
             int languageCheckboxX = 12;
@@ -2714,12 +2722,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool NoneFound()
-        {
-            MessageBox.Show("No subtitles were found for this file", "error");
-            return true;
-        }
-
         private void GetSubtitles(TreeNode node)
         {
             if (node == null)
@@ -2796,26 +2798,26 @@ namespace WindowPlugins.GUITVSeries
             if (selected != null)
             {
 
-                BaseSubtitleRetriever retriever = null;
+                SubtitleRetriever retriever = null;
 
                 switch ((String)selected.m_Tag)
                 {
 
                     // TODO: seco - add subtitledownloader
                     case "OpenSubtitles":
-                        retriever = new OpenSubtitlesRetriever(this);
+                        retriever = new SubtitleRetriever(this, new OpenSubtitlesDownloader());
                         break;
                     case "Sublight":
-                        retriever = new SublightRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SublightDownloader());
                         break;
                     case "Subscene":
-                        retriever = new SubsceneRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SubsceneDownloader());
                         break;
                     case "SubtitleSource":
-                        retriever = new SubtitleSourceRetriever(this);
+                        retriever = new SubtitleRetriever(this, new SubtitleSourceDownloaderV2());
                         break;
                     case "TVSubtitles":
-                        retriever = new TvSubtitlesRetriever(this);
+                        retriever = new SubtitleRetriever(this, new TvSubtitlesDownloader());
                         break;
                 }
                 if (retriever != null) //&& !subtitleDownloaderWorking)
@@ -2844,23 +2846,15 @@ namespace WindowPlugins.GUITVSeries
 
             if (bFound)
             {
-                //LoadFacade();
-                //dlgOK.SetHeading(Translation.Completed);
-                //dlgOK.SetLine(1, Translation.Subtitles_download_complete);
-                //dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                MessageBox.Show("Subtitles retrieved successfully", Translation.Completed);
             }
             else if (errorMessage != null)
             {
-                //GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
-                //errorDialog.SetHeading("Unable to retrieve subtitles");
-                //errorDialog.SetText(errorMessage);
-                //errorDialog.DoModal(GUIWindowManager.ActiveWindow);
+                MessageBox.Show(errorMessage, "Unable to retrieve subtitles");
             }
             else
             {
-                //dlgOK.SetHeading(Translation.Completed);
-                //dlgOK.SetLine(1, "No subtitles found or retrieved");
-                //dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                MessageBox.Show("No subtitles found or retrieved", Translation.Completed);
             }
         }
 
