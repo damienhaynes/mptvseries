@@ -215,7 +215,7 @@ namespace WindowPlugins.GUITVSeries
                     // forom subtitle retrieval always needs original (english) series title
                     // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
-                        string origLanguage = "7"; // 7 = english (original)
+                        string origLanguage = "en"; // English (original)
                         if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
                             return base[DBOnlineSeries.cPrettyName];
                         else
