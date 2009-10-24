@@ -97,7 +97,10 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            WorkerCompleted(_subtitleRetrieved, _errorMessage);
+            if (SubtitleRetrievalCompleted != null) // only if any subscribers exist
+            {
+                SubtitleRetrievalCompleted.Invoke(_subtitleRetrieved, _errorMessage);
+            }
         }
 
         void WorkerDoWork(object sender, DoWorkEventArgs e)
@@ -116,14 +119,6 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     Subtitle subtitle = (Subtitle) selected.m_Tag;
                     DownloadAndSaveSubtitle(subtitle);
                 }
-            }
-        }
-
-        public void WorkerCompleted(bool subtitleRetrieved, string message)
-        {
-            if (SubtitleRetrievalCompleted != null) // only if any subscribers exist
-            {
-                SubtitleRetrievalCompleted.Invoke(subtitleRetrieved, message);
             }
         }
 
