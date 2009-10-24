@@ -618,6 +618,8 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
+            // TODO: seco - to something for this, use database ??
+
             if (Helper.String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
             if (subTitleExtensions.Count == 0)
             {

@@ -1134,78 +1134,7 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.downloadSubtitle: {
 							if (selectedEpisode != null) {
 								DBEpisode episode = (DBEpisode)currentitem.TVTag;
-								setProcessAnimationStatus(true);
-
-								List<CItem> Choices = new List<CItem>();
-							    
-                                // TODO: seco - add subtitledownloader
-                                Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
-                                Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
-                                Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
-                                Choices.Add(new CItem("SubtitleSource", "SubtitleSource", "SubtitleSource"));
-                                Choices.Add(new CItem("TVSubtitles", "TVSubtitles", "TVSubtitles"));
-
-								CItem selected = null;
-
-								ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-								descriptor.m_sTitle = "Get subtitles from?";
-								descriptor.m_sListLabel = "Enabled subtitle sites:";
-								descriptor.m_List = Choices;
-								descriptor.m_sbtnIgnoreLabel = String.Empty;
-
-								bool bReady = false;
-								while (!bReady) {
-									ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-									switch (resultFeedback) {
-										case ReturnCode.NotReady: {
-												// we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-												Thread.Sleep(5000);
-											}
-											break;
-
-										case ReturnCode.OK: {
-												bReady = true;
-											}
-											break;
-
-										default: {
-												// exit too if cancelled
-												bReady = true;
-											}
-											break;
-									}
-								}
-
-								if (selected != null) {
-
-								    BaseSubtitleRetriever retriever = null;
-
-									switch ((String)selected.m_Tag) {
-	
-                                        // TODO: seco - add subtitledownloader
-                                        case "OpenSubtitles":
-                                            retriever = new OpenSubtitlesRetriever(this);
-                                            break;
-                                        case "Sublight":
-                                            retriever = new SublightRetriever(this);
-                                            break;
-                                        case "Subscene":
-                                            retriever = new SubsceneRetriever(this);
-                                            break;
-                                        case "SubtitleSource":
-                                            retriever = new SubtitleSourceRetriever(this);
-                                            break;
-                                        case "TVSubtitles":
-                                            retriever = new TvSubtitlesRetriever(this);
-                                            break;
-									}
-                                    if (retriever != null && !subtitleDownloaderWorking)
-								    {
-								        retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-								        subtitleDownloaderWorking = true;
-								        retriever.GetSubs(episode);
-								    }
-								}
+                                ShowSubtitleMenu(episode);
 							}
 						}
 						break;
@@ -1475,68 +1404,88 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-        protected void ShowSubtitleMenu(DBEpisode selectedEpisode)
+        protected void ShowSubtitleMenu(DBEpisode episode)
         {
-            #region Selected Menu Item Actions (Sub-Menus)
+            // TODO: seco - use this method in every place where download needed ?
 
-			setProcessAnimationStatus(true);
+            List<CItem> Choices = new List<CItem>();
 
-			List<CItem> Choices = new List<CItem>();
+            // TODO: seco - add subtitledownloader
+            Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
+            Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
+            Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
+            Choices.Add(new CItem("SubtitleSource", "SubtitleSource", "SubtitleSource"));
+            Choices.Add(new CItem("TVSubtitles", "TVSubtitles", "TVSubtitles"));
 
-            // TODO: seco - enable subtitle downloader
-			//Choices.Add(new CItem("TVSubtitles.Net", "TVSubtitles.Net", "TVSubtitles.Net"));
+            CItem selected = null;
 
-			CItem selected = null;
-			switch (Choices.Count) {
-				case 0:
-					// none enable, do nothing
-					break;
+            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+            descriptor.m_sTitle = "Get subtitles from?";
+            descriptor.m_sListLabel = "Enabled subtitle sites:";
+            descriptor.m_List = Choices;
+            descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-				case 1:
-					// only one enabled, don't bother showing the dialog
-					selected = Choices[0];
-					break;
+            bool bReady = false;
+            while (!bReady)
+            {
+                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+                switch (resultFeedback)
+                {
+                    case ReturnCode.NotReady:
+                        {
+                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                            Thread.Sleep(5000);
+                        }
+                        break;
 
-				default:
-					// more than 1 choice, show a feedback dialog
-					ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-					descriptor.m_sTitle = "Get subtitles from?";
-					descriptor.m_sListLabel = "Enabled subtitle sites:";
-					descriptor.m_List = Choices;
-					descriptor.m_sbtnIgnoreLabel = String.Empty;
+                    case ReturnCode.OK:
+                        {
+                            bReady = true;
+                        }
+                        break;
 
-					bool bReady = false;
-					while (!bReady) {
-						ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-						switch (resultFeedback) {
-							case ReturnCode.NotReady: {
-									// we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-									Thread.Sleep(5000);
-								}
-								break;
+                    default:
+                        {
+                            // exit too if cancelled
+                            bReady = true;
+                        }
+                        break;
+                }
+            }
 
-							case ReturnCode.OK: {
-									bReady = true;
-								}
-								break;
+            if (selected != null)
+            {
 
-							default: {
-									// exit too if cancelled
-									bReady = true;
-								}
-								break;
-						}
-					}
-					break;
-			}
+                BaseSubtitleRetriever retriever = null;
 
-			if (selected != null) {
-				switch ((String)selected.m_Tag) {
-					
-                    // TODO: seco - enable subtitledownloader
-				}
-			}
-            #endregion
+                switch ((String)selected.m_Tag)
+                {
+
+                    // TODO: seco - add subtitledownloader
+                    case "OpenSubtitles":
+                        retriever = new OpenSubtitlesRetriever(this);
+                        break;
+                    case "Sublight":
+                        retriever = new SublightRetriever(this);
+                        break;
+                    case "Subscene":
+                        retriever = new SubsceneRetriever(this);
+                        break;
+                    case "SubtitleSource":
+                        retriever = new SubtitleSourceRetriever(this);
+                        break;
+                    case "TVSubtitles":
+                        retriever = new TvSubtitlesRetriever(this);
+                        break;
+                }
+                if (retriever != null && !subtitleDownloaderWorking)
+                {
+                    setProcessAnimationStatus(true);
+                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
+                    subtitleDownloaderWorking = true;
+                    retriever.GetSubs(episode);
+                }
+            }
         }
 
         protected void ShowDownloadMenu(DBEpisode selectedEpisode)
@@ -3670,6 +3619,8 @@ namespace WindowPlugins.GUITVSeries
             subtitleDownloaderWorking = false;
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
 
+            // TODO: seco - set AvailableSubtitle for episode
+
             if (bFound)
             {
                 LoadFacade();
@@ -4100,7 +4051,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     
                     // TODO: seco - maybe add subtitledownloader working if it's any good
-                    else if (!torrentWorking)
+                    else if (!torrentWorking && !subtitleDownloaderWorking)
                         setProcessAnimationStatus(false);
                 }
             }
