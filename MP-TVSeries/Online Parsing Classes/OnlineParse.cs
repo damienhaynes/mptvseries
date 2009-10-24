@@ -889,11 +889,15 @@ namespace WindowPlugins.GUITVSeries
 
                     // Filter out episodes and parse only the ones in the current series
                     List<DBEpisode> eps = new List<DBEpisode>(episodesInDB.Count);
-                    for (int j = 0; j < episodesInDB.Count; j++)
-                        if (episodesInDB[j][DBEpisode.cSeriesID] == seriesID)
-                            eps.Add(episodesInDB[j]);
-
-                    matchOnlineToLocalEpisodes(Helper.getCorrespondingSeries(seriesID), eps, new GetEpisodes(seriesID.ToString()));
+					for (int j = 0; j < episodesInDB.Count; j++) {
+						if (episodesInDB[j][DBEpisode.cSeriesID] == seriesID)
+							eps.Add(episodesInDB[j]);
+					}
+					
+					DBSeries series = Helper.getCorrespondingSeries(seriesID);					
+					if (series != null) {
+						matchOnlineToLocalEpisodes(series, eps, new GetEpisodes(seriesID.ToString()));
+					}					
                 }
             }
         }
