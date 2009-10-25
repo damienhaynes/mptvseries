@@ -1643,10 +1643,14 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cMyRating:
                                         // do nothing here, those information are local only
                                         break;
-
+																	
                                     case DBOnlineEpisode.cSeasonIndex:
                                     case DBOnlineEpisode.cEpisodeIndex:
                                         break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
+
+									case DBOnlineEpisode.cEpisodeThumbnailFilename:
+										// Dont reset as Thumbnail update may not be called in some situations
+										break;
 
                                     default:
                                         localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
