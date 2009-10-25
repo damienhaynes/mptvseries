@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 24th Sep 2009 -->
+<!-- Last Updated: 25th Oct 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -199,4 +199,7 @@
 	<string Field="AdultSeries" Original="Adult Series">Adult Series</string>
 	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Clear Fanart Cache</string>
+	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Delete Thumbnails</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Would you also like to Delete and Re-Download</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">all episode thumbnails?</string>	
 </strings>

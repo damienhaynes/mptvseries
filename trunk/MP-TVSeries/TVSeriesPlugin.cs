@@ -24,6 +24,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -321,6 +322,7 @@ namespace WindowPlugins.GUITVSeries
 			actionToggleFavorite,
 			actionHide,
 			actionDelete,
+			actionUpdate,
 			actionLocalScan,
 			actionFullRefresh,
 			actionPlayRandom,
@@ -864,15 +866,21 @@ namespace WindowPlugins.GUITVSeries
 								dlg.Reset();
 								dlg.SetHeading(Translation.Actions);
 								if (listLevel != Listlevel.Group) {
-									pItem = new GUIListItem(Translation.Hide);
-									dlg.Add(pItem);
-									pItem.ItemId = (int)eContextItems.actionHide;
-
 									if (DBOption.GetOptions(DBOption.cShowDeleteMenu)) {
 										pItem = new GUIListItem(Translation.Delete + " ...");
 										dlg.Add(pItem);
 										pItem.ItemId = (int)eContextItems.actionDelete;
 									}
+
+									if (!m_parserUpdaterWorking) {
+										pItem = new GUIListItem(Translation.Update);
+										dlg.Add(pItem);
+										pItem.ItemId = (int)eContextItems.actionUpdate;
+									}
+
+									pItem = new GUIListItem(Translation.Hide);
+									dlg.Add(pItem);
+									pItem.ItemId = (int)eContextItems.actionHide;
 
 									pItem = new GUIListItem(Translation.updateMI);
 									dlg.Add(pItem);
@@ -882,6 +890,9 @@ namespace WindowPlugins.GUITVSeries
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.resetUserSelections;
 								}
+								
+								// Redundant with Run Import GUI button and Update Actions
+								/*
 								pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionLocalScan;
@@ -889,6 +900,7 @@ namespace WindowPlugins.GUITVSeries
 								pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionFullRefresh;
+								*/
 
 								pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
@@ -1211,6 +1223,14 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.actionDelete: {
 							dlg.Reset();
 							ShowDeleteMenu(selectedSeries, selectedSeason, selectedEpisode);
+						}
+						break;
+					#endregion
+
+					#region Update Series/Episode Information
+					case (int)eContextItems.actionUpdate: {
+							dlg.Reset();
+							UpdateEpisodes(selectedSeries, m_SelectedSeason, m_SelectedEpisode);
 						}
 						break;
 					#endregion
@@ -2830,7 +2850,91 @@ namespace WindowPlugins.GUITVSeries
         public static void clearGUIProperty(string which)
         {
             setGUIProperty(which, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
-        }        
+        }
+
+		private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode) {			
+			List<DBValue> epIDsUpdates = new List<DBValue>();
+			List<DBValue> seriesIDsUpdates = new List<DBValue>();
+
+			SQLCondition conditions = null;
+			string searchPattern = string.Empty;			 			 
+
+			// Get selected Series and/or list of Episode(s) to update
+			switch (this.listLevel) {
+				case Listlevel.Series:					
+					seriesIDsUpdates.Add(series[DBSeries.cID]);
+					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
+					searchPattern = "*.jpg";
+					break;
+
+				case Listlevel.Season:
+					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+					conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
+					searchPattern = season[DBSeason.cIndex] + "x*.jpg";
+					break;
+
+				case Listlevel.Episode:
+					epIDsUpdates.Add(episode[DBOnlineEpisode.cID]);
+					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
+					searchPattern = episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
+					break;
+			}
+
+			// Delete Physical Thumbnails
+			// Dont prompt if just doing a single episode update
+			bool deleteThumbs = true;
+			if (this.listLevel != Listlevel.Episode) {
+				GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+				if (dlgYesNo != null) {
+					dlgYesNo.Reset();
+					dlgYesNo.SetHeading(Translation.DeleteThumbnailsHeading);
+					dlgYesNo.SetLine(1, Translation.DeleteThumbnailsLine1);
+					dlgYesNo.SetLine(2, Translation.DeleteThumbnailsLine2);
+					dlgYesNo.SetDefaultToYes(false);
+					dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+					if (!dlgYesNo.IsConfirmed) deleteThumbs = false;
+				}
+			}
+
+			if (deleteThumbs) {
+				string thumbnailPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(series.ToString()) + @"\Episodes");
+				
+				// Search and delete matching files that actually exist
+				string[] fileList = Directory.GetFiles(thumbnailPath, searchPattern);
+
+				foreach (string file in fileList) {
+					MPTVSeriesLog.Write("Deleting Episode Thumbnail: " + file);
+					FileInfo fileInfo = new FileInfo(file);
+					try {
+						fileInfo.Delete();
+					}
+					catch (Exception ex) {
+						MPTVSeriesLog.Write("Failed to Delete Episode Thumbnail: " + file + ": " + ex.Message);
+					}
+				}
+
+				// Remove local thumbnail reference from db so that it thumbnails will be downloaded
+				DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", conditions);
+			}
+
+			// Execute Online Parsing Actions
+			if (epIDsUpdates.Count > 0) {
+
+				lock (m_parserUpdaterQueue) {
+					List<ParsingAction> parsingActions = new List<ParsingAction>();					
+					parsingActions.Add(ParsingAction.UpdateEpisodes);
+					
+					// Conditional parsing actions
+					if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);					
+					if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+
+					m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));				
+				}		
+
+			}
+		}
 
         internal static void showRatingsDialog(DBTable item, bool auto)
         {
