@@ -3115,7 +3115,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBEpisode> todoeps = new List<DBEpisode>();
                 // only get the episodes that dont have their resolutions read out already
                 for (int i = 0; i < episodes.Count; i++)
-                    if (!episodes[i].mediaInfoIsSet)
+                    if (!episodes[i].HasMediaInfo)
                         todoeps.Add(episodes[i]);
                 episodes = todoeps;
             }
@@ -3143,7 +3143,7 @@ namespace WindowPlugins.GUITVSeries
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
-                ep.readMediaInfoOfLocal();
+                ep.ReadMediaInfo();
             e.Result = episodes.Count;
         }
 

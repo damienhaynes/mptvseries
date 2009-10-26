@@ -1417,7 +1417,7 @@ namespace WindowPlugins.GUITVSeries
             cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);            
             // Playtime decrements by one every failed attempt(0,-1,-2,..,-5), dont attempt future scans if done more than Maximum attempts
-            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.maxMIAttempts*-1), SQLConditionType.GreaterEqualThan); 
+            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.MAX_MEDIAINFO_RETRIES*-1), SQLConditionType.GreaterThan); 
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
@@ -1447,7 +1447,7 @@ namespace WindowPlugins.GUITVSeries
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
-                ep.readMediaInfoOfLocal();
+                ep.ReadMediaInfo();
             e.Result = episodes.Count;
         }
 

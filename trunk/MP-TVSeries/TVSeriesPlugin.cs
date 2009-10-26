@@ -1239,17 +1239,17 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.actionRecheckMI:
 						switch (listLevel) {
 							case Listlevel.Episode:
-								m_SelectedEpisode.readMediaInfoOfLocal();
+								m_SelectedEpisode.ReadMediaInfo();
 								// reload here so logos update
 								LoadFacade();
 								break;
 							case Listlevel.Season:
 								foreach (DBEpisode ep in DBEpisode.Get(m_SelectedSeason[DBSeason.cSeriesID], m_SelectedSeason[DBSeason.cIndex], false))
-									ep.readMediaInfoOfLocal();
+									ep.ReadMediaInfo();
 								break;
 							case Listlevel.Series:
 								foreach (DBEpisode ep in DBEpisode.Get((int)m_SelectedSeries[DBSeries.cID], false))
-									ep.readMediaInfoOfLocal();
+									ep.ReadMediaInfo();
 								break;
 						}
 						break;

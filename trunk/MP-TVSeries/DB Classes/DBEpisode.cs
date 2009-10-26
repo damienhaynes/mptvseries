@@ -267,7 +267,7 @@ namespace WindowPlugins.GUITVSeries
         public List<string> cachedLogoResults = null;
         public string cachedFirstLogo = null;
 
-        public const int maxMIAttempts = 6;
+        public const int MAX_MEDIAINFO_RETRIES = 5;
 
         private static bool m_bUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
 
@@ -367,8 +367,8 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet)
-                readMediaInfoOfLocal();
+            if (System.IO.File.Exists(filename) && !HasMediaInfo && !Helper.IsImageFile(filename))
+                ReadMediaInfo();
 
             //composite id will bw set automatically from setting these three
             this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
@@ -383,7 +383,10 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !bSkipMediaInfo) readMediaInfoOfLocal();
+            
+            if (System.IO.File.Exists(filename) && !HasMediaInfo && !bSkipMediaInfo && !Helper.IsImageFile(filename))
+                ReadMediaInfo();
+
             if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(this[cSeriesID], this[cSeasonIndex], this[cEpisodeIndex]);
@@ -506,85 +509,97 @@ namespace WindowPlugins.GUITVSeries
             this[cEpisodeIndex] = -1;
         }
 
-        public bool mediaInfoIsSet
+        public bool HasMediaInfo
         {
             get
             {
-                if (Helper.String.IsNullOrEmpty(this["localPlaytime"])// ||
-                //    this["VideoCodec"] == "" ||
-                //    this["VideoBitrate"] == "" ||
-                //    this["VideoFrameRate"] == "" ||
-                //    this["videoWidth"] == "" ||
-                //    this["videoHeight"] == "" ||
-                //    this["VideoAspectRatio"] == "" ||
-                //    this["AudioCodec"] == "" ||
-                //    this["AudioChannels"] == "" ||
-                //    this["AudioBitrate"] == ""
-                    ) return false;
+                // Check at least one MediaInfo field has been populated                
+                if (Helper.String.IsNullOrEmpty(this["localPlaytime"]))                                
+                    return false;
                 else
                 {
                     int noAttempts = 0;
                     if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
-                    if (noAttempts >= 0 - maxMIAttempts && noAttempts < 0) return false; // we attempt to readout maxMIAttempts times
+                    
+                    // local playtime will be greater than zero if mediainfo has been retrieved
+                    if (noAttempts > 0) return true;
+
+                    // attempt to read MediaInfo until maximum attempts have been reached
+                    if (noAttempts >= -MAX_MEDIAINFO_RETRIES) return false;
+
                     return true;
                 }
 
             }
         }
 
-        public bool readMediaInfoOfLocal()
+        public bool ReadMediaInfo()
         {
             // Get File Date Added/Created
             GetFileTimeStamps();
 
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
-            if (null == MI) return false; // MediaInfo Object could not be created
             
-            if (System.IO.File.Exists(this[DBEpisode.cFilename]))
+            // MediaInfo Object could not be created
+            if (null == MI) return false;
+            
+            // Check if File Exists and is not an Image type e.g. ISO (we can't extract mediainfo from that)
+            if (System.IO.File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
             {
                 try
                 {
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
-                    MI.Open(this[DBEpisode.cFilename]);
-                    string result = string.Empty;
+                    
+                    // open file in MediaInfo
+                    MI.Open(this[DBEpisode.cFilename]);                                        
+                                        
+                    // check number of failed attempts at mediainfo extraction                    
                     int noAttempts = 0;
                     int.TryParse(this["localPlaytime"], out noAttempts);
                     noAttempts--;
+                    
+                    // Get Playtime (runtime)
+                    string result = MI.VideoPlaytime;
+                    this["localPlaytime"] = result != "-1" ? result : noAttempts.ToString();
+
                     bool failed = false;
-                    this["localPlaytime"] = (result = MI.getPlaytime()).Length > 0 ? result : noAttempts.ToString();
-                    if (result.Length > 0)
+                    if (result != "-1")
                     {
-                        this["VideoCodec"] = (result = MI.getVidCodec()).Length > 0 ? result : "-1";
-                        this["VideoBitrate"] = (result = MI.getVidBitrate()).Length > 0 ? result : "-1";
-                        this["VideoFrameRate"] = (result = MI.getFPS()).Length > 0 ? result : "-1";
-                        this["videoWidth"] = (result = MI.getWidth()).Length > 0 ? result : "-1"; // lower case for compat. with older version
-                        this["videoHeight"] = (result = MI.getHeight()).Length > 0 ? result : "-1";
-                        this["VideoAspectRatio"] = (result = MI.getAR()).Length > 0 ? result : "-1";
+                        this["VideoCodec"] = MI.VideoCodec;
+                        this["VideoBitrate"] = MI.VideoBitrate;
+                        this["VideoFrameRate"] = MI.VideoFramesPerSecond;
+                        this["videoWidth"] = MI.VideoWidth;
+                        this["videoHeight"] = MI.VideoHeight;
+                        this["VideoAspectRatio"] = MI.VideoAspectRatio;
 
-                        this["AudioCodec"] = (result = MI.getAudioCodec()).Length > 0 ? result : "-1";
-                        this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
-                        this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
-                        this["AudioTracks"] = (result = MI.getAudioStreamCount()).Length > 0 ? result : "-1";
-                        
-                        this["TextCount"] = (result = MI.getTextCount()).Length > 0 ? result : "-1";                        
+                        this["AudioCodec"] = MI.AudioCodec;
+                        this["AudioBitrate"] = MI.AudioBitrate;
+                        this["AudioChannels"] = MI.AudioChannelCount;
+                        this["AudioTracks"] = MI.AudioStreamCount;
 
+                        this["TextCount"] = MI.SubtitleCount;
                     }
-                    else failed = true;
+                    else 
+                        failed = true;
+                    
+                    // MediaInfo cleanup
                     MI.Close();
 
                     if (failed)
                     {
-                        MPTVSeriesLog.Write("Problem parsing Media Info for: ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
-                        int retry = maxMIAttempts - (noAttempts * -1);
-                        if(retry > 0)
-                            MPTVSeriesLog.Write("This file will be retried: ", retry.ToString() + " times", MPTVSeriesLog.LogLevel.Normal);
-                        else
-                            MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
+                        // Get number of retries left to report to user
+                        int retries = MAX_MEDIAINFO_RETRIES - (noAttempts * -1);
 
+                        string retriesLeft = retries > 0 ? retries.ToString() : "No"; 
+                        retriesLeft = string.Format("Problem parsing MediaInfo for: {0}, ({1} retries left)", this[DBEpisode.cFilename].ToString(), retriesLeft);
+
+                        MPTVSeriesLog.Write(retriesLeft,MPTVSeriesLog.LogLevel.Normal);
+                   
                     }
                     else 
                         MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
+                    // Commit MediaInfo to database
                     Commit();
                     
                     return true;
