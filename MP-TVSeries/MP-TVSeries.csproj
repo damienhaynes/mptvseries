@@ -408,23 +408,36 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrows.png" />
-    <None Include="img\arrow_up.png" />
-    <None Include="img\arrow_down.png" />
+    <None Include="Resources\Images\arrow_up.png" />
+    <None Include="Resources\Images\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrow_down_small.png" />
+    <None Include="Resources\Images\arrow_down_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrow_up_small.png" />
+    <None Include="Resources\Images\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="img\control_play_blue.png" />
-    <Content Include="img\folder_explore.png" />
-    <Content Include="img\television_add.png" />
-    <Content Include="img\television_add_unlisted.png" />
-    <Content Include="img\textfield_rename.png" />
-    <None Include="img\tv_series_logo_noreflection.png" />
+    <Content Include="Resources\Images\control_play_blue.png" />
+    <Content Include="Resources\Images\folder_explore.png" />
+    <Content Include="Resources\Images\television_add.png" />
+    <Content Include="Resources\Images\television_add_unlisted.png" />
+    <Content Include="Resources\Images\textfield_rename.png" />
+    <Content Include="Resources\Languages\da.xml" />
+    <Content Include="Resources\Languages\de.xml" />
+    <Content Include="Resources\Languages\en%28us%29.xml" />
+    <Content Include="Resources\Languages\es.xml" />
+    <Content Include="Resources\Languages\fr.xml" />
+    <Content Include="Resources\Languages\he.xml" />
+    <Content Include="Resources\Languages\it.xml" />
+    <Content Include="Resources\Languages\nl%28nl%29.xml" />
+    <Content Include="Resources\Languages\no%28nb%29.xml" />
+    <Content Include="Resources\Languages\no.xml" />
+    <Content Include="Resources\Languages\pl.xml" />
+    <Content Include="Resources\Languages\pt_pt.xml" />
+    <Content Include="Resources\Languages\ru.xml" />
+    <Content Include="Resources\Languages\sv.xml" />
+    <None Include="Resources\Images\tv_series_logo_noreflection.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
