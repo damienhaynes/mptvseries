@@ -76,6 +76,8 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         public void GetSubs(DBEpisode episode)
         {
+            MPTVSeriesLog.Write("Searching for subtitles...");
+
             Episode = episode;
 
             Series = new DBOnlineSeries(this.Episode[DBEpisode.cSeriesID]);
@@ -115,6 +117,8 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
             List<Subtitle> subtitles = PerformSearch(GetConfiguredLanguages());
 
+            MPTVSeriesLog.Write("Searching for subtitles completed. Found " + subtitles.Count + " subtitle(s).");
+
             if (subtitles.Count > 0)
             {
                 List<CItem> choices = GetSubtitleChoices(subtitles);
@@ -130,9 +134,17 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
         private void DownloadAndSaveSubtitle(Subtitle subtitle)
         {
+            MPTVSeriesLog.Write("Downloading subtitle...");
+
             try
             {
                 FileInfo originalFile = Downloader.SaveSubtitle(subtitle);
+
+                if (!File.Exists(EpisodeFileName))
+                {
+                    _errorMessage = "Unable to download subtitle: Not a local episode!";
+                    return;
+                }
 
                 string destinationFile =
                     SubtitleDownloader.Util.FileUtils.GetFileNameForSubtitle(
@@ -154,10 +166,12 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     File.Move(originalFile.FullName, destinationFile);
                     _subtitleRetrieved = true;
                 }
+                MPTVSeriesLog.Write("Downloading subtitle completed.");
             }
             catch (Exception e)
             {
-                _errorMessage = e.Message;
+                _errorMessage = "Downloading subtitle file failed: " + e.Message;
+                MPTVSeriesLog.Write(_errorMessage);
                 throw;
             }
         }
