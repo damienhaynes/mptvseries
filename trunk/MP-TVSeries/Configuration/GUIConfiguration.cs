@@ -86,6 +86,8 @@ namespace WindowPlugins.GUITVSeries
 		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
 		private MemoryBox deleteFilesMemBox = new MemoryBox();
 
+        private bool subtitleDownloaderWorking = false;
+
         private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
@@ -2767,37 +2769,10 @@ namespace WindowPlugins.GUITVSeries
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-            bool bReady = false;
-            while (!bReady)
-            {
-                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-                switch (resultFeedback)
-                {
-                    case ReturnCode.NotReady:
-                        {
-                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-                            Thread.Sleep(5000);
-                        }
-                        break;
-
-                    case ReturnCode.OK:
-                        {
-                            bReady = true;
-                        }
-                        break;
-
-                    default:
-                        {
-                            // exit too if cancelled
-                            bReady = true;
-                        }
-                        break;
-                }
-            }
+            ChooseFromSelection(descriptor, out selected);
 
             if (selected != null)
             {
-
                 SubtitleRetriever retriever = null;
 
                 switch ((String)selected.m_Tag)
@@ -2820,13 +2795,10 @@ namespace WindowPlugins.GUITVSeries
                         retriever = new SubtitleRetriever(this, new TvSubtitlesDownloader());
                         break;
                 }
-                if (retriever != null) //&& !subtitleDownloaderWorking)
+                if (retriever != null && !subtitleDownloaderWorking)
                 {
-                    // TODO: seco - should show some progress animation
-
-                    //setProcessAnimationStatus(true);
                     retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                    //subtitleDownloaderWorking = true;
+                    subtitleDownloaderWorking = true;
                     retriever.GetSubs(episode);
                 }
             }
@@ -2834,28 +2806,7 @@ namespace WindowPlugins.GUITVSeries
 
         void downloader_SubtitleRetrievalCompleted(bool bFound, string errorMessage)
         {
-            // TODO: seco - duplicate code with same method in tvseriesplugin.cs
-
-            // TODO: seco - show some dialogs, don't know what type
-
-            //setProcessAnimationStatus(false);
-            //subtitleDownloaderWorking = false;
-            //GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-
-            // TODO: seco - set AvailableSubtitle for episode
-
-            if (bFound)
-            {
-                MessageBox.Show("Subtitles retrieved successfully", Translation.Completed);
-            }
-            else if (errorMessage != null)
-            {
-                MessageBox.Show(errorMessage, "Unable to retrieve subtitles");
-            }
-            else
-            {
-                MessageBox.Show("No subtitles found or retrieved", Translation.Completed);
-            }
+            subtitleDownloaderWorking = false;
         }
 
         ToolStripMenuItem subMenuItem = null;
