@@ -423,6 +423,7 @@
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
+    <Content Include="Resources\Languages\cs.xml" />
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />
     <Content Include="Resources\Languages\en%28us%29.xml" />
