@@ -2748,13 +2748,8 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
-            // TODO: seco - duplicate code with same method in TVseriesplugin.cs
-
-            // TODO: seco - use this method in every place where download needed ?
-
             List<CItem> Choices = new List<CItem>();
 
-            // TODO: seco - add subtitledownloader
             Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
             Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
             Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
@@ -2777,8 +2772,6 @@ namespace WindowPlugins.GUITVSeries
 
                 switch ((String)selected.m_Tag)
                 {
-
-                    // TODO: seco - add subtitledownloader
                     case "OpenSubtitles":
                         retriever = new SubtitleRetriever(this, new OpenSubtitlesDownloader());
                         break;
@@ -2804,7 +2797,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void downloader_SubtitleRetrievalCompleted(bool bFound, string errorMessage)
+        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
         {
             subtitleDownloaderWorking = false;
         }

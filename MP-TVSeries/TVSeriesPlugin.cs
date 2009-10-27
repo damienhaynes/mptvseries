@@ -814,7 +814,6 @@ namespace WindowPlugins.GUITVSeries
 
                     #region Download menu - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList) {
-                        // TODO: seco - if subtitledownloader is enabled
                         if (subtitleDownloaderEnabled || newsEnable || torrentsEnable)
                         {
                             if (listLevel != Listlevel.Group)
@@ -837,7 +836,6 @@ namespace WindowPlugins.GUITVSeries
 								dlg.Reset();
 								dlg.SetHeading(Translation.Download);
 
-                                // TODO: seco - if subtitledownloader is enabled
 								if (subtitleDownloaderEnabled) {
 									pItem = new GUIListItem(Translation.Retrieve_Subtitle);
 									dlg.Add(pItem);
@@ -1431,11 +1429,8 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
-            // TODO: seco - use this method in every place where download needed ?
-
             List<CItem> Choices = new List<CItem>();
 
-            // TODO: seco - add subtitledownloader
             Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
             Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
             Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
@@ -1485,8 +1480,6 @@ namespace WindowPlugins.GUITVSeries
 
                 switch ((String)selected.m_Tag)
                 {
-
-                    // TODO: seco - add subtitledownloader
                     case "OpenSubtitles":
                         retriever = new SubtitleRetriever(this, new OpenSubtitlesDownloader());
                         break;
@@ -3722,15 +3715,13 @@ namespace WindowPlugins.GUITVSeries
                 if (m_Facade != null) LoadFacade();
         }
 
-        void downloader_SubtitleRetrievalCompleted(bool bFound, string errorMessage)
+        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
         {
             setProcessAnimationStatus(false);
             subtitleDownloaderWorking = false;
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
 
-            // TODO: seco - set AvailableSubtitle for episode
-
-            if (bFound)
+            if (subtitleRetrieved)
             {
                 LoadFacade();
                 dlgOK.SetHeading(Translation.Completed);
@@ -4159,7 +4150,6 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdaterQueue.RemoveAt(0);
                     }
                     
-                    // TODO: seco - maybe add subtitledownloader working if it's any good
                     else if (!torrentWorking && !subtitleDownloaderWorking)
                         setProcessAnimationStatus(false);
                 }
