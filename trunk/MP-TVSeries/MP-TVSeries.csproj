@@ -102,6 +102,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bierdopje.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Bierdopje.API.dll</HintPath>
+    </Reference>
     <Reference Include="ChilkatDotNet2, Version=9.0.5.0, Culture=neutral, PublicKeyToken=eb5fc1fc52ef09bd, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ChilkatDotNet2.dll</HintPath>

@@ -51,6 +51,7 @@ using SubtitleDownloader.Implementations.Sublight;
 using SubtitleDownloader.Implementations.Subscene;
 using SubtitleDownloader.Implementations.SubtitleSource;
 using SubtitleDownloader.Implementations.TVSubtitles;
+using SubtitleDownloader.Implementations.Bierdopje;
 
 #if DEBUG
 using System.Diagnostics;
@@ -2750,11 +2751,11 @@ namespace WindowPlugins.GUITVSeries
         {
             List<CItem> Choices = new List<CItem>();
 
-            Choices.Add(new CItem("OpenSubtitles", "OpenSubtitles", "OpenSubtitles"));
-            Choices.Add(new CItem("Sublight", "Sublight", "Sublight"));
-            Choices.Add(new CItem("Subscene", "Subscene", "Subscene"));
-            Choices.Add(new CItem("SubtitleSource", "SubtitleSource", "SubtitleSource"));
-            Choices.Add(new CItem("TVSubtitles", "TVSubtitles", "TVSubtitles"));
+            // Get names of the SubtitleDownloader implementations for menu
+            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            {
+                Choices.Add(new CItem(name, name, name));
+            }
 
             CItem selected = null;
 
@@ -2768,27 +2769,10 @@ namespace WindowPlugins.GUITVSeries
 
             if (selected != null)
             {
-                SubtitleRetriever retriever = null;
+                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
+                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
 
-                switch ((String)selected.m_Tag)
-                {
-                    case "OpenSubtitles":
-                        retriever = new SubtitleRetriever(this, new OpenSubtitlesDownloader());
-                        break;
-                    case "Sublight":
-                        retriever = new SubtitleRetriever(this, new SublightDownloader());
-                        break;
-                    case "Subscene":
-                        retriever = new SubtitleRetriever(this, new SubsceneDownloader());
-                        break;
-                    case "SubtitleSource":
-                        retriever = new SubtitleRetriever(this, new SubtitleSourceDownloaderV2());
-                        break;
-                    case "TVSubtitles":
-                        retriever = new SubtitleRetriever(this, new TvSubtitlesDownloader());
-                        break;
-                }
-                if (retriever != null && !subtitleDownloaderWorking)
+                if (!subtitleDownloaderWorking)
                 {
                     retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
                     subtitleDownloaderWorking = true;
