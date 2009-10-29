@@ -486,6 +486,6 @@ REM xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc
 REM xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)Bierdopje.API.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
+REM xcopy "$(TargetDir)Bierdopje.API.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
