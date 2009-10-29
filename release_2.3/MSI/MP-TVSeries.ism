@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{BBC2FD2A-89D3-4D5F-903D-CF7BEFCAECE9}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 23:00</createdtm>
-		<lastsavedtm>07/15/2000 02:50</lastsavedtm>
+		<createdtm>06/22/1999 00:00</createdtm>
+		<lastsavedtm>07/15/2000 03:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -1336,6 +1336,7 @@
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>common.window.tvseries.xml</td><td>skinBlue3XML</td><td>COMMON~1.XML|common.window.TVseries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\common.window.TVseries.xml</td><td>17</td><td/></row>
+		<row><td>cs.xml</td><td>Languages</td><td>cs.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\cs.xml</td><td>1</td><td/></row>
 		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>17</td><td/></row>
 		<row><td>de.xml</td><td>Languages</td><td>de.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\de.xml</td><td>17</td><td/></row>
 		<row><td>en_us_.xml</td><td>Languages</td><td>en(us).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\en(us).xml</td><td>17</td><td/></row>
@@ -1508,6 +1509,7 @@
 		<col def="s255">Destination</col>
 		<col def="s50">Target</col>
 		<col def="i4">Platform</col>
+		<col def="S255">StartScreenIcon</col>
 	</table>
 
 	<table name="ISChainPackage">
@@ -1968,7 +1970,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MP-TVSeries 2.3.3538</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MP-TVSeries 2.3.3589</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -3659,6 +3661,7 @@
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
 		<row><td>MigrateFeatureStates</td><td/><td>1010</td><td>MigrateFeatureStates</td><td/></row>
 		<row><td>MoveFiles</td><td/><td>3800</td><td>MoveFiles</td><td/></row>
+		<row><td>MsiConfigureServices</td><td>VersionMsi &gt;= "5.00"</td><td>5801</td><td>MSI5 MsiConfigureServices</td><td/></row>
 		<row><td>MsiPublishAssemblies</td><td/><td>6250</td><td>MsiPublishAssemblies</td><td/></row>
 		<row><td>MsiUnpublishAssemblies</td><td/><td>1750</td><td>MsiUnpublishAssemblies</td><td/></row>
 		<row><td>PatchFiles</td><td/><td>4090</td><td>PatchFiles</td><td/></row>
@@ -3742,7 +3745,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>SaveAsSchema</td><td/></row>
 		<row><td>SccEnabled</td><td>0</td></row>
 		<row><td>SccPath</td><td/></row>
-		<row><td>SchemaVersion</td><td>769</td></row>
+		<row><td>SchemaVersion</td><td>770</td></row>
 		<row><td>Script</td><td>1</td></row>
 		<row><td>Type</td><td>MSI</td></row>
 		<row><td>UseMSI45EmbeddedUI</td><td>0</td></row>
@@ -3940,7 +3943,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 
 	<table name="MsiServiceConfig">
 		<col key="yes" def="s72">MsiServiceConfig</col>
-		<col def="l72">Name</col>
+		<col def="s255">Name</col>
 		<col def="i2">Event</col>
 		<col def="i4">ConfigType</col>
 		<col def="S0">Argument</col>
@@ -3949,7 +3952,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 
 	<table name="MsiServiceConfigFailureActions">
 		<col key="yes" def="s72">MsiServiceConfigFailureActions</col>
-		<col def="l72">Name</col>
+		<col def="s255">Name</col>
 		<col def="i2">Event</col>
 		<col def="I4">ResetPeriod</col>
 		<col def="L255">RebootMessage</col>
@@ -4060,7 +4063,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>MPLANGUAGESDIR</td><td/><td/></row>
 		<row><td>MPPROGRAMDIR</td><td/><td/></row>
 		<row><td>MPSKINSDIR</td><td/><td/></row>
-		<row><td>MSIFASTINSTALL</td><td>3</td><td/></row>
+		<row><td>MSIFASTINSTALL</td><td>2</td><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>MsiLogging</td><td>voicewarmupx</td><td/></row>
 		<row><td>NewProperty1</td><td>0</td><td/></row>
@@ -4087,9 +4090,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{70021AE1-29B1-4288-B24F-33ACAC3835C2}</td><td/></row>
+		<row><td>ProductCode</td><td>{AE9A5FE0-F4C0-40C6-B128-D135E485AB82}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries 2.3</td><td/></row>
-		<row><td>ProductVersion</td><td>2.3.3538.2</td><td/></row>
+		<row><td>ProductVersion</td><td>2.3.3589.3</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
@@ -4673,6 +4676,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISCEShtCut</td><td>DisplayName</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>Platform</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>ShtCutKey</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISCEShtCut</td><td>StartScreenIcon</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>Target</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISChainPackage</td><td>DisplayName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Display name for the chained package. Used only in the IDE.</td></row>
 		<row><td>ISChainPackage</td><td>ISReleaseFlags</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
