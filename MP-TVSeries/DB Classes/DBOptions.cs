@@ -179,6 +179,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
         public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
+        public const String cSubtitleDownloadersEnabled = "SubtitleDownloadersEnabled";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -264,6 +265,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cSubtitleDownloaderLanguages) == null)
                     SetOptions(cSubtitleDownloaderLanguages, "");
+
+                if (GetOptions(cSubtitleDownloadersEnabled) == null)
+                    SetOptions(cSubtitleDownloadersEnabled, "");
 
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default

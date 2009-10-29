@@ -45,13 +45,6 @@ using System.Xml;
 using SubtitleDownloader.Core;
 using WindowPlugins.GUITVSeries.Subtitles;
 using MediaPortal.GUI.Library;
-using SubtitleDownloader.Implementations;
-using SubtitleDownloader.Implementations.OpenSubtitles;
-using SubtitleDownloader.Implementations.Sublight;
-using SubtitleDownloader.Implementations.Subscene;
-using SubtitleDownloader.Implementations.SubtitleSource;
-using SubtitleDownloader.Implementations.TVSubtitles;
-using SubtitleDownloader.Implementations.Bierdopje;
 
 #if DEBUG
 using System.Diagnostics;
@@ -90,6 +83,7 @@ namespace WindowPlugins.GUITVSeries
         private bool subtitleDownloaderWorking = false;
 
         private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
+        private List<CheckBox> subtitleDownloader_DownloaderCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
         {
@@ -417,7 +411,8 @@ namespace WindowPlugins.GUITVSeries
                 subtitleDownloader_enabled.Checked = true;
             }
 
-            DrawSubtitleLanguageCheckBoxes();
+            int endsY = DrawSubtitleDownloaderCheckBoxes();
+            DrawSubtitleLanguageCheckBoxes(endsY);
         }
 
         private void LoadViews()
@@ -790,12 +785,56 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void DrawSubtitleLanguageCheckBoxes()
+        private int DrawSubtitleDownloaderCheckBoxes()
+        {
+            int counter = 1;
+            int downloaderCheckboxY = 60;
+            int downloaderCheckboxX = 12;
+
+            List<String> downloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
+            downloaders.Sort();
+
+            foreach (var downloader in downloaders)
+            {
+                var downloaderCheckbox = new System.Windows.Forms.CheckBox();
+                downloaderCheckbox.AutoSize = true;
+                downloaderCheckbox.Location = new System.Drawing.Point(downloaderCheckboxX, downloaderCheckboxY);
+                downloaderCheckbox.Name = "subtitleDownloader_" + downloader;
+                downloaderCheckbox.Text = downloader;
+                downloaderCheckbox.UseVisualStyleBackColor = true;
+                downloaderCheckbox.Tag = downloader;
+
+                string checkedDownloaders =
+                    DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+
+                if (checkedDownloaders.Contains((String)downloaderCheckbox.Tag))
+                {
+                    downloaderCheckbox.Checked = true;
+                }
+
+                downloaderCheckbox.CheckedChanged += downloaderCheckBox_CheckedChanged;
+
+                this.subtitleDownloader_DownloaderCheckBoxes.Add(downloaderCheckbox);
+                this.panel_subtitleroot.Controls.Add(downloaderCheckbox);
+                downloaderCheckboxX += 125;
+
+                if (counter % 4 == 0)
+                {
+                    downloaderCheckboxY += 30;
+                    downloaderCheckboxX = 12;
+                }
+                counter++;
+            }
+
+            return downloaderCheckboxY;
+        }
+
+        private void DrawSubtitleLanguageCheckBoxes(int startY)
         {
             // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
 
             int counter = 1;
-            int languageCheckboxY = 60;
+            int languageCheckboxY = startY + 60;
             int languageCheckboxX = 12;
 
             List<String> languages = Languages.GetLanguageNames();
@@ -846,6 +885,20 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             DBOption.SetOptions(DBOption.cSubtitleDownloaderLanguages, selectedLanguages);
+        }
+
+        private void downloaderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            string selectedDownloaders = "";
+
+            foreach (var downloaderCheckbox in subtitleDownloader_DownloaderCheckBoxes)
+            {
+                if (downloaderCheckbox.Checked)
+                {
+                    selectedDownloaders += "|" + downloaderCheckbox.Tag;
+                }
+            }
+            DBOption.SetOptions(DBOption.cSubtitleDownloadersEnabled, selectedDownloaders);
         }
 
         #endregion
@@ -2750,11 +2803,15 @@ namespace WindowPlugins.GUITVSeries
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
             List<CItem> Choices = new List<CItem>();
+            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
 
             // Get names of the SubtitleDownloader implementations for menu
             foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
             {
-                Choices.Add(new CItem(name, name, name));
+                if (enabledDownloaders.Contains(name))
+                {
+                    Choices.Add(new CItem(name, name, name));
+                }
             }
 
             CItem selected = null;
@@ -2765,9 +2822,9 @@ namespace WindowPlugins.GUITVSeries
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 
-            ChooseFromSelection(descriptor, out selected);
+            ReturnCode returnCode = ChooseFromSelection(descriptor, out selected);
 
-            if (selected != null)
+            if (selected != null && returnCode.Equals(ReturnCode.OK))
             {
                 ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
                 SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
