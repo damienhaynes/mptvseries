@@ -367,7 +367,7 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet)
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !Helper.IsImageFile(filename))
                 readMediaInfoOfLocal();
 
             //composite id will bw set automatically from setting these three
@@ -383,7 +383,9 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !bSkipMediaInfo) readMediaInfoOfLocal();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !bSkipMediaInfo && !Helper.IsImageFile(filename)) 
+                readMediaInfoOfLocal();
+
             if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
                 m_onlineEpisode = new DBOnlineEpisode(this[cSeriesID], this[cSeasonIndex], this[cEpisodeIndex]);
@@ -539,8 +541,8 @@ namespace WindowPlugins.GUITVSeries
 
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
             if (null == MI) return false; // MediaInfo Object could not be created
-            
-            if (System.IO.File.Exists(this[DBEpisode.cFilename]))
+
+            if (System.IO.File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
             {
                 try
                 {
