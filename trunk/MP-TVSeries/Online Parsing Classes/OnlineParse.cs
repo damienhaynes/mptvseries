@@ -63,11 +63,11 @@ namespace WindowPlugins.GUITVSeries
     {
         private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { 
             ParsingAction.LocalScan, 
-            ParsingAction.MediaInfo,
-            ParsingAction.UpdateEpisodeCounts,
+            ParsingAction.MediaInfo,            
             ParsingAction.IdentifyNewSeries, 
             ParsingAction.IdentifyNewEpisodes, 
         };
+
         private static List<ParsingAction> OnlineRefreshActions = new List<ParsingAction> { 
             ParsingAction.GetOnlineUpdates, 
             ParsingAction.UpdateSeries, 
@@ -78,7 +78,9 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.GetNewBanners, 
             ParsingAction.GetNewFanArt, 
             ParsingAction.UpdateEpisodeThumbNails, 
-            ParsingAction.UpdateUserFavourites };
+            ParsingAction.UpdateUserFavourites,
+			ParsingAction.UpdateEpisodeCounts
+		};
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
 

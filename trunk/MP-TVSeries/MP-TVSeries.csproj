@@ -501,6 +501,7 @@ xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(Confi
 xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
+xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)Bierdopje.API.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
