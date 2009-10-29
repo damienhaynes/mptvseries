@@ -1426,11 +1426,15 @@ namespace WindowPlugins.GUITVSeries
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
             List<CItem> Choices = new List<CItem>();
+            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
 
             // Get names of the SubtitleDownloader implementations for menu
             foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
             {
-                Choices.Add(new CItem(name, name, name));
+                if (enabledDownloaders.Contains(name))
+                {
+                    Choices.Add(new CItem(name, name, name));
+                }
             }
 
             CItem selected = null;
