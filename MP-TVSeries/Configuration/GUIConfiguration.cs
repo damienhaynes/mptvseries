@@ -32,7 +32,6 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
-using MediaPortal.Dialogs;
 using MediaPortal.Util;
 using MediaPortal.Configuration;
 using System.Windows.Forms;
@@ -42,16 +41,6 @@ using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
-using SubtitleDownloader.Core;
-using WindowPlugins.GUITVSeries.Subtitles;
-using MediaPortal.GUI.Library;
-using SubtitleDownloader.Implementations;
-using SubtitleDownloader.Implementations.OpenSubtitles;
-using SubtitleDownloader.Implementations.Sublight;
-using SubtitleDownloader.Implementations.Subscene;
-using SubtitleDownloader.Implementations.SubtitleSource;
-using SubtitleDownloader.Implementations.TVSubtitles;
-using SubtitleDownloader.Implementations.Bierdopje;
 
 #if DEBUG
 using System.Diagnostics;
@@ -86,10 +75,6 @@ namespace WindowPlugins.GUITVSeries
 
 		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
 		private MemoryBox deleteFilesMemBox = new MemoryBox();
-
-        private bool subtitleDownloaderWorking = false;
-
-        private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
         {
@@ -208,23 +193,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
-            checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
-            checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImport_ScanRemoteShare);
-            nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse);
-            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
-
-            if (checkBox_doFolderWatch.Checked) {
-                checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
-                    nudScanRemoteShareFrequency.Enabled = true;
-                else
-                    nudScanRemoteShareFrequency.Enabled = false;
-            }
-            else {
-                checkBox_scanRemoteShares.Enabled = false;
-                nudScanRemoteShareFrequency.Enabled = false;
-            }
-
+            checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
@@ -233,9 +202,9 @@ namespace WindowPlugins.GUITVSeries
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles);
+            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
-            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
@@ -245,11 +214,11 @@ namespace WindowPlugins.GUITVSeries
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
 
-            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
+            int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
-            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData);
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
             chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
@@ -351,10 +320,22 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeRoot = null;
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
+            m_paneListExtra.Add(panel_tvsubtitles);
+            m_paneListExtra.Add(panel_seriessubs);
+            m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
             nodeRoot.Name = panel_subtitleroot.Name;
             treeView_Extra.Nodes.Add(nodeRoot);
+            nodeChild = new TreeNode(panel_tvsubtitles.Tag.ToString());
+            nodeChild.Name = panel_tvsubtitles.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+            nodeChild = new TreeNode(panel_seriessubs.Tag.ToString());
+            nodeChild.Name = panel_seriessubs.Name;
+            nodeRoot.Nodes.Add(nodeChild);
+            nodeChild = new TreeNode(panel_remository.Tag.ToString());
+            nodeChild.Name = panel_remository.Name;
+            nodeRoot.Nodes.Add(nodeChild);
             m_paneListExtra.Add(panel_torrentroot);
             m_paneListExtra.Add(panel_torrentsearch);
 
@@ -379,6 +360,47 @@ namespace WindowPlugins.GUITVSeries
                 pane.Dock = DockStyle.Fill;
                 pane.Visible = false;
             }
+
+            treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
+
+            checkBox_TVSubtitlesEnable.Checked = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
+            checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
+			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
+          
+          String sTVSubtitlesLanguageFilterList = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
+          if (sTVSubtitlesLanguageFilterList.IndexOf("en") != -1)
+            tvsub_en.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("fr") != -1)
+            tvsub_fr.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("es") != -1)
+            tvsub_es.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("de") != -1)
+            tvsub_de.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("br") != -1)
+            tvsub_br.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("ru") != -1)
+            tvsub_ru.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("it") != -1)
+            tvsub_it.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("gr") != -1)
+            tvsub_gr.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("ar") != -1)
+            tvsub_ar.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("hu") != -1)
+            tvsub_hu.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("pl") != -1)
+            tvsub_pl.Checked = true;
+          if (sTVSubtitlesLanguageFilterList.IndexOf("tr") != -1)
+            tvsub_tr.Checked = true;
+
+            checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
+            textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
+            textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
+            textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
+            textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
+            textBox_RemositoryRegExSeries.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons);
+            textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
+            textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
 
             LoadTorrentSearches();
 
@@ -411,13 +433,6 @@ namespace WindowPlugins.GUITVSeries
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             
 			LoadNewsSearches();
-
-            if (DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled))
-            {
-                subtitleDownloader_enabled.Checked = true;
-            }
-
-            DrawSubtitleLanguageCheckBoxes();
         }
 
         private void LoadViews()
@@ -788,64 +803,6 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }
-
-        private void DrawSubtitleLanguageCheckBoxes()
-        {
-            // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
-
-            int counter = 1;
-            int languageCheckboxY = 60;
-            int languageCheckboxX = 12;
-
-            List<String> languages = Languages.GetLanguageNames();
-            languages.Sort();
-
-            foreach (var languageName in languages)
-            {
-                var languageCheckbox = new System.Windows.Forms.CheckBox();
-                languageCheckbox.AutoSize = true;
-                languageCheckbox.Location = new System.Drawing.Point(languageCheckboxX, languageCheckboxY);
-                languageCheckbox.Name = "subtitleDownloader_" + languageName;
-                languageCheckbox.Text = languageName;
-                languageCheckbox.UseVisualStyleBackColor = true;
-                languageCheckbox.Tag = Languages.GetLanguageCode(languageName);
-
-                string checkedLanguages = 
-                    DBOption.GetOptions(DBOption.cSubtitleDownloaderLanguages);
-
-                if (checkedLanguages.Contains((String) languageCheckbox.Tag))
-                {
-                    languageCheckbox.Checked = true;
-                }
-
-                languageCheckbox.CheckedChanged += languageCheckBox_CheckedChanged;
-
-                this.subtitleDownloader_LanguageCheckBoxes.Add(languageCheckbox);
-                this.panel_subtitleroot.Controls.Add(languageCheckbox);
-                languageCheckboxX += 125;
-
-                if (counter % 4 == 0)
-                {
-                    languageCheckboxY += 30;
-                    languageCheckboxX = 12;
-                }
-                counter++;
-            }
-        }
-
-        private void languageCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            string selectedLanguages = "";
-
-            foreach (var languageCheckbox in subtitleDownloader_LanguageCheckBoxes)
-            {
-                if (languageCheckbox.Checked)
-                {
-                    selectedLanguages += "|" + languageCheckbox.Tag;
-                }
-            }
-            DBOption.SetOptions(DBOption.cSubtitleDownloaderLanguages, selectedLanguages);
         }
 
         #endregion
@@ -1343,7 +1300,9 @@ namespace WindowPlugins.GUITVSeries
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
             m_parser = null;
-            DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
+            // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
+            //            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
+            DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
         }
@@ -1838,13 +1797,13 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
+            DBOption.SetOptions(DBOption.cAutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
         }
 
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+            DBOption.SetOptions(DBOption.cAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
         }
 
         private void HideNode(TreeNode nodeHidden)
@@ -2446,6 +2405,11 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
         }
 
+		private void textBox_seriessubsBaseURL_TextChanged(object sender, EventArgs e)
+		{
+		  DBOption.SetOptions(DBOption.cSubs_SeriesSubs_BaseURL, textBox_seriessubsBaseURL.Text);
+		}
+
         private void log_window_changed()
         {
             this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
@@ -2472,7 +2436,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_DontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
+            DBOption.SetOptions(DBOption.cDontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
         }
 
         private void checkBox_ShowHidden_CheckedChanged(object sender, EventArgs e)
@@ -2725,6 +2689,12 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public bool NoneFound()
+        {
+            MessageBox.Show("No subtitles were found for this file", "error");
+            return true;
+        }
+
         private void GetSubtitles(TreeNode node)
         {
             if (node == null)
@@ -2742,48 +2712,102 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
-                    ShowSubtitleMenu(episode);
+
+                    List<CItem> Choices = new List<CItem>();
+                    if (checkBox_TVSubtitlesEnable.Checked)
+                      Choices.Add(new CItem("TVSubtitles.net", "TVSubtitles.net", "TVSubtitles.net"));
+                    if (checkBox_seriessubsEnable.Checked)
+					  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
+                    if (checkBox_remositoryEnable.Checked)
+					  Choices.Add(new CItem("Remository", "Remository", "Remository"));
+
+                    CItem selected = null;
+                    switch (Choices.Count)
+                    {
+                        case 0:
+                            // none enable, do nothing
+                            break;
+
+                        case 1:
+                            // only one enabled, don't bother showing the dialog
+                            selected = Choices[0];
+                            break;
+
+                        default:
+                            // more than 1 choice, show a feedback dialog
+                            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+                            descriptor.m_sTitle = "Get subtitles from?";
+                            descriptor.m_sListLabel = "Enabled subtitle sites:";
+                            descriptor.m_List = Choices;
+                            descriptor.m_sbtnIgnoreLabel = String.Empty;
+                            
+                            bool bReady = false;
+                            while (!bReady)
+                            {
+                                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
+                                switch (resultFeedback)
+                                {
+                                    case ReturnCode.NotReady:
+                                        {
+                                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
+                                            Thread.Sleep(5000);
+                                        }
+                                        break;
+
+                                    case ReturnCode.OK:
+                                        {
+                                            bReady = true;
+                                        }
+                                        break;
+
+                                    default:
+                                        {
+                                            // exit too if cancelled
+                                            bReady = true;
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+
+                    if (selected != null)
+                    {
+                        switch ((String)selected.m_Tag)
+                        {
+                          case "TVSubtitles.net":
+                                Subtitles.TvSubtitles tvsubs = new Subtitles.TvSubtitles(this);
+                                tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
+                                tvsubs.GetSubs(episode);
+                                break;
+
+                            case "Series Subs":
+								Subtitles.SeriesSubs seriesSubs = new Subtitles.SeriesSubs(this);
+								seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
+								seriesSubs.GetSubs(episode);
+								break;
+
+                            case "Remository":
+                                Subtitles.Remository remository = new Subtitles.Remository(this);
+                                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
+                                remository.GetSubs(episode);
+                                break;
+                        }
+                    }
                     break;
             }
         }
 
-        protected void ShowSubtitleMenu(DBEpisode episode)
+		void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
+		{
+		}
+
+        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
         {
-            List<CItem> Choices = new List<CItem>();
-
-            // Get names of the SubtitleDownloader implementations for menu
-            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
-            {
-                Choices.Add(new CItem(name, name, name));
-            }
-
-            CItem selected = null;
-
-            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = "Get subtitles from?";
-            descriptor.m_sListLabel = "Enabled subtitle sites:";
-            descriptor.m_List = Choices;
-            descriptor.m_sbtnIgnoreLabel = String.Empty;
-
-            ChooseFromSelection(descriptor, out selected);
-
-            if (selected != null)
-            {
-                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
-                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
-
-                if (!subtitleDownloaderWorking)
-                {
-                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                    subtitleDownloaderWorking = true;
-                    retriever.GetSubs(episode);
-                }
-            }
         }
 
-        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
+        void remository_SubtitleRetrievalCompleted(bool bFound)
         {
-            subtitleDownloaderWorking = false;
         }
 
         ToolStripMenuItem subMenuItem = null;
@@ -3043,7 +3067,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBEpisode> todoeps = new List<DBEpisode>();
                 // only get the episodes that dont have their resolutions read out already
                 for (int i = 0; i < episodes.Count; i++)
-                    if (!episodes[i].HasMediaInfo)
+                    if (!episodes[i].mediaInfoIsSet)
                         todoeps.Add(episodes[i]);
                 episodes = todoeps;
             }
@@ -3071,7 +3095,7 @@ namespace WindowPlugins.GUITVSeries
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
-                ep.ReadMediaInfo();
+                ep.readMediaInfoOfLocal();
             e.Result = episodes.Count;
         }
 
@@ -3308,27 +3332,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_doFolderWatch_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
-            if (checkBox_doFolderWatch.Checked) {
-                checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
-                    nudScanRemoteShareFrequency.Enabled = true;
-                else
-                    nudScanRemoteShareFrequency.Enabled = false;
-            }
-            else {
-                checkBox_scanRemoteShares.Enabled = false;
-                nudScanRemoteShareFrequency.Enabled = false;
-            }
-        }
-
-        private void checkBox_scanRemoteShares_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cImport_ScanRemoteShare, checkBox_scanRemoteShares.Checked);
-            if (checkBox_scanRemoteShares.Checked)
-                nudScanRemoteShareFrequency.Enabled = true;
-            else
-                nudScanRemoteShareFrequency.Enabled = false;
+            DBOption.SetOptions("doFolderWatch", checkBox_doFolderWatch.Checked);
         }
 
         //List<logicalView> testViews = new List<logicalView>();
@@ -3450,7 +3454,9 @@ namespace WindowPlugins.GUITVSeries
             if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
+                DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
+                DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
                 MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
@@ -3459,6 +3465,9 @@ namespace WindowPlugins.GUITVSeries
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
+            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
             
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
@@ -3766,6 +3775,86 @@ namespace WindowPlugins.GUITVSeries
             LoadTree();
         }
 
+        private void textBox_remositoryBaseURL_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_BaseURL, textBox_remositoryBaseURL.Text);
+        }
+
+        private void textBox_remositoryMainIdx_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_MainIdx, textBox_remositoryMainIdx.Text);
+        }
+
+        private void textbox_remositoryUserId_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_UserName, textBox_remositoryUserId.Text);
+        }
+
+        private void textbox_remositoryPassword_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_Password, textBox_remositoryPassword.Text);
+        }
+
+        private void textBox_RemositoryRegExSeries_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons, textBox_RemositoryRegExSeries.Text);
+        }
+
+        private void textBox_RemositoryRegexEpisode_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexEpisode, textBox_RemositoryRegexEpisode.Text);
+        }
+
+        private void textBox_RemositoryRegexDownload_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_RegexDownload, textBox_RemositoryRegexDownload.Text);
+        }
+        private void checkbox_tvsubsEnable_checkedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_TVSubtitles_Enable, checkBox_TVSubtitlesEnable.Checked);
+        }
+
+        private void tvsub_CheckedChanged(object sender, EventArgs e)
+        {
+          String sFilterList = String.Empty;
+          if (tvsub_en.Checked)
+            sFilterList += "en";
+          if (tvsub_fr.Checked)
+            sFilterList += "|fr";
+          if (tvsub_es.Checked)
+            sFilterList += "|es";
+          if (tvsub_de.Checked)
+            sFilterList += "|de";
+          if (tvsub_br.Checked)
+            sFilterList += "|br";
+          if (tvsub_ru.Checked)
+            sFilterList += "|ru";
+          if (tvsub_it.Checked)
+            sFilterList += "|it";
+          if (tvsub_gr.Checked)
+            sFilterList += "|gr";
+          if (tvsub_ar.Checked)
+            sFilterList += "|ar";
+          if (tvsub_hu.Checked)
+            sFilterList += "|hu";
+          if (tvsub_pl.Checked)
+            sFilterList += "|pl";
+          if (tvsub_tr.Checked)
+            sFilterList += "|tr";
+
+          DBOption.SetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList, sFilterList);
+        }
+
+        private void checkBox_seriessubEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_SeriesSubs_Enable, checkBox_seriessubsEnable.Checked);
+        }
+
+        private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
+        }  
+
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
         {
             if (onlineLanguages.Count != 0) return;
@@ -3917,7 +4006,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
+            DBOption.SetOptions(DBOption.cScanOnStartup, checkBox_ScanOnStartup.Checked);
         }
 
         private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
@@ -4247,21 +4336,6 @@ namespace WindowPlugins.GUITVSeries
                 LoadReplacements();
                 MPTVSeriesLog.Write("Replacements reset to defaults");
             }           
-        }
-
-        private void nudScanRemoteShareFrequency_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cImport_ScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
-        }
-
-        private void checkBox_SubDownloadOnPlay_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cPlay_SubtitleDownloadOnPlay, checkBox_SubDownloadOnPlay.Checked);
-        }
-
-        private void subtitleDownloader_enabled_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
         }
     }
     

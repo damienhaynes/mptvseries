@@ -248,7 +248,7 @@ namespace WindowPlugins.GUITVSeries
                 // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
                 // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)                
                 GUIGraphicsContext.IsFullScreenVideo = true;
-                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+                GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);				
 
                 // If the file is an image file, it should be mounted before playing
                 string filename = m_currentEpisode[DBEpisode.cFilename];

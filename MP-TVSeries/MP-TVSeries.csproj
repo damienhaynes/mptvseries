@@ -25,7 +25,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -102,48 +102,41 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bierdopje.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Core, Version=0.9.4.21896, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Bierdopje.API.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
-    <Reference Include="ChilkatDotNet2, Version=9.0.5.0, Culture=neutral, PublicKeyToken=eb5fc1fc52ef09bd, processorArchitecture=x86">
+    <Reference Include="Databases, Version=0.9.4.21897, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\ChilkatDotNet2.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="CookComputing.XmlRpcV2, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+    <Reference Include="Dialogs, Version=0.9.4.21898, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\CookComputing.XmlRpcV2.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.3.9.1, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="SubtitleDownloader, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\SubtitleDownloader.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utils, Version=2.2.6.21895, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>	
     <Compile Include="cache.cs" />
-    <Compile Include="Configuration\PlaylistSettings.cs">
+	<Compile Include="Configuration\PlaylistSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\ViewTemplates.cs">
+	<Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\ViewTemplates.Designer.cs">
@@ -155,9 +148,6 @@
     <Compile Include="Configuration\PinCode.Designer.cs">
       <DependentUpon>PinCode.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
-    <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
-    <Compile Include="DB Classes\DBIgnoreDownloadedFiles.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -239,7 +229,7 @@
     <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\SeriesSelect.cs">
+	<Compile Include="Configuration\SeriesSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\SeriesSelect.Designer.cs">
@@ -318,14 +308,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
+    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
+    <Compile Include="Subtitle Retrievers Classes\Remository.cs" />
+    <Compile Include="Subtitle Retrievers Classes\seriessubs.cs" />
+    <Compile Include="Subtitle Retrievers Classes\tvsubtitles.cs" />
+    <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
     <Compile Include="Downloaders\Torrent.cs" />
-    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
     <Compile Include="GUIUserRating.cs" />
-    <Compile Include="GUIPinCode.cs" />
+	<Compile Include="GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
@@ -370,7 +364,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\PinCode.resx">
       <DependentUpon>PinCode.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
@@ -378,7 +371,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\MemoryBox.resx">
       <DependentUpon>MemoryBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
@@ -388,17 +380,14 @@
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ViewTemplates.resx">
+	<EmbeddedResource Include="Configuration\ViewTemplates.resx">
       <DependentUpon>ViewTemplates.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\SeriesSelect.resx">
+    </EmbeddedResource>	
+	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
       <DependentUpon>SeriesSelect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+    </EmbeddedResource>	
+	<EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -412,37 +401,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Images\arrow_up.png" />
-    <None Include="Resources\Images\arrow_down.png" />
+    <None Include="img\arrows.png" />
+    <None Include="img\arrow_up.png" />
+    <None Include="img\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Images\arrow_down_small.png" />
+    <None Include="img\arrow_down_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Images\arrow_up_small.png" />
+    <None Include="img\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Images\control_play_blue.png" />
-    <Content Include="Resources\Images\folder_explore.png" />
-    <Content Include="Resources\Images\television_add.png" />
-    <Content Include="Resources\Images\television_add_unlisted.png" />
-    <Content Include="Resources\Images\textfield_rename.png" />
-    <Content Include="Resources\Languages\cs.xml" />
-    <Content Include="Resources\Languages\da.xml" />
-    <Content Include="Resources\Languages\de.xml" />
-    <Content Include="Resources\Languages\en%28us%29.xml" />
-    <Content Include="Resources\Languages\es.xml" />
-    <Content Include="Resources\Languages\fr.xml" />
-    <Content Include="Resources\Languages\he.xml" />
-    <Content Include="Resources\Languages\it.xml" />
-    <Content Include="Resources\Languages\nl%28nl%29.xml" />
-    <Content Include="Resources\Languages\no%28nb%29.xml" />
-    <Content Include="Resources\Languages\no.xml" />
-    <Content Include="Resources\Languages\pl.xml" />
-    <Content Include="Resources\Languages\pt_pt.xml" />
-    <Content Include="Resources\Languages\ru.xml" />
-    <Content Include="Resources\Languages\sv.xml" />
-    <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Content Include="img\control_play_blue.png" />
+    <Content Include="img\folder_explore.png" />
+    <Content Include="img\television_add.png" />
+    <Content Include="img\television_add_unlisted.png" />
+    <Content Include="img\textfield_rename.png" />
+    <None Include="img\tv_series_logo_noreflection.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -462,29 +437,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\mediaportal\Core\Core.csproj">
-      <Project>{02FFFC1F-2555-4B99-8B01-3432D0673855}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mediaportal\Databases\Databases.csproj">
-      <Project>{C1BCEC3E-6074-4328-B5D9-391A457C8FFB}</Project>
-      <Name>Databases</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mediaportal\Dialogs\Dialogs.csproj">
-      <Project>{396C5208-5D46-4A11-92C1-FD0F2F42D7DD}</Project>
-      <Name>Dialogs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mediaportal\Utils\Utils.csproj">
-      <Project>{6DA0E4DF-6230-4642-98B5-E690BB6942BB}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Mediaportal\WindowPlugins\WindowPlugins.csproj">
-      <Project>{B282C55B-A37B-4CEC-A4FC-00791069BF00}</Project>
-      <Name>WindowPlugins</Name>
+    <ProjectReference Include="..\Cornerstone.MP\Cornerstone.MP.csproj">
+      <Project>{77C78161-3206-45FD-A419-60218F3354C0}</Project>
+      <Name>Cornerstone.MP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -494,13 +454,9 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
-copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
-xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
-xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
+    <PostBuildEvent>cd $(TargetDir)
+call "merge.bat
+xcopy "MP-TVSeries.dll" "%25PROGRAMFILES%25\Team MediaPortal\MediaPortal\plugins\Windows" /Y
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

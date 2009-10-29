@@ -267,7 +267,7 @@ namespace WindowPlugins.GUITVSeries
         public List<string> cachedLogoResults = null;
         public string cachedFirstLogo = null;
 
-        public const int MAX_MEDIAINFO_RETRIES = 5;
+        public const int maxMIAttempts = 6;
 
         private static bool m_bUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
 
@@ -367,8 +367,8 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !HasMediaInfo && !Helper.IsImageFile(filename))
-                ReadMediaInfo();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !Helper.IsImageFile(filename))
+                readMediaInfoOfLocal();
 
             //composite id will bw set automatically from setting these three
             this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
@@ -383,9 +383,8 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            
-            if (System.IO.File.Exists(filename) && !HasMediaInfo && !bSkipMediaInfo && !Helper.IsImageFile(filename))
-                ReadMediaInfo();
+            if (System.IO.File.Exists(filename) && !mediaInfoIsSet && !bSkipMediaInfo && !Helper.IsImageFile(filename)) 
+                readMediaInfoOfLocal();
 
             if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
@@ -509,97 +508,85 @@ namespace WindowPlugins.GUITVSeries
             this[cEpisodeIndex] = -1;
         }
 
-        public bool HasMediaInfo
+        public bool mediaInfoIsSet
         {
             get
             {
-                // Check at least one MediaInfo field has been populated                
-                if (Helper.String.IsNullOrEmpty(this["localPlaytime"]))                                
-                    return false;
+                if (Helper.String.IsNullOrEmpty(this["localPlaytime"])// ||
+                //    this["VideoCodec"] == "" ||
+                //    this["VideoBitrate"] == "" ||
+                //    this["VideoFrameRate"] == "" ||
+                //    this["videoWidth"] == "" ||
+                //    this["videoHeight"] == "" ||
+                //    this["VideoAspectRatio"] == "" ||
+                //    this["AudioCodec"] == "" ||
+                //    this["AudioChannels"] == "" ||
+                //    this["AudioBitrate"] == ""
+                    ) return false;
                 else
                 {
                     int noAttempts = 0;
                     if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
-                    
-                    // local playtime will be greater than zero if mediainfo has been retrieved
-                    if (noAttempts > 0) return true;
-
-                    // attempt to read MediaInfo until maximum attempts have been reached
-                    if (noAttempts >= -MAX_MEDIAINFO_RETRIES) return false;
-
+                    if (noAttempts >= 0 - maxMIAttempts && noAttempts < 0) return false; // we attempt to readout maxMIAttempts times
                     return true;
                 }
 
             }
         }
 
-        public bool ReadMediaInfo()
+        public bool readMediaInfoOfLocal()
         {
             // Get File Date Added/Created
             GetFileTimeStamps();
 
             MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
-            
-            // MediaInfo Object could not be created
-            if (null == MI) return false;
-            
-            // Check if File Exists and is not an Image type e.g. ISO (we can't extract mediainfo from that)
+            if (null == MI) return false; // MediaInfo Object could not be created
+
             if (System.IO.File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
             {
                 try
                 {
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
-                    
-                    // open file in MediaInfo
-                    MI.Open(this[DBEpisode.cFilename]);                                        
-                                        
-                    // check number of failed attempts at mediainfo extraction                    
+                    MI.Open(this[DBEpisode.cFilename]);
+                    string result = string.Empty;
                     int noAttempts = 0;
                     int.TryParse(this["localPlaytime"], out noAttempts);
                     noAttempts--;
-                    
-                    // Get Playtime (runtime)
-                    string result = MI.VideoPlaytime;
-                    this["localPlaytime"] = result != "-1" ? result : noAttempts.ToString();
-
                     bool failed = false;
-                    if (result != "-1")
+                    this["localPlaytime"] = (result = MI.getPlaytime()).Length > 0 ? result : noAttempts.ToString();
+                    if (result.Length > 0)
                     {
-                        this["VideoCodec"] = MI.VideoCodec;
-                        this["VideoBitrate"] = MI.VideoBitrate;
-                        this["VideoFrameRate"] = MI.VideoFramesPerSecond;
-                        this["videoWidth"] = MI.VideoWidth;
-                        this["videoHeight"] = MI.VideoHeight;
-                        this["VideoAspectRatio"] = MI.VideoAspectRatio;
+                        this["VideoCodec"] = (result = MI.getVidCodec()).Length > 0 ? result : "-1";
+                        this["VideoBitrate"] = (result = MI.getVidBitrate()).Length > 0 ? result : "-1";
+                        this["VideoFrameRate"] = (result = MI.getFPS()).Length > 0 ? result : "-1";
+                        this["videoWidth"] = (result = MI.getWidth()).Length > 0 ? result : "-1"; // lower case for compat. with older version
+                        this["videoHeight"] = (result = MI.getHeight()).Length > 0 ? result : "-1";
+                        this["VideoAspectRatio"] = (result = MI.getAR()).Length > 0 ? result : "-1";
 
-                        this["AudioCodec"] = MI.AudioCodec;
-                        this["AudioBitrate"] = MI.AudioBitrate;
-                        this["AudioChannels"] = MI.AudioChannelCount;
-                        this["AudioTracks"] = MI.AudioStreamCount;
+                        this["AudioCodec"] = (result = MI.getAudioCodec()).Length > 0 ? result : "-1";
+                        this["AudioBitrate"] = (result = MI.getAudioBitrate()).Length > 0 ? result : "-1";
+                        this["AudioChannels"] = (result = MI.getNoChannels()).Length > 0 ? result : "-1";
+                        this["AudioTracks"] = (result = MI.getAudioStreamCount()).Length > 0 ? result : "-1";
+                        
+                        this["TextCount"] = (result = MI.getTextCount()).Length > 0 ? result : "-1";                        
 
-                        this["TextCount"] = MI.SubtitleCount;
                     }
-                    else 
-                        failed = true;
-                    
-                    // MediaInfo cleanup
+                    else failed = true;
                     MI.Close();
 
                     if (failed)
                     {
-                        // Get number of retries left to report to user
-                        int retries = MAX_MEDIAINFO_RETRIES - (noAttempts * -1);
+                        MPTVSeriesLog.Write("Problem parsing Media Info for: ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Normal);
+                        int retry = maxMIAttempts - (noAttempts * -1);
+                        if(retry > 0)
+                            MPTVSeriesLog.Write("This file will be retried: ", retry.ToString() + " times", MPTVSeriesLog.LogLevel.Normal);
+                        else
+                            MPTVSeriesLog.Write("This file will NOT be retried, you can however force a manual readout.");
 
-                        string retriesLeft = retries > 0 ? retries.ToString() : "No"; 
-                        retriesLeft = string.Format("Problem parsing MediaInfo for: {0}, ({1} retries left)", this[DBEpisode.cFilename].ToString(), retriesLeft);
-
-                        MPTVSeriesLog.Write(retriesLeft,MPTVSeriesLog.LogLevel.Normal);
-                   
                     }
                     else 
                         MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
-                    // Commit MediaInfo to database
                     Commit();
                     
                     return true;
@@ -885,38 +872,21 @@ namespace WindowPlugins.GUITVSeries
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
             cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired"); 
+            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             SQLiteResultSet results = DBTVSeries.Execute(query);
-            epsTotal = 0; // total episode means total *AIRED* episodes - I'm sure no-one's interested in counting unaired episodes
+            epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
+                if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
+                    epsTotal += parseResult;
+                }
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-                    epsWatched+= parseResult;
+                    epsWatched += parseResult;
                 }
-
-                Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
-                Match match = r.Match(results.Rows[i].fields[2]);
-                DateTime firstAired;
-                if (match.Success) {
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value),Convert.ToInt32(match.Groups[2].Value),Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today)
-                        epsTotal++;
-                }
-//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-//                     epsTotal += parseResult;
-//                 }
-//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-//                     epsWatched += parseResult;
-//                 }
             }
             epsUnWatched = epsTotal - epsWatched;
-            // this happens if for some reasoon an episode is marked as watched, but firstaired is in the future 
-            // - or no firstaired provided
-            if (epsUnWatched < 0)
-                epsUnWatched = 0;
         }
 
         public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
@@ -924,36 +894,19 @@ namespace WindowPlugins.GUITVSeries
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
-//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
+            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
             SQLiteResultSet results = DBTVSeries.Execute(query);
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
             //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
             for (int i = 0; i < results.Rows.Count; i++) {
-                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
-                {
+                if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
+                    epsTotal += parseResult;
+                }
+                if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
                     epsWatched += parseResult;
                 }
-
-                Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
-                Match match = r.Match(results.Rows[i].fields[2]);
-                DateTime firstAired;
-                if (match.Success)
-                {
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today)
-                        epsTotal++;
-                }
-
-                
-//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-//                     epsTotal += parseResult;
-//                 }
-//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-//                     epsWatched += parseResult;
-//                 }
             }
             epsUnWatched = epsTotal - epsWatched;
         }

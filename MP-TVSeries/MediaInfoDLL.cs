@@ -215,113 +215,21 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public String Get(StreamKind StreamKind, int StreamNumber, int Parameter) { return Get(StreamKind, StreamNumber, Parameter, InfoKind.Text); }
         public String Option(String Option_) { return Option(Option_, ""); }
         public int Count_Get(StreamKind StreamKind) { return Count_Get(StreamKind, -1); }
-
-        #region Video Properties
-
-        public string VideoCodec {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "Codec");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoBitrate{
-            get {
-                string result = this.Get(StreamKind.Video, 0, "BitRate");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoWidth {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "Width");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoHeight {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "Height");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoAspectRatio {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "AspectRatio");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoPlaytime {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "PlayTime");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string VideoFramesPerSecond {
-            get {
-                string result = this.Get(StreamKind.Video, 0, "FrameRate");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        #endregion
-
-        #region Audio Properties
-
-        public string AudioCodec {
-            get {
-                string result = this.Get(StreamKind.Audio, 0, "Codec");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string AudioBitrate {
-            get {
-                string result = this.Get(StreamKind.Audio, 0, "BitRate");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        public string AudioStreamCount {
-            get {
-                string result = this.Get(StreamKind.Audio, 0, "StreamCount");
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        /// <summary>
-        /// Returns the number of Audio channels in the 1st Audio stream
-        /// </summary>
-        public string AudioChannelCount {
-            get {
-                string result = GetAudioChannelCount(0);
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        #endregion
-
-        #region Subtitle properties
-
-        public string SubtitleCount {
-            get {
-                string result = this.Get(StreamKind.General, 0, "TextCount"); ;
-                return result.Length > 0 ? result : "-1";
-            }
-        }
-
-        #endregion
-
-        #region Audio Methods
-
-        public string GetAudioChannelCount(int stream) {
-            return this.Get(StreamKind.Audio, (int)stream, "Channel(s)");
-        }
-
-        #endregion
+       
+        public string getVidCodec() { return this.Get(StreamKind.Video, 0, "Codec"); }
+        public string getVidBitrate(){ return this.Get(StreamKind.Video, 0, "BitRate"); }
+        public string getWidth() { return this.Get(StreamKind.Video, 0, "Width"); }
+        public string getHeight() { return this.Get(StreamKind.Video, 0, "Height"); }
+        public string getAR() { return this.Get(StreamKind.Video, 0, "AspectRatio"); }
+        public string getPlaytime() { return this.Get(StreamKind.Video, 0, "PlayTime"); }
+        public string getFPS() { return this.Get(StreamKind.Video, 0, "FrameRate"); }
+        public string getAudioCount() { return this.Get(StreamKind.Audio, 0, "StreamCount");}
+        public string getAudioCodec() { return this.Get(StreamKind.Audio, 0, "Codec");  }
+        public string getAudioBitrate() { return this.Get(StreamKind.Audio, 0, "BitRate"); }
+        public string getAudioStreamCount() { return this.Get(StreamKind.Audio, 0, "StreamCount"); }
+        public string getNoChannels() { return getNoChannels(0); }
+        public string getNoChannels(int stream) { return this.Get(StreamKind.Audio, (int)stream, "Channel(s)"); }
+        public string getTextCount() { return this.Get(StreamKind.General, 0, "TextCount"); }
 
         #region IDisposable Members
 

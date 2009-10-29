@@ -79,8 +79,8 @@ namespace WindowPlugins.GUITVSeries.Download
         private Watcher m_watcherUpdater = null;
         private List<CMonitorParameters> m_ActionQueue = new List<CMonitorParameters>();
         private bool m_moverWorking = false;
+        private List<DBEpisode> m_DownloadingEpisodes = new List<DBEpisode>();
         private static Monitor s_Monitor;
-        private List<String> m_ignoredDownloadedFiles = new List<string>();
 
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
@@ -99,24 +99,14 @@ namespace WindowPlugins.GUITVSeries.Download
             watchedFolders.Add(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath));
             if (watchedFolders.Count > 0 && watchedFolders[0] != string.Empty) //path not set
             {
-                m_watcherUpdater = new Watcher(watchedFolders, DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse));
+
+                m_watcherUpdater = new Watcher(watchedFolders);
                 m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(m_watcherUpdater_WatcherProgress);
                 m_watcherUpdater.StartFolderWatch();
 
                 SQLCondition setcondition = new SQLCondition();
                 setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
-                List<DBEpisode> DownloadPendingEpisodes = DBEpisode.Get(setcondition);
-
-                // for each download pending episodes, check the presence of a path. If there is one, then assume it's been
-                // already downloaded & moved by another process. No need to keep it in the list
-                foreach (DBEpisode episode in DownloadPendingEpisodes)
-                {
-                    if (episode[DBEpisode.cFilename].ToString().Length != 0)
-                    {
-                        episode[DBOnlineEpisode.cDownloadPending] = 0;
-                        episode.Commit();
-                    }
-                }
+                m_DownloadingEpisodes = DBEpisode.Get(setcondition);
 
                 // full scan of the download folders, then monitor new files 
                 m_ActionQueue.Add(new CMonitorParameters());
@@ -125,21 +115,21 @@ namespace WindowPlugins.GUITVSeries.Download
                 m_timerDelegate = new TimerCallback(Clock);
                 m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 10000, 10000);
             }
-
-            List<DBIgnoredDownloadedFiles> ignoredFiles = DBIgnoredDownloadedFiles.Get();
-            foreach (DBIgnoredDownloadedFiles file in ignoredFiles)
-                m_ignoredDownloadedFiles.Add(file[DBIgnoredDownloadedFiles.cFilename]);
         }
 
         public static void AddPendingDownload(List<String> sSubjectNames, DBEpisode episode)
         {
             // check if already pending
-            episode[DBOnlineEpisode.cDownloadPending] = 1;
-            String sAll = String.Empty;
-            foreach (String s in sSubjectNames)
-                sAll += s + "|||";
-            episode[DBOnlineEpisode.cDownloadExpectedNames] = sAll;
-            episode.Commit();
+            if (episode[DBOnlineEpisode.cDownloadPending] != 1)
+            {
+                episode[DBOnlineEpisode.cDownloadPending] = 1;
+                String sAll = String.Empty;
+                foreach (String s in sSubjectNames)
+                    sAll += s + "|||";
+                episode[DBOnlineEpisode.cDownloadExpectedNames] = sAll;
+                episode.Commit();
+                s_Monitor.m_DownloadingEpisodes.Add(episode);
+            } 
         }
 
         void m_watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
@@ -215,7 +205,6 @@ namespace WindowPlugins.GUITVSeries.Download
                     List<String> watchedFolders = new List<String>();
                     watchedFolders.Add(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath));
                     List<PathPair> watchedFiles_simple = Filelister.GetFiles(watchedFolders);
-                    MPTVSeriesLog.Write("DownloadMonitor::MoveFiles found " + watchedFiles_simple.Count.ToString() + " supported video files in " + watchedFolders.ToString() + " and it's sub-folders");
                     List<MonitorPathPair> watchedFiles = new List<MonitorPathPair>();
                     foreach (PathPair pair in watchedFiles_simple)
                         watchedFiles.Add(new MonitorPathPair(pair.m_sMatch_FileName, pair.m_sFull_FileName));
@@ -245,14 +234,6 @@ namespace WindowPlugins.GUITVSeries.Download
 
         public void TryAndMoveFile(List<MonitorPathPair> files)
         {
-            // remove ignored files
-            foreach (String sPath in m_ignoredDownloadedFiles)
-                files.RemoveAll(file => file.m_sMatch_FileName == sPath);
-
-            SQLCondition setcondition = new SQLCondition();
-            setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
-            List<DBEpisode> DownloadPendingEpisodes = DBEpisode.Get(setcondition);
-
             foreach (MonitorPathPair pair in files)
             {
                 List<PathPair> currentFile = new List<PathPair>();
@@ -266,7 +247,7 @@ namespace WindowPlugins.GUITVSeries.Download
                         List<KeyValuePair<double, DBEpisode>> episodeMatches = new List<KeyValuePair<double, DBEpisode>>();
 
                         // first, figure out if the detected file is part of the pending downloads
-                        foreach (DBEpisode episode in DownloadPendingEpisodes)
+                        foreach (DBEpisode episode in m_DownloadingEpisodes)
                         {
                             // use nfo name if available
                             double fOverallMatchValue = 0;
@@ -378,10 +359,6 @@ namespace WindowPlugins.GUITVSeries.Download
                                         {
                                             // exit too if cancelled
                                             pair.m_episodeBestMatch = null;
-                                            // ignore this file later on
-                                            DBIgnoredDownloadedFiles ignoredFile = new DBIgnoredDownloadedFiles(pair.m_sMatch_FileName);
-                                            ignoredFile.Commit();
-                                            m_ignoredDownloadedFiles.Add(pair.m_sMatch_FileName);
                                             bReady = true;
                                         }
                                         break;
@@ -487,14 +464,12 @@ namespace WindowPlugins.GUITVSeries.Download
                             // move failed for some reason - reinsert this file in the loop
                             List<MonitorPathPair> path = new List<MonitorPathPair>();
                             path.Add(pair);
-                            lock (m_ActionQueue)
-                            {
-                                m_ActionQueue.Add(new CMonitorParameters(MonitorAction.List_Add, path));
-                            }
+                            m_ActionQueue.Add(new CMonitorParameters(MonitorAction.List_Add, path));
                         }
                         else
                         {
-                            // file has been moved - clears the pending download flag
+                            // file has been moved - remove from our list, clears the pending download flag
+                            m_DownloadingEpisodes.Remove(pair.m_episodeBestMatch);
                             pair.m_episodeBestMatch[DBOnlineEpisode.cDownloadPending] = 0;
                             pair.m_episodeBestMatch.Commit();
                         }

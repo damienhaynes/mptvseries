@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
-using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
 
 namespace WindowPlugins.GUITVSeries {

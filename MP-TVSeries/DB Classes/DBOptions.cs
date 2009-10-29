@@ -47,24 +47,23 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBViewsVersion = "DBViewsVersion";
         public const String cDBReplacementsVersion = "DBReplacementsVersion";
         public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
-        public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
-        public const String cAutoChooseOrder = "AutoChooseOrder";
+        public const String cAutoChooseOrder = "AutoChooseOrder";        
+        public const String cAutoScanLocalFiles = "AutoScanLocalFiles";
+        public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
+        public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
+        public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
+        public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
 
-        public const String cImport_FolderWatch = "doFolderWatch";
-        public const String cImport_ScanRemoteShare = "scanRemoteShare";
-        public const String cImport_ScanOnStartup = "ScanOnStartup";
-        public const String cImport_ScanRemoteShareLapse = "AutoScanLocalFilesLapse";
-        public const String cImport_AutoUpdateOnlineData = "AutoUpdateOnlineData";
-        public const String cImport_AutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
-        public const String cImport_DontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
-        public const String cImport_OnlineUpdateScanLastTime = "UpdateScanLastTime";
+        public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp"; // not used anymore
+        public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp"; // not used anymore
 
-        public const String cPlay_SubtitleDownloadOnPlay = "SubtitleDownloadOnPlay";
+        public const String cLocalScanLastTime = "LocalScanLastTime";
+        public const String cUpdateScanLastTime = "UpdateScanLastTime";
 
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
@@ -96,6 +95,21 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Title = "View_Episode_Title";
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
+
+        public const String cSubs_TVSubtitles_Enable = "Subs_TVSubtitles_Enable";
+        public const String cSubs_TVSubtitles_LanguageFilterList = "Subs_TVSubtitles_LanguageFilterList";
+
+	    public const String cSubs_SeriesSubs_Enable = "Subs_Series_Enable";
+	    public const String cSubs_SeriesSubs_BaseURL = "Subs_SeriesSubs_BaseURL";
+
+        public const String cSubs_Remository_Enable = "Subs_Remository_Enable";
+        public const String cSubs_Remository_BaseURL = "Subs_Remository_BaseURL";
+        public const String cSubs_Remository_MainIdx = "Subs_Remository_MainIdx";
+        public const String cSubs_Remository_UserName = "Subs_Remository_UserName";
+        public const String cSubs_Remository_Password = "Subs_Remository_Password";
+        public const String cSubs_Remository_RegexSeriesSeasons = "Subs_Remository_RegEx_Series_Seasons";
+        public const String cSubs_Remository_RegexEpisode = "Subs_Remository_RegEx_Episode";
+        public const String cSubs_Remository_RegexDownload = "Subs_Remository_Download";
 
         public const String cUTorrentPath = "uTorrentPath";
         public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
@@ -152,6 +166,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
 
+        public const String cScanOnStartup = "ScanOnStartup";
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
         public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
         public const String cAutoUpdateAllFanart = "AutoUpdateAllFanart";
@@ -176,9 +191,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cParentalControlPinCode = "ParentalControlPinCode";
 		public const String cKeyboardStyle = "KeyboardStyle";
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
-
-        public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
-        public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -229,41 +241,38 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_HideUnwatchedThumbnail) == null)
                     SetOptions(cView_Episode_HideUnwatchedThumbnail, false);
                 
-                if (GetOptions(cImport_FolderWatch) == null)
-                    SetOptions(cImport_FolderWatch, true);
+                if (GetOptions(cUpdateSeriesTimeStamp) == null)
+                    SetOptions(cUpdateSeriesTimeStamp, 0);
 
-                if (GetOptions(cImport_ScanRemoteShare) == null)
-                    SetOptions(cImport_ScanRemoteShare, true);
+                if (GetOptions(cUpdateEpisodesTimeStamp) == null)
+                    SetOptions(cUpdateEpisodesTimeStamp, 0);
 
-                if (GetOptions(cImport_ScanRemoteShareLapse) == null)
-                    SetOptions(cImport_ScanRemoteShareLapse, 5);
+                if (GetOptions(cAutoScanLocalFiles) == null)
+                    SetOptions(cAutoScanLocalFiles, true);
 
-                if (GetOptions(cImport_AutoUpdateOnlineData) == null)
-                    SetOptions(cImport_AutoUpdateOnlineData, true);
+                if (GetOptions(cAutoScanLocalFilesLapse) == null)
+                    SetOptions(cAutoScanLocalFilesLapse, 5);
 
-                if (GetOptions(cImport_AutoUpdateOnlineDataLapse) == null)
-                    SetOptions(cImport_AutoUpdateOnlineDataLapse, 12);
+                if (GetOptions(cAutoUpdateOnlineData) == null)
+                    SetOptions(cAutoUpdateOnlineData, true);
 
-                if (GetOptions(cImport_OnlineUpdateScanLastTime) == null)
-                    SetOptions(cImport_OnlineUpdateScanLastTime, 0);
+                if (GetOptions(cAutoUpdateOnlineDataLapse) == null)
+                    SetOptions(cAutoUpdateOnlineDataLapse, 12);
 
-                if (GetOptions(cImport_DontClearMissingLocalFiles) == null)
-                    SetOptions(cImport_DontClearMissingLocalFiles, 0);
+                if (GetOptions(cLocalScanLastTime) == null)
+                    SetOptions(cLocalScanLastTime, 0);
 
-                if (GetOptions(cPlay_SubtitleDownloadOnPlay) == null)
-                    SetOptions(cPlay_SubtitleDownloadOnPlay, false);
+                if (GetOptions(cUpdateScanLastTime) == null)
+                    SetOptions(cUpdateScanLastTime, 0);
+
+                if (GetOptions(cDontClearMissingLocalFiles) == null)
+                    SetOptions(cDontClearMissingLocalFiles, 0);
 
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
 
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
-
-                if (GetOptions(cSubtitleDownloaderEnabled) == null)
-                    SetOptions(cSubtitleDownloaderEnabled, false);
-
-                if (GetOptions(cSubtitleDownloaderLanguages) == null)
-                    SetOptions(cSubtitleDownloaderLanguages, "");
 
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default
@@ -346,6 +355,27 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
+		        if (GetOptions(cSubs_TVSubtitles_Enable) == null)
+		            SetOptions(cSubs_TVSubtitles_Enable, false);
+
+		        if (GetOptions(cSubs_SeriesSubs_Enable) == null)
+		            SetOptions(cSubs_SeriesSubs_Enable, false);
+
+		        if (GetOptions(cSubs_Remository_Enable) == null)
+		            SetOptions(cSubs_Remository_Enable, false);
+
+                if (GetOptions(cSubs_TVSubtitles_LanguageFilterList) == null)
+                  SetOptions(cSubs_TVSubtitles_LanguageFilterList, @"en");
+
+		        if (GetOptions(cSubs_SeriesSubs_BaseURL) == null)
+		            SetOptions(cSubs_SeriesSubs_BaseURL, @"http://www.seriessub.com/sous-titres/");
+
+                if (GetOptions(cSubs_Remository_BaseURL) == null)
+                    SetOptions(cSubs_Remository_BaseURL, @"http://www.italiansubs.net/");
+                
+                if (GetOptions(cSubs_Remository_MainIdx) == null)
+                    SetOptions(cSubs_Remository_MainIdx, "27");
+
                 if (GetOptions(cTorrentSearch) == null)
                     SetOptions(cTorrentSearch, String.Empty);
 
@@ -357,6 +387,8 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
+                if (GetOptions("doFolderWatch") == null)
+                    SetOptions("doFolderWatch", true); 
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default
@@ -416,8 +448,8 @@ namespace WindowPlugins.GUITVSeries
 				if (GetOptions(cPlaylistAutoShuffle) == null)
 					SetOptions(cPlaylistAutoShuffle, false);
 
-                if (GetOptions(cImport_ScanOnStartup) == null)
-                    SetOptions(cImport_ScanOnStartup, true);
+                if (GetOptions(cScanOnStartup) == null)
+                    SetOptions(cScanOnStartup, true);
 
                 if (GetOptions(cAutoDownloadMissingArtwork) == null)
                     SetOptions(cAutoDownloadMissingArtwork, true);
