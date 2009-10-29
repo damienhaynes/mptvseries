@@ -102,27 +102,11 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bierdopje.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Bierdopje.API.dll</HintPath>
-    </Reference>
-    <Reference Include="ChilkatDotNet2, Version=9.0.5.0, Culture=neutral, PublicKeyToken=eb5fc1fc52ef09bd, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\ChilkatDotNet2.dll</HintPath>
-    </Reference>
-    <Reference Include="CookComputing.XmlRpcV2, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\CookComputing.XmlRpcV2.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.3.9.1, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
@@ -497,9 +481,9 @@
     <PostBuildEvent>copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
 copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
 xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
-xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+REM xcopy "$(TargetDir)ChilkatDotNet2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+REM xcopy "$(TargetDir)CookComputing.XmlRpcV2.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+REM xcopy "$(TargetDir)HtmlAgilityPack.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)Bierdopje.API.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
