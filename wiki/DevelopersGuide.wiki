@@ -18,12 +18,21 @@ We will be using TortoiseSVN for retrieving the latest source code and changes f
 
 http://tortoisesvn.net/downloads 
 
+== DirectX End-User Runtimes ==
+MediaPortal uses the DirectX runtime, so if you have not already installed MediaPortal or the DirectX End-User Runtimes you will need to install it before you can successfully build MediaPortal. At the time of writing the latest build is August 2009 which you can download from the following URL:
+
+http://www.microsoft.com/downloads/details.aspx?familyid=04AC064B-00D1-474E-B7B1-442D8712D553&displaylang=en
+
+Alternatively you may prefer to install the DirectX Software Development Kit (August 2009) which you can download from:
+
+http://www.microsoft.com/downloads/details.aspx?familyid=B66E14B8-8505-4B17-BF80-EDB2DF5ABAD4&displaylang=en
+
 == Folder Structure ==
 So now that you have your tools setup, you will want to pull down the latest source code. Before you do that though, you will have to decide where you want your projects to be stored. The default location for Visual Studio Projects is "My Documents\Visual Studio 2008\Projects". Any location will do if you would rather not work from there. To give you a little visibility, this is the folder structure I am recommending: 
 
 http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructure.jpg
 
-So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal, Common-MP-TVE3 and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
+So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
 
 = Getting the MediaPortal Source Code =
 == Checking Out ==
@@ -40,12 +49,6 @@ Using the very latest code base from MediaPortal, may not be the best idea thoug
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/MediaPortal
-}}}
-
-MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". Right Click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
-{{{
-https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
-https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/Common-MP-TVE3
 }}}
 
 == Getting the MP-TVSeries Source Code ==
