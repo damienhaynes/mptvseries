@@ -27,6 +27,12 @@ Alternatively you may prefer to install the DirectX Software Development Kit (Au
 
 http://www.microsoft.com/downloads/details.aspx?familyid=B66E14B8-8505-4B17-BF80-EDB2DF5ABAD4&displaylang=en
 
+=== Microsoft .Net Framework 3.5 ===
+MP-TVSeries and MediaPortal target the Microsoft .Net Framework 3.5, If you have already installed MediaPortal 1.0.1 or above then you will most likely already have this pre-requisite. The .Net Framework 3.5 is available to download from the following URL:
+
+http://www.microsoft.com/downloads/details.aspx?FamilyId=333325FD-AE52-4E35-B531-508D977D32A6&displaylang=en
+
+
 == Folder Structure ==
 So now that you have your tools setup, you will want to pull down the latest source code. Before you do that though, you will have to decide where you want your projects to be stored. The default location for Visual Studio Projects is "My Documents\Visual Studio 2008\Projects". Any location will do if you would rather not work from there. To give you a little visibility, this is the folder structure I am recommending: 
 
@@ -54,7 +60,6 @@ https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/M
 MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". If you are developing for a release other than 1.0.2 then right-click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
-https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/Common-MP-TVE3
 }}}
 
 == Getting the MP-TVSeries Source Code ==
