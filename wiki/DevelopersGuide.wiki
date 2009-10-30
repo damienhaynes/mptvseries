@@ -51,7 +51,7 @@ https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/MediaPortal
 }}}
 
-MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". If you are developing for a release other then 1.0.2 then right Click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
+MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". If you are developing for a release other than 1.0.2 then right-click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/Common-MP-TVE3
