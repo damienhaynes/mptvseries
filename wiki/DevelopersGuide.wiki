@@ -8,17 +8,17 @@ This document will walk you through setting up your development environment to c
 == Prerequisites ==
 As mentioned above, you will at a minimum need two tools to work with the MP-TVSeries source code. Once you get going though you might want to consider grabbing a program to browse the MP-TVSeries database. Any app that can read a SQLite3 database will do e.g. SQLite2009 Pro Enterprise Manager
 
-== Visual Studio 2008 ==
+=== Visual Studio 2008 ===
 If you do not already have it installed, you will need to install Visual C# before you proceed with the rest of this guide. Visual C# is a subset of Visual Studio, and it is the only portion of Visual Studio you will need. Throughout this document though, these terms will be used interchangeably. Don't get confused, all you need is Visual C#. A walk through for the Visual Studio installation is outside the scope of this guide, but you should not need anything beyond a standard install of the Visual Studio. The Express edition of Visual Studio 2008 is available from Microsoft, free of charge at the following URL, again, you will only need the Visual C# component:
 
 http://www.microsoft.com/express/download/  
 
-== TortoiseSVN ==
+=== TortoiseSVN ===
 We will be using TortoiseSVN for retrieving the latest source code and changes from the Subversion repositories for both MediaPortal and MP-TVSeries. There are many other Subversion clients you could use, TortoiseSVN just happens to be our favorite. You will need TortoiseSVN installed before proceeding with this guide. You can get the latest version of TortoiseSVN from the following URL:
 
 http://tortoisesvn.net/downloads 
 
-== DirectX End-User Runtimes ==
+=== DirectX End-User Runtimes ===
 MediaPortal uses the DirectX runtime, so if you have not already installed MediaPortal or the DirectX End-User Runtimes you will need to install it before you can successfully build MediaPortal. At the time of writing the latest build is August 2009 which you can download from the following URL:
 
 http://www.microsoft.com/downloads/details.aspx?familyid=04AC064B-00D1-474E-B7B1-442D8712D553&displaylang=en
