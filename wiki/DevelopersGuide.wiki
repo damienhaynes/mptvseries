@@ -32,7 +32,7 @@ So now that you have your tools setup, you will want to pull down the latest sou
 
 http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructure.jpg
 
-So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
+So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal, Common-MP-TV3 (this folder is not needed in 1.0.2) and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
 
 = Getting the MediaPortal Source Code =
 == Checking Out ==
@@ -49,6 +49,12 @@ Using the very latest code base from MediaPortal, may not be the best idea thoug
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/MediaPortal
+}}}
+
+MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". If you are developing for a release other then 1.0.2 then right Click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
+{{{
+https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
+https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/Common-MP-TVE3
 }}}
 
 == Getting the MP-TVSeries Source Code ==
