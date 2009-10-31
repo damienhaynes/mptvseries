@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!-- MP-TV-Series translation file -->
 <!-- Czech (CS) -->
-<!-- Last Updated: 25th Oct 2009 -->
+<!-- Last Updated: 30th Oct 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -67,7 +67,7 @@
 	<string Field="RatingStar" Original="Star">hvězdička</string>
 	<string Field="RatingStars" Original="Stars">hvězdiček</string>
 	<string Field="ChangeView" Original="Change View">Změnit pohled</string>
-	<string Field="ChangeViewFast" Original="Immediatly Change Views">Změnít pohled nyní</string>	
+	<string Field="ChangeViewFast" Original="Immediatly Change Views">Změnit pohled nyní</string>
 	<string Field="FanArt" Original="Fanart">Pozadí</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">Ukázat všechna pozadí pro tento pořad</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Stáhnout a použít pozadí</string>
@@ -127,10 +127,10 @@
 	<string Field="ButtonSwitchView" Original="Switch View">Změnit pohled</string>
 	<string Field="ButtonRunImport" Original="Run Import">Spustit import</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Změnit zobrazení</string>
-	<string Field="ButtonOptions" Original="Options">Možnosti</string>	
+	<string Field="ButtonOptions" Original="Options">Možnosti</string>
 	<string Field="FanArtFilter" Original="Filter">Filtr</string>
 	<string Field="FanArtFilterAll" Original="All">Vše</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">Náhodné pozadí</string>	
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Náhodné pozadí</string>
 	<string Field="LabelResolution" Original="Resolution:">Rozlišení:</string>
 	<string Field="LabelChosen" Original="Chosen:">Zvoleno:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Zakázáno:</string>
@@ -139,12 +139,12 @@
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Odstranit z databáze</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Odstranit z disku a databáze</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Zvolte hodnocení pro {0}</string>
-	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Skrýt náhledy nezhlédnutých</string>	
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Skrýt náhledy nezhlédnutých</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Otřesné</string>
-	<string Field="RateFiveStarTwo" Original="">Průměrné</string>
-	<string Field="RateFiveStarThree" Original="">Dobré</string>
-	<string Field="RateFiveStarFour" Original="">Výborné</string>
+	<string Field="RateFiveStarTwo" Original="">Slabé</string>
+	<string Field="RateFiveStarThree" Original="">Slušné</string>
+	<string Field="RateFiveStarFour" Original="">Skvělé</string>
 	<string Field="RateFiveStarFive" Original="">Perfektní</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Hrozné</string>
@@ -191,10 +191,11 @@
 	<string Field="Top25User" Original="Top 25 (User)">Top 25 (uživatel)</string>
 	<string Field="Subtitles" Original="Subtitles">S titulky</string>
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Více zvukových stop</string>
-	<string Field="OnlineFavourites" Original="Online Favourites">Oblíbené online</string>	
+	<string Field="OnlineFavourites" Original="Online Favourites">Oblíbené online</string>
 	<string Field="Actors" Original="Actors">Herci</string>
 	<string Field="RemovableMedia" Original="Removable Media">Vyměnitelná úložiště</string>
 	<string Field="LocalMedia" Original="Local Media">Místní úložiště</string>
 	<string Field="AdultSeries" Original="Adult Series">Pořady pro dospělé</string>
-	<string Field="KidsSeries" Original="Kids Series">Pořady pro děti</string>	
+	<string Field="KidsSeries" Original="Kids Series">Pořady pro děti</string>
+	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Aktualizovat nabízená pozadí</string>
 </strings>
