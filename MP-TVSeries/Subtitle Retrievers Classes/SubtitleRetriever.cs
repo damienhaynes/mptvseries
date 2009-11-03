@@ -143,6 +143,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                 if (!File.Exists(EpisodeFileName))
                 {
                     _errorMessage = "Unable to download subtitle: Not a local episode!";
+                    MPTVSeriesLog.Write(_errorMessage);
                     return;
                 }
 
