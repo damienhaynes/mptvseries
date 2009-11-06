@@ -47,7 +47,7 @@ using SubtitleDownloader.Core;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback {
+    public class TVSeriesPlugin : GUIInternalWindow, ISetupForm, IFeedback {
 
         #region Constructor
         public TVSeriesPlugin()
@@ -399,6 +399,14 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		public override string GetModuleName() {
+			return pluginName;
+		}
+
         public override bool Init()
         {
             m_localControlForInvoke = new Control();
@@ -581,8 +589,7 @@ namespace WindowPlugins.GUITVSeries
 			if (OptionsMenuButton != null)
 				OptionsMenuButton.Label = Translation.ButtonOptions;
 
-			setProcessAnimationStatus(m_parserUpdaterWorking);
-			MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
+			setProcessAnimationStatus(m_parserUpdaterWorking);			
 
 			if (m_Logos_Image != null) {
 				logosHeight = m_Logos_Image.Height;
@@ -600,7 +607,7 @@ namespace WindowPlugins.GUITVSeries
                     LoadFacade();
                 }
             }
-		}
+		}		
 
 		protected override void OnPageDestroy(int new_windowId) {
 			// Disable Random Fanart Timer

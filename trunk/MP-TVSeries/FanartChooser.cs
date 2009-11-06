@@ -31,7 +31,7 @@ using System.Drawing;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class FanartChooser : GUIWindow
+    class FanartChooser : GUIInternalWindow
     {
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
@@ -205,6 +205,14 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
         }
 
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		public override string GetModuleName() {
+			return Translation.FanArt;
+		}
+
         protected View CurrentView
         {
             get { return currentView; }
@@ -250,7 +258,7 @@ namespace WindowPlugins.GUITVSeries
             UpdateFilterProperty(false);
 
             setDownloadStatus();
-
+			
             MPTVSeriesLog.Write("Fanart Chooser Window initializing");            
                
             fetchList(SeriesID);

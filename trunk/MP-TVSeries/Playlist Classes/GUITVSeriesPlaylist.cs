@@ -39,7 +39,7 @@ using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class GUITVSeriesPlayList : GUIWindow
+    public class GUITVSeriesPlayList : GUIInternalWindow
     {
         #region variables
 
@@ -116,7 +116,7 @@ namespace WindowPlugins.GUITVSeries
         public int GetWindowId()
         { 
             return windowID; 
-        }
+        }		
 
         protected View CurrentView
         {
@@ -125,6 +125,14 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #region BaseWindow Members
+
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		public override string GetModuleName() {
+			return GUILocalizeStrings.Get(136);
+		}
 
         public override bool Init() {
             currentFolder = Directory.GetCurrentDirectory();

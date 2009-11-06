@@ -263,6 +263,10 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateTenStarNine = "Superb";
 		public static string RateTenStarTen = "Perfect";
 
+		// Dialog Names
+		public static string RateDialog = "Rate Dialog";
+		public static string PinCodeDialog = "Pin Code Dialog";
+
         #endregion
 
         static string path = string.Empty;

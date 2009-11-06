@@ -85,7 +85,15 @@ namespace WindowPlugins.GUITVSeries {
 		} public StarDisplay _displayStars = StarDisplay.FIVE_STARS;
 
         public int Rating { get; set; }		
-        public bool IsSubmitted { get; set; }		
+        public bool IsSubmitted { get; set; }
+
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		public override string GetModuleName() {
+			return Translation.RateDialog;
+		}
 
         public override void Reset() {
             base.Reset();
