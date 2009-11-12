@@ -115,13 +115,15 @@ If you want to test changes you have made in an actual MediaPortal install, you 
 
 == Debugging in MediaPortal ==
 
-To debug MP-TVSeries in MediaPortal you will need to configure the Debug properties for the project. Right Click on the MP-TVSeries project and select Properties. Now, select the Debug tab and enter the location to MediaPortal.exe in the "Start external program" field:
+To debug MP-TVSeries in MediaPortal you will need to configure the Debug properties for the project. Right Click on the MediaPortal project and select Properties. Now, select the Debug tab and enter the location to MediaPortal.exe in the "Start external program" field:
 
 http://mptvseries.googlecode.com/svn/wiki/Images/DebugSettings.jpg
 
 Similarly, you can enter in the path to Configuration.exe if you want to debug MP-TVSeries configuration.
 
-Before pressing F5 to debug, you will probably also want to set the MP-TVSeries project as the default. Do this by Right Clicking on the MP-TVSeries project and selecting "Set as Startup project".
+Before pressing F5 to debug, you will probably also want to set the MediaPortal project as the default. Do this by Right Clicking on the MP-TVSeries project and selecting "Set as Startup project".
+
+Should should now be able to debug MediaPortal and TVSeries in the same solution.
 
 == Problems? ==
 
