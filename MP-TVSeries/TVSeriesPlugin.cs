@@ -891,17 +891,17 @@ namespace WindowPlugins.GUITVSeries
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.resetUserSelections;
 								}
+																
 								
-								// Redundant with Run Import GUI button and Update Actions
-								/*
 								pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionLocalScan;
-
-								pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
+                                
+                                // Redundant with Run Import GUI button
+								/*pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
-								pItem.ItemId = (int)eContextItems.actionFullRefresh;
-								*/
+								pItem.ItemId = (int)eContextItems.actionFullRefresh;							
+                                */
 
 								pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
