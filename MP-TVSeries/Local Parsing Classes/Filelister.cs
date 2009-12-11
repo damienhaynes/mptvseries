@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int i = 0; i < sfiles.Length; i++)
                     {
                         // ZEFLASH what's the point of using a regular expression to match an already existing list of strings? 
-                        if (MediaPortal.Util.Utils.VideoExtensions.Contains(System.IO.Path.GetExtension(sfiles[i])))
+                        if (MediaPortal.Util.Utils.VideoExtensions.Contains(System.IO.Path.GetExtension(sfiles[i]).ToLowerInvariant()))
                         {
                             // trim the import path root from the filenames (because I don't think it makes sense to add unneeded data
                             outList.Add(new PathPair(sfiles[i].Substring(importPathLength).TrimStart('\\'), sfiles[i]));
