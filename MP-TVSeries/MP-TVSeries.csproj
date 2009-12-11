@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -121,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cache.cs" />
+    <Compile Include="Configuration\DeleteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DeleteDialog.Designer.cs">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\PlaylistSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -320,6 +326,9 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DeleteDialog.resx">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -419,7 +428,7 @@
     <Content Include="Resources\Languages\fr.xml" />
     <Content Include="Resources\Languages\he.xml" />
     <Content Include="Resources\Languages\it.xml" />
-    <Content Include="Resources\Languages\nl%28nl%29.xml" />
+    <Content Include="Resources\Languages\nl.xml" />
     <Content Include="Resources\Languages\no%28nb%29.xml" />
     <Content Include="Resources\Languages\no.xml" />
     <Content Include="Resources\Languages\pl.xml" />
