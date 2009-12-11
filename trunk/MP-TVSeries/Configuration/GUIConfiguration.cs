@@ -4332,6 +4332,12 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
         }
+
+        private void treeView_Library_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right) {
+                treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
+            } 
+        }
     }
     
     public class BannerComboItem
