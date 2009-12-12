@@ -138,7 +138,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 
             try
             {
-                FileInfo originalFile = Downloader.SaveSubtitle(subtitle);
+                List<FileInfo> originalFiles = Downloader.SaveSubtitle(subtitle);
 
                 if (!File.Exists(EpisodeFileName))
                 {
@@ -146,6 +146,14 @@ namespace WindowPlugins.GUITVSeries.Subtitles
                     MPTVSeriesLog.Write(_errorMessage);
                     return;
                 }
+                if (originalFiles.Count != 1)
+                {
+                    _errorMessage = "Download returned " + originalFiles.Count + " subtitle files. Count mismatch, should be one!";
+                    MPTVSeriesLog.Write(_errorMessage);
+                    return;
+                }
+
+                FileInfo originalFile = originalFiles[0];
 
                 string destinationFile =
                     SubtitleDownloader.Util.FileUtils.GetFileNameForSubtitle(
