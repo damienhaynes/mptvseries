@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -106,7 +106,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
@@ -328,6 +328,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\DeleteDialog.resx">
       <DependentUpon>DeleteDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
