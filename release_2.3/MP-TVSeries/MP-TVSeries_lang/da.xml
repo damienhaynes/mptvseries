@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Dansk (Da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-
+<!-- Contributed by Steffansp. Updated 05-12-2009 -->
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
 	<string Field="Series_Plural" Original="Series (Plr)">Serier</string> <!-- plural -->
@@ -49,8 +49,8 @@
 	<string Field="Force_Online_Match" Original="Force Online Match">Tving online match</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Åben vha. NewsLeehcer</string>
 	<string Field="Download" Original="Download">Hent</string>
-	<string Field="Actions" Original="Actions">Handlinger</string>
-	<string Field="Options" Original="Options">Muligheder</string>
+	<string Field="Actions" Original="Actions">Muligheder</string>
+	<string Field="Options" Original="Options">Indstillinger</string>
 	<string Field="Genres" Original="Genres">Genre</string>
 	<string Field="All" Original="All">Alle</string>
 	<string Field="Latest" Original="Latest">Seneste</string>
@@ -67,10 +67,10 @@
 	<string Field="RatingStars" Original="Stars">Stjerner</string>
 	<string Field="ChangeView" Original="Change View">Skift syn</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Øjeblikkelig oversigts ændring</string>
-	<string Field="Cycle_Banner" Original="Cycle Banner">Roter banner</string>
 	<string Field="FanArt" Original="Fanart">Fanart</string>
 	<string Field="FanListAll" Original="List all Fanart for this Series">Vis alle fanart for denne serie</string>
 	<string Field="FanArtGetAndUse" Original="Download Fanart and Use">Hent fanart og benyt det</string>
+	<string Field="FanArtGet" Original="Download Fanart">Hent fanart</string>
 	<string Field="FanArtUse" Original="Use Fanart">Benyt fanart</string>
 	<string Field="FanArtDelete" Original="Delete Fanart">Slet fanart</string>
 	<string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Henter {0} fanart...</string>
@@ -139,13 +139,13 @@
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Slet permanent og fjern fra databasen</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Vurder {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Gem spoiler miniatureportræter</string>	
-	<!-- Rate Movie Descriptions - 5 Stars-->
+	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Forfærdelig</string>
 	<string Field="RateFiveStarTwo" Original="">Middelmådig</string>
 	<string Field="RateFiveStarThree" Original="">God</string>
 	<string Field="RateFiveStarFour" Original="">Fortrinlig</string>
 	<string Field="RateFiveStarFive" Original="">Perfekt</string>
-	<!-- Rate Movie Descriptions - 10 Stars-->
+	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Rædselsfuld</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Forfærdelig</string>
 	<string Field="RateTenStarThree" Original="Bad">Dårlig</string>
@@ -178,23 +178,30 @@
 	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Tryk OK for at prøve igen</string>
 	<string Field="ParentalControlLocked" Original="Lock Views">Lås overbliket</string>
 	<string Field="ViewIsLocked" Original="View Locked">Vis låst overblik</string>
-	
-	<string Field="ViewTags" Original="View Tags">Vis </string>
-    <string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Overblikket "{0}" er låst</string>
+	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Overblikket "{0}" er låst</string>
     <string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Skriv den 4 ciffrede kode for at fortsætte:</string>
     <string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Forkert kode</string>
-
-	<!-- View Templates -->
-	<string Field="Continuing" Original="Continuing Series">Forsættende serie</string>
+	<string Field="Continuing" Original="Continuing Series">Fortsættende serie</string>
 	<string Field="Ended" Original="Ended Series">Afsluttet serie</string>
 	<string Field="HighDefinition" Original="High Definition">High Definition</string>
 	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
 	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
-	<string Field="Top10User" Original="Top 10 (User)">Top 10 (Brugere)</string>
+	<string Field="Top10User" Original="Top 10 (User)">Top 10 (Bruger)</string>
 	<string Field="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
-	<string Field="Top25User" Original="Top 25 (User)">Top 25 (Brugere)</string>
+	<string Field="Top25User" Original="Top 25 (User)">Top 25(Bruger)</string>
 	<string Field="Subtitles" Original="Subtitles">Undertekster</string>
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Flere lydsport</string>
+	<string Field="OnlineFavourites" Original="Online Favourites">Online favoritter</string>	
+	<string Field="Actors" Original="Actors">Skuespillere</string>
+	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
+	<string Field="LocalMedia" Original="Local Media">Lokalt medie</string>
+	<string Field="AdultSeries" Original="Adult Series">Voksen serie</string>
+	<string Field="KidsSeries" Original="Kids Series">Børne serie</string>
+	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Tøm midlertidig fanart lagring</string>
+	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Slet miniatureportræter</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Vil du også slette og hente igen</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">alle afsnit miniatureportræter?</string>
+	<string Field="RateDialog" Original="Rate Dialog">Vurderings dialog</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Adgangskode dialog</string>
 
-	
 </strings>

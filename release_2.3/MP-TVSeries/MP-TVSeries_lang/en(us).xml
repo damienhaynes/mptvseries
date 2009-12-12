@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 24th Sep 2009 -->
+<!-- Last Updated: 25th Oct 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -142,10 +142,10 @@
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Hide Spoiler Thumbnails</string>	
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
-	<string Field="RateFiveStarTwo" Original="">Mediocre</string>
-	<string Field="RateFiveStarThree" Original="">Good</string>
-	<string Field="RateFiveStarFour" Original="">Superb</string>
-	<string Field="RateFiveStarFive" Original="">Perfect</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
+	<string Field="RateFiveStarThree" Original="Good">Good</string>
+	<string Field="RateFiveStarFour" Original="Superb">Superb</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Perfect</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Abysmal</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Terrible</string>
@@ -199,4 +199,10 @@
 	<string Field="AdultSeries" Original="Adult Series">Adult Series</string>
 	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Clear Fanart Cache</string>
+	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Delete Thumbnails</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Would you also like to Delete and Re-Download</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">all episode thumbnails?</string>
+	<string Field="RateDialog" Original="Rate Dialog">Rate Dialog</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Pin Code Dialog</string>
+	
 </strings>

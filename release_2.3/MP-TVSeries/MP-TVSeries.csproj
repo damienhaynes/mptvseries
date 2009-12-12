@@ -12,7 +12,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -102,41 +102,51 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core, Version=0.9.4.21896, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Core, Version=1.0.4.37961, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
+      <HintPath>..\..\MediaPortal\xbmc\bin\Release\Core.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=0.9.4.21897, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Databases, Version=1.0.4.37961, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+      <HintPath>..\..\MediaPortal\xbmc\bin\Release\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=0.9.4.21898, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Dialogs, Version=1.0.4.37962, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
+      <HintPath>..\..\MediaPortal\xbmc\bin\Release\plugins\Windows\Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils, Version=2.2.6.21895, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Utils, Version=2.2.7.37960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+      <HintPath>..\..\MediaPortal\xbmc\bin\Release\Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowPlugins, Version=1.0.4.37964, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MediaPortal\xbmc\bin\Release\plugins\Windows\WindowPlugins.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>	
+  <ItemGroup>
     <Compile Include="cache.cs" />
-	<Compile Include="Configuration\PlaylistSettings.cs">
+    <Compile Include="Configuration\DeleteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DeleteDialog.designer.cs">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PlaylistSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\ViewTemplates.cs">
+    <Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\ViewTemplates.Designer.cs">
@@ -229,7 +239,7 @@
     <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
     </Compile>
-	<Compile Include="Configuration\SeriesSelect.cs">
+    <Compile Include="Configuration\SeriesSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\SeriesSelect.Designer.cs">
@@ -319,7 +329,7 @@
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
     <Compile Include="GUIUserRating.cs" />
-	<Compile Include="GUIPinCode.cs" />
+    <Compile Include="GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">
@@ -329,6 +339,9 @@
     <EmbeddedResource Include="Configuration\ChooseFromSelection.resx">
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DeleteDialog.resx">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
       <DependentUpon>ExpressionBuilder.cs</DependentUpon>
@@ -380,13 +393,13 @@
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\ViewTemplates.resx">
+    <EmbeddedResource Include="Configuration\ViewTemplates.resx">
       <DependentUpon>ViewTemplates.cs</DependentUpon>
-    </EmbeddedResource>	
-	<EmbeddedResource Include="Configuration\SeriesSelect.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\SeriesSelect.resx">
       <DependentUpon>SeriesSelect.cs</DependentUpon>
-    </EmbeddedResource>	
-	<EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
@@ -454,9 +467,8 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>cd $(TargetDir)
-call "merge.bat
-xcopy "MP-TVSeries.dll" "%25PROGRAMFILES%25\Team MediaPortal\MediaPortal\plugins\Windows" /Y
+    <PostBuildEvent>copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
+copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

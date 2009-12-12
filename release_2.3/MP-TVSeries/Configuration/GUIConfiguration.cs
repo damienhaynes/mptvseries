@@ -73,9 +73,6 @@ namespace WindowPlugins.GUITVSeries
         private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
 
-		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
-		private MemoryBox deleteFilesMemBox = new MemoryBox();
-
         public static ConfigurationForm GetInstance()
         {
             return instance;
@@ -1897,108 +1894,146 @@ namespace WindowPlugins.GUITVSeries
             {
                 List<DBEpisode> epsDeletion = new List<DBEpisode>();
 
-				string message = string.Empty;
-				deleteDatabaseMemBox.DisableButton(MemoryBoxResult.NoToAll, false);
-				MemoryBoxResult result = MemoryBoxResult.No;
+                DeleteDialog deleteDialog = new DeleteDialog();
+                DialogResult result = deleteDialog.ShowDialog(this);
 
                 switch (nodeDeleted.Name)
                 {
+                    #region Delete Series
                     case DBSeries.cTableName:
-						message = "Are you sure you want to delete this series and all the underlying seasons and\nepisodes from the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";						
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Series");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
+                        if (result == DialogResult.OK)
                         {
                             DBSeries series = (DBSeries)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
+
+                            // Delete from Disk
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database)
+                            {
+                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;
+                                foreach (TreeNode node in nodeDeleted.Nodes)
+                                {
+                                    node.ForeColor = System.Drawing.SystemColors.GrayText;
+                                }
+                            }
+
+                            // Always Delete from Local Episode Table for all choices
                             DBEpisode.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
+                            // Delete from Database (Online Episode Table)
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk)
+                            {
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBSeason.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeries.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBSeries.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineSeries.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
+                                DBOnlineSeries.Clear(condition);
 
-                            treeView_Library.Nodes.Remove(nodeDeleted);
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
                         }
                         break;
+                    #endregion
 
+                    #region Delete Season
                     case DBSeason.cTableName:
-						message = "Are you sure you want to delete this season and all the underlying episodes\nfrom the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Season");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
+                        if (result == DialogResult.OK)
                         {
                             DBSeason season = (DBSeason)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
                             condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
+
+                            // Delete from Disk
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database)
+                            {
+                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;
+                                foreach (TreeNode node in nodeDeleted.Nodes)
+                                {
+                                    node.ForeColor = System.Drawing.SystemColors.GrayText;
+                                }
+                            }
+
+                            // Always Delete from Local Episode Table for all choices
                             DBEpisode.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
+                            // Delete from Database (Online Episode Table)
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk)
+                            {
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
 
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
+                                condition = new SQLCondition();
+                                condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
+                                DBSeason.Clear(condition);
 
-                            treeView_Library.Nodes.Remove(nodeDeleted);
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
                         }
                         break;
+                    #endregion
 
+                    #region Delete Episode
                     case DBEpisode.cTableName:
-						message = "Are you sure you want to delete this episode from the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Episode");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
+                        if (result == DialogResult.OK)
                         {
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                             SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                            
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+
+                            // Delete from Disk
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database)
+                            {
+                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
+                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;
+                            }
+
+                            // Always Delete from Local Episode Table for all choices
                             DBEpisode.Clear(condition);
-                                                       
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-                            treeView_Library.Nodes.Remove(nodeDeleted);
+
+                            // Delete from Database (Online Episode Table)
+                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk)
+                            {
+                                condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                                DBOnlineEpisode.Clear(condition);
+
+                                treeView_Library.Nodes.Remove(nodeDeleted);
+                            }
                         }
                         break;
+                    #endregion
                 }
+
+                // Delete Physical Files
                 if (epsDeletion.Count > 0)
                 {
-                    // delete the actual files!!
                     List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-					message = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?\n\n\n";
-					message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";					
-					result = deleteFilesMemBox.ShowMemoryDialog(message, "Delete Files");
-					if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
+                    foreach (string file in files)
                     {
-                        foreach (string file in files)
+                        try
                         {
-                            try {
-                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
-                                System.IO.File.Delete(file);
-                            }
-                            catch (Exception ex) {
-                                MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
-                            }
+                            MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
+                            System.IO.File.Delete(file);
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
                         }
                     }
                 }
@@ -4336,6 +4371,14 @@ namespace WindowPlugins.GUITVSeries
                 LoadReplacements();
                 MPTVSeriesLog.Write("Replacements reset to defaults");
             }           
+        }
+
+        private void treeView_Library_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
+            }
         }
     }
     
