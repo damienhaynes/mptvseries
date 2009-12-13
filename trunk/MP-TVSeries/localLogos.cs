@@ -408,9 +408,14 @@ namespace WindowPlugins.GUITVSeries
             if (getFieldValues(fieldToGet, out value, level))
             {
                 // for genres/actors we need to split dynamic filenames again
-                string[] vals = DBOnlineSeries.splitField(value);
+                string[] vals = DBOnlineSeries.splitField(value);                                
+
                 for (int i = 0; i < vals.Length; i++)
-                    result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i].Trim()), level)); // recursive so we support multiple dyn fields in filename
+                {                    
+                    // recursive so we support multiple dyn fields in filename
+                    if (vals[i] != fieldToGet)
+                        result.AddRange(getDynamicFileName(dynfilename.Replace(fieldToGet, vals[i].Trim()), level));
+                }
                 return result;
             }
             else
@@ -437,26 +442,24 @@ namespace WindowPlugins.GUITVSeries
         }
 
         static bool getFieldValues(string what, out string value, Level level)
-        {
-            
-                value = string.Empty;
-                if (what.Trim().Length == 0) return true; // just skip it
-                if (level == Level.Group)
-                {
-                    value = groupedSelection.ToString(); // the only thing we can do
-                }
-                else
-                {
-                    DBTable item = null;
-                    switch(level)
-                    {
-                        case Level.Episode: item = tmpEp; break;
-                        case Level.Season: item = tmpSeason; break;
-                        case Level.Series: item = tmpSeries; break;
-                    }
-                    value = FieldGetter.resolveDynString(what, item, false);
+        {            
+            value = string.Empty;
+            if (what.Trim().Length == 0) return true; // just skip it
+            if (level == Level.Group)
+            {
+                value = groupedSelection.ToString(); // the only thing we can do
             }
-             
+            else
+            {
+                DBTable item = null;
+                switch(level)
+                {
+                    case Level.Episode: item = tmpEp; break;
+                    case Level.Season: item = tmpSeason; break;
+                    case Level.Series: item = tmpSeries; break;
+                }
+                value = FieldGetter.resolveDynString(what, item, false);            
+            }             
             return true;
         }
 
