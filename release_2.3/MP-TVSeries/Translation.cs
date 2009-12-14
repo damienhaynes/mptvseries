@@ -112,7 +112,11 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
-        public static string CycleSeasonBanner = "Cycle Season Poster";                
+        public static string CycleSeasonBanner = "Cycle Season Poster";
+		public static string Update = "Update";
+		public static string DeleteThumbnailsHeading = "Delete Thumbnails";
+		public static string DeleteThumbnailsLine1 = "Would you also like to Delete and Re-Download";
+		public static string DeleteThumbnailsLine2 = "all episode thumbnails?";
 
         // Views
         public static string Genres = "Genres";
