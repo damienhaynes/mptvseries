@@ -113,6 +113,11 @@ namespace WindowPlugins.GUITVSeries
             initLoading = false;
             LoadTree();
 
+            // Only Advanced Users / Skin Designers need to see these.
+            // Tabs are visible if import="false" TVSeries.SkinSettings.xml
+            if (SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
+            if (SkinSettings.ImportLogos) tabControl_Details.TabPages.Remove(tabLogoRules);
+            
             if (load != null) load.Close();
             instance = this;
 
@@ -156,7 +161,9 @@ namespace WindowPlugins.GUITVSeries
                 // Load Skin Settings if they exist
                 SkinSettings.Load(skinSettings);
                 // Reload formatting rules
-                formattingConfiguration1.LoadFromDB();
+                if (!SkinSettings.ImportFormatting) {
+                    formattingConfiguration1.LoadFromDB();
+                }
             }
             catch { }
 
@@ -288,19 +295,7 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_episodeFormat_Subtitle);
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
-            FieldValidate(ref richTextBox_episodeFormat_Main);
-       
-            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
-            qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
-            qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
-            qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
-            if (SkinSettings.ImportGraphics)
-            {
-                qualitySeries.Enabled = false;
-                qualitySeason.Enabled = false;
-                qualityEpisode.Enabled = false;
-                qualityPoster.Enabled = false;
-            }
+            FieldValidate(ref richTextBox_episodeFormat_Main);                  
 
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
 
@@ -401,7 +396,9 @@ namespace WindowPlugins.GUITVSeries
 
             LoadTorrentSearches();
 
-            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            if (!SkinSettings.ImportLogos) {
+                lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            }
 
             comboLanguage.Items.AddRange(Translation.getSupportedLangs().ToArray());
             if (comboLanguage.Items.Count == 0) comboLanguage.Enabled = false;
@@ -1394,9 +1391,11 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // let configs now what was selected (for samples)
-                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                        this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                        this.formattingConfiguration1.Episode = episode;
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                            this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+                            this.formattingConfiguration1.Episode = episode;
+                        }
                     }                    
                     break;
 
@@ -1466,9 +1465,11 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // let configs now what was selected (for samples)
-                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
-                        this.formattingConfiguration1.Season = season;
-                        this.formattingConfiguration1.Episode = null;
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
+                            this.formattingConfiguration1.Season = season;
+                            this.formattingConfiguration1.Episode = null;
+                        }
                     }
                     break;
                 #endregion
@@ -1574,10 +1575,12 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                        // let configs now what was selected (for samples)                        
-                        this.formattingConfiguration1.Series = series;                        
-                        this.formattingConfiguration1.Season = null;
-                        this.formattingConfiguration1.Episode = null;
+                        // let configs now what was selected (for samples)
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = series;
+                            this.formattingConfiguration1.Season = null;
+                            this.formattingConfiguration1.Episode = null;
+                        }
                     }
                     break;
 
@@ -3916,27 +3919,7 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cOnlineUserID, txtUserID.Text);
         }
-
-        private void qualitySeries_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeriesBanners, (int)qualitySeries.Value);
-        }
-
-        private void qualitySeason_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeasonBanners, (int)qualitySeason.Value);
-        }
-
-        private void qualityEpisode_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
-        }
         
-        private void qualityPoster_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeriesPosters, (int)qualityPoster.Value);
-        } 
-
         private void btnLogoDeleteAll_Click(object sender, EventArgs e)
         {
             if (lstLogos.Items.Count > 0)
