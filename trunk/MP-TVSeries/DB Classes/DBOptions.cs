@@ -181,6 +181,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
         public const String cSubtitleDownloadersEnabled = "SubtitleDownloadersEnabled";
 
+        public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -479,6 +481,9 @@ namespace WindowPlugins.GUITVSeries
 
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
 					SetOptions(cMarkRatedEpisodeAsWatched, 0);
+
+                if (GetOptions(cSubstituteMissingArtwork) == null)
+                    SetOptions(cSubstituteMissingArtwork, 0);
 
             }
             catch (Exception ex)

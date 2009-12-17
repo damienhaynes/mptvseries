@@ -2315,7 +2315,19 @@ namespace WindowPlugins.GUITVSeries
                                         if (nSeasonDisplayMode != 0)
                                         {
                                             item = new GUIListItem();
-                                            item.IconImage = item.IconImageBig = ImageAllocator.GetSeasonBanner(season, true);
+                                            string filename = ImageAllocator.GetSeasonBanner(season, false);
+
+                                            if (filename.Length == 0) {
+                                                // Load Series Poster instead
+                                                if (DBOption.GetOptions(DBOption.cSubstituteMissingArtwork) && m_SelectedSeries != null) {
+                                                    filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                                                }
+                                                else {
+                                                    // Add Season Label to Poster Thumb
+                                                    filename = ImageAllocator.GetSeasonBanner(season, true);
+                                                }
+                                            }
+                                            item.IconImage = item.IconImageBig = filename;
                                         }
                                         else
                                         {
@@ -4223,8 +4235,15 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
 
-            // Delayed Image Loading of Season Banners            
-            seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);            
+            // Delayed Image Loading of Season Banners
+            string filename = ImageAllocator.GetSeasonBannerAsFilename(season);
+            if (filename.Length == 0) {
+                // Load Series Poster instead
+                if (DBOption.GetOptions(DBOption.cSubstituteMissingArtwork) && m_SelectedSeries != null) {
+                    filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                }           
+            }          
+            seasonbanner.Filename = filename;            
 
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref season, logosHeight, logosWidth));
 
