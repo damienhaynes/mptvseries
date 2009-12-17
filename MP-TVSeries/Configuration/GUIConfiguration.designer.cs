@@ -114,21 +114,6 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoChooseSeries = new System.Windows.Forms.CheckBox();
             this.checkBox_FullSeriesRetrieval = new System.Windows.Forms.CheckBox();
-            this.groupGraphicsQuality = new System.Windows.Forms.GroupBox();
-            this.label67 = new System.Windows.Forms.Label();
-            this.label66 = new System.Windows.Forms.Label();
-            this.label63 = new System.Windows.Forms.Label();
-            this.qualityPoster = new System.Windows.Forms.NumericUpDown();
-            this.label62 = new System.Windows.Forms.Label();
-            this.label59 = new System.Windows.Forms.Label();
-            this.label60 = new System.Windows.Forms.Label();
-            this.qualitySeason = new System.Windows.Forms.NumericUpDown();
-            this.label57 = new System.Windows.Forms.Label();
-            this.label58 = new System.Windows.Forms.Label();
-            this.qualityEpisode = new System.Windows.Forms.NumericUpDown();
-            this.label56 = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.qualitySeries = new System.Windows.Forms.NumericUpDown();
             this.linkExWatched = new System.Windows.Forms.LinkLabel();
             this.linkImpWatched = new System.Windows.Forms.LinkLabel();
             this.chkAllowDeletes = new System.Windows.Forms.CheckBox();
@@ -361,11 +346,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log = new System.Windows.Forms.ListBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
-            this.groupGraphicsQuality.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.qualityPoster)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualitySeason)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualityEpisode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualitySeries)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
             this.splitMain_Log.Panel1.SuspendLayout();
@@ -866,198 +846,6 @@ namespace WindowPlugins.GUITVSeries
                     "ter");
             this.checkBox_FullSeriesRetrieval.UseVisualStyleBackColor = true;
             this.checkBox_FullSeriesRetrieval.CheckedChanged += new System.EventHandler(this.checkBox_FullSeriesRetrieval_CheckedChanged);
-            // 
-            // groupGraphicsQuality
-            // 
-            this.groupGraphicsQuality.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupGraphicsQuality.Controls.Add(this.label67);
-            this.groupGraphicsQuality.Controls.Add(this.label66);
-            this.groupGraphicsQuality.Controls.Add(this.label63);
-            this.groupGraphicsQuality.Controls.Add(this.qualityPoster);
-            this.groupGraphicsQuality.Controls.Add(this.label62);
-            this.groupGraphicsQuality.Controls.Add(this.label59);
-            this.groupGraphicsQuality.Controls.Add(this.label60);
-            this.groupGraphicsQuality.Controls.Add(this.qualitySeason);
-            this.groupGraphicsQuality.Controls.Add(this.label57);
-            this.groupGraphicsQuality.Controls.Add(this.label58);
-            this.groupGraphicsQuality.Controls.Add(this.qualityEpisode);
-            this.groupGraphicsQuality.Controls.Add(this.label56);
-            this.groupGraphicsQuality.Controls.Add(this.label55);
-            this.groupGraphicsQuality.Controls.Add(this.qualitySeries);
-            this.groupGraphicsQuality.Location = new System.Drawing.Point(6, 348);
-            this.groupGraphicsQuality.Name = "groupGraphicsQuality";
-            this.groupGraphicsQuality.Size = new System.Drawing.Size(754, 155);
-            this.groupGraphicsQuality.TabIndex = 1;
-            this.groupGraphicsQuality.TabStop = false;
-            this.groupGraphicsQuality.Text = "Graphics Quality";
-            this.toolTip_Help.SetToolTip(this.groupGraphicsQuality, "Determines the Resolution in % of the originals Images. This is a quality/perform" +
-                    "ance tradeoff, you should enter the minimum you can tolerate as it can produce s" +
-                    "ubstantial performance gains.");
-            // 
-            // label67
-            // 
-            this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(9, 115);
-            this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(612, 26);
-            this.label67.TabIndex = 13;
-            this.label67.Text = "Graphics Quality will be overridden by skin if defined, to override set the Impor" +
-                "t attribute to false in your TVSeries.SkinSettings.xml\r\nlocated in your skin dir" +
-                "ectory.";
-            // 
-            // label66
-            // 
-            this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(9, 17);
-            this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(594, 26);
-            this.label66.TabIndex = 0;
-            this.label66.Text = resources.GetString("label66.Text");
-            // 
-            // label63
-            // 
-            this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(360, 87);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(15, 13);
-            this.label63.TabIndex = 12;
-            this.label63.Text = "%";
-            // 
-            // qualityPoster
-            // 
-            this.qualityPoster.Location = new System.Drawing.Point(314, 83);
-            this.qualityPoster.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualityPoster.Name = "qualityPoster";
-            this.qualityPoster.Size = new System.Drawing.Size(40, 20);
-            this.qualityPoster.TabIndex = 11;
-            this.qualityPoster.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualityPoster.ValueChanged += new System.EventHandler(this.qualityPoster_ValueChanged);
-            // 
-            // label62
-            // 
-            this.label62.Location = new System.Drawing.Point(221, 86);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(88, 13);
-            this.label62.TabIndex = 10;
-            this.label62.Text = "Series Posters:";
-            this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(360, 61);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(15, 13);
-            this.label59.TabIndex = 9;
-            this.label59.Text = "%";
-            // 
-            // label60
-            // 
-            this.label60.Location = new System.Drawing.Point(213, 61);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(96, 13);
-            this.label60.TabIndex = 7;
-            this.label60.Text = "Season Banners:";
-            this.label60.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // qualitySeason
-            // 
-            this.qualitySeason.Location = new System.Drawing.Point(314, 57);
-            this.qualitySeason.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualitySeason.Name = "qualitySeason";
-            this.qualitySeason.Size = new System.Drawing.Size(40, 20);
-            this.qualitySeason.TabIndex = 8;
-            this.qualitySeason.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualitySeason.ValueChanged += new System.EventHandler(this.qualitySeason_ValueChanged);
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(165, 87);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(15, 13);
-            this.label57.TabIndex = 6;
-            this.label57.Text = "%";
-            // 
-            // label58
-            // 
-            this.label58.Location = new System.Drawing.Point(29, 86);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(88, 13);
-            this.label58.TabIndex = 4;
-            this.label58.Text = "Episode Images:";
-            this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // qualityEpisode
-            // 
-            this.qualityEpisode.Location = new System.Drawing.Point(120, 83);
-            this.qualityEpisode.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualityEpisode.Name = "qualityEpisode";
-            this.qualityEpisode.Size = new System.Drawing.Size(40, 20);
-            this.qualityEpisode.TabIndex = 5;
-            this.qualityEpisode.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualityEpisode.ValueChanged += new System.EventHandler(this.qualityEpisode_ValueChanged);
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(165, 61);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(15, 13);
-            this.label56.TabIndex = 3;
-            this.label56.Text = "%";
-            // 
-            // label55
-            // 
-            this.label55.Location = new System.Drawing.Point(29, 61);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(88, 13);
-            this.label55.TabIndex = 1;
-            this.label55.Text = "Series Banners:";
-            this.label55.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // qualitySeries
-            // 
-            this.qualitySeries.Location = new System.Drawing.Point(120, 57);
-            this.qualitySeries.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualitySeries.Name = "qualitySeries";
-            this.qualitySeries.Size = new System.Drawing.Size(40, 20);
-            this.qualitySeries.TabIndex = 2;
-            this.qualitySeries.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.qualitySeries.ValueChanged += new System.EventHandler(this.qualitySeries_ValueChanged);
             // 
             // linkExWatched
             // 
@@ -2721,7 +2509,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.tabPage_MP_DisplayControl.AutoScroll = true;
             this.tabPage_MP_DisplayControl.AutoScrollMinSize = new System.Drawing.Size(0, 478);
-            this.tabPage_MP_DisplayControl.Controls.Add(this.groupGraphicsQuality);
             this.tabPage_MP_DisplayControl.Controls.Add(this.groupBox1);
             this.tabPage_MP_DisplayControl.ImageIndex = 9;
             this.tabPage_MP_DisplayControl.Location = new System.Drawing.Point(4, 31);
@@ -2734,7 +2521,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.checkBox_SubDownloadOnPlay);
             this.groupBox1.Controls.Add(this.nudScanRemoteShareFrequency);
@@ -2774,7 +2562,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.label16);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(754, 340);
+            this.groupBox1.Size = new System.Drawing.Size(754, 504);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
@@ -3996,12 +3784,6 @@ namespace WindowPlugins.GUITVSeries
             this.Text = "MP-TV Series Configuration";
             this.contextMenuStrip_DetailsTree.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
-            this.groupGraphicsQuality.ResumeLayout(false);
-            this.groupGraphicsQuality.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.qualityPoster)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualitySeason)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualityEpisode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qualitySeries)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).EndInit();
             this.splitMain_Log.Panel1.ResumeLayout(false);
@@ -4220,19 +4002,6 @@ namespace WindowPlugins.GUITVSeries
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox optionAsk2Rate;
         private System.Windows.Forms.ComboBox comboBox_PosterSelection;
         private System.Windows.Forms.PictureBox pictureBox_SeriesPoster;
-        private System.Windows.Forms.GroupBox groupGraphicsQuality;
-        private System.Windows.Forms.Label label63;
-        private System.Windows.Forms.NumericUpDown qualityPoster;
-        private System.Windows.Forms.Label label62;
-        private System.Windows.Forms.Label label59;
-        private System.Windows.Forms.Label label60;
-        private System.Windows.Forms.NumericUpDown qualitySeason;
-        private System.Windows.Forms.Label label57;
-        private System.Windows.Forms.Label label58;
-        private System.Windows.Forms.NumericUpDown qualityEpisode;
-        private System.Windows.Forms.Label label56;
-        private System.Windows.Forms.Label label55;
-        private System.Windows.Forms.NumericUpDown qualitySeries;
         private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedSummary;
         private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedThumbnail;
         private System.Windows.Forms.CheckBox checkBox_Episode_OnlyShowLocalFiles;
@@ -4294,8 +4063,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label65;
         private System.Windows.Forms.Label label64;
-        private System.Windows.Forms.Label label66;
-        private System.Windows.Forms.Label label67;
         private System.Windows.Forms.TabPage tabOnlineData;
         private System.Windows.Forms.Panel panel_OnlineData;
         private System.Windows.Forms.LinkLabel linkMediaInfoUpdate;
