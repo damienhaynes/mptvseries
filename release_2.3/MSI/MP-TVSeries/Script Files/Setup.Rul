@@ -961,7 +961,7 @@ begin
 end;
 
 function VOID BackupDatabase(sFileName)
-	STRING sDestinationFolder, svResult, sErrorMsg, svResultDate, svResultTime;   
+	STRING sDestinationFolder, svDateTime, sErrorMsg, svResultDate, svResultTime;   
 	NUMBER nResult;
 begin
  	
@@ -969,15 +969,20 @@ begin
 	
 	// Get Current Date
 	GetSystemInfo ( DATE, nResult, svResultDate );
+		 
+	// Set Destination Folder to current Database directory
+	sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svResultDate;
 	
-	// Get Current Time and remove colons so we can make a valid path
-	GetSystemInfo ( TIME, nResult, svResultTime ); 
- 	StrReplace ( svResultTime, ":", "", 0 ); 
- 	
- 	svResult = svResultDate + "_" + svResultTime;
- 	
-	// Set Destination Folder to Personal Directory
-	sDestinationFolder = PersonalFolder ^ "MP-TVSeries\\Backup" ^ svResult;
+	// If folder exists create a unique foldername based on time
+	if (Is(PATH_EXISTS,sDestinationFolder)) then
+		// Get Current Time and remove colons so we can make a valid path
+		GetSystemInfo ( TIME, nResult, svResultTime ); 
+	 	StrReplace ( svResultTime, ":", "", 0 ); 
+	 	
+	 	svDateTime = svResultDate + "_" + svResultTime;
+	 	
+		sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svDateTime;
+	endif;
 	
 	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
 	if nResult < 0 goto err;
