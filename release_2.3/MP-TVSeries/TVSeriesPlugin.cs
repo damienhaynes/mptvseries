@@ -505,20 +505,28 @@ namespace WindowPlugins.GUITVSeries
             
             ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
-			// For some reason on non initial loads (such as coming back from fullscreen video or after having exited to home and coming back)
-			// the labels don't display, unless we somehow call them like so
-			// (no, allocResources doesnt work!)
-			clearGUIProperty(guiProperty.Subtitle);
-			clearGUIProperty(guiProperty.Title);
-			clearGUIProperty(guiProperty.Description);
+            #region Clear GUI Properties
+            // Clear GUI Properties when first entering the plugin
+            // This will avoid ugly property names being seen before 
+            // its corresponding value is assigned
+            if (!m_bPluginLoaded) {
+                clearGUIProperty(guiProperty.Subtitle);
+                clearGUIProperty(guiProperty.Title);
+                clearGUIProperty(guiProperty.Description);
 
-			clearGUIProperty(guiProperty.CurrentView);
-			clearGUIProperty(guiProperty.SimpleCurrentView);
-			clearGUIProperty(guiProperty.NextView);
-			clearGUIProperty(guiProperty.LastView);
-            clearGUIProperty(guiProperty.SeriesCount);
-            clearGUIProperty(guiProperty.GroupCount);
-            clearGUIProperty(guiProperty.FilteredEpisodeCount);
+                clearGUIProperty(guiProperty.CurrentView);
+                clearGUIProperty(guiProperty.SimpleCurrentView);
+                clearGUIProperty(guiProperty.NextView);
+                clearGUIProperty(guiProperty.LastView);
+                clearGUIProperty(guiProperty.SeriesCount);
+                clearGUIProperty(guiProperty.GroupCount);
+                clearGUIProperty(guiProperty.FilteredEpisodeCount);
+
+                clearFieldsForskin("Series");
+                clearFieldsForskin("Season");
+                clearFieldsForskin("Episode");
+            }
+            #endregion
 
             localLogos.appendEpImage = m_Episode_Image == null ? true : false;
 
@@ -1786,30 +1794,16 @@ namespace WindowPlugins.GUITVSeries
                 if (m_Facade != null) m_Facade.Focus = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 setCurPositionLabel();
-                // always clear all fields
-                switch (this.listLevel)
-                {
+                
+                switch (this.listLevel) {
                     case Listlevel.Series:
-						if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
-							DisableFanart();
-						}
-						goto case Listlevel.Group;
-                    case Listlevel.Group:
-                        clearFieldsForskin("Season");
-                        clearFieldsForskin("Series");
-                        goto case Listlevel.Episode;
-                    case Listlevel.Season:
-                        int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
-                        if (nSeasonDisplayMode != 0)
-                            setFacadeMode(GUIFacadeControl.ViewMode.AlbumView);
-                        else
-                            setFacadeMode(GUIFacadeControl.ViewMode.List);
-                        goto case Listlevel.Episode;
-                    case Listlevel.Episode:
-                        clearFieldsForskin("Episode");
+                        // Check if series fanart is enabled                       
+                        if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
+                            DisableFanart();
+                        }
                         break;
-
                 }
+
                 setNewListLevelOfCurrView(m_CurrViewStep);
 
             }
@@ -2040,15 +2034,21 @@ namespace WindowPlugins.GUITVSeries
                     item.IsRemote = true;
                     this.m_Facade.Add(item);
 
+                    #region Clear GUI Properties
                     clearGUIProperty(guiProperty.Title);
                     clearGUIProperty(guiProperty.Subtitle);
                     clearGUIProperty(guiProperty.Description);
-                    
+
                     clearGUIProperty(guiProperty.SeriesBanner);
                     clearGUIProperty(guiProperty.SeriesPoster);
                     clearGUIProperty(guiProperty.SeasonPoster);
                     clearGUIProperty(guiProperty.EpisodeImage);
                     clearGUIProperty(guiProperty.Logos);
+
+                    clearFieldsForskin("Series");
+                    clearFieldsForskin("Season");
+                    clearFieldsForskin("Episode");
+                    #endregion
 
                 }
                 else
@@ -2304,15 +2304,17 @@ namespace WindowPlugins.GUITVSeries
                             if (!canBeSkipped)
 								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
 
+                            bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List));
+
                             foreach (DBSeason season in seasons)
                             {
                                 try
-                                {
-                                    int nSeasonDisplayMode = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+                                {                                    
                                     item = null;
                                     if (!canBeSkipped)
                                     {
-                                        if (nSeasonDisplayMode != 0)
+                                        if (graphicalFacade)                                    
                                         {
                                             item = new GUIListItem();
                                             string filename = ImageAllocator.GetSeasonBanner(season, false);
@@ -2382,9 +2384,26 @@ namespace WindowPlugins.GUITVSeries
                                     }
                                     else
                                     {
-                                        // since onseasonselected won't be triggered automatically, we have to force it
-                                        Season_OnItemSelected(item);
                                         selectedIndex = 0;
+
+                                        // If we are skipping Season view, going from Series -> Episodes then
+                                        // we also need to load season artwork
+                                        if (skipSeasonIfOne_DirectionDown && seasons.Count == 1) {
+                                            // Delayed Image Loading of Season Banners
+                                            string filename = ImageAllocator.GetSeasonBannerAsFilename(season);
+                                            if (filename.Length == 0) {
+                                                // Load Series Poster instead
+                                                if (DBOption.GetOptions(DBOption.cSubstituteMissingArtwork) && m_SelectedSeries != null) {
+                                                    filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                                                }
+                                            }
+                                            seasonbanner.Filename = filename;
+                                        }
+                                        else if (!skipSeasonIfOne_DirectionDown && seasons.Count == 1) {
+                                            seasonbanner.Filename = string.Empty;
+                                            clearGUIProperty(guiProperty.Logos);
+                                            clearGUIProperty(guiProperty.EpisodeImage);
+                                        }
                                     }
 
                                     if (bg.CancellationPending) return;
@@ -4327,8 +4346,16 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (m_SelectedSeason != null)
-                {                    
-                    seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(m_SelectedSeason);
+                {
+                    string filename = ImageAllocator.GetSeasonBannerAsFilename(m_SelectedSeason);
+                    if (filename.Length == 0) {
+                        // Load Series Poster instead
+                        if (DBOption.GetOptions(DBOption.cSubstituteMissingArtwork) && m_SelectedSeries != null) {
+                            filename = ImageAllocator.GetSeriesPosterAsFilename(m_SelectedSeries);
+                        }
+                    }
+                    seasonbanner.Filename = filename;
+
                     pushFieldsToSkin(m_SelectedSeason, "Season");
                 }
                 else
