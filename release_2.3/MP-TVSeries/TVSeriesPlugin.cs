@@ -1802,6 +1802,19 @@ namespace WindowPlugins.GUITVSeries
                             DisableFanart();
                         }
                         break;
+
+                    case Listlevel.Season:
+                        clearFieldsForskin("Season");
+                        clearFieldsForskin("Episode");
+                        break;
+
+                    case Listlevel.Group:
+                        clearGUIProperty(guiProperty.Description);
+                        seriesposter.Filename = string.Empty;
+                        seriesbanner.Filename = string.Empty;
+                        seasonbanner.Filename = string.Empty;
+                        clearFieldsForskin("Series");
+                        break;
                 }
 
                 setNewListLevelOfCurrView(m_CurrViewStep);

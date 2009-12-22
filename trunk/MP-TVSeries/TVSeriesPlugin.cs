@@ -1916,8 +1916,22 @@ namespace WindowPlugins.GUITVSeries
 						// Check if series fanart is enabled                       
                         if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
                             DisableFanart();
-                        }                       
-                        break;                 
+                        }                        
+                        break;     
+            
+                    case Listlevel.Season:
+                        clearFieldsForskin("Season");
+                        clearFieldsForskin("Episode");
+                        break;
+
+                    case Listlevel.Group:
+                        clearGUIProperty(guiProperty.Description);                        
+                        seriesposter.Filename = string.Empty;
+                        seriesbanner.Filename = string.Empty;
+                        seasonbanner.Filename = string.Empty;
+                        clearFieldsForskin("Series");                        
+                        break;
+
                 }      
                 setNewListLevelOfCurrView(m_CurrViewStep);
 
