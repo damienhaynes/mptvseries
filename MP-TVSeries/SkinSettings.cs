@@ -122,7 +122,7 @@ namespace WindowPlugins.GUITVSeries {
                 else if (matches[i].Value.Contains((remove = "#TVSeries.Series.")))
                     pre = "Series";
                 
-                string value = matches[i].Value.Trim().Replace(remove, string.Empty);
+                string value = matches[i].Value.Trim().Replace(remove, string.Empty);                
                 if (pre.Length > 0) {                    
                     if (SkinProperties.ContainsKey(pre)) {
                         if (!SkinProperties[pre].Contains(value)) {                            
@@ -141,24 +141,29 @@ namespace WindowPlugins.GUITVSeries {
         /// <summary>
         /// Logs all Skin Properties used
         /// </summary>
-        public static void LogSkinProperties() {            
-            List<string> seriesProperties = SkinSettings.SkinProperties["Series"];
-            List<string> seasonProperties = SkinSettings.SkinProperties["Season"];
-            List<string> episodeProperties = SkinSettings.SkinProperties["Episode"];
-
+        public static void LogSkinProperties() {
             MPTVSeriesLog.Write("Skin uses the following properties:");
 
-            foreach (string property in seriesProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Series." + property);
+            if (SkinSettings.SkinProperties.ContainsKey("Series")) {
+                List<string> seriesProperties = SkinSettings.SkinProperties["Series"];
+                foreach (string property in seriesProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Series." + property);
+                }
             }
 
-            foreach (string property in seasonProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Season." + property);
+            if (SkinSettings.SkinProperties.ContainsKey("Season")) {
+                List<string> seasonProperties = SkinSettings.SkinProperties["Season"];
+                foreach (string property in seasonProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Season." + property);
+                }
             }
 
-            foreach (string property in episodeProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Episode." + property);
-            }
+            if (SkinSettings.SkinProperties.ContainsKey("Episode")) {
+                List<string> episodeProperties = SkinSettings.SkinProperties["Episode"];
+                foreach (string property in episodeProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Episode." + property);
+                }
+            }            
         }
 
         #endregion
