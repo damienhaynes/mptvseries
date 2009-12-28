@@ -96,46 +96,68 @@ namespace WindowPlugins.GUITVSeries {
             }
             return count;
         }
-        
+
         /// <summary>
         /// Gets all properties used by this plugin     
         /// </summary>
         /// <param name="skinfile"></param>
         public static void GetSkinProperties(string filename) {
-            string content = string.Empty;
-            
-            StreamReader r = new StreamReader(filename);
-            content = r.ReadToEnd();
-                        
-            Regex reg = new Regex(@"#TVSeries\..+?(?=[\s<])");
-            MatchCollection matches = reg.Matches(content);
-            MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Normal);
+            string content=string.Empty;
 
-            for (int i = 0; i < matches.Count; i++) {
-                string pre = string.Empty;
-                string remove = string.Empty;
-                
-                if (matches[i].Value.Contains((remove = "#TVSeries.Episode.")))
-                    pre = "Episode";
-                else if (matches[i].Value.Contains((remove = "#TVSeries.Season.")))
-                    pre = "Season";
-                else if (matches[i].Value.Contains((remove = "#TVSeries.Series.")))
-                    pre = "Series";
-                
-                string value = matches[i].Value.Trim().Replace(remove, string.Empty);
-                if (pre.Length > 0) {
-                    MPTVSeriesLog.Write(matches[i].Value);
+            StreamReader r=new StreamReader(filename);
+            content=r.ReadToEnd();
+
+            Regex reg=new Regex(@"#TVSeries\..+?(?=[\s<])");
+            MatchCollection matches=reg.Matches(content);
+            MPTVSeriesLog.Write("Skin uses "+matches.Count.ToString()+" fields", MPTVSeriesLog.LogLevel.Debug);
+
+            for (int i=0; i<matches.Count; i++) {
+                string pre=string.Empty;
+                string remove=string.Empty;
+
+                if (matches[i].Value.Contains((remove="#TVSeries.Episode.")))
+                    pre="Episode";
+                else if (matches[i].Value.Contains((remove="#TVSeries.Season.")))
+                    pre="Season";
+                else if (matches[i].Value.Contains((remove="#TVSeries.Series.")))
+                    pre="Series";
+
+                string value=matches[i].Value.Trim().Replace(remove, string.Empty);
+                if (pre.Length>0) {
                     if (SkinProperties.ContainsKey(pre)) {
                         if (!SkinProperties[pre].Contains(value)) {
                             SkinProperties[pre].Add(value);
                         }
                     }
                     else {
-                        List<string> v = new List<string>();
+                        List<string> v=new List<string>();
                         v.Add(value);
                         SkinProperties.Add(pre, v);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Logs all Skin Properties used
+        /// </summary>
+        public static void LogSkinProperties() {
+            List<string> seriesProperties=SkinSettings.SkinProperties["Series"];
+            List<string> seasonProperties=SkinSettings.SkinProperties["Season"];
+            List<string> episodeProperties=SkinSettings.SkinProperties["Episode"];
+
+            MPTVSeriesLog.Write("Skin uses the following properties:");
+
+            foreach (string property in seriesProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Series."+property);
+            }
+
+            foreach (string property in seasonProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Season."+property);
+            }
+
+            foreach (string property in episodeProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Episode."+property);
             }
         }
         #endregion
