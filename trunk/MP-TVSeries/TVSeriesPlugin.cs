@@ -494,9 +494,13 @@ namespace WindowPlugins.GUITVSeries
             m_FanartTimer = new System.Threading.Timer(new TimerCallback(FanartTimerEvent), null, Timeout.Infinite, Timeout.Infinite);
             m_bFanartTimerDisabled = true;
 
-            String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
-            MPTVSeriesLog.Write("Loading XML Skin: " + xmlSkin);
-            SkinSettings.GetSkinProperties(xmlSkin);
+            // Load all Skin Fields being used
+            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
+            foreach (string skinFile in skinFiles) {
+                MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
+                SkinSettings.GetSkinProperties(skinFile);
+            }
+            SkinSettings.LogSkinProperties();
 
             // Check if MediaPortal will Show TVSeries Plugin when restarting
             // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
@@ -505,6 +509,8 @@ namespace WindowPlugins.GUITVSeries
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
 
+            String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
+            MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
             return Load(xmlSkin);
 		}
 

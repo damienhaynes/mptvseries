@@ -109,7 +109,7 @@ namespace WindowPlugins.GUITVSeries {
                         
             Regex reg = new Regex(@"#TVSeries\..+?(?=[\s<])");
             MatchCollection matches = reg.Matches(content);
-            MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Debug);
 
             for (int i = 0; i < matches.Count; i++) {
                 string pre = string.Empty;
@@ -123,10 +123,9 @@ namespace WindowPlugins.GUITVSeries {
                     pre = "Series";
                 
                 string value = matches[i].Value.Trim().Replace(remove, string.Empty);
-                if (pre.Length > 0) {
-                    MPTVSeriesLog.Write(matches[i].Value);
+                if (pre.Length > 0) {                    
                     if (SkinProperties.ContainsKey(pre)) {
-                        if (!SkinProperties[pre].Contains(value)) {
+                        if (!SkinProperties[pre].Contains(value)) {                            
                             SkinProperties[pre].Add(value);
                         }
                     }
@@ -138,6 +137,30 @@ namespace WindowPlugins.GUITVSeries {
                 }
             }
         }
+
+        /// <summary>
+        /// Logs all Skin Properties used
+        /// </summary>
+        public static void LogSkinProperties() {            
+            List<string> seriesProperties = SkinSettings.SkinProperties["Series"];
+            List<string> seasonProperties = SkinSettings.SkinProperties["Season"];
+            List<string> episodeProperties = SkinSettings.SkinProperties["Episode"];
+
+            MPTVSeriesLog.Write("Skin uses the following properties:");
+
+            foreach (string property in seriesProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Series." + property);
+            }
+
+            foreach (string property in seasonProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Season." + property);
+            }
+
+            foreach (string property in episodeProperties) {
+                MPTVSeriesLog.Write("#TVSeries.Episode." + property);
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -457,7 +480,7 @@ namespace WindowPlugins.GUITVSeries {
 
             node = doc.DocumentElement.SelectSingleNode("/settings/graphicsquality");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true") {
-                MPTVSeriesLog.Write("Loading Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("Loading Skin Thumbnail Graphics Quality", MPTVSeriesLog.LogLevel.Normal);
 
                 innerNode = node.SelectSingleNode("seriesbanners");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
