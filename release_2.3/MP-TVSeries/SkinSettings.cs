@@ -142,22 +142,27 @@ namespace WindowPlugins.GUITVSeries {
         /// Logs all Skin Properties used
         /// </summary>
         public static void LogSkinProperties() {
-            List<string> seriesProperties=SkinSettings.SkinProperties["Series"];
-            List<string> seasonProperties=SkinSettings.SkinProperties["Season"];
-            List<string> episodeProperties=SkinSettings.SkinProperties["Episode"];
-
             MPTVSeriesLog.Write("Skin uses the following properties:");
 
-            foreach (string property in seriesProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Series."+property);
+            if (SkinSettings.SkinProperties.ContainsKey("Series")) {
+                List<string> seriesProperties = SkinSettings.SkinProperties["Series"];
+                foreach (string property in seriesProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Series." + property);
+                }
             }
 
-            foreach (string property in seasonProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Season."+property);
+            if (SkinSettings.SkinProperties.ContainsKey("Season")) {
+                List<string> seasonProperties = SkinSettings.SkinProperties["Season"];
+                foreach (string property in seasonProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Season." + property);
+                }
             }
 
-            foreach (string property in episodeProperties) {
-                MPTVSeriesLog.Write("#TVSeries.Episode."+property);
+            if (SkinSettings.SkinProperties.ContainsKey("Episode")) {
+                List<string> episodeProperties = SkinSettings.SkinProperties["Episode"];
+                foreach (string property in episodeProperties) {
+                    MPTVSeriesLog.Write("#TVSeries.Episode." + property);
+                }
             }
         }
         #endregion
