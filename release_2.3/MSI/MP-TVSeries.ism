@@ -1348,7 +1348,7 @@
 		<row><td>issues.url</td><td>Issues</td><td>Issues.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Issues.url</td><td>1</td><td/></row>
 		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>17</td><td/></row>
 		<row><td>mp_tvseries.dll</td><td>MP_TVSeries.dll</td><td>MP-TVS~1.DLL|MP-TVSeries.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BinDir&gt;\MP-TVSeries.dll</td><td>1</td><td/></row>
-		<row><td>nl_nl_.xml</td><td>Languages</td><td>nl(nl).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\nl(nl).xml</td><td>17</td><td/></row>
+		<row><td>nl.xml</td><td>Languages</td><td>nl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\nl.xml</td><td>1</td><td/></row>
 		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>17</td><td/></row>
 		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>17</td><td/></row>
 		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>17</td><td/></row>
@@ -1970,7 +1970,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MP-TVSeries 2.3.3589</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.3.3647</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -4090,9 +4090,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{AE9A5FE0-F4C0-40C6-B128-D135E485AB82}</td><td/></row>
+		<row><td>ProductCode</td><td>{904D518B-38C4-439F-85B6-45D3804A1B66}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries 2.3</td><td/></row>
-		<row><td>ProductVersion</td><td>2.3.3589.3</td><td/></row>
+		<row><td>ProductVersion</td><td>2.3.3647.4</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
