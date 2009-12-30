@@ -60,8 +60,8 @@
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{BBC2FD2A-89D3-4D5F-903D-CF7BEFCAECE9}</revnumber>
 		<lastprinted/>
-		<createdtm>06/21/1999 23:00</createdtm>
-		<lastsavedtm>07/15/2000 02:50</lastsavedtm>
+		<createdtm>06/22/1999 00:00</createdtm>
+		<lastsavedtm>07/15/2000 03:50</lastsavedtm>
 		<pagecount>200</pagecount>
 		<wordcount>0</wordcount>
 		<charcount/>
@@ -325,13 +325,16 @@
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>Forums</td><td>{B66DD604-B425-440E-BF55-6C859026407D}</td><td>WEB</td><td>8</td><td/><td>forums.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Home</td><td>{D4B8B1AA-313B-4DE4-B17D-02AC11D72823}</td><td>WEB</td><td>8</td><td/><td>home.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ICSharpCode.SharpZipLib.dll</td><td>{D34F6AB0-2068-4F66-BE68-5729679F8A5D}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>icsharpcode.sharpziplib.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{8A4BF4FA-0DB6-4387-B076-58F050BD0D62}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Issues</td><td>{8CCBDA0E-4673-4E6E-8650-D4F52E722867}</td><td>WEB</td><td>8</td><td/><td>issues.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Wiki</td><td>{B6C9EB8C-2048-45DA-801E-A45FB97B1837}</td><td>WEB</td><td>8</td><td/><td>wiki.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>_z.dll</td><td>{50FB2E7A-ABE6-4433-A2FB-F064D4925450}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>_z.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3Media</td><td>{CC2C416E-AD41-4A37-AECC-F5EFCDC1FB39}</td><td>MEDIA</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1314,13 +1317,16 @@
 		<row><td>Blue3Wide</td><td>skinBlue3WideXML</td></row>
 		<row><td>Main</td><td>Forums</td></row>
 		<row><td>Main</td><td>Home</td></row>
+		<row><td>Main</td><td>ICSharpCode.SharpZipLib.dll</td></row>
 		<row><td>Main</td><td>ISRegistryComponent</td></row>
 		<row><td>Main</td><td>Issues</td></row>
 		<row><td>Main</td><td>Languages</td></row>
 		<row><td>Main</td><td>MP_TVSeries.dll</td></row>
 		<row><td>Main</td><td>PluginConfigLoader</td></row>
+		<row><td>Main</td><td>SubtitleDownloader.dll</td></row>
 		<row><td>Main</td><td>Updates</td></row>
 		<row><td>Main</td><td>Wiki</td></row>
+		<row><td>Main</td><td>_z.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1335,7 +1341,9 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>_z.dll</td><td>_z.dll</td><td>7z.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\7z.dll</td><td>1</td><td/></row>
 		<row><td>common.window.tvseries.xml</td><td>skinBlue3XML</td><td>COMMON~1.XML|common.window.TVseries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\common.window.TVseries.xml</td><td>17</td><td/></row>
+		<row><td>cs.xml</td><td>Languages</td><td>cs.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\cs.xml</td><td>1</td><td/></row>
 		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>17</td><td/></row>
 		<row><td>de.xml</td><td>Languages</td><td>de.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\de.xml</td><td>17</td><td/></row>
 		<row><td>en_us_.xml</td><td>Languages</td><td>en(us).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\en(us).xml</td><td>17</td><td/></row>
@@ -1344,16 +1352,18 @@
 		<row><td>fr.xml</td><td>Languages</td><td>fr.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\fr.xml</td><td>17</td><td/></row>
 		<row><td>he.xml</td><td>Languages</td><td>he.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\he.xml</td><td>17</td><td/></row>
 		<row><td>home.url</td><td>Home</td><td>Home.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Home.url</td><td>1</td><td/></row>
+		<row><td>icsharpcode.sharpziplib.dll</td><td>ICSharpCode.SharpZipLib.dll</td><td>ICSHAR~1.DLL|ICSharpCode.SharpZipLib.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\ICSharpCode.SharpZipLib.dll</td><td>1</td><td/></row>
 		<row><td>issues.url</td><td>Issues</td><td>Issues.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Issues.url</td><td>1</td><td/></row>
 		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>17</td><td/></row>
 		<row><td>mp_tvseries.dll</td><td>MP_TVSeries.dll</td><td>MP-TVS~1.DLL|MP-TVSeries.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BinDir&gt;\MP-TVSeries.dll</td><td>1</td><td/></row>
-		<row><td>nl_nl_.xml</td><td>Languages</td><td>nl(nl).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\nl(nl).xml</td><td>17</td><td/></row>
+		<row><td>nl.xml</td><td>Languages</td><td>nl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\nl.xml</td><td>1</td><td/></row>
 		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>17</td><td/></row>
 		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>17</td><td/></row>
 		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>17</td><td/></row>
 		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;UtilsDir&gt;\pluginconfigloader\pluginconfigloader\bin\release\PluginConfigLoader.exe</td><td>1</td><td/></row>
 		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>17</td><td/></row>
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>17</td><td/></row>
+		<row><td>subtitledownloader.dll</td><td>SubtitleDownloader.dll</td><td>SUBTIT~1.DLL|SubtitleDownloader.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\SubtitleDownloader.dll</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>17</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.dummy.xml</td><td>17</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
@@ -1508,6 +1518,7 @@
 		<col def="s255">Destination</col>
 		<col def="s50">Target</col>
 		<col def="i4">Platform</col>
+		<col def="S255">StartScreenIcon</col>
 	</table>
 
 	<table name="ISChainPackage">
@@ -1620,13 +1631,16 @@
 		<col def="S0">Miscellaneous</col>
 		<row><td>Forums</td><td/><td/><td>_A0EA4D39_4B4A_462F_9BF8_408AE9F8DFD4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Home</td><td/><td/><td>_89D7E8ED_2F5D_49C4_B656_176EBB5131F7_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ICSharpCode.SharpZipLib.dll</td><td/><td/><td>_70E7B767_FAAA_4F85_8282_40B179102EC1_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISRegistryComponent</td><td/><td/><td>_E38F6CA8_8D42_411E_A66B_B22C2885C0C7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Issues</td><td/><td/><td>_7F846ECC_7C21_4158_AB9A_FC4BE1131072_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Languages</td><td/><td/><td>_43676FB1_360E_4DBF_969B_179B371EB92A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MP_TVSeries.dll</td><td/><td/><td>_3D521D74_D0A4_40AB_8993_D9147023752A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PluginConfigLoader</td><td/><td/><td>_5B0A85B6_7138_45C5_A964_0E08743C61D3_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>SubtitleDownloader.dll</td><td/><td/><td>_EA13FE16_030C_4022_AE5C_FAA0992269E0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Updates</td><td/><td/><td>_906420BA_C1A6_4D16_A4EE_0749D1E8796D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Wiki</td><td/><td/><td>_FA268EEB_795E_49F2_A65E_3688CE9B9ADC_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>_z.dll</td><td/><td/><td>_DFEAB152_6492_4430_8613_254C080FD337_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3Media</td><td/><td/><td>_D51CB0E0_168F_474F_B433_1699779B7DCF_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideMedia</td><td/><td/><td>_9731C4B7_32CE_4ECA_945D_A300288D0959_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideXML</td><td/><td/><td>_69B87E1A_652B_44E9_8735_18332E35DB31_FILTER</td><td/><td/><td/><td/></row>
@@ -1933,18 +1947,19 @@
 		<col def="S255">Value</col>
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
-		<row><td>BinDir</td><td>&lt;TrunkDir&gt;\MP-TVSeries\bin\ReleaseInclDownloaders</td><td/><td>2</td></row>
+		<row><td>BinDir</td><td>&lt;TrunkDir&gt;\MP-TVSeries\bin\Release</td><td/><td>2</td></row>
+		<row><td>BranchDir</td><td>D:\Development\MP-TVSeries\release_2.3</td><td/><td>2</td></row>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
-		<row><td>LanguageDir</td><td>&lt;TrunkDir&gt;\MP-TVSeries\MP-TVSeries_lang</td><td/><td>2</td></row>
+		<row><td>LanguageDir</td><td>&lt;TrunkDir&gt;\MP-TVSeries\Resources\Languages</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SkinDir</td><td>&lt;TrunkDir&gt;\skin files</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
-		<row><td>TrunkDir</td><td>MPTVSeriesTrunkDir</td><td/><td>4</td></row>
-		<row><td>UtilsDir</td><td>MPTVSeriesUtilsDir</td><td/><td>4</td></row>
+		<row><td>TrunkDir</td><td>D:\Development\MP-TVSeries\trunk</td><td/><td>2</td></row>
+		<row><td>UtilsDir</td><td>D:\Development\MP-TVSeries\utils</td><td/><td>2</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
 
@@ -1967,6 +1982,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.4.0</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -3646,6 +3662,7 @@
 		<row><td>ISSetupFilesCleanup</td><td/><td>6603</td><td/><td/></row>
 		<row><td>ISSetupFilesExtract</td><td/><td>3</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
+		<row><td>InstallExecute</td><td/><td>6411</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
 		<row><td>InstallFinalize</td><td/><td>6600</td><td>InstallFinalize</td><td/></row>
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
@@ -3656,6 +3673,7 @@
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
 		<row><td>MigrateFeatureStates</td><td/><td>1010</td><td>MigrateFeatureStates</td><td/></row>
 		<row><td>MoveFiles</td><td/><td>3800</td><td>MoveFiles</td><td/></row>
+		<row><td>MsiConfigureServices</td><td>VersionMsi &gt;= "5.00"</td><td>5801</td><td>MSI5 MsiConfigureServices</td><td/></row>
 		<row><td>MsiPublishAssemblies</td><td/><td>6250</td><td>MsiPublishAssemblies</td><td/></row>
 		<row><td>MsiUnpublishAssemblies</td><td/><td>1750</td><td>MsiUnpublishAssemblies</td><td/></row>
 		<row><td>PatchFiles</td><td/><td>4090</td><td>PatchFiles</td><td/></row>
@@ -3675,7 +3693,7 @@
 		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
 		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
 		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
-		<row><td>RemoveExistingProducts</td><td/><td>1410</td><td>RemoveExistingProducts</td><td/></row>
+		<row><td>RemoveExistingProducts</td><td/><td>1500</td><td>RemoveExistingProducts</td><td/></row>
 		<row><td>RemoveFiles</td><td/><td>3500</td><td>RemoveFiles</td><td/></row>
 		<row><td>RemoveFolders</td><td/><td>3600</td><td>RemoveFolders</td><td/></row>
 		<row><td>RemoveIniValues</td><td/><td>3100</td><td>RemoveIniValues</td><td/></row>
@@ -3739,7 +3757,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>SaveAsSchema</td><td/></row>
 		<row><td>SccEnabled</td><td>0</td></row>
 		<row><td>SccPath</td><td/></row>
-		<row><td>SchemaVersion</td><td>769</td></row>
+		<row><td>SchemaVersion</td><td>770</td></row>
 		<row><td>Script</td><td>1</td></row>
 		<row><td>Type</td><td>MSI</td></row>
 		<row><td>UseMSI45EmbeddedUI</td><td>0</td></row>
@@ -3937,7 +3955,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 
 	<table name="MsiServiceConfig">
 		<col key="yes" def="s72">MsiServiceConfig</col>
-		<col def="l72">Name</col>
+		<col def="s255">Name</col>
 		<col def="i2">Event</col>
 		<col def="i4">ConfigType</col>
 		<col def="S0">Argument</col>
@@ -3946,7 +3964,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 
 	<table name="MsiServiceConfigFailureActions">
 		<col key="yes" def="s72">MsiServiceConfigFailureActions</col>
-		<col def="l72">Name</col>
+		<col def="s255">Name</col>
 		<col def="i2">Event</col>
 		<col def="I4">ResetPeriod</col>
 		<col def="L255">RebootMessage</col>
@@ -4057,7 +4075,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>MPLANGUAGESDIR</td><td/><td/></row>
 		<row><td>MPPROGRAMDIR</td><td/><td/></row>
 		<row><td>MPSKINSDIR</td><td/><td/></row>
-		<row><td>MSIFASTINSTALL</td><td>3</td><td/></row>
+		<row><td>MSIFASTINSTALL</td><td>2</td><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>MsiLogging</td><td>voicewarmupx</td><td/></row>
 		<row><td>NewProperty1</td><td>0</td><td/></row>
@@ -4084,9 +4102,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{C490B4F8-03AB-4CF3-8A46-3D504FEC760B}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.3</td><td/></row>
-		<row><td>ProductVersion</td><td>2.3.3491</td><td/></row>
+		<row><td>ProductCode</td><td>{F44D31BB-ACC2-4B9E-B1CD-C38F210786C3}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.4</td><td/></row>
+		<row><td>ProductVersion</td><td>2.4.0.868</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
@@ -4670,6 +4688,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>ISCEShtCut</td><td>DisplayName</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>Platform</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>ShtCutKey</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>ISCEShtCut</td><td>StartScreenIcon</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISCEShtCut</td><td>Target</td><td>N</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>ISChainPackage</td><td>DisplayName</td><td>Y</td><td/><td/><td/><td/><td>Text</td><td/><td>Display name for the chained package. Used only in the IDE.</td></row>
 		<row><td>ISChainPackage</td><td>ISReleaseFlags</td><td>Y</td><td/><td/><td/><td/><td/><td/><td/></row>
