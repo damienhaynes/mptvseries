@@ -387,7 +387,9 @@ namespace WindowPlugins.GUITVSeries
 			Logos,
 			SeriesCount,
 			GroupCount,
-            FilteredEpisodeCount
+            FilteredEpisodeCount,
+            WatchedCount,
+            UnWatchedCount
 		}
 		#endregion
 
@@ -502,6 +504,17 @@ namespace WindowPlugins.GUITVSeries
             }
             SkinSettings.LogSkinProperties();
 
+            // Push Translated Strings to skin
+            MPTVSeriesLog.Write("Setting translated strings: ", MPTVSeriesLog.LogLevel.Debug);
+            string propertyName = string.Empty;
+            string propertyValue = string.Empty;
+            foreach (string name in Translation.Strings.Keys) {
+                propertyName = "#TVSeries.Translation." + name + ".Label";
+                propertyValue = Translation.Strings[name];
+                MPTVSeriesLog.Write(propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug);
+                GUIPropertyManager.SetProperty(propertyName, propertyValue);
+            }
+
             // Check if MediaPortal will Show TVSeries Plugin when restarting
             // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
             using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) {
@@ -544,6 +557,8 @@ namespace WindowPlugins.GUITVSeries
                 clearGUIProperty(guiProperty.SeriesCount);
                 clearGUIProperty(guiProperty.GroupCount);
                 clearGUIProperty(guiProperty.FilteredEpisodeCount);
+                clearGUIProperty(guiProperty.WatchedCount);
+                clearGUIProperty(guiProperty.UnWatchedCount);
 
                 clearFieldsForskin("Series");
                 clearFieldsForskin("Season");
@@ -2578,6 +2593,9 @@ namespace WindowPlugins.GUITVSeries
                             // #TVSeries.Series.EpisodeCount is not desirable in some views e.g. Recently Added or views that filter by episode fields
                             setGUIProperty(guiProperty.FilteredEpisodeCount, episodesToDisplay.Count.ToString());
 
+                            int watchedCount = 0;
+                            int unwatchedCount = episodesToDisplay.Count;
+
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
                             item = null;
 
@@ -2635,6 +2653,11 @@ namespace WindowPlugins.GUITVSeries
                                         item.IsPlayed = true;
                                     }
                                     #endregion
+
+                                    if (item.IsPlayed) {
+                                        watchedCount++;
+                                        unwatchedCount--;
+                                    }
 
                                     item.TVTag = episode;
 
@@ -2694,7 +2717,9 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 count++;
                             }
-
+                            // Push Watched/Unwatched Count for Current Episode View
+                            setGUIProperty(guiProperty.WatchedCount, watchedCount.ToString());
+                            setGUIProperty(guiProperty.UnWatchedCount, unwatchedCount.ToString());
                         }
                         MPTVSeriesLog.Write("LoadFacade: Finish", MPTVSeriesLog.LogLevel.Debug);
                         break;
