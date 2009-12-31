@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 25th Oct 2009 -->
+<!-- Last Updated: 30th Dec 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -199,10 +199,37 @@
 	<string Field="AdultSeries" Original="Adult Series">Adult Series</string>
 	<string Field="KidsSeries" Original="Kids Series">Kids Series</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Clear Fanart Cache</string>
-	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Delete Thumbnails</string>
+	
+    <string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Delete Thumbnails</string>
 	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Would you also like to Delete and Re-Download</string>
 	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">all episode thumbnails?</string>
 	<string Field="RateDialog" Original="Rate Dialog">Rate Dialog</string>
 	<string Field="PinCodeDialog" Original="Pin Code Dialog">Pin Code Dialog</string>
-	
+    
+    <string Field="Aired" Original="Aired">Aired</string>
+    <string Field="AiredStatusContinuing" Original="Continuing">Continuing</string>
+    <string Field="AiredStatusEnded" Original="Ended">Ended</string>
+    <string Field="AirsDay" Original="Airs Day">Airs Day</string>
+    <string Field="AirsTime" Original="Airs Time">Airs Time</string>
+    <string Field="Certification" Original="Certification">Certification</string>    
+    <string Field="Director" Original="Director">Director</string>
+    <string Field="Directors" Original="Directors">Directors</string>    
+    <string Field="File Size" Original="File Size">File Size</string>
+    <string Field="FirstAired" Original="First Aired">First Aired</string>
+    <string Field="Genre" Original="Genre">Genre</string>
+    <string Field="Group" Original="Groups">Group</string>
+    <string Field="Groups" Original="Groups">Groups</string>
+    <string Field="GuestStar" Original="Guest Star">Guest Star</string>
+    <string Field="GuestStars" Original="Guest Stars">Guest Stars</string>
+    <string Field="MediaInfo" Original="Media Info">Media Info</string>
+    <string Field="Minutes" Original="Minutes">Minutes</string>
+    <string Field="Network" Original="Network">Network</string>
+    <string Field="Rated" Original="Rated">Rated</string>
+    <string Field="Rating" Original="Rating">Rating</string>
+    <string Field="Runtime" Original="Runtime">Runtime</string>
+    <string Field="SeriesDetails" Original="Series Details">Series Details</string>
+    <string Field="Watched" Original="Watched">Watched</string>
+	<string Field="Writer" Original="Writer">Writer</string>
+    <string Field="Writers" Original="Writers">Writers</string>
+    
 </strings>

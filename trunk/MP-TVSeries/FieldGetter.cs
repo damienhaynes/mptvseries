@@ -105,6 +105,9 @@ namespace WindowPlugins.GUITVSeries
             fr = new formatingRule(@"Season\:{0,1}\s{0,2}0", Translation.specials, true);
             formatingRules.Add(fr);
 
+            fr = new formatingRule(@"Season\:{0,1}\s{0,2}", Translation.Season + " ", true);
+            formatingRules.Add(fr);
+
             fr = new formatingRule(@"(?<!\d)0x\d{1,3}", Translation.special + " ", true);
             formatingRules.Add(fr);
 
@@ -178,6 +181,7 @@ namespace WindowPlugins.GUITVSeries
             value = doFormatting(value, what, item);
 
             value = MathParser.mathParser.TryParse(value);
+            value = MathParser.mathParser.TranslateExpression(value);
 
             // apply userFormatting on the field's result
             if (applyUserFormatting)

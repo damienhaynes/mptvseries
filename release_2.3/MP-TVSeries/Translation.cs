@@ -33,6 +33,8 @@ namespace WindowPlugins.GUITVSeries
 {
     static class Translation
     {
+        private static Dictionary<string, string> translations;
+
         /// <summary>
         /// These will be loaded with the language files content
         /// if the selected lang file is not found, it will first try to load en(us).xml as a backup
@@ -260,6 +262,59 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateTenStarEight = "Great";
 		public static string RateTenStarNine = "Superb";
 		public static string RateTenStarTen = "Perfect";
+
+		// Dialog Names
+		public static string RateDialog = "Rate Dialog";
+		public static string PinCodeDialog = "Pin Code Dialog";
+
+        // Additional Skin Fields        
+        public static string Aired = "Aired";
+        public static string AiredStatusContinuing = "Continuing";
+        public static string AiredStatusEnded = "Ended";
+        public static string Airs = "Airs";
+        public static string AirsDay = "Airs Day";
+        public static string AirsTime = "Airs Time";
+        public static string Certification = "Certification";
+        public static string Director = "Director";
+        public static string Directors = "Directors";
+        public static string FileSize = "File Size";
+        public static string FirstAired = "First Aired";        
+        public static string Genre = "Genre";
+        public static string Group = "Group";
+        public static string Groups = "Groups";
+        public static string GuestStar = "Guest Star";
+        public static string GuestStars = "Guest Stars";        
+        public static string MediaInfo = "Media Info";
+        public static string Minutes = "Minutes";
+        public static string Network = "Network";
+        public static string Runtime = "Runtime";
+        public static string Rating = "Rating";
+        public static string Rated = "Rated";
+        public static string SeriesDetails = "Series Details";
+        public static string Watched = "Watched";
+        public static string Writer = "Writer";
+        public static string Writers = "Writers";        
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets the translated strings collection in the active language
+        /// </summary>
+        public static Dictionary<string, string> Strings {
+            get {
+                if (translations == null) {
+                    translations = new Dictionary<string, string>();
+                    Type transType = typeof(Translation);
+                    FieldInfo[] fields = transType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                    foreach (FieldInfo field in fields) {
+                        translations.Add(field.Name, field.GetValue(transType).ToString());
+                    }
+                }
+                return translations;
+            }
+        }
 
         #endregion
 
