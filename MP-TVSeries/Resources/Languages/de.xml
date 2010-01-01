@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- German -->
+<!-- German (de) -->
+<!-- Last Updated: 1st Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -17,13 +18,13 @@
 	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Alle als noch nicht gesehen markieren</string>
 	<string Field="Hide" Original="Hide">Verstecken</string>
 	<string Field="Delete" Original="Delete">Löschen</string>
-	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Serie von Favouriten entfernen</string>
-	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Serie zu Favouriten hinzufügen</string>
+	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Serie von Favoriten entfernen</string>
+	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Serie zu Favoriten hinzufügen</string>
 	<string Field="Force_Local_Scan" Original="Force Local Scan ">Lokalen Scan erzwingen </string>
-	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Online Aktualisierung erzwingen </string>
+	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Online-Aktualisierung erzwingen </string>
 	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(..in Arbeit...)</string>
-	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Nur Folgen mit lokalen Datei anzeigen</string>
-	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Beschreibung von noch nicht gesehenen Folgen verstecken</string>
+	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Nur Folgen mit lokaler Datei anzeigen</string>
+	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Beschreibung noch nicht gesehener Folgen verstecken</string>
 	<string Field="on" Original="on">ein</string>
 	<string Field="off" Original="off">aus</string>
 	<string Field="Play_Random_Episode" Original="Play Random Episode">Zufällige Folge wiedergeben</string>
@@ -40,9 +41,9 @@
 	<string Field="Yes" Original="Yes">Ja</string>
 	<string Field="No" Original="No">Nein</string>
 	<string Field="Error" Original="#Error">#Fehler</string>
-	<string Field="No_items" Original="No items!">Keine Elemente!</string>	
+	<string Field="No_items" Original="No items!">Keine Elemente!</string>
 	<string Field="Unknown" Original="Unknown">Unbekannt</string>
-	<string Field="wrongSkin" Original="Wrong Skin file">Falsche Skin Datei!</string>
+	<string Field="wrongSkin" Original="Wrong Skin file">Falsche Skin-Datei!</string>
 	<string Field="special" Original="Special">Special</string>
 	<string Field="specials" Original="Specials">Specials</string>
 	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du bist dabei {0} Datei(en) von der Festplatte zu löschen.\nMöchtest du wirklich fortfahren?"</string>
@@ -53,13 +54,13 @@
 	<string Field="Options" Original="Options">Optionen</string>
 	<string Field="Genres" Original="Genres">Genre</string>
 	<string Field="All" Original="All">Alle</string>
-	<string Field="Latest" Original="Latest">Neuste</string>
+	<string Field="Latest" Original="Latest">Neueste</string>
 	<string Field="Channels" Original="Channels">Sender</string>
 	<string Field="Unwatched" Original="Unwatched">Ungesehen</string>
 	<string Field="Favourites" Original="Favourites">Favoriten</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Mediainformationen der lokalen Dateien</string>
-	<string Field="RateSeries" Original="Rate this Series">Bewerte diese Serie</string>
-	<string Field="RateEpisode" Original="Rate this Episode">Bewerte diese Episode</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Media-Informationen der lokalen Dateien</string>
+	<string Field="RateSeries" Original="Rate this Series">Diese Serie bewerten</string>
+	<string Field="RateEpisode" Original="Rate this Episode">Diese Episode bewerten</string>
 	<string Field="ResetRating" Original="Reset Rating">Bewertung zurücksetzen</string>
 	<string Field="AskToRate" Original="Ask me to rate unrated episodes">Erinnerung, nicht bewertete Episoden zu bewerten</string>
 	<string Field="DontAskToRate" Original="Don't ask me to rate again">Nicht mehr an Bewertung erinnern</string>
@@ -91,15 +92,15 @@
 	<string Field="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Wähle gewünschte Untertitelversion</string>
 	<string Field="CFS_Select_Version" Original="Version:">Version:</string>
 	<string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Wähle korrekte Folge</string>
-	<string Field="CFS_Local_Episode_Index" Original="Local Episode index:">Lokaler Folgenindex:</string>
-	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Verfügbare Folgenliste:</string>
+	<string Field="CFS_Local_Episode_Index" Original="Local Episode index:">Index lokaler Folgen:</string>
+	<string Field="CFS_Available_Episode_List" Original="Available Episode list:">Liste verfügbarer Folgen:</string>
 	<string Field="CFS_Choose_Search_Site" Original="Choose search site:">Wähle Suchseite:</string>
 	<string Field="CFS_List_Search_Site" Original="List of search sites:">Liste der Suchseiten:</string>
 	<string Field="CFS_Found_Torrents" Original="Found torrents:">Gefundene Torrents:</string>
 	<string Field="CFS_Looking_For" Original="Looking for:">Suche nach:</string>
 	<string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Wähle korrekte Staffel</string>
-	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Lokaler Staffelindex:</string>
-	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Verfügbare Staffelliste:</string>
+	<string Field="CFS_Local_Season_Index" Original="Local Season index:">Index lokaler Staffeln:</string>
+	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Liste verfügbarer Staffeln:</string>
 	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Untertiteldatei ersetzen</string>
 	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Alte Untertiteldatei vorhanden: überschreiben?</string>
 	<string Field="RecentlyAdded" Original="Recently Added">Kürzlich hinzugefügt</string>
@@ -107,8 +108,8 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Zugangskennung ist nicht gesetzt</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Gib die ID deines Onlinezugangs in der Konfiguration ein</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com ist zur Zeit nicht verfügbar, versuch es später wieder</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Internetverbindung nicht verfügbar, prüfe die Verbindung und versuche es erneut</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com ist zur Zeit nicht erreichbar, versuche es später erneut</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Keine Internetverbindung, prüfe die Verbindung und versuche es erneut</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Fanart in Serienansicht zeigen</string>
 	<string Field="ChangeLayout" Original="Change Layout">Layout ändern</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Online-Favoriten nutzen</string>
@@ -127,19 +128,19 @@
 	<string Field="ButtonSwitchView" Original="Switch View">Ansicht wechseln</string>
 	<string Field="ButtonRunImport" Original="Run Import">Import starten</string>
 	<string Field="ButtonChangeLayout" Original="Change Layout">Layout ändern</string>
-	<string Field="ButtonOptions" Original="Options">Optionen</string>	
+	<string Field="ButtonOptions" Original="Options">Optionen</string>
 	<string Field="FanArtFilter" Original="Filter">Filter</string>
 	<string Field="FanArtFilterAll" Original="All">Alle</string>
-	<string Field="ButtonRandomFanart" Original="Random Fanart">Zufalls-Fanart</string>	
+	<string Field="ButtonRandomFanart" Original="Random Fanart">Zufällige Fanart</string>
 	<string Field="LabelResolution" Original="Resolution:">Auflösung:</string>
 	<string Field="LabelChosen" Original="Chosen:">Gewählt:</string>
 	<string Field="LabelDisabled" Original="Disabled:">Deaktiviert:</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Nutzerauswahl zurücksetzen</string>
 	<string Field="DeleteFromDisk" Original="Delete from Disk">Von Festplatte löschen</string>
-	<string Field="DeleteFromDatabase" Original="Delete from Database">Au Datenbank löschen</string>
+	<string Field="DeleteFromDatabase" Original="Delete from Database">Aus Datenbank löschen</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Von Datenbank und Festplatte löschen</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Wähle Bewertung für {0}</string>
-	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verstecke Thumbnails</string>	
+	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verstecke Thumbnails</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Grausam</string>
 	<string Field="RateFiveStarTwo" Original="">Mittelmäßig</string>
@@ -147,7 +148,7 @@
 	<string Field="RateFiveStarFour" Original="">Super</string>
 	<string Field="RateFiveStarFive" Original="">Perfekt</string>
 	<!-- Rate Descriptions - 10 Stars-->
-	<string Field="RateTenStarOne" Original="Abysmal">Indiskutable</string>
+	<string Field="RateTenStarOne" Original="Abysmal">Indiskutabel</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Grausam</string>
 	<string Field="RateTenStarThree" Original="Bad">Sehr Schlecht</string>
 	<string Field="RateTenStarFour" Original="Poor">Schlecht</string>
@@ -157,16 +158,16 @@
 	<string Field="RateTenStarEight" Original="Great">Großartig</string>
 	<string Field="RateTenStarNine" Original="Superb">Super</string>
 	<string Field="RateTenStarTen" Original="Perfect">Perfekt</string>
-	
+
 	<string Field="ContentRating" Original="Content Rating">Inhaltsbewertung</string>
 	<string Field="ViewTags" Original="View Tags">Zeige Tags</string>
 	<string Field="AddViewTag" Original="Add Series to View Tag">Serie zu Ansicht hinzufügen</string>
 	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Serie von Ansicht entfernen</string>
-	<string Field="NewViewTag" Original="New Tag">NNeue Ansicht</string>
-	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Wechsel Serien Banner</string>
-	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Wechsel Staffel Poster</string>
-	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Wechsel Serien Poster</string>
-	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Timer Interval</string>
+	<string Field="NewViewTag" Original="New Tag">Neue Ansicht</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Serien-Banner wechseln</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Staffel-Poster wechseln</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Serien-Poster wechseln</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Fanart Zeit-Interval</string>
 	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 Sekunden</string>
 	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 Sekunden</string>
 	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 Sekunden</string>
@@ -174,16 +175,16 @@
 	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Sekunden</string>
 	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 Sekunden</string>
 	<string Field="NoPlaylistsFound" Original="No Playlists found in:">Keine Playliste gefunden:</string>
-	<string Field="PinCode" Original="Pin Code">Pin Code</string>
-	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Der eingegebene PIN ist falsch</string>
+	<string Field="PinCode" Original="Pin Code">PIN</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Die eingegebene PIN ist falsch</string>
 	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Drücke OK und versuche es erneut</string>
 	<string Field="ParentalControlLocked" Original="Lock Views">Sperre Ansicht</string>
 	<string Field="ViewIsLocked" Original="View Locked">Ansicht gesperrt</string>
 	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Die Ansicht "{0}" ist gesperrt</string>
-	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Enter in 4 Digit Pin Code to proceed:</string>
-	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin falsch</string>=	
-	<string Field="Continuing" Original="Continuing Series">Fortgesetzte Serien</string>
-	<string Field="Ended" Original="Ended Series">Beendete Serien</string>
+	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">4-stellige PIN eingeben:</string>
+	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">PIN falsch</string>=
+	<string Field="Continuing" Original="Continuing Series">Wird fortgesetzt</string>
+	<string Field="Ended" Original="Ended Series">Beendet</string>
 	<string Field="HighDefinition" Original="High Definition">High Definition</string>
 	<string Field="StandardDefinition" Original="Standard Defintion">Standard Defintion</string>
 	<string Field="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
@@ -192,10 +193,39 @@
 	<string Field="Top25User" Original="Top 25 (User)">Top 25(User)</string>
 	<string Field="Subtitles" Original="Subtitles">Untertitel</string>
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
-	<string Field="OnlineFavourites" Original="Online Favourites">Online Favoriten</string>	
+	<string Field="OnlineFavourites" Original="Online Favourites">Online Favoriten</string>
 	<string Field="Actors" Original="Actors">Darsteller</string>
-	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
-	<string Field="LocalMedia" Original="Local Media">Local Media</string>
-	<string Field="AdultSeries" Original="Adult Series">Erwachsen Serie</string>
-	<string Field="KidsSeries" Original="Kids Series">Kinder Serie</string>	
+	<string Field="RemovableMedia" Original="Removable Media">Wechselmedien</string>
+	<string Field="LocalMedia" Original="Local Media">Lokale Medien</string>
+	<string Field="AdultSeries" Original="Adult Series">Serie für Erwachsene</string>
+	<string Field="KidsSeries" Original="Kids Series">Kinderserie</string>
+	<!-- ************ The NEW translated strings ****************** -->
+	<string Field="Aired" Original="Aired">Ausgestrahlt</string>
+	<string Field="AiredStatusContinuing" Original="Continuing">Wird fortgesetzt</string>
+	<string Field="AiredStatusEnded" Original="Ended">Beendet</string>
+	<string Field="Airs" Original="Airs">Ausstrahlungen</string>
+	<string Field="AirsDay" Original="Airs Day">Tag der Ausstrahlung</string>
+	<string Field="AirsTime" Original="Airs Time">Uhrzeit der Ausstrahlung</string>
+	<string Field="Certification" Original="Certification">Freigegeben ab</string>
+	<string Field="Director" Original="Director">Regisseur</string>
+	<string Field="Directors" Original="Directors">Regisseure</string>	
+	<string Field="File Size" Original="File Size">Dateigröße</string>
+	<string Field="FirstAired" Original="First Aired">Erstausstrahlung</string>
+	<string Field="Genre" Original="Genre">Genre</string>
+	<string Field="Group" Original="Groups">Gruppe</string>
+	<string Field="Groups" Original="Groups">Gruppen</string>
+	<string Field="GuestStar" Original="Guest Star">Gaststar</string>
+	<string Field="GuestStars" Original="Guest Stars">Gaststars</string>
+	<string Field="MediaInfo" Original="Media Info">Medien-Info</string>
+	<string Field="MyRating" Original="My Rating">Meine Bewertung</string>
+	<string Field="Minutes" Original="Minutes">Minuten</string>
+	<string Field="Network" Original="Network">Sender</string>
+	<string Field="Rated" Original="Rated">Bewertet</string>
+	<string Field="Rating" Original="Rating">Bewertung</string>
+	<string Field="Runtime" Original="Runtime">Laufzeit</string>
+	<string Field="SeriesDetails" Original="Series Details">Serien-Details</string>
+	<string Field="SeriesStatus" Original="Series Status">Serien-Status</string>
+	<string Field="Watched" Original="Watched">Gesehen</string>
+	<string Field="Writer" Original="Writer">Autor</string>
+	<string Field="Writers" Original="Writers">Autoren</string>	
 </strings>
