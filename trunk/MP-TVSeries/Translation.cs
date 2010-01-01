@@ -208,7 +208,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ButtonOptions = "Options";
         public static string ButtonRandomFanart = "Random Fanart";        
         public static string LabelResolution = "Resolution:";
-        public static string LabelChosen = "Chosen:";
+        public static string LabelChosen = "Default:";
         public static string LabelDisabled = "Disabled:";
 
         // ChooseFromSelectionDescriptor
@@ -270,32 +270,34 @@ namespace WindowPlugins.GUITVSeries
 		public static string PinCodeDialog = "Pin Code Dialog";
 
         // Additional Skin Fields        
-        public static string Aired = "Aired";
-        public static string AiredStatusContinuing = "Continuing";
-        public static string AiredStatusEnded = "Ended";
-        public static string Airs = "Airs";
-        public static string AirsDay = "Airs Day";
-        public static string AirsTime = "Airs Time";
-        public static string Certification = "Certification";
-        public static string Director = "Director";
-        public static string Directors = "Directors";
-        public static string FileSize = "File Size";
-        public static string FirstAired = "First Aired";        
-        public static string Genre = "Genre";
-        public static string Group = "Group";
-        public static string Groups = "Groups";
-        public static string GuestStar = "Guest Star";
-        public static string GuestStars = "Guest Stars";        
-        public static string MediaInfo = "Media Info";
-        public static string Minutes = "Minutes";
-        public static string Network = "Network";
-        public static string Runtime = "Runtime";
-        public static string Rating = "Rating";
-        public static string Rated = "Rated";
-        public static string SeriesDetails = "Series Details";
-        public static string Watched = "Watched";
-        public static string Writer = "Writer";
-        public static string Writers = "Writers";        
+        public static string Aired="Aired";
+        public static string AiredStatusContinuing="Continuing";
+        public static string AiredStatusEnded="Ended";
+        public static string Airs="Airs";
+        public static string AirsDay="Airs Day";
+        public static string AirsTime="Airs Time";
+        public static string Certification="Certification";
+        public static string Director="Director";
+        public static string Directors="Directors";
+        public static string FileSize="File Size";
+        public static string FirstAired="First Aired";
+        public static string Genre="Genre";
+        public static string Group="Group";
+        public static string Groups="Groups";
+        public static string GuestStar="Guest Star";
+        public static string GuestStars="Guest Stars";
+        public static string MediaInfo="Media Info";
+        public static string Minutes="Minutes";
+        public static string MyRating="My Rating";
+        public static string Network="Network";
+        public static string Runtime="Runtime";
+        public static string Rating="Rating";
+        public static string Rated="Rated";
+        public static string SeriesDetails="Series Details";
+        public static string SeriesStatus="Series Status";
+        public static string Watched="Watched";
+        public static string Writer="Writer";
+        public static string Writers="Writers";
 
         #endregion
 
@@ -413,6 +415,3 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
-
-
-

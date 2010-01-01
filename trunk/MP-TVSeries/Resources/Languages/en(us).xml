@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 30th Dec 2009 -->
+<!-- Last Updated: 1st Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -131,9 +131,9 @@
 	<string Field="FanArtFilter" Original="Filter">Filter</string>
 	<string Field="FanArtFilterAll" Original="All">All</string>
 	<string Field="ButtonRandomFanart" Original="Random Fanart">Random Fanart</string>	
-	<string Field="LabelResolution" Original="Resolution:">Resolution:</string>
-	<string Field="LabelChosen" Original="Chosen:">Chosen:</string>
-	<string Field="LabelDisabled" Original="Disabled:">Disabled:</string>
+	<string Field="LabelResolution" Original="Resolution">Resolution</string>
+	<string Field="LabelChosen" Original="Chosen">Default</string>
+	<string Field="LabelDisabled" Original="Disabled">Disabled</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Reset User Selections</string>
 	<string Field="DeleteFromDisk" Original="Delete from Disk">Delete from Disk</string>
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Delete from Database</string>
@@ -223,11 +223,13 @@
     <string Field="GuestStars" Original="Guest Stars">Guest Stars</string>
     <string Field="MediaInfo" Original="Media Info">Media Info</string>
     <string Field="Minutes" Original="Minutes">Minutes</string>
+	<string Field="MyRating" Original="My Rating">My Rating</string>
     <string Field="Network" Original="Network">Network</string>
     <string Field="Rated" Original="Rated">Rated</string>
     <string Field="Rating" Original="Rating">Rating</string>
     <string Field="Runtime" Original="Runtime">Runtime</string>
     <string Field="SeriesDetails" Original="Series Details">Series Details</string>
+	<string Field="SeriesStatus" Original="Series Status">Series Status</string>
     <string Field="Watched" Original="Watched">Watched</string>
 	<string Field="Writer" Original="Writer">Writer</string>
     <string Field="Writers" Original="Writers">Writers</string>
