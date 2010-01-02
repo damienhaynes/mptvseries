@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- Nederlands (nl)-->
-<!-- Last Updated: 31st Dec 2009 -->
+<!-- Nederlands -->
+<!-- Last Updated: 1st Dec 2009 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -229,4 +229,6 @@
   <string Field="Watched" Original="Watched">Bekeken</string> 
   <string Field="Writer" Original="Writer">Schrijver</string> 
   <string Field="Writers" Original="Writers">Schrijvers</string> 
+  <string Field="MyRating" Original="My Rating">Mijn waardering</string>
+  <string Field="SeriesStatus" Original="Series Status">Seriestatus</string>
 </strings>
