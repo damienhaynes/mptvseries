@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MP-TVSeries")]
-[assembly: AssemblyDescription("Build 2.4")]
+[assembly: AssemblyDescription("MP-TVSeries plugin for MediaPortal")]
 [assembly: AssemblyConfiguration("Test")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2009")]
+[assembly: AssemblyCopyright("Copyright © 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,10 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.4.*")]
-//[assembly: AssemblyFileVersion("2.4.0.0")]
+
+// 1st/2nd Digit reprsents the Major Version, this should increment whenever any new enhancements have been made. 3rd Number should be reset.
+// 3rd Digit represents the Maintenance Number (Hot Fix), this should increment by one each update release
+// 4th Digit represents the SVN revision
+// Be sure to clock these before distrubuting releases. Development builds can be left alone.
+[assembly: AssemblyVersion("2.5.0.0")]
+[assembly: AssemblyFileVersion("2.5.0.0")]
