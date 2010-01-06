@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 1st Jan 2010 -->
+<!-- Last Updated: 6th Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -106,11 +106,7 @@
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB Error</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Account Identifier is not set</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Enter your online account ID in Configuration</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com is currently unavailable</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Please try again later</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Network connection is unavailable</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Check your connection and try again</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Enter your online account ID in Configuration</string>	
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Show Fanart in Series View</string>
 	<string Field="ChangeLayout" Original="Change Layout">Change Layout</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
@@ -142,6 +138,7 @@
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Delete from Disk and Database</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Select Your Rating for {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Hide Spoiler Thumbnails</string>	
+	
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
 	<string Field="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
@@ -235,5 +232,10 @@
     <string Field="Watched" Original="Watched">Watched</string>
 	<string Field="Writer" Original="Writer">Writer</string>
     <string Field="Writers" Original="Writers">Writers</string>
+	
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com is currently unavailable</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Please try again later</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Network connection is unavailable</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Check your connection and try again</string>
     
 </strings>
