@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!-- MP-TV-Series translation file -->
 <!-- Czech (CS) -->
-<!-- Last Updated: 30th Oct 2009 -->
+<!-- Last Updated: 6th Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -28,7 +28,7 @@
 	<string Field="on" Original="on">zapnuto</string>
 	<string Field="off" Original="off">vypnuto</string>
 	<string Field="Play_Random_Episode" Original="Play Random Episode">Přehrát náhodnou epizodu</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Přehrát náhodnou první neshlédnutou epizodu</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Přehrát náhodnou první nezhlédnutou epizodu</string>
 	<string Field="Delete_that_series" Original="Delete that series?">Odstranit tento TV pořad?</string>
 	<string Field="Delete_that_season" Original="Delete that season?">Odstranit tuto řadu?</string>
 	<string Field="Delete_that_episode" Original="Delete that episode?">Odstranit tuto epizodu?</string>
@@ -105,12 +105,8 @@
 	<string Field="RecentlyAdded" Original="Recently Added">Nedávno přidané</string>
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Chyba theTVDB</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
-	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identifikátor účtu není nastaven</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Zadejte ID vašeho účtu v konfiguraci</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com je momentálně nedostupná</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Zkuste to později</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Připojení k síti není dostupné</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Zkontrolujte připojení a opakujte akci</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identifikátor účtu není nastaven.</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Zadejte ID vašeho účtu v konfiguraci.</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Zobrazit pozadí v přehledu pořadů</string>
 	<string Field="ChangeLayout" Original="Change Layout">Změnit zobrazení</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Používat Oblíbené online</string>
@@ -200,4 +196,40 @@
 	<string Field="AdultSeries" Original="Adult Series">Pořady pro dospělé</string>
 	<string Field="KidsSeries" Original="Kids Series">Pořady pro děti</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Aktualizovat nabízená pozadí</string>
+	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Odstranit náhledy</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Přejete si také odstranit a znovu nahrát</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">náhledy všech epizod?</string>
+	<string Field="RateDialog" Original="Rate Dialog">Dialog hodnocení</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Dialog PIN kódu</string>
+	<string Field="Aired" Original="Aired">Premiéra</string>
+	<string Field="AiredStatusContinuing" Original="Continuing">Vysílán</string>
+	<string Field="AiredStatusEnded" Original="Ended">Ukončen</string>
+	<string Field="AirsDay" Original="Airs Day">Vysílací den</string>
+	<string Field="AirsTime" Original="Airs Time">Vysílací čas</string>
+	<string Field="Certification" Original="Certification">Certifikace</string>
+	<string Field="Director" Original="Director">Režisér</string>
+	<string Field="Directors" Original="Directors">Režiséři</string>
+	<string Field="File Size" Original="File Size">Velikost souboru</string>
+	<string Field="FirstAired" Original="First Aired">Vysíláno</string>
+	<string Field="Genre" Original="Genre">Žánr</string>
+	<string Field="Group" Original="Groups">Skupina</string>
+	<string Field="Groups" Original="Groups">Skupiny</string>
+	<string Field="GuestStar" Original="Guest Star">Guest Star</string>
+	<string Field="GuestStars" Original="Guest Stars">Guest Stars</string>
+	<string Field="MediaInfo" Original="Media Info">Údaje o médiu</string>
+	<string Field="Minutes" Original="Minutes">Minut</string>
+	<string Field="MyRating" Original="My Rating">Mé hodnocení</string>
+	<string Field="Network" Original="Network">Kanál</string>
+	<string Field="Rated" Original="Rated">Hodnoceno</string>
+	<string Field="Rating" Original="Rating">Hodnocení</string>
+	<string Field="Runtime" Original="Runtime">Délka</string>
+	<string Field="SeriesDetails" Original="Series Details">Detaily o pořadu</string>
+	<string Field="SeriesStatus" Original="Series Status">Stav pořadu</string>
+	<string Field="Watched" Original="Watched">Zhlédnuto</string>
+	<string Field="Writer" Original="Writer">Scénárista</string>
+	<string Field="Writers" Original="Writers">Scénáristé</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com je momentálně nedostupná.</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Zkuste to prosím později.</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Připojení k síti není dostupné.</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Zkontrolujte připojení a opakujte akci.</string>
 </strings>

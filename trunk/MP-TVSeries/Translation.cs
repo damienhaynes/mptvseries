@@ -342,21 +342,18 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(loadTranslations(lang).ToString() + " translated Strings found");
         }
         static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
-        
-        public static int loadTranslations(string lang)
-        {
-            XmlDocument doc = new XmlDocument();
-            TranslatedStrings = new Dictionary<string, string>();
-            Type TransType = typeof(Translation);
-            FieldInfo[] fieldInfos = TransType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            try
-            {
-                doc.Load(path + "\\" + lang + ".xml");
+        public static int loadTranslations(string lang) {
+            XmlDocument doc=new XmlDocument();
+            TranslatedStrings=new Dictionary<string, string>();
+            Type TransType=typeof(Translation);
+            FieldInfo[] fieldInfos=TransType.GetFields(BindingFlags.Public|BindingFlags.Static);
+
+            try {
+                doc.Load(path+"\\"+lang+".xml");
             }
-            catch (Exception e)
-            {
-                if (lang == "en(us)")
+            catch (Exception e) {
+                if (lang=="en(us)")
                     return 0; // othwerise we are in an endless loop!
                 MPTVSeriesLog.Write("Cannot find Translation File (or error in xml): ", lang, MPTVSeriesLog.LogLevel.Normal);
                 MPTVSeriesLog.Write(e.Message);
@@ -364,24 +361,25 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cLanguage, "en(us)");
                 return loadTranslations("en(us)");
             }
-            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes)
-                if (stringEntry.NodeType == XmlNodeType.Element)
-                    try
-                    {
-                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("Field").Value, stringEntry.InnerText);
+
+            string transField=string.Empty;
+            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes) {
+                if (stringEntry.NodeType==XmlNodeType.Element)
+                    try {
+                        transField=stringEntry.Attributes.GetNamedItem("Field").Value;
+                        TranslatedStrings.Add(transField, stringEntry.InnerText);
                     }
-                    catch (Exception ex)
-                    {
-                        MPTVSeriesLog.Write("Error in Translation Engine: " + ex.Message);
+                    catch (Exception ex) {
+                        MPTVSeriesLog.Write(string.Format("Error adding translation field ({0}:{1}), {2}", transField, stringEntry.InnerText, ex.Message));
                     }
-            foreach (FieldInfo fi in fieldInfos)
-            {
-                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType,
-                    new object[] { Get(fi.Name)});
-                
             }
-            int count = TranslatedStrings.Count;
-            TranslatedStrings = null; // free up
+
+            foreach (FieldInfo fi in fieldInfos) {
+                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { Get(fi.Name) });
+            }
+
+            int count=TranslatedStrings.Count;
+            TranslatedStrings=null; // free up
             return count;
         }
 
