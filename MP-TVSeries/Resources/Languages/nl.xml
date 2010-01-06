@@ -145,10 +145,10 @@
   <string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verberg spoilerminiaturen</string>
   <!-- Rate Descriptions - 5 Stars-->
   <string Field="RateFiveStarOne" Original="Terrible">Slecht</string>
-  <string Field="RateFiveStarTwo" Original="">Matig</string>
-  <string Field="RateFiveStarThree" Original="">Goed</string>
-  <string Field="RateFiveStarFour" Original="">Heel Goed</string>
-  <string Field="RateFiveStarFive" Original="">Uitstekend</string>
+  <string Field="RateFiveStarTwo" Original="Mediocre">Matig</string>
+  <string Field="RateFiveStarThree" Original="Good">Goed</string>
+  <string Field="RateFiveStarFour" Original="Superb">Heel Goed</string>
+  <string Field="RateFiveStarFive" Original="Perfect">Uitstekend</string>
   <!-- Rate Descriptions - 10 Stars-->
   <string Field="RateTenStarOne" Original="Abysmal">Verschrikkelijk</string>
   <string Field="RateTenStarTwo" Original="Terrible">Heel Slecht</string>
