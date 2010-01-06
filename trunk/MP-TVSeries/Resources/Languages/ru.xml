@@ -141,10 +141,10 @@
 
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Ужасно</string>
-	<string Field="RateFiveStarTwo" Original="">Посредственно</string>
-	<string Field="RateFiveStarThree" Original="">Хорошо</string>
-	<string Field="RateFiveStarFour" Original="">Супер</string>
-	<string Field="RateFiveStarFive" Original="">Идеально</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Посредственно</string>
+	<string Field="RateFiveStarThree" Original="Good">Хорошо</string>
+	<string Field="RateFiveStarFour" Original="Superb">Супер</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Идеально</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Отстой</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Ужасно</string>

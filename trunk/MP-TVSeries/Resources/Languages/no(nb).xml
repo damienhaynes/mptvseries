@@ -106,6 +106,8 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Konto identifikator er ikke satt</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Skriv inn din online konto ID i konfigurasjonen</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com er for tiden utilgjengelig, prøv igjen senere</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Nettverkstilkobling er utilgjengelig, sjekk tilkobling og prøv igjen</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com er for tiden utilgjengelig</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Prøv igjen senere</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Nettverkstilkobling er utilgjengelig</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Sjekk tilkobling og prøv igjen</string>
 </strings>

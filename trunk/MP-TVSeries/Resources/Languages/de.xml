@@ -145,10 +145,10 @@
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verstecke Thumbnails</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Grausam</string>
-	<string Field="RateFiveStarTwo" Original="">Mittelmäßig</string>
-	<string Field="RateFiveStarThree" Original="">Gut</string>
-	<string Field="RateFiveStarFour" Original="">Super</string>
-	<string Field="RateFiveStarFive" Original="">Perfekt</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Mittelmäßig</string>
+	<string Field="RateFiveStarThree" Original="Good">Gut</string>
+	<string Field="RateFiveStarFour" Original="Superb">Super</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Perfekt</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Indiskutabel</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Grausam</string>

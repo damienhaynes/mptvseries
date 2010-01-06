@@ -140,10 +140,10 @@
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Skrýt náhledy nezhlédnutých</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Otřesné</string>
-	<string Field="RateFiveStarTwo" Original="">Slabé</string>
-	<string Field="RateFiveStarThree" Original="">Slušné</string>
-	<string Field="RateFiveStarFour" Original="">Skvělé</string>
-	<string Field="RateFiveStarFive" Original="">Perfektní</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Slabé</string>
+	<string Field="RateFiveStarThree" Original="Good">Slušné</string>
+	<string Field="RateFiveStarFour" Original="Superb">Skvělé</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Perfektní</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Hrozné</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Otřesné</string>
