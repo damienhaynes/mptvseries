@@ -105,10 +105,12 @@
 	<string Field="RecentlyAdded" Original="Recently Added">Nedávno přidané</string>
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Chyba theTVDB</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
-	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identifikátor účtu není nastaven.</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Zadejte ID vašeho účtu v konfiguraci.</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com je momentálně nedostupná, zkuste to později.</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Připojení k síti není dostupné, zkontrolujte připojení a opakujte akci.</string>
+	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identifikátor účtu není nastaven</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Zadejte ID vašeho účtu v konfiguraci</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com je momentálně nedostupná</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Zkuste to později</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Připojení k síti není dostupné</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Zkontrolujte připojení a opakujte akci</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Zobrazit pozadí v přehledu pořadů</string>
 	<string Field="ChangeLayout" Original="Change Layout">Změnit zobrazení</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Používat Oblíbené online</string>

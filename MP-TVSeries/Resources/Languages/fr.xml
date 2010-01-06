@@ -107,8 +107,10 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">TVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identifiant inconnu</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Rentrer vos identifiants dans la configuration</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TVDB indisponible, essayer plus tard</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Réseau indisponible, vérifiez et réessayez</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TVDB indisponible</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Essayer plus tard</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Réseau indisponible</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Vérifiez et réessayez</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Montrer les fanarts dans la vue Séries</string>
 	<string Field="ChangeLayout" Original="Change Layout">Changer la disposition</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Utiliser les favoris en ligne</string>

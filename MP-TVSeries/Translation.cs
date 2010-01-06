@@ -243,8 +243,10 @@ namespace WindowPlugins.GUITVSeries
         public static string TVDB_INFO_TITLE = "Online TV Database";
         public static string TVDB_INFO_ACCOUNTID_1 = "Account Identifier is not set";
         public static string TVDB_INFO_ACCOUNTID_2 = "Enter your online account ID in Configuration";
-        public static string TVDB_ERROR_UNAVAILABLE = "TheTVDB.com is currently unavailable, try again later";
-        public static string NETWORK_ERROR_UNAVAILABLE = "Network connection is unavailable, check connection and try again";
+        public static string TVDB_ERROR_UNAVAILABLE_1 = "TheTVDB.com is currently unavailable";
+        public static string TVDB_ERROR_UNAVAILABLE_2 = "Please try again later";
+        public static string NETWORK_ERROR_UNAVAILABLE_1 = "Network connection is unavailable";
+        public static string NETWORK_ERROR_UNAVAILABLE_2 = "Check your connection and try again";
 
 		// Rate Movie Descriptions - 5 Stars
 		public static string RateFiveStarOne = "Terrible";
