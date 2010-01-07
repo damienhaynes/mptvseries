@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- TVSeries translation file -->
+<!-- MP-TVSeries translation file -->
 <!-- Spanish -->
+<!-- Last Updated: 8th Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -25,8 +26,8 @@
   <string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar resumen de los episodios no vistos</string>
   <string Field="on" Original="on">on</string>
   <string Field="off" Original="off">off</string>
-  <string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir aleatoriamente un episodio </string>
-  <string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir aleatoriamente el primer episodio no visto </string>
+  <string Field="Play_Random_Episode" Original="Play Random Episode">Reproducir aleatoriamente un Episodio </string>
+  <string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproducir aleatoriamente el primer Episodio no visto </string>
   <string Field="Delete_that_series" Original="Delete that series?">¿Borrar esta serie?</string>
   <string Field="Delete_that_season" Original="Delete that season?">¿Borrar esta temporada?</string>
   <string Field="Delete_that_episode" Original="Delete that episode?">¿Borrar este episodio?</string>
@@ -75,7 +76,7 @@
   <string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Descargando {0} Fanart...</string>
   <string Field="FanArtLocal" Original="Available locally">Disponible localmente</string>
   <string Field="FanArtOnline" Original="Available for downloading">Disponible para descargar</string>
-  <string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">Cargando {0} de {1} Fanart...</string>
+  <string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">cargando {0} de {1} Fanart...</string>
   <string Field="FanArtRandom" Original="Display random Fanart">Mostrar Fanart aleatorio</string>
   <string Field="FanArtNoneFound" Original="No Fanart could be found">No se encontró ningún Fanart</string>
   <string Field="CFS_Choose_Item" Original="Choose item">Elige elemento</string>
@@ -105,10 +106,6 @@
   <string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
   <string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Datos de cuenta no establecidos</string>
   <string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Introduzca sus datos de cuenta en Configuración</string>
-  <string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com no está actualmente disponible</string>
-  <string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Inténtelo más tarde</string>
-  <string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Conexión de red no disponible</string>
-  <string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Compruebe la conexión e inténtelo de nuevo</string>
   <string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Mostrar Fanart en la Vista de Series</string>
   <string Field="ChangeLayout" Original="Change Layout">Cambiar diseño</string>
   <string Field="UseOnlineFavourites" Original="Use Online Favourites">Usar Favoritos Online</string>
@@ -138,7 +135,7 @@
   <string Field="DeleteFromDisk" Original="Delete from Disk">Borrar del disco</string>
   <string Field="DeleteFromDatabase" Original="Delete from Database">Borrar de la base de datos</string>
   <string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Borrar del disco y de la base de datos</string>
-  <string Field="RateDialogLabel" Original="Select Your Rating for {0}">Elija su calificación para {0}</string>
+  <string Field="RateDialogLabel" Original="Select Your Rating for {0}">Elija su puntuación para {0}</string>
   <string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Ocultar miniaturas de spoilers</string>
   <string Field="RateFiveStarOne" Original="Terrible">Terrible</string>
   <string Field="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
@@ -195,4 +192,41 @@
   <string Field="LocalMedia">Medios Locales</string>
   <string Field="AdultSeries">Series de Adultos</string>
   <string Field="KidsSeries">Series Infantiles</string>
+  <string Field="ClearFanartCache">Limpiar Caché de Fanart</string>
+  <string Field="DeleteThumbnailsHeading">Borrar Miniaturas</string>
+  <string Field="DeleteThumbnailsLine1">¿Quiere también borrar y volver a descargar</string>
+  <string Field="DeleteThumbnailsLine2">todas las miniaturas de los episodios?</string>
+  <string Field="RateDialog">Diálogo de Puntuaciones</string>
+  <string Field="PinCodeDialog">Diálogo de Código PIN</string>
+  <string Field="Aired">Emitido</string>
+  <string Field="AiredStatusContinuing">Continuando</string>
+  <string Field="AiredStatusEnded">Finalizado</string>
+  <string Field="AirsDay">Día de Emisión</string>
+  <string Field="AirsTime">Hora de Emisión</string>
+  <string Field="Certification">Calificación</string>
+  <string Field="Director">Director</string>
+  <string Field="Directors">Directores</string>
+  <string Field="File Size">Tamaño de Archivo</string>
+  <string Field="FirstAired">Primera Emisión</string>
+  <string Field="Genre">Género</string>
+  <string Field="Group">Grupo</string>
+  <string Field="Groups">Grupos</string>
+  <string Field="GuestStar">Artista Invitado</string>
+  <string Field="GuestStars">Artistas Invitados</string>
+  <string Field="MediaInfo">Información de Medio</string>
+  <string Field="Minutes">Minutos</string>
+  <string Field="MyRating">Mi Puntuación</string>
+  <string Field="Network">Cadena</string>
+  <string Field="Rated">Puntuado</string>
+  <string Field="Rating">Puntuación</string>
+  <string Field="Runtime">Duración</string>
+  <string Field="SeriesDetails">Detalles de Serie</string>
+  <string Field="SeriesStatus">Estado de la Serie</string>
+  <string Field="Watched">Visto</string>
+  <string Field="Writer">Guionista</string>
+  <string Field="Writers">Guionistas</string>
+  <string Field="TVDB_ERROR_UNAVAILABLE_1">TheTVDB.com no está disponible en estos momentos</string>
+  <string Field="TVDB_ERROR_UNAVAILABLE_2">Por favor, inténtelo de nuevo más tarde</string>
+  <string Field="NETWORK_ERROR_UNAVAILABLE_1">Conexión de red  no disponible</string>
+  <string Field="NETWORK_ERROR_UNAVAILABLE_2">Compruebe su conexión e inténtelo de nuevo</string>
 </strings>
