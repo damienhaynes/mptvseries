@@ -163,7 +163,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           }
           else {
               dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
-              dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_2);
+              dlgOK.SetLine(2, Translation.TVDB_ERROR_UNAVAILABLE_2);
           }
 
           dlgOK.DoModal(GUIWindowManager.ActiveWindow);
