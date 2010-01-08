@@ -57,8 +57,7 @@
 	<string Field="Channels" Specials="Channels">ערוצים</string>
 	<string Field="Unwatched" Specials="Unwatched">לא נצפו</string>
 	<string Field="Favourites" Specials="Favourites">מועדפים</string>
-	<string Field="updateMI" Specials="Update Mediainfo of local file">עדכן מידע של קובץ מקומי(s)</string>
-	<string Field="Cycle_Banner" Specials="Cycle Banner">שנה תמונה</string>
+	<string Field="updateMI" Specials="Update Mediainfo of local file">עדכן מידע של קובץ מקומי(s)</string>	
 	<string Field="RateSeries" Specials="Rate this Series">דרג סדרה</string>
 	<string Field="RateEpisode" Specials="Rate this Episode">דרג פרק</string>
 	<string Field="AskToRate" Specials="Ask me to rate unrated episodes">בקש ממני לדרג פרקים לא מדורגים</string>

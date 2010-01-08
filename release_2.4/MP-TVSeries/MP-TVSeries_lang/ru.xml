@@ -5,8 +5,8 @@
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
-	<string Field="Series" Original="Series">Сериалы</string>
-	<string Field="Series_Plural" Original="Series (Plr)">Сериал</string> <!-- plural -->
+	<string Field="Series" Original="Series">Сериал</string>
+	<string Field="Series_Plural" Original="Series (Plr)">Сериалы</string> <!-- plural -->
 	<string Field="Season" Original="Season">Сезон</string>
 	<string Field="Seasons" Original="Seasons">Сезоны</string>
 	<string Field="Episode" Original="Episode">Эпизод</string>
@@ -107,8 +107,6 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Не установлен идентификатор аккаунта</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Ввведите в настройках ваш онлайновый идентификатор пользоателя</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com сейчас недоступен, попробуйте позднее</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Подключение к сети недоступно, проверьте соединение и попробуйте снова</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Отображать фанарт при просмотре сериалов</string>
 	<string Field="ChangeLayout" Original="Change Layout">Изменить представление</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Использовать избранное онлайн</string>
@@ -140,12 +138,13 @@
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Удалить с диска и из базы данных</string>
 	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Установите ваш рейтинг для {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Скрыть спойлерные скриншоты</string>	
+
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Ужасно</string>
-	<string Field="RateFiveStarTwo" Original="">Посредственно</string>
-	<string Field="RateFiveStarThree" Original="">Хорошо</string>
-	<string Field="RateFiveStarFour" Original="">Супер</string>
-	<string Field="RateFiveStarFive" Original="">Идеально</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Посредственно</string>
+	<string Field="RateFiveStarThree" Original="Good">Хорошо</string>
+	<string Field="RateFiveStarFour" Original="Superb">Супер</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Идеально</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Отстой</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Ужасно</string>
@@ -157,6 +156,7 @@
 	<string Field="RateTenStarEight" Original="Great">Здорово</string>
 	<string Field="RateTenStarNine" Original="Superb">Супер</string>
 	<string Field="RateTenStarTen" Original="Perfect">Идеально</string>
+	
 	<string Field="ContentRating" Original="Content Rating">Рейтинг содержания</string>
 	<string Field="ViewTags" Original="View Tags">Посмотреть тэги</string>
 	<string Field="AddViewTag" Original="Add Series to View Tag">Добавить сериал к виду</string>
@@ -198,4 +198,42 @@
 	<string Field="AdultSeries" Original="Adult Series">Сериал "для взрослых"</string>
 	<string Field="KidsSeries" Original="Kids Series">Детский сериал</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Очистить кэш фанарта</string>
+	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Удалить скриншоты</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Вы также хотите удалить и скачать заново</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">все скриншоты эпизодов?</string>
+	<string Field="RateDialog" Original="Rate Dialog">Диалог оценки</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Диалог пин-кода</string>
+    
+	<string Field="Aired" Original="Aired">Показан в эфире</string>
+	<string Field="AiredStatusContinuing" Original="Continuing">Продолжается</string>
+	<string Field="AiredStatusEnded" Original="Ended">Закончен</string>
+	<string Field="AirsDay" Original="Airs Day">День эфира</string>
+	<string Field="AirsTime" Original="Airs Time">Время эфира</string>
+	<string Field="Certification" Original="Certification">Сертификация</string>	
+	<string Field="Director" Original="Director">Режиссер</string>
+	<string Field="Directors" Original="Directors">Режиссеры</string>	
+	<string Field="File Size" Original="File Size">размер файла</string>
+	<string Field="FirstAired" Original="First Aired">Впервые показан в эфире</string>
+	<string Field="Genre" Original="Genre">Жанр</string>
+	<string Field="Group" Original="Groups">Группа</string>
+	<string Field="Groups" Original="Groups">Группы</string>
+	<string Field="GuestStar" Original="Guest Star">Приглашенная звезда</string>
+	<string Field="GuestStars" Original="Guest Stars">Приглашенные звезды</string>
+	<string Field="MediaInfo" Original="Media Info">Информация о файле</string>
+	<string Field="Minutes" Original="Minutes">Минут</string>
+	<string Field="MyRating" Original="My Rating">Моя оценка</string>
+	<string Field="Network" Original="Network">Телесеть</string>
+	<string Field="Rated" Original="Rated">Оценен</string>
+	<string Field="Rating" Original="Rating">Оценка</string>
+	<string Field="Runtime" Original="Runtime">Длительность серии</string>
+	<string Field="SeriesDetails" Original="Series Details">Подробности сериала</string>
+	<string Field="SeriesStatus" Original="Series Status">Статус сериала</string>
+	<string Field="Watched" Original="Watched">Просмотрен</string>
+	<string Field="Writer" Original="Writer">Сценарист</string>
+	<string Field="Writers" Original="Writers">Сценаристы</string>
+	
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">Сайт TheTVDB.com сейчас недоступен</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Пожалуйста, попробуйте позднее</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Подключение к сети недоступно</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Проверьте соединение и попробуйте снова</string>
 </strings>

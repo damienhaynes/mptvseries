@@ -157,12 +157,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
           GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
           dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-          if (!TVSeriesPlugin.IsNetworkAvailable)
-          {
-            dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE);
+          if (!TVSeriesPlugin.IsNetworkAvailable) {
+              dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_1);
+              dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_2);
           }
-          else
-            dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+          else {
+              dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
+              dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_2);
+          }
 
           dlgOK.DoModal(GUIWindowManager.ActiveWindow);
           MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");

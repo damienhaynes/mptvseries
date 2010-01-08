@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
         public static string wrongSkin = "Wrong Skin file";
         public static string special = "Special";
         public static string specials = "Specials";
-        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";        
+        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
         public static string Force_Online_Match = "Force Online Match";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
@@ -241,8 +241,10 @@ namespace WindowPlugins.GUITVSeries
         public static string TVDB_INFO_TITLE = "Online TV Database";
         public static string TVDB_INFO_ACCOUNTID_1 = "Account Identifier is not set";
         public static string TVDB_INFO_ACCOUNTID_2 = "Enter your online account ID in Configuration";
-        public static string TVDB_ERROR_UNAVAILABLE = "TheTVDB.com is currently unavailable, try again later";
-        public static string NETWORK_ERROR_UNAVAILABLE = "Network connection is unavailable, check connection and try again";
+        public static string TVDB_ERROR_UNAVAILABLE_1 = "TheTVDB.com is currently unavailable";
+        public static string TVDB_ERROR_UNAVAILABLE_2 = "Please try again later";
+        public static string NETWORK_ERROR_UNAVAILABLE_1 = "Network connection is unavailable";
+        public static string NETWORK_ERROR_UNAVAILABLE_2 = "Check your connection and try again";
 
 		// Rate Movie Descriptions - 5 Stars
 		public static string RateFiveStarOne = "Terrible";
@@ -338,21 +340,18 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(loadTranslations(lang).ToString() + " translated Strings found");
         }
         static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
-        
-        public static int loadTranslations(string lang)
-        {
-            XmlDocument doc = new XmlDocument();
-            TranslatedStrings = new Dictionary<string, string>();
-            Type TransType = typeof(Translation);
-            FieldInfo[] fieldInfos = TransType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            try
-            {
-                doc.Load(path + "\\" + lang + ".xml");
+        public static int loadTranslations(string lang) {
+            XmlDocument doc=new XmlDocument();
+            TranslatedStrings=new Dictionary<string, string>();
+            Type TransType=typeof(Translation);
+            FieldInfo[] fieldInfos=TransType.GetFields(BindingFlags.Public|BindingFlags.Static);
+
+            try {
+                doc.Load(path+"\\"+lang+".xml");
             }
-            catch (Exception e)
-            {
-                if (lang == "en(us)")
+            catch (Exception e) {
+                if (lang=="en(us)")
                     return 0; // othwerise we are in an endless loop!
                 MPTVSeriesLog.Write("Cannot find Translation File (or error in xml): ", lang, MPTVSeriesLog.LogLevel.Normal);
                 MPTVSeriesLog.Write(e.Message);
@@ -360,24 +359,25 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cLanguage, "en(us)");
                 return loadTranslations("en(us)");
             }
-            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes)
-                if (stringEntry.NodeType == XmlNodeType.Element)
-                    try
-                    {
-                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("Field").Value, stringEntry.InnerText);
+
+            string transField=string.Empty;
+            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes) {
+                if (stringEntry.NodeType==XmlNodeType.Element)
+                    try {
+                        transField=stringEntry.Attributes.GetNamedItem("Field").Value;
+                        TranslatedStrings.Add(transField, stringEntry.InnerText);
                     }
-                    catch (Exception ex)
-                    {
-                        MPTVSeriesLog.Write("Error in Translation Engine: " + ex.Message);
+                    catch (Exception ex) {
+                        MPTVSeriesLog.Write(string.Format("Error adding translation field ({0}:{1}), {2}", transField, stringEntry.InnerText, ex.Message));
                     }
-            foreach (FieldInfo fi in fieldInfos)
-            {
-                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType,
-                    new object[] { Get(fi.Name)});
-                
             }
-            int count = TranslatedStrings.Count;
-            TranslatedStrings = null; // free up
+
+            foreach (FieldInfo fi in fieldInfos) {
+                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { Get(fi.Name) });
+            }
+
+            int count=TranslatedStrings.Count;
+            TranslatedStrings=null; // free up
             return count;
         }
 

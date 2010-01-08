@@ -18,7 +18,7 @@
 	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Alle als noch nicht gesehen markieren</string>
 	<string Field="Hide" Original="Hide">Verstecken</string>
 	<string Field="Delete" Original="Delete">Löschen</string>
-	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Serie von Favoriten entfernen</string>
+	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Serie aus Favoriten entfernen</string>
 	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Serie zu Favoriten hinzufügen</string>
 	<string Field="Force_Local_Scan" Original="Force Local Scan ">Lokalen Scan erzwingen </string>
 	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Online-Aktualisierung erzwingen </string>
@@ -35,7 +35,7 @@
 	<string Field="Confirm" Original="Confirm">Bestätigung</string>
 	<string Field="Completed" Original="Completed">Fertig</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Keine Untertitel gefunden</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Übergehen / niemals mehr nachfragen</string>
+	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Übergehen / nicht mehr nachfragen</string>
 	<string Field="no_results_found" Original="no results found!">keine Ergebnisse gefunden</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Versteckt um Spoiler zu vermeiden *</string>
 	<string Field="Yes" Original="Yes">Ja</string>
@@ -46,7 +46,7 @@
 	<string Field="wrongSkin" Original="Wrong Skin file">Falsche Skin-Datei!</string>
 	<string Field="special" Original="Special">Special</string>
 	<string Field="specials" Original="Specials">Specials</string>
-	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du bist dabei {0} Datei(en) von der Festplatte zu löschen.\nMöchtest du wirklich fortfahren?"</string>
+	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Du bist dabei {0} Datei(en) von der Festplatte zu löschen.\nMöchtest Sie wirklich fortfahren?"</string>
 	<string Field="Force_Online_Match" Original="Force Online Match">Onlineabgleich erzwingen</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Über NewsLeecher laden</string>
 	<string Field="Download" Original="Download">Download</string>
@@ -58,7 +58,7 @@
 	<string Field="Channels" Original="Channels">Sender</string>
 	<string Field="Unwatched" Original="Unwatched">Ungesehen</string>
 	<string Field="Favourites" Original="Favourites">Favoriten</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Media-Informationen der lokalen Dateien</string>
+	<string Field="updateMI" Original="Update Mediainfo of local file">Aktualisiere Medieninformationen der lokalen Dateien</string>
 	<string Field="RateSeries" Original="Rate this Series">Diese Serie bewerten</string>
 	<string Field="RateEpisode" Original="Rate this Episode">Diese Episode bewerten</string>
 	<string Field="ResetRating" Original="Reset Rating">Bewertung zurücksetzen</string>
@@ -66,7 +66,7 @@
 	<string Field="DontAskToRate" Original="Don't ask me to rate again">Nicht mehr an Bewertung erinnern</string>
 	<string Field="RatingStar" Original="Star">Stern</string>
 	<string Field="RatingStars" Original="Stars">Sterne</string>
-	<string Field="ChangeView" Original="Change View">Ändere Ansicht</string>
+	<string Field="ChangeView" Original="Change View">Ansicht ändern</string>
 	<string Field="ChangeViewFast" Original="Immediatly Change Views">Ansicht sofort verändern</string>
 	<string Field="Cycle_Banner" Original="Cycle Banner">Wechsle Banner</string>
 	<string Field="FanArt" Original="Fanart">Fanart</string>
@@ -108,8 +108,10 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Zugangskennung ist nicht gesetzt</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Gib die ID deines Onlinezugangs in der Konfiguration ein</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE" Original="TheTVDB.com is currently unavailable, try again later">TheTVDB.com ist zur Zeit nicht erreichbar, versuche es später erneut</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE" Original="Network connection is unavailable, check connection and try again">Keine Internetverbindung, prüfe die Verbindung und versuche es erneut</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com ist zur Zeit nicht erreichbar</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Versuche es später erneut</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Keine Internetverbindung</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Prüfe die Verbindung und versuche es erneut</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Fanart in Serienansicht zeigen</string>
 	<string Field="ChangeLayout" Original="Change Layout">Layout ändern</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Online-Favoriten nutzen</string>
@@ -143,10 +145,10 @@
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Verstecke Thumbnails</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Grausam</string>
-	<string Field="RateFiveStarTwo" Original="">Mittelmäßig</string>
-	<string Field="RateFiveStarThree" Original="">Gut</string>
-	<string Field="RateFiveStarFour" Original="">Super</string>
-	<string Field="RateFiveStarFive" Original="">Perfekt</string>
+	<string Field="RateFiveStarTwo" Original="Mediocre">Mittelmäßig</string>
+	<string Field="RateFiveStarThree" Original="Good">Gut</string>
+	<string Field="RateFiveStarFour" Original="Superb">Super</string>
+	<string Field="RateFiveStarFive" Original="Perfect">Perfekt</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Indiskutabel</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Grausam</string>
