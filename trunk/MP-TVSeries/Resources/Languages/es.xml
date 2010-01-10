@@ -206,7 +206,7 @@
   <string Field="Certification">Calificación</string>
   <string Field="Director">Director</string>
   <string Field="Directors">Directores</string>
-  <string Field="File Size">Tamaño de Archivo</string>
+  <string Field="FileSize">Tamaño de Archivo</string>
   <string Field="FirstAired">Primera Emisión</string>
   <string Field="Genre">Género</string>
   <string Field="Group">Grupo</string>

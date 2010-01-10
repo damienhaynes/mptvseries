@@ -212,7 +212,7 @@
 	<string Field="Certification" Original="Certification">Сертификация</string>	
 	<string Field="Director" Original="Director">Режиссер</string>
 	<string Field="Directors" Original="Directors">Режиссеры</string>	
-	<string Field="File Size" Original="File Size">размер файла</string>
+	<string Field="FileSize" Original="File Size">размер файла</string>
 	<string Field="FirstAired" Original="First Aired">Впервые показан в эфире</string>
 	<string Field="Genre" Original="Genre">Жанр</string>
 	<string Field="Group" Original="Groups">Группа</string>

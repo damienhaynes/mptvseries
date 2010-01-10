@@ -213,7 +213,7 @@
     <string Field="Certification" Original="Certification">Certification</string>    
     <string Field="Director" Original="Director">Director</string>
     <string Field="Directors" Original="Directors">Directors</string>    
-    <string Field="File Size" Original="File Size">File Size</string>
+    <string Field="FileSize" Original="File Size">File Size</string>
     <string Field="FirstAired" Original="First Aired">First Aired</string>
     <string Field="Genre" Original="Genre">Genre</string>
     <string Field="Group" Original="Groups">Group</string>

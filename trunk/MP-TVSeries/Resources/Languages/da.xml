@@ -216,7 +216,7 @@
     <string Field="Certification" Original="Certification">Censur</string>    
     <string Field="Director" Original="Director">Instruktør</string>
     <string Field="Directors" Original="Directors">Instruktører</string>    
-    <string Field="File Size" Original="File Size">File størrelse</string>
+    <string Field="FileSize" Original="File Size">File størrelse</string>
     <string Field="FirstAired" Original="First Aired">Sendt første gang</string>
     <string Field="Genre" Original="Genre">Genre</string>
     <string Field="Group" Original="Groups">Gruppe</string>

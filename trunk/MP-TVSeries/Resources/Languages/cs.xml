@@ -209,7 +209,7 @@
 	<string Field="Certification" Original="Certification">Certifikace</string>
 	<string Field="Director" Original="Director">Režisér</string>
 	<string Field="Directors" Original="Directors">Režiséři</string>
-	<string Field="File Size" Original="File Size">Velikost souboru</string>
+	<string Field="FileSize" Original="File Size">Velikost souboru</string>
 	<string Field="FirstAired" Original="First Aired">Vysíláno</string>
 	<string Field="Genre" Original="Genre">Žánr</string>
 	<string Field="Group" Original="Groups">Skupina</string>
