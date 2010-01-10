@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
         public static string wrongSkin = "Wrong Skin file";
         public static string special = "Special";
         public static string specials = "Specials";
-        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";        
+        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
         public static string Force_Online_Match = "Force Online Match";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
@@ -272,34 +272,37 @@ namespace WindowPlugins.GUITVSeries
 		public static string PinCodeDialog = "Pin Code Dialog";
 
         // Additional Skin Fields        
-        public static string Aired="Aired";
-        public static string AiredStatusContinuing="Continuing";
-        public static string AiredStatusEnded="Ended";
-        public static string Airs="Airs";
-        public static string AirsDay="Airs Day";
-        public static string AirsTime="Airs Time";
-        public static string Certification="Certification";
-        public static string Director="Director";
-        public static string Directors="Directors";
-        public static string FileSize="File Size";
-        public static string FirstAired="First Aired";
-        public static string Genre="Genre";
-        public static string Group="Group";
-        public static string Groups="Groups";
-        public static string GuestStar="Guest Star";
-        public static string GuestStars="Guest Stars";
-        public static string MediaInfo="Media Info";
-        public static string Minutes="Minutes";
-        public static string MyRating="My Rating";
-        public static string Network="Network";
-        public static string Runtime="Runtime";
-        public static string Rating="Rating";
-        public static string Rated="Rated";
-        public static string SeriesDetails="Series Details";
-        public static string SeriesStatus="Series Status";
-        public static string Watched="Watched";
-        public static string Writer="Writer";
-        public static string Writers="Writers";
+        public static string Aired = "Aired";
+        public static string AiredStatusContinuing = "Continuing";
+        public static string AiredStatusEnded = "Ended";
+        public static string Airs = "Airs";
+        public static string AirsDay = "Airs Day";
+        public static string AirsTime = "Airs Time";
+        public static string Cast = "Cast";
+        public static string Certification = "Certification";
+        public static string Director = "Director";
+        public static string Directors = "Directors";
+        public static string FileSize = "File Size";
+        public static string FirstAired = "First Aired";
+        public static string Genre = "Genre";
+        public static string Group = "Group";
+        public static string Groups = "Groups";
+        public static string GuestStar = "Guest Star";
+        public static string GuestStars = "Guest Stars";
+        public static string MediaInfo = "Media Info";
+        public static string Minutes = "Minutes";
+        public static string MyRating = "My Rating";
+        public static string Network = "Network";
+        public static string Playlist = "Playlist";
+        public static string Runtime = "Runtime";
+        public static string Rating = "Rating";
+        public static string Rated = "Rated";
+        public static string SeriesDetails = "Series Details";
+        public static string SeriesStatus = "Series Status";
+        public static string Starring = "Starring";
+        public static string Watched = "Watched";
+        public static string Writer = "Writer";
+        public static string Writers = "Writers";
 
         #endregion
 
