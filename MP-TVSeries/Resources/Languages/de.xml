@@ -211,7 +211,7 @@
 	<string Field="Certification" Original="Certification">Freigegeben ab</string>
 	<string Field="Director" Original="Director">Regisseur</string>
 	<string Field="Directors" Original="Directors">Regisseure</string>	
-	<string Field="File Size" Original="File Size">Dateigröße</string>
+	<string Field="FileSize" Original="File Size">Dateigröße</string>
 	<string Field="FirstAired" Original="First Aired">Erstausstrahlung</string>
 	<string Field="Genre" Original="Genre">Genre</string>
 	<string Field="Group" Original="Groups">Gruppe</string>

@@ -214,7 +214,7 @@
   <string Field="Certification" Original="Certification">Kijkwijzer</string> 
   <string Field="Director" Original="Director">Regisseur</string> 
   <string Field="Directors" Original="Directors">Regisseurs</string> 
-  <string Field="File Size" Original="File Size">Bestandsgrootte</string> 
+  <string Field="FileSize" Original="File Size">Bestandsgrootte</string> 
   <string Field="FirstAired" Original="First Aired">Eerste uitzending</string> 
   <string Field="Genre" Original="Genre">Genre</string> 
   <string Field="Group" Original="Groups">Groep</string> 
