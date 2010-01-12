@@ -276,6 +276,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Airs="Airs";
         public static string AirsDay="Airs Day";
         public static string AirsTime="Airs Time";
+        public static string Cast = "Cast";
         public static string Certification="Certification";
         public static string Director="Director";
         public static string Directors="Directors";
@@ -290,11 +291,13 @@ namespace WindowPlugins.GUITVSeries
         public static string Minutes="Minutes";
         public static string MyRating="My Rating";
         public static string Network="Network";
+        public static string Playlist = "Playlist";
         public static string Runtime="Runtime";
         public static string Rating="Rating";
         public static string Rated="Rated";
         public static string SeriesDetails="Series Details";
         public static string SeriesStatus="Series Status";
+        public static string Starring = "Starring";
         public static string Watched="Watched";
         public static string Writer="Writer";
         public static string Writers="Writers";

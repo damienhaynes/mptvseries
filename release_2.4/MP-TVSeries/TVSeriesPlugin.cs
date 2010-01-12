@@ -4750,11 +4750,11 @@ namespace WindowPlugins.GUITVSeries
                     dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
                     if (!TVSeriesPlugin.IsNetworkAvailable) {
                         dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_1);
-                        dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_2);
+                        dlgOK.SetLine(2, Translation.NETWORK_ERROR_UNAVAILABLE_2);
                     }
                     else {
                         dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
-                        dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_2);
+                        dlgOK.SetLine(2, Translation.TVDB_ERROR_UNAVAILABLE_2);
                     }
                     
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);

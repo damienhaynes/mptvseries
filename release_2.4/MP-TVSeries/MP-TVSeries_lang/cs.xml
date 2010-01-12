@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!-- MP-TV-Series translation file -->
 <!-- Czech (CS) -->
-<!-- Last Updated: 6th Jan 2010 -->
+<!-- Last Updated: 11th Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -140,10 +140,10 @@
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Skrýt náhledy nezhlédnutých</string>
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Otřesné</string>
-	<string Field="RateFiveStarTwo" Original="Mediocre">Slabé</string>
-	<string Field="RateFiveStarThree" Original="Good">Slušné</string>
-	<string Field="RateFiveStarFour" Original="Superb">Skvělé</string>
-	<string Field="RateFiveStarFive" Original="Perfect">Perfektní</string>
+	<string Field="RateFiveStarTwo" Original="">Slabé</string>
+	<string Field="RateFiveStarThree" Original="">Slušné</string>
+	<string Field="RateFiveStarFour" Original="">Skvělé</string>
+	<string Field="RateFiveStarFive" Original="">Perfektní</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Hrozné</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Otřesné</string>
@@ -197,19 +197,21 @@
 	<string Field="KidsSeries" Original="Kids Series">Pořady pro děti</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Aktualizovat nabízená pozadí</string>
 	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Odstranit náhledy</string>
-	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Přejete si také odstranit a znovu nahrát</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Přejete si také odstranit a znovu stáhnout</string>
 	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">náhledy všech epizod?</string>
 	<string Field="RateDialog" Original="Rate Dialog">Dialog hodnocení</string>
 	<string Field="PinCodeDialog" Original="Pin Code Dialog">Dialog PIN kódu</string>
 	<string Field="Aired" Original="Aired">Premiéra</string>
 	<string Field="AiredStatusContinuing" Original="Continuing">Vysílán</string>
 	<string Field="AiredStatusEnded" Original="Ended">Ukončen</string>
+	<string Field="Airs" Original="Airs">Vysílán</string>
 	<string Field="AirsDay" Original="Airs Day">Vysílací den</string>
 	<string Field="AirsTime" Original="Airs Time">Vysílací čas</string>
+	<string Field="Cast" Original="Cast">Hrají</string>
 	<string Field="Certification" Original="Certification">Certifikace</string>
 	<string Field="Director" Original="Director">Režisér</string>
 	<string Field="Directors" Original="Directors">Režiséři</string>
-	<string Field="File Size" Original="File Size">Velikost souboru</string>
+	<string Field="FileSize" Original="File Size">Velikost souboru</string>
 	<string Field="FirstAired" Original="First Aired">Vysíláno</string>
 	<string Field="Genre" Original="Genre">Žánr</string>
 	<string Field="Group" Original="Groups">Skupina</string>
@@ -225,6 +227,7 @@
 	<string Field="Runtime" Original="Runtime">Délka</string>
 	<string Field="SeriesDetails" Original="Series Details">Detaily o pořadu</string>
 	<string Field="SeriesStatus" Original="Series Status">Stav pořadu</string>
+	<string Field="Starring" Original="Starring">V hlavních rolích</string>
 	<string Field="Watched" Original="Watched">Zhlédnuto</string>
 	<string Field="Writer" Original="Writer">Scénárista</string>
 	<string Field="Writers" Original="Writers">Scénáristé</string>
@@ -232,4 +235,5 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Zkuste to prosím později.</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Připojení k síti není dostupné.</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Zkontrolujte připojení a opakujte akci.</string>
+	<string Field="Playlist" Original="Playlist">Playlist</string>
 </strings>

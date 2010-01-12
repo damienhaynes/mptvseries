@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- MP-TVSeries translation file -->
+<!-- TVSeries translation file -->
 <!-- Spanish -->
-<!-- Last Updated: 8th Jan 2010 -->
+<!-- Last Upated 11 Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -46,7 +46,7 @@
   <string Field="special" Original="Special">Especial</string>
   <string Field="specials" Original="Specials">Especiales</string>
   <string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Está a punto de borrar permanentemente {0} archivo(s).\n¿Desea continuar?"</string>
-  <string Field="Force_Online_Match" Original="Force Online Match">Forzar coincidencia online</string>
+  <string Field="Force_Online_Match" Original="Force Online Match">Forzar coincidencia Online</string>
   <string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Cargar vía NewsLeecher</string>
   <string Field="Download" Original="Download">Descargar</string>
   <string Field="Actions" Original="Actions">Acciones</string>
@@ -57,7 +57,7 @@
   <string Field="Channels" Original="Channels">Canales</string>
   <string Field="Unwatched" Original="Unwatched">No visto</string>
   <string Field="Favourites" Original="Favourites">Favoritos</string>
-  <string Field="updateMI" Original="Update Mediainfo of local file">Actualizar Media Info de los archivos locales</string>
+  <string Field="updateMI" Original="Update Mediainfo of local file">Actualizar Información de los archivos locales</string>
   <string Field="RateSeries" Original="Rate this Series">Valorar esta serie</string>
   <string Field="RateEpisode" Original="Rate this Episode">Valorar este episodio</string>
   <string Field="ResetRating" Original="Reset Rating">Borrar valoración</string>
@@ -79,11 +79,11 @@
   <string Field="FanArtOnlineLoading" Original="loading {0} of {1} Fanart...">cargando {0} de {1} Fanart...</string>
   <string Field="FanArtRandom" Original="Display random Fanart">Mostrar Fanart aleatorio</string>
   <string Field="FanArtNoneFound" Original="No Fanart could be found">No se encontró ningún Fanart</string>
-  <string Field="CFS_Choose_Item" Original="Choose item">Elige elemento</string>
+  <string Field="CFS_Choose_Item" Original="Choose item">Elija elemento</string>
   <string Field="CFS_Select_Matching_Item" Original="Select matching item:">Seleccione elemento coincidente:</string>
   <string Field="CFS_Search_Again" Original="Search again">Buscar de nuevo</string>
   <string Field="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Seleccione archivo de subtítulo coincidente</string>
-  <string Field="CFS_Subtitle_Episode" Original="Choose item">Elija elemento</string>
+  <string Field="CFS_Subtitle_Episode" Original="Choose item">Episodio:</string>
   <string Field="CFS_Matching_Subtitles" Original="Matching Subtitles">Subtítulos coincidentes</string>
   <string Field="CFS_Choose_Correct_Series" Original="Choose Correct Series">Elija Serie correcta</string>
   <string Field="CFS_Available_Series" Original="Available Series">Series disponibles</string>
@@ -121,16 +121,16 @@
   <string Field="LayoutFilmstrip" Original="Filmstrip">Diapositivas</string>
   <string Field="LayoutSmallIcons" Original="Small Icons">Iconos Pequeños</string>
   <string Field="ButtonAutoPlay" Original="Auto Play">Reproducción Automática</string>
-  <string Field="ButtonSwitchView" Original="Switch Layout">Alternar Diseño</string>
+  <string Field="ButtonSwitchView" Original="Switch Layout">Cambiar Vista</string>
   <string Field="ButtonRunImport" Original="Run Import">Comenzar Importación</string>
   <string Field="ButtonChangeLayout" Original="Change Layout">Cambiar Diseño</string>
   <string Field="ButtonOptions" Original="Options">Opciones</string>
   <string Field="FanArtFilter" Original="Filter">Fitro</string>
   <string Field="FanArtFilterAll" Original="All">Todo</string>
   <string Field="ButtonRandomFanart" Original="Random Fanart">Fanart Aleatorio</string>
-  <string Field="LabelResolution" Original="Resolution:">Resolución:</string>
-  <string Field="LabelChosen" Original="Chosen:">Preferido:</string>
-  <string Field="LabelDisabled" Original="Disabled:">Desactivado:</string>
+  <string Field="LabelResolution" Original="Resolution:">Resolución</string>
+  <string Field="LabelChosen" Original="Chosen:">Predeterminado</string>
+  <string Field="LabelDisabled" Original="Disabled:">Desactivado</string>
   <string Field="ResetUserSelections" Original="Reset User Selections">Restablecer ajustes de usuario</string>
   <string Field="DeleteFromDisk" Original="Delete from Disk">Borrar del disco</string>
   <string Field="DeleteFromDatabase" Original="Delete from Database">Borrar de la base de datos</string>
@@ -201,12 +201,14 @@
   <string Field="Aired">Emitido</string>
   <string Field="AiredStatusContinuing">Continuando</string>
   <string Field="AiredStatusEnded">Finalizado</string>
+  <string Field="Airs">Emisión</string>
   <string Field="AirsDay">Día de Emisión</string>
   <string Field="AirsTime">Hora de Emisión</string>
+  <string Field="Cast">Reparto</string>
   <string Field="Certification">Calificación</string>
   <string Field="Director">Director</string>
   <string Field="Directors">Directores</string>
-  <string Field="File Size">Tamaño de Archivo</string>
+  <string Field="FileSize">Tamaño de archivo</string>
   <string Field="FirstAired">Primera Emisión</string>
   <string Field="Genre">Género</string>
   <string Field="Group">Grupo</string>
@@ -222,6 +224,7 @@
   <string Field="Runtime">Duración</string>
   <string Field="SeriesDetails">Detalles de Serie</string>
   <string Field="SeriesStatus">Estado de la Serie</string>
+  <string Field="Starring">Protagonista</string>
   <string Field="Watched">Visto</string>
   <string Field="Writer">Guionista</string>
   <string Field="Writers">Guionistas</string>
@@ -229,4 +232,5 @@
   <string Field="TVDB_ERROR_UNAVAILABLE_2">Por favor, inténtelo de nuevo más tarde</string>
   <string Field="NETWORK_ERROR_UNAVAILABLE_1">Conexión de red  no disponible</string>
   <string Field="NETWORK_ERROR_UNAVAILABLE_2">Compruebe su conexión e inténtelo de nuevo</string>
+  <string Field="Playlist">Lista de Reproducción</string>
 </strings>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- MP-TV-Series translation file -->
-<!-- Russian(RU) -->
-<!-- Last Updated: 21st Nov 2009 -->
+<!-- Russian (RU) -->
+<!-- Last Updated: 11 Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -141,10 +141,10 @@
 
 	<!-- Rate Descriptions - 5 Stars-->
 	<string Field="RateFiveStarOne" Original="Terrible">Ужасно</string>
-	<string Field="RateFiveStarTwo" Original="Mediocre">Посредственно</string>
-	<string Field="RateFiveStarThree" Original="Good">Хорошо</string>
-	<string Field="RateFiveStarFour" Original="Superb">Супер</string>
-	<string Field="RateFiveStarFive" Original="Perfect">Идеально</string>
+	<string Field="RateFiveStarTwo" Original="">Посредственно</string>
+	<string Field="RateFiveStarThree" Original="">Хорошо</string>
+	<string Field="RateFiveStarFour" Original="">Супер</string>
+	<string Field="RateFiveStarFive" Original="">Идеально</string>
 	<!-- Rate Descriptions - 10 Stars-->
 	<string Field="RateTenStarOne" Original="Abysmal">Отстой</string>
 	<string Field="RateTenStarTwo" Original="Terrible">Ужасно</string>
@@ -207,12 +207,14 @@
 	<string Field="Aired" Original="Aired">Показан в эфире</string>
 	<string Field="AiredStatusContinuing" Original="Continuing">Продолжается</string>
 	<string Field="AiredStatusEnded" Original="Ended">Закончен</string>
+	<string Field="Airs" Original="Airs">В эфире</string>
 	<string Field="AirsDay" Original="Airs Day">День эфира</string>
 	<string Field="AirsTime" Original="Airs Time">Время эфира</string>
+	<string Field="Cast" Original="Cast">Актерский состав</string>
 	<string Field="Certification" Original="Certification">Сертификация</string>	
 	<string Field="Director" Original="Director">Режиссер</string>
 	<string Field="Directors" Original="Directors">Режиссеры</string>	
-	<string Field="File Size" Original="File Size">размер файла</string>
+	<string Field="FileSize" Original="File Size">Размер файла</string>
 	<string Field="FirstAired" Original="First Aired">Впервые показан в эфире</string>
 	<string Field="Genre" Original="Genre">Жанр</string>
 	<string Field="Group" Original="Groups">Группа</string>
@@ -228,6 +230,7 @@
 	<string Field="Runtime" Original="Runtime">Длительность серии</string>
 	<string Field="SeriesDetails" Original="Series Details">Подробности сериала</string>
 	<string Field="SeriesStatus" Original="Series Status">Статус сериала</string>
+	<string Field="Starring" Original="Starring">В главных ролях</string>
 	<string Field="Watched" Original="Watched">Просмотрен</string>
 	<string Field="Writer" Original="Writer">Сценарист</string>
 	<string Field="Writers" Original="Writers">Сценаристы</string>
@@ -236,4 +239,5 @@
 	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Пожалуйста, попробуйте позднее</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Подключение к сети недоступно</string>
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Проверьте соединение и попробуйте снова</string>
+	<string Field="Playlist" Original="Playlist">Список воспроизведения</string>
 </strings>

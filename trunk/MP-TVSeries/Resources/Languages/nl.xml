@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- Nederlands (nl) -->
-<!-- Last Updated: 9th Jan 2010 -->
+<!-- Last Updated: 11th Jan 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
   <string Field="Series_Plural" Original="Series (Plr)">Series</string>
-  <!-- plural -->
   <string Field="Season" Original="Season">Seizoen</string>
   <string Field="Seasons" Original="Seasons">Seizoenen</string>
   <string Field="Episode" Original="Episode">Aflevering</string>
@@ -233,4 +232,7 @@
   <string Field="Writers" Original="Writers">Schrijvers</string> 
   <string Field="MyRating" Original="My Rating">Mijn waardering</string>
   <string Field="SeriesStatus" Original="Series Status">Seriestatus</string>
+  <string Field="Starring" Original="Starring">Met:</string>
+  <string Field="Playlist" Original="Playlist">Afspeellijst</string>
+  <string Field="Cast" Original="Cast">Rolverdeling:</string>
 </strings>
