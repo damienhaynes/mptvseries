@@ -98,9 +98,9 @@
 <Enabled>1<Format>SMALLSPACE<FormatAs> ]]>
 	</formatting>
 	<logos import="true">
-		<![CDATA[skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\fullscreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.7;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+		<![CDATA[skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\fullscreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.7;-;AND;-;<Episode.VideoAspectRatio>;-;>;-;0;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\widescreen.png;-;<Episode.VideoAspectRatio>;-;>;-;1.7;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\sd.png;-;<Episode.videoHeight>;-;<;-;720;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\sd.png;-;<Episode.videoHeight>;-;<;-;720;-;AND;-;<Episode.videoHeight>;-;>;-;0;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\hd.png;-;<Episode.videoHeight>;-;>;-;720;-;AND;-;<Episode.videoHeight>;-;<;-;1080;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\720p.png;-;<Episode.videoHeight>;-;=;-;720;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoAspectRatio\1080p.png;-;<Episode.videoHeight>;-;=;-;1080;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
