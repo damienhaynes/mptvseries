@@ -620,8 +620,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (System.IO.File.Exists(this[DBEpisode.cFilename]))
                 {
-                    this[cFileDateAdded] = DateTime.Now.ToString("yyyy-MM-dd");
-                    this[cFileDateCreated] = System.IO.File.GetCreationTime(this[DBEpisode.cFilename]).ToString("yyyy-MM-dd");
+                    this[cFileDateAdded] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    this[cFileDateCreated] = System.IO.File.GetCreationTime(this[DBEpisode.cFilename]).ToString("yyyy-MM-dd HH:mm:ss");
                     Commit();
                 }
             }

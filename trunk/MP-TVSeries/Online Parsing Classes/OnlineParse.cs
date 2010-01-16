@@ -30,6 +30,7 @@ using System.Threading;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using WindowPlugins.GUITVSeries.Feedback;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -56,7 +57,9 @@ namespace WindowPlugins.GUITVSeries
         GetNewBanners,
         GetNewFanArt,
         UpdateEpisodeThumbNails,
-        UpdateUserFavourites
+        UpdateUserFavourites,
+
+        BroadcastRecentlyAdded
     }
 
     class CParsingParameters
@@ -79,7 +82,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.GetNewFanArt, 
             ParsingAction.UpdateEpisodeThumbNails, 
             ParsingAction.UpdateUserFavourites,
-			ParsingAction.UpdateEpisodeCounts
+			ParsingAction.UpdateEpisodeCounts,
+            ParsingAction.BroadcastRecentlyAdded
 		};
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
@@ -114,6 +118,7 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
+                m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
             }
             m_files = files;
 
@@ -254,14 +259,12 @@ namespace WindowPlugins.GUITVSeries
 
             BackgroundWorker tMediaInfo = null;
             BackgroundWorker tEpisodeCounts = null;
-            BackgroundWorker tUserRatings = null;
-
+            BackgroundWorker tUserRatings = null;         
             Online_Parsing_Classes.GetUpdates updates = null;
             foreach (ParsingAction action in m_params.m_actions) {
                 
                 if (m_worker.CancellationPending)
                     break;
-
                 switch (action) {
                     case ParsingAction.List_Remove:
                         ParseActionRemove(m_params.m_files);
@@ -399,6 +402,13 @@ namespace WindowPlugins.GUITVSeries
                         tEpisodeCounts = new BackgroundWorker();
                         UpdateEpisodeCounts(tEpisodeCounts);
                         break;
+
+                    case ParsingAction.BroadcastRecentlyAdded:
+                        // Broadcast Recently Added to Infoservice plugin
+                        if (!Settings.isConfig) {
+                            BroadcastRecentlyAdded();
+                        }
+                        break;
                 }
             }
             
@@ -425,6 +435,47 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************            Completed           ************************");
             MPTVSeriesLog.Write("***************************************************************************");
+        }
+
+        private void BroadcastRecentlyAdded()
+        {
+            
+            MPTVSeriesLog.Write("Getting list of Recently Added episodes from Database");
+
+            // Calculate date for querying database
+            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            dt = dt.Subtract(new TimeSpan(1,0,0,0,0));
+            string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
+
+            // Get a list of the most recently added episodes in the database
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
+            conditions.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLCondition.orderType.Descending);
+            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
+
+            if (episodes != null)
+            {
+                MPTVSeriesLog.Write("Sending most Recently Added episode to InfoService plugin");
+
+                // Get most recently added episode
+                DBEpisode episode = episodes[0];
+
+                // Get Episode Details and send to InfoService plugin
+                DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                string episodeTitle = episode[DBEpisode.cEpisodeName];
+                string seasonIdx = episode[DBEpisode.cSeasonIndex];
+                string episodeIdx = episode[DBEpisode.cEpisodeIndex];
+                string seriesTitle = series.ToString();
+                string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
+                string sendTitle = string.Format("{0}/{1}/{2}/{3}", seriesTitle, seasonIdx, episodeIdx, episodeTitle);
+
+                string[] episodeDetails = new string[] {"Series", sendTitle, thumb};
+                MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}", episodeDetails[0], episodeDetails[1], episodeDetails[2]));
+
+                // Send message to InfoService plugin
+                GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 16000, 9811, 0, 0, 0, episodeDetails);
+                GUIGraphicsContext.SendMessage(msg);
+            }
         }
 
         #region ParseActions
@@ -2042,15 +2093,6 @@ namespace WindowPlugins.GUITVSeries
 
     class testing
     {
-
-
-  
-
-
-
-
-
-
         static List<string> generateIDListOfString<T>(List<T> entities, string fieldname) where T : DBTable
         {
             // generate a comma separated list of all the ids
