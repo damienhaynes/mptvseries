@@ -444,7 +444,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Calculate date for querying database
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            dt = dt.Subtract(new TimeSpan(1,0,0,0,0));
+            dt = dt.Subtract(new TimeSpan(7,0,0,0,0));
             string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
 
             // Get a list of the most recently added episodes in the database
