@@ -47,17 +47,13 @@ Now that you have your folders created, we need to pull down the latest code for
 
 http://mptvseries.googlecode.com/svn/wiki/Images/SVNCheckout.jpg
 
-== Picking Your Repository ==
+The only thing you need to change on this popup is the "URL of Repository" field. Cut and paste the first URL listed below into the "URL of Repository" field, then click OK.
 
-The only thing you need to change on this popup is the "URL of Repository" field. You have a choice though, you can go with the latest, greatest source code from the MediaPortal project (sometimes called the SVN version), or you can go with the source code from the most recent release. If you want the latest, greatest (and possibly buggy) MediaPortal code, cut and paste the first URL listed below into the "URL of Repository" field, then click OK.
-
-Using the very latest code base from MediaPortal, may not be the best idea though. Most of the users of MP-TVSeries are going to be running the plug-in against the latest release of MediaPortal, not the SVN version, so it may be a better idea to go with the code from the latest release. If this is the route you want to go (I recommend this) then cut and paste the second URL below into the "URL of Repository" field and click OK. At the time of writing, the latest version is 1.0.2, but there may be a newer release by now. Pick the newest.
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
-https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/tags/Release 1.0.2/MediaPortal
 }}}
 
-MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". If you are developing for a release other than 1.0.2 then right-click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
+MediaPortal references a project "PowerScheduler.Interfaces" outside of its folder structure, this being "Common-MP-TVE3". Right-click on the Common-MP-TVE3 folder and do a SVN Checkout from the source below:
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/Common-MP-TVE3
 }}}
