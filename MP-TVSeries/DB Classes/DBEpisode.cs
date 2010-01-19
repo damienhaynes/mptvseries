@@ -367,8 +367,8 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            if (System.IO.File.Exists(filename) && !HasMediaInfo && !Helper.IsImageFile(filename))
-                ReadMediaInfo();
+            //if (System.IO.File.Exists(filename) && !HasMediaInfo && !Helper.IsImageFile(filename))
+            //    ReadMediaInfo();
 
             //composite id will bw set automatically from setting these three
             this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
@@ -384,8 +384,8 @@ namespace WindowPlugins.GUITVSeries
             if (!ReadPrimary(filename))
                 InitValues();
             
-            if (System.IO.File.Exists(filename) && !HasMediaInfo && !bSkipMediaInfo && !Helper.IsImageFile(filename))
-                ReadMediaInfo();
+            //if (System.IO.File.Exists(filename) && !HasMediaInfo && !bSkipMediaInfo && !Helper.IsImageFile(filename))
+            //    ReadMediaInfo();
 
             if (this[cSeriesID].ToString().Length > 0 && this[cSeasonIndex] != -1 && this[cEpisodeIndex] != -1)
             {
