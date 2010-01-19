@@ -38,7 +38,7 @@ So now that you have your tools setup, you will want to pull down the latest sou
 
 http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructure.jpg
 
-So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal, Common-MP-TV3 (this folder is not needed in 1.0.2) and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
+So go ahead and create your folder structure. Create the PluginDev folder and the MediaPortal, Common-MP-TV3 and MP-TVSeries folders below that. These are all you need to do manually, everything else will automatically be pulled down by TortoiseSVN.
 
 = Getting the MediaPortal Source Code =
 == Checking Out ==
@@ -47,7 +47,7 @@ Now that you have your folders created, we need to pull down the latest code for
 
 http://mptvseries.googlecode.com/svn/wiki/Images/SVNCheckout.jpg
 
-The only thing you need to change on this popup is the "URL of Repository" field. Cut and paste the first URL listed below into the "URL of Repository" field, then click OK.
+The only thing you need to change on this popup is the "URL of Repository" field. Copy and paste the first URL listed below into the "URL of Repository" field, then click OK.
 
 {{{
 https://mediaportal.svn.sourceforge.net/svnroot/mediaportal/trunk/mediaportal
@@ -95,6 +95,11 @@ http://mptvseries.googlecode.com/svn/wiki/Images/FinalSolnExplorer.jpg
 Once you have these projects added to your environment your References for the MP-TVSeries project should be free of warning icons, like the image below. If you see any warnings, this probably means additional dependencies have been added since the time of this writing. Don't panic, just browse through the MediaPortal folder structure and find the project Visual Studio is complaining about. You might also want to double check the references for the other MediaPortal projects. Again, at the time of this writing, the projects listed above are all that is required, but additional dependencies may have been added to any of these projects over the last few months. 
 
 http://mptvseries.googlecode.com/svn/wiki/Images/References.jpg
+
+= API Key =
+For your plugin to successfully import data from the online database, you will need to register for an *APIKey*. Simply visit http://thetvdb.com, and request this from one of the site Admins.
+
+Once you have been given an APIKey you will need to enter this into the plugins APIKey resource file. In the Solution explorer, expand *Online Parsing Classes* and double click on the file *APIKey.resx*. Enter your APIKey in the *Value* field.
 
 = Testing Your Setup =
 == Building and Running ==
