@@ -23,6 +23,7 @@
 
 
 using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
@@ -1067,6 +1068,14 @@ namespace WindowPlugins.GUITVSeries
     // holds the SQLLite object and the log object.
     public class DBTVSeries
     {
+
+        #region static imports
+
+        [DllImport("shlwapi.dll")]
+        private static extern bool PathIsNetworkPath(string Path);
+
+        #endregion
+
         #region private & init stuff        
         private static SQLiteClient m_db = null;
         private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
@@ -1146,6 +1155,24 @@ namespace WindowPlugins.GUITVSeries
             }            
         }
 
+        public static void Close ()
+        {
+          String databaseFile = string.Empty;
+          databaseFile = Settings.GetPath(Settings.Path.database);
+
+          try
+          {            
+            m_db.Close();
+            m_db.Dispose();
+            m_db = null; ;
+            MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
+          }
+          catch (Exception e)
+          {
+            MPTVSeriesLog.Write("Failed closing Database: " + databaseFile);
+          }              
+        }
+
         public static SQLiteResultSet Execute(String sCommand)
         {
             if (m_db == null)
@@ -1166,5 +1193,21 @@ namespace WindowPlugins.GUITVSeries
                 return new SQLiteResultSet();
             }
         }
+
+        #region public properties
+
+        public static bool IsDatabaseOnNetworkPath
+        {
+          get
+          {
+            String databaseFile = string.Empty;
+            databaseFile = Settings.GetPath(Settings.Path.database);
+
+            bool isRemotePath = PathIsNetworkPath(databaseFile);
+            return isRemotePath;
+          }
+        }
+
+        #endregion
     };
 }

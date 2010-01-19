@@ -1720,46 +1720,45 @@ namespace WindowPlugins.GUITVSeries
             ask2Rate = episode;
         }
 
-        void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
-        {
-            if (e.Mode == Microsoft.Win32.PowerModes.Resume)
-            {
+        void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e) {
+            if (e.Mode == Microsoft.Win32.PowerModes.Resume) {
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
-                
+
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
-				// If the window is not active, we handle on page load
-				if (GUIWindowManager.ActiveWindow == GetID) {
-					if (m_CurrLView != null) {
-						bool viewSwitched = false;
-						if (m_CurrLView.ParentalControl) {							
-							viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
-							// Exit if no view changed, otherwise reload the facade
-							if (!viewSwitched)
-								GUIWindowManager.ShowPreviousWindow();
-							else
-								LoadFacade();
-						}
-					}
-				}
+                // If the window is not active, we handle on page load
+                if (GUIWindowManager.ActiveWindow == GetID) {
+                    if (m_CurrLView != null) {
+                        bool viewSwitched = false;
+                        if (m_CurrLView.ParentalControl) {
+                            viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+                            // Exit if no view changed, otherwise reload the facade
+                            if (!viewSwitched)
+                                GUIWindowManager.ShowPreviousWindow();
+                            else
+                                LoadFacade();
+                        }
+                    }
+                }
+                
+                if (DBOption.GetOptions(DBOption.cImport_FolderWatch)) {
+                    setUpFolderWatches();
+                }
 
-                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-                {
-					setUpFolderWatches();
-				}
-
-                // lets do a full folder scan since we might have network shares which could have been updated
-                if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
-                {
+                // Treat Resuming from Standby as a startup action, scan on startup if enabled
+                if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup)) {
                     m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
                 }
             }
-            else if (e.Mode == Microsoft.Win32.PowerModes.Suspend)
-            {
+            else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");
+                // Only disconnect from the database if file exists on the network.
+                if (DBTVSeries.IsDatabaseOnNetworkPath) {
+                    DBTVSeries.Close();
+                }
             }
         }
 
