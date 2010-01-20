@@ -179,6 +179,8 @@ namespace WindowPlugins.GUITVSeries
 
         public Watcher(List<String> WatchedFolders, int nScanLapse)
         {
+            MPTVSeriesLog.Write("Watcher: Creating new File System Watcher", MPTVSeriesLog.LogLevel.Normal);
+
             m_nScanLapse = nScanLapse;
 
             foreach (String folder in WatchedFolders) {
@@ -187,17 +189,21 @@ namespace WindowPlugins.GUITVSeries
                 {
                     DriveInfo info = new DriveInfo(sRoot);
 
-                    if (info.DriveType == DriveType.Network)
-                    {
-                        string sUNCPath = MPR.GetUniversalName(folder);
+                    if (info.DriveType==DriveType.Network) {
+                        string sUNCPath=MPR.GetUniversalName(folder);
+
+                        MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", sUNCPath), MPTVSeriesLog.LogLevel.Normal);
                         m_ScannedFolders.Add(sUNCPath);
                     }
-                    else
+                    else {
+                        MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
                         m_WatchedFolders.Add(folder);
+                    }
                 }
-                catch (System.ArgumentException ex)
+                catch (System.ArgumentException)
                 {
                 	// this has to be a UNC path
+                    MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
                     m_ScannedFolders.Add(folder);
                 }
             }
@@ -221,7 +227,8 @@ namespace WindowPlugins.GUITVSeries
 
         void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            MPTVSeriesLog.Write("watcher_Renamed: " + e.FullPath);
+            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.FullPath);
+            
             // rename: delete the old, add the new
             lock (m_modifiedFilesList)
             {
@@ -240,8 +247,15 @@ namespace WindowPlugins.GUITVSeries
 
         void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            MPTVSeriesLog.Write("watcher_Changed: " + e.FullPath);
-            // a file has changed! created, not created, whatever. Just add it to our list. We only process this list once in a while
+            if (!TVSeriesPlugin.IsNetworkAvailable) {
+                MPTVSeriesLog.Write("Watcher: Network not available, ignoring watcher changed event");
+                return;
+            }
+
+            MPTVSeriesLog.Write("Watcher: Changed event: " + e.FullPath);
+            
+            // a file has changed! created, not created, whatever. Just add it to our list. 
+            // we only process this list once in a while
             lock (m_modifiedFilesList)
             {
                 foreach (WatcherItem item in m_modifiedFilesList)
@@ -258,9 +272,11 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void setUpWatches()
-        {
+        {            
             if (m_watchersList.Count > 0) 
             {
+                MPTVSeriesLog.Write("Watcher: Cleaning up File System Watchers", MPTVSeriesLog.LogLevel.Normal);
+
                 // do some cleanup first, remove the existing watchers
                 foreach (FileSystemWatcher watcher in m_watchersList)
                 {
@@ -273,7 +289,7 @@ namespace WindowPlugins.GUITVSeries
                 m_watchersList.Clear();
             }
             
-            // ok let's see ... go through all enable import folders, and add a watchfolder on it
+            // go through all enabled import folders, and add a watchfolder on it
             foreach (String sWatchedFolder in m_WatchedFolders)
             {
                 if (Directory.Exists(sWatchedFolder))
@@ -283,13 +299,11 @@ namespace WindowPlugins.GUITVSeries
                     // from MSDN, filter doesn't change the amount of stuff looked at internally
                     watcher.Path = sWatchedFolder;
                     watcher.IncludeSubdirectories = true;
-                    watcher.NotifyFilter = NotifyFilters.FileName;
-                    // Inker, I don't think lastwrite is such as good idea if you have your download/recording dir monitored
-                    // only check for lastwrite .. I believe that's the only thing we're interested in
+                    watcher.NotifyFilter = NotifyFilters.FileName;                 
                     watcher.Changed += new FileSystemEventHandler(watcher_Changed);
                     watcher.Created += new FileSystemEventHandler(watcher_Changed);
                     watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
-                    watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                    watcher.Renamed += new RenamedEventHandler(watcher_Renamed);                    
                     watcher.Error += new ErrorEventHandler(watcher_Error);
                     watcher.EnableRaisingEvents = true;
                     m_watchersList.Add(watcher);
@@ -300,7 +314,7 @@ namespace WindowPlugins.GUITVSeries
 
         void watcher_Error(object sender, ErrorEventArgs e)
         {
-            MPTVSeriesLog.Write("watcher_Error: " + e.GetException().Message);
+            MPTVSeriesLog.Write("Watcher: Error event: " + e.GetException().Message);
             refreshWatchers = true;
         }
 
@@ -312,7 +326,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_modifiedFilesList.Count > 0)
                     {
-                        MPTVSeriesLog.Write("watcher: signaling " + m_modifiedFilesList.Count + " modified files");
+                        MPTVSeriesLog.Write("Watcher: Signaling " + m_modifiedFilesList.Count + " modified files");
                         List<WatcherItem> outList = new List<WatcherItem>();
 
                         // go over the modified files list once in a while & update
@@ -325,12 +339,18 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception exp)
             {
-                MPTVSeriesLog.Write("Exception happened in workerWatcher_DoWork: " + exp.Message);
+                MPTVSeriesLog.Write("Watcher: Exception happened in Signal Modified Files: " + exp.Message);
             }
         }
 
         void DoFileScan()
         {
+            MPTVSeriesLog.Write("Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
+            if (!TVSeriesPlugin.IsNetworkAvailable) {
+                MPTVSeriesLog.Write("Watcher: Network not available, aborting file scan");
+                return;
+            }
+
             List<PathPair> newScan = Filelister.GetFiles(m_ScannedFolders);
 
             List<PathPair> addedFiles = new List<PathPair>();
@@ -341,9 +361,9 @@ namespace WindowPlugins.GUITVSeries
 
             List<PathPair> removedFiles = new List<PathPair>();
             removedFiles.AddRange(m_PreviousScan);
-            foreach (PathPair pair in newScan)
+            foreach (PathPair pair in newScan) {
                 removedFiles.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
-
+            }
 
             lock (m_modifiedFilesList)
             {
@@ -359,29 +379,35 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
+            MPTVSeriesLog.Write("Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
+            
             System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+            while (!TVSeriesPlugin.IsNetworkAvailable) {
+                MPTVSeriesLog.Write("Network is not available yet, postponing Watcher setup 30 secs", MPTVSeriesLog.LogLevel.Normal);
+                Thread.Sleep(30000);
+            }
             setUpWatches();
+
             // do the initial scan
             m_PreviousScan = Filelister.GetFiles(m_ScannedFolders);
             DateTime timeLastScan = DateTime.Now;
 
             // then start the watcher loop
             while (!worker.CancellationPending)
-            {
-                TimeSpan tsUpdate = DateTime.Now - timeLastScan;
-                if ((int)tsUpdate.TotalMinutes > m_nScanLapse)
+            {               
+               TimeSpan tsUpdate = DateTime.Now - timeLastScan;
+                if ((int)tsUpdate.TotalMinutes > m_nScanLapse) 
                 {
                     timeLastScan = DateTime.Now;
                     DoFileScan();
                 }
-
+           
                 signalModifiedFiles();
 
                 if (refreshWatchers)
                     setUpWatches();
-
-                // wait
-                Thread.Sleep(1000); // every 10 seconds do a quick check if we need to do something
+       
+                Thread.Sleep(10000);
             }
         }
     };
