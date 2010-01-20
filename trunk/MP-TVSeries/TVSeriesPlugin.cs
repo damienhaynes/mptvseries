@@ -442,7 +442,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 setUpFolderWatches();
 
-                // do a local scan when starting up the app if enabled - late orn the watcher will monitor changes
+                // do a local scan when starting up the app if enabled - late on the watcher will monitor changes
                 // also do an online scan if it's been more than the allocated time since the last scan
                 if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
                 {
@@ -1742,11 +1742,7 @@ namespace WindowPlugins.GUITVSeries
                                 LoadFacade();
                         }
                     }
-                }
-                
-                if (DBOption.GetOptions(DBOption.cImport_FolderWatch)) {
-                    setUpFolderWatches();
-                }
+                }                
 
                 // Treat Resuming from Standby as a startup action, scan on startup if enabled
                 if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup)) {
@@ -1791,6 +1787,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
         {
+            if (!TVSeriesPlugin.IsNetworkAvailable) return;
+
             List<PathPair> filesAdded = new List<PathPair>();
             List<PathPair> filesRemoved = new List<PathPair>();
 
@@ -4803,7 +4801,7 @@ namespace WindowPlugins.GUITVSeries
             DBImportPath[] importPaths = DBImportPath.GetAll();
             if (importPaths != null)
             {
-                // ok let's see ... go through all enable import folders, and add a watchfolder on it
+                // Go through all enabled import folders, and add a watchfolder on it
                 foreach (DBImportPath importPath in importPaths)
                 {
                     if (importPath[DBImportPath.cEnabled] != 0)
@@ -4871,6 +4869,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Cannot Display Fanart Chooser, the online database is unavailable or network is unavailable.");
                     return;
                 }
+
             }
 
             MPTVSeriesLog.Write("Switching to Fanart Chooser Window");
