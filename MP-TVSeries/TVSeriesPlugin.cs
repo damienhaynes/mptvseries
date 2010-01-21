@@ -522,6 +522,9 @@ namespace WindowPlugins.GUITVSeries
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
 
+            // Log Options
+            DBOption.LogOptions();
+
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
             return Load(xmlSkin);
