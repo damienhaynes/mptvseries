@@ -106,7 +106,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
