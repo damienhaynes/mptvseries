@@ -571,5 +571,12 @@ namespace WindowPlugins.GUITVSeries
             }
             return null;
         }
+
+        public static void LogOptions() {
+            foreach (string key in optionsCache.Keys) {
+                MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
+            }
+        }
+
     };
 }
