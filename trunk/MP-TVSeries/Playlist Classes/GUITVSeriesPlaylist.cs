@@ -39,7 +39,7 @@ using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class GUITVSeriesPlayList : GUIInternalWindow
+    public class GUITVSeriesPlayList : GUIWindow
     {
         #region variables
 
@@ -130,9 +130,9 @@ namespace WindowPlugins.GUITVSeries
 		/// MediaPortal will set #currentmodule with GetModuleName()
 		/// </summary>
 		/// <returns>Localized Window Name</returns>
-		public override string GetModuleName() {
-			return GUILocalizeStrings.Get(136);
-		}
+		//public override string GetModuleName() {
+		//	return GUILocalizeStrings.Get(136);
+		//}
 
         public override bool Init() {
             currentFolder = Directory.GetCurrentDirectory();
@@ -191,7 +191,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
             }
-            
+
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", GUILocalizeStrings.Get(136));
+
             // Episode Formatting
             m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
             m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);

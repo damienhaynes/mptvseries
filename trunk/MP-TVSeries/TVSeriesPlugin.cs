@@ -48,7 +48,7 @@ using SubtitleDownloader.Core;
 namespace WindowPlugins.GUITVSeries
 {
     //[PluginIcons("WindowPlugins.GUITVSeries.Resources.Images.icon_normal.png", "WindowPlugins.GUITVSeries.Resources.Images.icon_faded.png")]
-    public class TVSeriesPlugin : GUIInternalWindow, ISetupForm, IFeedback {
+    public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback {
 
         #region Constructor
         public TVSeriesPlugin()
@@ -549,7 +549,9 @@ namespace WindowPlugins.GUITVSeries
 				GUIWindowManager.ShowPreviousWindow();
 				return;
 			}
-            
+
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
+
             ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
 
             #region Clear GUI Properties
