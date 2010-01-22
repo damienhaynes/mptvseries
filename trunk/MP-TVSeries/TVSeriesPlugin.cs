@@ -76,6 +76,10 @@ namespace WindowPlugins.GUITVSeries
             seasonbanner = new AsyncImageResource();
             seasonbanner.Property = "#TVSeries.SeasonPoster";
             seasonbanner.Delay = artworkDelay;
+
+            string[] ver = Settings.Version.ToString().Split(new char[] { '.' });
+            MPTVSeriesLog.Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
+            MPTVSeriesLog.Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
 
@@ -414,6 +418,10 @@ namespace WindowPlugins.GUITVSeries
         {
             m_localControlForInvoke = new Control();
             m_localControlForInvoke.CreateControl();
+
+            // Get Logging Level
+            MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
+
             Translation.Init();
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
 
