@@ -76,9 +76,8 @@ namespace WindowPlugins.GUITVSeries
             seasonbanner = new AsyncImageResource();
             seasonbanner.Property = "#TVSeries.SeasonPoster";
             seasonbanner.Delay = artworkDelay;
-
-            string[] ver = Settings.Version.ToString().Split(new char[] { '.' });
-            MPTVSeriesLog.Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
+            
+            MPTVSeriesLog.Write(string.Format("MP-TVSeries Version: v{0}", Settings.Version.ToString()));
             MPTVSeriesLog.Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
