@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("MP-TVSeries")]
 [assembly: AssemblyDescription("MP-TVSeries plugin for MediaPortal")]
-[assembly: AssemblyConfiguration("Test")]
+[assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
 [assembly: AssemblyCopyright("Copyright © 2010")]
@@ -35,6 +35,6 @@ using System.Runtime.InteropServices;
 // 1st/2nd Digit reprsents the Major Version, this should increment whenever any new enhancements have been made. 3rd Number should be reset.
 // 3rd Digit represents the Maintenance Number (Hot Fix), this should increment by one each update release
 // 4th Digit represents the SVN revision
-// Be sure to clock these before distrubuting releases. Development builds can be left alone.
-[assembly: AssemblyVersion("2.5.0.0")]
-[assembly: AssemblyFileVersion("2.5.0.0")]
+// AssemblyVersion is updated by Pre-Build step
+// Assume TortoiseSVN is in enviroment to run: subwcrev.exe
+
