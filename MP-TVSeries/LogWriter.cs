@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #region Vars
-        static private LogLevel _selectedLogLevel = LogLevel.Debug;
+        static private LogLevel _selectedLogLevel = LogLevel.Normal;
         static String m_filename = Settings.GetPath(Settings.Path.log);
         static StreamWriter m_LogStream;
         static System.Windows.Forms.ListBox m_ListLog;
@@ -97,14 +97,9 @@ namespace WindowPlugins.GUITVSeries
                 // oopps, can't create file
             }
 
-            int level = 0;
-            int.TryParse(DBOption.GetOptions("logLevel"), out level);
-            selectedLogLevel = (LogLevel)level;
+            selectedLogLevel = LogLevel.Normal;
             pauseAutoWriteDB = true;
             
-            string[] ver = Settings.Version.ToString().Split(new char[] { '.' });            
-            Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
-            Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
 
@@ -146,7 +141,6 @@ namespace WindowPlugins.GUITVSeries
         {
             WriteMultiLine(entry, LogLevel.Normal);
         }
-
 
         /// <summary>
         /// To avoid having to join values if not needed in lower LogLevels use this
