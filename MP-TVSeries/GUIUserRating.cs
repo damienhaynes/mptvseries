@@ -91,9 +91,9 @@ namespace WindowPlugins.GUITVSeries {
 		/// MediaPortal will set #currentmodule with GetModuleName()
 		/// </summary>
 		/// <returns>Localized Window Name</returns>
-		public override string GetModuleName() {
-			return Translation.RateDialog;
-		}
+		//public override string GetModuleName() {
+		//	return Translation.RateDialog;
+		//}
 
         public override void Reset() {
             base.Reset();

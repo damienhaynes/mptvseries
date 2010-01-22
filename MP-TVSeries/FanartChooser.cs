@@ -31,7 +31,7 @@ using System.Drawing;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class FanartChooser : GUIInternalWindow
+    class FanartChooser : GUIWindow
     {
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
@@ -209,9 +209,9 @@ namespace WindowPlugins.GUITVSeries
 		/// MediaPortal will set #currentmodule with GetModuleName()
 		/// </summary>
 		/// <returns>Localized Window Name</returns>
-		public override string GetModuleName() {
-			return Translation.FanArt;
-		}
+		//public override string GetModuleName() {
+		//	return Translation.FanArt;
+		//}
 
         protected View CurrentView
         {
@@ -222,6 +222,8 @@ namespace WindowPlugins.GUITVSeries
         protected override void OnPageLoad()
         {            
             AllocResources();
+
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", Translation.FanArt);
 
             loadingWorker = new BackgroundWorker();            
             loadingWorker.WorkerReportsProgress = true;
