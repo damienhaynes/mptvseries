@@ -810,7 +810,7 @@ namespace WindowPlugins.GUITVSeries
 
                 this.subtitleDownloader_DownloaderCheckBoxes.Add(downloaderCheckbox);
                 this.panel_subtitleroot.Controls.Add(downloaderCheckbox);
-                downloaderCheckboxX += 175;
+                downloaderCheckboxX += 130;
 
                 if (counter % 4 == 0)
                 {
