@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cAutoChooseSeries, true);
                 
                 if (GetOptions(cAutoChooseOrder) == null)
-                    SetOptions(cAutoChooseOrder, false);
+                    SetOptions(cAutoChooseOrder, true);
 
                 if (GetOptions(cView_Episode_OnlyShowLocalFiles) == null)
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
@@ -484,6 +484,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cSubstituteMissingArtwork) == null)
                     SetOptions(cSubstituteMissingArtwork, 0);
+
+                if (GetOptions(cAskToRate)==null)
+                    SetOptions(cAskToRate, 1);
 
             }
             catch (Exception ex)

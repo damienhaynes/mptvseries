@@ -418,11 +418,12 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke = new Control();
             m_localControlForInvoke.CreateControl();
 
+            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
+
             // Get Logging Level
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
 
             Translation.Init();
-            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
 
             Download.Monitor.Start(this);
             m_VideoHandler = new VideoHandler();
@@ -529,7 +530,7 @@ namespace WindowPlugins.GUITVSeries
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
 
-            // Log Options
+            // Log Options            
             DBOption.LogOptions();
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
