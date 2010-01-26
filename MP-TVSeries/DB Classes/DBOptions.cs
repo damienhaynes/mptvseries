@@ -199,7 +199,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
-                    SetOptions(cConfig_LogCollapsed, true);
+                    SetOptions(cConfig_LogCollapsed, false);
 
                 if (GetOptions(cDBSeriesLastLocalID) == null)
                     SetOptions(cDBSeriesLastLocalID, -1);
