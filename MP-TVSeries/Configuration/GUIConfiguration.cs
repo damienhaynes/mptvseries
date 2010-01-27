@@ -1100,34 +1100,53 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void button_MoveExpUp_Click(object sender, EventArgs e)
-        {
+        {               
             int nCurrentRow = dataGridView_Expressions.CurrentCellAddress.Y;
+            int nCurrentCol = dataGridView_Expressions.CurrentCellAddress.X;
+
             if (nCurrentRow > 0)
-            {
+            {                           
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow);
                 DBExpression expressionGoingDown = new DBExpression(nCurrentRow - 1);
-                expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow - 1);
+                
+                DBExpression.Clear(nCurrentRow - 1);
+                DBExpression.Clear(nCurrentRow);
+                
+                expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow - 1);                                
                 expressionGoingUp.Commit();
+
                 expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow);
                 expressionGoingDown.Commit();
+
                 LoadExpressions();
-                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow - 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
+
+                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow - 1].Cells[nCurrentCol];
             }
         }
 
         private void button_MoveExpDown_Click(object sender, EventArgs e)
         {
             int nCurrentRow = dataGridView_Expressions.CurrentCellAddress.Y;
-            if (nCurrentRow < dataGridView_Expressions.Rows.Count - 2) //don't take in account the new line 
+            int nCurrentCol = dataGridView_Expressions.CurrentCellAddress.X;
+
+            // don't take in account the new line
+            if (nCurrentRow < dataGridView_Expressions.Rows.Count - 2) 
             {
                 DBExpression expressionGoingDown = new DBExpression(nCurrentRow);
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow + 1);
+                
+                DBExpression.Clear(nCurrentRow);
+                DBExpression.Clear(nCurrentRow + 1);
+
                 expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow);
                 expressionGoingUp.Commit();
+
                 expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow + 1);
                 expressionGoingDown.Commit();
+                
                 LoadExpressions();
-                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
+
+                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[nCurrentCol];
             }
         }
         #endregion

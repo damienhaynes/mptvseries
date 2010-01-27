@@ -2078,7 +2078,7 @@ namespace WindowPlugins.GUITVSeries
             // button_MoveExpUp
             // 
             this.button_MoveExpUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_MoveExpUp.Enabled = false;
+            this.button_MoveExpUp.Enabled = true;
             this.button_MoveExpUp.Image = ((System.Drawing.Image)(resources.GetObject("button_MoveExpUp.Image")));
             this.button_MoveExpUp.Location = new System.Drawing.Point(130, 72);
             this.button_MoveExpUp.Name = "button_MoveExpUp";
@@ -2090,7 +2090,7 @@ namespace WindowPlugins.GUITVSeries
             // button_MoveExpDown
             // 
             this.button_MoveExpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_MoveExpDown.Enabled = false;
+            this.button_MoveExpDown.Enabled = true;
             this.button_MoveExpDown.Image = ((System.Drawing.Image)(resources.GetObject("button_MoveExpDown.Image")));
             this.button_MoveExpDown.Location = new System.Drawing.Point(130, 107);
             this.button_MoveExpDown.Name = "button_MoveExpDown";
