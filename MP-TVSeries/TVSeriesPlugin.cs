@@ -409,9 +409,9 @@ namespace WindowPlugins.GUITVSeries
 		/// MediaPortal will set #currentmodule with GetModuleName()
 		/// </summary>
 		/// <returns>Localized Window Name</returns>
-		public override string GetModuleName() {
-			return pluginName;
-		}
+		//public override string GetModuleName() {
+		//	return pluginName;
+		//}
 
         public override bool Init()
         {
