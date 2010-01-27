@@ -183,6 +183,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
 
+        public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -487,6 +489,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cAskToRate)==null)
                     SetOptions(cAskToRate, 1);
+
+                if (GetOptions(cSkipSeasonViewOnSingleSeason) == null)
+                    SetOptions(cSkipSeasonViewOnSingleSeason, 1);
 
             }
             catch (Exception ex)
