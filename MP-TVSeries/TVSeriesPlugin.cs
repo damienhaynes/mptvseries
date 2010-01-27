@@ -2455,7 +2455,7 @@ namespace WindowPlugins.GUITVSeries
                             // view handling                               
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
 
-                            bool canBeSkipped = (seasons.Count == 1);
+                            bool canBeSkipped = (seasons.Count == 1) && DBOption.GetOptions(DBOption.cSkipSeasonViewOnSingleSeason);
                             if (!canBeSkipped)
 								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
 
@@ -2576,12 +2576,12 @@ namespace WindowPlugins.GUITVSeries
                             }
 
                             // if there is only one season to display, skip directly to the episodes list
-                            if (skipSeasonIfOne_DirectionDown && seasons.Count == 1)
+                            if (skipSeasonIfOne_DirectionDown && seasons.Count == 1 && canBeSkipped)
                             {
                                 MPTVSeriesLog.Write("Skipping season display (Series->Episode)", MPTVSeriesLog.LogLevel.Debug);
                                 ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SkipSeasonDown, 0, null);                                
                             }
-                            else if (seasons.Count == 1)
+                            else if (seasons.Count == 1 && canBeSkipped)
                             {
                                 // we're back from the ep list, go up one hierarchy more (depending on view, most likely series)
                                 MPTVSeriesLog.Write("Skipping season display (Episode->Series)", MPTVSeriesLog.LogLevel.Debug);
