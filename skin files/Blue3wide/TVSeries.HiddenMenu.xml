@@ -32,7 +32,7 @@
 				<type>group</type>
 				<animation effect="slide" time="450" start="-300,0" reversible="false">visible</animation>
 				<animation effect="slide" time="450" end="-300,0" reversible="false">hidden</animation>
-				<visible>!Control.HasFocus(50)</visible>         
+				<visible>!Control.HasFocus(50)</visible>				
 				<control>
 					<description>button group</description>
 					<type>group</type>
@@ -137,9 +137,28 @@
 						<ondown>2</ondown>
 						<onup>10</onup>
 						<visible>plugin.isenabled(My Trailers)</visible>
-					</control>
+					</control>					
 				</control>
-			</control>
+				<control>
+					<id>0</id>
+					<description>Last Online Update Label</description>
+					<label>#TVSeries.Translation.LastOnlineUpdate.Label:</label>
+					<type>label</type>
+					<font>font12</font>
+					<posX>71</posX>
+					<posY>575</posY>
+					<textcolor>ffffffff</textcolor>					
+				</control>
+				<control>
+					<id>0</id>
+					<description>Last Online Update Value</description>
+					<label>#TVSeries.LastOnlineUpdate</label>
+					<type>label</type>
+					<font>font11</font>
+					<posX>71</posX>
+					<posY>600</posY>					
+				</control>
+			</control>			
 		</control>
 	</controls>
 </window>
