@@ -392,7 +392,8 @@ namespace WindowPlugins.GUITVSeries
 			GroupCount,
             FilteredEpisodeCount,
             WatchedCount,
-            UnWatchedCount
+            UnWatchedCount,
+            LastOnlineUpdate
 		}
 		#endregion
 
@@ -650,7 +651,11 @@ namespace WindowPlugins.GUITVSeries
                     LoadFacade();
                 }
             }
-		}		
+            
+            // Push last update time to skin
+            setGUIProperty(guiProperty.LastOnlineUpdate, DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
+
+		}	
 
 		protected override void OnPageDestroy(int new_windowId) {
 			// Disable Random Fanart Timer
@@ -4235,6 +4240,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 m_LastUpdateScan = DateTime.Now;
                 DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
+                setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
             if (bDataUpdated)

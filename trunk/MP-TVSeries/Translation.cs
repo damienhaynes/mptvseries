@@ -289,6 +289,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Groups = "Groups";
         public static string GuestStar = "Guest Star";
         public static string GuestStars = "Guest Stars";
+        public static string LastOnlineUpdate = "Last Online Update";
         public static string MediaInfo = "Media Info";
         public static string Minutes = "Minutes";
         public static string MyRating = "My Rating";
@@ -303,7 +304,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Watched = "Watched";
         public static string Writer = "Writer";
         public static string Writers = "Writers";
-
+        
         #endregion
 
         #region Public Properties
