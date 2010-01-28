@@ -330,6 +330,7 @@
 		<row><td>Issues</td><td>{8CCBDA0E-4673-4E6E-8650-D4F52E722867}</td><td>WEB</td><td>8</td><td/><td>issues.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MediaInfo.dll</td><td>{69869902-F997-4417-8BFB-D56CC44D42BF}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>mediainfo.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1302,10 +1303,12 @@
 		<col def="S255">ISComments</col>
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
-		<row><td>Blue3</td><td>Skins</td><td>##ID_STRING10##</td><td>##ID_STRING13##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>Blue3Wide</td><td>Skins</td><td>##ID_STRING11##</td><td>##ID_STRING14##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>Main</td><td/><td>##ID_STRING8##</td><td>##ID_STRING7##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>6</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Blue3</td><td>Skins</td><td>##ID_STRING10##</td><td>##ID_STRING13##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Blue3Wide</td><td>Skins</td><td>##ID_STRING11##</td><td>##ID_STRING14##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Main</td><td/><td>##ID_STRING8##</td><td>##ID_STRING7##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
+		<row><td>MediaInfo</td><td/><td>##ID_STRING26##</td><td>##ID_STRING27##</td><td>12</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>14</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>SubTitleDowloader</td><td/><td>##ID_STRING28##</td><td>##ID_STRING29##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1323,10 +1326,11 @@
 		<row><td>Main</td><td>Languages</td></row>
 		<row><td>Main</td><td>MP_TVSeries.dll</td></row>
 		<row><td>Main</td><td>PluginConfigLoader</td></row>
-		<row><td>Main</td><td>SubtitleDownloader.dll</td></row>
 		<row><td>Main</td><td>Updates</td></row>
 		<row><td>Main</td><td>Wiki</td></row>
-		<row><td>Main</td><td>_z.dll</td></row>
+		<row><td>MediaInfo</td><td>MediaInfo.dll</td></row>
+		<row><td>SubTitleDowloader</td><td>SubtitleDownloader.dll</td></row>
+		<row><td>SubTitleDowloader</td><td>_z.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1344,40 +1348,53 @@
 		<row><td>_z.dll</td><td>_z.dll</td><td>7z.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\7z.dll</td><td>1</td><td/></row>
 		<row><td>common.window.tvseries.xml</td><td>skinBlue3XML</td><td>COMMON~1.XML|common.window.TVseries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\common.window.TVseries.xml</td><td>17</td><td/></row>
 		<row><td>cs.xml</td><td>Languages</td><td>cs.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\cs.xml</td><td>1</td><td/></row>
-		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>17</td><td/></row>
-		<row><td>de.xml</td><td>Languages</td><td>de.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\de.xml</td><td>17</td><td/></row>
-		<row><td>en_us_.xml</td><td>Languages</td><td>en(us).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\en(us).xml</td><td>17</td><td/></row>
-		<row><td>es.xml</td><td>Languages</td><td>es.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\es.xml</td><td>17</td><td/></row>
+		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>1</td><td/></row>
+		<row><td>de.xml</td><td>Languages</td><td>de.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\de.xml</td><td>1</td><td/></row>
+		<row><td>el.xml</td><td>Languages</td><td>el.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\el.xml</td><td>1</td><td/></row>
+		<row><td>en_us_.xml</td><td>Languages</td><td>en(us).xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\en(us).xml</td><td>1</td><td/></row>
+		<row><td>es.xml</td><td>Languages</td><td>es.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\es.xml</td><td>1</td><td/></row>
 		<row><td>forums.url</td><td>Forums</td><td>Forums.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Forums.url</td><td>1</td><td/></row>
-		<row><td>fr.xml</td><td>Languages</td><td>fr.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\fr.xml</td><td>17</td><td/></row>
-		<row><td>he.xml</td><td>Languages</td><td>he.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\he.xml</td><td>17</td><td/></row>
+		<row><td>fr.xml</td><td>Languages</td><td>fr.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\fr.xml</td><td>1</td><td/></row>
+		<row><td>he.xml</td><td>Languages</td><td>he.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\he.xml</td><td>1</td><td/></row>
 		<row><td>home.url</td><td>Home</td><td>Home.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Home.url</td><td>1</td><td/></row>
 		<row><td>icsharpcode.sharpziplib.dll</td><td>ICSharpCode.SharpZipLib.dll</td><td>ICSHAR~1.DLL|ICSharpCode.SharpZipLib.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\ICSharpCode.SharpZipLib.dll</td><td>1</td><td/></row>
 		<row><td>issues.url</td><td>Issues</td><td>Issues.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Issues.url</td><td>1</td><td/></row>
-		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>17</td><td/></row>
+		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>1</td><td/></row>
+		<row><td>mediainfo.dll</td><td>MediaInfo.dll</td><td>MEDIAI~1.DLL|MediaInfo.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\MediaInfo.dll</td><td>1</td><td/></row>
 		<row><td>mp_tvseries.dll</td><td>MP_TVSeries.dll</td><td>MP-TVS~1.DLL|MP-TVSeries.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BinDir&gt;\MP-TVSeries.dll</td><td>1</td><td/></row>
 		<row><td>nl.xml</td><td>Languages</td><td>nl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\nl.xml</td><td>1</td><td/></row>
-		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>17</td><td/></row>
-		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>17</td><td/></row>
-		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>17</td><td/></row>
+		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>1</td><td/></row>
+		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>1</td><td/></row>
+		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>1</td><td/></row>
 		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;UtilsDir&gt;\pluginconfigloader\pluginconfigloader\bin\release\PluginConfigLoader.exe</td><td>1</td><td/></row>
-		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>17</td><td/></row>
-		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>17</td><td/></row>
+		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>1</td><td/></row>
+		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
+		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
 		<row><td>subtitledownloader.dll</td><td>SubtitleDownloader.dll</td><td>SUBTIT~1.DLL|SubtitleDownloader.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\SubtitleDownloader.dll</td><td>1</td><td/></row>
-		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.dummy.xml</td><td>17</td><td/></row>
+		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.fanart.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.FanArt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.FanArt.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.episodelist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.EpisodeList.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.EpisodeList.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.facade.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Facade.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Facade.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.fanart.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.FanArt.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.FanArt.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.fanart.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.FanArt.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.FanArt.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.pincodedialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.PinCodeDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.PinCodeDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.grouplist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.GroupList.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.GroupList.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.hiddenmenu.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.HiddenMenu.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.HiddenMenu.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.overlay.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Overlay.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Overlay.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.pincodedialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.PinCodeDialog.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.PinCodeDialog.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.pincodedialog.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.PinCodeDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.PinCodeDialog.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.playlist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Playlist.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Playlist.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.playlist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Playlist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Playlist.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.playlist.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.Playlist.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.Playlist.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.ratingdialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.RatingDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.RatingDialog.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.ratingdialog.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.RatingDialog.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.RatingDialog.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.ratingdialog.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.RatingDialog.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.RatingDialog.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.skinsettings.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SkinSettings.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SkinSettings.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.seriesandseasonfilm</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SeriesAndSeasonFilmstrip.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SeriesAndSeasonFilmstrip.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.seriesandseasonlist</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SeriesAndSeasonListPosters.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SeriesAndSeasonListPosters.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.serieslistbanners.x</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SeriesListBanners.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SeriesListBanners.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.serieswidebanners.x</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SeriesWideBanners.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SeriesWideBanners.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.skinsettings.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.SkinSettings.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.SkinSettings.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.skinsettings.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.SkinSettings.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.SkinSettings.xml</td><td>17</td><td/></row>
-		<row><td>tvseries.xml</td><td>skinBlue3WideXML</td><td>TVSeries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.xml</td><td>17</td><td/></row>
+		<row><td>tvseries.topbar.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.TopBar.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.TopBar.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.xml</td><td>skinBlue3WideXML</td><td>TVSeries.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.xml1</td><td>skinBlue3XML</td><td>TVSeries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.xml</td><td>17</td><td/></row>
 		<row><td>updates.url</td><td>Updates</td><td>Updates.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Updates.url</td><td>1</td><td/></row>
 		<row><td>wiki.url</td><td>Wiki</td><td>Wiki.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Wiki.url</td><td>1</td><td/></row>
@@ -1636,6 +1653,7 @@
 		<row><td>Issues</td><td/><td/><td>_7F846ECC_7C21_4158_AB9A_FC4BE1131072_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Languages</td><td/><td/><td>_43676FB1_360E_4DBF_969B_179B371EB92A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MP_TVSeries.dll</td><td/><td/><td>_3D521D74_D0A4_40AB_8993_D9147023752A_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>MediaInfo.dll</td><td/><td/><td>_29635E16_1C8A_4834_9579_C98737CD99E2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PluginConfigLoader</td><td/><td/><td>_5B0A85B6_7138_45C5_A964_0E08743C61D3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SubtitleDownloader.dll</td><td/><td/><td>_EA13FE16_030C_4022_AE5C_FAA0992269E0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Updates</td><td/><td/><td>_906420BA_C1A6_4D16_A4EE_0749D1E8796D_FILTER</td><td/><td/><td/><td/></row>
@@ -1723,7 +1741,9 @@
 		<row><td>Blue3</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Blue3Wide</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>MediaInfo</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Skins</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>SubTitleDowloader</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -1982,7 +2002,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.4.0</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.5.0</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -2259,11 +2279,15 @@
 		<row><td>Complete</td><td>Blue3</td></row>
 		<row><td>Complete</td><td>Blue3Wide</td></row>
 		<row><td>Complete</td><td>Main</td></row>
+		<row><td>Complete</td><td>MediaInfo</td></row>
 		<row><td>Complete</td><td>Skins</td></row>
+		<row><td>Complete</td><td>SubTitleDowloader</td></row>
 		<row><td>Custom</td><td>Blue3</td></row>
 		<row><td>Custom</td><td>Blue3Wide</td></row>
 		<row><td>Custom</td><td>Main</td></row>
+		<row><td>Custom</td><td>MediaInfo</td></row>
 		<row><td>Custom</td><td>Skins</td></row>
+		<row><td>Custom</td><td>SubTitleDowloader</td></row>
 	</table>
 
 	<table name="ISStorages">
@@ -3495,7 +3519,13 @@
 		<row><td>ID_STRING23</td><td>1033</td><td>Wiki</td><td>0</td><td/><td>463291602</td></row>
 		<row><td>ID_STRING24</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-1415723317</td></row>
 		<row><td>ID_STRING25</td><td>1033</td><td>This feature contains all the language translations for the MP-TVSeries plugin, if you want to create a custom language</td><td>0</td><td/><td>-1415764213</td></row>
+		<row><td>ID_STRING26</td><td>1033</td><td>MediaInfo</td><td>0</td><td/><td>-526481589</td></row>
+		<row><td>ID_STRING27</td><td>1033</td><td>MediaInfo supplies technical and tag information about your video or audio files. Newer versions will not be downgraded.\n\nv0.7.27.0</td><td>0</td><td/><td>-526488916</td></row>
+		<row><td>ID_STRING28</td><td>1033</td><td>Subtitle Downloader</td><td>0</td><td/><td>-526485492</td></row>
+		<row><td>ID_STRING29</td><td>1033</td><td>SubtitleDownloader is a C# API library for downloading subtitles. It has support for multiple sites e.g. OpenSubtitles, Sublight, SubtitleSource, TVSubtitles ... and multiple languages.\n\nAuthor: Seco, v1.6.0.0</td><td>0</td><td/><td>-526475924</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>http://code.google.com/p/mptvseries/</td><td>0</td><td/><td>463326637</td></row>
+		<row><td>ID_STRING30</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-526476692</td></row>
+		<row><td>ID_STRING31</td><td>1033</td><td>Translations used by the plugin to present data in the GUI. This can optionally be installed if you wish to customise your own translations.</td><td>0</td><td/><td>-526482804</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://forum.team-mediaportal.com/my-tvseries-162/</td><td>0</td><td/><td>463295949</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>MediaPortal Forums</td><td>0</td><td/><td>463306189</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>http://code.google.com/p/mptvseries/downloads/list</td><td>0</td><td/><td>463326669</td></row>
@@ -4102,9 +4132,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{F44D31BB-ACC2-4B9E-B1CD-C38F210786C3}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.4</td><td/></row>
-		<row><td>ProductVersion</td><td>2.4.0.868</td><td/></row>
+		<row><td>ProductCode</td><td>{3EFECEAB-9BF1-49E3-A070-9187A49DB86B}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.5.0</td><td/></row>
+		<row><td>ProductVersion</td><td>2.5.0.911</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
