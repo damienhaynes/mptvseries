@@ -242,5 +242,6 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Check your connection and try again</string>
     
 	<string Field="Playlist" Original="Playlist">Playlist</string>
+  <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Last Online Update</string>
 	
 </strings>
