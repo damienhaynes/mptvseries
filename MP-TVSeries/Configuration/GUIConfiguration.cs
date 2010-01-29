@@ -625,17 +625,18 @@ namespace WindowPlugins.GUITVSeries
         {
             if (initLoading) return;
             if (null == load) load = new loadingDisplay();
-            //this.SuspendLayout();
+           
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
             SQLCondition condition = new SQLCondition();
             List<DBSeries> seriesList = DBSeries.Get(condition);
             load.updateStats(seriesList.Count, 0, 0);
             List<DBSeason> altSeasonList = DBSeason.Get(new SQLCondition(), false);
-            load.updateStats(seriesList.Count, altSeasonList.Count, 0);
-            List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false); 
-            load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
-            aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, altEpList.Count);
+            load.updateStats(seriesList.Count, altSeasonList.Count, 0);            
+            SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes");
+
+            load.updateStats(seriesList.Count, altSeasonList.Count, int.Parse(results.GetRow(0).fields[0]));
+            aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, int.Parse(results.GetRow(0).fields[0]));
 
             if (seriesList.Count == 0)
             {
@@ -653,12 +654,19 @@ namespace WindowPlugins.GUITVSeries
                 root.Nodes.Add(seriesNode);
                 Font fontDefault = treeView_Library.Font;
 
-                //set FontStyle
+                // set color for non-local files
+                if (series[DBOnlineSeries.cEpisodeCount] == 0) {
+                    seriesNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                } 
+                else {
+                    // set color for watched items
+                    if (series[DBOnlineSeries.cUnwatchedItems] == 0)
+                        seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
+                }
+                
+                // set FontStyle
                 if (series[DBSeries.cHidden])
                     seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-                //set color for watched items
-                if (series[DBOnlineSeries.cUnwatchedItems] == 0)
-                    seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
 
                 int seriesID = series[DBSeries.cID];            
                 foreach (DBSeason season in altSeasonList)
@@ -670,54 +678,28 @@ namespace WindowPlugins.GUITVSeries
                             seasonNode = new TreeNode(Translation.specials);
                         else
                             seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
+                        
                         seasonNode.Name = DBSeason.cTableName;
                         seasonNode.Tag = (DBSeason)season;
                         seriesNode.Nodes.Add(seasonNode);
-                        // default a season node to disabled, reenable it if an episode node is valid
-                        seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
                         
-                        //set FontStyle
+                        // set no local files color
+                        if (season[DBSeason.cEpisodeCount] == 0) {
+                            seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                        }
+                        else {
+                            // set color for watched season
+                            if (season[DBSeason.cUnwatchedItems] == 0)
+                                seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
+                        }
+
+                        // set FontStyle
                         if (season[DBSeason.cHidden])
                             seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-
-                        int epCount = 0;
-                        int seasonIndex = season[DBSeason.cIndex];
-                        
-                        foreach (DBEpisode episode in altEpList)
-                        {
-                            if (episode[DBEpisode.cSeriesID] == seriesID && episode[DBEpisode.cSeasonIndex] == seasonIndex)
-                            {
-                                epCount++;                                
-                                String sEpisodeName = (String)episode[DBEpisode.cEpisodeName];
-                                TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
-                                episodeNode.Name = DBEpisode.cTableName;
-                                episodeNode.Tag = (DBEpisode)episode;
-                                if (episode[DBEpisode.cFilename].ToString().Length == 0)
-                                {
-                                    episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
-                                }
-                                else
-                                {
-                                    //set color for watched episode
-                                    if (episode[DBOnlineEpisode.cWatched] == 1)
-                                        episodeNode.ForeColor = System.Drawing.Color.DarkBlue;
-                                    //set color for watched season
-                                    if (season[DBSeason.cEpisodesUnWatched] == 0)
-                                        seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
-                                    else seasonNode.ForeColor = treeView_Library.ForeColor;
-                                }
-                                seasonNode.Nodes.Add(episodeNode);
-                                //set FontStyle
-                                if (episode[DBOnlineEpisode.cHidden])
-                                    episodeNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-                            }
-                        }
-                        if (epCount == 0) // no episodes, then no season node
-                            seriesNode.Nodes.Remove(seasonNode);
                     }
                 }
             }
-            this.ResumeLayout();            
+            this.ResumeLayout();
             load.Close();
             load = null;
         }
@@ -1591,8 +1573,8 @@ namespace WindowPlugins.GUITVSeries
                 #region When Series Nodes is Clicked
 
                 case DBSeries.cTableName:
-                    {
-                        DBSeries series = (DBSeries)node.Tag;
+                    {                       
+                        DBSeries series = (DBSeries)node.Tag;                        
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
@@ -1706,6 +1688,53 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.ResumeLayout();
             foreach (Control c in dataGridView1.Controls)
                 c.ResumeLayout();
+        }
+
+        private void treeView_Library_AfterExpand(object sender, TreeViewEventArgs e) {
+            TreeNode node = e.Node;
+            if (node.Level != 0) return;
+
+            Font defaultFont = treeView_Library.Font;
+            DBSeries series = (DBSeries)node.Tag;
+            int seriesID = series[DBSeries.cID];
+
+            //////////////////////////////////////////////////////////////////////////////
+            #region Load Episodes into season tree child nodes of expanding series
+            foreach (TreeNode childNode in node.Nodes) {
+                // Check if we have already loaded episodes into season nodes
+                if (childNode.Nodes.Count == 0) {
+                    DBSeason season = (DBSeason)childNode.Tag;
+                    int seasonIndex = season[DBSeason.cIndex];
+
+                    List<DBEpisode> episodes = DBEpisode.Get(seriesID, seasonIndex);
+
+                    foreach (DBEpisode episode in episodes) {
+                        String episodeName = (String)episode[DBEpisode.cEpisodeName];
+                        TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episodeName);
+                        episodeNode.Name = DBEpisode.cTableName;
+                        episodeNode.Tag = (DBEpisode)episode;
+
+                        // set color for non-local file
+                        if (episode[DBEpisode.cFilename].ToString().Length == 0) {
+                            episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                        }
+                        else {
+                            // set color for watched episode
+                            if (episode[DBOnlineEpisode.cWatched] == 1)
+                                episodeNode.ForeColor = System.Drawing.Color.DarkBlue;
+                        }
+
+                        // set FontStyle for hidden episodes
+                        if (episode[DBOnlineEpisode.cHidden])
+                            episodeNode.NodeFont = new Font(defaultFont.Name, defaultFont.Size, FontStyle.Italic);
+
+                        childNode.Nodes.Add(episodeNode);
+                    }
+                }
+            }
+
+            #endregion
+            //////////////////////////////////////////////////////////////////////////////
         }
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue)
