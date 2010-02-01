@@ -31,8 +31,8 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBOnlineSeries : DBTable
-    {
+    public class DBOnlineSeries : DBTable {
+        #region Online DB Fields
         public const String cTableName = "online_series";
 
         public const String cID = "ID";
@@ -81,27 +81,51 @@ namespace WindowPlugins.GUITVSeries
 
 		public const String cViewTags = "ViewTags";
 
+        public const String cSeriesID = "SeriesID";
+        public const String cBanner = "banner";
+        public const String cLanguage = "language";
+        public const String cIMDBID = "IMDB_ID";
+        public const String cZap2ITID = "zap2it_id";
+        public const String cContentRating = "ContentRating";
+        public const String cNetworkID = "NetworkID";
+        public const String cAdded = "added";
+        public const String cAddedBy = "addedBy";
+        public const String cFanart = "fanart";
+        public const String cLastUpdated = "lastupdated";
+        public const String cPoster = "poster";
+        #endregion
+
         public const int cDBVersion = 3;
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string, DBField>();
 
-        static DBOnlineSeries()
-        {
+        static DBOnlineSeries() {
+            ///////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
             s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
-            s_FieldToDisplayNameMap.Add(cPrettyName, "Pretty Name");
+            s_FieldToDisplayNameMap.Add(cPrettyName, "Title");
             s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
             s_FieldToDisplayNameMap.Add(cGenre, "Genre");
-            s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");
-            s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
-            s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");
-            s_FieldToDisplayNameMap.Add(cPosterFileNames, "Poster FileName List");
-            s_FieldToDisplayNameMap.Add(cCurrentPosterFileName, "Current Poster FileName");
-            s_FieldToDisplayNameMap.Add(cAirsDay, "Week Day Aired");
-            s_FieldToDisplayNameMap.Add(cAirsTime, "Hour Aired");
-            s_FieldToDisplayNameMap.Add(cSortName, "Sort (Original) Name");
-           
+            s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");            
+            s_FieldToDisplayNameMap.Add(cAirsDay, "Aired Day");
+            s_FieldToDisplayNameMap.Add(cAirsTime, "Aired Time");
+            s_FieldToDisplayNameMap.Add(cSortName, "Sort By");
+            s_FieldToDisplayNameMap.Add(cLanguage, "Language");
+            s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
+            s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
+            s_FieldToDisplayNameMap.Add(cChoseEpisodeOrder, "Episode Order");
+            s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
+            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
+            s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
+            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
+            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");            
+            #endregion
+            ///////////////////////////////////////////////////
+
+            //////////////////////////////////////////////////
+            #region Local DB field mapping to Online DB
             s_OnlineToFieldMap.Add("id", cID);            
             s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
             s_OnlineToFieldMap.Add("Status", cStatus);
@@ -109,7 +133,9 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("Overview", cSummary);
             s_OnlineToFieldMap.Add("Airs_DayOfWeek", cAirsDay);
             s_OnlineToFieldMap.Add("Airs_Time", cAirsTime);
-            s_OnlineToFieldMap.Add("SortName", cSortName);            
+            s_OnlineToFieldMap.Add("SortName", cSortName);
+            #endregion
+            //////////////////////////////////////////////////
 
             // make sure the table is created on first run
             DBOnlineSeries dummy = new DBOnlineSeries();           
@@ -165,8 +191,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
             base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cIsFavourite, new DBField(DBField.cTypeString));
+            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));           
             base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
@@ -269,13 +294,16 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_series";
         public const String cOutName = "Series";
-        public const int cDBVersion = 12;
 
+        #region DB Field Names
         public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
         public const String cScanIgnore = "ScanIgnore";
         public const String cDuplicateLocalName = "DuplicateLocalName";
         public const String cHidden = "Hidden";
+        #endregion
+
+        public const int cDBVersion = 12;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
