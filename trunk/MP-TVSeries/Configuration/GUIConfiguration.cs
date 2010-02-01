@@ -1519,6 +1519,28 @@ namespace WindowPlugins.GUITVSeries
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
+                                case DBEpisode.cAvailableSubtitles:
+                                case DBEpisode.cVideoWidth:
+                                case DBEpisode.cVideoHeight:
+                                case DBEpisode.cVideoFrameRate:
+                                case DBEpisode.cVideoCodec:
+                                case DBEpisode.cVideoBitRate:
+                                case DBEpisode.cVideoAspectRatio:
+                                case DBEpisode.cAudioTracks:
+                                case DBEpisode.cAudioCodec:
+                                case DBEpisode.cAudioChannels:
+                                case DBEpisode.cAudioBitrate:
+                                case DBEpisode.cFileDateAdded:
+                                case DBEpisode.cFileDateCreated:
+                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
+                                case DBEpisode.cTextCount:
+                                    if (!Helper.String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
                                 default:
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
