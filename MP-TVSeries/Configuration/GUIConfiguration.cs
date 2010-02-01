@@ -1726,7 +1726,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
-                                case DBSeries.cDuplicateLocalName:
+                                case DBSeries.cDuplicateLocalName:                                
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -2722,6 +2722,18 @@ namespace WindowPlugins.GUITVSeries
                     DeleteNode(clickedNode);
                     break;
 
+                case "update":
+                    UpdateNode(clickedNode);
+                    break;
+
+                case "watched":
+                    ToggleWatchedNode(clickedNode, 1);
+                    break;
+
+                case "unwatched":
+                    ToggleWatchedNode(clickedNode, 0);
+                    break;
+
                 case "subtitle":
                     GetSubtitles(clickedNode);
                     break;
@@ -2738,17 +2750,6 @@ namespace WindowPlugins.GUITVSeries
                     ResetUserSelectionsToolStripMenuItem(clickedNode);
                     break;
 
-                case "update":
-                    UpdateNode(clickedNode);
-                    break;
-
-                case "watched":
-                    ToggleWatchedNode(clickedNode, 1);
-                    break;
-
-                case "unwatched":
-                    ToggleWatchedNode(clickedNode, 0);
-                    break;
             }
         }
 
@@ -3080,11 +3081,19 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);                  
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
-                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;                   
                     break;
             }
+            // Hide Downloaders not frequently used by users
+            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
+                contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Visible = false;
+            }
+            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
+                contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Visible = false;
+            }
+
             if (bHidden)
                 contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "UnHide";
             else
