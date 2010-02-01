@@ -43,10 +43,12 @@ namespace WindowPlugins.GUITVSeries
             get { return this; }
             set { overRide(this, value); }
         }
+
         public const String cTableName = "season";
         public const String cOutName = "Season";
         public const int cDBVersion = 5;
-
+        
+        #region DB Field Names
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesID = "SeriesID";
         public const String cIndex = "SeasonIndex";
@@ -56,13 +58,14 @@ namespace WindowPlugins.GUITVSeries
         public const String cHasLocalFilesTemp = "HasLocalFilesTemp";
         public const String cHasEpisodes = "HasOnlineEpisodes";
         public const String cHasEpisodesTemp = "HasOnlineEpisodesTemp";
-        public const String cHidden = "Hidden";
+        public const String cHidden = "Hidden";        
 
         public const String cForomSubtitleRoot = "ForomSubtitleRoot";
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
+        #endregion
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -75,11 +78,15 @@ namespace WindowPlugins.GUITVSeries
         {
             DBSeason dummy = new DBSeason();
 
+            ////////////////////////////////////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
             s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
             s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
             s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
-            s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
-            s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");            
+            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
+            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
+            #endregion
+            ////////////////////////////////////////////////////////////////////////////////
 
             int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeasonVersion);

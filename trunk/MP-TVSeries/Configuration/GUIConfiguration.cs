@@ -1459,13 +1459,9 @@ namespace WindowPlugins.GUITVSeries
                         foreach (String key in episode.FieldNames)
                         {
                             switch (key)
-                            {
-                                case DBEpisode.cSeasonIndex:
-                                case DBEpisode.cEpisodeIndex:
-                                case DBEpisode.cSeriesID:
-                                case DBEpisode.cCompositeID:
-                                case DBEpisode.cFilename:
-                                case DBOnlineEpisode.cID:
+                            {                                                                
+                                case DBEpisode.cFilename:                                
+                                    // Read Only Fields
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
 
@@ -1476,7 +1472,51 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cEpisodeName:
                                 case DBEpisode.cImportProcessed:
                                 case DBOnlineEpisode.cOnlineDataImported:
-                                    // hide those, they are handled internally
+                                    // hide these fields, they are handled internally
+                                    break;
+                                
+                                case DBEpisode.cSeasonIndex:
+                                case DBEpisode.cEpisodeIndex:
+                                case DBEpisode.cEpisodeIndex2:
+                                case DBEpisode.cSeriesID:
+                                case DBEpisode.cCompositeID:
+                                case DBEpisode.cCompositeID2:
+                                case DBEpisode.cStopTime:
+                                case DBEpisode.cExtension:
+                                case DBEpisode.cLocalPlaytime:
+                                case DBEpisode.cIsOnRemovable:
+                                case DBOnlineEpisode.cHidden:
+                                case DBOnlineEpisode.cID:
+                                case DBOnlineEpisode.cLastUpdated:
+                                case DBOnlineEpisode.cDownloadExpectedNames:
+                                case DBOnlineEpisode.cDownloadPending:
+                                case DBOnlineEpisode.cWatched:                                
+                                case DBOnlineEpisode.cEpisodeThumbnailFilename:
+                                case DBOnlineEpisode.cEpisodeThumbnailUrl:
+                                case DBOnlineEpisode.cCombinedEpisodeNumber:
+                                case DBOnlineEpisode.cCombinedSeason:
+                                case DBOnlineEpisode.cEpisodeImageFlag:
+                                case DBOnlineEpisode.cIMDBID:
+                                case DBOnlineEpisode.cLanguage:
+                                case DBOnlineEpisode.cProductionCode:
+                                case DBOnlineEpisode.cSeasonID:
+                                case DBOnlineEpisode.cDVDChapter:
+                                case DBOnlineEpisode.cDVDDiscID:
+                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                    // hide these fields as we are not so interested in, 
+                                    // possibly add a toggle option to display all fields later
+                                    break;
+                                
+                                case DBEpisode.cVolumeLabel:
+                                    if (!Helper.String.IsNullOrEmpty(episode[key]))                                        
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
+                                case DBOnlineEpisode.cAirsAfterSeason:
+                                case DBOnlineEpisode.cAirsBeforeEpisode:
+                                case DBOnlineEpisode.cAirsBeforeSeason:
+                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 default:
@@ -1553,6 +1593,14 @@ namespace WindowPlugins.GUITVSeries
                                     // hide those, they are handled internally
                                     break;
 
+                                case DBSeason.cForomSubtitleRoot:                                                                
+                                case DBSeason.cUnwatchedItems:
+                                case DBSeason.cHasEpisodes:
+                                case DBSeason.cHasEpisodesTemp:
+                                    // hide these fields as we are not so interested in, 
+                                    // possibly add a toggle option to display all fields later
+                                    break;
+
                                 default:
                                     AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
                                     break;
@@ -1568,6 +1616,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     break;
                 #endregion
+                //////////////////////////////////////////////////////////////////////////////
 
                 //////////////////////////////////////////////////////////////////////////////
                 #region When Series Nodes is Clicked
@@ -1642,7 +1691,7 @@ namespace WindowPlugins.GUITVSeries
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
 
-                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        // go over all the database fields and add to Grid View
                         foreach (String key in series.FieldNames)
                         {
                             switch (key)
@@ -1656,12 +1705,42 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
                                 case DBSeries.cDuplicateLocalName:
-                                    // hide those, they are handled internally
+                                    // hide these fields, they are handled internally
                                     break;
+                                
+                                case DBOnlineSeries.cGetEpisodesTimeStamp:
+                                case DBOnlineSeries.cUpdateBannersTimeStamp:
+                                case DBOnlineSeries.cWatchedFileTimeStamp:
+                                case DBOnlineSeries.cUnwatchedItems:
+                                case DBOnlineSeries.cZap2ITID:
+                                case DBOnlineSeries.cIMDBID:
+                                case DBOnlineSeries.cNetworkID:
+                                case DBOnlineSeries.cAdded:
+                                case DBOnlineSeries.cAddedBy:
+                                case DBOnlineSeries.cFanart:
+                                case DBOnlineSeries.cLastUpdated:
+                                case DBOnlineSeries.cPoster:
+                                case DBOnlineSeries.cViewTags:
+                                case DBOnlineSeries.cBanner:
+                                case DBOnlineSeries.cEpisodeOrders:                                
+                                case DBOnlineSeries.cLanguage:
+                                case DBOnlineSeries.cSeriesID:
+                                case DBSeries.cHidden:                                
+                                     // hide these fields as we are not so interested in, 
+                                     // possibly add a toggle option to display all fields later
+                                     break;
 
                                 case DBSeries.cParsedName:
                                 case DBSeries.cID:
+                                case DBOnlineSeries.cEpisodeCount:
+                                case DBOnlineSeries.cEpisodesUnWatched:
+                                    // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    break;
+
+                                case DBOnlineSeries.cChoseEpisodeOrder:
+                                    if (!Helper.String.IsNullOrEmpty(series[key]))
+                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
                                 default:
@@ -1670,7 +1749,7 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                        // let configs now what was selected (for samples)    
+                        // let formatting rules know what was selected (for samples)    
                         if (!SkinSettings.ImportFormatting) {
                             this.formattingConfiguration1.Series = series;
                             this.formattingConfiguration1.Season = null;
@@ -1749,11 +1828,15 @@ namespace WindowPlugins.GUITVSeries
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue, bool CanModify, DataGridViewContentAlignment TextAlign)
         {
+            // Add new Row
             int id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
 
+            // First Column (Name)
             DataGridViewCell cell = this.dataGridView1.Rows[id].Cells[0];
+            cell.Style.BackColor = System.Drawing.SystemColors.Control;
             cell.ReadOnly = true;
 
+            // Second Column (Value)
             cell = this.dataGridView1.Rows[id].Cells[1];
             cell.Tag = FieldName;
             if (!CanModify)

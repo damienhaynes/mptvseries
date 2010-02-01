@@ -36,6 +36,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public const String cTableName = "online_episodes";
 
+        #region Online DB Fields
         public const String cCompositeID = "CompositeID";         // composite string used for primary index, based on series, season & episode
         public const String cSeriesID = "SeriesID";
         public const String cID = "EpisodeID";                    // onlineDB episodeID
@@ -53,25 +54,52 @@ namespace WindowPlugins.GUITVSeries
         public const String cLastUpdated = "lastupdated";
         public const String cDownloadPending = "DownloadPending";
         public const String cDownloadExpectedNames = "DownloadExpectedName";
-
         public const String cEpisodeThumbnailUrl = "ThumbUrl";
         public const String cEpisodeThumbnailFilename = "thumbFilename";
-
         public const String cAirsBeforeSeason = "airsbefore_season";
         public const String cAirsBeforeEpisode = "airsbefore_episode";
-
         public const String cAirsAfterSeason = "airsafter_season";
-
         public const String cRating = "Rating";
         public const String cMyRating = "myRating";
-        
+        public const String cCombinedEpisodeNumber = "Combined_episodenumber";
+        public const String cCombinedSeason = "Combined_season";
+        public const String cDVDChapter = "DVD_chapter";
+        public const String cDVDDiscID = "DVD_discid";
+        public const String cDVDEpisodeNumber = "DVD_episodenumber";
+        public const String cDVDSeasonNumber = "DVD_season";
+        public const String cEpisodeImageFlag = "EpImgFlag";
+        public const String cIMDBID = "IMDB_ID";
+        public const String cLanguage = "Language";
+        public const String cProductionCode = "ProductionCode";
+        public const String cAbsoluteNumber = "absolute_number";
+        public const String cSeasonID = "seasonid";
+        #endregion
+
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
         
         new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Writer", "Director", "GuestStars" });
 
         static DBOnlineEpisode()
         {
+            //////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
+            s_FieldToDisplayNameMap.Add(cID, "Episode ID");
+            s_FieldToDisplayNameMap.Add(cEpisodeSummary, "Overview");
+            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
+            s_FieldToDisplayNameMap.Add(cFirstAired, "Air Date");
+            s_FieldToDisplayNameMap.Add(cGuestStars, "Guest Stars");
+            s_FieldToDisplayNameMap.Add(cDVDEpisodeNumber, "DVD Episode Number");
+            s_FieldToDisplayNameMap.Add(cDVDSeasonNumber, "DVD Season Number");
+            s_FieldToDisplayNameMap.Add(cAirsAfterSeason, "Airs After Season");
+            s_FieldToDisplayNameMap.Add(cAirsBeforeSeason, "Airs Before Season");
+            s_FieldToDisplayNameMap.Add(cAirsBeforeEpisode, "Airs Before Episode");
+            #endregion
+            //////////////////////////////////////////////////
+
+            //////////////////////////////////////////////////
+            #region Local DB field mapping to Online DB
             s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
             s_OnlineToFieldMap.Add("EpisodeNumber", cEpisodeIndex);
             s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
@@ -79,6 +107,8 @@ namespace WindowPlugins.GUITVSeries
             s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
             s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
             s_OnlineToFieldMap.Add("filename", cEpisodeThumbnailUrl);
+            #endregion
+            //////////////////////////////////////////////////
 
             // lately it also returns seriesID (which we already had before - but unfortunatly not in all lower case, prevents an error msg, thats all
             s_OnlineToFieldMap.Add("seriesid", cSeriesID);
@@ -224,6 +254,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cOutName = "Episode";
         public const int cDBVersion = 6;
 
+        #region Local DB Fields
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
         public const String cSeriesID = DBOnlineEpisode.cSeriesID;
@@ -238,21 +269,34 @@ namespace WindowPlugins.GUITVSeries
         public const String cImportProcessed = "LocalImportProcessed";
         public const String cAvailableSubtitles = "AvailableSubtitles";
 
+        public const String cAudioCodec = "AudioCodec";
+        public const String cAudioBitrate = "AudioBitrate";
+        public const String cAudioChannels = "AudioChannels";
+        public const String cAudioTracks = "AudioTracks";
+        public const String cTextCount = "TextCount";
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
+        public const String cVideoBitRate = "VideoBitrate";
+        public const String cVideoFrameRate = "VideoFrameRate";
+        public const String cVideoAspectRatio = "VideoAspectRatio";
+        public const String cVideoCodec = "VideoCodec";
+        
         public const String cStopTime = "StopTime";
 
         public const String cFileSizeBytes = "FileSizeB";
         public const String cFileSize = "FileSize";
 
+        public const String cLocalPlaytime = "localPlaytime";
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
         public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
+        public const String cExtension = "ext";
 
         public const String cIsOnRemovable = "Removable";
         public const String cVolumeLabel = "VolumeLabel";
 
         public const String cFileDateCreated = "FileDateCreated";
         public const String cFileDateAdded = "FileDateAdded";
+        #endregion
 
         private DBOnlineEpisode m_onlineEpisode = null;
 
@@ -276,18 +320,37 @@ namespace WindowPlugins.GUITVSeries
             // make sure the table is created on first run
             DBEpisode dummy = new DBEpisode();
 
+            ///////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
             s_FieldToDisplayNameMap.Add(cFilename, "Local FileName");
             s_FieldToDisplayNameMap.Add(cCompositeID, "Composite Episode ID");
             s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
             s_FieldToDisplayNameMap.Add(cSeasonIndex, "Season Index");
             s_FieldToDisplayNameMap.Add(cEpisodeIndex, "Episode Index");
             s_FieldToDisplayNameMap.Add(cEpisodeName, "Episode Name");
-            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cID, "Episode ID");
-            s_FieldToDisplayNameMap.Add(DBOnlineEpisode.cEpisodeSummary, "Overview");
+            s_FieldToDisplayNameMap.Add(cFileDateAdded, "Date Added");
+            s_FieldToDisplayNameMap.Add(cFileDateCreated, "Date Created");
+            s_FieldToDisplayNameMap.Add(cAvailableSubtitles, "Subtitles Available");
+            s_FieldToDisplayNameMap.Add(cVideoWidth, "Video Width");
+            s_FieldToDisplayNameMap.Add(cVideoHeight, "Video Height");
+            s_FieldToDisplayNameMap.Add(cVideoAspectRatio, "Video Aspect Ratio");
+            s_FieldToDisplayNameMap.Add(cVideoBitRate, "Video Bit Rate");
+            s_FieldToDisplayNameMap.Add(cVideoCodec, "Video Codec");
+            s_FieldToDisplayNameMap.Add(cVideoFrameRate, "Video Frame Rate");
+            s_FieldToDisplayNameMap.Add(cAudioBitrate, "Audio Bitrate");
+            s_FieldToDisplayNameMap.Add(cVolumeLabel, "Volume Label");
+            s_FieldToDisplayNameMap.Add(cAudioChannels, "Audio Channels");
+            s_FieldToDisplayNameMap.Add(cAudioCodec, "Audio Codec");
+            s_FieldToDisplayNameMap.Add(cAudioTracks, "Audio Tracks");
+            s_FieldToDisplayNameMap.Add(cTextCount, "Subtitle Count");
+            #endregion
+            ///////////////////////////////////////////////////
 
             int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBEpisodesVersion);
 
+            ///////////////////////////////////////////////////
+            #region Database Upgrade
             while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
                 switch (nUpgradeDBVersion)
@@ -331,10 +394,14 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             DBOption.SetOptions(DBOption.cDBEpisodesVersion, nCurrentDBVersion);
+            #endregion
+            ///////////////////////////////////////////////////
         }
 
         public static String PrettyFieldName(String sFieldName)
         {
+            if (DBOnlineEpisode.s_FieldToDisplayNameMap.ContainsKey(sFieldName))
+                return DBOnlineEpisode.s_FieldToDisplayNameMap[sFieldName];
             if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
                 return s_FieldToDisplayNameMap[sFieldName];
             else
