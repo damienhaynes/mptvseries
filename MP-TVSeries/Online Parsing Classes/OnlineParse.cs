@@ -68,7 +68,7 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.LocalScan, 
             ParsingAction.MediaInfo,            
             ParsingAction.IdentifyNewSeries, 
-            ParsingAction.IdentifyNewEpisodes, 
+            ParsingAction.IdentifyNewEpisodes           
         };
 
         private static List<ParsingAction> OnlineRefreshActions = new List<ParsingAction> { 
@@ -147,6 +147,7 @@ namespace WindowPlugins.GUITVSeries
         CParsingParameters m_params = null;
         DateTime m_LastOnlineMirrorUpdate = DateTime.MinValue;
 
+        public static bool IsMainOnlineParseComplete = true; // not including extra background threads
 
         int RETRY_INTERVAL = 1000;
         int RETRY_MULTIPLIER = 2;
@@ -252,6 +253,8 @@ namespace WindowPlugins.GUITVSeries
             m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             m_bNoExactMatch = false;
             m_worker.ReportProgress(0);
+
+            IsMainOnlineParseComplete = false;
 
             TVSeriesPlugin.IsResumeFromStandby = false;
 
@@ -413,7 +416,9 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             }
-            
+
+            IsMainOnlineParseComplete = true;
+
             // Notify users there are background threads still working
             if (tMediaInfo != null && tMediaInfo.IsBusy) 
                 MPTVSeriesLog.Write("*******************   MediaInfo Scan Still Going   ************************");
