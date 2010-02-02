@@ -33,7 +33,6 @@ namespace WindowPlugins.GUITVSeries
 {
     public class LocalParse
     {
-
         private BackgroundWorker worker = null;
 
         public delegate void LocalParseProgressHandler(int nProgress, List<parseResult> results);
@@ -107,7 +106,8 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (Exception)
                 {
-                    MPTVSeriesLog.Write("Warning: Could not add Volume Label/Removable Property to episode - are you using these as a capture group?");
+                    MPTVSeriesLog.Write("Warning: Could not add Volume Label for: " + file.m_sFull_FileName);
+                    MPTVSeriesLog.Write("Ensure file exists on Removable Media, otherwise uncheck removable property");
                 }
 
                 item = new ListViewItem(file.m_sMatch_FileName);
