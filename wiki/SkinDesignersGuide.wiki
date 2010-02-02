@@ -13,6 +13,34 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 <wiki:toc max_depth="3" />
 
 = Skinner's Change Log =
+== v2.3 - v2.5 ==
+ * New Skin Properties:
+|| *Property* || *Description* ||
+||#TVSeries.LastOnlineUpdate||Push's the Last Date\Time an Online Update occured ||
+||#TVSeries.WatchedCount||Push's the Watched Count of episodes in Episode View||
+||#TVSeries.UnWatchedCount||Push's the UnWatched Count of episodes in Episode View||
+
+ * All Translations are now pushed to the skin using the following property syntax:
+*#TVSeries.Translation.$(FieldName).Label*
+
+where *$(FieldName)* corresponds to the field name in the translation files e.g:
+
+ * #TVSeries.Translation.*Episodes*.Label
+ * #TVSeries.Translation.*MediaInfo*.Label
+ * #TVSeries.Translation.*Cast*.Label
+ * #TVSeries.Translation.*Actors*.Label
+ * #TVSeries.Translation.*FirstAired*.Label
+ * #TVSeries.Translation.*Certification*.Label
+ * #TVSeries.Translation.*AirsDay*.Label
+
+See Debug log output for a full listing.
+
+ * Translations can also be applied to Formatting Rules in TVSeries.SkinSettings.xml using the functions Trans($(FieldName)) e.g.
+
+{{{<Enabled>1<Format><Episode.InfoPanelLine1Key><FormatAs>Trans(Rating)}}}
+
+This will Translate the property #TVSeries.Episode.InfoPanelLine1Key by looking up the translation for "Rating".
+
 == v2.2 - v2.3 ==
  * Series Posters and Series Banners are now exposed to the skin as two separate properties: 
 
@@ -76,7 +104,7 @@ Dummy Controls are used so the plugin can force changes in the skin. This is don
 || 1241 || Visible when Fanart has colour properties defined ||
 || 1242 || Visible when Series Posters are used e.g. List Poster layout ||
 || 1243 || Visible when the selected item is Watched, applied to all views except groups ||
-|| 1244 || Visible when the selected item is not available, applied to all views except groups ||
+|| 1244 || Visible when the selected item is available, applied to all views except groups ||
 
 
 == Fanart Chooser Window ==
@@ -366,6 +394,8 @@ Formatting Rules can also make use of the built-in Math engine, allowing you to 
 
 This can then be used in your skin as standard property using: #TVSeries.Series.EpisodesWatched.
 
+Formatting Rules can also be configured in the plugins configuration and then copied into the Skin Settings xml (set import="false" to see logos tab in configuration settings).
+
 = Logo Rules =
 Logo Rules allow you to create a Single Image on the skin which consists of multiple logos, the logos get added to the image (from Left to Right) in the order they were successfully evaluated. If the image does not exist, or the rule does not evaluate based on the conditions set then the image is not added. The advantage of this is that you dont need to worry about any gaps generated, also it only requires a single Image on the skin. Here is an example set of logo rules:
 {{{
@@ -380,4 +410,4 @@ Logo Rules allow you to create a Single Image on the skin which consists of mult
   skin\Blue3wide\Media\TVSeries\Logos\<Series.Genre>.png;-;;-;=;-;;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;]]>
 </logos>
 }}}
-Logo Rules can be easily configured in the plugins configuration and then copied into the Skin Settings xml.
+Logo Rules can be easily configured in the plugins configuration and then copied into the Skin Settings xml (set import="false" to see logos tab in configuration settings).
