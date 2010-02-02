@@ -664,7 +664,7 @@ namespace WindowPlugins.GUITVSeries
                     else {
                         if (OnlineParsing.IsMainOnlineParseComplete) {
                             // we can now log output to keep user informed of scan progress
-                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString());
+                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(),MPTVSeriesLog.LogLevel.Normal);
                         }
                         else {                            
                             MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
