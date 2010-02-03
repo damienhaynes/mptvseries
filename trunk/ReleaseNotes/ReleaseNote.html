@@ -58,7 +58,91 @@ ul {
 </head>
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
-
+	<div class="main_title">TVSeries v2.5 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Skin</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Blue3Wide skin refresh and Translation support</strong></p>
+		<p>Updated Blue3Wide Skin layout, modularized the skin files so its easier to maintain and read, better 
+			visibility of the Fanart and the GUI is fully Translated. For users that dont like the new look you can 
+			find the old skin in the Zip Package.
+		</p>
+		<p>Skin properties are now read from all TVSeries xmls files so skinners can modularize skin files.</p>
+		<p>New Skin properties, see Skin Designers Guide for more information.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Translations</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Updated Translations and Publishing to skin</strong></p>
+		<p>The following languages have been updated: Dansk, Czech, Dutch, Italian, Spanish, Greek, Russian
+			German, French, Danish.</p>
+		<p>New Translations have been added so skinners can fully translate any existing TVSeries strings used. 
+			Translations can also be used in Skin Formatting rules. See Debug Log for a complete list of translatable strings.</p>
+		<p>Thanks to the following people whom contributed translations: 1stDead, Kucheek, HenkieFlits, RoChess, macro.tips
+			Cybertex, Pedernal74, elapse, Undel, Rasputin, catavolt, truffe, ubela64, Steffansp.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import / File Monitoring</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Improvements to way Network Shares are handled and a new Import feature</strong></p>
+		<p>Improved support for Network Shares when monitoring paths for changes. All mapped shares are translated to UNC paths
+			and are now always picked by File Monitor when changes occur e.g. Delete File, Added File, Renamed File.</p>
+		<p>File Monitoring interval is now configurable and defaults to 5 mins. Setting can be changed in General Settings tab of configuration.</p>
+		<p>Added ability to update a single series/seasons/episodes from with-in the GUI. This also has the ability to delete and refresh Episode thumbnails
+			which are sometimes out-dated or wrong. Setting for 'Update' is available from the Action menu after selecting an item.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Configuration</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Speed Improvements and better Details Layout in Gridview.</strong></p>
+		<p>Improved Speed of loading the configuration dialog, esp. for large number of episodes.</p>
+		<p>Improved Speed of Selections in Details tree, cleaned up Display Field names and removed unnecessary fields.</p>
+		<p>Fixed Configuration not displaying Episodes in details tab for large episode collections (15,000+).</p>
+		<p>Fixed Right Click select of series/seasons/episodes in Details Tree.</p>
+		<p>Delete Logic is now consistent to the behaviour in the GUI.</p>
+		<p>Logo Rules / Formatting Rules tabs are now hidden. Skinners can set import="false" in TVSeries.SkinSettings.xml to show tabs.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Subtitles</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Subtitle Downloading is no longer handled internally by plugin</strong></p>
+		<p>TVSeries now uses the SubtitleDownloader library provided by Seco, the Subtitle downloader library includes the support 
+			for many Subtitle providers/languages and can be configured in the plugin.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Installer</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Installer now include some new 3rd Party Libraries</strong></p>
+		<p>MediaInfo has been added back to package so old MediaPortal versions can easily be upgraded, current version is v0.7.27.0.</p>
+		<p>Libraries to support Subtitle downloading have been added SubtitleDownloader.dll (v1.6.0) and 7z.dll.</p>
+		<p>Database backup path has changed to the MediaPortal Database directory to make it easier to find and apply backup if needed.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">General / Misc</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">		
+		<p>Added new setting to Show season view when there is only one season available. Setting can be changed in General Settings of configuration.</p>
+		<p>Fixed and Re-Enabled Up/Down buttons in Parsing Expressions, much easier to add new ones and change order now.</p>
+		<p>Changed defaults for 'Prompt to Rate Episode' and 'Automatically choose Aired episode order' to enabled.</p>
+		<p>Added support 'Recently Added Episode' for new feature of the InfoService plugin (thanks edsche).</p>
+		<p>Fixed Sort Order of episodes in the 'Recently Added' view to respect Time component. Episodes now added on the same day are now sorted correctly.</p>
+		<p>Fixed a crash in Episode only views e.g. 'Recently Added' and 'Latest' when viewing an episode that did not get parsed from online.</p>
+		<p>Added new configuration setting to 'Substitute Missing Season Poster with corresponding Series Poster', default is disabled. 
+			Setting can be changed in General Settings of configuration</p>	
+	</div>
 	<div class="main_title">TVSeries v2.3 Release Highlights</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Views System</div>
