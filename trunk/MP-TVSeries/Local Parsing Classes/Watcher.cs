@@ -349,6 +349,12 @@ namespace WindowPlugins.GUITVSeries
             if (!TVSeriesPlugin.IsNetworkAvailable) {
                 MPTVSeriesLog.Write("Watcher: Network not available, aborting file scan");
                 return;
+            }                    
+            
+            // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
+            if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
+                MPTVSeriesLog.Write("Watcher: Fullscreen Video has been detected, aborting file scan");
+                return;
             }
 
             List<PathPair> newScan = Filelister.GetFiles(m_ScannedFolders);

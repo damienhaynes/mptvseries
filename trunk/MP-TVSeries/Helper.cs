@@ -216,7 +216,7 @@ namespace WindowPlugins.GUITVSeries
                 bool wasCached = false;
                 if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f])) {
                     if (!wasCached) {
-                        MPTVSeriesLog.Write("This file does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("File does not exist: " + filenames[f], MPTVSeriesLog.LogLevel.Debug);
                         nonExistingFiles.Add(filenames[f]);
                     }
                     filenames.RemoveAt(f);
@@ -430,6 +430,20 @@ namespace WindowPlugins.GUITVSeries
         public static bool IsImageFile(string filename) {
             string extension = System.IO.Path.GetExtension(filename).ToLower();
             return VirtualDirectory.IsImageFile(extension);
+        }
+
+        /// <summary>
+        /// Checks if Fullscreen video is active
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsFullscreenVideo {
+            get {
+                bool isFullscreen = false;
+                if (GUIWindowManager.ActiveWindow == (int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO)
+                    isFullscreen = true;
+
+                return isFullscreen;
+            }
         }
 
         #endregion
