@@ -1497,7 +1497,7 @@ namespace WindowPlugins.GUITVSeries
 
             }
             else 
-                MPTVSeriesLog.Write("No Episodes found that need updating");
+                MPTVSeriesLog.Write("All episodes already contain MediaInfo");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)

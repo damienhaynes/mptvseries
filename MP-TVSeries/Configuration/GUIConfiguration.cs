@@ -213,14 +213,19 @@ namespace WindowPlugins.GUITVSeries
 
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
+                if (checkBox_scanRemoteShares.Checked) {
                     nudScanRemoteShareFrequency.Enabled = true;
-                else
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
                     nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
             }
             else {
                 checkBox_scanRemoteShares.Enabled = false;
                 nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
             }
 
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
@@ -3551,14 +3556,19 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
+                if (checkBox_scanRemoteShares.Checked) {
                     nudScanRemoteShareFrequency.Enabled = true;
-                else
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
                     nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
             }
             else {
                 checkBox_scanRemoteShares.Enabled = false;
                 nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
             }
         }
 
