@@ -2663,7 +2663,11 @@ namespace WindowPlugins.GUITVSeries
                                     if (episode[DBEpisode.cFilename].ToString().Length == 0) {
                                         item.IsRemote = true;
                                     }
-                                    // Set IsPlayed property to true, if episode is has been watched
+                                    // Set IsRemomote property to true if episode is on removable media and media is not mounted
+                                    else if (episode[DBEpisode.cIsOnRemovable] && !System.IO.File.Exists(episode[DBEpisode.cFilename].ToString())) {                                        
+                                        item.IsRemote = true;
+                                    }
+                                    // Set IsPlayed property to true, if the episode has been watched
                                     else if (episode[DBOnlineEpisode.cWatched]) {
                                         item.IsPlayed = true;
                                     }
