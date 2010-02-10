@@ -1365,8 +1365,7 @@ namespace WindowPlugins.GUITVSeries
 
 		public override void OnAction(Action action) {
 			switch (action.wID) {
-				case Action.ActionType.ACTION_PARENT_DIR:
-				case Action.ActionType.ACTION_HOME:
+				case Action.ActionType.ACTION_PARENT_DIR:				
 					ImageAllocator.FlushAll();
 					GUIWindowManager.ShowPreviousWindow();
 					break;
@@ -1375,7 +1374,7 @@ namespace WindowPlugins.GUITVSeries
 					// back one level
 					MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
 					if (m_CurrViewStep == 0) {
-						goto case Action.ActionType.ACTION_HOME;
+                        goto case Action.ActionType.ACTION_PARENT_DIR;
 					}
 					else {
 						m_stepSelections.RemoveAt(m_CurrViewStep);
