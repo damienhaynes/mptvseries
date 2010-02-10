@@ -336,6 +336,8 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (control == btnPlay || control == this.m_Facade)
             {
+                if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
+
                 playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
                 playlistPlayer.Reset();
                 playlistPlayer.Play(m_Facade.SelectedListItemIndex);
