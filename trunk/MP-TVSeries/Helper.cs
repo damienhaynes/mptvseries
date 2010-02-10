@@ -34,21 +34,7 @@ namespace WindowPlugins.GUITVSeries
     {
         #region String Methods
         public static class String
-        {
-            /// <summary>
-            /// Fix for the buggy MS implementation
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-            public static bool IsNullOrEmpty(string value)
-            {
-                // great, won't be fixed until Orcas
-                // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=113102
-                if (value != null) return value.Length == 0;
-                return true;
-            }
-
+        {           
             public static bool IsNumerical(string number)
             {
                 double isNumber = 0;
@@ -169,7 +155,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        #region getCorrespondingX Methods
+        #region Get Corresponding Series/Season Methods
         public static DBSeries getCorrespondingSeries(int id)
         {
             DBSeries cached = cache.getSeries(id);

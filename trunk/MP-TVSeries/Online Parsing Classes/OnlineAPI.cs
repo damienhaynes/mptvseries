@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         if (selLang.Length == 0)
         {
           string lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
-          if (!Helper.String.IsNullOrEmpty(lang)) selLang = lang;
+          if (!String.IsNullOrEmpty(lang)) selLang = lang;
           else selLang = "en"; // use english
         }
         return selLang;
@@ -132,7 +132,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public bool SubmitRating(RatingType type, string itemId, int rating)
     {
       string account = DBOption.GetOptions(DBOption.cOnlineUserID);
-      if (Helper.String.IsNullOrEmpty(account))
+      if (String.IsNullOrEmpty(account))
       {
         GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
         dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
@@ -330,7 +330,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       {
         if (format == Format.Zip)
         {
-          if (!Helper.String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
+          if (!String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
           {
             Dictionary<string, XmlDocument> x = DecompressZipToXmls(data);
             entryNameToGetIfZip += ".xml";

@@ -200,7 +200,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 m_LogStream = File.CreateText(m_filename);
                             
-                            if (OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey))
+                            if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey))
                                 entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
 
                             String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);

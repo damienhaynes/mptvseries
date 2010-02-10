@@ -1513,14 +1513,14 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 
                                 case DBEpisode.cVolumeLabel:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))                                        
+                                    if (String.IsNullOrEmpty(episode[key]))                                        
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 case DBOnlineEpisode.cAirsAfterSeason:
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                    if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
@@ -1537,12 +1537,12 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cAudioBitrate:
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                    if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 case DBEpisode.cTextCount:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
+                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
@@ -1766,7 +1766,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBOnlineSeries.cChoseEpisodeOrder:
-                                    if (!Helper.String.IsNullOrEmpty(series[key]))
+                                    if (!String.IsNullOrEmpty(series[key]))
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
@@ -3092,10 +3092,10 @@ namespace WindowPlugins.GUITVSeries
                     break;
             }
             // Hide Downloaders not frequently used by users
-            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
                 contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Visible = false;
             }
-            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
                 contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Visible = false;
             }
 

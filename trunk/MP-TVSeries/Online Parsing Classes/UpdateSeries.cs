@@ -104,10 +104,10 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         case "DVD_episodenumber":
                                         case "DVD_season":
-                                            if(!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
+                                            if(!String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
                                             break;
                                         case "absolute_number":
-                                            if (!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
+                                            if (!String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
                                             break;
                                     }
                                 }

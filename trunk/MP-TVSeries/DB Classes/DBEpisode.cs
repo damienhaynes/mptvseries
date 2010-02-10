@@ -581,7 +581,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 // Check at least one MediaInfo field has been populated                
-                if (Helper.String.IsNullOrEmpty(this["localPlaytime"]))                                
+                if (String.IsNullOrEmpty(this["localPlaytime"]))                                
                     return false;
                 else
                 {
@@ -704,7 +704,7 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
-            if (Helper.String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
+            if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
             if (subTitleExtensions.Count == 0)
             {
                 // load them in first time
@@ -742,7 +742,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Read MediaInfo for embedded subtitles
-            if (!Helper.String.IsNullOrEmpty(this["TextCount"]))
+            if (!String.IsNullOrEmpty(this["TextCount"]))
             {
                 if ((int)this["TextCount"] > 0) 
                     return true;
@@ -827,13 +827,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case cEpisodeName:
                             retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                            if (Helper.String.IsNullOrEmpty(retVal))
+                            if (String.IsNullOrEmpty(retVal))
                                 retVal = base[cEpisodeName];
                             return retVal;
 
                         default:
                             retVal = m_onlineEpisode[fieldName];
-                            if (Helper.String.IsNullOrEmpty(retVal))
+                            if (String.IsNullOrEmpty(retVal))
                                 retVal = base[fieldName];
                             return retVal;
                     }
@@ -859,7 +859,7 @@ namespace WindowPlugins.GUITVSeries
                             // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
                         case cEpisodeIndex2:
-                            if (!Helper.String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
+                            if (!String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
                             {
                                 MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discarded because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
@@ -1141,7 +1141,7 @@ namespace WindowPlugins.GUITVSeries
                       ? string.Empty
                       : conditions.orderString;
 
-                if (Helper.String.IsNullOrEmpty(orderBy))
+                if (String.IsNullOrEmpty(orderBy))
                     orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
 
                 SQLWhat what = new SQLWhat(first);
@@ -1157,7 +1157,7 @@ namespace WindowPlugins.GUITVSeries
             // its orders of magnitude faster to make two queries instead and do a UNION
             // union currently has a problem with orders in sqlite (bug in 3.4) -> temp workaround = use explicite alias on order field (works only if a single order col)
             // http://www.sqlite.org/cvstrac/tktview?tn=2561,6
-            if (!Helper.String.IsNullOrEmpty(orderBy))
+            if (!String.IsNullOrEmpty(orderBy))
             {
                 string ordercol = orderBy.Replace(" order by ", "").Replace(" asc ", "").Replace(" desc ", "");
                 string ordecolsplit = ordercol;
