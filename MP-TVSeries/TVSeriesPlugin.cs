@@ -734,14 +734,14 @@ namespace WindowPlugins.GUITVSeries
 							dlg.Add(pItem);
 							pItem.ItemId = (int)eContextItems.toggleWatched;
 
-							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
 								pItem = new GUIListItem(Translation.RateEpisode + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;								
 							}
 						}
 						else if (this.listLevel != Listlevel.Group) {
-							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
                                 pItem = new GUIListItem(Translation.RateSeries + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;
@@ -829,7 +829,7 @@ namespace WindowPlugins.GUITVSeries
 						}
 						// Dont show if not a member of any view
 						if (listLevel == Listlevel.Series) {
-							if (!Helper.String.IsNullOrEmpty(selectedSeries[DBOnlineSeries.cViewTags])) {
+							if (!String.IsNullOrEmpty(selectedSeries[DBOnlineSeries.cViewTags])) {
 								pItem = new GUIListItem(Translation.RemoveViewTag + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.removeFromView;
@@ -955,7 +955,7 @@ namespace WindowPlugins.GUITVSeries
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionPlayRandom;
 
-                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode))) {
+                                if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode))) {
                                     pItem = new GUIListItem(Translation.ParentalControlLocked);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
@@ -3093,7 +3093,7 @@ namespace WindowPlugins.GUITVSeries
 			string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
 			
 			// Submit rating online database if current rating is different
-			if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
+			if (!String.IsNullOrEmpty(value) && value != item[type])
 			{
 				int rating = -1;
 				if (Int32.TryParse(value, out rating))
@@ -3322,7 +3322,7 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
 
-            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
             {
                 pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
                 dlg.Add(pItem);
@@ -3537,7 +3537,7 @@ namespace WindowPlugins.GUITVSeries
             // We need to add/remove from online database
             if (selectedItem == DBView.cTranslateTokenOnlineFavourite) {
                 string account = DBOption.GetOptions(DBOption.cOnlineUserID);
-                if (Helper.String.IsNullOrEmpty(account)) {
+                if (String.IsNullOrEmpty(account)) {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.OnlineFavourites);
                     dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
@@ -3840,7 +3840,7 @@ namespace WindowPlugins.GUITVSeries
         {
 			// If view does not exist, default to 'ALL' internal view
 			// If 'ALL' view does not exist use first view
-            if (Helper.String.IsNullOrEmpty(viewName))
+            if (String.IsNullOrEmpty(viewName))
 				viewName = Translation.All;
 
            return switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
@@ -3850,7 +3850,7 @@ namespace WindowPlugins.GUITVSeries
         {
             string prettyCurrPosition = m_CurrLView.prettyName;
             foreach (string subPos in m_stepSelectionPretty)
-                if (!Helper.String.IsNullOrEmpty(subPos))
+                if (!String.IsNullOrEmpty(subPos))
                     prettyCurrPosition += " -> " + subPos;
             setGUIProperty(guiProperty.CurrentView, prettyCurrPosition);
             setGUIProperty(guiProperty.SimpleCurrentView, m_CurrLView.prettyName);

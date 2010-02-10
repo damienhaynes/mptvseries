@@ -274,7 +274,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static String GetEpisodeImage(DBEpisode episode)
         {
-            if (Helper.String.IsNullOrEmpty(episode.Image)) return string.Empty;
+            if (String.IsNullOrEmpty(episode.Image)) return string.Empty;
             if (episode.Image.Length > 0 && System.IO.File.Exists(episode.Image))
               return episode.Image;
             else

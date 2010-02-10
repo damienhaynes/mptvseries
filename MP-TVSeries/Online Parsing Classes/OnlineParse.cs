@@ -1260,7 +1260,7 @@ namespace WindowPlugins.GUITVSeries
 
             List<DBOnlineSeries> seriesList = (List<DBOnlineSeries>)e.Argument;
 
-            if (!Helper.String.IsNullOrEmpty(sAccountID))
+            if (!String.IsNullOrEmpty(sAccountID))
             {
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
@@ -1339,7 +1339,7 @@ namespace WindowPlugins.GUITVSeries
         {
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
 
-            if (!Helper.String.IsNullOrEmpty(sAccountID)) {
+            if (!String.IsNullOrEmpty(sAccountID)) {
                 MPTVSeriesLog.Write(bigLogMessage("Get User Favourites"));
 
                 GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
@@ -1397,7 +1397,7 @@ namespace WindowPlugins.GUITVSeries
                             string orderIdentifier = ".jpg";
                             string order = tmpSeries[DBOnlineSeries.cChoseEpisodeOrder];
 
-                            if (Helper.String.IsNullOrEmpty(order) || order == "Aired")
+                            if (String.IsNullOrEmpty(order) || order == "Aired")
                                 orderIdentifier = ".jpg";
                             else
                                 orderIdentifier = "_" + tmpSeries[DBOnlineSeries.cChoseEpisodeOrder] + ".jpg";
@@ -1528,7 +1528,7 @@ namespace WindowPlugins.GUITVSeries
                 // try to find an exact match in our results, if found, return
                 if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
                     foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
-                        if (!bNoExactMatch && !Helper.String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
+                        if (!bNoExactMatch && !String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
                            (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase))) {
                             MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
                             return onlineSeries;
@@ -1761,14 +1761,14 @@ namespace WindowPlugins.GUITVSeries
                     int localEp = (int)localEpisode[DBEpisode.cEpisodeIndex];
                     int localEp2 = (int)localEpisode[DBEpisode.cEpisodeIndex2];
 
-                    if (Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2]))
+                    if (String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2]))
                         localEp2 = 0;
                     float onlineEp = -1;
 
 
                     if (onlineSeason != -1 && float.TryParse(onlineEpisode["DVD_episodenumber"], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp)) {
                         //MPTVSeriesLog.Write(string.Format("Series {0} , localEp {1} localEp2 {2} onlineEp {3}", onlineSeason, localEp, localEp2, onlineEp));
-                        /*if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) &&
+                        /*if (!String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !String.IsNullOrEmpty(onlineEpisode["DVD_season"]) &&
                             (localSeason == onlineSeason && ((int)localEp == (int)onlineEp || (int)localEp2 == -1 ? false : (int)localEp2 == (int)onlineEp)))
                         */
 
@@ -1777,7 +1777,7 @@ namespace WindowPlugins.GUITVSeries
                         double localcomp;
                         localstring = (localEp.ToString() + "." + localEp2.ToString());
                         localcomp = Convert.ToDouble(localstring, provider);
-                        if (!Helper.String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !Helper.String.IsNullOrEmpty(onlineEpisode["DVD_episodenumber"]) && (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp))) {
+                        if (!String.IsNullOrEmpty(onlineEpisode["DVD_season"]) && !String.IsNullOrEmpty(onlineEpisode["DVD_episodenumber"]) && (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp))) {
                             /*check that the vital parts exist DVD_season and DVD_episodenumber, then check to see if we have a match either for the full
                              possible online format of X.Y via the use of localcomp and some string combinations, or through the default style of X.0 
                              via integer comparison*/
@@ -1810,9 +1810,9 @@ namespace WindowPlugins.GUITVSeries
                         if ((int)localEpisode[DBEpisode.cSeasonIndex] == 0) {
                             /*Now we have to figure out whether we are at ep 100 or more*/
                             localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
-                        } else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] < 10 /*&& Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/) {/* Any episode X0[0-9] should be combined in this manner */
+                        } else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] < 10 /*&& String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/) {/* Any episode X0[0-9] should be combined in this manner */
                             localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + "0" + localEpisode[DBEpisode.cEpisodeIndex].ToString());
-                        } else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] >= 10 /*&& Helper.String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/) {/* All other episodes should fall into this category */
+                        } else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] >= 10 /*&& String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/) {/* All other episodes should fall into this category */
                             localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
                         }
 

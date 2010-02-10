@@ -232,7 +232,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                if (Helper.String.IsNullOrEmpty(this[cCurrentBannerFileName]))
+                if (String.IsNullOrEmpty(this[cCurrentBannerFileName]))
                     return String.Empty;
                 string filename;
                 if (this[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(this[cCurrentBannerFileName])) == -1)
@@ -273,7 +273,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 List<String> outList = new List<string>();
                 String sList = this[cBannerFileNames];
-                if (Helper.String.IsNullOrEmpty(sList))
+                if (String.IsNullOrEmpty(sList))
                     return outList;
 
                 String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);                
@@ -289,7 +289,7 @@ namespace WindowPlugins.GUITVSeries
                 for(int i=0; i<value.Count; i++)
                 {
                     value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                    if (Helper.String.IsNullOrEmpty(sIn))
+                    if (String.IsNullOrEmpty(sIn))
                         sIn += value[i];
                     else
                         sIn += "," + value[i];

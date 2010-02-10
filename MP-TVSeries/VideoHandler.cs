@@ -383,7 +383,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("This episode counts as watched");
                 if(countAsWatched) MarkEpisodeAsWatched(m_currentEpisode);
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
-                if ((Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
+                if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
                     MPTVSeriesLog.Write("Episode not rated yet");
                     if(RateRequestOccured != null)
