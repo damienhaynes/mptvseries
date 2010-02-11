@@ -115,8 +115,7 @@ namespace WindowPlugins.GUITVSeries
 
             m_actions.Add(action);
             if (action == ParsingAction.List_Add) {
-                m_actions.Add(ParsingAction.MediaInfo);
-                m_actions.Add(ParsingAction.UpdateEpisodeCounts);
+                m_actions.Add(ParsingAction.MediaInfo);                
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
