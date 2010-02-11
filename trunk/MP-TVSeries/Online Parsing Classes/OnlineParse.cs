@@ -507,9 +507,8 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region ParseActions
-        private void ParseActionRemove(List<PathPair> files)
-        {
+        #region ParseActions       
+        private void ParseActionRemove(List<PathPair> files) {
             string initialMsg = "*******************        Remove Run Starting      ***********************";
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             MPTVSeriesLog.Write(initialMsg);
@@ -520,7 +519,8 @@ namespace WindowPlugins.GUITVSeries
                 List<DBSeason> relatedSeasons = new List<DBSeason>();
 
                 foreach (PathPair pair in files) {
-                    if (!LocalParse.isOnRemovable(pair.m_sFull_FileName)) {
+                    //if (!LocalParse.isOnRemovable(pair.m_sFull_FileName))
+                    {
                         DBEpisode episode = new DBEpisode(pair.m_sFull_FileName, true);
 
                         // already in?
@@ -544,17 +544,38 @@ namespace WindowPlugins.GUITVSeries
 
                         SQLCondition condition = new SQLCondition();
                         condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
-                        DBEpisode.Clear(condition);
+                        if (!LocalParse.isOnRemovable(pair.m_sFull_FileName)) {
+                            DBEpisode.Clear(condition);
+                            m_bDataUpdated = true;
+                        }
+                        else {
+                            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2, condition);
+                            m_bDataUpdated = true;
+                        }
                     }
                 }
 
                 // now go over the touched seasons & series
+                bool seriesHasLocalFilesTemp = false;
+                bool seasonHasLocalFilesTemp = false;
                 foreach (DBSeason season in relatedSeasons) {
+                    foreach (DBEpisode episode1 in DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false)) {
+                        if (episode1[DBEpisode.cImportProcessed] == 1) {
+                            seasonHasLocalFilesTemp = true;
+                            break;
+                        }
+                    }
+
+                    season[DBSeason.cHasLocalFilesTemp] = seasonHasLocalFilesTemp;
+
                     if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false).Count > 0) {
-                        season[DBSeason.cHasLocalFilesTemp] = true;
+                        //season[DBSeason.cHasLocalFilesTemp] = true;
                         season[DBSeason.cHasEpisodes] = true;
-                    } else
-                        season[DBSeason.cHasLocalFilesTemp] = false;
+                    }
+                    else {
+                        //season[DBSeason.cHasLocalFilesTemp] = false;
+                        season[DBSeason.cHasEpisodes] = false;
+                    }
 
                     DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
                     if (episode != null)
@@ -566,10 +587,20 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 foreach (DBOnlineSeries series in relatedSeries) {
-                    if (DBEpisode.Get((int)series[DBOnlineSeries.cID], false).Count > 0)
-                        series[DBOnlineSeries.cHasLocalFilesTemp] = true;
-                    else
-                        series[DBOnlineSeries.cHasLocalFilesTemp] = false;
+
+                    foreach (DBEpisode episode1 in DBEpisode.Get(series[DBOnlineSeries.cSeriesID], false)) {
+                        if (episode1[DBEpisode.cImportProcessed] == 1) {
+                            seriesHasLocalFilesTemp = true;
+                            break;
+                        }
+                    }
+
+                    series[DBOnlineSeries.cHasLocalFilesTemp] = seriesHasLocalFilesTemp;
+
+                    //if (DBEpisode.Get((int)series[DBOnlineSeries.cID], false).Count > 0)
+                    //    series[DBOnlineSeries.cHasLocalFilesTemp] = true;
+                    //else
+                    //    series[DBOnlineSeries.cHasLocalFilesTemp] = false;
 
                     DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
                     if (episode != null)
@@ -586,13 +617,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void ParseActionAdd(List<PathPair> files)
-        {
+        private void ParseActionAdd(List<PathPair> files) {
             string initialMsg = "*******************       Add Run Starting     ***************************";
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             MPTVSeriesLog.Write(initialMsg);
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             ParseLocal(files);
+
+            // GUI refresh after update actions
+            // and copy the HasLocalFileTemp value into the real one
+            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
         }
 
         private void ParseActionLocalScan(bool localScan, bool updateScan)
