@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- MP-TV-Series translation file -->
 <!-- Greek (EL) -->
-<!-- Last Updated: 11th Jan 2010 -->
+<!-- Last Updated: 10th Feb 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -130,13 +130,13 @@
 	<string Field="FanArtFilterAll" Original="All">Όλα</string>
 	<string Field="ButtonRandomFanart" Original="Random Fanart">Τυχαίο Fanart</string>	
 	<string Field="LabelResolution" Original="Resolution">Ανάλυση</string>
-	<string Field="LabelChosen" Original="Chosen">Default</string>
+	<string Field="LabelChosen" Original="Chosen">Προεπιλεγμένο</string>
 	<string Field="LabelDisabled" Original="Disabled">Απενεργοποιημένο</string>
 	<string Field="ResetUserSelections" Original="Reset User Selections">Αναίρεση επιλογών χρήστη</string>
 	<string Field="DeleteFromDisk" Original="Delete from Disk">Διαγραφή από το δίσκο</string>
 	<string Field="DeleteFromDatabase" Original="Delete from Database">Διαγραφή από τη βάση δεδομένων</string>
 	<string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Διαγραφή από το δίσκο και τη βάση δεδομένων</string>
-	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Επιλέξτε την αξιολόγηδή σας για {0}</string>
+	<string Field="RateDialogLabel" Original="Select Your Rating for {0}">Επιλέξτε την αξιολόγησή σας για {0}</string>
 	<string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Απόκρυψη μικρογραφιών για τα Spoiler</string>	
 	
 	<!-- Rate Descriptions - 5 Stars-->
@@ -162,10 +162,10 @@
 	<string Field="AddViewTag" Original="Add Series to View Tag">Προσθήκη σειράς στην προβολή</string>
 	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Αφαίρεση σειράς από την προβολή</string>
 	<string Field="NewViewTag" Original="New Tag">Νέα προβολή</string>
-	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Περιοδική επανάληψη των Banner σειράς</string>
-	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Περιοδική επανάληψη των Poster σεζόν</string>
-	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Περιοδική επανάληψη των Poster σειράς</string>
-	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Χρονοδιακόπτης Fanart</string>
+	<string Field="CycleSeriesBanner" Original="Cycle Series Banner">Εναλλαγή Banner σειράς</string>
+	<string Field="CycleSeasonBanner" Original="Cycle Season Poster">Εναλλαγή Poster σεζόν</string>
+	<string Field="CycleSeriesPoster" Original="Cycle Series Poster">Εναλλαγή Poster σειράς</string>
+	<string Field="FanartRandomInterval" Original="Fanart Timer Interval">Χρονικό διάστημα για αλλαγή Fanart</string>
 	<string Field="FanartIntervalFiveSeconds" Original="5 Seconds">5 δευτερόλεπτα</string>
 	<string Field="FanartIntervalTenSeconds" Original="10 Seconds">10 δευτερόλεπτα</string>
 	<string Field="FanartIntervalFifteenSeconds" Original="15 Seconds">15 δευτερόλεπτα</string>
@@ -173,13 +173,13 @@
 	<string Field="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 δευτερόλεπτα</string>
 	<string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 δευτερόλεπτα</string>
 	<string Field="NoPlaylistsFound" Original="No Playlists found in:">Δεν βρέθηκαν λίστες αναπαραγωγής σε:</string>
-	<string Field="PinCode" Original="Pin Code">Pin Code</string>
-	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Ο εισαγμένος pin code δεν είναι σωστός</string>
+	<string Field="PinCode" Original="Pin Code">Κωδικός Pin</string>
+	<string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Ο εισαγμένος κωδικός pin δεν είναι σωστός</string>
 	<string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Πιέστε OK για να δοκιμάσετε ξανά</string>
 	<string Field="ParentalControlLocked" Original="Lock Views">Κλείδωμα προβολών</string>
 	<string Field="ViewIsLocked" Original="View Locked">Εμφάνιση κλειδωμένων</string>
 	<string Field="PinCodeDlgLabel1" Original="The view {0} is locked">Η προβολή "{0}" είναι κλειδωμένη</string>
-	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Εισάγετε τον τετραψήφιο Pin Code για να συνεχίσετε:</string>
+	<string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Εισάγετε τον τετραψήφιο κωδικό Pin για να συνεχίσετε:</string>
 	<string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">Λάθος Pin</string>=	
 	<string Field="Continuing" Original="Continuing Series">Σειρά σε εξέλιξη</string>
 	<string Field="Ended" Original="Ended Series">Η σειρά έχει ολοκληρωθεί</string>
@@ -203,7 +203,7 @@
 	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Θα θέλατε τη διαγραφή και την επαναμεταφόρτωση</string>
 	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">όλων των μικρογραφιών επεισοδίων;</string>
 	<string Field="RateDialog" Original="Rate Dialog">Διάλογος αξιολόγησης</string>
-	<string Field="PinCodeDialog" Original="Pin Code Dialog">Διάλογος Pin Code</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Διάλογος κωδικού Pin</string>
     
     <string Field="Aired" Original="Aired">Έχουν προβληθεί</string>
     <string Field="AiredStatusContinuing" Original="Continuing">Σε εξέλιξη</string>
@@ -212,29 +212,29 @@
     <string Field="AirsDay" Original="Airs Day">Ημέρα προβολής</string>
     <string Field="AirsTime" Original="Airs Time">Ώρα προβολής</string>
 	<string Field="Cast" Original="Cast">Ηθοποιοί</string>
-    <string Field="Certification" Original="Certification">Πιστοποίηση</string>    
+    <string Field="Certification" Original="Certification">Καταλληλότητα</string>    
     <string Field="Director" Original="Director">Σκηνοθέτης</string>
     <string Field="Directors" Original="Directors">Σκηνοθέτες</string>    
     <string Field="FileSize" Original="File Size">Μέγεθος αρχείου</string>
     <string Field="FirstAired" Original="First Aired">Πρώτη προβολή</string>
     <string Field="Genre" Original="Genre">Είδος</string>
-    <string Field="Group" Original="Groups">Γκρουπ</string>
-    <string Field="Groups" Original="Groups">Γκρουπ</string>
+    <string Field="Group" Original="Groups">Ομάδα</string>
+    <string Field="Groups" Original="Groups">Ομάδες</string>
     <string Field="GuestStar" Original="Guest Star">Έκτακτη συμμετοχή</string>
     <string Field="GuestStars" Original="Guest Stars">Έκτακτες συμμετοχές</string>
     <string Field="MediaInfo" Original="Media Info">Πληροφορίες μέσου</string>
     <string Field="Minutes" Original="Minutes">Λεπτά</string>
 	<string Field="MyRating" Original="My Rating">Η αξιολόγησή μου</string>
     <string Field="Network" Original="Network">Δίκτυο</string>
-    <string Field="Rated" Original="Rated">Αξιολογημένο</string>
+    <string Field="Rated" Original="Rated">Αξιολογήθηκε ως</string>
     <string Field="Rating" Original="Rating">Αξιολόγηση</string>
     <string Field="Runtime" Original="Runtime">Διάρκεια</string>
     <string Field="SeriesDetails" Original="Series Details">Λεπτομέρειες σειράς</string>
 	<string Field="SeriesStatus" Original="Series Status">Κατάσταση σειράς</string>
 	<string Field="Starring" Original="Starring">Παίζουν</string>
     <string Field="Watched" Original="Watched">Προβληθέν</string>
-	<string Field="Writer" Original="Writer">Συγγραφέας</string>
-    <string Field="Writers" Original="Writers">Συγγραφείς</string>
+	<string Field="Writer" Original="Writer">Σεναριογράφος</string>
+    <string Field="Writers" Original="Writers">Σεναριογράφοι</string>
 	
 	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com δεν είναι διαθέσιμο</string>
 	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Παρακαλώ δοκιμάστε αργότερα</string>
@@ -242,5 +242,6 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά</string>
 	
 	<string Field="Playlist" Original="Playlist">Λίστα αναπαραγωγής</string>
-    
+    <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Τελευταία ενημέρωση</string>
+	
 </strings>
