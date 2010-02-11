@@ -139,6 +139,8 @@ namespace WindowPlugins.GUITVSeries
 
     class OnlineParsing
     {
+        public bool onlineUpdateNeeded = false;
+        public bool wasOnlineUpdate = false;
         public BackgroundWorker m_worker = new BackgroundWorker();
         IFeedback m_feedback = null;
 
@@ -175,10 +177,18 @@ namespace WindowPlugins.GUITVSeries
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (OnlineParsingCompleted != null) // only if any subscribers exist
-            {
-                this.OnlineParsingCompleted.Invoke(m_bDataUpdated);
+            // Run an Online update when needed
+            if (onlineUpdateNeeded && !wasOnlineUpdate) {
+                MPTVSeriesLog.Write("Worker completed, online update needed is set to true, needs online update!", MPTVSeriesLog.LogLevel.Debug);
+                onlineUpdateNeeded = false;                
+                Start(new CParsingParameters(false, true));
             }
+            else {
+                if (OnlineParsingCompleted != null) // only if any subscribers exist
+                {
+                    this.OnlineParsingCompleted.Invoke(m_bDataUpdated);
+                }
+            }           
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -197,6 +207,14 @@ namespace WindowPlugins.GUITVSeries
 
         public bool Start(CParsingParameters param)
         {
+            wasOnlineUpdate=false;
+
+            // check if we are doing any online refresh actions
+            // we dont want to double up actions later            
+            if (param.m_actions.Contains(ParsingAction.GetOnlineUpdates)) {
+                wasOnlineUpdate = true;
+            }
+
             if (!m_worker.IsBusy)
             {
                 m_worker.RunWorkerAsync(param);
@@ -631,8 +649,12 @@ namespace WindowPlugins.GUITVSeries
 
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
-            if (seriesList.Count > 0)
+            if (seriesList.Count > 0)            
+            {
+                // Run Online update when needed
+                onlineUpdateNeeded = true;
                 MPTVSeriesLog.Write(string.Format("Found {0} unknown Series, attempting to identify them now", seriesList.Count));
+            }
             else
                 MPTVSeriesLog.Write("All Series are already identified");
 
@@ -917,7 +939,12 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             if (epCount == 0)
-                MPTVSeriesLog.Write("No new episodes identified");
+                MPTVSeriesLog.Write("No new episodes identified");            
+            else {
+                // Online update when needed
+                if (!bUpdateScan)
+                    onlineUpdateNeeded = true;
+            }
         }
 
         private void UpdateEpisodes(List<DBValue> episodesUpdated)
