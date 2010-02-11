@@ -1303,7 +1303,10 @@ namespace WindowPlugins.GUITVSeries
                         // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
                         // Series/Episodes that have rating changes.
                         series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRating;
-                        series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRating;
+                        // Dont clear site rating if user rating does not exist
+                        if (!String.IsNullOrEmpty(userRatings.SeriesCommunityRating)) {
+                            series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRating;
+                        }
                         series.Commit();
 
                         SQLCondition condition = new SQLCondition();
@@ -1354,8 +1357,12 @@ namespace WindowPlugins.GUITVSeries
                         }
                         if (userRatings.AllSeriesCommunityRatings.ContainsKey(series[DBOnlineSeries.cID])) {
                             MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
-                            series[DBOnlineSeries.cRating] = userRatings.AllSeriesCommunityRatings[series[DBOnlineSeries.cID]];
-                            series.Commit();
+                            // Dont clear site rating if user rating does not exist
+                            if (!String.IsNullOrEmpty(userRatings.AllSeriesCommunityRatings[series[DBOnlineSeries.cID]])) {
+                                MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
+                                series[DBOnlineSeries.cRating] = userRatings.AllSeriesCommunityRatings[series[DBOnlineSeries.cID]];
+                                series.Commit();
+                            }                            
                         }
                     }
                 }
