@@ -68,7 +68,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.LocalScan, 
             ParsingAction.MediaInfo,            
             ParsingAction.IdentifyNewSeries, 
-            ParsingAction.IdentifyNewEpisodes           
+            ParsingAction.IdentifyNewEpisodes,
+            ParsingAction.UpdateEpisodeCounts
         };
 
         private static List<ParsingAction> OnlineRefreshActions = new List<ParsingAction> { 
@@ -118,6 +119,7 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
+                m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
             }
             m_files = files;
