@@ -2992,16 +2992,16 @@ namespace WindowPlugins.GUITVSeries
 			// Execute Online Parsing Actions
 			if (epIDsUpdates.Count > 0) {
 
-				lock (m_parserUpdaterQueue) {
-					List<ParsingAction> parsingActions = new List<ParsingAction>();					
-					parsingActions.Add(ParsingAction.UpdateEpisodes);
-					
-					// Conditional parsing actions
-					if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);					
-					if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                lock (m_parserUpdaterQueue) {
+                    List<ParsingAction> parsingActions = new List<ParsingAction>();
+                    // Conditional parsing actions                    
+                    if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
+                    parsingActions.Add(ParsingAction.UpdateEpisodes);                    
+                    if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 
-					m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));				
-				}		
+                    m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
+                }
 
 			}
 		}
