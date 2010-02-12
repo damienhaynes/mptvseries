@@ -403,8 +403,9 @@ namespace WindowPlugins.GUITVSeries
         }
         
         List<String> GetDeviceManagerWatchedFolders()
-        {
+        {                        
             List<String> result = new List<String>();
+            if (DeviceManager.watchedDrives == null) return result;
 
             foreach (DBImportPath importPath in DBImportPath.GetAll())
             {
