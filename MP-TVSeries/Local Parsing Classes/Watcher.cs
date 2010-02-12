@@ -163,9 +163,10 @@ namespace WindowPlugins.GUITVSeries
         public BackgroundWorker worker = new BackgroundWorker();
         List<String> m_WatchedFolders = new List<String>();
         int m_nScanLapse; // number of minutes between scans
+        
         List<String> m_ScannedFolders = new List<String>();
-
-        List<PathPair> m_PreviousScan = new List<PathPair>();
+        List<PathPair> m_PreviousScan = new List<PathPair>();        
+        List<PathPair> m_PreviousScanRemovable = new List<PathPair>();
 
         List<System.IO.FileSystemWatcher> m_watchersList = new List<System.IO.FileSystemWatcher>();
         List<WatcherItem> m_modifiedFilesList = new List<WatcherItem>();
@@ -188,8 +189,12 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     DriveInfo info = new DriveInfo(sRoot);
-
-                    if (info.DriveType==DriveType.Network) {
+                    
+                    if (info.DriveType == DriveType.CDRom) {
+                        // do nothing as filesystemwatchers do nothing for cd or dvd drives
+                        MPTVSeriesLog.Write(string.Format("Watcher: Skipping CD/DVD drive: {0}", sRoot), MPTVSeriesLog.LogLevel.Normal);
+                    }
+                    else if (info.DriveType==DriveType.Network) {
                         string sUNCPath=MPR.GetUniversalName(folder);
 
                         MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", sUNCPath), MPTVSeriesLog.LogLevel.Normal);
@@ -207,6 +212,9 @@ namespace WindowPlugins.GUITVSeries
                     m_ScannedFolders.Add(folder);
                 }
             }
+            
+            DeviceManager.OnVolumeInserted += OnVolumeInsertedRemoved;
+            DeviceManager.OnVolumeRemoved += OnVolumeInsertedRemoved;
 
             worker.WorkerReportsProgress = true;
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
@@ -342,8 +350,68 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Watcher: Exception happened in Signal Modified Files: " + exp.Message);
             }
         }
+        
+        List<String> GetDeviceManagerWatchedFolders()
+        {
+            List<String> result = new List<String>();
 
+            foreach (DBImportPath importPath in DBImportPath.GetAll())
+            {
+                string sRoot = System.IO.Path.GetPathRoot(importPath[DBImportPath.cPath]);
+                string importPathString = importPath[DBImportPath.cPath];
+                if (!String.IsNullOrEmpty(importPathString) && (importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot))
+                {
+                    foreach (String drive in DeviceManager.watchedDrives)
+                    {
+                        if (importPathString.StartsWith(drive) && !result.Contains(importPathString))
+                            result.Add(importPathString);
+                    }
+                }
+            }
+            return result;
+        }
+        
+        void OnVolumeInsertedRemoved(string volume, string serial)
+        {
+            MPTVSeriesLog.Write("On Volume Inserted or Removed: " + volume);
+            
+            List<String> folders = new List<String>();
+
+            foreach (DBImportPath importPath in DBImportPath.GetAll())
+            {
+                string sRoot = System.IO.Path.GetPathRoot(importPath[DBImportPath.cPath]);
+                if ((importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot) && sRoot.StartsWith(volume))
+                {
+                    MPTVSeriesLog.Write("Adding for import: " + importPath[DBImportPath.cPath]);
+                    folders.Add(importPath[DBImportPath.cPath]); 
+                }
+            }
+
+            if (folders.Count > 0)
+            {
+                List<PathPair> m_PreviousScanRemovableTemp = new List<PathPair>();
+                m_PreviousScanRemovableTemp.AddRange(m_PreviousScanRemovable);
+                foreach (String pair in folders)
+                {
+                    m_PreviousScanRemovableTemp.RemoveAll(item => !item.m_sFull_FileName.StartsWith(pair));
+                }
+                foreach (PathPair pair in m_PreviousScanRemovableTemp)
+                {
+                    m_PreviousScanRemovable.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
+                }
+
+                DoFileScan(folders, ref m_PreviousScanRemovableTemp);
+
+                m_PreviousScanRemovable.AddRange(m_PreviousScanRemovableTemp);
+            }
+        }
+        
         void DoFileScan()
+        {
+            DoFileScan(m_ScannedFolders, ref m_PreviousScan);
+        }
+
+        void DoFileScan(List<String> scannedFolders, ref List<PathPair> previousScan)
         {
             MPTVSeriesLog.Write("Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
             if (!TVSeriesPlugin.IsNetworkAvailable) {
@@ -357,16 +425,17 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
-            List<PathPair> newScan = Filelister.GetFiles(m_ScannedFolders);
+            List<PathPair> newScan = Filelister.GetFiles(scannedFolders);
 
             List<PathPair> addedFiles = new List<PathPair>();
             addedFiles.AddRange(newScan);
-            foreach (PathPair pair in m_PreviousScan) {
+            foreach (PathPair pair in previousScan)
+            {
                 addedFiles.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
             }
 
             List<PathPair> removedFiles = new List<PathPair>();
-            removedFiles.AddRange(m_PreviousScan);
+            removedFiles.AddRange(previousScan);
             foreach (PathPair pair in newScan) {
                 removedFiles.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
             }
@@ -380,7 +449,7 @@ namespace WindowPlugins.GUITVSeries
                     m_modifiedFilesList.Add(new WatcherItem(pair, WatcherItemType.Deleted));
             }
 
-            m_PreviousScan = newScan;
+            previousScan = newScan;
         }
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
@@ -395,7 +464,9 @@ namespace WindowPlugins.GUITVSeries
             setUpWatches();
 
             // do the initial scan
-            m_PreviousScan = Filelister.GetFiles(m_ScannedFolders);
+            m_PreviousScan = Filelister.GetFiles(m_ScannedFolders);            
+            m_PreviousScanRemovable = Filelister.GetFiles(GetDeviceManagerWatchedFolders());
+
             DateTime timeLastScan = DateTime.Now;
 
             // then start the watcher loop

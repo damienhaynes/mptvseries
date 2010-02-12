@@ -27,6 +27,7 @@ using System.Text;
 using System.Diagnostics;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
+using MediaPortal.Ripper;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -429,6 +430,21 @@ namespace WindowPlugins.GUITVSeries
                     isFullscreen = true;
 
                 return isFullscreen;
+            }
+        }
+
+        public static void disableNativeAutoplay()
+        {
+            MPTVSeriesLog.Write("Disabling native autoplay.");
+            AutoPlay.StopListening();
+        }
+
+        public static void enableNativeAutoplay()
+        {
+            if (GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.RUNNING)
+            {
+                MPTVSeriesLog.Write("Re-enabling native autoplay.");
+                AutoPlay.StartListening();
             }
         }
 

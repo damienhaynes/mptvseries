@@ -243,6 +243,8 @@ namespace WindowPlugins.GUITVSeries
             }            
 
             base.OnPageLoad();
+            
+            Helper.disableNativeAutoplay();
 
             // update skin controls
             UpdateLayoutButton();
@@ -405,6 +407,9 @@ namespace WindowPlugins.GUITVSeries
               System.Windows.Forms.Application.DoEvents();
 
             loadingWorker = null;
+            
+            Helper.enableNativeAutoplay();
+            
             base.OnPageDestroy(new_windowId);
         }
 
