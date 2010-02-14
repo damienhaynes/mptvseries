@@ -966,7 +966,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (EncloseIfString)
             {
-                if (value.Length > 2 && value[0] != '\'' && !Helper.String.IsNumerical(value))
+                if (value.Length > 2 && value[0] != '\'' && !value.IsNumerical())
                     value = "'" + value + "'";
             }
             AddCustom(what, value, type);

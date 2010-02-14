@@ -63,7 +63,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(203, 16);
             this.label1.TabIndex = 12;
-            this.label1.Text = "Step 2 of 2: Online Data Retrieval";
+            this.label1.Text = "Step 2 of 3: Online Data Retrieval";
             // 
             // label_wait_parse
             // 

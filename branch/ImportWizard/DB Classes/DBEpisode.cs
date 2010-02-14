@@ -859,7 +859,7 @@ namespace WindowPlugins.GUITVSeries
                             // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
                         case cEpisodeIndex2:
-                            if (!String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
+                            if (!String.IsNullOrEmpty(value) && (!((string)value).IsNumerical() || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
                             {
                                 MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discarded because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());

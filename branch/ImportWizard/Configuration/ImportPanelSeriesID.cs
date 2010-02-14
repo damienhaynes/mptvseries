@@ -16,12 +16,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
         const string cSearching = "Searching...";
         const string cWait2Search = "Waiting to Search...";
 
-        Color AutoApproved = Color.Green;
-        Color ManualApproved = Color.LightGreen;
+        Color Approved = Color.LightGreen;
         Color SkipColor = Color.Yellow;
         Color IgnoreColor = Color.Gray;
 
         IList<parseResult> givenResults = null;
+
+        Dictionary<UserInputResults.SeriesAction, string> displayedActions = new Dictionary<UserInputResults.SeriesAction, string>();
 
         delegate void SearchProgressDelegate(string searchString, List<DBOnlineSeries> result, DataGridViewRow row);
         public ImportPanelSeriesID()
@@ -91,7 +92,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 if (e.ColumnIndex == 1)
                 {
                     // we dont do anything else, just approve                    
-                    row.Cells[4].Value = UserInputResults.SeriesAction.Approve;
+                    row.Cells[4].Value = displayedActions[UserInputResults.SeriesAction.Approve];
                     row.Tag = null; // for color coding
                 }
                 else if (e.ColumnIndex == 4)
@@ -99,22 +100,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     // seriesAction
                     // we color code
                     
-                    var reqAction = (UserInputResults.SeriesAction)row.Cells[4].Value;
-                    switch (reqAction)
-                    {
-                        case UserInputResults.SeriesAction.Skip:
+                    var reqAction = row.Cells[4].Value.ToString();
+                    if (reqAction == displayedActions[UserInputResults.SeriesAction.Skip])
                             row.DefaultCellStyle.BackColor = SkipColor;
-                            break;
-                        case UserInputResults.SeriesAction.IgnoreAlways:
+                    else if (reqAction == displayedActions[UserInputResults.SeriesAction.IgnoreAlways])
                             row.DefaultCellStyle.BackColor = IgnoreColor;
-                            break;
-                        case UserInputResults.SeriesAction.Approve:
-                            if (row.Cells[4].Tag == null) // manually approved
-                                row.DefaultCellStyle.BackColor = ManualApproved;
-                            else
-                                row.DefaultCellStyle.BackColor = AutoApproved;
-                            break;
-                    }
+                    else if (reqAction == displayedActions[UserInputResults.SeriesAction.Approve])
+                            row.DefaultCellStyle.BackColor = Approved;
+                    
                 }
             });
 
@@ -133,6 +126,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
 
             });
+
+            displayedActions.Add(UserInputResults.SeriesAction.Approve, "Approved");
+            displayedActions.Add(UserInputResults.SeriesAction.Skip, "Skip");
+            displayedActions.Add(UserInputResults.SeriesAction.IgnoreAlways, "Always Ignore");
 
             isGridPrepared = true;
         }
@@ -164,10 +161,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 row.Cells.Add(searchOKCell);
 
                 var approveCell = new DataGridViewComboBoxCell();
-                approveCell.Items.Add(UserInputResults.SeriesAction.Approve);
-                approveCell.Items.Add(UserInputResults.SeriesAction.Skip);
-                approveCell.Items.Add(UserInputResults.SeriesAction.IgnoreAlways);
-                approveCell.Value = UserInputResults.SeriesAction.Skip;
+                approveCell.Items.Add(displayedActions[UserInputResults.SeriesAction.Approve]);
+                approveCell.Items.Add(displayedActions[UserInputResults.SeriesAction.Skip]);
+                approveCell.Items.Add(displayedActions[UserInputResults.SeriesAction.IgnoreAlways]);
+                approveCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
                 row.Cells.Add(approveCell);
 
                 row.Tag = newSeries;
@@ -226,20 +223,17 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             foreach (var r in result)
                 cc.Items.Add(getDisplayStringForSeries(r));
-
+            
             if (cc.Items.Count < 1)
                 cc.Items.Add("No Results found");
 
+            var statusCell = row.Cells[4] as DataGridViewComboBoxCell;
             cc.Value = cc.Items[0];
 
-            // if we found a perfect match, set approved to true
+            // overwrite from the cellchanged event which set it to approve
             if (perfectMatch == null)
-                row.Cells[4].Value = UserInputResults.SeriesAction.Skip;
-            else
-            {
-                row.Cells[4].Value = UserInputResults.SeriesAction.Approve;
-                row.Tag = "auto"; // for color coding
-            }
+                statusCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
+
         }
 
         string getDisplayStringForSeries(DBOnlineSeries series)
@@ -248,13 +242,16 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         DBOnlineSeries RankSearchResults(string name, IList<DBOnlineSeries> candidates, out List<DBOnlineSeries> orderedCandidates)
-        {          
-
+        {
+            string cleanedName = name.ToLowerInvariant().Trim().CleanStringOfSpecialChars();
             // calculate distances
             // note: this should also be done in GetSeries, but it seems to simplistic, I don't trust it :-(
-            var bestMatch = (from candidate in candidates                            
-                            select new { LSDistance = MediaPortal.Util.Levenshtein.Match(name.ToLowerInvariant(), candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant()),
-                                         Series = candidate });
+            var bestMatch = (from candidate in candidates
+                             select new
+                             {
+                                 LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant().CleanStringOfSpecialChars()),
+                                 Series     = candidate 
+                             });
             
             // make them unique
             // note: this is different from onlineparse, should probably pick one implementation (read: this one!)           
@@ -304,7 +301,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 string inputSeriesName = row.Cells[0].Value as string;
-                var requestedAction = (UserInputResults.SeriesAction)row.Cells[4].Value;
+                var requestedActionS = row.Cells[4].Value.ToString();
+                var requestedAction = requestedActionS == UserInputResults.SeriesAction.Approve.ToString() ? UserInputResults.SeriesAction.Approve :
+                    requestedActionS == UserInputResults.SeriesAction.IgnoreAlways.ToString() ? UserInputResults.SeriesAction.IgnoreAlways :
+                     UserInputResults.SeriesAction.Skip;
                 DBOnlineSeries chosenSeries = null;
 
                 // else we dont even care
