@@ -178,9 +178,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 try
                 {
-                    //MPTVSeriesLog.Write("Showing pic: " + path);
                     this.pictureDetails.Image = ImageAllocator.LoadImageFastFromFile(path);
-                    //MPTVSeriesLog.Write("Showed pic");
                 }
                 catch (Exception) { };
             }

@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {
@@ -155,7 +156,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 });
             runner.AsyncFullParse();
         }
-
 
         private void button2_Click(object sender, EventArgs e)
         {

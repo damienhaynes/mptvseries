@@ -28,6 +28,7 @@ using System.Diagnostics;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using MediaPortal.Ripper;
+using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -83,6 +84,18 @@ namespace WindowPlugins.GUITVSeries
 
             return new string(newLenghtChars);
         }
+        
+        /// <summary>
+        /// TitleCases a string
+        /// </summary>
+        /// <param name="input">The string to TitleCase</param>
+        /// <returns>The TitleCased String</returns>
+        public static string ToTitleCase(this string input)
+        {
+            return textInfo.ToTitleCase(input.ToLower());
+        }
+        static TextInfo textInfo = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo;
+
     }
     #endregion
 

@@ -303,7 +303,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 12;
+        public const int cDBVersion = 13;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
@@ -444,7 +444,21 @@ namespace WindowPlugins.GUITVSeries
 
                         nUpgradeDBVersion++;
                         break;
+                    case 12:
+                        // we now have parsed_series names as titlecased
+                        // to avoid users having to re-identify series for new episodes, and to avoid duplicate entries, we upgrade existing series names
 
+                        foreach (var series in AllSeries)
+                        {
+                            string oldName = series[DBSeries.cParsedName];
+                            string newName = oldName.ToTitleCase();
+                            MPTVSeriesLog.Write(string.Format("Upgrading Parsed Series Name: {0} to {1}", oldName, newName));
+                            series[DBSeries.cParsedName] = newName;
+                            series.Commit();
+                        }
+
+                        nUpgradeDBVersion++;
+                        break;
                     default:
                         // new DB, nothing special to do
                         nUpgradeDBVersion = nCurrentDBVersion;

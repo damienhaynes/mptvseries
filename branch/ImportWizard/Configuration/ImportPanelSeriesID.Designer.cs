@@ -34,7 +34,13 @@
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label_wait_parse = new System.Windows.Forms.Label();
+            this.groupBoxDetails = new System.Windows.Forms.GroupBox();
+            this.linkLabelCloseDetails = new System.Windows.Forms.LinkLabel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.checkBoxFilter = new System.Windows.Forms.CheckBox();
+            this.labelSearchStats = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.groupBoxDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -103,11 +109,72 @@
             this.label_wait_parse.TabIndex = 12;
             this.label_wait_parse.Text = "Review, change and approve identified Series below.";
             // 
+            // groupBoxDetails
+            // 
+            this.groupBoxDetails.Controls.Add(this.textBox1);
+            this.groupBoxDetails.Controls.Add(this.linkLabelCloseDetails);
+            this.groupBoxDetails.Location = new System.Drawing.Point(294, 138);
+            this.groupBoxDetails.Name = "groupBoxDetails";
+            this.groupBoxDetails.Size = new System.Drawing.Size(215, 99);
+            this.groupBoxDetails.TabIndex = 14;
+            this.groupBoxDetails.TabStop = false;
+            this.groupBoxDetails.Text = "Plot";
+            this.groupBoxDetails.Visible = false;
+            // 
+            // linkLabelCloseDetails
+            // 
+            this.linkLabelCloseDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelCloseDetails.AutoSize = true;
+            this.linkLabelCloseDetails.Location = new System.Drawing.Point(176, 83);
+            this.linkLabelCloseDetails.Name = "linkLabelCloseDetails";
+            this.linkLabelCloseDetails.Size = new System.Drawing.Size(33, 13);
+            this.linkLabelCloseDetails.TabIndex = 0;
+            this.linkLabelCloseDetails.TabStop = true;
+            this.linkLabelCloseDetails.Text = "Close";
+            this.linkLabelCloseDetails.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCloseDetails_LinkClicked);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(6, 19);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(203, 61);
+            this.textBox1.TabIndex = 1;
+            // 
+            // checkBoxFilter
+            // 
+            this.checkBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxFilter.AutoSize = true;
+            this.checkBoxFilter.Location = new System.Drawing.Point(471, 37);
+            this.checkBoxFilter.Name = "checkBoxFilter";
+            this.checkBoxFilter.Size = new System.Drawing.Size(234, 17);
+            this.checkBoxFilter.TabIndex = 15;
+            this.checkBoxFilter.Text = "Show only Series requiring manual Selection";
+            this.checkBoxFilter.UseVisualStyleBackColor = true;
+            this.checkBoxFilter.CheckedChanged += new System.EventHandler(this.checkBoxFilter_CheckedChanged);
+            // 
+            // labelSearchStats
+            // 
+            this.labelSearchStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSearchStats.AutoSize = true;
+            this.labelSearchStats.Location = new System.Drawing.Point(37, 391);
+            this.labelSearchStats.Name = "labelSearchStats";
+            this.labelSearchStats.Size = new System.Drawing.Size(70, 13);
+            this.labelSearchStats.TabIndex = 16;
+            this.labelSearchStats.Text = "Searching for";
+            // 
             // ImportPanelSeriesID
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.labelSearchStats);
+            this.Controls.Add(this.checkBoxFilter);
+            this.Controls.Add(this.groupBoxDetails);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_wait_parse);
             this.Controls.Add(this.button3);
@@ -117,6 +184,8 @@
             this.Name = "ImportPanelSeriesID";
             this.Size = new System.Drawing.Size(720, 424);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.groupBoxDetails.ResumeLayout(false);
+            this.groupBoxDetails.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -130,5 +199,10 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_wait_parse;
+        private System.Windows.Forms.GroupBox groupBoxDetails;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.LinkLabel linkLabelCloseDetails;
+        private System.Windows.Forms.CheckBox checkBoxFilter;
+        private System.Windows.Forms.Label labelSearchStats;
     }
 }

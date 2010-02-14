@@ -581,8 +581,7 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnTagEnabled = new DataGridViewCheckBoxColumn();
                 columnTagEnabled.Name = DBReplacements.cTagEnabled;
                 columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
-                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                
+                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;                
                 dataGridView_Replace.Columns.Add(columnTagEnabled);
 
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
@@ -590,6 +589,12 @@ namespace WindowPlugins.GUITVSeries
                 columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
                 columnBefore.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnBefore);
+
+                DataGridViewCheckBoxColumn columnRegex = new DataGridViewCheckBoxColumn();
+                columnRegex.Name = DBReplacements.cIsRegex;
+                columnRegex.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cIsRegex);
+                columnRegex.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Replace.Columns.Add(columnRegex);
 
                 DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
                 columnToReplace.Name = DBReplacements.cToReplace;
@@ -623,6 +628,7 @@ namespace WindowPlugins.GUITVSeries
                 row.Cells[DBReplacements.cBefore].Value = (Boolean)replacement[DBReplacements.cBefore];
                 row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
                 row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
+                row.Cells[DBReplacements.cIsRegex].Value = (Boolean)replacement[DBReplacements.cIsRegex];
             }
         }
 

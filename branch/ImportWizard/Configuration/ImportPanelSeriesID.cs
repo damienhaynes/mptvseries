@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {    
@@ -16,6 +17,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
         const string cSearching = "Searching...";
         const string cWait2Search = "Waiting to Search...";
 
+        const string colImage     = "Status";
+        const string colSeries    = "Series";
+        const string colOSeries   = "OSeries";
+        const string colOSeriesD  = "DSeries";
+        const string colSearchTXT = "SearchTXT";
+        const string colSearchBTN = "SearchBTN";
+        const string colAction    = "Action";
+
+
         Color Approved = Color.LightGreen;
         Color SkipColor = Color.Yellow;
         Color IgnoreColor = Color.Gray;
@@ -24,7 +34,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         Dictionary<UserInputResults.SeriesAction, string> displayedActions = new Dictionary<UserInputResults.SeriesAction, string>();
 
-        delegate void SearchProgressDelegate(string searchString, List<DBOnlineSeries> result, DataGridViewRow row);
+        int queuedSearches = 0;
+        int activeSearches = 0;
+
+        delegate void SearchProgressDelegate(string searchString, GetSeries searchResult, DataGridViewRow row);
         public ImportPanelSeriesID()
         {
             InitializeComponent();
@@ -36,10 +49,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             givenResults = results;
 
-            // get the parsed series
+            
+            // get the parsed series as grouped by nicely Title Cased strings
             var uniqueSeries = from result in results
                                 where !string.IsNullOrEmpty(result.parser.Matches[DBSeries.cParsedName])
-                                group result by result.parser.Matches[DBSeries.cParsedName];
+                                group result by (string)result.parser.Matches[DBSeries.cParsedName];
             
             // now filter by those we don't already have identified in the db
             // get them from the db
@@ -55,32 +69,55 @@ namespace WindowPlugins.GUITVSeries.Configuration
             FillGrid(uniqueSeries.ToList());           
         }
 
+        int ColIndexOf(string columnName)
+        {
+            return dataGridView1.Columns[columnName].Index;
+        }
+
         bool isGridPrepared = false;
         void prepareGrid()
         {
             // add the columns, fixed here
+            var dgvcI = new DataGridViewImageColumn();
+            dgvcI.Name = colImage;
+            dgvcI.HeaderText = string.Empty;
+            dgvcI.ReadOnly = true;
+            dgvcI.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+
             var dgvcS = new DataGridViewTextBoxColumn();
-            dgvcS.Name = "Series";
+            dgvcS.Name = colSeries;
             dgvcS.ReadOnly = true;
+            dgvcS.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
 
             var dgvcO = new DataGridViewComboBoxColumn();
-            dgvcO.Name = "Online Series";
-            dgvcO.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvcO.Name = colOSeries;
+            dgvcO.HeaderText = "Matched Online Series";
+            dgvcO.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+            dgvcO.Width = 240;
+
+            var dgvcD = new DataGridViewButtonColumn();
+            dgvcD.Name = colOSeriesD;
+            dgvcD.HeaderText = string.Empty;
+            dgvcD.Width = 16;
 
             var dgvcSearch = new DataGridViewTextBoxColumn();
-            dgvcSearch.Name = "Search different Name";
-            dgvcSearch.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dgvcSearch.Name = colSearchTXT;
+            dgvcSearch.HeaderText = "Search different Name";
+            dgvcSearch.Width = 180;
 
             var dgvcSearchOK = new DataGridViewButtonColumn();
-            dgvcSearchOK.Name = "-";
+            dgvcSearchOK.Name = colSearchBTN;
+            dgvcSearchOK.HeaderText = string.Empty;
             dgvcSearchOK.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
             var dgvcApprove = new DataGridViewComboBoxColumn();
-            dgvcApprove.Name = "Status";
-            dgvcApprove.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvcApprove.Name = colAction;
+            dgvcApprove.Width = 85;
 
+            dataGridView1.Columns.Add(dgvcI);
             dataGridView1.Columns.Add(dgvcS);
             dataGridView1.Columns.Add(dgvcO);
+            dataGridView1.Columns.Add(dgvcD);
             dataGridView1.Columns.Add(dgvcSearch);
             dataGridView1.Columns.Add(dgvcSearchOK);
             dataGridView1.Columns.Add(dgvcApprove);
@@ -89,18 +126,27 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 var row = dataGridView1.Rows[e.RowIndex];
                 // was onlinesearchresult changed?
-                if (e.ColumnIndex == 1)
+                if (e.ColumnIndex == ColIndexOf(colOSeries))
                 {
-                    // we dont do anything else, just approve                    
-                    row.Cells[4].Value = displayedActions[UserInputResults.SeriesAction.Approve];
-                    row.Tag = null; // for color coding
+                    var actionCell = row.Cells[ColIndexOf(colAction)];
+                    if (row.Cells[ColIndexOf(colOSeries)].Tag is List<DBOnlineSeries>)
+                    {
+                        // we have valid results in combobox, and one selected
+                        // we dont do anything else, just approve                    
+                        actionCell.Value = displayedActions[UserInputResults.SeriesAction.Approve];
+                    }
+                    else
+                    {
+                        // set to skip
+                        actionCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
+                    }
                 }
-                else if (e.ColumnIndex == 4)
+                else if (e.ColumnIndex == ColIndexOf(colAction))
                 {
                     // seriesAction
                     // we color code
-                    
-                    var reqAction = row.Cells[4].Value.ToString();
+
+                    var reqAction = row.Cells[ColIndexOf(colAction)].Value.ToString();
                     if (reqAction == displayedActions[UserInputResults.SeriesAction.Skip])
                             row.DefaultCellStyle.BackColor = SkipColor;
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.IgnoreAlways])
@@ -113,16 +159,28 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             dataGridView1.CellContentClick += new DataGridViewCellEventHandler((sender, e) =>
             {
-
+                // which row was clicked?
+                var row = dataGridView1.Rows[e.RowIndex];
+                
                 // was search clicked?
-                if (e.ColumnIndex == 3)
-                {
-                    // which row was clicked?
-                    var row = dataGridView1.Rows[e.RowIndex];
+                if (e.ColumnIndex == ColIndexOf(colSearchBTN))
+                {                    
                     // fire off a new search, if user typed something
-                    string customSearch = row.Cells[2].Value as string;
+                    string customSearch = row.Cells[ColIndexOf(colSearchTXT)].Value as string;
                     if (!string.IsNullOrEmpty(customSearch))
                         FireOffSearch(row.Tag as IGrouping<string, parseResult>, row, customSearch);
+                }
+                // was plot details clicked?
+                if (e.ColumnIndex == ColIndexOf(colOSeriesD))
+                {
+                    // get the selected series to display the plot
+                    var series = getSeriesFromSelected(row);
+                    if (series != null)
+                    {
+                        this.textBox1.Text = series[DBOnlineSeries.cSummary];
+                        this.groupBoxDetails.Location = new Point(Cursor.Position.X, Cursor.Position.Y - 50);
+                        this.groupBoxDetails.Visible = true;
+                    }
                 }
 
             });
@@ -139,18 +197,28 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridView1.SuspendLayout();
             
             if (!isGridPrepared) prepareGrid();
-
+            
             foreach (var newSeries in uniqueNewSeries)
             {
                 var row = new DataGridViewRow();
+
+                var imageCell = new DataGridViewImageCell();
+                //imageCell.Value = ;
+                row.Cells.Add(imageCell);
+
                 var seriesCell = new DataGridViewTextBoxCell();
                 seriesCell.Value = newSeries.Key;
                 row.Cells.Add(seriesCell);
 
                 var onlineSeriesCell = new DataGridViewComboBoxCell();
                 onlineSeriesCell.Items.Add(cWait2Search);
-                onlineSeriesCell.Value = cWait2Search;                         
+                onlineSeriesCell.Value = cWait2Search;
+                onlineSeriesCell.FlatStyle = FlatStyle.Popup;       
                 row.Cells.Add(onlineSeriesCell);
+
+                var DCell = new DataGridViewButtonCell();
+                DCell.Value = "?";
+                row.Cells.Add(DCell);
 
                 var searchCell = new DataGridViewTextBoxCell();
                 searchCell.Value = string.Empty;
@@ -182,6 +250,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if(lastSearch.ContainsKey(row.Index))
                 lastSearch[row.Index] = toSearch;
             else lastSearch.Add(row.Index, toSearch);
+            
+            System.Threading.Interlocked.Increment(ref queuedSearches);
+            setSearchStatus();
 
             System.Threading.ThreadPool.QueueUserWorkItem((o) =>
                 {
@@ -189,139 +260,112 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     SearchProgress(cSearching, null, row);
                     GetSeries gs = new GetSeries(toSearch);
                     // and give the results
-                    SearchProgress(toSearch, gs.Results, row);
+                    SearchProgress(toSearch, gs, row);
                 });
             
         }
 
-        void SearchProgress(string searchString, List<DBOnlineSeries> result, DataGridViewRow row)
-        {
-            
+        void SearchProgress(string searchString, GetSeries searchResult, DataGridViewRow row)
+        {            
             // we need to invoke
             if (this.dataGridView1.InvokeRequired)
             {                
-                this.dataGridView1.Invoke(new SearchProgressDelegate(SearchProgress), searchString, result, row);
+                this.dataGridView1.Invoke(new SearchProgressDelegate(SearchProgress), searchString, searchResult, row);
                 return;
             }
 
             // lets update the combobox
             var cc = new DataGridViewComboBoxCell();
-            row.Cells[1] = cc;
+            row.Cells[ColIndexOf(colOSeries)] = cc;
 
             // ok, if we only get a string and the row, display that string
-            if (result == null)
+            if (searchResult == null)
             {
-                cc.Items.Add(searchString); // not really searchstring, probably statusmsg
-                cc.Value = searchString;
+                displayValsInCBCell(cc, searchString);
+
+                // this also means that an queued search went into active status
+                System.Threading.Interlocked.Decrement(ref queuedSearches);
+                System.Threading.Interlocked.Increment(ref activeSearches);
+                setSearchStatus();
                 return;
             }
 
-            // else we got the results
-            // lets see about ordering, maybe auto approvable
-            var perfectMatch = RankSearchResults(searchString, result, out result);
-            cc.Tag = result;
+            // else we got the results                        
+            cc.Tag = searchResult.Results;
 
-            foreach (var r in result)
-                cc.Items.Add(getDisplayStringForSeries(r));
-            
+            // which also means an active search has finished
+            System.Threading.Interlocked.Decrement(ref activeSearches);
+            setSearchStatus();
+
+            displayValsInCBCell(cc, searchResult.Results.Select(r => getDisplayStringForSeries(r)).ToArray());
+
             if (cc.Items.Count < 1)
-                cc.Items.Add("No Results found");
+                displayValsInCBCell(cc, "No Results found");
 
-            var statusCell = row.Cells[4] as DataGridViewComboBoxCell;
-            cc.Value = cc.Items[0];
+            var actionCell = row.Cells[ColIndexOf(colAction)] as DataGridViewComboBoxCell;
 
             // overwrite from the cellchanged event which set it to approve
-            if (perfectMatch == null)
-                statusCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
+            if (searchResult.PerfectMatch == null)
+                actionCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
 
+        }
+
+        void displayValsInCBCell(DataGridViewComboBoxCell cell, params string[] values)
+        {
+            cell.Items.Clear();
+            for (int i = 0; i < values.Length; i++)
+            {
+                cell.Items.Add(values[i]);
+                if (i == 0)
+                    cell.Value = values[i];
+            }
         }
 
         string getDisplayStringForSeries(DBOnlineSeries series)
         {
             return string.Format("{0} ({1})", series[DBOnlineSeries.cPrettyName], series[DBOnlineSeries.cID]);
         }
-
-        DBOnlineSeries RankSearchResults(string name, IList<DBOnlineSeries> candidates, out List<DBOnlineSeries> orderedCandidates)
-        {
-            string cleanedName = name.ToLowerInvariant().Trim().CleanStringOfSpecialChars();
-            // calculate distances
-            // note: this should also be done in GetSeries, but it seems to simplistic, I don't trust it :-(
-            var bestMatch = (from candidate in candidates
-                             select new
-                             {
-                                 LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant().CleanStringOfSpecialChars()),
-                                 Series     = candidate 
-                             });
-            
-            // make them unique
-            // note: this is different from onlineparse, should probably pick one implementation (read: this one!)           
-            var uniqueResults = from candidate in bestMatch
-                                group candidate by (int)candidate.Series[DBOnlineSeries.cID];
-            
-            // now order the series by their minLSDistance (each ID can have several series and thus names)
-            // we dont care which one won, we just want the minimum it scored
-            // we also pick out the series in the users lang, and the englis lang
-            var weightedUniqueResults = from ur in uniqueResults
-                                        select new 
-                                        {  
-                                            MinLSDistance  = ur.Min(r => r.LSDistance), 
-                                            SeriesScored   = ur.OrderBy( r => r.LSDistance).FirstOrDefault(),
-                                            SeriesUserLang = ur.FirstOrDefault( r => r.Series["language"] == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString),
-                                            SeriesEng      = ur.FirstOrDefault( r => r.Series["language"] == "en"),                                         
-                                        };
-            
-            // now decide which one to display
-            // 1) userlang 2) english 3) whichever scored our best result, this has to exist
-            var weightedDisplayResults = from dr in weightedUniqueResults
-                                         orderby dr.MinLSDistance
-                                         select new
-                                         {
-                                             LSDistance = dr.MinLSDistance,
-                                             Series = (dr.SeriesUserLang != null && dr.SeriesUserLang.Series != null) ? dr.SeriesUserLang.Series
-                                                        : (dr.SeriesEng != null && dr.SeriesEng.Series != null) ? dr.SeriesEng.Series
-                                                        : dr.SeriesScored.Series,
-                                         };
-
-            
-            // give the ordered results back for displaying
-            orderedCandidates = weightedDisplayResults.Select(r => r.Series).ToList();
-            
-            // get the best one thats under a distance of 2, which is a bit more fuzzy than the perfect requirement in onlineparse
-            // this could be tweaked
-            var best = weightedDisplayResults.FirstOrDefault(m => m.LSDistance < 2);
-            if (best != null)
-                return best.Series;
-
-            return null;
-         }
-
+        
         Dictionary<string, UserInputResultSeriesActionPair> getApprovedResults()
         {
             var pageResult = new Dictionary<string, UserInputResultSeriesActionPair>();
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                string inputSeriesName = row.Cells[0].Value as string;
-                var requestedActionS = row.Cells[4].Value.ToString();
-                var requestedAction = requestedActionS == UserInputResults.SeriesAction.Approve.ToString() ? UserInputResults.SeriesAction.Approve :
-                    requestedActionS == UserInputResults.SeriesAction.IgnoreAlways.ToString() ? UserInputResults.SeriesAction.IgnoreAlways :
-                     UserInputResults.SeriesAction.Skip;
+                string inputSeriesName = row.Cells[ColIndexOf(colSeries)].Value as string;
+                var requestedAction = getActionFromRow(row);
                 DBOnlineSeries chosenSeries = null;
 
                 // else we dont even care
                 if (requestedAction == UserInputResults.SeriesAction.Approve)
                 {
-                    var seriesList = row.Cells[1].Tag as List<DBOnlineSeries>;
-                    if (seriesList != null)
-                    {
-                        string toMatch = row.Cells[1].Value as string;
-                        chosenSeries = seriesList.SingleOrDefault(s => toMatch == getDisplayStringForSeries(s));
-                    }
+                    chosenSeries = getSeriesFromSelected(row);
                 }
+
+                MPTVSeriesLog.Write(string.Format("Series \"{0}\" {1} {2}", inputSeriesName, requestedAction.ToString(), chosenSeries == null ? string.Empty : this.getDisplayStringForSeries(chosenSeries))); 
 
                 pageResult.Add(inputSeriesName, new UserInputResultSeriesActionPair(requestedAction, chosenSeries));         
             }
 
             return pageResult;
+        }
+
+        DBOnlineSeries getSeriesFromSelected(DataGridViewRow row)
+        {
+            DBOnlineSeries chosenSeries = null;
+            var cell = row.Cells[ColIndexOf(colOSeries)] as DataGridViewComboBoxCell;
+            var seriesList = cell.Tag as List<DBOnlineSeries>;
+            if (seriesList != null)
+            {
+                string toMatch = cell.Value as string;
+                chosenSeries = seriesList.FirstOrDefault(s => toMatch == getDisplayStringForSeries(s));
+            }
+            return chosenSeries;
+        }
+
+
+        void setSearchStatus()
+        {
+            this.labelSearchStats.Text = string.Format("Searching in progress for {0} series ({1} queued)", activeSearches, queuedSearches);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -340,6 +384,35 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (UserFinishedEditing != null)
                 UserFinishedEditing(null, UserFinishedRequestedAction.Prev);
+        }
+
+        private void linkLabelCloseDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.groupBoxDetails.Visible = false;
+        }
+
+        private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            this.dataGridView1.SuspendLayout();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (checkBoxFilter.Checked && getActionFromRow(row) == UserInputResults.SeriesAction.Approve)
+                {
+                    row.Visible = false;
+                }
+                else row.Visible = true;
+            }
+            this.dataGridView1.ResumeLayout();
+        }
+
+        UserInputResults.SeriesAction getActionFromRow(DataGridViewRow row)
+        {
+            string val = ((string)row.Cells[ColIndexOf(colAction)].Value);
+            if (val == displayedActions[UserInputResults.SeriesAction.Approve])
+                return UserInputResults.SeriesAction.Approve;
+            if (val == displayedActions[UserInputResults.SeriesAction.Skip])
+                return UserInputResults.SeriesAction.Skip;
+            return UserInputResults.SeriesAction.IgnoreAlways;
         }
     }
 }

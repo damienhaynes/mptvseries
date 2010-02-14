@@ -95,6 +95,11 @@ namespace WindowPlugins.GUITVSeries
             foreach (PathPair file in files)
             {
                 parser = new FilenameParser(file.m_sMatch_FileName);
+                
+                // title case the seriesname
+                if (parser.Matches.ContainsKey(DBSeries.cParsedName))
+                    parser.Matches[DBSeries.cParsedName] = parser.Matches[DBSeries.cParsedName].ToString().ToTitleCase();
+
                 try
                 {
                     if (isOnRemovable(file.m_sFull_FileName))

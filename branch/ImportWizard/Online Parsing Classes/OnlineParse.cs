@@ -740,12 +740,27 @@ namespace WindowPlugins.GUITVSeries
                 worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, sSeriesNameToSearch, nIndex, seriesList.Count, series, null));
                 DBOnlineSeries UserChosenSeries = null;
                 UserInputResultSeriesActionPair sap = null;
-                
-                if (preChosenSeriesPairs == null || !preChosenSeriesPairs.TryGetValue(sSeriesNameToSearch, out sap))
+
+                if (preChosenSeriesPairs != null)
+                    preChosenSeriesPairs.TryGetValue(sSeriesNameToSearch, out sap);
+                MPTVSeriesLog.Write(sSeriesNameToSearch);
+                foreach (var item in preChosenSeriesPairs)
+                {
+                    MPTVSeriesLog.Write(item.Key);
+                }
+
+                MPTVSeriesLog.Write("sap is null: " + (sap == null).ToString());
+                if (preChosenSeriesPairs == null)
+                {
+                    MPTVSeriesLog.Write("not chosen before, searching inline for : " + sSeriesNameToSearch);
                     UserChosenSeries = SearchForSeries(sSeriesNameToSearch, bNoExactMatch, m_feedback);
-                else if(sap.RequestedAction == UserInputResults.SeriesAction.Approve)
+                }
+                else if (sap != null && sap.RequestedAction == UserInputResults.SeriesAction.Approve)
+                {
+                    MPTVSeriesLog.Write("Found that user chose before for \"" + sSeriesNameToSearch + " as being: " + sap.ChosenSeries.ToString());
                     UserChosenSeries = sap.ChosenSeries;
-                else if (sap.RequestedAction == UserInputResults.SeriesAction.IgnoreAlways)
+                }
+                else if (sap != null && sap.RequestedAction == UserInputResults.SeriesAction.IgnoreAlways)
                 {
                     // duplicate code from SearchForSeries - should be changed
                     MPTVSeriesLog.Write("Found that user chose to Ignore \"" + sSeriesNameToSearch + "\" in the future");
@@ -806,7 +821,6 @@ namespace WindowPlugins.GUITVSeries
 
             }
             // that is done
-            // -1 indicates whole step done
             worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, seriesList.Count));
         }
 
@@ -1694,15 +1708,21 @@ namespace WindowPlugins.GUITVSeries
                 GetSeries GetSeriesParser = new GetSeries(nameToSearch);
 
                 // try to find an exact match in our results, if found, return
-                if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
-                    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
-                        if (!bNoExactMatch && !String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
-                           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase))) {
-                            MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
-                            return onlineSeries;
-                        }
-                    }
+                //if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
+                //    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
+                //        if (!bNoExactMatch && !String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
+                //           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase))) {
+                //            MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
+                //            return onlineSeries;
+                //        }
+                //    }
+                //}
+                if (GetSeriesParser.PerfectMatch != null)
+                {
+                    MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, GetSeriesParser.PerfectMatch.ToString(), GetSeriesParser.PerfectMatch[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
+                    return GetSeriesParser.PerfectMatch;
                 }
+
                 MPTVSeriesLog.Write(string.Format("Found {0} possible matches for \"{1}\"", GetSeriesParser.Results.Count, nameToSearch));
 
                 // User has four choices:
@@ -2125,7 +2145,7 @@ namespace WindowPlugins.GUITVSeries
                     if (progress.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired))
                     {
                         // series first
-                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
+                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
                         series[DBOnlineSeries.cHasLocalFilesTemp] = 1;
                         // not much to do here except commiting the series
                         series.Commit();
@@ -2136,7 +2156,7 @@ namespace WindowPlugins.GUITVSeries
 
                         // ok, we are sure it's valid now
                         // series first
-                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName].ToLower());
+                        series = new DBSeries(progress.parser.Matches[DBSeries.cParsedName]);
                         series[DBOnlineSeries.cHasLocalFilesTemp] = 1;
                         // not much to do here except commiting the series
                         series.Commit();
