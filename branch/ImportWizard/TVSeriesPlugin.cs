@@ -448,7 +448,9 @@ namespace WindowPlugins.GUITVSeries
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
 
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-            {
+            {                
+                DeviceManager.StartMonitor();
+
                 setUpFolderWatches();
 
                 // do a local scan when starting up the app if enabled - late on the watcher will monitor changes
@@ -539,8 +541,16 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
 		}
 
-		protected override void OnPageLoad() {			
-			if (m_Facade == null) 
+        public override void DeInit()
+        {
+            base.DeInit();
+
+            DeviceManager.StopMonitor();
+        }
+
+        protected override void OnPageLoad() {
+            MPTVSeriesLog.Write("OnPageLoad() started.", MPTVSeriesLog.LogLevel.Debug);
+            if (m_Facade == null) 
             {
 				// Most likely the skin does not exist
 				GUIDialogOK dlg = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
@@ -641,6 +651,8 @@ namespace WindowPlugins.GUITVSeries
 			}
 
             m_bPluginLoaded = true;
+            
+            Helper.disableNativeAutoplay();
 
             // Ask to Rate Episode, onPageLoad is triggered after returning from player
             if (ask2Rate != null) {
@@ -655,15 +667,23 @@ namespace WindowPlugins.GUITVSeries
             // Push last update time to skin
             setGUIProperty(guiProperty.LastOnlineUpdate, DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
 
+            MPTVSeriesLog.Write("OnPageLoad() completed.", MPTVSeriesLog.LogLevel.Debug);
+
 		}	
 
 		protected override void OnPageDestroy(int new_windowId) {
-			// Disable Random Fanart Timer
+            MPTVSeriesLog.Write("OnPageDestroy() started.", MPTVSeriesLog.LogLevel.Debug);
+            
+            // Disable Random Fanart Timer
 			m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);
 			m_bFanartTimerDisabled = true;
+                        
+            Helper.enableNativeAutoplay();
 
 			base.OnPageDestroy(new_windowId);
-		}
+        
+            MPTVSeriesLog.Write("OnPageDestroy() completed.", MPTVSeriesLog.LogLevel.Debug);
+        }
 
 		#region Main Context Menu
 		protected override void OnShowContextMenu() {
@@ -951,7 +971,7 @@ namespace WindowPlugins.GUITVSeries
 								pItem.ItemId = (int)eContextItems.actionFullRefresh;							
                                 */
 
-								pItem = new GUIListItem(Translation.Play_Random_Episode);
+                                pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionPlayRandom;
 
@@ -961,7 +981,8 @@ namespace WindowPlugins.GUITVSeries
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
                                 }
 
-								pItem = new GUIListItem(Translation.Play_Random_Episode);
+                                // TODO CHECK translation ???
+                                pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
 
@@ -1744,6 +1765,8 @@ namespace WindowPlugins.GUITVSeries
 
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
+                
+                DeviceManager.StartMonitor();
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
@@ -1769,6 +1792,9 @@ namespace WindowPlugins.GUITVSeries
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");
                 // Only disconnect from the database if file exists on the network.
+                
+                DeviceManager.StopMonitor();
+
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
                     DBTVSeries.Close();
                 }
@@ -2992,16 +3018,16 @@ namespace WindowPlugins.GUITVSeries
 			// Execute Online Parsing Actions
 			if (epIDsUpdates.Count > 0) {
 
-				lock (m_parserUpdaterQueue) {
-					List<ParsingAction> parsingActions = new List<ParsingAction>();					
-					parsingActions.Add(ParsingAction.UpdateEpisodes);
-					
-					// Conditional parsing actions
-					if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);					
-					if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                lock (m_parserUpdaterQueue) {
+                    List<ParsingAction> parsingActions = new List<ParsingAction>();
+                    // Conditional parsing actions                    
+                    if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
+                    parsingActions.Add(ParsingAction.UpdateEpisodes);                    
+                    if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 
-					m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));				
-				}		
+                    m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
+                }
 
 			}
 		}
