@@ -34,7 +34,7 @@ namespace WindowPlugins.GUITVSeries
     class GetSeries
     {
         /// <summary>
-        /// The maximum string Levhenstein Distance for an auto-match.
+        /// The maximum string Levenshtein Distance for an auto-match.
         /// This could be tweaked.
         /// </summary>
         public static int FuzzyMatching_MaxLSDistance = 2;

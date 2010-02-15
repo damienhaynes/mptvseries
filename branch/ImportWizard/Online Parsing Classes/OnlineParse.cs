@@ -743,16 +743,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (preChosenSeriesPairs != null)
                     preChosenSeriesPairs.TryGetValue(sSeriesNameToSearch, out sap);
-                MPTVSeriesLog.Write(sSeriesNameToSearch);
-                foreach (var item in preChosenSeriesPairs)
-                {
-                    MPTVSeriesLog.Write(item.Key);
-                }
 
-                MPTVSeriesLog.Write("sap is null: " + (sap == null).ToString());
                 if (preChosenSeriesPairs == null)
                 {
-                    MPTVSeriesLog.Write("not chosen before, searching inline for : " + sSeriesNameToSearch);
                     UserChosenSeries = SearchForSeries(sSeriesNameToSearch, bNoExactMatch, m_feedback);
                 }
                 else if (sap != null && sap.RequestedAction == UserInputResults.SeriesAction.Approve)
@@ -1820,37 +1813,44 @@ namespace WindowPlugins.GUITVSeries
         private void determineOrderOption(DBSeries series)
         {
             try {
-                List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-                if (episodeOrders.Count > 1 && (DBOption.GetOptions(DBOption.cAutoChooseOrder) == 0)) {
-                    MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count), MPTVSeriesLog.LogLevel.Debug);
-                    // let the user choose
-                    string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
-                                      "Note that your file numbering must match the option you choose here." + Environment.NewLine +
-                                      "Choose the default \"Aired\" option unless you have a specific reason not to!";
+                if (series[DBOnlineSeries.cChoseEpisodeOrder] == null)
+                {
+                    List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+                    if (episodeOrders.Count > 1 && (DBOption.GetOptions(DBOption.cAutoChooseOrder) == 0))
+                    {
+                        MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count), MPTVSeriesLog.LogLevel.Debug);
+                        // let the user choose
+                        string helpText = "Some series expose several ways in which they are ordered, for instance a DVD-release may differ from the original Air schedule." + Environment.NewLine +
+                                          "Note that your file numbering must match the option you choose here." + Environment.NewLine +
+                                          "Choose the default \"Aired\" option unless you have a specific reason not to!";
 
-                    List<CItem> Choices = new List<CItem>();
-                    foreach (string orderOption in episodeOrders)
-                        Choices.Add(new CItem(orderOption, helpText, orderOption));
+                        List<CItem> Choices = new List<CItem>();
+                        foreach (string orderOption in episodeOrders)
+                            Choices.Add(new CItem(orderOption, helpText, orderOption));
 
-                    ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-                    descriptor.m_sTitle = "Multiple ordering Options detected";
-                    descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
-                    descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
-                    descriptor.m_sListLabel = "Please choose the desired Option:";
-                    descriptor.m_List = Choices;
-                    descriptor.m_useRadioToSelect = true;
-                    descriptor.m_allowAlter = false;
+                        ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+                        descriptor.m_sTitle = "Multiple ordering Options detected";
+                        descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
+                        descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
+                        descriptor.m_sListLabel = "Please choose the desired Option:";
+                        descriptor.m_List = Choices;
+                        descriptor.m_useRadioToSelect = true;
+                        descriptor.m_allowAlter = false;
 
-                    CItem selectedOrdering = null;
-                    ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
-                    if (result == ReturnCode.OK) {
-                        series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
-                        MPTVSeriesLog.Write(string.Format("{0} order option chosen for series \"{1}\"", (string)selectedOrdering.m_Tag, series.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                        CItem selectedOrdering = null;
+                        ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
+                        if (result == ReturnCode.OK)
+                        {
+                            series[DBOnlineSeries.cChoseEpisodeOrder] = (string)selectedOrdering.m_Tag;
+                            MPTVSeriesLog.Write(string.Format("{0} order option chosen for series \"{1}\"", (string)selectedOrdering.m_Tag, series.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                        }
                     }
-                } else {
-                    if (series[DBOnlineSeries.cEpisodeOrders] != "")
-                        series[DBOnlineSeries.cChoseEpisodeOrder] = "Aired";
-                    MPTVSeriesLog.Write(string.Format("Aired order option chosen for series \"{0}\"", series.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                    else
+                    {
+                        if (series[DBOnlineSeries.cEpisodeOrders] != "")
+                            series[DBOnlineSeries.cChoseEpisodeOrder] = "Aired";
+                        MPTVSeriesLog.Write(string.Format("Aired order option chosen for series \"{0}\"", series.ToString()), MPTVSeriesLog.LogLevel.Normal);
+                    }
                 }
 
             } catch (Exception) {

@@ -20,10 +20,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
         const string colImage     = "Status";
         const string colSeries    = "Series";
         const string colOSeries   = "OSeries";
-        const string colOSeriesD  = "DSeries";
+        //const string colOSeriesOrder = "Order"; // only get this during alter stages, or we get the full series record here already when user makes selection?
+        //const string colOSeriesD  = "DSeries";
         const string colSearchTXT = "SearchTXT";
         const string colSearchBTN = "SearchBTN";
         const string colAction    = "Action";
+
+        const string searchTip = "<Custom Search>";
 
 
         Color Approved = Color.LightGreen;
@@ -95,10 +98,16 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dgvcO.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
             dgvcO.Width = 240;
 
-            var dgvcD = new DataGridViewButtonColumn();
-            dgvcD.Name = colOSeriesD;
-            dgvcD.HeaderText = string.Empty;
-            dgvcD.Width = 16;
+            //var dgvcOrder = new DataGridViewComboBoxColumn();
+            //dgvcOrder.Name = colOSeriesOrder;
+            //dgvcOrder.HeaderText = "Ordering";
+            //dgvcOrder.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+            //dgvcOrder.Width = 100;
+
+            //var dgvcD = new DataGridViewButtonColumn();
+            //dgvcD.Name = colOSeriesD;
+            //dgvcD.HeaderText = string.Empty;
+            //dgvcD.Width = 16;
 
             var dgvcSearch = new DataGridViewTextBoxColumn();
             dgvcSearch.Name = colSearchTXT;
@@ -117,19 +126,37 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridView1.Columns.Add(dgvcI);
             dataGridView1.Columns.Add(dgvcS);
             dataGridView1.Columns.Add(dgvcO);
-            dataGridView1.Columns.Add(dgvcD);
+            //dataGridView1.Columns.Add(dgvcOrder);
+            //dataGridView1.Columns.Add(dgvcD);
             dataGridView1.Columns.Add(dgvcSearch);
             dataGridView1.Columns.Add(dgvcSearchOK);
             dataGridView1.Columns.Add(dgvcApprove);
 
+            dataGridView1.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
+            {
+                var row = dataGridView1.Rows[e.RowIndex];
+                // did we enter the searchField
+                if (e.ColumnIndex == ColIndexOf(colSearchTXT))
+                {
+                    var cell = row.Cells[e.ColumnIndex];
+                    if ((string)cell.Value == searchTip)
+                    {
+                        cell.Value = string.Empty;
+                        //cell.Tag = new object(); // prevent auto change back
+                    }
+                }
+            });
+
             dataGridView1.CellValueChanged += new DataGridViewCellEventHandler((sender, e) =>
             {
                 var row = dataGridView1.Rows[e.RowIndex];
+                var cell = row.Cells[e.ColumnIndex];
                 // was onlinesearchresult changed?
+
                 if (e.ColumnIndex == ColIndexOf(colOSeries))
                 {
-                    var actionCell = row.Cells[ColIndexOf(colAction)];
-                    if (row.Cells[ColIndexOf(colOSeries)].Tag is List<DBOnlineSeries>)
+                    var actionCell = row.Cells[colAction] as DataGridViewComboBoxCell;
+                    if (cell.Tag is List<DBOnlineSeries>)
                     {
                         // we have valid results in combobox, and one selected
                         // we dont do anything else, just approve                    
@@ -140,6 +167,17 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         // set to skip
                         actionCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
                     }
+
+                    // get the selected series to display the plot, ordering options
+                    var series = getSeriesFromSelected(row);
+                    //var orderCell = row.Cells[ColIndexOf(colOSeriesOrder)] as DataGridViewComboBoxCell;
+                    //orderCell.Items.Clear();                    
+                    if (series != null)
+                    {
+                        cell.ToolTipText = series[DBOnlineSeries.cSummary];
+                        //displayValsInCBCell(orderCell, series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));                        
+                    }
+                    else cell.ToolTipText = string.Empty;
                 }
                 else if (e.ColumnIndex == ColIndexOf(colAction))
                 {
@@ -153,8 +191,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
                             row.DefaultCellStyle.BackColor = IgnoreColor;
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.Approve])
                             row.DefaultCellStyle.BackColor = Approved;
-                    
+                                      
                 }
+                //else if (e.ColumnIndex == ColIndexOf(colSearchTXT))
+                //{
+                //    if ((string)cell.Value == string.Empty && cell.Tag == null)
+                //        cell.Value = searchTip;
+                //    cell.Tag = null;
+                //}
             });
 
             dataGridView1.CellContentClick += new DataGridViewCellEventHandler((sender, e) =>
@@ -169,18 +213,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     string customSearch = row.Cells[ColIndexOf(colSearchTXT)].Value as string;
                     if (!string.IsNullOrEmpty(customSearch))
                         FireOffSearch(row.Tag as IGrouping<string, parseResult>, row, customSearch);
-                }
-                // was plot details clicked?
-                if (e.ColumnIndex == ColIndexOf(colOSeriesD))
-                {
-                    // get the selected series to display the plot
-                    var series = getSeriesFromSelected(row);
-                    if (series != null)
-                    {
-                        this.textBox1.Text = series[DBOnlineSeries.cSummary];
-                        this.groupBoxDetails.Location = new Point(Cursor.Position.X, Cursor.Position.Y - 50);
-                        this.groupBoxDetails.Visible = true;
-                    }
                 }
 
             });
@@ -212,20 +244,23 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
                 var onlineSeriesCell = new DataGridViewComboBoxCell();
                 onlineSeriesCell.Items.Add(cWait2Search);
-                onlineSeriesCell.Value = cWait2Search;
-                onlineSeriesCell.FlatStyle = FlatStyle.Popup;       
+                onlineSeriesCell.Value = cWait2Search;     
                 row.Cells.Add(onlineSeriesCell);
 
-                var DCell = new DataGridViewButtonCell();
-                DCell.Value = "?";
-                row.Cells.Add(DCell);
+                //var onlineSeriesOrderCell = new DataGridViewComboBoxCell();
+                //row.Cells.Add(onlineSeriesOrderCell);
+
+                //var DCell = new DataGridViewButtonCell();
+                //DCell.Value = "?";
+                //row.Cells.Add(DCell);
 
                 var searchCell = new DataGridViewTextBoxCell();
-                searchCell.Value = string.Empty;
+                searchCell.Value = searchTip;
+                searchCell.ToolTipText = "Type a new string to search again. Click search to find results.";
                 row.Cells.Add(searchCell);
 
                 var searchOKCell = new DataGridViewButtonCell();
-                searchOKCell.Value = "Search";                
+                searchOKCell.Value = "Search";
                 row.Cells.Add(searchOKCell);
 
                 var approveCell = new DataGridViewComboBoxCell();
