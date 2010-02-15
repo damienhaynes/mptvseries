@@ -4481,6 +4481,8 @@ namespace WindowPlugins.GUITVSeries
                     val += ";";
                     val += (int)replacement[DBReplacements.cTagEnabled];
                     val += ";";
+                    val += (int)replacement[DBReplacements.cIsRegex];
+                    val += ";";
                     val += (String)replacement[DBReplacements.cToReplace];
                     val += ";";
                     val += (String)replacement[DBReplacements.cWith];                    
@@ -4505,7 +4507,7 @@ namespace WindowPlugins.GUITVSeries
                 StreamReader r = new StreamReader(fd.FileName);
                 DBReplacements replacement;
 
-                //Dialog box to make sure they want to clear out current replacements to import new ones.
+                // Dialog box to make sure they want to clear out current replacements to import new ones.
                 if (DialogResult.Yes ==
                     MessageBox.Show("You are about to delete all current string replacements," + Environment.NewLine +
                         "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
@@ -4519,11 +4521,13 @@ namespace WindowPlugins.GUITVSeries
                 string[] parts;
                 int index = 0;
 
-                // now set watched for all in file
+                // read file and import into database
                 while ((line = r.ReadLine()) != null) {
                     char[] c = { ';' };
-                    parts = line.Split(c, 5);
-                    if (parts.Length != 5) continue;
+                    parts = line.Split(c, 6);
+                    
+                    // support older relacements file 
+                    if (parts.Length < 5 || parts.Length > 6) continue;
 
                     replacement = new DBReplacements();                   
                     replacement[DBReplacements.cIndex] = index;
@@ -4531,10 +4535,18 @@ namespace WindowPlugins.GUITVSeries
                     if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) replacement[DBReplacements.cEnabled] = parts[0]; else continue;
                     if (Convert.ToInt32(parts[1]) == 0 || Convert.ToInt32(parts[1]) == 1) replacement[DBReplacements.cBefore] = parts[1]; else continue;
                     if (Convert.ToInt32(parts[2]) == 0 || Convert.ToInt32(parts[2]) == 1) replacement[DBReplacements.cTagEnabled] = parts[2]; else continue;
-
-                    replacement[DBReplacements.cToReplace] = parts[3];
-                    replacement[DBReplacements.cWith] = parts[4];
-
+                    
+                    // handle upgrade, first version does not contain IsRegEx part
+                    if (parts.Length == 6) {
+                        if (Convert.ToInt32(parts[3]) == 0 || Convert.ToInt32(parts[3]) == 1) replacement[DBReplacements.cIsRegex] = parts[3]; else continue;
+                        replacement[DBReplacements.cToReplace] = parts[4];
+                        replacement[DBReplacements.cWith] = parts[5];
+                    }
+                    else {
+                        replacement[DBReplacements.cIsRegex] = "0";
+                        replacement[DBReplacements.cToReplace] = parts[3];
+                        replacement[DBReplacements.cWith] = parts[4];
+                    }
                     if (replacement.Commit()) index++;
                 }
 
