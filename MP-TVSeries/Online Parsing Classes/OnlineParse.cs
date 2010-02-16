@@ -121,6 +121,12 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
             }
+            
+            if (action == ParsingAction.List_Remove)
+            { 
+                m_actions.Add(ParsingAction.UpdateEpisodeCounts); 
+            }
+            
             m_files = files;
 
             if (m_bLocalScan)
