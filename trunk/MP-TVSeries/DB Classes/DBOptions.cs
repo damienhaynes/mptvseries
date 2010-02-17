@@ -186,6 +186,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
 
+        public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
+        public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -497,6 +500,11 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cImport_ScanWhileFullscreenVideo) == null)
                     SetOptions(cImport_ScanWhileFullscreenVideo, 0);
 
+                if (GetOptions(cInvokeExtBeforePlayback) == null)
+                    SetOptions(cInvokeExtBeforePlayback, string.Empty);
+
+                if (GetOptions(cInvokeExtAfterPlayback) == null)
+                    SetOptions(cInvokeExtAfterPlayback, string.Empty);
             }
             catch (Exception ex)
             {
