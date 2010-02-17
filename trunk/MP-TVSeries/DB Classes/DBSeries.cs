@@ -176,6 +176,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
             base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
             base.AddColumn(cSortName, new DBField(DBField.cTypeString));
+            base.AddColumn(cOriginalName, new DBField(DBField.cTypeString));
             base.AddColumn(cStatus, new DBField(DBField.cTypeString));
             base.AddColumn(cGenre, new DBField(DBField.cTypeString));
             base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
@@ -196,7 +197,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
-			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
+			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));                        
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -236,8 +237,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 switch (fieldName)
-                {
-                    // forom subtitle retrieval always needs original (english) series title
+                {                    
                     // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "en"; // English (original)
@@ -250,8 +250,8 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 // we need to get it
-                                MPTVSeriesLog.Write("Retrieving original Series Name...");
-                                UpdateSeries origParser = null; //= new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage); // doesn't work anymore
+                                MPTVSeriesLog.Write("Retrieving original Series Name...");                                
+                                UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], origLanguage);
                                 if (origParser != null && origParser.Results.Count == 1)
                                 {
                                     base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];

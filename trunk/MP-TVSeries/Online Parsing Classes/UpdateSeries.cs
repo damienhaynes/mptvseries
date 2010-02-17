@@ -56,8 +56,29 @@ namespace WindowPlugins.GUITVSeries
             foreach(string id in sSeriesIDs)
                 Work(id);
         }
-
+        
+        public UpdateSeries(String sSeriesIDs)
+        {
+            Work(sSeriesIDs);
+        }
+        
+        public UpdateSeries(List<String> sSeriesIDs, String languageID)
+        {
+            foreach (String id in sSeriesIDs)
+                Work(id, languageID);
+        }
+        
+        public UpdateSeries(String sSeriesIDs, String languageID)
+        {
+            Work(sSeriesIDs, languageID);
+        }
+        
         void Work(String sSeriesID)
+        {
+            Work(sSeriesID, "");
+        }
+        
+        void Work(String sSeriesID, String languageID)
         {
             if (sSeriesID.Length > 0)
             {
@@ -65,7 +86,15 @@ namespace WindowPlugins.GUITVSeries
                 if (int.TryParse(sSeriesID,out result))
                     MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
                 
-                XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                XmlNode node = null;
+                if (String.IsNullOrEmpty(languageID))
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                }
+                else
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID);
+                }
 
                 if (node != null)
                 {
