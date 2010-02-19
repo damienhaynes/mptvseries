@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABS
-        dQAAAk1TRnQBSQFMAgEBCwEAAWQBAAFkAQABGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        dQAAAk1TRnQBSQFMAgEBCwEAAWwBAAFsAQABGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABSAMAAQEBAAEgBgABbDEAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMYASEDEQEXAwoBDgME
         AQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMAAQEXAAEBAxIBGAM1
         AVgDSgGLA1EBogNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQ
@@ -644,8 +644,8 @@
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
         CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
         NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
         F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
@@ -688,9 +688,6 @@ local/online refresh of series.
 This is active when first starting MP or when resuming from standby. A manual scan
 can be started within plugin.</value>
   </data>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
-  </metadata>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 56</value>
   </metadata>
@@ -816,8 +813,8 @@ If an expression can not evaluate these items, the next expression in the list i
   <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
         HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
         pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
         KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
@@ -827,8 +824,8 @@ If an expression can not evaluate these items, the next expression in the list i
   <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
         cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
         fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
         IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
