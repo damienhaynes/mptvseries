@@ -246,7 +246,7 @@ namespace WindowPlugins.GUITVSeries
             currentSelectedItem = m_Facade.SelectedListItemIndex;
             DBOption.SetOptions(DBOption.cRepeatPlaylist, playlistPlayer.RepeatPlaylist);
             DBOption.SetOptions(DBOption.cPlaylistAutoPlay, playlistPlayer.PlaylistAutoPlay);
-            prevSelectedEpisode = null;            
+            prevSelectedEpisode = null;
             Helper.enableNativeAutoplay();
             base.OnPageDestroy(newWindowId);
         }

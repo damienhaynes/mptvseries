@@ -296,6 +296,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFileDateCreated = "FileDateCreated";
         public const String cFileDateAdded = "FileDateAdded";
+        
+        public const String cIsAvailable = "IsAvailable";
         #endregion
 
         private DBOnlineEpisode m_onlineEpisode = null;
@@ -527,7 +529,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             base.AddColumn(cFilename, new DBField(DBField.cTypeString, true));
             base.AddColumn(cCompositeID, new DBField(DBField.cTypeString));
             base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
@@ -545,6 +547,8 @@ namespace WindowPlugins.GUITVSeries
 
             base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
             base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));
+            
+            base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -618,7 +622,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
                     
                     // open file in MediaInfo
-                    MI.Open(this[DBEpisode.cFilename]);                                        
+                    MI.Open(this[DBEpisode.cFilename]);
                                         
                     // check number of failed attempts at mediainfo extraction                    
                     int noAttempts = 0;

@@ -519,108 +519,114 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             MPTVSeriesLog.Write(initialMsg);
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
-            // should we remove deleted files?
-            if (!DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles)) {
-                List<DBOnlineSeries> relatedSeries = new List<DBOnlineSeries>();
-                List<DBSeason> relatedSeasons = new List<DBSeason>();
+			
+            List<DBOnlineSeries> relatedSeries = new List<DBOnlineSeries>();
+            List<DBSeason> relatedSeasons = new List<DBSeason>();
 
-                foreach (PathPair pair in files) {
-                    //if (!LocalParse.isOnRemovable(pair.m_sFull_FileName))
+            foreach (PathPair pair in files) 
+            {               
+                DBEpisode episode = new DBEpisode(pair.m_sFull_FileName, true);
+
+                // already in?
+                bool bSeasonFound = false;
+                foreach (DBSeason season in relatedSeasons)
+                {
+                    if (season[DBSeason.cSeriesID] == episode[DBEpisode.cSeriesID] && season[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex])
                     {
-                        DBEpisode episode = new DBEpisode(pair.m_sFull_FileName, true);
-
-                        // already in?
-                        bool bSeasonFound = false;
-                        foreach (DBSeason season in relatedSeasons)
-                            if (season[DBSeason.cSeriesID] == episode[DBEpisode.cSeriesID] && season[DBSeason.cIndex] == episode[DBEpisode.cSeasonIndex]) {
-                                bSeasonFound = true;
-                                break;
-                            }
-                        if (!bSeasonFound)
-                            relatedSeasons.Add(new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
-
-                        bool bSeriesFound = false;
-                        foreach (DBOnlineSeries series in relatedSeries)
-                            if (series[DBOnlineSeries.cID] == episode[DBEpisode.cSeriesID]) {
-                                bSeriesFound = true;
-                                break;
-                            }
-                        if (!bSeriesFound)
-                            relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
-
-                        SQLCondition condition = new SQLCondition();
-                        condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
-                        if (!LocalParse.isOnRemovable(pair.m_sFull_FileName)) {
-                            DBEpisode.Clear(condition);
-                            m_bDataUpdated = true;
-                        }
-                        else {
-                            DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2, condition);
-                            m_bDataUpdated = true;
-                        }
+                        bSeasonFound = true;
+                        break;
                     }
                 }
+                if (!bSeasonFound)
+                    relatedSeasons.Add(new DBSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]));
 
-                // now go over the touched seasons & series
-                bool seriesHasLocalFilesTemp = false;
-                bool seasonHasLocalFilesTemp = false;
-                foreach (DBSeason season in relatedSeasons) {
-                    foreach (DBEpisode episode1 in DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false)) {
-                        if (episode1[DBEpisode.cImportProcessed] == 1) {
-                            seasonHasLocalFilesTemp = true;
-                            break;
-                        }
+                bool bSeriesFound = false;
+                foreach (DBOnlineSeries series in relatedSeries)
+                {
+                    if (series[DBOnlineSeries.cID] == episode[DBEpisode.cSeriesID])
+                    {
+                        bSeriesFound = true;
+                        break;
                     }
-
-                    season[DBSeason.cHasLocalFilesTemp] = seasonHasLocalFilesTemp;
-
-                    if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false).Count > 0) {
-                        //season[DBSeason.cHasLocalFilesTemp] = true;
-                        season[DBSeason.cHasEpisodes] = true;
-                    }
-                    else {
-                        //season[DBSeason.cHasLocalFilesTemp] = false;
-                        season[DBSeason.cHasEpisodes] = false;
-                    }
-
-                    DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
-                    if (episode != null)
-                        season[DBSeason.cUnwatchedItems] = true;
-                    else
-                        season[DBSeason.cUnwatchedItems] = false;
-
-                    season.Commit();
                 }
+                if (!bSeriesFound)
+                    relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
 
-                foreach (DBOnlineSeries series in relatedSeries) {
-
-                    foreach (DBEpisode episode1 in DBEpisode.Get(series[DBOnlineSeries.cSeriesID], false)) {
-                        if (episode1[DBEpisode.cImportProcessed] == 1) {
-                            seriesHasLocalFilesTemp = true;
-                            break;
-                        }
-                    }
-
-                    series[DBOnlineSeries.cHasLocalFilesTemp] = seriesHasLocalFilesTemp;
-
-                    //if (DBEpisode.Get((int)series[DBOnlineSeries.cID], false).Count > 0)
-                    //    series[DBOnlineSeries.cHasLocalFilesTemp] = true;
-                    //else
-                    //    series[DBOnlineSeries.cHasLocalFilesTemp] = false;
-
-                    DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
-                    if (episode != null)
-                        series[DBOnlineSeries.cUnwatchedItems] = true;
-                    else
-                        series[DBOnlineSeries.cUnwatchedItems] = false;
-
-                    series.Commit();
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
+                
+                if (!LocalParse.isOnRemovable(pair.m_sFull_FileName) && !LocalParse.needToKeepReference(pair.m_sFull_FileName)) /*!DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles)*/
+                {
+                    DBEpisode.Clear(condition);
+                    m_bDataUpdated = true;
                 }
-
-                // and copy the HasLocalFileTemp value into the real one
-                DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
-                DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
+                else 
+                {
+                    DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2, condition);
+                    DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 0, condition);
+                    m_bDataUpdated = true;
+                }               
             }
+
+            // now go over the touched seasons & series
+            bool seriesHasLocalFilesTemp = false;
+            bool seasonHasLocalFilesTemp = false;
+            foreach (DBSeason season in relatedSeasons) {
+                foreach (DBEpisode episode1 in DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false)) {
+                    if (episode1[DBEpisode.cImportProcessed] == 1) {
+                        seasonHasLocalFilesTemp = true;
+                        break;
+                    }
+                }
+
+                season[DBSeason.cHasLocalFilesTemp] = seasonHasLocalFilesTemp;
+
+                if (DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false).Count > 0) {
+                    //season[DBSeason.cHasLocalFilesTemp] = true;
+                    season[DBSeason.cHasEpisodes] = true;
+                }
+                else {
+                    //season[DBSeason.cHasLocalFilesTemp] = false;
+                    season[DBSeason.cHasEpisodes] = false;
+                }
+
+                DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
+                if (episode != null)
+                    season[DBSeason.cUnwatchedItems] = true;
+                else
+                    season[DBSeason.cUnwatchedItems] = false;
+
+                season.Commit();
+            }
+
+            foreach (DBOnlineSeries series in relatedSeries) {
+                	// Just bug fixing :)
+					foreach (DBEpisode episode1 in DBEpisode.Get(series[DBOnlineSeries.cID], false)) {
+                    if (episode1[DBEpisode.cImportProcessed] == 1) {
+                        seriesHasLocalFilesTemp = true;
+                        break;
+                    }
+                }
+
+                series[DBOnlineSeries.cHasLocalFilesTemp] = seriesHasLocalFilesTemp;
+
+                //if (DBEpisode.Get((int)series[DBOnlineSeries.cID], false).Count > 0)
+                //    series[DBOnlineSeries.cHasLocalFilesTemp] = true;
+                //else
+                //    series[DBOnlineSeries.cHasLocalFilesTemp] = false;
+
+                DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+                if (episode != null)
+                    series[DBOnlineSeries.cUnwatchedItems] = true;
+                else
+                    series[DBOnlineSeries.cUnwatchedItems] = false;
+
+                series.Commit();
+            }
+
+            // and copy the HasLocalFileTemp value into the real one
+            DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
+            DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
         }
 
         private void ParseActionAdd(List<PathPair> files) {
@@ -647,7 +653,9 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));
             if (localScan) {
                 // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
-                DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);
+                DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);                
+                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 0);
+
                 // also clear all season & series for local files
                 DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
                 DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, false);
@@ -665,12 +673,22 @@ namespace WindowPlugins.GUITVSeries
                 ParseLocal(Filelister.GetFiles(listFolders));
 
                 // now, remove all episodes still processed = 0, the weren't find in the scan
-                if (!DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles)) {
-                    SQLCondition condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                    condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
-                    DBEpisode.Clear(condition);
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
+
+                foreach (DBEpisode localepisode in DBEpisode.Get(condition))
+                {
+                    if (!LocalParse.needToKeepReference(localepisode[DBEpisode.cFilename]))
+                    {
+                        DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
+                    }
+                    else
+                    {
+                        DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
+                    }
                 }
+
                 // and copy the HasLocalFileTemp value into the real one
                 DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
                 DBSeason.GlobalSet(DBSeason.cHasLocalFiles, DBSeason.cHasLocalFilesTemp);
@@ -1957,8 +1975,11 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
-            foreach(SQLCondition condition in importProcessedConds)
-                DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, condition);
+            foreach (SQLCondition condition in importProcessedConds)
+            {
+                DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 1, condition);                
+                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 1, condition);
+            }
 
             SQLCondition condSeason = new SQLCondition();
             condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
@@ -2069,7 +2090,9 @@ namespace WindowPlugins.GUITVSeries
                         bNewFile = true;
                     }
 
-                    episode[DBEpisode.cImportProcessed] = 1;
+                    episode[DBEpisode.cImportProcessed] = 1;                    
+                    episode[DBEpisode.cIsAvailable] = 1;
+                    
                     episode[DBEpisode.cSeriesID] = series[DBSeries.cID];
                     if (progress.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex2))
                     {

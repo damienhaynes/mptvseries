@@ -433,8 +433,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 string sRoot = System.IO.Path.GetPathRoot(importPath[DBImportPath.cPath]);
                 if ((importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot) && sRoot.StartsWith(volume))
-                {
-                    MPTVSeriesLog.Write("Adding for import: " + importPath[DBImportPath.cPath]);
+                {                    
+					MPTVSeriesLog.Write("Adding for import or remove: " + importPath[DBImportPath.cPath]);
                     folders.Add(importPath[DBImportPath.cPath]); 
                 }
             }
