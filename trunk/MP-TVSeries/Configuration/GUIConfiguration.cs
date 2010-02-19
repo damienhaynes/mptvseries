@@ -235,8 +235,7 @@ namespace WindowPlugins.GUITVSeries
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
-            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles);
+            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
             checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
@@ -1028,7 +1027,7 @@ namespace WindowPlugins.GUITVSeries
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     bNewRow = true;
                 }
-
+                
                 AddImportPathPopup importPathPopup = new AddImportPathPopup();
 
                 // If Path is defined, set path to default in folder browser dialog
@@ -2755,11 +2754,6 @@ namespace WindowPlugins.GUITVSeries
             splitMain_Log.Panel2Collapsed = !splitMain_Log.Panel2Collapsed;
             DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
             log_window_changed();
-        }
-
-        private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cImport_DontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
         }
 
         private void checkBox_ShowHidden_CheckedChanged(object sender, EventArgs e)
