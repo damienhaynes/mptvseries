@@ -486,7 +486,14 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
                 columnRemovable.Name = "removable";
                 columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnRemovable.ToolTipText = @"Enable this option to treat this path as removable e.g. CD\DVD-ROM, USB Drive.";
                 dataGridView_ImportPathes.Columns.Add(columnRemovable);
+               
+                DataGridViewCheckBoxColumn columnKeepReference = new DataGridViewCheckBoxColumn();
+                columnKeepReference.Name = "keep_references";
+                columnKeepReference.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnKeepReference.ToolTipText = "Enable this option to keep reference to files in database that are not available for this import path.";
+                dataGridView_ImportPathes.Columns.Add(columnKeepReference);
 
                 DataGridViewButtonColumn columnPath = new DataGridViewButtonColumn();
                 columnPath.Name = DBImportPath.cPath;
@@ -506,6 +513,17 @@ namespace WindowPlugins.GUITVSeries
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
                     row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
                     row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
+                    
+                    if (row.Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = false;
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
+                    else
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = (Boolean)importPath[DBImportPath.cKeepReference];
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
             }              
@@ -934,7 +952,8 @@ namespace WindowPlugins.GUITVSeries
                     // Set default values of cells for new rows
                     // we do this so if user keeps adding empty rows, it wont throw an exception when removed
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
@@ -945,18 +964,55 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string sEnabled = cell.Value.ToString();
                     if (sEnabled == "True")
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                                         
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                        
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     else
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                        
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
                 }
                 else
                 {
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
+            
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cKeepReference].Index)
+            {
+                if (!cell.ReadOnly)
+                {
+                    if (cell.Value != null)
+                    {
+                        string sEnabled = cell.Value.ToString();
+                        if (sEnabled == "True")
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        else
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = true;
 
+                        if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                        {
+                            DataGridViewCheckBoxCell cbCell = (DataGridViewCheckBoxCell)dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference];
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+
+                        }
+                    }
+                    else
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
+                    }
+                }
+            }
+            
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
             {
                 // Determine if user clicked on the last row, (manually add new row)
@@ -969,6 +1025,7 @@ namespace WindowPlugins.GUITVSeries
                     // set default values for cells
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     bNewRow = true;
                 }
 
@@ -1507,7 +1564,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonID:
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
-                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                case DBOnlineEpisode.cAbsoluteNumber:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;

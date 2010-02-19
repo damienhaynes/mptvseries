@@ -141,7 +141,8 @@ namespace WindowPlugins.GUITVSeries.Local_Parsing_Classes {
             // construct and add the episode (i am not sure how much of this is required...
             // would be nice if a DBOnlineEpisode object could just create a DBEpisode object...
             DBEpisode episode = new DBEpisode(onlineEp, this.videoFile.FullName);
-            episode[DBEpisode.cImportProcessed] = 1;
+            episode[DBEpisode.cImportProcessed] = 1;            
+            episode[DBEpisode.cIsAvailable] = 1;
 
             episode[DBOnlineEpisode.cID] = 0; //Force it to update on next scan
             if (episode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
