@@ -981,10 +981,12 @@ namespace WindowPlugins.GUITVSeries
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
                                 }
 
-                                // TODO CHECK translation ???
-                                pItem = new GUIListItem(Translation.Play_Random_Episode);
-								dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                if (newsEnable || torrentsEnable) // is this used by subtitles?
+                                {
+                                    pItem = new GUIListItem(Translation.ResetIgnoredDownloadedFiles);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                }
 
 								dlg.DoModal(GUIWindowManager.ActiveWindow);
 								if (dlg.SelectedId != -1)
