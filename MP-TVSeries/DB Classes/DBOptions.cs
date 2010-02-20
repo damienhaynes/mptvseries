@@ -189,6 +189,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
         public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
 
+        public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -505,6 +507,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cInvokeExtAfterPlayback) == null)
                     SetOptions(cInvokeExtAfterPlayback, string.Empty);
+
+                if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
+                    SetOptions(cCountEmptyAndFutureAiredEps, 1);
             }
             catch (Exception ex)
             {
