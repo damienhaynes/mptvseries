@@ -102,7 +102,8 @@ namespace WindowPlugins.GUITVSeries
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
         public static string RatingStars = "Stars";        
-        public static string ResetUserSelections = "Reset User Selections";        
+        public static string ResetUserSelections = "Reset User Selections";
+        public static string ResetIgnoredDownloadedFiles = "Reset Ignored Downloaded Files";
         public static string ChangeLayout = "Change Layout";
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";

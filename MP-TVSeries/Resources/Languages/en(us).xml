@@ -243,5 +243,7 @@
     
 	<string Field="Playlist" Original="Playlist">Playlist</string>
   <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Last Online Update</string>
-	
+
+  <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Reset Ignored Downloaded Files</string>
+  
 </strings>
