@@ -976,22 +976,30 @@ namespace WindowPlugins.GUITVSeries
                 {
                     epsWatched += parseResult;
                 }
-                                
+                
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
                 Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
-                
-                if (match.Success)
+
+                try
                 {
-                    // if episode airdate is in the future conditionally add to episode count
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    if (match.Success)
+                    {
+                        // if episode airdate is in the future conditionally add to episode count
+                        firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                        if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                            epsTotal++;
+                    }
+                    else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    {
+                        // no airdate field set, this occurs for specials most of the time                   
                         epsTotal++;
+                    }
                 }
-                else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                catch
                 {
-                    // no airdate field set, this occurs for specials most of the time                   
-                    epsTotal++;                    
+                    // most likely invalid date in database 
+                    epsTotal++;
                 }
 
             }
@@ -1028,19 +1036,28 @@ namespace WindowPlugins.GUITVSeries
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
                 Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
-                if (match.Success)
+
+                try
                 {
-                    // if episode airdate is in the future conditionally add to episode count
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    if (match.Success)
+                    {
+                        // if episode airdate is in the future conditionally add to episode count
+                        firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                        if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                            epsTotal++;
+                    }
+                    else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    {
+                        // no airdate field set, this occurs for specials most of the time                    
                         epsTotal++;
+                    }
                 }
-                else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                catch
                 {
-                    // no airdate field set, this occurs for specials most of the time                    
+                    // most likely invalid date in database 
                     epsTotal++;
                 }
-               
+        
             }
             epsUnWatched = epsTotal - epsWatched;
         }
