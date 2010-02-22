@@ -13,25 +13,16 @@ namespace WindowPlugins.GUITVSeries.Configuration
         public event EventHandler ImportFinished;
 
         ConfigurationForm owner = null;
-        internal ImportProgessPage(ConfigurationForm owner, OnlineParsing parser)
+        internal ImportProgessPage(ConfigurationForm owner)
         {
             InitializeComponent();
 
             this.owner = owner;
-            parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(b =>
-                {
-                    this.btnFinish.Enabled = true; 
-                    this.btnCancel.Enabled = false;
-                });
-            parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(ReceiveUpdates);
-
+            
             this.progressLabel1.Label.Text = "Local Filename Processing";
-            this.progressLabel1.Status = ProgressLabelStatus.Finished;
-            this.progressLabel1.Progress.Text = "Processed in previous Step";
             this.progressLabel10.Label.Text = "Reading MediaInfo of local files";
 
-
-            this.progressLabel2.Label.Text = "Identifying Series";
+            this.progressLabel2.Label.Text = "Matching Series";
             this.progressLabel3.Label.Text = "Identifying Episodes";
 
             this.progressLabel4.Label.Text = "Retrieving Series MetaData";
@@ -43,12 +34,23 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.progressLabel9.Label.Text = "Retrieving Fanart";            
         }
 
+        internal void AddParser(OnlineParsing parser)
+        {
+            parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(b =>
+            {
+                this.btnFinish.Enabled = true;
+                this.btnCancel.Enabled = false;
+            });
+            parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(ReceiveUpdates);
+        }
+
         void setProgressLabel(ProgressLabel lbl, ParsingProgress progress)
         {
             string type = string.Empty;
             switch (progress.CurrentAction)
             {
                 case ParsingAction.MediaInfo:
+                case ParsingAction.LocalScan:
                     type = "files";
                     break;
                 case ParsingAction.IdentifyNewSeries:                
@@ -92,6 +94,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     case ParsingAction.NoExactMatch:
                         break;
                     case ParsingAction.LocalScan:
+                        setProgressLabel(this.progressLabel1, progress);
                         break;
                     case ParsingAction.List_Add:
                         break;
@@ -138,18 +141,23 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     default:
                         break;
                 }
-                
+
                 // display the details
                 if (progress.Details is DBTable)
                 {
+                    labelNoInfo.Visible = false;
+                    labelDetailHeader.Visible = true;
+                    labelDetailHeader.Text = progress.Details.ToString();
+                    textBoxDetails.Visible = true;
+                    pictureBoxDetails.Visible = true;
                     if (progress.Details is DBEpisode)
-                    {
-                        this.labelDetails.Text = progress.Details.ToString();
+                    {                        
+                        this.textBoxDetails.Text = progress.Details.ToString();
                         bool DontShowSummary = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) && !progress.Details[DBOnlineEpisode.cWatched];
-                        this.textDetails.Text = DontShowSummary ? "Spoilers!" : progress.Details[DBOnlineEpisode.cEpisodeSummary].ToString();
+                        this.textBoxDetails.Text = DontShowSummary ? "Spoilers!" : progress.Details[DBOnlineEpisode.cEpisodeSummary].ToString();
 
                         bool DontShowTN = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) && !progress.Details[DBOnlineEpisode.cWatched];
-                        this.pictureDetails.Image = null;
+                        this.pictureBoxDetails.Image = null;
                         if (!DontShowTN)
                         {
                             tryShowDetailsPicture(progress.Picture);
@@ -157,17 +165,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     }
                     else if (progress.Details is DBSeries)
                     {
-                        this.labelDetails.Text = progress.Details.ToString();
-                        this.textDetails.Text = progress.Details[DBOnlineSeries.cSummary];
-                        this.pictureDetails.Image = null;
+                        this.textBoxDetails.Text = progress.Details.ToString();
+                        this.textBoxDetails.Text = progress.Details[DBOnlineSeries.cSummary];
+                        this.pictureBoxDetails.Image = null;
                         tryShowDetailsPicture(progress.Picture);
                     }
                 }
                 else
                 {
-                    labelDetails.Text = string.Empty;
-                    textDetails.Text = string.Empty;
-                    pictureDetails.Image = null;
+                    labelNoInfo.Visible = true;
+                    textBoxDetails.Text = string.Empty;
+                    textBoxDetails.Visible = false;
+                    pictureBoxDetails.Image = null;
+                    pictureBoxDetails.Visible = false;
                 }
             }                
         }
@@ -178,7 +188,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 try
                 {
-                    this.pictureDetails.Image = ImageAllocator.LoadImageFastFromFile(path);
+                    this.pictureBoxDetails.Image = ImageAllocator.LoadImageFastFromFile(path);
                 }
                 catch (Exception) { };
             }
@@ -190,6 +200,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 if (this.owner != null)
                     owner.AbortImport();
+                if (this.ImportFinished != null)
+                    ImportFinished(this, new EventArgs());
             }
         }
 
@@ -197,6 +209,36 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (ImportFinished != null)
                 ImportFinished(this, new EventArgs());
+        }
+
+        public void ShowDetailsPanel(Control c)
+        {
+            if (this.panel1.Controls.Contains(c))
+            {
+                c.BringToFront();
+                c.Visible = true;
+                return;
+            }
+            this.panel1.Controls.Add(c);
+            c.Dock = DockStyle.Fill;
+            c.BringToFront();
+            c.Visible = true;
+
+            //this.panelProgress.Width = 275;
+        }
+
+        public void RemoveDetailsPanel(Control c)
+        {
+            this.panel1.Controls.Remove(c);
+            //this.panelProgress.Width = 400;
+        }
+
+        public void AddSleepingDetailsPanel(Control c)
+        {
+            this.panel1.Controls.Add(c);
+            c.Dock = DockStyle.Fill;
+            c.BringToFront();
+            c.Visible = false;
         }
     }
 }

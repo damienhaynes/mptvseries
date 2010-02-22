@@ -174,6 +174,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        static public void Write(String format, params object[] arg)
+        {
+            Write(string.Format(format, arg), LogLevel.Normal);
+        }
+
         /// <summary>
         /// Use this for Std. Log entries, only show up in LogLevel.Normal
         /// </summary>

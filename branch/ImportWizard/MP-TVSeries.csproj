@@ -349,6 +349,9 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\DeleteDialog.resx">
       <DependentUpon>DeleteDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -474,6 +477,12 @@
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\ImportPanelEpID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelEpID.Designer.cs">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ImportPanelParsing.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -461,6 +461,34 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public void ChangeIndexes(int seasonIndex, int episodeIndex)
+        {
+            string composite = base[cSeriesID] + "_" + seasonIndex + "x" + episodeIndex;
+            base[cSeasonIndex] = seasonIndex;
+            base[cEpisodeIndex] = episodeIndex;
+            base[cCompositeID] = composite;
+
+            DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
+            if (!newOnlineEpisode.ReadPrimary(composite))
+            {                
+                foreach (String fieldName in m_onlineEpisode.FieldNames)
+                {
+                    switch (fieldName)
+                    {
+                        default:
+                            newOnlineEpisode[fieldName] = m_onlineEpisode[fieldName];
+                            break;
+                    }
+                }
+                newOnlineEpisode[cSeriesID] = this[cSeriesID];
+                newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
+                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
+                newOnlineEpisode[cCompositeID] = base[cCompositeID];
+            }
+            m_onlineEpisode = newOnlineEpisode;
+            Commit();
+        }
+
         public void ChangeSeriesID(int nSeriesID)
         {
             // use base[] as this[] as logic for DBOnlineEpisode prevents localepisode seriesID being set 

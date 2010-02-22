@@ -169,6 +169,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.match_filename = file.m_sMatch_FileName;
                 progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
+                progressReporter.PathPair = file;
                 if(includeFailed ||progressReporter.success)
                     results.Add(progressReporter);
             }
@@ -214,6 +215,7 @@ namespace WindowPlugins.GUITVSeries
         public FilenameParser parser;
         public string match_filename;
         public string full_filename;
+        public PathPair PathPair;
 
         private static parseResultComparer comparer = new parseResultComparer();
         public static parseResultComparer Comparer { get { return comparer;}}

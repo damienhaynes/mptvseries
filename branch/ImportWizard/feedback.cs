@@ -125,4 +125,11 @@ namespace WindowPlugins.GUITVSeries.Feedback
         ReturnCode YesNoOkDialog(ChooseFromYesNoDescriptor descriptor);
         ReturnCode GetStringFromUser(GetStringFromUserDescriptor descriptor, out String input);
     }
+
+    public interface IEpisodeMatchingFeedback
+    {
+        void MatchEpisodesForSeries(DBSeries series, List<DBEpisode> localEpisodes, List<DBOnlineEpisode> onlineCandidates);
+
+        ReturnCode GetResult(out List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> result);
+    }
 }

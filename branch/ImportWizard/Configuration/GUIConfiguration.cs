@@ -1380,62 +1380,95 @@ namespace WindowPlugins.GUITVSeries
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
 
-                                 
-                ImportPanelParsing ipp = new ImportPanelParsing();
+                var ParsingWizardHost = new ImportProgessPage(this);
+                var ParsingWizardParsingPage = new ImportPanelParsing();
+                var ParsingWizardSeriesIDPage = new ImportPanelSeriesID();
+                var ParsingWizardEpIDPage = new ImportPanelEpID();
 
-                this.tabPage_Import.Controls.Add(ipp);
+                // bring up the wizard                
+                this.tabPage_Import.Controls.Add(ParsingWizardHost);
+                ParsingWizardHost.Dock = DockStyle.Fill;
+                ParsingWizardHost.BringToFront();
 
-                ipp.Dock = DockStyle.Fill;
-                ipp.BringToFront();
-                ipp.DoLocalParsing();
+                // now have it host the the initial parsing page                 
+                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
 
-                ipp.UserFinishedEditing += new userFinishedEditingDel((changedResults, Request) =>
+                ParsingWizardHost.AddSleepingDetailsPanel(ParsingWizardEpIDPage);
+
+                // and fire off work on that page
+                ParsingWizardParsingPage.DoLocalParsing();
+
+                ParsingWizardParsingPage.UserFinishedEditing += new userFinishedEditingDel((changedResults, ParsingRequest) =>
                 {
-                    this.tabPage_Import.Controls.Remove(ipp);
-                    if (Request == UserFinishedRequestedAction.Next)
+                    ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+                    if (ParsingRequest == UserFinishedRequestedAction.Next)
                     {
                         // show the seriesIdentification Page
+                        ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+                        ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
 
-                        var ipsi = new ImportPanelSeriesID();
-                        this.tabPage_Import.Controls.Add(ipsi);
-                        ipsi.Dock = DockStyle.Fill;
-                        ipsi.SetResults(changedResults.ParseResults);
-                        ipsi.BringToFront();
+                        ParsingWizardSeriesIDPage.SetResults(changedResults.ParseResults);
 
-                        ipsi.UserFinishedEditing += new userFinishedEditingDel((idSeries, RequestedAction) =>
+                        ParsingWizardSeriesIDPage.UserFinishedEditing += new userFinishedEditingDel((idSeries, SeriesIDRequest) =>
                         {
-                            this.tabPage_Import.Controls.Remove(ipsi);
-                            if (RequestedAction == UserFinishedRequestedAction.Next)
+                            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                            
+                            if (SeriesIDRequest == UserFinishedRequestedAction.Next)
                             {
                                 m_parser = new OnlineParsing(this);
 
-                                // show the next page (progess)
-                                var ipp2 = new ImportProgessPage(this, this.m_parser);
-                                this.tabPage_Import.Controls.Add(ipp2);
+                                // and give it to the wizard
+                                ParsingWizardHost.AddParser(m_parser);
 
-                                ipp2.ImportFinished += new EventHandler((sender, e) =>
+                                // now show generic progress details (remove seriesIDPage)
+                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+
+                                ParsingWizardHost.ImportFinished += new EventHandler((sender, e) =>
                                 {
                                     // user clicked finished (can only do so after import is through
-                                    this.tabPage_Import.Controls.Remove(ipp2);
+                                    this.tabPage_Import.Controls.Remove(ParsingWizardHost);
+                                });    
+
+                                // only now do we set up the parser itself and fire it off
+                                parsingParams.m_userInputResult = idSeries;
+                                // this will be requested by the the parsing engine at the appropriate time
+                                parsingParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
+                                parsingParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
+
+                                ParsingWizardEpIDPage.UserFinishedEditing += new userFinishedEditingDel((values, req) =>
+                                {
+                                    switch (req)
+                                    {
+                                        case UserFinishedRequestedAction.Cancel:
+                                            m_parser.Cancel();
+                                            break;
+                                        case UserFinishedRequestedAction.Next:
+                                            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardEpIDPage);
+                                            break;
+                                        case UserFinishedRequestedAction.ShowMe:
+                                            // it was requested, tell the progress wizard to show it
+                                            ParsingWizardHost.ShowDetailsPanel(ParsingWizardEpIDPage);
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 });
 
-                                ipp2.Dock = DockStyle.Fill;
-                                ipp2.BringToFront();
 
-                                parsingParams.m_userInputResult = idSeries;
                                 button_Start.Text = "Abort";
                                 m_timingStart = DateTime.Now;
 
                                 m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
                                 m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
 
+                                // finally fire it off
                                 m_parser.Start(parsingParams);
                             }
-                            else if (RequestedAction == UserFinishedRequestedAction.Prev)
-                            {
-                                this.tabPage_Import.Controls.Add(ipp);
-                                ipp.Dock = DockStyle.Fill;
-                                ipp.BringToFront();
+                            else if (SeriesIDRequest == UserFinishedRequestedAction.Prev)
+                            {                                
+                                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
+                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                                ParsingWizardSeriesIDPage.ClearResults();
                             }
                         });
                     }

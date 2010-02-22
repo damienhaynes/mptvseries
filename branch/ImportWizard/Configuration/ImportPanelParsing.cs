@@ -14,7 +14,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
     {
         Cancel,
         Next,
-        Prev
+        Prev,
+        ShowMe
     }
     public delegate void userFinishedEditingDel(UserInputResults userInputResult, UserFinishedRequestedAction RequestedAction);
     
@@ -25,6 +26,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             InitializeComponent();
         }
+
+        public List<PathPair> allFoundFiles = new List<PathPair>();
 
         List<columns> uniqueCols = null;
         List<string> userCols = new List<string>();
@@ -93,7 +96,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
 
             // note: we order by parsed_name (series), which also sorts those with !success at the top
-            foreach (var result in parsingResults.OrderBy(r => r.parser.Matches.SingleOrDefault(kv => kv.Key == DBSeries.cParsedName).Value))
+            foreach (var result in parsingResults.OrderBy(r => r.parser.Matches.SingleOrDefault(kv => kv.Key == DBSeries.cParsedName).Value
+                                                             + r.parser.Matches.SingleOrDefault(kv => kv.Key == DBEpisode.cSeasonIndex).Value
+                                                             + r.parser.Matches.SingleOrDefault(kv => kv.Key == DBEpisode.cEpisodeIndex).Value))
             {
                 DataGridViewRow r = new DataGridViewRow();
 
@@ -147,8 +152,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             LocalParse runner = new LocalParse();
             runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler( result => 
-                {                    
-                    OnlineParsing.RemoveFilesNotInDB(result);
+                {
+                    allFoundFiles = result.Select(r => r.PathPair).ToList();
+                    OnlineParsing.RemoveFilesInDB(result);
                     this.label_wait_parse.Text = "FileParsing is done, displaying Results...";
                     origResults = result;
                     FillGrid(result);
@@ -165,7 +171,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (UserFinishedEditing != null) UserFinishedEditing(new UserInputResults(IdentifyChanges(false), null), UserFinishedRequestedAction.Next);
+            var results = IdentifyChanges(false);
+            // TODO: make possible to only have series filled out!
+            // we requrie at least the series to be filled for all enabled ones
+            var invalids = results.Count(pr => !pr.parser.Matches.ContainsKey(DBSeries.cParsedName) || string.IsNullOrEmpty(pr.parser.Matches[DBSeries.cParsedName]));
+            invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex]));
+            invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex]));
+            if (invalids == 0)
+            {
+                if (UserFinishedEditing != null)
+                    UserFinishedEditing(new UserInputResults(results, null), UserFinishedRequestedAction.Next);
+            }
+            else MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);
+                
         }
 
         IList<parseResult> IdentifyChanges(bool includeDisabled)
@@ -184,6 +202,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                             var origPR = origResults.SingleOrDefault(pr => pr.full_filename == (row.Tag as parseResult).full_filename);
                             if (origPR != null)
                             {
+                                origPR.success = (bool)row.Cells[0].Value == true;
                                 var colname = uniqueCols[i].Name;
                                 string origValue;
                                 string newValue = row.Cells[colname].Value as string;

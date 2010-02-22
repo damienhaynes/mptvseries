@@ -72,6 +72,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
             FillGrid(uniqueSeries.ToList());           
         }
 
+        public void ClearResults()
+        {
+            givenResults = null;
+            displayedActions = new Dictionary<UserInputResults.SeriesAction, string>();
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            isGridPrepared = false;
+        }
+
         int ColIndexOf(string columnName)
         {
             return dataGridView1.Columns[columnName].Index;

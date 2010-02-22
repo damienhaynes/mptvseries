@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries
 {
     class UpdateSeries
     {
+        private List<String> sSeriesIDs = null;
         private long m_nServerTimeStamp = 0;
         private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
         private List<int> listIncorrectIDs = new List<int>();
@@ -43,7 +44,29 @@ namespace WindowPlugins.GUITVSeries
 
         public List<DBOnlineSeries> Results
         {
-            get { return listSeries; }
+            get
+            {
+                if (listSeries == null)
+                    listSeries = new List<DBOnlineSeries>(ResultsLazy);
+                return listSeries;
+            }
+        }
+
+        /// <summary>
+        /// Lazily Evaluates
+        /// </summary>
+        public IEnumerable<DBOnlineSeries> ResultsLazy
+        {
+            get
+            {
+                foreach (string id in sSeriesIDs)
+                {
+                    var results = Work(id);
+                    foreach (var r in results)
+                        if(r != null && r[DBOnlineSeries.cID] > 0)
+                          yield return r;
+                }
+            }
         }
 
         public List<int> BadIds
@@ -53,11 +76,10 @@ namespace WindowPlugins.GUITVSeries
 
         public UpdateSeries(List<String> sSeriesIDs)
         {
-            foreach(string id in sSeriesIDs)
-                Work(id);
+            this.sSeriesIDs = sSeriesIDs;            
         }
 
-        void Work(String sSeriesID)
+        IEnumerable<DBOnlineSeries> Work(String sSeriesID)
         {
             if (sSeriesID.Length > 0)
             {
@@ -72,13 +94,13 @@ namespace WindowPlugins.GUITVSeries
                     foreach (XmlNode itemNode in node.ChildNodes)
                     {
                         bool hasDVDOrdering = false;
-                        bool hasAbsoluteOrdering = false;
+                        bool hasAbsoluteOrdering = false;       
                         DBOnlineSeries series = new DBOnlineSeries();
                         foreach (XmlNode seriesNode in itemNode)
                         {
-                            // first return item SHOULD ALWAYS be the series
+                            // first return item SHOULD ALWAYS be the series                            
                             if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {                                                                
+                            {                           
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
@@ -120,6 +142,7 @@ namespace WindowPlugins.GUITVSeries
                             if (hasDVDOrdering) ordering += "DVD";
                             series[DBOnlineSeries.cEpisodeOrders] = ordering;
                         }
+                        if(series != null) yield return series;
                     }
                 }
             }
