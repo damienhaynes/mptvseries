@@ -1948,8 +1948,28 @@ namespace WindowPlugins.GUITVSeries
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue, bool CanModify, DataGridViewContentAlignment TextAlign)
         {
-            // Add new Row
-            int id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
+            int id = -1;
+            // are we a user_edited item? if so replace the orig entry
+            if (FieldName.EndsWith(DBTable.cUserEditPostFix))
+            {
+                // except if the content is empty, then we just dont display it
+                if (string.IsNullOrEmpty(FieldValue)) return;
+                string origFieldName = FieldName.Replace(DBTable.cUserEditPostFix, "");
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells[1].Tag as string == origFieldName)
+                    {
+                        id = i;
+                        break;
+                    }
+
+                }
+            }
+            if(id < 0)
+            {
+                // Add new Row
+                id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
+            } this.dataGridView1.Rows[id].Cells[1].Value = FieldValue; // we just edit the value
 
             // First Column (Name)
             DataGridViewCell cell = this.dataGridView1.Rows[id].Cells[0];
@@ -1966,6 +1986,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             cell.Style.Alignment = TextAlign;
+
         }
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -1995,25 +2016,28 @@ namespace WindowPlugins.GUITVSeries
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
             if (nodeEdited != null)
             {
+                string field = (string)cell.Tag;
+                if (!field.EndsWith(DBTable.cUserEditPostFix))
+                    field += DBTable.cUserEditPostFix;
                 switch (nodeEdited.Name)
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        series[(String)cell.Tag] = (String)cell.Value;
+                        series[field] = (String)cell.Value;
                         series.Commit();
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
-                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
+                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
                         break;
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeEdited.Tag;
-                        season[(String)cell.Tag] = (String)cell.Value;
+                        season[field] = (String)cell.Value;
                         season.Commit();
                         break;
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        episode[(String)cell.Tag] = (String)cell.Value;
+                        episode[field] = (String)cell.Value;
                         episode.Commit();
                         if (episode[DBEpisode.cEpisodeName].ToString().Length > 0)
                             nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];

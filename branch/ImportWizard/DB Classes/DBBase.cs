@@ -258,6 +258,7 @@ namespace WindowPlugins.GUITVSeries
     // holds a field hash table, includes an update mechanism to keep the DB tables in sync
     public class DBTable
     {
+        public const string cUserEditPostFix = @"__USEREDIT__";
         public string m_tableName;
         public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
         public bool m_CommitNeeded = false;
