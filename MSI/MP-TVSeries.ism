@@ -3520,9 +3520,9 @@
 		<row><td>ID_STRING24</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-1415723317</td></row>
 		<row><td>ID_STRING25</td><td>1033</td><td>This feature contains all the language translations for the MP-TVSeries plugin, if you want to create a custom language</td><td>0</td><td/><td>-1415764213</td></row>
 		<row><td>ID_STRING26</td><td>1033</td><td>MediaInfo</td><td>0</td><td/><td>-526481589</td></row>
-		<row><td>ID_STRING27</td><td>1033</td><td>MediaInfo supplies technical and tag information about your video or audio files. Newer versions will not be downgraded.\n\nv0.7.27.0</td><td>0</td><td/><td>-526488916</td></row>
+		<row><td>ID_STRING27</td><td>1033</td><td>MediaInfo supplies technical and tag information about your video or audio files. Newer versions will not be downgraded.\n\nv0.7.28.0</td><td>0</td><td/><td>-1189158543</td></row>
 		<row><td>ID_STRING28</td><td>1033</td><td>Subtitle Downloader</td><td>0</td><td/><td>-526485492</td></row>
-		<row><td>ID_STRING29</td><td>1033</td><td>SubtitleDownloader is a C# API library for downloading subtitles. It has support for multiple sites e.g. OpenSubtitles, Sublight, SubtitleSource, TVSubtitles ... and multiple languages.\n\nAuthor: Seco, v1.6.0.0</td><td>0</td><td/><td>-526475924</td></row>
+		<row><td>ID_STRING29</td><td>1033</td><td>SubtitleDownloader is a C# API library for downloading subtitles. It has support for multiple sites e.g. OpenSubtitles, Sublight, SubtitleSource, TVSubtitles ... and multiple languages.\n\nAuthor: Seco, v1.8.0.0</td><td>0</td><td/><td>-1189213807</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>http://code.google.com/p/mptvseries/</td><td>0</td><td/><td>463326637</td></row>
 		<row><td>ID_STRING30</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-526476692</td></row>
 		<row><td>ID_STRING31</td><td>1033</td><td>Translations used by the plugin to present data in the GUI. This can optionally be installed if you wish to customise your own translations.</td><td>0</td><td/><td>-526482804</td></row>
