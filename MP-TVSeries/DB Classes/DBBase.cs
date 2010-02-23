@@ -1167,9 +1167,10 @@ namespace WindowPlugins.GUITVSeries
             m_db = null; ;
             MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
           }
-          catch (Exception e)
+          catch (Exception ex)
           {
             MPTVSeriesLog.Write("Failed closing Database: " + databaseFile);
+            MPTVSeriesLog.Write(ex.Message);
           }              
         }
 
