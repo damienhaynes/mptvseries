@@ -1223,7 +1223,7 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.downloadSubtitle: {
 							if (selectedEpisode != null) {
 								DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                ShowSubtitleMenu(episode);
+                                ShowSubtitleMenu(episode, false);
 							}
 						}
 						break;
@@ -1500,10 +1500,13 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-        protected void ShowSubtitleMenu(DBEpisode episode)
+        protected void ShowSubtitleMenu(DBEpisode episode, bool bShowNoSearch)
         {
             List<CItem> Choices = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+
+            if (bShowNoSearch)
+                Choices.Add(new CItem(Translation.CFS_No_Search, Translation.CFS_No_Search, "Cancel"));
 
             // Get names of the SubtitleDownloader implementations for menu
             foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
@@ -1515,9 +1518,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             CItem selected = null;
-
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = "Get subtitles from?";
+            descriptor.m_sTitle = Translation.CFS_Choose_Search_Site;
             descriptor.m_sListLabel = "Enabled subtitle sites:";
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
@@ -1548,19 +1550,30 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                 }
-            }
+			}
 
             if (selected != null)
             {
-                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
-                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
-
-                if (!subtitleDownloaderWorking)
+                switch ((String)selected.m_Tag)
                 {
-                    setProcessAnimationStatus(true);
-                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                    subtitleDownloaderWorking = true;
-                    retriever.GetSubs(episode);
+                    case "Cancel":
+                        m_VideoHandler.ResumeOrPlay(episode);
+                        break;
+
+                    default:
+                        {
+                            ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
+                            SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
+
+                            if (!subtitleDownloaderWorking)
+                            {
+                                setProcessAnimationStatus(true);
+                                retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
+                                subtitleDownloaderWorking = true;
+                                retriever.GetSubs(episode);
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -1744,7 +1757,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay))
                         {
-                            ShowSubtitleMenu(m_SelectedEpisode);
+                            ShowSubtitleMenu(m_SelectedEpisode, true);
                         }
                         else
     						m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
@@ -3826,9 +3839,10 @@ namespace WindowPlugins.GUITVSeries
             if (subtitleRetrieved)
             {
                 LoadFacade();
-                dlgOK.SetHeading(Translation.Completed);
-                dlgOK.SetLine(1, Translation.Subtitles_download_complete);
-                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                // Why show a dialog if everything went fine? It adds one unecessary step
+                 dlgOK.SetHeading(Translation.Completed);
+                 dlgOK.SetLine(1, Translation.Subtitles_download_complete);
+                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
             else if (errorMessage != null)
             {
