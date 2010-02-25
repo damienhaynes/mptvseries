@@ -448,7 +448,9 @@ namespace WindowPlugins.GUITVSeries
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
 
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-            {
+            {                
+                DeviceManager.StartMonitor();
+
                 setUpFolderWatches();
 
                 // do a local scan when starting up the app if enabled - late on the watcher will monitor changes
@@ -539,8 +541,16 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
 		}
 
-		protected override void OnPageLoad() {			
-			if (m_Facade == null) 
+        public override void DeInit()
+        {
+            base.DeInit();
+
+            DeviceManager.StopMonitor();
+        }
+
+        protected override void OnPageLoad() {
+            MPTVSeriesLog.Write("OnPageLoad() started.", MPTVSeriesLog.LogLevel.Debug);
+            if (m_Facade == null) 
             {
 				// Most likely the skin does not exist
 				GUIDialogOK dlg = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
@@ -641,6 +651,8 @@ namespace WindowPlugins.GUITVSeries
 			}
 
             m_bPluginLoaded = true;
+            
+            Helper.disableNativeAutoplay();
 
             // Ask to Rate Episode, onPageLoad is triggered after returning from player
             if (ask2Rate != null) {
@@ -655,15 +667,23 @@ namespace WindowPlugins.GUITVSeries
             // Push last update time to skin
             setGUIProperty(guiProperty.LastOnlineUpdate, DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
 
+            MPTVSeriesLog.Write("OnPageLoad() completed.", MPTVSeriesLog.LogLevel.Debug);
+
 		}	
 
 		protected override void OnPageDestroy(int new_windowId) {
-			// Disable Random Fanart Timer
+            MPTVSeriesLog.Write("OnPageDestroy() started.", MPTVSeriesLog.LogLevel.Debug);
+            
+            // Disable Random Fanart Timer
 			m_FanartTimer.Change(Timeout.Infinite, Timeout.Infinite);
 			m_bFanartTimerDisabled = true;
+                        
+            Helper.enableNativeAutoplay();
 
 			base.OnPageDestroy(new_windowId);
-		}
+        
+            MPTVSeriesLog.Write("OnPageDestroy() completed.", MPTVSeriesLog.LogLevel.Debug);
+        }
 
 		#region Main Context Menu
 		protected override void OnShowContextMenu() {
@@ -734,14 +754,14 @@ namespace WindowPlugins.GUITVSeries
 							dlg.Add(pItem);
 							pItem.ItemId = (int)eContextItems.toggleWatched;
 
-							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
 								pItem = new GUIListItem(Translation.RateEpisode + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;								
 							}
 						}
 						else if (this.listLevel != Listlevel.Group) {
-							if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
                                 pItem = new GUIListItem(Translation.RateSeries + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;
@@ -829,7 +849,7 @@ namespace WindowPlugins.GUITVSeries
 						}
 						// Dont show if not a member of any view
 						if (listLevel == Listlevel.Series) {
-							if (!Helper.String.IsNullOrEmpty(selectedSeries[DBOnlineSeries.cViewTags])) {
+							if (!String.IsNullOrEmpty(selectedSeries[DBOnlineSeries.cViewTags])) {
 								pItem = new GUIListItem(Translation.RemoveViewTag + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.removeFromView;
@@ -951,19 +971,22 @@ namespace WindowPlugins.GUITVSeries
 								pItem.ItemId = (int)eContextItems.actionFullRefresh;							
                                 */
 
-								pItem = new GUIListItem(Translation.Play_Random_Episode);
+                                pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionPlayRandom;
 
-                                if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode))) {
+                                if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode))) {
                                     pItem = new GUIListItem(Translation.ParentalControlLocked);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
                                 }
 
-								pItem = new GUIListItem(Translation.Play_Random_Episode);
-								dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                if (newsEnable || torrentsEnable) // is this used by subtitles?
+                                {
+                                    pItem = new GUIListItem(Translation.ResetIgnoredDownloadedFiles);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                }
 
 								dlg.DoModal(GUIWindowManager.ActiveWindow);
 								if (dlg.SelectedId != -1)
@@ -1365,8 +1388,7 @@ namespace WindowPlugins.GUITVSeries
 
 		public override void OnAction(Action action) {
 			switch (action.wID) {
-				case Action.ActionType.ACTION_PARENT_DIR:
-				case Action.ActionType.ACTION_HOME:
+				case Action.ActionType.ACTION_PARENT_DIR:				
 					ImageAllocator.FlushAll();
 					GUIWindowManager.ShowPreviousWindow();
 					break;
@@ -1375,7 +1397,7 @@ namespace WindowPlugins.GUITVSeries
 					// back one level
 					MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
 					if (m_CurrViewStep == 0) {
-						goto case Action.ActionType.ACTION_HOME;
+                        goto case Action.ActionType.ACTION_PARENT_DIR;
 					}
 					else {
 						m_stepSelections.RemoveAt(m_CurrViewStep);
@@ -1745,6 +1767,8 @@ namespace WindowPlugins.GUITVSeries
 
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
+                
+                DeviceManager.StartMonitor();
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
@@ -1770,6 +1794,9 @@ namespace WindowPlugins.GUITVSeries
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");
                 // Only disconnect from the database if file exists on the network.
+                
+                DeviceManager.StopMonitor();
+
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
                     DBTVSeries.Close();
                 }
@@ -2659,11 +2686,12 @@ namespace WindowPlugins.GUITVSeries
                                     item.IsRemote = false;
                                     item.IsPlayed = false;
 
-                                    // Set IsRemote property to true, if the episode is not local on disk
-                                    if (episode[DBEpisode.cFilename].ToString().Length == 0) {
+                                    // Set IsRemote property to true, if the episode is not local on disk                                    
+                                    if (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)
+                                    {
                                         item.IsRemote = true;
                                     }
-                                    // Set IsPlayed property to true, if episode is has been watched
+                                    // Set IsPlayed property to true, if the episode has been watched
                                     else if (episode[DBOnlineEpisode.cWatched]) {
                                         item.IsPlayed = true;
                                     }
@@ -2989,16 +3017,16 @@ namespace WindowPlugins.GUITVSeries
 			// Execute Online Parsing Actions
 			if (epIDsUpdates.Count > 0) {
 
-				lock (m_parserUpdaterQueue) {
-					List<ParsingAction> parsingActions = new List<ParsingAction>();					
-					parsingActions.Add(ParsingAction.UpdateEpisodes);
-					
-					// Conditional parsing actions
-					if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);					
-					if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                lock (m_parserUpdaterQueue) {
+                    List<ParsingAction> parsingActions = new List<ParsingAction>();
+                    // Conditional parsing actions                    
+                    if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
+                    parsingActions.Add(ParsingAction.UpdateEpisodes);                    
+                    if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 
-					m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));				
-				}		
+                    m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
+                }
 
 			}
 		}
@@ -3090,7 +3118,7 @@ namespace WindowPlugins.GUITVSeries
 			string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
 			
 			// Submit rating online database if current rating is different
-			if (!Helper.String.IsNullOrEmpty(value) && value != item[type])
+			if (!String.IsNullOrEmpty(value) && value != item[type])
 			{
 				int rating = -1;
 				if (Int32.TryParse(value, out rating))
@@ -3319,7 +3347,7 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
 
-            if (!Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
             {
                 pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
                 dlg.Add(pItem);
@@ -3534,7 +3562,7 @@ namespace WindowPlugins.GUITVSeries
             // We need to add/remove from online database
             if (selectedItem == DBView.cTranslateTokenOnlineFavourite) {
                 string account = DBOption.GetOptions(DBOption.cOnlineUserID);
-                if (Helper.String.IsNullOrEmpty(account)) {
+                if (String.IsNullOrEmpty(account)) {
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     dlgOK.SetHeading(Translation.OnlineFavourites);
                     dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
@@ -3837,7 +3865,7 @@ namespace WindowPlugins.GUITVSeries
         {
 			// If view does not exist, default to 'ALL' internal view
 			// If 'ALL' view does not exist use first view
-            if (Helper.String.IsNullOrEmpty(viewName))
+            if (String.IsNullOrEmpty(viewName))
 				viewName = Translation.All;
 
            return switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
@@ -3847,7 +3875,7 @@ namespace WindowPlugins.GUITVSeries
         {
             string prettyCurrPosition = m_CurrLView.prettyName;
             foreach (string subPos in m_stepSelectionPretty)
-                if (!Helper.String.IsNullOrEmpty(subPos))
+                if (!String.IsNullOrEmpty(subPos))
                     prettyCurrPosition += " -> " + subPos;
             setGUIProperty(guiProperty.CurrentView, prettyCurrPosition);
             setGUIProperty(guiProperty.SimpleCurrentView, m_CurrLView.prettyName);

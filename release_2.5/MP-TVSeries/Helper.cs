@@ -27,6 +27,7 @@ using System.Text;
 using System.Diagnostics;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
+using MediaPortal.Ripper;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -34,21 +35,7 @@ namespace WindowPlugins.GUITVSeries
     {
         #region String Methods
         public static class String
-        {
-            /// <summary>
-            /// Fix for the buggy MS implementation
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-            public static bool IsNullOrEmpty(string value)
-            {
-                // great, won't be fixed until Orcas
-                // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=113102
-                if (value != null) return value.Length == 0;
-                return true;
-            }
-
+        {           
             public static bool IsNumerical(string number)
             {
                 double isNumber = 0;
@@ -169,7 +156,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        #region getCorrespondingX Methods
+        #region Get Corresponding Series/Season Methods
         public static DBSeries getCorrespondingSeries(int id)
         {
             DBSeries cached = cache.getSeries(id);
@@ -216,7 +203,7 @@ namespace WindowPlugins.GUITVSeries
                 bool wasCached = false;
                 if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f])) {
                     if (!wasCached) {
-                        MPTVSeriesLog.Write("This file does not exist..skipping: " + filenames[f], MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write("File does not exist: " + filenames[f], MPTVSeriesLog.LogLevel.Debug);
                         nonExistingFiles.Add(filenames[f]);
                     }
                     filenames.RemoveAt(f);
@@ -430,6 +417,35 @@ namespace WindowPlugins.GUITVSeries
         public static bool IsImageFile(string filename) {
             string extension = System.IO.Path.GetExtension(filename).ToLower();
             return VirtualDirectory.IsImageFile(extension);
+        }
+
+        /// <summary>
+        /// Checks if Fullscreen video is active
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsFullscreenVideo {
+            get {
+                bool isFullscreen = false;
+                if (GUIWindowManager.ActiveWindow == (int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO)
+                    isFullscreen = true;
+
+                return isFullscreen;
+            }
+        }
+
+        public static void disableNativeAutoplay()
+        {
+            MPTVSeriesLog.Write("Disabling native autoplay.");
+            AutoPlay.StopListening();
+        }
+
+        public static void enableNativeAutoplay()
+        {
+            if (GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.RUNNING)
+            {
+                MPTVSeriesLog.Write("Re-enabling native autoplay.");
+                AutoPlay.StartListening();
+            }
         }
 
         #endregion

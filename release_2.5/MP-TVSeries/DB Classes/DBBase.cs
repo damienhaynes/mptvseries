@@ -561,7 +561,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     }
 
-                if (Helper.String.IsNullOrEmpty(PrimaryField.Value.Value))
+                if (String.IsNullOrEmpty(PrimaryField.Value.Value))
                     return false;
 
                 String sWhere = " where ";
@@ -593,7 +593,7 @@ namespace WindowPlugins.GUITVSeries
                             switch (fieldPair.Value.Type)
                             {
                                 case DBField.cTypeInt:
-                                    if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                    if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                         builder.Append("'',");
                                     else
                                         builder.Append((string)fieldPair.Value.Value).Append(',');
@@ -631,7 +631,7 @@ namespace WindowPlugins.GUITVSeries
                         switch (fieldPair.Value.Type)
                         {
                             case DBField.cTypeInt:
-                                if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                     builder.Append("''");
                                 else
                                     builder.Append((string)fieldPair.Value.Value);
@@ -783,7 +783,7 @@ namespace WindowPlugins.GUITVSeries
 
         /// <summary>
         /// For Genre etc. this method will split by each character in "splits"
-        /// Should be used only for fields descriped in FieldsRequiringSplit
+        /// Should be used only for fields described in FieldsRequiringSplit
         /// </summary>
         /// <param name="fieldvalue"></param>
         /// <returns></returns>
@@ -820,7 +820,7 @@ namespace WindowPlugins.GUITVSeries
         {
             foreach (KeyValuePair<string, DBField> field in table.m_fields)
             {
-                if (Helper.String.IsNullOrEmpty(m_sWhat))
+                if (String.IsNullOrEmpty(m_sWhat))
                     m_sWhat += table.m_tableName + "." + field.Key;
                 else
                     m_sWhat += ", " + table.m_tableName + "." + field.Key;
@@ -1167,9 +1167,10 @@ namespace WindowPlugins.GUITVSeries
             m_db = null; ;
             MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
           }
-          catch (Exception e)
+          catch (Exception ex)
           {
             MPTVSeriesLog.Write("Failed closing Database: " + databaseFile);
+            MPTVSeriesLog.Write(ex.Message);
           }              
         }
 

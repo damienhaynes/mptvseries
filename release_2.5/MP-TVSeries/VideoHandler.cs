@@ -203,8 +203,8 @@ namespace WindowPlugins.GUITVSeries
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
-			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
-				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
+			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])                
+                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode)));
 			else
 				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : series.Poster);
 			
@@ -255,6 +255,23 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bIsImageFile) { 
                     if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {                        
                         return false;
+                    }
+                }
+
+                // see if we have an invokeOption set up
+                string invoke;
+                if((invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback)) != null && !string.IsNullOrEmpty(invoke))
+                {
+                    try
+                    {
+                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                        System.Diagnostics.Process.Start(invoke);
+                        MPTVSeriesLog.Write("Sucessfully Invoked BeforeFilePlay Command: " + invoke);
+                    }
+                    catch (Exception e)
+                    {
+                        MPTVSeriesLog.Write("Unable to Invoke BeforeFilePlay Command: " + invoke);
+                        MPTVSeriesLog.Write(e.Message);
                     }
                 }
                 
@@ -383,14 +400,31 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("This episode counts as watched");
                 if(countAsWatched) MarkEpisodeAsWatched(m_currentEpisode);
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
-                if ((Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
+                if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
                     MPTVSeriesLog.Write("Episode not rated yet");
                     if(RateRequestOccured != null)
                         RateRequestOccured.Invoke(m_currentEpisode);
                 } else MPTVSeriesLog.Write("Episode has already been rated or option not set");
             }
-            SetGUIProperties(true); // clear GUI Properties          
+            SetGUIProperties(true); // clear GUI Properties
+
+            // see if we have an invokeOption set up
+            string invoke;
+            if (countAsWatched && (invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback)) != null && !string.IsNullOrEmpty(invoke))
+            {
+                try
+                {
+                    invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                    System.Diagnostics.Process.Start(invoke);
+                    MPTVSeriesLog.Write("Sucessfully Invoked AfterFilePlay Command: " + invoke);
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("Unable to Invoke AfterFilePlay Command: " + invoke);
+                    MPTVSeriesLog.Write(e.Message);
+                }
+            }
         }
 
         void LogPlayBackOp(string OperationType, string filename)

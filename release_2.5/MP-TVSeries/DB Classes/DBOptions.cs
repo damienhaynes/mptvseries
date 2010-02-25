@@ -58,6 +58,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cImport_FolderWatch = "doFolderWatch";
         public const String cImport_ScanRemoteShare = "scanRemoteShare";
         public const String cImport_ScanOnStartup = "ScanOnStartup";
+        public const String cImport_ScanWhileFullscreenVideo = "AutoScanLocalFilesFSV";
         public const String cImport_ScanRemoteShareLapse = "AutoScanLocalFilesLapse";
         public const String cImport_AutoUpdateOnlineData = "AutoUpdateOnlineData";
         public const String cImport_AutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
@@ -184,6 +185,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
 
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
+
+        public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
+        public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
+
+        public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
@@ -493,6 +499,17 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cSkipSeasonViewOnSingleSeason) == null)
                     SetOptions(cSkipSeasonViewOnSingleSeason, 1);
 
+                if (GetOptions(cImport_ScanWhileFullscreenVideo) == null)
+                    SetOptions(cImport_ScanWhileFullscreenVideo, 0);
+
+                if (GetOptions(cInvokeExtBeforePlayback) == null)
+                    SetOptions(cInvokeExtBeforePlayback, string.Empty);
+
+                if (GetOptions(cInvokeExtAfterPlayback) == null)
+                    SetOptions(cInvokeExtAfterPlayback, string.Empty);
+
+                if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
+                    SetOptions(cCountEmptyAndFutureAiredEps, 1);
             }
             catch (Exception ex)
             {
@@ -509,11 +526,7 @@ namespace WindowPlugins.GUITVSeries
                     bTableUpdateDone = true;
                     SQLiteResultSet results;
                     results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
-                    if (results != null && results.Rows.Count > 0)
-                    {
-                        // table is already there, perfect
-                    }
-                    else
+                    if (results == null || results.Rows.Count == 0)                    
                     {
                         // no table, create it
                         String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";

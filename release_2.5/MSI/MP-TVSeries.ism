@@ -2002,7 +2002,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.5.0</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries 2.5.1</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -3520,9 +3520,9 @@
 		<row><td>ID_STRING24</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-1415723317</td></row>
 		<row><td>ID_STRING25</td><td>1033</td><td>This feature contains all the language translations for the MP-TVSeries plugin, if you want to create a custom language</td><td>0</td><td/><td>-1415764213</td></row>
 		<row><td>ID_STRING26</td><td>1033</td><td>MediaInfo</td><td>0</td><td/><td>-526481589</td></row>
-		<row><td>ID_STRING27</td><td>1033</td><td>MediaInfo supplies technical and tag information about your video or audio files. Newer versions will not be downgraded.\n\nv0.7.27.0</td><td>0</td><td/><td>-526488916</td></row>
+		<row><td>ID_STRING27</td><td>1033</td><td>MediaInfo supplies technical and tag information about your video or audio files. Newer versions will not be downgraded.\n\nv0.7.28.0</td><td>0</td><td/><td>-1189158543</td></row>
 		<row><td>ID_STRING28</td><td>1033</td><td>Subtitle Downloader</td><td>0</td><td/><td>-526485492</td></row>
-		<row><td>ID_STRING29</td><td>1033</td><td>SubtitleDownloader is a C# API library for downloading subtitles. It has support for multiple sites e.g. OpenSubtitles, Sublight, SubtitleSource, TVSubtitles ... and multiple languages.\n\nAuthor: Seco, v1.6.0.0</td><td>0</td><td/><td>-526475924</td></row>
+		<row><td>ID_STRING29</td><td>1033</td><td>SubtitleDownloader is a C# API library for downloading subtitles. It has support for multiple sites e.g. OpenSubtitles, Sublight, SubtitleSource, TVSubtitles ... and multiple languages.\n\nAuthor: Seco, v1.8.0.0</td><td>0</td><td/><td>-1189213807</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>http://code.google.com/p/mptvseries/</td><td>0</td><td/><td>463326637</td></row>
 		<row><td>ID_STRING30</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-526476692</td></row>
 		<row><td>ID_STRING31</td><td>1033</td><td>Translations used by the plugin to present data in the GUI. This can optionally be installed if you wish to customise your own translations.</td><td>0</td><td/><td>-526482804</td></row>
@@ -4132,9 +4132,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{20476F3F-01F6-49C5-96AF-5118BD29E800}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.5.0</td><td/></row>
-		<row><td>ProductVersion</td><td>2.5.0.924</td><td/></row>
+		<row><td>ProductCode</td><td>{5018BF3E-890C-4CB7-A255-FEF65D89C9CB}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.5.1</td><td/></row>
+		<row><td>ProductVersion</td><td>2.5.1.969</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>

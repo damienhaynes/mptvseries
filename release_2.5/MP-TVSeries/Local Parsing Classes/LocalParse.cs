@@ -71,6 +71,17 @@ namespace WindowPlugins.GUITVSeries
             }
             return false;
         }
+        
+        public static bool needToKeepReference(string filename)
+        {
+            if (paths == null) paths = DBImportPath.GetAll();
+            foreach (DBImportPath path in paths)
+            {
+                if (path[DBImportPath.cKeepReference] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
+            }
+            return false;
+        }
+
 
         public static string getDiskID(string filename)
         {

@@ -123,7 +123,7 @@ namespace WindowPlugins.GUITVSeries
 
             //_dateFormat = DBOption.GetOptions(DBOption.cDateFormatString);
             _dateFormat = System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
-            _formatDates = !Helper.String.IsNullOrEmpty(_dateFormat) && DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
+            _formatDates = !String.IsNullOrEmpty(_dateFormat) && DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
         }
         #endregion
 

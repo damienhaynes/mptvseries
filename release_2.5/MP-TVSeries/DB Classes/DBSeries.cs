@@ -176,6 +176,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
             base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
             base.AddColumn(cSortName, new DBField(DBField.cTypeString));
+            base.AddColumn(cOriginalName, new DBField(DBField.cTypeString));
             base.AddColumn(cStatus, new DBField(DBField.cTypeString));
             base.AddColumn(cGenre, new DBField(DBField.cTypeString));
             base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
@@ -196,7 +197,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
-			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
+			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));                        
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -236,8 +237,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 switch (fieldName)
-                {
-                    // forom subtitle retrieval always needs original (english) series title
+                {                    
                     // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "en"; // English (original)
@@ -250,8 +250,8 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 // we need to get it
-                                MPTVSeriesLog.Write("Retrieving original Series Name...");
-                                UpdateSeries origParser = null; //= new UpdateSeries(base[DBOnlineSeries.cID], 0, origLanguage); // doesn't work anymore
+                                MPTVSeriesLog.Write("Retrieving original Series Name...");                                
+                                UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], origLanguage);
                                 if (origParser != null && origParser.Results.Count == 1)
                                 {
                                     base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
@@ -494,7 +494,7 @@ namespace WindowPlugins.GUITVSeries
                 s_nLastLocalID--;
                 DBOption.SetOptions(DBOption.cDBSeriesLastLocalID, s_nLastLocalID);
                 this[cID] = m_onlineSeries[DBOnlineSeries.cID];
-                if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cPrettyName]))
+                if (String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cPrettyName]))
                 {
                     m_onlineSeries[DBOnlineSeries.cPrettyName] = this[cParsedName];
                     m_onlineSeries[DBOnlineSeries.cSortName] = this[cParsedName];
@@ -585,7 +585,7 @@ namespace WindowPlugins.GUITVSeries
                         if (m_onlineSeries != null)
                             retVal = m_onlineSeries[fieldName];
 
-                        if (Helper.String.IsNullOrEmpty(retVal))
+                        if (String.IsNullOrEmpty(retVal))
                             retVal = base[cParsedName];
                         return retVal;
 
@@ -648,7 +648,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                    if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]))
+                    if (String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]))
                         return String.Empty;
                     
                     if (m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName])) == -1)
@@ -676,7 +676,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(PosterList);
-                    if (Helper.String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName]))
+                    if (String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName]))
                         return String.Empty;
                     
                     if (m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName].ToString().IndexOf(Directory.GetDirectoryRoot(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName])) == -1)
@@ -705,7 +705,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sList = m_onlineSeries[DBOnlineSeries.cBannerFileNames];
-                    if (Helper.String.IsNullOrEmpty(sList))
+                    if (String.IsNullOrEmpty(sList))
                         return outList;
 
                     String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -724,7 +724,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int i = 0; i < value.Count; i++)
                     {
                         value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                        if (Helper.String.IsNullOrEmpty(String.Empty))
+                        if (String.IsNullOrEmpty(String.Empty))
                             sIn += value[i];
                         else
                             sIn += "," + value[i];
@@ -742,7 +742,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sList = m_onlineSeries[DBOnlineSeries.cPosterFileNames];
-                    if (Helper.String.IsNullOrEmpty(sList))
+                    if (String.IsNullOrEmpty(sList))
                         return outList;
 
                     String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -761,7 +761,7 @@ namespace WindowPlugins.GUITVSeries
                     for (int i = 0; i < value.Count; i++)
                     {
                         value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                        if (Helper.String.IsNullOrEmpty(String.Empty))
+                        if (String.IsNullOrEmpty(String.Empty))
                             sIn += value[i];
                         else
                             sIn += "," + value[i];
@@ -952,7 +952,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_onlineSeries != null)
             {
                 string pretty = m_onlineSeries.ToString();
-                if (!Helper.String.IsNullOrEmpty(pretty)) return pretty;
+                if (!String.IsNullOrEmpty(pretty)) return pretty;
             }
             return this[DBSeries.cParsedName];
         }

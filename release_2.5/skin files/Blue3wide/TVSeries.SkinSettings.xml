@@ -113,6 +113,9 @@ skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\realvideo.png;-;<Episode.VideoCo
 skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\vc-1.png;-;<Episode.VideoCodec>;-;contains;-;VC-1;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AAC.png;-;<Episode.AudioCodec>;-;contains;-;AAC;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3.png;-;<Episode.AudioCodec>;-;=;-;AC3;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3+.png;-;<Episode.AudioCodec>;-;=;-;AC3+;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\TrueHD.png;-;<Episode.AudioCodec>;-;=;-;TrueHD;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTSHD.png;-;<Episode.AudioCodec>;-;=;-;DTS-HD;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTS.png;-;<Episode.AudioCodec>;-;=;-;DTS;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\FLAC.png;-;<Episode.AudioCodec>;-;contains;-;FLAC;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\MP3.png;-;<Episode.AudioCodec>;-;contains;-;MPA1L3;-;OR;-;<Episode.AudioCodec>;-;contains;-;MPA2L3;-;AND;-;;-;=;-;;-;<Restrict:Episode>
@@ -121,8 +124,8 @@ skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\wma.png;-;<Episode.AudioCodec>;-
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\realaudio.png;-;<Episode.AudioCodec>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\mono.png;-;<Episode.AudioChannels>;-;=;-;1;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\stereo.png;-;<Episode.AudioChannels>;-;=;-;2;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\5.1.png;-;<Episode.AudioChannels>;-;=;-;6;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\7.1.png;-;<Episode.AudioChannels>;-;=;-;8;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\5.1.png;-;<Episode.AudioChannels>;-;=;-;6;-;OR;-;<Episode.AudioChannels>;-;=;-;5;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioChannels\7.1.png;-;<Episode.AudioChannels>;-;=;-;8;-;OR;-;<Episode.AudioChannels>;-;=;-;8 / 6;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\MediaType\BLURAY.png;-;<Episode.EpisodeFilename>;-;contains;-;BLURAY;-;OR;-;<Episode.EpisodeFilename>;-;contains;-;BLU-RAY;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\MediaType\DVD.png;-;<Episode.EpisodeFilename>;-;contains;-;DVD;-;AND;-;<Episode.EpisodeFilename>;-;!contains;-;HDDVD;-;AND;-;<Episode.EpisodeFilename>;-;!contains;-;HD-DVD;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\MediaType\HDDVD.png;-;<Episode.EpisodeFilename>;-;contains;-;HDDVD;-;OR;-;<Episode.EpisodeFilename>;-;contains;-;HD-DVD;-;AND;-;;-;=;-;;-;<Restrict:Episode>

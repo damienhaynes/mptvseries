@@ -118,7 +118,6 @@ namespace WindowPlugins.GUITVSeries
             this.linkImpWatched = new System.Windows.Forms.LinkLabel();
             this.chkAllowDeletes = new System.Windows.Forms.CheckBox();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
-            this.checkBox_DontClearMissingLocalFiles = new System.Windows.Forms.CheckBox();
             this.checkBox_Series_UseSortName = new System.Windows.Forms.CheckBox();
             this.nudWatchedAfter = new System.Windows.Forms.NumericUpDown();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
@@ -237,6 +236,7 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dbOptChkBoxScanFullscreenVideo = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox2 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBoxSubstituteMissingArtwork = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBoxSMSKeyboard = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -346,6 +346,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
@@ -887,7 +888,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_doFolderWatch
             // 
-            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(11, 284);
+            this.checkBox_doFolderWatch.Location = new System.Drawing.Point(11, 261);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
             this.checkBox_doFolderWatch.Size = new System.Drawing.Size(385, 17);
             this.checkBox_doFolderWatch.TabIndex = 18;
@@ -897,18 +898,6 @@ namespace WindowPlugins.GUITVSeries
                     "works from with-in Media Portal");
             this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
             this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
-            // 
-            // checkBox_DontClearMissingLocalFiles
-            // 
-            this.checkBox_DontClearMissingLocalFiles.Location = new System.Drawing.Point(11, 261);
-            this.checkBox_DontClearMissingLocalFiles.Name = "checkBox_DontClearMissingLocalFiles";
-            this.checkBox_DontClearMissingLocalFiles.Size = new System.Drawing.Size(417, 17);
-            this.checkBox_DontClearMissingLocalFiles.TabIndex = 17;
-            this.checkBox_DontClearMissingLocalFiles.Text = "&Keep reference to files that are no longer available on computer";
-            this.toolTip_Help.SetToolTip(this.checkBox_DontClearMissingLocalFiles, "Enable this option to keep a reference to files that are no longer available duri" +
-                    "ng scan e.g. series stored on an offline fileserver");
-            this.checkBox_DontClearMissingLocalFiles.UseVisualStyleBackColor = true;
-            this.checkBox_DontClearMissingLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_DontClearMissingLocalFiles_CheckedChanged);
             // 
             // checkBox_Series_UseSortName
             // 
@@ -1284,7 +1273,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_scanRemoteShares
             // 
-            this.checkBox_scanRemoteShares.Location = new System.Drawing.Point(32, 307);
+            this.checkBox_scanRemoteShares.Location = new System.Drawing.Point(32, 284);
             this.checkBox_scanRemoteShares.Name = "checkBox_scanRemoteShares";
             this.checkBox_scanRemoteShares.Size = new System.Drawing.Size(171, 18);
             this.checkBox_scanRemoteShares.TabIndex = 32;
@@ -1296,7 +1285,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // nudScanRemoteShareFrequency
             // 
-            this.nudScanRemoteShareFrequency.Location = new System.Drawing.Point(185, 307);
+            this.nudScanRemoteShareFrequency.Location = new System.Drawing.Point(185, 284);
             this.nudScanRemoteShareFrequency.Maximum = new decimal(new int[] {
             60,
             0,
@@ -2527,6 +2516,8 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.dbOptChkBoxCountEmptyFutureEps);
+            this.groupBox1.Controls.Add(this.dbOptChkBoxScanFullscreenVideo);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox2);
             this.groupBox1.Controls.Add(this.dbOptionCheckBoxSubstituteMissingArtwork);
             this.groupBox1.Controls.Add(this.checkBox_SubDownloadOnPlay);
@@ -2549,7 +2540,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.linkImpWatched);
             this.groupBox1.Controls.Add(this.chkAllowDeletes);
             this.groupBox1.Controls.Add(this.checkBox_doFolderWatch);
-            this.groupBox1.Controls.Add(this.checkBox_DontClearMissingLocalFiles);
             this.groupBox1.Controls.Add(this.checkBox_Episode_HideUnwatchedSummary);
             this.groupBox1.Controls.Add(this.checkBox_Episode_HideUnwatchedThumbnail);
             this.groupBox1.Controls.Add(this.checkBox_Episode_OnlyShowLocalFiles);
@@ -2571,6 +2561,18 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // dbOptChkBoxScanFullscreenVideo
+            // 
+            this.dbOptChkBoxScanFullscreenVideo.AutoSize = true;
+            this.dbOptChkBoxScanFullscreenVideo.Location = new System.Drawing.Point(32, 309);
+            this.dbOptChkBoxScanFullscreenVideo.Name = "dbOptChkBoxScanFullscreenVideo";
+            this.dbOptChkBoxScanFullscreenVideo.Option = "AutoScanLocalFilesFSV";
+            this.dbOptChkBoxScanFullscreenVideo.Size = new System.Drawing.Size(266, 17);
+            this.dbOptChkBoxScanFullscreenVideo.TabIndex = 38;
+            this.dbOptChkBoxScanFullscreenVideo.Text = "Scan remote shares while fullscreen video is active";
+            this.dbOptChkBoxScanFullscreenVideo.ToolTip = "";
+            this.dbOptChkBoxScanFullscreenVideo.UseVisualStyleBackColor = true;
             // 
             // dbOptionCheckBox2
             // 
@@ -2613,7 +2615,7 @@ namespace WindowPlugins.GUITVSeries
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(235, 309);
+            this.label77.Location = new System.Drawing.Point(235, 286);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(43, 13);
             this.label77.TabIndex = 10;
@@ -3802,6 +3804,21 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
+            // dbOptChkBoxCountEmptyFutureEps
+            // 
+            this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 354);
+            this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
+            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
+            this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
+            this.dbOptChkBoxCountEmptyFutureEps.ToolTip = " ";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
+                    "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
+                    "an see when browsing GUI.");
+            this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4055,7 +4072,6 @@ namespace WindowPlugins.GUITVSeries
         private WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration formattingConfiguration1;
         private System.Windows.Forms.CheckBox chkAllowDeletes;
         private System.Windows.Forms.CheckBox checkBox_doFolderWatch;
-        private System.Windows.Forms.CheckBox checkBox_DontClearMissingLocalFiles;
         private System.Windows.Forms.LinkLabel linkExWatched;
         private System.Windows.Forms.LinkLabel linkImpWatched;
         private System.Windows.Forms.TabPage tabLayoutSettings;
@@ -4171,5 +4187,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox subtitleDownloader_enabled;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionCheckBoxSubstituteMissingArtwork;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptionCheckBox2;
+        private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBoxScanFullscreenVideo;
+        private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBoxCountEmptyFutureEps;
     }
 }

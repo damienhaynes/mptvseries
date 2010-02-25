@@ -213,14 +213,19 @@ namespace WindowPlugins.GUITVSeries
 
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
+                if (checkBox_scanRemoteShares.Checked) {
                     nudScanRemoteShareFrequency.Enabled = true;
-                else
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
                     nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
             }
             else {
                 checkBox_scanRemoteShares.Enabled = false;
                 nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
             }
 
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
@@ -230,8 +235,7 @@ namespace WindowPlugins.GUITVSeries
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
-            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles);
+            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
             checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
@@ -481,7 +485,14 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
                 columnRemovable.Name = "removable";
                 columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnRemovable.ToolTipText = @"Enable this option to treat this path as removable e.g. CD\DVD-ROM, USB Drive.";
                 dataGridView_ImportPathes.Columns.Add(columnRemovable);
+               
+                DataGridViewCheckBoxColumn columnKeepReference = new DataGridViewCheckBoxColumn();
+                columnKeepReference.Name = "keep_references";
+                columnKeepReference.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnKeepReference.ToolTipText = "Enable this option to keep reference to files in database that are not available for this import path.";
+                dataGridView_ImportPathes.Columns.Add(columnKeepReference);
 
                 DataGridViewButtonColumn columnPath = new DataGridViewButtonColumn();
                 columnPath.Name = DBImportPath.cPath;
@@ -501,6 +512,17 @@ namespace WindowPlugins.GUITVSeries
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
                     row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
                     row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
+                    
+                    if (row.Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = false;
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
+                    else
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = (Boolean)importPath[DBImportPath.cKeepReference];
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
             }              
@@ -929,7 +951,8 @@ namespace WindowPlugins.GUITVSeries
                     // Set default values of cells for new rows
                     // we do this so if user keeps adding empty rows, it wont throw an exception when removed
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
@@ -940,18 +963,55 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string sEnabled = cell.Value.ToString();
                     if (sEnabled == "True")
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                                         
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                        
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     else
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                        
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
                 }
                 else
                 {
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
+            
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cKeepReference].Index)
+            {
+                if (!cell.ReadOnly)
+                {
+                    if (cell.Value != null)
+                    {
+                        string sEnabled = cell.Value.ToString();
+                        if (sEnabled == "True")
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        else
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = true;
 
+                        if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                        {
+                            DataGridViewCheckBoxCell cbCell = (DataGridViewCheckBoxCell)dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference];
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+
+                        }
+                    }
+                    else
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
+                    }
+                }
+            }
+            
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
             {
                 // Determine if user clicked on the last row, (manually add new row)
@@ -964,9 +1024,10 @@ namespace WindowPlugins.GUITVSeries
                     // set default values for cells
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     bNewRow = true;
                 }
-
+                
                 AddImportPathPopup importPathPopup = new AddImportPathPopup();
 
                 // If Path is defined, set path to default in folder browser dialog
@@ -1502,20 +1563,20 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonID:
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
-                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                case DBOnlineEpisode.cAbsoluteNumber:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
                                 
                                 case DBEpisode.cVolumeLabel:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))                                        
+                                    if (String.IsNullOrEmpty(episode[key]))                                        
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 case DBOnlineEpisode.cAirsAfterSeason:
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                    if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
@@ -1532,12 +1593,12 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cAudioBitrate:
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]))
+                                    if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 case DBEpisode.cTextCount:
-                                    if (!Helper.String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
+                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
@@ -1747,6 +1808,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeOrders:                                
                                 case DBOnlineSeries.cLanguage:
                                 case DBOnlineSeries.cSeriesID:
+                                case DBOnlineSeries.cOriginalName:
                                 case DBSeries.cHidden:                                
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
@@ -1761,7 +1823,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBOnlineSeries.cChoseEpisodeOrder:
-                                    if (!Helper.String.IsNullOrEmpty(series[key]))
+                                    if (!String.IsNullOrEmpty(series[key]))
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
@@ -2694,11 +2756,6 @@ namespace WindowPlugins.GUITVSeries
             log_window_changed();
         }
 
-        private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cImport_DontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
-        }
-
         private void checkBox_ShowHidden_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cShowHiddenItems, checkBox_ShowHidden.Checked);
@@ -3087,10 +3144,10 @@ namespace WindowPlugins.GUITVSeries
                     break;
             }
             // Hide Downloaders not frequently used by users
-            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
                 contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Visible = false;
             }
-            if (Helper.String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
                 contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Visible = false;
             }
 
@@ -3551,14 +3608,19 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
-                if (checkBox_scanRemoteShares.Checked)
+                if (checkBox_scanRemoteShares.Checked) {
                     nudScanRemoteShareFrequency.Enabled = true;
-                else
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
                     nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
             }
             else {
                 checkBox_scanRemoteShares.Enabled = false;
                 nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
             }
         }
 

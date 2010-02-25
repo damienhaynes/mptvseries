@@ -198,6 +198,8 @@ namespace WindowPlugins.GUITVSeries
             m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
             m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
             m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            
+            Helper.disableNativeAutoplay();
 
             // Clear GUI Properties
             ClearGUIProperties();
@@ -245,6 +247,7 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cRepeatPlaylist, playlistPlayer.RepeatPlaylist);
             DBOption.SetOptions(DBOption.cPlaylistAutoPlay, playlistPlayer.PlaylistAutoPlay);
             prevSelectedEpisode = null;
+            Helper.enableNativeAutoplay();
             base.OnPageDestroy(newWindowId);
         }
 
@@ -336,6 +339,8 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (control == btnPlay || control == this.m_Facade)
             {
+                if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
+
                 playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
                 playlistPlayer.Reset();
                 playlistPlayer.Play(m_Facade.SelectedListItemIndex);

@@ -296,6 +296,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFileDateCreated = "FileDateCreated";
         public const String cFileDateAdded = "FileDateAdded";
+        
+        public const String cIsAvailable = "IsAvailable";
         #endregion
 
         private DBOnlineEpisode m_onlineEpisode = null;
@@ -527,7 +529,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             base.AddColumn(cFilename, new DBField(DBField.cTypeString, true));
             base.AddColumn(cCompositeID, new DBField(DBField.cTypeString));
             base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
@@ -545,6 +547,8 @@ namespace WindowPlugins.GUITVSeries
 
             base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
             base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));
+            
+            base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -581,7 +585,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 // Check at least one MediaInfo field has been populated                
-                if (Helper.String.IsNullOrEmpty(this["localPlaytime"]))                                
+                if (String.IsNullOrEmpty(this["localPlaytime"]))                                
                     return false;
                 else
                 {
@@ -618,7 +622,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
                     
                     // open file in MediaInfo
-                    MI.Open(this[DBEpisode.cFilename]);                                        
+                    MI.Open(this[DBEpisode.cFilename]);
                                         
                     // check number of failed attempts at mediainfo extraction                    
                     int noAttempts = 0;
@@ -704,7 +708,7 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
-            if (Helper.String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
+            if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
             if (subTitleExtensions.Count == 0)
             {
                 // load them in first time
@@ -742,7 +746,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Read MediaInfo for embedded subtitles
-            if (!Helper.String.IsNullOrEmpty(this["TextCount"]))
+            if (!String.IsNullOrEmpty(this["TextCount"]))
             {
                 if ((int)this["TextCount"] > 0) 
                     return true;
@@ -827,13 +831,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case cEpisodeName:
                             retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName];
-                            if (Helper.String.IsNullOrEmpty(retVal))
+                            if (String.IsNullOrEmpty(retVal))
                                 retVal = base[cEpisodeName];
                             return retVal;
 
                         default:
                             retVal = m_onlineEpisode[fieldName];
-                            if (Helper.String.IsNullOrEmpty(retVal))
+                            if (String.IsNullOrEmpty(retVal))
                                 retVal = base[fieldName];
                             return retVal;
                     }
@@ -859,7 +863,7 @@ namespace WindowPlugins.GUITVSeries
                             // the only flags we are not rerouting to the onlineEpisode if it exists
                             break;
                         case cEpisodeIndex2:
-                            if (!Helper.String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
+                            if (!String.IsNullOrEmpty(value) && (!Helper.String.IsNumerical(value) || Int32.Parse(value) != Int32.Parse(base[cEpisodeIndex]) + 1))
                             {
                                 MPTVSeriesLog.Write("Info: A file parsed out a secondary episode index, indicating a double episode, however the value was discarded because it was either not numerical or not equal to <episodeIndex> + 1. This is often an indication of too loose restriction in your parsing expressions. - " +
                                     base[cFilename] + " Value for " + cEpisodeIndex2 + " was: " + value.ToString());
@@ -955,36 +959,53 @@ namespace WindowPlugins.GUITVSeries
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired"); 
+            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);           
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
-            epsTotal = 0; // total episode means total *AIRED* episodes - I'm sure no-one's interested in counting unaired episodes
+
+            epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
-            //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
-            for (int i = 0; i < results.Rows.Count; i++) {
-                if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-                    epsWatched+= parseResult;
-                }
 
+            // we either get two rows (one for normal episodes, one for double episodes), 
+            // or we get no rows so we add them
+            for (int i = 0; i < results.Rows.Count; i++)
+            {
+                // increment watched count if episode is watched
+                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
+                {
+                    epsWatched += parseResult;
+                }
+                
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
                 Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
-                if (match.Success) {
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value),Convert.ToInt32(match.Groups[2].Value),Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today)
+
+                try
+                {
+                    if (match.Success)
+                    {
+                        // if episode airdate is in the future conditionally add to episode count
+                        firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                        if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                            epsTotal++;
+                    }
+                    else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    {
+                        // no airdate field set, this occurs for specials most of the time                   
                         epsTotal++;
+                    }
                 }
-//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-//                     epsTotal += parseResult;
-//                 }
-//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-//                     epsWatched += parseResult;
-//                 }
+                catch
+                {
+                    // most likely invalid date in database 
+                    epsTotal++;
+                }
+
             }
             epsUnWatched = epsTotal - epsWatched;
-            // this happens if for some reasoon an episode is marked as watched, but firstaired is in the future 
+            
+            // this happens if for some reason an episode is marked as watched, but firstaired is in the future 
             // - or no firstaired provided
             if (epsUnWatched < 0)
                 epsUnWatched = 0;
@@ -994,15 +1015,19 @@ namespace WindowPlugins.GUITVSeries
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
-//            string query = stdGetSQL(cond, false, true, "count(*) as epCount, sum(" + DBOnlineEpisode.cWatched + ") as watched");
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
+
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
-            //we either get two rows (one for normal episodes, one for double episodes), or we get no rows so we add them
-            for (int i = 0; i < results.Rows.Count; i++) {
+
+            // we either get two rows (one for normal episodes, one for double episodes), 
+            // or we get no rows so we add them
+            for (int i = 0; i < results.Rows.Count; i++)
+            {
+                // increment watched count if episode is watched
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult))
                 {
                     epsWatched += parseResult;
@@ -1011,20 +1036,28 @@ namespace WindowPlugins.GUITVSeries
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
                 Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
-                if (match.Success)
-                {
-                    firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-                    if (firstAired < DateTime.Today)
-                        epsTotal++;
-                }
 
-                
-//                 if (int.TryParse(results.Rows[i].fields[0], out parseResult)) {
-//                     epsTotal += parseResult;
-//                 }
-//                 if (int.TryParse(results.Rows[i].fields[1], out parseResult)) {
-//                     epsWatched += parseResult;
-//                 }
+                try
+                {
+                    if (match.Success)
+                    {
+                        // if episode airdate is in the future conditionally add to episode count
+                        firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                        if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                            epsTotal++;
+                    }
+                    else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                    {
+                        // no airdate field set, this occurs for specials most of the time                    
+                        epsTotal++;
+                    }
+                }
+                catch
+                {
+                    // most likely invalid date in database 
+                    epsTotal++;
+                }
+        
             }
             epsUnWatched = epsTotal - epsWatched;
         }
@@ -1141,7 +1174,7 @@ namespace WindowPlugins.GUITVSeries
                       ? string.Empty
                       : conditions.orderString;
 
-                if (Helper.String.IsNullOrEmpty(orderBy))
+                if (String.IsNullOrEmpty(orderBy))
                     orderBy = " order by " + DBOnlineEpisode.Q(cEpisodeIndex);
 
                 SQLWhat what = new SQLWhat(first);
@@ -1157,7 +1190,7 @@ namespace WindowPlugins.GUITVSeries
             // its orders of magnitude faster to make two queries instead and do a UNION
             // union currently has a problem with orders in sqlite (bug in 3.4) -> temp workaround = use explicite alias on order field (works only if a single order col)
             // http://www.sqlite.org/cvstrac/tktview?tn=2561,6
-            if (!Helper.String.IsNullOrEmpty(orderBy))
+            if (!String.IsNullOrEmpty(orderBy))
             {
                 string ordercol = orderBy.Replace(" order by ", "").Replace(" asc ", "").Replace(" desc ", "");
                 string ordecolsplit = ordercol;
