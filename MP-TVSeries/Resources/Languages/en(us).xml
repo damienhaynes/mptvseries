@@ -245,5 +245,10 @@
   <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Last Online Update</string>
 
   <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Reset Ignored Downloaded Files</string>
-  
+
+  <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Get subtitles from?</string>
+  <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Enabled subtitle sites:</string>
+  <string Field="PlayNow" Original="Play Now">Play Now</string>
+  <string Field="NoSubtitleDownload" Original="No Subtitle Download">No Subtitle Download</string>
+
 </strings>
