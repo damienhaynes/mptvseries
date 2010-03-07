@@ -1777,7 +1777,8 @@ namespace WindowPlugins.GUITVSeries
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
                 
-                DeviceManager.StartMonitor();
+                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+                    DeviceManager.StartMonitor();
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load

@@ -112,9 +112,6 @@ namespace WindowPlugins.GUITVSeries
             if (!MonitorStarted)
                 return;
 
-            // unregister listener to stop receiving notifications about new import paths
-            //MovingPicturesCore.DatabaseManager.ObjectInserted -= new DatabaseManager.ObjectAffectedDelegate(onPathAdded);
-            
             ClearWatchDrives();
         }
 
@@ -177,8 +174,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static void StartDiskWatcher() {
             lock (syncRoot) {
-                // TODO
-                //if (MovingPicturesCore.Settings.DeviceManagerEnabled && !MonitorStarted) {
                 if (!MonitorStarted) {
                     MPTVSeriesLog.Write("Starting Disk Watcher...", MPTVSeriesLog.LogLevel.Normal);
                     watcherThread = new Thread(new ThreadStart(WatchDisks));
