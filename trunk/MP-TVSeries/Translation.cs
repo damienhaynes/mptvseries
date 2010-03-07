@@ -306,6 +306,13 @@ namespace WindowPlugins.GUITVSeries
         public static string Writer = "Writer";
         public static string Writers = "Writers";
         
+
+        // Subtitles
+        public static string GetSubtitlesFrom = "Get subtitles from?";
+        public static string EnabledSubtitleSites = "Enabled subtitle sites:";
+        public static string PlayNow = "Play Now";
+        public static string NoSubtitleDownload = "No Subtitle Download";
+
         #endregion
 
         #region Public Properties
