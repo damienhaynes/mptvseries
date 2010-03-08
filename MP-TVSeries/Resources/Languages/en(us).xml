@@ -256,5 +256,8 @@
   <string Field="UnableToDeleteSubtitleFile" Original ="Unable to Delete Subtitle File: {0}">Unable to Delete Subtitle File: {0}</string>
   <string Field="PathNotAvailable" Original ="Path is not available: {0}">Path is not available: {0}</string>
   <string Field="UnableToDeleteSubtitles" Original ="Unable to Delete Subtitles">Unable to Delete Subtitles</string>
-
+  <string Field="ErrorClear" Original ="Error">Error</string>
+  <string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Unable to retrieve subtitles</string>
+  <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">No subtitles found or retrieved</string>
+  
 </strings>

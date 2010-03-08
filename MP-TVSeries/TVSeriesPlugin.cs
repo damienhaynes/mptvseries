@@ -1503,6 +1503,11 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
+            ShowSubtitleMenu(episode, false);
+        }
+
+        protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
+        {
             List<CItem> Choices = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
 
@@ -1515,8 +1520,9 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            if (Choices.Count > 0) {
-                Choices.Insert(0, new CItem(Translation.PlayNow, Translation.NoSubtitleDownload, "playNow"));
+            if (fromPlay && Choices.Count > 0)
+            {
+                Choices.Insert(0, new CItem(Translation.PlayNow, Translation.NoSubtitleDownload, (object)"playNow"));
             }
 
             CItem selected = null;
@@ -1557,9 +1563,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (selected != null)
             {
-                if (selected.m_Tag == "playNow")
+                if (selected.m_Tag == (object)"playNow")
                 {
-                    m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+                    m_VideoHandler.ResumeOrPlay(episode);
                 }
                 else 
                 {
@@ -1756,7 +1762,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay))
                         {
-                            ShowSubtitleMenu(m_SelectedEpisode);
+                            ShowSubtitleMenu(m_SelectedEpisode, true);
                         }
                         else
     						m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
@@ -3848,7 +3854,7 @@ namespace WindowPlugins.GUITVSeries
             if (!bOK)
             {
                 GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                dlgOK.SetHeading("Error");
+                dlgOK.SetHeading(Translation.ErrorClear);
                 dlgOK.SetLine(2, msgOut);
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
@@ -3872,14 +3878,14 @@ namespace WindowPlugins.GUITVSeries
             else if (errorMessage != null)
             {
                 GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
-                errorDialog.SetHeading("Unable to retrieve subtitles");
+                errorDialog.SetHeading(Translation.UnableToRetrieveSubtitles);
                 errorDialog.SetText(errorMessage);
                 errorDialog.DoModal(GUIWindowManager.ActiveWindow);
             }
             else
             {
                 dlgOK.SetHeading(Translation.Completed);
-                dlgOK.SetLine(1, "No subtitles found or retrieved");
+                dlgOK.SetLine(1, Translation.NoSubtitlesFoundOrRetrieved);
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
         }

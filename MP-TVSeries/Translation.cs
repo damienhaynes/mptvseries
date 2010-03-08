@@ -126,6 +126,7 @@ namespace WindowPlugins.GUITVSeries
         public static string UnableToDeleteSubtitleFile = "Unable to Delete Subtitle File: {0}";
         public static string PathNotAvailable = "Path is not available: {0}";
         public static string UnableToDeleteSubtitles = "Unable to Delete Subtitles";
+        public static string ErrorClear = "Error";
 
         // Views
         public static string Genres = "Genres";
@@ -317,6 +318,8 @@ namespace WindowPlugins.GUITVSeries
         public static string EnabledSubtitleSites = "Enabled subtitle sites:";
         public static string PlayNow = "Play Now";
         public static string NoSubtitleDownload = "No Subtitle Download";
+        public static string UnableToRetrieveSubtitles = "Unable to retrieve subtitles";
+        public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
 
         #endregion
 
