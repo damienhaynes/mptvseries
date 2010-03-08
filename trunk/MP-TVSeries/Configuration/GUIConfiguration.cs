@@ -3084,6 +3084,8 @@ namespace WindowPlugins.GUITVSeries
 
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
             descriptor.m_sTitle = Translation.GetSubtitlesFrom;
+            descriptor.m_sItemToMatchLabel = "";
+            descriptor.m_sItemToMatch = "";
             descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;

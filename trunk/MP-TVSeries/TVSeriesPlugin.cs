@@ -726,7 +726,7 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
-                    bool subtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+                    bool subtitleDownloaderEnabled = SubtitleDownloaderEnabledAndHasSites();
 					bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
 					bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
@@ -1501,6 +1501,32 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
+        protected List<CItem> GetEnabledSubtitleDownloaderProviders()
+        {
+            List<CItem> providers = new List<CItem>();
+            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            {
+                if (enabledDownloaders.Contains(name))
+                {
+                    providers.Add(new CItem(name, name, name));
+                }
+            }
+            return providers;
+        }
+
+        protected bool SubtitleDownloaderEnabledAndHasSites()
+        {
+            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+            if (isSubtitleDownloaderEnabled)
+            {
+                List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
+                if (providers.Count == 0)
+                    return false;
+            }
+            return true;
+        }
+
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
             ShowSubtitleMenu(episode, false);
@@ -1508,16 +1534,15 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
         {
-            List<CItem> Choices = new List<CItem>();
-            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+            if (!SubtitleDownloaderEnabledAndHasSites()) return;
 
-            // Get names of the SubtitleDownloader implementations for menu
-            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
+
+            if (Choices.Count == 0)
             {
-                if (enabledDownloaders.Contains(name))
-                {
-                    Choices.Add(new CItem(name, name, name));
-                }
+                if (fromPlay)
+                    m_VideoHandler.ResumeOrPlay(episode);
+                return;
             }
 
             if (fromPlay && Choices.Count > 0)
@@ -1529,6 +1554,8 @@ namespace WindowPlugins.GUITVSeries
 
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
             descriptor.m_sTitle = Translation.GetSubtitlesFrom;
+            descriptor.m_sItemToMatchLabel = "";
+            descriptor.m_sItemToMatch = "";
             descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
