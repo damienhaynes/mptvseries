@@ -358,6 +358,7 @@ namespace WindowPlugins.GUITVSeries
 			disk,
 			database,
 			diskdatabase,
+            subtitles,
 			cancel
 		}
 
@@ -1556,10 +1557,12 @@ namespace WindowPlugins.GUITVSeries
 
             if (selected != null)
             {
-                if (selected.m_Tag == "playNow") {
+                if (selected.m_Tag == "playNow")
+                {
                     m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
                 }
-                else {
+                else 
+                {
                     ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
                     SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
 
@@ -3642,6 +3645,13 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)DeleteMenuItems.diskdatabase;
 
+            if (this.listLevel == Listlevel.Episode && episode != null && episode.checkHasLocalSubtitles())
+            {
+                pItem = new GUIListItem(Translation.DeleteSubtitles);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)DeleteMenuItems.subtitles;
+            }
+
             pItem = new GUIListItem(Translation.Cancel);            
             dlg.Add(pItem);
             pItem.ItemId = (int)DeleteMenuItems.cancel;
@@ -3650,6 +3660,25 @@ namespace WindowPlugins.GUITVSeries
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId < 0 || dlg.SelectedId == (int)DeleteMenuItems.cancel) 
 				return;
+
+            if (dlg.SelectedId == (int)DeleteMenuItems.subtitles)
+            {
+                switch (this.listLevel) {
+                    case Listlevel.Episode:
+                        if (episode == null) return;
+                        List<string> results = episode.deleteLocalSubTitles();
+                        LoadFacade();
+                        if (results != null && results.Count > 0)
+                        {
+                            GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
+                            errorDialog.SetHeading(Translation.UnableToDeleteSubtitles);
+                            errorDialog.SetText(string.Join("\n", results.ToArray()));
+                            errorDialog.DoModal(GUIWindowManager.ActiveWindow);
+                        }
+                        break;
+               }
+               return;
+            }
 
             List<DBEpisode> epsDeletion = new List<DBEpisode>();
 			List<DBEpisode> episodes = new List<DBEpisode>();

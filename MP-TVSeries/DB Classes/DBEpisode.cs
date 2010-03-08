@@ -708,7 +708,85 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
+            return checkHasSubtitles(true);
+        }
+
+        public bool checkHasLocalSubtitles()
+        {
+            return checkHasSubtitles(false);
+        }
+
+        public bool checkHasSubtitles(bool useMediaInfo)
+        {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
+            fillSubTitleExtensions();
+
+            // Read MediaInfo for embedded subtitles
+            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
+            {
+                if ((int)this["TextCount"] > 0) 
+                    return true;
+            }
+
+            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            try
+            {
+                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
+                }
+            }
+            catch (Exception)
+            {
+                // most likley path not available
+            }
+            return false;
+        }
+
+        public List<string> deleteLocalSubTitles()
+        {
+            List<string> resultMsg = new List<string>(); 
+
+            if (String.IsNullOrEmpty(this[DBEpisode.cFilename]))
+            {
+                resultMsg.Add(Translation.EpisodeFilenameEmpty);
+                return resultMsg;
+            }
+            fillSubTitleExtensions();
+
+            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            string path = string.Empty;
+            try
+            {
+                path = System.IO.Path.GetDirectoryName(this[cFilename]);
+                foreach (string file in System.IO.Directory.GetFiles(path, filenameNoExt + "*"))
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    if (subTitleExtensions.Contains(fi.Extension.ToLower()))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(file);
+                        }
+                        catch
+                        {
+                            resultMsg.Add(string.Format(Translation.UnableToDeleteSubtitleFile, file));
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!String.IsNullOrEmpty(path))
+                    resultMsg.Add(string.Format(Translation.PathNotAvailable, path));
+            }
+            return resultMsg;
+        }
+
+
+        private void fillSubTitleExtensions()
+        {
             if (subTitleExtensions.Count == 0)
             {
                 // load them in first time
@@ -742,30 +820,7 @@ namespace WindowPlugins.GUITVSeries
                 subTitleExtensions.Add(".vkt");
                 subTitleExtensions.Add(".vsf");
                 subTitleExtensions.Add(".zeg");
-                
             }
-
-            // Read MediaInfo for embedded subtitles
-            if (!String.IsNullOrEmpty(this["TextCount"]))
-            {
-                if ((int)this["TextCount"] > 0) 
-                    return true;
-            }
-
-            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
-            try
-            {
-                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
-                {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
-                    if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
-                }
-            }
-            catch (Exception)
-            {
-                // most likley path not available
-            }
-            return false;
         }
 
         public DBOnlineEpisode onlineEpisode

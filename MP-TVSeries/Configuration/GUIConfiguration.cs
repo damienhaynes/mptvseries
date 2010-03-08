@@ -2205,8 +2205,42 @@ namespace WindowPlugins.GUITVSeries
             if (nodeDeleted != null) {
                 List<DBEpisode> epsDeletion = new List<DBEpisode>();
 
-                DeleteDialog deleteDialog = new DeleteDialog();
+                bool hasSubtitles = false;
+                if (nodeDeleted.Name == DBEpisode.cTableName)
+                {
+                    DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                    if (episode != null && episode.checkHasLocalSubtitles())
+                        hasSubtitles = true;
+                }
+
+                DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
                 DialogResult result = deleteDialog.ShowDialog(this);
+
+                if (result == DialogResult.OK && deleteDialog.DeleteMode == DeleteDialog.DeleteType.subtitles)
+                {
+                    switch (nodeDeleted.Name)
+                    {
+                        case DBEpisode.cTableName:
+                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                            if (episode == null) return;
+                            List<string> results = episode.deleteLocalSubTitles();
+                            if (results != null && results.Count > 0)
+                            {
+                                MessageBox.Show(string.Join("\n", results.ToArray()), Translation.UnableToDeleteSubtitles); 
+                            }
+                            break;
+                    }
+                    try
+                    {
+                        TreeNode selectedTN = treeView_Library.SelectedNode;
+                        treeView_Library.SelectedNode = null;
+                        treeView_Library.SelectedNode = selectedTN;
+                    }
+                    catch
+                    {
+                    }
+                    return;
+                }
 
                 switch (nodeDeleted.Name) {
                     #region Delete Series

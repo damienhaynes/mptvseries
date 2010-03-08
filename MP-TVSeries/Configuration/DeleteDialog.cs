@@ -13,10 +13,17 @@ namespace WindowPlugins.GUITVSeries.Configuration {
         public enum DeleteType {
             disk,
             database,
-            diskdatabase
+            diskdatabase,
+            subtitles
         }
 
         public DeleteType DeleteMode { get; set; }
+
+        public DeleteDialog(bool hasSubtitles)
+        {
+            InitializeComponent();
+            if (!hasSubtitles) radioDeleteSubtitles.Enabled = false;
+        }
 
         public DeleteDialog() {
             InitializeComponent();
@@ -48,6 +55,11 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 
         private void radioDeleteFromDiskAndDatabase_Click(object sender, EventArgs e) {
             DeleteMode = DeleteType.diskdatabase;
+        }
+
+        private void radioDeleteSubtitles_Click(object sender, EventArgs e)
+        {
+            DeleteMode = DeleteType.subtitles;
         }
 
     }

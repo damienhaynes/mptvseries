@@ -112,7 +112,8 @@ namespace WindowPlugins.GUITVSeries
         public static string DeleteFromDisk = "Delete from Disk";       
         public static string DeleteFromDatabase = "Delete from Database";     
         public static string DeleteFromFileDatabase = "Delete from Disk and Database";
-		public static string RateDialogLabel = "Select Your Rating for {0}";
+        public static string DeleteSubtitles = "Delete Subtitles";
+        public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
         public static string CycleSeriesThumb = "Cycle Series Panel";
@@ -121,6 +122,10 @@ namespace WindowPlugins.GUITVSeries
 		public static string DeleteThumbnailsHeading = "Delete Thumbnails";
 		public static string DeleteThumbnailsLine1 = "Would you also like to Delete and Re-Download";
 		public static string DeleteThumbnailsLine2 = "all episode thumbnails?";
+        public static string EpisodeFilenameEmpty = "Episode Filename is Empty in Database";
+        public static string UnableToDeleteSubtitleFile = "Unable to Delete Subtitle File: {0}";
+        public static string PathNotAvailable = "Path is not available: {0}";
+        public static string UnableToDeleteSubtitles = "Unable to Delete Subtitles";
 
         // Views
         public static string Genres = "Genres";

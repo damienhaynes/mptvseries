@@ -250,5 +250,11 @@
   <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Enabled subtitle sites:</string>
   <string Field="PlayNow" Original="Play Now">Play Now</string>
   <string Field="NoSubtitleDownload" Original="No Subtitle Download">No Subtitle Download</string>
+  
+  <string Field="DeleteSubtitles" Original="Delete Subtitles">Delete Subtitles</string>
+  <string Field="EpisodeFilenameEmpty" Original ="Episode Filename is Empty in Database">Episode Filename is Empty in Database</string>
+  <string Field="UnableToDeleteSubtitleFile" Original ="Unable to Delete Subtitle File: {0}">Unable to Delete Subtitle File: {0}</string>
+  <string Field="PathNotAvailable" Original ="Path is not available: {0}">Path is not available: {0}</string>
+  <string Field="UnableToDeleteSubtitles" Original ="Unable to Delete Subtitles">Unable to Delete Subtitles</string>
 
 </strings>
