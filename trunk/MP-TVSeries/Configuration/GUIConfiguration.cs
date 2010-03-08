@@ -2226,7 +2226,7 @@ namespace WindowPlugins.GUITVSeries
                             List<string> results = episode.deleteLocalSubTitles();
                             if (results != null && results.Count > 0)
                             {
-                                MessageBox.Show(string.Join("\n", results.ToArray()), Translation.UnableToDeleteSubtitles); 
+                                MessageBox.Show(string.Join("\n", results.ToArray()), Translation.UnableToDeleteSubtitles, MessageBoxButtons.OK, MessageBoxIcon.Error); 
                             }
                             break;
                     }
