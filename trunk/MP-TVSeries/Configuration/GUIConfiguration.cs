@@ -2278,7 +2278,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // Delete tree node
-                    if (resultMsg.Count == 0)
+                    if (resultMsg.Count == 0 && result == DialogResult.OK && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
                         treeView_Library.Nodes.Remove(nodeDeleted);
 
                     if (treeView_Library.Nodes.Count == 0)
