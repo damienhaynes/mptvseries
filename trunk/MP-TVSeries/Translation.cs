@@ -127,6 +127,8 @@ namespace WindowPlugins.GUITVSeries
         public static string PathNotAvailable = "Path is not available: {0}";
         public static string UnableToDeleteSubtitles = "Unable to Delete Subtitles";
         public static string ErrorClear = "Error";
+        public static string UnableToDelete = "Unable to Delete";
+        public static string UnableToDeleteFile = "Unable to Delete File: {0}";
 
         // Views
         public static string Genres = "Genres";
@@ -311,7 +313,6 @@ namespace WindowPlugins.GUITVSeries
         public static string Watched = "Watched";
         public static string Writer = "Writer";
         public static string Writers = "Writers";
-        
 
         // Subtitles
         public static string GetSubtitlesFrom = "Get subtitles from?";

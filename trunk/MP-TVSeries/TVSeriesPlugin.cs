@@ -354,7 +354,7 @@ namespace WindowPlugins.GUITVSeries
 			removeFromView
 		}
 
-		enum DeleteMenuItems {
+		public enum DeleteMenuItems {
 			disk,
 			database,
 			diskdatabase,
@@ -3694,181 +3694,59 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId < 0 || dlg.SelectedId == (int)DeleteMenuItems.cancel) 
 				return;
 
+            List<string> resultMsg = null;
+            string msgDlgCaption = string.Empty;
+
+            #region Delete Subtitles
             if (dlg.SelectedId == (int)DeleteMenuItems.subtitles)
             {
-                switch (this.listLevel) {
+                msgDlgCaption = Translation.UnableToDeleteSubtitles;
+                switch (this.listLevel)
+                {
                     case Listlevel.Episode:
                         if (episode == null) return;
-                        List<string> results = episode.deleteLocalSubTitles();
-                        LoadFacade();
-                        if (results != null && results.Count > 0)
-                        {
-                            GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
-                            errorDialog.SetHeading(Translation.UnableToDeleteSubtitles);
-                            errorDialog.SetText(string.Join("\n", results.ToArray()));
-                            errorDialog.DoModal(GUIWindowManager.ActiveWindow);
-                        }
+                        resultMsg = episode.deleteLocalSubTitles();
                         break;
-               }
-               return;
+                }
+                return;
             }
+            #endregion
+            else
+            {
+                msgDlgCaption = Translation.UnableToDelete;
+                switch (this.listLevel)
+                {
+                    #region Delete Series
+                    case Listlevel.Series:
+                        resultMsg = series.deleteSeries((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
 
-            List<DBEpisode> epsDeletion = new List<DBEpisode>();
-			List<DBEpisode> episodes = new List<DBEpisode>();
-            SQLCondition condition = null;
+                    #region Delete Season
+                    case Listlevel.Season:
+                        resultMsg = season.deleteSeason((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
 
-            switch (this.listLevel) {
-                case Listlevel.Series:
-                    // Always delete from Local episode table if deleting from disk or database
-					// we shouldnt delete from Local series table as then we will not be able to see in MediaPortal
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);                    
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                           
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-										
-					DBEpisode.Clear(condition);                    
-
-                    // Delete from online tables and season/series tables
-                    if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBOnlineEpisode.Clear(condition);
-
-                        condition = new SQLCondition();
-                        condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBSeason.Clear(condition);
-
-						condition = new SQLCondition();
-						condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-						DBSeries.Clear(condition);
-
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBOnlineSeries.Clear(condition);
-                    }
-                    break;
-
-                case Listlevel.Season:
-                    // Always delete from Local episode table if deleting from disk or database
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                    
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                            
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-					
-					DBEpisode.Clear(condition);
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                        DBOnlineEpisode.Clear(condition);
-
-                        condition = new SQLCondition();
-						condition.Add(new DBSeason(), DBSeason.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-						condition.Add(new DBSeason(), DBSeason.cIndex, season[DBSeason.cIndex], SQLConditionType.Equal);						
-                        DBSeason.Clear(condition);
-					}
-
-					#region Cleanup
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						// If episode count is zero then delete the series and all seasons
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-						episodes = DBEpisode.Get(condition, false);
-						if (episodes.Count == 0) {
-							// Delete Seasons
-							condition = new SQLCondition();
-							condition.Add(new DBSeason(), DBSeason.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBSeason.Clear(condition);
-
-							// Delete Local Series
-							condition = new SQLCondition();
-							condition.Add(new DBSeries(), DBSeries.cID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBSeries.Clear(condition);
-
-							// Delete Online Series
-							condition = new SQLCondition();
-							condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBOnlineSeries.Clear(condition);
-						}
-					}
-					#endregion
-					break;
-
-                case Listlevel.Episode:
-                    // Always delete from Local episode table if deleting from disk or database
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                    
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                            
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-
-					DBEpisode.Clear(condition);
-
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-						DBOnlineEpisode.Clear(condition);
-					}
-
-					#region Cleanup
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						// If episode count is zero then delete the season
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);						
-						episodes = DBEpisode.Get(condition, false);
-						if (episodes.Count == 0) {
-							condition = new SQLCondition();
-							condition.Add(new DBSeason(), DBSeason.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);							
-							condition.Add(new DBSeason(), DBSeason.cIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
-							DBSeason.Clear(condition);
-
-							// If episode count is still zero, then delete the series\seasons
-							condition = new SQLCondition();
-							condition.Add(new DBEpisode(), DBEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-							episodes = DBEpisode.Get(condition, false);
-							if (episodes.Count == 0) {
-								// Delete All Seasons
-								condition = new SQLCondition();
-								condition.Add(new DBSeason(), DBSeason.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBSeason.Clear(condition);
-
-								// Delete Local Series
-								condition = new SQLCondition();
-								condition.Add(new DBSeries(), DBSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBSeries.Clear(condition);
-
-								// Delete Online Series
-								condition = new SQLCondition();
-								condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBOnlineSeries.Clear(condition);
-							}
-						}
-					}
-					#endregion
-					break;
-            }
-
-            if (epsDeletion.Count > 0) {
-                // Delete the actual files
-                List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);                    
-                foreach (string file in files) {
-                    try {
-                        MPTVSeriesLog.Write(string.Format("Deleting file: {0}",file));
-                        System.IO.File.Delete(file);
-                    }
-                    catch (Exception ex) {
-                        MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
-                    }
-                }                   
+                    #region Delete Series
+                    case Listlevel.Episode:
+                        resultMsg = episode.deleteEpisode((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
+                }
             }
 
             // Re-load the facade to accurately reflect actions taked above
             LoadFacade();
+
+            // Show errors, if any
+            if (resultMsg != null && resultMsg.Count > 0)
+            {
+                GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
+                errorDialog.SetHeading(msgDlgCaption);
+                errorDialog.SetText(string.Join("\n", resultMsg.ToArray()));
+                errorDialog.DoModal(GUIWindowManager.ActiveWindow);
+            }
         }
         #endregion
 

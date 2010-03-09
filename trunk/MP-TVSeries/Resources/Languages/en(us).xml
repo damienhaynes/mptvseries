@@ -259,5 +259,8 @@
   <string Field="ErrorClear" Original ="Error">Error</string>
   <string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Unable to retrieve subtitles</string>
   <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">No subtitles found or retrieved</string>
+
+  <string Field="UnableToDelete" Original ="Unable to Delete">Unable to Delete</string>
+  <string Field="UnableToDeleteFile" Original ="Unable to Delete File: {0}">Unable to Delete File: {0}</string>
   
 </strings>

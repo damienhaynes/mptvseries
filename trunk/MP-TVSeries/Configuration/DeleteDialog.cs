@@ -10,14 +10,7 @@ using System.Windows.Forms;
 namespace WindowPlugins.GUITVSeries.Configuration {
     public partial class DeleteDialog : Form {
 
-        public enum DeleteType {
-            disk,
-            database,
-            diskdatabase,
-            subtitles
-        }
-
-        public DeleteType DeleteMode { get; set; }
+        public TVSeriesPlugin.DeleteMenuItems DeleteMode { get; set; }
 
         public DeleteDialog(bool hasSubtitles)
         {
@@ -30,7 +23,7 @@ namespace WindowPlugins.GUITVSeries.Configuration {
         }
 
         protected override void OnLoad(EventArgs e) {
-            DeleteMode = DeleteType.database;
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.database;
             radioDeleteFromDatabase.Checked = true;
             base.OnLoad(e);
         }
@@ -46,20 +39,20 @@ namespace WindowPlugins.GUITVSeries.Configuration {
         }
 
         private void radioDeleteFromDatabase_Click(object sender, EventArgs e) {
-            DeleteMode = DeleteType.database;
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.database;
         }
 
         private void radioDeleteFromDisk_Click(object sender, EventArgs e) {
-            DeleteMode = DeleteType.disk;
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.disk;
         }
 
         private void radioDeleteFromDiskAndDatabase_Click(object sender, EventArgs e) {
-            DeleteMode = DeleteType.diskdatabase;
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.diskdatabase;
         }
 
         private void radioDeleteSubtitles_Click(object sender, EventArgs e)
         {
-            DeleteMode = DeleteType.subtitles;
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.subtitles;
         }
 
     }
