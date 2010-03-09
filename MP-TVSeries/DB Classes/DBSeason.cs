@@ -497,6 +497,71 @@ namespace WindowPlugins.GUITVSeries
             else series[DBOnlineSeries.cUnwatchedItems] = true;
             series.Commit();
         }
+
+        public List<string> deleteSeason(TVSeriesPlugin.DeleteMenuItems type)
+        {
+            List<string> resultMsg = new List<string>(); 
+
+            // Always delete from Local episode table if deleting from disk or database
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+            /* TODO will include hidden episodes as hidden attribute is only in onlineepisodes. maybe we should include it in localepisodes also..
+             * if hidden episodes are excluded then the if (resultMsg.Count is wrong and should do another select to get proper count
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+            {
+                //don't include hidden seasons unless the ShowHiddenItems option is set
+                condition.Add(new DBEpisode(), idden, 0, SQLConditionType.Equal);
+            }
+            */
+
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+            if (episodes != null)
+            {
+                foreach (DBEpisode episode in episodes)
+                {
+                    resultMsg.AddRange(episode.deleteEpisode(type));
+                }
+            }
+
+            // if there are no error messages and if we need to delete from db
+            if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                condition = new SQLCondition();
+                condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                condition.Add(new DBSeason(), DBSeason.cIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+                DBSeason.Clear(condition);
+            }
+
+            #region Cleanup
+            if (type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                // If episode count is zero then delete the series and all seasons
+                condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                episodes = DBEpisode.Get(condition, false);
+                if (episodes.Count == 0)
+                {
+                    // Delete Seasons
+                    condition = new SQLCondition();
+                    condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBSeason.Clear(condition);
+
+                    // Delete Local Series
+                    condition = new SQLCondition();
+                    condition.Add(new DBSeries(), DBSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBSeries.Clear(condition);
+
+                    // Delete Online Series
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBOnlineSeries.Clear(condition);
+                }
+            }
+            #endregion
+
+            return resultMsg;
+        }
         
     }
 }
