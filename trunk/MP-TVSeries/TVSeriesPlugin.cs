@@ -1521,10 +1521,10 @@ namespace WindowPlugins.GUITVSeries
             if (isSubtitleDownloaderEnabled)
             {
                 List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
-                if (providers.Count == 0)
-                    return false;
+                if (providers.Count > 0)
+                    return true;                
             }
-            return true;
+            return false;
         }
 
         protected void ShowSubtitleMenu(DBEpisode episode)
