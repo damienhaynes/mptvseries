@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 11th Jan 2010 -->
+<!-- Last Updated: 09th Mar 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -242,25 +242,25 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Check your connection and try again</string>
     
 	<string Field="Playlist" Original="Playlist">Playlist</string>
-  <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Last Online Update</string>
+	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Last Online Update</string>
 
-  <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Reset Ignored Downloaded Files</string>
+	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Reset Ignored Downloaded Files</string>
 
-  <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Get subtitles from?</string>
-  <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Enabled subtitle sites:</string>
-  <string Field="PlayNow" Original="Play Now">Play Now</string>
-  <string Field="NoSubtitleDownload" Original="No Subtitle Download">No Subtitle Download</string>
-  
-  <string Field="DeleteSubtitles" Original="Delete Subtitles">Delete Subtitles</string>
-  <string Field="EpisodeFilenameEmpty" Original ="Episode Filename is Empty in Database">Episode Filename is Empty in Database</string>
-  <string Field="UnableToDeleteSubtitleFile" Original ="Unable to Delete Subtitle File: {0}">Unable to Delete Subtitle File: {0}</string>
-  <string Field="PathNotAvailable" Original ="Path is not available: {0}">Path is not available: {0}</string>
-  <string Field="UnableToDeleteSubtitles" Original ="Unable to Delete Subtitles">Unable to Delete Subtitles</string>
-  <string Field="ErrorClear" Original ="Error">Error</string>
-  <string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Unable to retrieve subtitles</string>
-  <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">No subtitles found or retrieved</string>
+	<string Field="GetSubtitlesFrom" Original="Get subtitles from?">Get subtitles from?</string>
+	<string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Enabled subtitle sites:</string>
+	<string Field="PlayNow" Original="Play Now">Play Now</string>
+	<string Field="NoSubtitleDownload" Original="No Subtitle Download">No Subtitle Download</string>
 
-  <string Field="UnableToDelete" Original ="Unable to Delete">Unable to Delete</string>
-  <string Field="UnableToDeleteFile" Original ="Unable to Delete File: {0}">Unable to Delete File: {0}</string>
+	<string Field="DeleteSubtitles" Original="Delete Subtitles">Delete Subtitles</string>
+	<string Field="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Episode Filename is Empty in Database</string>
+	<string Field="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Unable to Delete Subtitle File: {0}</string>
+	<string Field="PathNotAvailable" Original="Path is not available: {0}">Path is not available: {0}</string>
+	<string Field="UnableToDeleteSubtitles" Original="Unable to Delete Subtitles">Unable to Delete Subtitles</string>
+	<string Field="ErrorClear" Original="Error">Error</string>
+	<string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Unable to retrieve subtitles</string>
+	<string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">No subtitles found or retrieved</string>
+
+	<string Field="UnableToDelete" Original="Unable to Delete">Unable to Delete</string>
+	<string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Unable to Delete File: {0}</string>
   
 </strings>
