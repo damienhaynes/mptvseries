@@ -2203,147 +2203,106 @@ namespace WindowPlugins.GUITVSeries
         private void DeleteNode(TreeNode nodeDeleted)
         {
             if (nodeDeleted != null) {
-                List<DBEpisode> epsDeletion = new List<DBEpisode>();
+                List<string> resultMsg = null;
+                string msgDlgCaption = string.Empty;
 
-                DeleteDialog deleteDialog = new DeleteDialog();
+                bool hasSubtitles = false;
+                if (nodeDeleted.Name == DBEpisode.cTableName)
+                {
+                    DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                    if (episode != null && episode.checkHasLocalSubtitles())
+                        hasSubtitles = true;
+                }
+
+                DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
                 DialogResult result = deleteDialog.ShowDialog(this);
 
-                switch (nodeDeleted.Name) {
-                    #region Delete Series
-                    case DBSeries.cTableName:
-                        if (result == DialogResult.OK) {
-                            DBSeries series = (DBSeries)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-
-                            // Delete from Disk
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database) {
-                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;
-                                foreach (TreeNode node in nodeDeleted.Nodes) {
-                                    node.ForeColor = System.Drawing.SystemColors.GrayText;
-                                }
-                            }
-                            
-                            // Always Delete from Local Episode Table for all choices
-                            DBEpisode.Clear(condition);
-
-                            // Delete from Database (Online Episode Table)
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk) {                                
-                                condition = new SQLCondition();
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                                DBOnlineEpisode.Clear(condition);
-
-                                condition = new SQLCondition();
-                                condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                                DBSeason.Clear(condition);
-
-                                condition = new SQLCondition();
-                                condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                                DBSeries.Clear(condition);
-
-                                condition = new SQLCondition();
-                                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                                DBOnlineSeries.Clear(condition);
-
-                                treeView_Library.Nodes.Remove(nodeDeleted);
-                            }
-                        }
-                        break;
-                    #endregion
-
-                    #region Delete Season
-                    case DBSeason.cTableName:
-                        if (result == DialogResult.OK) {
-                            DBSeason season = (DBSeason)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-
-                            // Delete from Disk
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database) {
-                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;
-                                foreach (TreeNode node in nodeDeleted.Nodes) {
-                                    node.ForeColor = System.Drawing.SystemColors.GrayText;
-                                }
-                            }
-
-                            // Always Delete from Local Episode Table for all choices
-                            DBEpisode.Clear(condition);
-
-                            // Delete from Database (Online Episode Table)
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk) {                                
-                                condition = new SQLCondition();
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                                DBOnlineEpisode.Clear(condition);
-
-                                condition = new SQLCondition();
-                                condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
-                                DBSeason.Clear(condition);
-
-                                treeView_Library.Nodes.Remove(nodeDeleted);
-                            }
-                        }
-                        break;
-                    #endregion
-
-                    #region Delete Episode
-                    case DBEpisode.cTableName:
-                        if (result == DialogResult.OK) {
+                #region Delete Subtitles
+                if (result == DialogResult.OK && deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
+                {
+                    msgDlgCaption = Translation.UnableToDeleteSubtitles;
+                    switch (nodeDeleted.Name)
+                    {
+                        case DBEpisode.cTableName:
                             DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
-
-                            // Delete from Disk
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.database) {
-                                epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                                nodeDeleted.ForeColor = System.Drawing.SystemColors.GrayText;                                
-                            }
-
-                            // Always Delete from Local Episode Table for all choices
-                            DBEpisode.Clear(condition);
-                            
-                            // Delete from Database (Online Episode Table)
-                            if (deleteDialog.DeleteMode != DeleteDialog.DeleteType.disk) {
-                                condition = new SQLCondition();
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                                DBOnlineEpisode.Clear(condition);
-
-                                treeView_Library.Nodes.Remove(nodeDeleted);
-                            }
-                        }
-                        break;
-                    #endregion
+                            if (episode == null) return;
+                            resultMsg = episode.deleteLocalSubTitles();
+                            break;
+                    }
+                    try
+                    {
+                        TreeNode selectedTN = treeView_Library.SelectedNode;
+                        treeView_Library.SelectedNode = null;
+                        treeView_Library.SelectedNode = selectedTN;
+                    }
+                    catch
+                    {
+                    }
+                    return;
                 }
+                #endregion
+                else
+                {
+                    msgDlgCaption = Translation.UnableToDelete;                   
+                    switch (nodeDeleted.Name)
+                    {
+                        #region Delete Series
+                        case DBSeries.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBSeries series = (DBSeries)nodeDeleted.Tag;
+                                resultMsg = series.deleteSeries(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
 
-                // Delete Physical Files
-                if (epsDeletion.Count > 0) {                    
-                    List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
+                        #region Delete Season
+                        case DBSeason.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBSeason season = (DBSeason)nodeDeleted.Tag;
+                                resultMsg = season.deleteSeason(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
 
-                    foreach (string file in files) {
-                        try {
-                            MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
-                            System.IO.File.Delete(file);
+                        #region Delete Episode
+                        case DBEpisode.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                                resultMsg = episode.deleteEpisode(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
+                    }
+
+                    // Delete tree node
+                    if (resultMsg.Count == 0 && result == DialogResult.OK && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
+                        treeView_Library.Nodes.Remove(nodeDeleted);
+
+                    if (treeView_Library.Nodes.Count == 0)
+                    {
+                        // also clear the data pane
+                        this.detailsPropertyBindingSource.Clear();
+                        try
+                        {
+                            if (this.pictureBox_Series.Image != null)
+                            {
+                                this.pictureBox_Series.Image.Dispose();
+                                this.pictureBox_Series.Image = null;
+                            }
                         }
-                        catch (Exception ex) {
-                            MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
-                        }
+                        catch { }
                     }
                 }
 
-                if (treeView_Library.Nodes.Count == 0) {
-                    // also clear the data pane
-                    this.detailsPropertyBindingSource.Clear();
-                    try {
-                        if (this.pictureBox_Series.Image != null) {
-                            this.pictureBox_Series.Image.Dispose();
-                            this.pictureBox_Series.Image = null;
-                        }
-                    }
-                    catch { }
+                // Show errors, if any
+                if (resultMsg != null && resultMsg.Count > 0)
+                {
+                    MessageBox.Show(string.Join("\n", resultMsg.ToArray()), msgDlgCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
             }
         }
 
@@ -3049,8 +3008,10 @@ namespace WindowPlugins.GUITVSeries
             CItem selected = null;
 
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = "Get subtitles from?";
-            descriptor.m_sListLabel = "Enabled subtitle sites:";
+            descriptor.m_sTitle = Translation.GetSubtitlesFrom;
+            descriptor.m_sItemToMatchLabel = "";
+            descriptor.m_sItemToMatch = "";
+            descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 

@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using SQLite.NET;
 using MediaPortal.Database;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -708,7 +709,205 @@ namespace WindowPlugins.GUITVSeries
 
         public bool checkHasSubtitles()
         {
+            return checkHasSubtitles(true);
+        }
+
+        public bool checkHasLocalSubtitles()
+        {
+            return checkHasSubtitles(false);
+        }
+
+        public bool checkHasSubtitles(bool useMediaInfo)
+        {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
+            fillSubTitleExtensions();
+
+            // Read MediaInfo for embedded subtitles
+            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
+            {
+                if ((int)this["TextCount"] > 0) 
+                    return true;
+            }
+
+            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            try
+            {
+                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
+                }
+            }
+            catch (Exception)
+            {
+                // most likley path not available
+            }
+            return false;
+        }
+
+        bool isLocked(FileInfo fileInfo)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = fileInfo.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null) stream.Close();
+            }
+            return false;
+        }
+
+        public bool isLocked()
+        {
+            string file = this[DBEpisode.cFilename];
+            if (string.IsNullOrEmpty(file)) return false;
+            FileInfo fi = new FileInfo(file);
+            if (fi != null)
+            {
+                return isLocked(fi);
+            }
+            return false;
+        }
+
+        public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type)
+        {
+            List<string> resultMsg = new List<string>(); 
+
+            // Always delete from Local episode table if deleting from disk or database
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cFilename, this[DBEpisode.cFilename], SQLConditionType.Equal);
+
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+            if (episodes != null)
+            {
+                foreach (DBEpisode episode in episodes)
+                {
+                    string file = this[DBEpisode.cFilename];
+                    if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episode.isLocked()) || type == TVSeriesPlugin.DeleteMenuItems.database)
+                    {
+                        DBEpisode.Clear(condition);
+
+                        if (type != TVSeriesPlugin.DeleteMenuItems.database)
+                        {
+                            try
+                            {
+                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
+                                System.IO.File.Delete(file);
+                            }
+                            catch (Exception ex)
+                            {
+                                // this should succeed all the time because of the locked check..but still..
+                                MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
+                            }
+                        }
+
+                        if (type != TVSeriesPlugin.DeleteMenuItems.disk)
+                        {
+                            condition = new SQLCondition();
+                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                            DBOnlineEpisode.Clear(condition);
+                        }
+                    
+                    }
+                    else
+                    {
+                        resultMsg.Add(string.Format(Translation.UnableToDeleteFile, file));
+                    }
+                }
+            }
+
+            #region Cleanup
+            if (type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                // If episode count is zero then delete the season
+                condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                episodes = DBEpisode.Get(condition, false);
+                if (episodes.Count == 0)
+                {
+                    condition = new SQLCondition();
+                    condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(new DBSeason(), DBSeason.cIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                    DBSeason.Clear(condition);
+
+                    // If episode count is still zero, then delete the series\seasons
+                    condition = new SQLCondition();
+                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                    episodes = DBEpisode.Get(condition, false);
+                    if (episodes.Count == 0)
+                    {
+                        // Delete All Seasons
+                        condition = new SQLCondition();
+                        condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                        DBSeason.Clear(condition);
+
+                        // Delete Local Series
+                        condition = new SQLCondition();
+                        condition.Add(new DBSeries(), DBSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                        DBSeries.Clear(condition);
+
+                        // Delete Online Series
+                        condition = new SQLCondition();
+                        condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                        DBOnlineSeries.Clear(condition);
+                    }
+                }
+            }
+            #endregion
+
+            return resultMsg;
+        }
+
+        public List<string> deleteLocalSubTitles()
+        {
+            List<string> resultMsg = new List<string>(); 
+
+            if (String.IsNullOrEmpty(this[DBEpisode.cFilename]))
+            {
+                resultMsg.Add(Translation.EpisodeFilenameEmpty);
+                return resultMsg;
+            }
+            fillSubTitleExtensions();
+
+            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            string path = string.Empty;
+            try
+            {
+                path = System.IO.Path.GetDirectoryName(this[cFilename]);
+                foreach (string file in System.IO.Directory.GetFiles(path, filenameNoExt + "*"))
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    if (subTitleExtensions.Contains(fi.Extension.ToLower()))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(file);
+                        }
+                        catch
+                        {
+                            resultMsg.Add(string.Format(Translation.UnableToDeleteSubtitleFile, file));
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!String.IsNullOrEmpty(path))
+                    resultMsg.Add(string.Format(Translation.PathNotAvailable, path));
+            }
+            return resultMsg;
+        }
+
+
+        private void fillSubTitleExtensions()
+        {
             if (subTitleExtensions.Count == 0)
             {
                 // load them in first time
@@ -742,30 +941,7 @@ namespace WindowPlugins.GUITVSeries
                 subTitleExtensions.Add(".vkt");
                 subTitleExtensions.Add(".vsf");
                 subTitleExtensions.Add(".zeg");
-                
             }
-
-            // Read MediaInfo for embedded subtitles
-            if (!String.IsNullOrEmpty(this["TextCount"]))
-            {
-                if ((int)this["TextCount"] > 0) 
-                    return true;
-            }
-
-            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
-            try
-            {
-                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
-                {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
-                    if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
-                }
-            }
-            catch (Exception)
-            {
-                // most likley path not available
-            }
-            return false;
         }
 
         public DBOnlineEpisode onlineEpisode
