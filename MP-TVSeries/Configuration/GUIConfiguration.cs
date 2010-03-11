@@ -2200,6 +2200,33 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void RescanMediaInfoNode(TreeNode nodeMediaInfo)
+        {
+            if (nodeMediaInfo == null) return;
+
+            List<DBEpisode> episodes = new List<DBEpisode>();
+
+            switch (nodeMediaInfo.Name)
+            {
+                case DBEpisode.cTableName:
+                    DBEpisode episode = nodeMediaInfo.Tag as DBEpisode;
+                    episode.ReadMediaInfo();                    
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = nodeMediaInfo.Tag as DBSeason;
+                    episodes = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false);
+                    UpdateMediaInfoASync(episodes);
+                    break;
+
+                case DBSeries.cTableName:
+                    DBSeries series = nodeMediaInfo.Tag as DBSeries;
+                    episodes = DBEpisode.Get((int)series[DBSeries.cID], false);
+                    UpdateMediaInfoASync(episodes);
+                    break;
+            }            
+        }
+
         private void DeleteNode(TreeNode nodeDeleted)
         {
             if (nodeDeleted != null) {
@@ -2740,6 +2767,10 @@ namespace WindowPlugins.GUITVSeries
 
                 case "update":
                     UpdateNode(clickedNode);
+                    break;
+                
+                case "mediainfo":
+                    RescanMediaInfoNode(clickedNode);
                     break;
 
                 case "watched":
@@ -3306,6 +3337,12 @@ namespace WindowPlugins.GUITVSeries
                 episodes = todoeps;
             }
 
+            UpdateMediaInfoASync(episodes);
+
+        }
+
+        private void UpdateMediaInfoASync(List<DBEpisode> episodes)
+        {
             if (episodes.Count > 0)
             {
                 MPTVSeriesLog.Write("Updating MediaInfo....(Please be patient!)");
@@ -3314,8 +3351,8 @@ namespace WindowPlugins.GUITVSeries
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 resReader.RunWorkerAsync(episodes);
             }
-            else MPTVSeriesLog.Write("No Episodes found that need updating");
-
+            else 
+                MPTVSeriesLog.Write("No Episodes found that need updating");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
