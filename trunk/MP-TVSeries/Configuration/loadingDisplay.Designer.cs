@@ -33,6 +33,7 @@ namespace WindowPlugins.GUITVSeries
             this.season = new System.Windows.Forms.Label();
             this.episodes = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.version = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -93,12 +94,24 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox1.TabStop = false;
             this.pictureBox1.UseWaitCursor = true;
             // 
+            // version
+            // 
+            this.version.AutoSize = true;
+            this.version.BackColor = System.Drawing.Color.Transparent;
+            this.version.Location = new System.Drawing.Point(277, 131);
+            this.version.Name = "version";
+            this.version.Size = new System.Drawing.Size(41, 13);
+            this.version.TabIndex = 6;
+            this.version.Text = "version";
+            this.version.UseWaitCursor = true;
+            // 
             // loadingDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(584, 194);
+            this.Controls.Add(this.version);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.episodes);
             this.Controls.Add(this.season);
@@ -126,5 +139,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label series;
         private System.Windows.Forms.Label season;
         private System.Windows.Forms.Label episodes;
+        private System.Windows.Forms.Label version;
     }
 }

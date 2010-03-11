@@ -50,6 +50,7 @@ namespace WindowPlugins.GUITVSeries
             this.series.Text = "0 " + Translation.Series_Plural;
             this.season.Text = "0 " + Translation.Seasons;
             this.episodes.Text = "0 " + Translation.Episodes;
+            this.version.Text = Settings.Version.ToString();
             this.Show();
             this.Refresh();
         }
