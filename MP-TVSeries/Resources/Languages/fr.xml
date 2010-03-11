@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) r914 vs francais-->
-<!-- Last Updated: 6 fevrier 2010 -->
+<!-- English (US) r991 vs francais-->
+<!-- Last Updated: 10 mars 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages  -->
 
 <strings>
@@ -138,8 +138,8 @@
         <string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Effacer du disque et de la base de données</string>
         <string Field="RateDialogLabel" Original="Select Your Rating for {0}">Votre classement pour {0}</string>
         <string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Cacher la vignette du résumé</string>
-        
-	    <!-- Rate Descriptions - 5 Stars-->
+       
+            <!-- Rate Descriptions - 5 Stars-->
         <string Field="RateFiveStarOne" Original="Terrible">Affreux</string>
         <string Field="RateFiveStarTwo" Original="Mediocre">Médiocre</string>
         <string Field="RateFiveStarThree" Original="Good">Bon</string>
@@ -193,56 +193,74 @@
         <string Field="MultiAudio" Original="Multiple Audio Tracks">Plusieurs Pistes Audio</string>
         <string Field="OnlineFavourites" Original="Online Favourites">Favoris en ligne</string>
         <string Field="Actors" Original="Actors">Acteurs</string>
-		<string Field="RemovableMedia" Original="Removable Media">Média Amovible</string>
+        <string Field="RemovableMedia" Original="Removable Media">Média Amovible</string>
         <string Field="LocalMedia" Original="Local Media">Média Local</string>
         <string Field="AdultSeries" Original="Adult Series">Séries pour Adultes</string>
         <string Field="KidsSeries" Original="Kids Series">Séries pour Enfants</string>
         <string Field="ClearFanartCache" Original="Clear Fanart Cache">Effacer le cache de Fanart</string>
-	
+       
         <string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Effacer les Vignettes</string>
         <string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Voulez vous effacer puis re-télécharger</string>
         <string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">Toutes les vignettes des épisodes?</string>
         <string Field="RateDialog" Original="Rate Dialog">Classement</string>
         <string Field="PinCodeDialog" Original="Pin Code Dialog">Code PIN</string>
 
-		<string Field="Aired" Original="Aired">Diffusé</string>
-    	<string Field="AiredStatusContinuing" Original="Continuing">En Cours</string>
-    	<string Field="AiredStatusEnded" Original="Ended">Terminé(e)</string>
-	    <string Field="Airs" Original="Airs">Diffusion</string>
-    	<string Field="AirsDay" Original="Airs Day">Jour de diffusion</string>
-    	<string Field="AirsTime" Original="Airs Time">Heure de diffusion</string>
-	    <string Field="Cast" Original="Cast">Distribution</string>
-    	<string Field="Certification" Original="Certification">Certification</string>    
-    	<string Field="Director" Original="Director">Réalisateur</string>
-    	<string Field="Directors" Original="Directors">Réalisateurs</string>    
-    	<string Field="FileSize" Original="File Size">Taille du Fichier</string>
-    	<string Field="FirstAired" Original="First Aired">Première Diffusion</string>
-    	<string Field="Genre" Original="Genre">Genre</string>
-    	<string Field="Group" Original="Groups">Groupe</string>
-    	<string Field="Groups" Original="Groups">Groupes</string>
-    	<string Field="GuestStar" Original="Guest Star">Célébrité Invité</string>
-    	<string Field="GuestStars" Original="Guest Stars">Célébrités Invités</string>
-    	<string Field="MediaInfo" Original="Media Info">Info Média</string>
-    	<string Field="Minutes" Original="Minutes">Minutes</string>
+        <string Field="Aired" Original="Aired">Diffusé</string>
+        <string Field="AiredStatusContinuing" Original="Continuing">En Cours</string>
+        <string Field="AiredStatusEnded" Original="Ended">Terminé(e)</string>
+        <string Field="Airs" Original="Airs">Diffusion</string>
+        <string Field="AirsDay" Original="Airs Day">Jour de diffusion</string>
+        <string Field="AirsTime" Original="Airs Time">Heure de diffusion</string>
+        <string Field="Cast" Original="Cast">Distribution</string>
+        <string Field="Certification" Original="Certification">Certification</string>    
+        <string Field="Director" Original="Director">Réalisateur</string>
+        <string Field="Directors" Original="Directors">Réalisateurs</string>    
+        <string Field="FileSize" Original="File Size">Taille du Fichier</string>
+        <string Field="FirstAired" Original="First Aired">Première Diffusion</string>
+        <string Field="Genre" Original="Genre">Genre</string>
+        <string Field="Group" Original="Groups">Groupe</string>
+        <string Field="Groups" Original="Groups">Groupes</string>
+        <string Field="GuestStar" Original="Guest Star">Célébrité Invité</string>
+        <string Field="GuestStars" Original="Guest Stars">Célébrités Invités</string>
+        <string Field="MediaInfo" Original="Media Info">Info Média</string>
+        <string Field="Minutes" Original="Minutes">Minutes</string>
         <string Field="MyRating" Original="My Rating">Ma note</string>
-    	<string Field="Network" Original="Network">Chaine</string>
-    	<string Field="Rated" Original="Rated">Noté</string>
-    	<string Field="Rating" Original="Rating">Note</string>
-    	<string Field="Runtime" Original="Runtime">Durée</string>
-    	<string Field="SeriesDetails" Original="Series Details">Détails des séries</string>
+        <string Field="Network" Original="Network">Chaine</string>
+        <string Field="Rated" Original="Rated">Noté</string>
+        <string Field="Rating" Original="Rating">Note</string>
+        <string Field="Runtime" Original="Runtime">Durée</string>
+        <string Field="SeriesDetails" Original="Series Details">Détails des séries</string>
         <string Field="SeriesStatus" Original="Series Status">Status des séries</string>
-	    <string Field="Starring" Original="Starring">Starring</string>
-    	<string Field="Watched" Original="Watched">Vu</string>
+        <string Field="Starring" Original="Starring">Starring</string>
+        <string Field="Watched" Original="Watched">Vu</string>
         <string Field="Writer" Original="Writer">Scénariste</string>
-    	<string Field="Writers" Original="Writers">Scénaristes</string>
+        <string Field="Writers" Original="Writers">Scénaristes</string>
  
-	    <string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TVDB est indsiponible</string>
+        <string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TVDB est indsiponible</string>
         <string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">SVP, essayer ultérieurement</string>
         <string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Connection Internet indisponible</string>
         <string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Vérifier votre connection et réessayer</string>    
-        
+       
         <string Field="Playlist" Original="Playlist">Liste de lectures</string>
         <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Dernière mise à jour en ligne</string>
 		
-</strings>
+            <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Reset Ignored Downloaded Files</string>
+		
+	    <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Obtenir les sous-titres via?</string>
+		<string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Sites de sous-titres:</string>
+		<string Field="PlayNow" Original="Play Now">Lecture</string>
+		<string Field="NoSubtitleDownload" Original="No Subtitle Download">Aucun sous-titre Téléchargé</string>
 
+		<string Field="DeleteSubtitles" Original="Delete Subtitles">Supprimer le sous-titre</string>
+		<string Field="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Le nom de l'épisode n'éxiste pas dans la base de données</string>
+		<string Field="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Impossible de supprimer le fichier sous-titre: {0}</string>
+		<string Field="PathNotAvailable" Original="Path is not available: {0}">Le chemin n'est pas disponible: {0}</string>
+		<string Field="UnableToDeleteSubtitles" Original="Unable to Delete Subtitles">Impossible de supprimer le sous-titre</string>
+	    <string Field="ErrorClear" Original="Error">Erreur</string>
+		<string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Impossible de récupérer les sous-titres</string>
+        <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">Aucun sous-titre trouvé ou récupéré</string>	
+
+        <string Field="UnableToDelete" Original="Unable to Delete">Impossible de supprimer</string>
+	    <string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Impossible de supprimer le fichier: {0}</string>
+			 
+</strings>
