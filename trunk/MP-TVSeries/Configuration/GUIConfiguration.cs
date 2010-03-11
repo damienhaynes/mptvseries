@@ -2210,21 +2210,20 @@ namespace WindowPlugins.GUITVSeries
             {
                 case DBEpisode.cTableName:
                     DBEpisode episode = nodeMediaInfo.Tag as DBEpisode;
-                    episode.ReadMediaInfo();                    
+                    episodes.Add(episode);
                     break;
 
                 case DBSeason.cTableName:
                     DBSeason season = nodeMediaInfo.Tag as DBSeason;
-                    episodes = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false);
-                    UpdateMediaInfoASync(episodes);
+                    episodes = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false);                    
                     break;
 
                 case DBSeries.cTableName:
                     DBSeries series = nodeMediaInfo.Tag as DBSeries;
-                    episodes = DBEpisode.Get((int)series[DBSeries.cID], false);
-                    UpdateMediaInfoASync(episodes);
+                    episodes = DBEpisode.Get((int)series[DBSeries.cID], false);                    
                     break;
-            }            
+            }
+            UpdateMediaInfoASync(episodes);
         }
 
         private void DeleteNode(TreeNode nodeDeleted)
