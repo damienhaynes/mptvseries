@@ -125,7 +125,6 @@ namespace WindowPlugins.GUITVSeries
             InitValues();
             
             DBTVSeries.CreateDBIndices("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)","online_episodes",true);
- 
         }
 
         public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
@@ -819,6 +818,14 @@ namespace WindowPlugins.GUITVSeries
                     {
                         resultMsg.Add(string.Format(Translation.UnableToDeleteFile, file));
                     }
+                }
+
+                // if there are no local episodes, we still need to delete from online table
+                if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+                {
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                    DBOnlineEpisode.Clear(condition);
                 }
             }
 
