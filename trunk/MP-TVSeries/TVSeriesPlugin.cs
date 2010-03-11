@@ -1505,11 +1505,15 @@ namespace WindowPlugins.GUITVSeries
         {
             List<CItem> providers = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            List<string> availableDownloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
+            if (availableDownloaders != null)
             {
-                if (enabledDownloaders.Contains(name))
+                foreach (var name in availableDownloaders)
                 {
-                    providers.Add(new CItem(name, name, name));
+                    if (enabledDownloaders.Contains(name))
+                    {
+                        providers.Add(new CItem(name, name, name));
+                    }
                 }
             }
             return providers;
