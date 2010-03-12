@@ -691,9 +691,6 @@ can be started within plugin.</value>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 56</value>
   </metadata>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
-  </metadata>
   <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
     <value>Enable this option to disable the overview for episodes that haven't been watched yet.
 This option is recommended if you want to prevent spoilers before watching an episodes.
