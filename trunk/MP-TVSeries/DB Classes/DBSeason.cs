@@ -522,6 +522,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     resultMsg.AddRange(episode.deleteEpisode(type));
                 }
+
+                // if there are no local episodes, we still need to delete from online table
+                if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+                {
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
+                    DBOnlineEpisode.Clear(condition);
+                }
             }
 
             // if there are no error messages and if we need to delete from db
