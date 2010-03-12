@@ -25,6 +25,7 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.ComponentModel;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -177,6 +178,7 @@ namespace WindowPlugins.GUITVSeries
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;
         private bool subtitleDownloaderWorking = false;
+        private List<string> availableSubtitleDownloaderNames = null;
         private bool torrentWorking = false;        
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
@@ -536,6 +538,12 @@ namespace WindowPlugins.GUITVSeries
 
             // Log Options            
             DBOption.LogOptions();
+
+            // subtitle downloader background tasks
+            BackgroundWorker subsChecker = new BackgroundWorker();
+            subsChecker.DoWork += new DoWorkEventHandler(GetSubtitleDownloaderNames);
+            subsChecker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetSubtitleDownloaderNames_Completed);
+            subsChecker.RunWorkerAsync();
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
@@ -1501,14 +1509,37 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
+        private void GetSubtitleDownloaderNames_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {            
+            if (availableSubtitleDownloaderNames != null)
+            {
+                MPTVSeriesLog.Write(string.Format("Completed getting list of Subtitle Downloader Sites, {0} sites available", availableSubtitleDownloaderNames.Count));
+                MPTVSeriesLog.Write("Subtitle sites available:", MPTVSeriesLog.LogLevel.Debug);
+                foreach (var name in availableSubtitleDownloaderNames)
+                {
+                    MPTVSeriesLog.Write(name, MPTVSeriesLog.LogLevel.Debug);   
+                }            
+            }
+        }
+
+        private void GetSubtitleDownloaderNames(object sender, DoWorkEventArgs e)
+        {            
+            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+            if (isSubtitleDownloaderEnabled)
+            {
+                MPTVSeriesLog.Write("Retrieving List of Subtitle Downloader Sites");
+                availableSubtitleDownloaderNames = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
+            }
+        }
+
         protected List<CItem> GetEnabledSubtitleDownloaderProviders()
         {
             List<CItem> providers = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-            List<string> availableDownloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
-            if (availableDownloaders != null)
+            
+            if (availableSubtitleDownloaderNames != null)
             {
-                foreach (var name in availableDownloaders)
+                foreach (var name in availableSubtitleDownloaderNames)
                 {
                     if (enabledDownloaders.Contains(name))
                     {
