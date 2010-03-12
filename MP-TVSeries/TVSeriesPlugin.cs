@@ -3711,11 +3711,12 @@ namespace WindowPlugins.GUITVSeries
                         if (episode == null) return;
                         resultMsg = episode.deleteLocalSubTitles();
                         break;
-                }
-                return;
+                }                
             }
             #endregion
-            else
+
+            #region Delete From Disk, Database or Both
+            if (dlg.SelectedId != (int)DeleteMenuItems.subtitles)
             {
                 msgDlgCaption = Translation.UnableToDelete;
                 switch (this.listLevel)
@@ -3739,6 +3740,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
                 }
             }
+            #endregion
 
             // Re-load the facade to accurately reflect actions taked above
             LoadFacade();
