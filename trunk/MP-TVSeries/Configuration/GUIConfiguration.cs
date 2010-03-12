@@ -2243,8 +2243,11 @@ namespace WindowPlugins.GUITVSeries
                 DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
                 DialogResult result = deleteDialog.ShowDialog(this);
 
+                // nothing to do exit
+                if (result != DialogResult.OK) return;
+
                 #region Delete Subtitles
-                if (result == DialogResult.OK && deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
+                if (deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
                 {
                     msgDlgCaption = Translation.UnableToDeleteSubtitles;
                     switch (nodeDeleted.Name)
@@ -2263,13 +2266,14 @@ namespace WindowPlugins.GUITVSeries
                     }
                     catch
                     {
-                    }
-                    return;
+                    }                   
                 }
                 #endregion
-                else
+
+                #region Delete From Disk, Database or Both
+                if (deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.subtitles)
                 {
-                    msgDlgCaption = Translation.UnableToDelete;                   
+                    msgDlgCaption = Translation.UnableToDelete;
                     switch (nodeDeleted.Name)
                     {
                         #region Delete Series
@@ -2304,7 +2308,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // Delete tree node
-                    if (resultMsg.Count == 0 && result == DialogResult.OK && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
+                    if (resultMsg.Count == 0 && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
                         treeView_Library.Nodes.Remove(nodeDeleted);
 
                     if (treeView_Library.Nodes.Count == 0)
@@ -2322,13 +2326,14 @@ namespace WindowPlugins.GUITVSeries
                         catch { }
                     }
                 }
+                #endregion
 
                 // Show errors, if any
                 if (resultMsg != null && resultMsg.Count > 0)
                 {
                     MessageBox.Show(string.Join("\n", resultMsg.ToArray()), msgDlgCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
+                
             }
         }
 
