@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- Nederlands (nl) -->
-<!-- Last Updated: 11th Jan 2010 -->
+<!-- Last Updated: 6th March 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -21,7 +21,7 @@
   <string Field="Add_series_to_Favourites" Original="Add series to Favourites">Voeg toe aan favorieten</string>
   <string Field="Force_Local_Scan" Original="Force Local Scan ">Forceer lokale scan</string>
   <string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forceer online vernieuwen</string>
-  <string Field="In_Progress_with_Barracks" Original="(In Progress)">(Bezig)</string>
+  <string Field="In_Progress_with_Barracks" Original="(In Progress)"> (Bezig)</string>
   <string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Toon alleen lokale afleveringen</string>
   <string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Verberg de omschrijving bij onbekeken afleveringen</string>
   <string Field="on" Original="on">aan</string>
@@ -75,8 +75,8 @@
   <string Field="FanArtDelete" Original="Delete Fanart">Verwijder fanart</string>
   <string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Downloaden van {0} fanart(s)...</string>
   <string Field="FanArtLocal" Original="Local">Lokaal</string>
-  <string Field="FanArtOnline" Original="Remote">Op afstand</string>
-  <string Field="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Bezig met laden {0} van {1} fanart(s)...</string>
+  <string Field="FanArtOnline" Original="Remote">Online</string>
+  <string Field="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Bezig met laden van {0} van {1} fanart afbeelding(en)...</string>
   <string Field="FanArtRandom" Original="Display random Fanart">Toon willekeurige fanart</string>
   <string Field="FanArtNoneFound" Original="No Fanart could be found">Geen fanart gevonden</string>
   <string Field="CFS_Choose_Item" Original="Choose item">Kies item</string>
@@ -131,7 +131,7 @@
   <string Field="ButtonChangeLayout" Original="Change Layout">Wijzig layout</string>
   <string Field="ButtonOptions" Original="Options">Opties</string>
   <string Field="FanArtFilter" Original="Filter">Filter</string>
-  <string Field="FanArtFilterAll" Original="All">Allemaal</string>
+  <string Field="FanArtFilterAll" Original="All">Alle</string>
   <string Field="ButtonRandomFanart" Original="Random Fanart">Willekeurige fanart</string>
   <string Field="LabelResolution" Original="Resolution:">Resolutie:</string>
   <string Field="LabelChosen" Original="Chosen:">Gekozen:</string>
@@ -150,7 +150,7 @@
   <string Field="RateFiveStarFive" Original="Perfect">Uitstekend</string>
   <!-- Rate Descriptions - 10 Stars-->
   <string Field="RateTenStarOne" Original="Abysmal">Verschrikkelijk</string>
-  <string Field="RateTenStarTwo" Original="Terrible">Heel Slecht</string>
+  <string Field="RateTenStarTwo" Original="Terrible">Heel slecht</string>
   <string Field="RateTenStarThree" Original="Bad">Slecht</string>
   <string Field="RateTenStarFour" Original="Poor">Ondermaats</string>
   <string Field="RateTenStarFive" Original="Mediocre">Matig</string>
@@ -176,12 +176,12 @@
   <string Field="FanartIntervalSixtySeconds" Original="60 Seconds">60 seconden</string>
   <string Field="NoPlaylistsFound" Original="No Playlists found in:">Geen afspeellijst gevonden in:</string>
   <string Field="PinCode" Original="Pin Code">PIN Code</string>
-  <string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">De ingevoerde PIN-code is niet correct</string>
+  <string Field="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">De ingevoerde PIN code is niet correct</string>
   <string Field="PinCodeIncorrectLine2" Original="Press OK to try again">Druk op OK om opnieuw te proberen</string>
   <string Field="ParentalControlLocked" Original="Lock Views">Vergrendel weergaves</string>
   <string Field="ViewIsLocked" Original="View Locked">Bekijk vergrendelde</string>
   <string Field="PinCodeDlgLabel1" Original="The view {0} is locked">De weergave "{0}" is vergrendeld</string>
-  <string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Voer 4-cijferige PIN-code in om verder te gaan:</string>
+  <string Field="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Voer 4-cijferige PIN code in om verder te gaan:</string>
   <string Field="PinCodeMessageIncorrect" Original="Pin Incorrect">PIN Foutief</string>
   <string Field="Continuing" Original="Continuing Series">Lopende series</string>
   <string Field="Ended" Original="Ended Series">Afgelopen series</string>

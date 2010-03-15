@@ -354,10 +354,11 @@ namespace WindowPlugins.GUITVSeries
 			removeFromView
 		}
 
-		enum DeleteMenuItems {
+		public enum DeleteMenuItems {
 			disk,
 			database,
 			diskdatabase,
+            subtitles,
 			cancel
 		}
 
@@ -725,7 +726,7 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
-                    bool subtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+                    bool subtitleDownloaderEnabled = SubtitleDownloaderEnabledAndHasSites();
 					bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
 					bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
@@ -1500,25 +1501,62 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-        protected void ShowSubtitleMenu(DBEpisode episode)
+        protected List<CItem> GetEnabledSubtitleDownloaderProviders()
         {
-            List<CItem> Choices = new List<CItem>();
+            List<CItem> providers = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-
-            // Get names of the SubtitleDownloader implementations for menu
             foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
             {
                 if (enabledDownloaders.Contains(name))
                 {
-                    Choices.Add(new CItem(name, name, name));
+                    providers.Add(new CItem(name, name, name));
                 }
+            }
+            return providers;
+        }
+
+        protected bool SubtitleDownloaderEnabledAndHasSites()
+        {
+            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+            if (isSubtitleDownloaderEnabled)
+            {
+                List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
+                if (providers.Count == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        protected void ShowSubtitleMenu(DBEpisode episode)
+        {
+            ShowSubtitleMenu(episode, false);
+        }
+
+        protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
+        {
+            if (!SubtitleDownloaderEnabledAndHasSites()) return;
+
+            List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
+
+            if (Choices.Count == 0)
+            {
+                if (fromPlay)
+                    m_VideoHandler.ResumeOrPlay(episode);
+                return;
+            }
+
+            if (fromPlay && Choices.Count > 0)
+            {
+                Choices.Insert(0, new CItem(Translation.PlayNow, Translation.NoSubtitleDownload, (object)"playNow"));
             }
 
             CItem selected = null;
 
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = "Get subtitles from?";
-            descriptor.m_sListLabel = "Enabled subtitle sites:";
+            descriptor.m_sTitle = Translation.GetSubtitlesFrom;
+            descriptor.m_sItemToMatchLabel = "";
+            descriptor.m_sItemToMatch = "";
+            descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
 
@@ -1552,15 +1590,22 @@ namespace WindowPlugins.GUITVSeries
 
             if (selected != null)
             {
-                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
-                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
-
-                if (!subtitleDownloaderWorking)
+                if (selected.m_Tag == (object)"playNow")
                 {
-                    setProcessAnimationStatus(true);
-                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                    subtitleDownloaderWorking = true;
-                    retriever.GetSubs(episode);
+                    m_VideoHandler.ResumeOrPlay(episode);
+                }
+                else 
+                {
+                    ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
+                    SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
+
+                    if (!subtitleDownloaderWorking)
+                    {
+                        setProcessAnimationStatus(true);
+                        retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
+                        subtitleDownloaderWorking = true;
+                        retriever.GetSubs(episode);
+                    }
                 }
             }
         }
@@ -1744,7 +1789,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay))
                         {
-                            ShowSubtitleMenu(m_SelectedEpisode);
+                            ShowSubtitleMenu(m_SelectedEpisode, true);
                         }
                         else
     						m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
@@ -1768,7 +1813,8 @@ namespace WindowPlugins.GUITVSeries
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
                 
-                DeviceManager.StartMonitor();
+                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+                    DeviceManager.StartMonitor();
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
@@ -3632,6 +3678,13 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)DeleteMenuItems.diskdatabase;
 
+            if (this.listLevel == Listlevel.Episode && episode != null && episode.checkHasLocalSubtitles())
+            {
+                pItem = new GUIListItem(Translation.DeleteSubtitles);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)DeleteMenuItems.subtitles;
+            }
+
             pItem = new GUIListItem(Translation.Cancel);            
             dlg.Add(pItem);
             pItem.ItemId = (int)DeleteMenuItems.cancel;
@@ -3641,162 +3694,59 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId < 0 || dlg.SelectedId == (int)DeleteMenuItems.cancel) 
 				return;
 
-            List<DBEpisode> epsDeletion = new List<DBEpisode>();
-			List<DBEpisode> episodes = new List<DBEpisode>();
-            SQLCondition condition = null;
+            List<string> resultMsg = null;
+            string msgDlgCaption = string.Empty;
 
-            switch (this.listLevel) {
-                case Listlevel.Series:
-                    // Always delete from Local episode table if deleting from disk or database
-					// we shouldnt delete from Local series table as then we will not be able to see in MediaPortal
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);                    
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                           
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-										
-					DBEpisode.Clear(condition);                    
-
-                    // Delete from online tables and season/series tables
-                    if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBOnlineEpisode.Clear(condition);
-
-                        condition = new SQLCondition();
-                        condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBSeason.Clear(condition);
-
-						condition = new SQLCondition();
-						condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-						DBSeries.Clear(condition);
-
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                        DBOnlineSeries.Clear(condition);
-                    }
-                    break;
-
-                case Listlevel.Season:
-                    // Always delete from Local episode table if deleting from disk or database
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                    
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                            
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-					
-					DBEpisode.Clear(condition);
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-                        condition = new SQLCondition();
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                        DBOnlineEpisode.Clear(condition);
-
-                        condition = new SQLCondition();
-						condition.Add(new DBSeason(), DBSeason.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-						condition.Add(new DBSeason(), DBSeason.cIndex, season[DBSeason.cIndex], SQLConditionType.Equal);						
-                        DBSeason.Clear(condition);
-					}
-
-					#region Cleanup
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						// If episode count is zero then delete the series and all seasons
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-						episodes = DBEpisode.Get(condition, false);
-						if (episodes.Count == 0) {
-							// Delete Seasons
-							condition = new SQLCondition();
-							condition.Add(new DBSeason(), DBSeason.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBSeason.Clear(condition);
-
-							// Delete Local Series
-							condition = new SQLCondition();
-							condition.Add(new DBSeries(), DBSeries.cID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBSeries.Clear(condition);
-
-							// Delete Online Series
-							condition = new SQLCondition();
-							condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-							DBOnlineSeries.Clear(condition);
-						}
-					}
-					#endregion
-					break;
-
-                case Listlevel.Episode:
-                    // Always delete from Local episode table if deleting from disk or database
-                    condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                    
-
-                    if (dlg.SelectedId != (int)DeleteMenuItems.database)                            
-                        epsDeletion.AddRange(DBEpisode.Get(condition, false));
-
-					DBEpisode.Clear(condition);
-
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-						DBOnlineEpisode.Clear(condition);
-					}
-
-					#region Cleanup
-					if (dlg.SelectedId != (int)DeleteMenuItems.disk) {
-						// If episode count is zero then delete the season
-						condition = new SQLCondition();
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-						condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);						
-						episodes = DBEpisode.Get(condition, false);
-						if (episodes.Count == 0) {
-							condition = new SQLCondition();
-							condition.Add(new DBSeason(), DBSeason.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);							
-							condition.Add(new DBSeason(), DBSeason.cIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
-							DBSeason.Clear(condition);
-
-							// If episode count is still zero, then delete the series\seasons
-							condition = new SQLCondition();
-							condition.Add(new DBEpisode(), DBEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-							episodes = DBEpisode.Get(condition, false);
-							if (episodes.Count == 0) {
-								// Delete All Seasons
-								condition = new SQLCondition();
-								condition.Add(new DBSeason(), DBSeason.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBSeason.Clear(condition);
-
-								// Delete Local Series
-								condition = new SQLCondition();
-								condition.Add(new DBSeries(), DBSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBSeries.Clear(condition);
-
-								// Delete Online Series
-								condition = new SQLCondition();
-								condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-								DBOnlineSeries.Clear(condition);
-							}
-						}
-					}
-					#endregion
-					break;
+            #region Delete Subtitles
+            if (dlg.SelectedId == (int)DeleteMenuItems.subtitles)
+            {
+                msgDlgCaption = Translation.UnableToDeleteSubtitles;
+                switch (this.listLevel)
+                {
+                    case Listlevel.Episode:
+                        if (episode == null) return;
+                        resultMsg = episode.deleteLocalSubTitles();
+                        break;
+                }
+                return;
             }
+            #endregion
+            else
+            {
+                msgDlgCaption = Translation.UnableToDelete;
+                switch (this.listLevel)
+                {
+                    #region Delete Series
+                    case Listlevel.Series:
+                        resultMsg = series.deleteSeries((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
 
-            if (epsDeletion.Count > 0) {
-                // Delete the actual files
-                List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);                    
-                foreach (string file in files) {
-                    try {
-                        MPTVSeriesLog.Write(string.Format("Deleting file: {0}",file));
-                        System.IO.File.Delete(file);
-                    }
-                    catch (Exception ex) {
-                        MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
-                    }
-                }                   
+                    #region Delete Season
+                    case Listlevel.Season:
+                        resultMsg = season.deleteSeason((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
+
+                    #region Delete Series
+                    case Listlevel.Episode:
+                        resultMsg = episode.deleteEpisode((DeleteMenuItems)dlg.SelectedId);
+                        break;
+                    #endregion
+                }
             }
 
             // Re-load the facade to accurately reflect actions taked above
             LoadFacade();
+
+            // Show errors, if any
+            if (resultMsg != null && resultMsg.Count > 0)
+            {
+                GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
+                errorDialog.SetHeading(msgDlgCaption);
+                errorDialog.SetText(string.Join("\n", resultMsg.ToArray()));
+                errorDialog.DoModal(GUIWindowManager.ActiveWindow);
+            }
         }
         #endregion
 
@@ -3809,7 +3759,7 @@ namespace WindowPlugins.GUITVSeries
             if (!bOK)
             {
                 GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                dlgOK.SetHeading("Error");
+                dlgOK.SetHeading(Translation.ErrorClear);
                 dlgOK.SetLine(2, msgOut);
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
@@ -3833,14 +3783,14 @@ namespace WindowPlugins.GUITVSeries
             else if (errorMessage != null)
             {
                 GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
-                errorDialog.SetHeading("Unable to retrieve subtitles");
+                errorDialog.SetHeading(Translation.UnableToRetrieveSubtitles);
                 errorDialog.SetText(errorMessage);
                 errorDialog.DoModal(GUIWindowManager.ActiveWindow);
             }
             else
             {
                 dlgOK.SetHeading(Translation.Completed);
-                dlgOK.SetLine(1, "No subtitles found or retrieved");
+                dlgOK.SetLine(1, Translation.NoSubtitlesFoundOrRetrieved);
                 dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
         }

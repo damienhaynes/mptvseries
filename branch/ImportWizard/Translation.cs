@@ -112,7 +112,8 @@ namespace WindowPlugins.GUITVSeries
         public static string DeleteFromDisk = "Delete from Disk";       
         public static string DeleteFromDatabase = "Delete from Database";     
         public static string DeleteFromFileDatabase = "Delete from Disk and Database";
-		public static string RateDialogLabel = "Select Your Rating for {0}";
+        public static string DeleteSubtitles = "Delete Subtitles";
+        public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
         public static string CycleSeriesThumb = "Cycle Series Panel";
@@ -121,6 +122,13 @@ namespace WindowPlugins.GUITVSeries
 		public static string DeleteThumbnailsHeading = "Delete Thumbnails";
 		public static string DeleteThumbnailsLine1 = "Would you also like to Delete and Re-Download";
 		public static string DeleteThumbnailsLine2 = "all episode thumbnails?";
+        public static string EpisodeFilenameEmpty = "Episode Filename is Empty in Database";
+        public static string UnableToDeleteSubtitleFile = "Unable to Delete Subtitle File: {0}";
+        public static string PathNotAvailable = "Path is not available: {0}";
+        public static string UnableToDeleteSubtitles = "Unable to Delete Subtitles";
+        public static string ErrorClear = "Error";
+        public static string UnableToDelete = "Unable to Delete";
+        public static string UnableToDeleteFile = "Unable to Delete File: {0}";
 
         // Views
         public static string Genres = "Genres";
@@ -305,7 +313,15 @@ namespace WindowPlugins.GUITVSeries
         public static string Watched = "Watched";
         public static string Writer = "Writer";
         public static string Writers = "Writers";
-        
+
+        // Subtitles
+        public static string GetSubtitlesFrom = "Get subtitles from?";
+        public static string EnabledSubtitleSites = "Enabled subtitle sites:";
+        public static string PlayNow = "Play Now";
+        public static string NoSubtitleDownload = "No Subtitle Download";
+        public static string UnableToRetrieveSubtitles = "Unable to retrieve subtitles";
+        public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
+
         #endregion
 
         #region Public Properties

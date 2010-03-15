@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Dansk (Da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Contributed by Steffansp. Last update 11-Jan-2010 -->
+<!-- Contributed by Steffansp. Last update 9. marts 2010 -->
 
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
@@ -242,4 +242,25 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Kontroller forbindelsen og prøv igen</string>
 
 	<string Field="Playlist" Original="Playlist">Playliste</string>
+	
+	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Sidste online updatering</string>
+	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Nustil ignorerede hentede filer</string>
+
+	<string Field="GetSubtitlesFrom" Original="Get subtitles from?">Hent undertekster fra?</string>
+	<string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Aktiverede undertekstsider:</string>
+	<string Field="PlayNow" Original="Play Now">Afspil nu</string>
+	<string Field="NoSubtitleDownload" Original="No Subtitle Download">Ingen undertekst hent</string>
+  
+	<string Field="DeleteSubtitles" Original="Delete Subtitles">Slet undertekster</string>
+	<string Field="EpisodeFilenameEmpty" Original ="Episode Filename is Empty in Database">Afsnits filenavnet er tomt i databasen</string>
+	<string Field="UnableToDeleteSubtitleFile" Original ="Unable to Delete Subtitle File: {0}">Sletning af undertekstfile fejlede: {0}</string>
+	<string Field="PathNotAvailable" Original ="Path is not available: {0}">Stien er utilgængelig: {0}</string>
+	<string Field="UnableToDeleteSubtitles" Original ="Unable to Delete Subtitles">Sletning af undertekster fejlede</string>
+	<string Field="ErrorClear" Original ="Error">Fejl</string>
+	<string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Hentning af undertekst mislykkedes</string>
+	<string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">Ingen undertekst blev fundet</string>
+
+	<string Field="UnableToDelete" Original ="Unable to Delete">Sletning mislykkedes</string>
+	<string Field="UnableToDeleteFile" Original ="Unable to Delete File: {0}">Sletning af filen mislykkedes: {0}</string>
+	
 </strings>

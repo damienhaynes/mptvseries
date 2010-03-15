@@ -1021,5 +1021,46 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
         }
 
+        public List<string> deleteSeries(TVSeriesPlugin.DeleteMenuItems type)
+        {
+            List<string> resultMsg = new List<string>();
+
+            // Always delete from Local episode table if deleting from disk or database
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeries.cID], SQLConditionType.Equal);
+            /* TODO dunno if to include or exclude hidden items. 
+             * if they are excluded then the if (resultMsg.Count is wrong and should do another select to get proper count
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+            {
+                //don't include hidden seasons unless the ShowHiddenItems option is set
+                condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+            }
+            */
+
+            List<DBSeason> seasons = DBSeason.Get(condition, false);
+            if (seasons != null)
+            {
+                foreach (DBSeason season in seasons)
+                {
+                    resultMsg.AddRange(season.deleteSeason(type));
+                }
+            }
+
+            // if there are no error messages and if we need to delete from db
+            // Delete from online tables and season/series tables
+            if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                condition = new SQLCondition();
+                condition.Add(new DBSeries(), DBSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
+                DBSeries.Clear(condition);
+
+                condition = new SQLCondition();
+                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
+                DBOnlineSeries.Clear(condition);
+            }
+
+            return resultMsg;
+        }
+
     }
 }

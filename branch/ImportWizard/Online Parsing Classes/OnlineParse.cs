@@ -537,10 +537,11 @@ namespace WindowPlugins.GUITVSeries
                 string episodeIdx = episode[DBEpisode.cEpisodeIndex];
                 string seriesTitle = series.ToString();
                 string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
+                string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
                 string sendTitle = string.Format("{0}/{1}/{2}/{3}", seriesTitle, seasonIdx, episodeIdx, episodeTitle);
 
-                string[] episodeDetails = new string[] {"Series", sendTitle, thumb};
-                MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}", episodeDetails[0], episodeDetails[1], episodeDetails[2]));
+                string[] episodeDetails = new string[] {"Series", sendTitle, thumb, fanart};
+                MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}, {3}", episodeDetails[0], episodeDetails[1], episodeDetails[2], episodeDetails[3]));
 
                 // Send message to InfoService plugin
                 GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 16000, 9811, 0, 0, 0, episodeDetails);

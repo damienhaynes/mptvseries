@@ -91,19 +91,19 @@ namespace WindowPlugins.GUITVSeries
         public static void StartMonitor() {
             if (MonitorStarted)
                 return;
-
-            // register listener to start receiving notifications about new import paths
-            //MovingPicturesCore.DatabaseManager.ObjectInserted += new DatabaseManager.ObjectAffectedDelegate(onPathAdded);
             
-            foreach (DBImportPath currPath in DBImportPath.GetAll()) {
-                try {
-                    AddWatchDrive(currPath[DBImportPath.cPath]);
-                }
-                catch (Exception e) {
-                    if (e is ThreadAbortException)
-                        throw e;
+            DBImportPath[] importPaths = DBImportPath.GetAll();
+            if (importPaths != null) {
+                foreach (DBImportPath currPath in importPaths) {
+                    try {
+                        AddWatchDrive(currPath[DBImportPath.cPath]);
+                    }
+                    catch (Exception e) {
+                        if (e is ThreadAbortException)
+                            throw e;
 
-                    MPTVSeriesLog.Write("Failed adding " + currPath + " to the Disk Watcher!", MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("Failed adding " + currPath + " to the Disk Watcher!", MPTVSeriesLog.LogLevel.Debug);
+                    }
                 }
             }
         }
@@ -112,9 +112,6 @@ namespace WindowPlugins.GUITVSeries
             if (!MonitorStarted)
                 return;
 
-            // unregister listener to stop receiving notifications about new import paths
-            //MovingPicturesCore.DatabaseManager.ObjectInserted -= new DatabaseManager.ObjectAffectedDelegate(onPathAdded);
-            
             ClearWatchDrives();
         }
 
@@ -177,8 +174,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static void StartDiskWatcher() {
             lock (syncRoot) {
-                // TODO
-                //if (MovingPicturesCore.Settings.DeviceManagerEnabled && !MonitorStarted) {
                 if (!MonitorStarted) {
                     MPTVSeriesLog.Write("Starting Disk Watcher...", MPTVSeriesLog.LogLevel.Normal);
                     watcherThread = new Thread(new ThreadStart(WatchDisks));
