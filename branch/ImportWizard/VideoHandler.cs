@@ -257,6 +257,23 @@ namespace WindowPlugins.GUITVSeries
                         return false;
                     }
                 }
+
+                // see if we have an invokeOption set up
+                string invoke;
+                if((invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback)) != null && !string.IsNullOrEmpty(invoke))
+                {
+                    try
+                    {
+                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                        System.Diagnostics.Process.Start(invoke);
+                        MPTVSeriesLog.Write("Sucessfully Invoked BeforeFilePlay Command: " + invoke);
+                    }
+                    catch (Exception e)
+                    {
+                        MPTVSeriesLog.Write("Unable to Invoke BeforeFilePlay Command: " + invoke);
+                        MPTVSeriesLog.Write(e.Message);
+                    }
+                }
                 
                 // Start Listening to any External Player Events
                 listenToExternalPlayerEvents = true;
@@ -390,7 +407,24 @@ namespace WindowPlugins.GUITVSeries
                         RateRequestOccured.Invoke(m_currentEpisode);
                 } else MPTVSeriesLog.Write("Episode has already been rated or option not set");
             }
-            SetGUIProperties(true); // clear GUI Properties          
+            SetGUIProperties(true); // clear GUI Properties
+
+            // see if we have an invokeOption set up
+            string invoke;
+            if (countAsWatched && (invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback)) != null && !string.IsNullOrEmpty(invoke))
+            {
+                try
+                {
+                    invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                    System.Diagnostics.Process.Start(invoke);
+                    MPTVSeriesLog.Write("Sucessfully Invoked AfterFilePlay Command: " + invoke);
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("Unable to Invoke AfterFilePlay Command: " + invoke);
+                    MPTVSeriesLog.Write(e.Message);
+                }
+            }
         }
 
         void LogPlayBackOp(string OperationType, string filename)

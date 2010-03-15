@@ -981,10 +981,12 @@ namespace WindowPlugins.GUITVSeries
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
                                 }
 
-                                // TODO CHECK translation ???
-                                pItem = new GUIListItem(Translation.Play_Random_Episode);
-								dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                if (newsEnable || torrentsEnable) // is this used by subtitles?
+                                {
+                                    pItem = new GUIListItem(Translation.ResetIgnoredDownloadedFiles);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
+                                }
 
 								dlg.DoModal(GUIWindowManager.ActiveWindow);
 								if (dlg.SelectedId != -1)
@@ -2684,12 +2686,9 @@ namespace WindowPlugins.GUITVSeries
                                     item.IsRemote = false;
                                     item.IsPlayed = false;
 
-                                    // Set IsRemote property to true, if the episode is not local on disk
-                                    if (episode[DBEpisode.cFilename].ToString().Length == 0) {
-                                        item.IsRemote = true;
-                                    }
-                                    // Set IsRemomote property to true if episode is on removable media and media is not mounted
-                                    else if (episode[DBEpisode.cIsOnRemovable] && !System.IO.File.Exists(episode[DBEpisode.cFilename].ToString())) {                                        
+                                    // Set IsRemote property to true, if the episode is not local on disk                                    
+                                    if (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)
+                                    {
                                         item.IsRemote = true;
                                     }
                                     // Set IsPlayed property to true, if the episode has been watched

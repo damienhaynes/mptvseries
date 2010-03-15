@@ -644,16 +644,16 @@
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
-        CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
-        NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
-        F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
-        kssoNIIlMXqu89SPL0V7AjCQ2p0m5nRwdzIB3KU3UFMggEdHM8SjpNMHqEJlLcR3QSCAC+TUZCCj2WiB
-        /lE1OmQM4Oo/AONi/tb/GlAG82MBGE0L6IfJlDM/zP2aMN/Hd0UogBPPfcEVtiUmh6tmR5hzkw6xXgso
-        RttJ6FaYcKXwHNqGXsT/VxNdlq8BcB8cCQP3DpDlO7QbE5GpAJVmpA8eyCf+c0MuQo3SXBuB7cPTdAXi
-        4cdRn0ETEA/GH1el7aRJkTuoLvzgzcU7Od+t/E0Esm8NCrx8uDQTHxnBNxzK2wROMetMAAAAAElFTkSu
-        QmCC
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAdNJREFUSEu1Vb0rR1EY/l2SRD6TgWQy+UjJRyklsipZZDHIYJHJYrFYFJvVYLCQ/AMo
+        FJKBiaIYfhaLlI/oep7rHL0O99xzLk493fuej+d53/ec95wgDMMMWxAE0TehdXEqsAt8LPyhac5oiMaX
+        DrvCFIafgHmg1ibwyesgkAeiJmAAWFGe0/trYBIoMoU0Z+S4RaAEC8eBA+BZEJNc4hx2rxRxEWjFAp1n
+        k1DaL5i3CXT6CHSo8DXRG+wdYAZYFd4fq7Tl+6SoBpNPBckJ/vsFwQT+b4FpoNAk1nZciriZi4KcKao2
+        SJpht8QRJwkwj/dK4A7fxiQi3wjmhPc856lbXIq2hEBPanaSqOI164ACrNILoN5TgNdHA8CrpC1OoByD
+        VQC/uZ4CPCCHKgNZl0Lz5M9UYEFWCZz9h8Cw2L/lvxYoBvm+EBhMK9ANkjFjf5j7JUG+jf9SXwFuPOuC
+        J2xNbA5PzYYgZ5H2cdxVoABzR4FLQcKTwntoHXgQ/Y8qukjfRYB1sCcIbFf2FeYNicicBMqUpzcxIq/o
+        Z0HOAnWS3DUCvYa36QLAy49RHAEjAC/Gb0+lXuSSItOpdnTw5eKbnGMO/iYCubYSBh8fHk1rkxG8A28g
+        05d8OjNKAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
@@ -688,9 +688,6 @@ local/online refresh of series.
 This is active when first starting MP or when resuming from standby. A manual scan
 can be started within plugin.</value>
   </data>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
-  </metadata>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 56</value>
   </metadata>
@@ -816,23 +813,23 @@ If an expression can not evaluate these items, the next expression in the list i
   <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
-        HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
-        pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
-        KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
-        AAAASUVORK5CYII=
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
+        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
+        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
+        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
+        xtkWAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8wAA
-        CvMB7xUV9QAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
-        cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
-        fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
-        IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
-        AABJRU5ErkJggg==
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
+        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
+        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
+        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
+        mAY8AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="label69.Text" xml:space="preserve">

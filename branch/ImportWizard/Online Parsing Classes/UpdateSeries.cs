@@ -74,20 +74,43 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
+        public UpdateSeries(String sSeriesIDs)
+        {
+            Work(sSeriesIDs);
+        }
+
         public UpdateSeries(List<String> sSeriesIDs)
         {
             this.sSeriesIDs = sSeriesIDs;            
         }
 
-        IEnumerable<DBOnlineSeries> Work(String sSeriesID)
+        public UpdateSeries(String sSeriesIDs, String languageID)
+        {
+            Work(sSeriesIDs, languageID);
+        }
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
+        {
+            return Work(sSeriesID, "");
+        }
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID)
         {
             if (sSeriesID.Length > 0)
             {
                 int result;
                 if (int.TryParse(sSeriesID,out result))
                     MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
-                
-                XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+
+                XmlNode node = null;
+                if (String.IsNullOrEmpty(languageID))
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                }
+                else
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID);
+                }
 
                 if (node != null)
                 {

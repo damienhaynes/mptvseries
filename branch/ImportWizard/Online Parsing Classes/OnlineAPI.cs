@@ -123,10 +123,19 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public XmlNode UpdateSeries(String sSeriesID)
     { return UpdateSeries(sSeriesID, true); }
 
+    static public XmlNode UpdateSeries(String sSeriesID, String languageID)
+    { return UpdateSeries(sSeriesID, languageID, true); }
+
     static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
       int series = Int32.Parse(sSeriesID);
       return getFromCache(series, SelLanguageAsString + ".xml");
+    }
+
+    static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
+    {
+        int series = Int32.Parse(sSeriesID);
+        return getFromCache(series, languageID + ".xml", languageID);
     }
 
     static public bool SubmitRating(RatingType type, string itemId, int rating)
@@ -273,9 +282,15 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode getFromCache(int seriesID, string elemName)
     {
-      return getFromCache(seriesID, true, elemName);
+        return getFromCache(seriesID, true, elemName, SelLanguageAsString);
     }
-    static XmlNode getFromCache(int seriesID, bool first, string elemName)
+
+    static XmlNode getFromCache(int seriesID, string elemName, string languageID)
+    {
+        return getFromCache(seriesID, true, elemName, languageID);
+    }
+
+    static XmlNode getFromCache(int seriesID, bool first, string elemName, string languageID)
     {
       if (zipCache.ContainsKey(seriesID))
       {
@@ -286,12 +301,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           return d[elemName];
         }
       }
-      else if (first)
+      
+      if (first)
       {
         Generic(string.Format(apiURIs.FullSeriesUpdate,
                                    seriesID,
-                                   SelLanguageAsString), true, true, Format.Zip, SelLanguageAsString, seriesID);
-        return getFromCache(seriesID, false, elemName);
+                                   languageID), true, true, Format.Zip, languageID, seriesID);
+        return getFromCache(seriesID, false, elemName, languageID);
       }
       return null;
     }
