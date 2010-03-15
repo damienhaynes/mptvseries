@@ -2341,6 +2341,32 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void RescanMediaInfoNode(TreeNode nodeMediaInfo)
+        {
+            if (nodeMediaInfo == null) return;
+
+            List<DBEpisode> episodes = new List<DBEpisode>();
+
+            switch (nodeMediaInfo.Name)
+            {
+                case DBEpisode.cTableName:
+                    DBEpisode episode = nodeMediaInfo.Tag as DBEpisode;
+                    episodes.Add(episode);
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = nodeMediaInfo.Tag as DBSeason;
+                    episodes = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false);                    
+                    break;
+
+                case DBSeries.cTableName:
+                    DBSeries series = nodeMediaInfo.Tag as DBSeries;
+                    episodes = DBEpisode.Get((int)series[DBSeries.cID], false);                    
+                    break;
+            }
+            UpdateMediaInfoASync(episodes);
+        }
+
         private void DeleteNode(TreeNode nodeDeleted)
         {
             if (nodeDeleted != null) {
@@ -2358,8 +2384,11 @@ namespace WindowPlugins.GUITVSeries
                 DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
                 DialogResult result = deleteDialog.ShowDialog(this);
 
+                // nothing to do exit
+                if (result != DialogResult.OK) return;
+
                 #region Delete Subtitles
-                if (result == DialogResult.OK && deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
+                if (deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
                 {
                     msgDlgCaption = Translation.UnableToDeleteSubtitles;
                     switch (nodeDeleted.Name)
@@ -2378,13 +2407,14 @@ namespace WindowPlugins.GUITVSeries
                     }
                     catch
                     {
-                    }
-                    return;
+                    }                   
                 }
                 #endregion
-                else
+
+                #region Delete From Disk, Database or Both
+                if (deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.subtitles)
                 {
-                    msgDlgCaption = Translation.UnableToDelete;                   
+                    msgDlgCaption = Translation.UnableToDelete;
                     switch (nodeDeleted.Name)
                     {
                         #region Delete Series
@@ -2419,7 +2449,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // Delete tree node
-                    if (resultMsg.Count == 0)
+                    if (resultMsg.Count == 0 && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
                         treeView_Library.Nodes.Remove(nodeDeleted);
 
                     if (treeView_Library.Nodes.Count == 0)
@@ -2437,13 +2467,14 @@ namespace WindowPlugins.GUITVSeries
                         catch { }
                     }
                 }
+                #endregion
 
                 // Show errors, if any
                 if (resultMsg != null && resultMsg.Count > 0)
                 {
                     MessageBox.Show(string.Join("\n", resultMsg.ToArray()), msgDlgCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
+                
             }
         }
 
@@ -2882,6 +2913,10 @@ namespace WindowPlugins.GUITVSeries
                 case "update":
                     UpdateNode(clickedNode);
                     break;
+                
+                case "mediainfo":
+                    RescanMediaInfoNode(clickedNode);
+                    break;
 
                 case "watched":
                     ToggleWatchedNode(clickedNode, 1);
@@ -3200,14 +3235,16 @@ namespace WindowPlugins.GUITVSeries
                     // No need to create a Remove Item as we can use the checked state
                     if (subMenuItem == null) {
                         subMenuItem = new ToolStripMenuItem("Add Series to View");
+                        subMenuItem.Name = "addSeriesToView";
                         subMenu = new ContextMenuStrip(this.components);
                         subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
                         subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_AddToView_ItemClicked);
                         subMenuItem.DropDown = subMenu;
                         subMenu.ShowCheckMargin = true;
                         subMenu.ShowImageMargin = false;                        
-                    }					
-                                        
+                    }
+                    subMenuItem.Enabled = true;
+                    
                     // Populate View Sub-Menu
 					DBView[] views = DBView.getTaggedViews();                    
                     string viewTags = series[DBOnlineSeries.cViewTags];
@@ -3235,6 +3272,9 @@ namespace WindowPlugins.GUITVSeries
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
+                    
+                    if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
+                        contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
                     break;
 
                 case DBEpisode.cTableName:
@@ -3242,8 +3282,12 @@ namespace WindowPlugins.GUITVSeries
                     bHidden = episode[DBOnlineEpisode.cHidden];
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);                  
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
-                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;                   
-                    break;
+                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
+                    
+                    if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
+                        contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
+                    
+                        break;
             }
             // Hide Downloaders not frequently used by users
             if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
@@ -3447,6 +3491,12 @@ namespace WindowPlugins.GUITVSeries
                 episodes = todoeps;
             }
 
+            UpdateMediaInfoASync(episodes);
+
+        }
+
+        private void UpdateMediaInfoASync(List<DBEpisode> episodes)
+        {
             if (episodes.Count > 0)
             {
                 MPTVSeriesLog.Write("Updating MediaInfo....(Please be patient!)");
@@ -3455,8 +3505,8 @@ namespace WindowPlugins.GUITVSeries
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 resReader.RunWorkerAsync(episodes);
             }
-            else MPTVSeriesLog.Write("No Episodes found that need updating");
-
+            else 
+                MPTVSeriesLog.Write("No Episodes found that need updating");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
