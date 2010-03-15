@@ -125,7 +125,6 @@ namespace WindowPlugins.GUITVSeries
             InitValues();
             
             DBTVSeries.CreateDBIndices("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)","online_episodes",true);
- 
         }
 
         public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
@@ -745,14 +744,14 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        bool isLocked(FileInfo fileInfo)
+        bool isWritable(FileInfo fileInfo)
         {
             FileStream stream = null;
             try
             {
                 stream = fileInfo.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
-            catch (IOException)
+            catch
             {
                 return true;
             }
@@ -763,14 +762,14 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        public bool isLocked()
+        public bool isWritable()
         {
             string file = this[DBEpisode.cFilename];
             if (string.IsNullOrEmpty(file)) return false;
             FileInfo fi = new FileInfo(file);
             if (fi != null)
             {
-                return isLocked(fi);
+                return isWritable(fi);
             }
             return false;
         }
@@ -789,7 +788,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode episode in episodes)
                 {
                     string file = this[DBEpisode.cFilename];
-                    if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episode.isLocked()) || type == TVSeriesPlugin.DeleteMenuItems.database)
+                    if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episode.isWritable()) || type == TVSeriesPlugin.DeleteMenuItems.database)
                     {
                         DBEpisode.Clear(condition);
 
@@ -819,6 +818,14 @@ namespace WindowPlugins.GUITVSeries
                     {
                         resultMsg.Add(string.Format(Translation.UnableToDeleteFile, file));
                     }
+                }
+
+                // if there are no local episodes, we still need to delete from online table
+                if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+                {
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                    DBOnlineEpisode.Clear(condition);
                 }
             }
 
