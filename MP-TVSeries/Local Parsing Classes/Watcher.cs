@@ -266,22 +266,71 @@ namespace WindowPlugins.GUITVSeries
             worker.RunWorkerAsync();
         }
 
+        void removeFromModifiedFilesList(string filePath, WatcherItemType type, bool isFolder)
+        {
+            List<WatcherItem> watcherItemsRemove = new List<WatcherItem>();
+            string completeFilePath = filePath;
+            if (isFolder) completeFilePath = completeFilePath + "\\";
+            
+            foreach (WatcherItem watcherItem in m_modifiedFilesList)
+            {
+                if (watcherItem.m_sFullPathFileName.StartsWith(filePath) && watcherItem.m_type == type)
+                    watcherItemsRemove.Add(watcherItem);
+            }
+            foreach (WatcherItem watcherItem in watcherItemsRemove)
+                m_modifiedFilesList.Remove(watcherItem);
+        }
+
         void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.FullPath);
-            
+            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.OldFullPath + " to " + e.FullPath);
+
+            List<PathPair> filesToRemove = new List<PathPair>();
+            List<PathPair> filesToAdd = new List<PathPair>();
+            bool isDirectoryRename = false;
+
+            if (Directory.Exists(e.FullPath)) 
+            {
+                isDirectoryRename = true;
+
+                List<string> folder = new List<string>();
+                folder.Add(e.FullPath);
+                filesToAdd = Filelister.GetFiles(folder);
+                
+                foreach (PathPair pathPair in filesToAdd)
+                    filesToRemove.Add(new PathPair(pathPair.m_sMatch_FileName, pathPair.m_sFull_FileName.Replace(e.FullPath, e.OldFullPath)));
+            }
+
             // rename: delete the old, add the new
             lock (m_modifiedFilesList)
             {
-                String sOldExtention = System.IO.Path.GetExtension(e.OldFullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sOldExtention) != -1)
+                if (isDirectoryRename)
                 {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, true));
+                    foreach (PathPair pathPair in filesToRemove)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Added, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Deleted));
+                    }
+                    foreach (PathPair pathPair in filesToAdd)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Added));
+                    }
                 }
-                String sNewExtention = System.IO.Path.GetExtension(e.FullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sNewExtention) != -1)
+                else
                 {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, false));
+                    String sOldExtention = System.IO.Path.GetExtension(e.OldFullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sOldExtention) != -1)
+                    {
+                        removeFromModifiedFilesList(e.OldFullPath, WatcherItemType.Added, false);
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, true));
+                    }
+                    String sNewExtention = System.IO.Path.GetExtension(e.FullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sNewExtention) != -1)
+                    {
+                        removeFromModifiedFilesList(e.FullPath, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, false));
+                    }
                 }
             }
         }
@@ -294,20 +343,66 @@ namespace WindowPlugins.GUITVSeries
             }
 
             MPTVSeriesLog.Write("Watcher: Changed event: " + e.FullPath);
+
+            List<PathPair> filesChanged = new List<PathPair>();
+            bool isDirectoryChange = false;
+
+            if (Directory.Exists(e.FullPath))
+            {
+                isDirectoryChange = true;
+
+                List<string> folder = new List<string>();
+                folder.Add(e.FullPath);
+                filesChanged = Filelister.GetFiles(folder);
+            }
             
             // a file has changed! created, not created, whatever. Just add it to our list. 
             // we only process this list once in a while
             lock (m_modifiedFilesList)
             {
-                foreach (WatcherItem item in m_modifiedFilesList)
+                if (e.ChangeType == WatcherChangeTypes.Deleted)
                 {
-                    if (item.m_sFullPathFileName == e.FullPath)
-                        return;
+                    removeFromModifiedFilesList(e.FullPath, WatcherItemType.Added, true);
+                    
+                    SQLCondition condition = new SQLCondition(new DBEpisode(), DBEpisode.cFilename, e.FullPath + "\\%", SQLConditionType.Like);
+                    List<DBEpisode> dbepisodes = DBEpisode.Get(condition, false);
+                    if (dbepisodes != null && dbepisodes.Count > 0)
+                    {
+                        foreach (DBEpisode dbepisode in dbepisodes)
+                        {
+                            m_modifiedFilesList.Add(new WatcherItem(new PathPair(dbepisode[DBEpisode.cFilename].ToString().Substring(e.FullPath.Length).TrimStart('\\'), dbepisode[DBEpisode.cFilename]), WatcherItemType.Deleted));
+                        }
+                    }
                 }
 
-                String sExtention = System.IO.Path.GetExtension(e.FullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sExtention) != -1) {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+                if (isDirectoryChange)
+                {
+                    foreach (PathPair pathPair in filesChanged)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Added));
+                    }
+                }
+                else
+                {
+                    /* duplicates are removed later
+                    foreach (WatcherItem item in m_modifiedFilesList)
+                    {
+                        if (item.m_sFullPathFileName == e.FullPath)
+                            return;
+                    }
+                    */
+
+                    String sExtention = System.IO.Path.GetExtension(e.FullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sExtention) != -1)
+                    {
+                        if (e.ChangeType == WatcherChangeTypes.Deleted)
+                            removeFromModifiedFilesList(e.FullPath, WatcherItemType.Added, false);
+                        else
+                            removeFromModifiedFilesList(e.FullPath, WatcherItemType.Deleted, false);
+
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+                    }
                 }
             }
         }
@@ -321,6 +416,7 @@ namespace WindowPlugins.GUITVSeries
                 // do some cleanup first, remove the existing watchers
                 foreach (FileSystemWatcher watcher in m_watchersList)
                 {
+                    watcher.EnableRaisingEvents = false;
                     watcher.Changed -= new FileSystemEventHandler(watcher_Changed);
                     watcher.Created -= new FileSystemEventHandler(watcher_Changed);
                     watcher.Deleted -= new FileSystemEventHandler(watcher_Changed);
@@ -340,7 +436,7 @@ namespace WindowPlugins.GUITVSeries
                     // from MSDN, filter doesn't change the amount of stuff looked at internally
                     watcher.Path = sWatchedFolder;
                     watcher.IncludeSubdirectories = true;
-                    watcher.NotifyFilter = NotifyFilters.FileName;                 
+                    watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size;
                     watcher.Changed += new FileSystemEventHandler(watcher_Changed);
                     watcher.Created += new FileSystemEventHandler(watcher_Changed);
                     watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
@@ -359,6 +455,38 @@ namespace WindowPlugins.GUITVSeries
             refreshWatchers = true;
         }
 
+
+        static List<WatcherItem> removeDuplicates(List<WatcherItem> inputList)
+        {
+            Dictionary<string, int> uniqueStore = new Dictionary<string, int>();
+            List<WatcherItem> finalList = new List<WatcherItem>();
+
+            MPTVSeriesLog.Write("Remove duplicates from inputList, starting count: " + inputList.Count, MPTVSeriesLog.LogLevel.DebugSQL);
+
+            foreach (WatcherItem currValue in inputList)
+            {
+                string key = currValue.m_sFullPathFileName;
+                switch (currValue.m_type)
+                {
+                    case WatcherItemType.Deleted:
+                        key += " DELETED";
+                        break;
+                    case WatcherItemType.Added:
+                        key += " ADDED";
+                        break;
+                }
+
+                if (!uniqueStore.ContainsKey(key))
+                {
+                    uniqueStore.Add(key, 0);
+                    finalList.Add(currValue);
+                }
+            }
+
+            MPTVSeriesLog.Write("Removed duplicates from inputList, final count: " + inputList.Count, MPTVSeriesLog.LogLevel.DebugSQL);
+            return finalList;
+        }
+
         void signalModifiedFiles()
         {
             try
@@ -367,6 +495,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_modifiedFilesList.Count > 0)
                     {
+                        m_modifiedFilesList = removeDuplicates(m_modifiedFilesList);
+
                         MPTVSeriesLog.Write("Watcher: Signaling " + m_modifiedFilesList.Count + " modified files");
                         List<WatcherItem> outList = new List<WatcherItem>();
                        
