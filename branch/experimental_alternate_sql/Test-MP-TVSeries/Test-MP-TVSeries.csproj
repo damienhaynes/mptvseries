@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B2ECBD02-DD25-48C0-AEE8-792F1F071B3C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -50,13 +50,13 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core, Version=1.0.2476.19636, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Core, Version=1.0.3.26514, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
+      <HintPath>..\..\mediaportal\xbmc\bin\Debug\Core.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=1.0.2308.21888, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Databases, Version=1.0.3.26516, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+      <HintPath>..\..\mediaportal\xbmc\bin\Debug\Databases.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediaPortal.GUI.Library;
+using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
 using System.Drawing;
 
@@ -204,6 +205,14 @@ namespace WindowPlugins.GUITVSeries
             return Load(xmlSkin);
         }
 
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		//public override string GetModuleName() {
+		//	return Translation.FanArt;
+		//}
+
         protected View CurrentView
         {
             get { return currentView; }
@@ -213,6 +222,8 @@ namespace WindowPlugins.GUITVSeries
         protected override void OnPageLoad()
         {
             AllocResources();
+
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", Translation.FanArt);
 
             loadingWorker = new BackgroundWorker();            
             loadingWorker.WorkerReportsProgress = true;
@@ -232,6 +243,8 @@ namespace WindowPlugins.GUITVSeries
             }            
 
             base.OnPageLoad();
+            
+            Helper.disableNativeAutoplay();
 
             // update skin controls
             UpdateLayoutButton();
@@ -249,7 +262,7 @@ namespace WindowPlugins.GUITVSeries
             UpdateFilterProperty(false);
 
             setDownloadStatus();
-
+			
             MPTVSeriesLog.Write("Fanart Chooser Window initializing");
 
             fetchList(SeriesID);
@@ -394,6 +407,9 @@ namespace WindowPlugins.GUITVSeries
               System.Windows.Forms.Application.DoEvents();
 
             loadingWorker = null;
+            
+            Helper.enableNativeAutoplay();
+            
             base.OnPageDestroy(new_windowId);
         }
 

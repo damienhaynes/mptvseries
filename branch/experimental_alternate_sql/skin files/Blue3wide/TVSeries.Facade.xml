@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window> 
+	<controls>
+
+		<!-- OVERLAYS -->
+		
+		<control>
+			<description>WideBanner Background (No Fanart Visible)</description>
+            <type>image</type>            
+            <id>0</id>
+            <width>1280</width>
+            <height>720</height>
+            <texture>background.png</texture>            
+            <visible>facadeview.largeicons|facadeview.smallicons</visible>
+        </control>
+
+        <control>
+            <description>FanArt Overlay - List View</description>
+            <type>image</type>
+            <id>0</id>
+            <posX>-2</posX>
+            <posY>0</posY>
+            <width>1284</width>
+            <height>722</height>
+            <texture>mainoverlay.png</texture>
+            <visible>facadeview.list</visible>
+        </control>
+
+		<control>
+			<description>FanArt Overlay - Filmstrip View</description>
+			<id>0</id>
+			<type>image</type>
+			<posX>0</posX>
+			<posY>0</posY>
+			<width>1280</width>
+			<height>720</height>			
+			<texture>filmstrip_overlay.png</texture>
+			<visible>facadeview.filmstrip</visible>
+		</control>
+
+		<control>
+			<type>group</type>
+			<id>28</id>
+			<layout>StackLayout</layout>
+			<animation effect="fade" time="250">WindowClose</animation>
+			<control>
+				<type>facadeview</type>
+				<id>50</id>
+				<control>					
+					<type>listcontrol</type>
+					<subtype>album</subtype>
+					<id>50</id>
+				</control>
+				<control>
+					<description>Graphical Series Wide Banners (5x2) View</description>
+					<type>thumbnailpanel</type>
+					<id>50</id>
+					<onleft>2</onleft>
+					<onright>2</onright>
+					<posX>425</posX>
+					<posY>69</posY>
+					<width>870</width>
+					<height>470</height>					
+					<textureFocus>-</textureFocus>
+					<imageFolder>-</imageFolder>
+					<imageFolderFocus>thumbborder.png</imageFolderFocus>	
+					<frameNoFocus>-</frameNoFocus>
+					<frameFocus>-</frameFocus>			
+					<enableFocusZoom>no</enableFocusZoom>
+					<scrollOffset>1</scrollOffset>
+					<dimColor>30ffffff</dimColor>
+					<font>font12</font>
+					<unfocusedAlpha>150</unfocusedAlpha>
+					<!-- margin -->
+					<itemWidthBig>407</itemWidthBig>
+					<itemHeightBig>85</itemHeightBig>
+					<!-- frame texture -->
+					<textureWidthBig>405</textureWidthBig>
+					<textureHeightBig>79</textureHeightBig>
+					<!-- wide banners -->
+					<thumbWidthBig>390</thumbWidthBig>
+					<thumbHeightBig>73</thumbHeightBig>
+					<thumbPosXBig>8</thumbPosXBig>
+					<thumbPosYBig>3</thumbPosYBig>          
+					<thumbZoom>no</thumbZoom>
+					<!-- text (when there is no banner) -->
+					<textXOff>0</textXOff>
+					<textYOff>0</textYOff>				
+					<!-- Spin Controls -->
+					<spinCanFocus>no</spinCanFocus>
+					<spinWidth>30</spinWidth>
+					<spinHeight>30</spinHeight>
+					<spinPosX>1170</spinPosX>
+					<spinPosY>500</spinPosY>					
+				</control>
+				<control>
+					<description>Filmstrip view (Series/Season Views)</description>
+					<type>filmstrip</type>
+					<id>50</id>					
+					<posX>25</posX>
+					<posY>345</posY>
+					<width>1250</width>
+					<height>400</height>
+					<onup>2</onup>
+					<onleft>2</onleft>
+					<thumbWidth>170</thumbWidth>
+					<thumbHeight>250</thumbHeight>					
+					<itemWidth>172</itemWidth>
+					<itemHeight>252</itemHeight>				
+					<scrollOffset>3</scrollOffset>					
+					<showFolder>no</showFolder>
+					<showBackGround>no</showBackGround>
+					<spinWidth>30</spinWidth>
+					<spinHeight>30</spinHeight>
+					<spinPosX>1182</spinPosX>
+					<spinPosY>670</spinPosY>
+					<thumbs flipY="true" diffuse="Thumb_Mask.png"></thumbs>
+					<thumbAnimation effect="zoom" start="100,100" end="130,130" time="200">focus</thumbAnimation>
+					<thumbAnimation effect="zoom" start="130,130" end="100,100" time="200">unfocus</thumbAnimation>						
+				</control>
+				<control>
+					<description>Text List (Groups/Series/Season/Episode Views)</description>
+                    <type>listcontrol</type>
+                    <id>50</id>
+                    <onleft>2</onleft>
+                    <onright>2</onright>
+                    <posX>760</posX>
+                    <posY>305</posY>
+                    <width>510</width>
+					<height>390</height>
+                    <IconXOff>480</IconXOff>
+                    <IconYOff>10</IconYOff>
+                    <textXOff>-15</textXOff>
+                    <textYOff>4</textYOff>
+					<dimColor>50ffffff</dimColor>
+					<scrollOffset>3</scrollOffset>
+                    <!-- Watched/Unwatched icons -->
+                    <itemWidth>20</itemWidth>
+                    <itemHeight>20</itemHeight>
+                    <textXOff2>480</textXOff2>
+                    <textYOff2>4</textYOff2>
+                    <textXOff3>480</textXOff3>
+                    <textYOff3>4</textYOff3>
+					<font>font11</font>
+                    <font2>font11</font2>
+                    <font3>font11</font3>                    
+                    <!-- Spin Controls -->
+					<spinCanFocus>no</spinCanFocus>
+					<spinWidth>30</spinWidth>
+					<spinHeight>30</spinHeight>
+                    <spinPosX>1210</spinPosX>
+                    <spinPosY>645</spinPosY>
+				</control>
+			</control>
+		</control>
+	
+	</controls>
+</window>

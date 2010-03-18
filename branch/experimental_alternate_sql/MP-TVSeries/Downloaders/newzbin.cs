@@ -432,7 +432,9 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                         response.Close();
 
                         Download.Monitor.AddPendingDownload(sParsedArticleName, m_dbEpisode);
-                        System.Diagnostics.Process.Start(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+                        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(DBOption.GetOptions(DBOption.cNewsLeecherPath), "\"" + sOutputFile + "\"");
+                        startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                        System.Diagnostics.Process.Start(startInfo);
                         m_bSuccess = true;
                     }
                 }

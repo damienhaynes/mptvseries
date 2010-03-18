@@ -105,6 +105,9 @@ namespace WindowPlugins.GUITVSeries
             fr = new formatingRule(@"Season\:{0,1}\s{0,2}0", Translation.specials, true);
             formatingRules.Add(fr);
 
+            fr = new formatingRule(@"Season\:{0,1}\s{0,2}", Translation.Season + " ", true);
+            formatingRules.Add(fr);
+
             fr = new formatingRule(@"(?<!\d)0x\d{1,3}", Translation.special + " ", true);
             formatingRules.Add(fr);
 
@@ -120,7 +123,7 @@ namespace WindowPlugins.GUITVSeries
 
             //_dateFormat = DBOption.GetOptions(DBOption.cDateFormatString);
             _dateFormat = System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
-            _formatDates = !Helper.String.IsNullOrEmpty(_dateFormat) && DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
+            _formatDates = !String.IsNullOrEmpty(_dateFormat) && DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
         }
         #endregion
 
@@ -178,6 +181,7 @@ namespace WindowPlugins.GUITVSeries
             value = doFormatting(value, what, item);
 
             value = MathParser.mathParser.TryParse(value);
+            value = MathParser.mathParser.TranslateExpression(value);
 
             // apply userFormatting on the field's result
             if (applyUserFormatting)
@@ -263,18 +267,22 @@ namespace WindowPlugins.GUITVSeries
         {          
             string value = what;
             foreach (Match m in matchRegex.Matches(what))
-            {                
-                string result = item[m.Value];                
+            {            
+                string result;
+                // check if we have useredted column             
+                string userEditedEquivalent = m.Value + DBTable.cUserEditPostFix;
+                if (string.IsNullOrEmpty((result = item[userEditedEquivalent])))
+                    result = item[m.Value];
+                
+                // Create pretty string for split fields e.g. |SCI-FI|ACTION| => SCI-FI, ACTION
                 if (_splitFields) result = result.Trim('|').Replace("|", ", ");
                 
+                // Prefix specials with an 'S' when in-line sorting with episodes
                 if (m.Value == "EpisodeIndex" && item["SeasonIndex"].ToString() == "0" && what.IndexOf("<SeasonIndex>",0) < 0)
                     result = "S" + item["EpisodeIndex"];
                 
-                if (_formatDates) {
-                    //this seems to be the only location that we can easily get the individual field values without having to worry if the
-                    //format string contains more than one field (eg. "<firstAried> (<status>)")
-                    //so this is were we test if the value is a date in the format "yyyy-MM-dd" and if it is we format it.
-
+                // Localize Date Format
+                if (_formatDates) {                    
                     DateTime date;
                     if (DateTime.TryParseExact(result, "yyyy-MM-dd", System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out date)) {
                         result = date.ToString(_dateFormat);

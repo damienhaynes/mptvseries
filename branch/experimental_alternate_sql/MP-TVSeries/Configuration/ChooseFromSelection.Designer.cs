@@ -72,7 +72,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textbox_ToMatch.Location = new System.Drawing.Point(15, 25);
             this.textbox_ToMatch.Name = "textbox_ToMatch";
-            this.textbox_ToMatch.Size = new System.Drawing.Size(406, 20);
+            this.textbox_ToMatch.Size = new System.Drawing.Size(666, 20);
             this.textbox_ToMatch.TabIndex = 1;
             this.textbox_ToMatch.TextChanged += new System.EventHandler(this.textbox_ToMatch_TextChanged);
             // 
@@ -101,7 +101,7 @@ namespace WindowPlugins.GUITVSeries
             this.listbox_Choices.FormattingEnabled = true;
             this.listbox_Choices.Location = new System.Drawing.Point(15, 65);
             this.listbox_Choices.Name = "listbox_Choices";
-            this.listbox_Choices.Size = new System.Drawing.Size(406, 95);
+            this.listbox_Choices.Size = new System.Drawing.Size(666, 160);
             this.listbox_Choices.TabIndex = 3;
             this.listbox_Choices.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listbox_Choices_MouseDoubleClick);
             this.listbox_Choices.SelectedIndexChanged += new System.EventHandler(this.listbox_Choices_SelectedIndexChanged);
@@ -111,7 +111,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_OK.AutoSize = true;
             this.button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button_OK.Location = new System.Drawing.Point(15, 258);
+            this.button_OK.Location = new System.Drawing.Point(15, 394);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
             this.button_OK.TabIndex = 11;
@@ -123,7 +123,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Cancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.button_Cancel.AutoSize = true;
             this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_Cancel.Location = new System.Drawing.Point(265, 259);
+            this.button_Cancel.Location = new System.Drawing.Point(525, 395);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(75, 23);
             this.button_Cancel.TabIndex = 12;
@@ -135,7 +135,7 @@ namespace WindowPlugins.GUITVSeries
             this.button_Ignore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Ignore.AutoSize = true;
             this.button_Ignore.DialogResult = System.Windows.Forms.DialogResult.Ignore;
-            this.button_Ignore.Location = new System.Drawing.Point(346, 259);
+            this.button_Ignore.Location = new System.Drawing.Point(606, 395);
             this.button_Ignore.Name = "button_Ignore";
             this.button_Ignore.Size = new System.Drawing.Size(75, 23);
             this.button_Ignore.TabIndex = 13;
@@ -146,12 +146,12 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.textbox_Description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textbox_Description.Location = new System.Drawing.Point(15, 166);
+            this.textbox_Description.Location = new System.Drawing.Point(15, 231);
             this.textbox_Description.Multiline = true;
             this.textbox_Description.Name = "textbox_Description";
             this.textbox_Description.ReadOnly = true;
             this.textbox_Description.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textbox_Description.Size = new System.Drawing.Size(406, 86);
+            this.textbox_Description.Size = new System.Drawing.Size(666, 157);
             this.textbox_Description.TabIndex = 10;
             this.textbox_Description.TabStop = false;
             // 
@@ -233,7 +233,7 @@ namespace WindowPlugins.GUITVSeries
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Cancel;
-            this.ClientSize = new System.Drawing.Size(435, 293);
+            this.ClientSize = new System.Drawing.Size(695, 429);
             this.Controls.Add(this.radOption6);
             this.Controls.Add(this.radOption5);
             this.Controls.Add(this.radOption4);

@@ -32,6 +32,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
+using MediaPortal.Dialogs;
 using MediaPortal.Util;
 using MediaPortal.Configuration;
 using System.Windows.Forms;
@@ -41,6 +42,9 @@ using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
+using SubtitleDownloader.Core;
+using WindowPlugins.GUITVSeries.Subtitles;
+using MediaPortal.GUI.Library;
 
 #if DEBUG
 using System.Diagnostics;
@@ -73,8 +77,10 @@ namespace WindowPlugins.GUITVSeries
         private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
 
-		private MemoryBox deleteDatabaseMemBox = new MemoryBox();
-		private MemoryBox deleteFilesMemBox = new MemoryBox();
+        private bool subtitleDownloaderWorking = false;
+
+        private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
+        private List<CheckBox> subtitleDownloader_DownloaderCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
         {
@@ -116,6 +122,11 @@ namespace WindowPlugins.GUITVSeries
             initLoading = false;
             LoadTree();
 
+            // Only Advanced Users / Skin Designers need to see these.
+            // Tabs are visible if import="false" TVSeries.SkinSettings.xml
+            if (SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
+            if (SkinSettings.ImportLogos) tabControl_Details.TabPages.Remove(tabLogoRules);
+            
             if (load != null) load.Close();
             instance = this;
 
@@ -133,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
         {   
             string skinSettings = null;
 			string MediaPortalConfig = Path.Combine(Config.GetFolder(Config.Dir.Config), "MediaPortal.xml");
-            
+     
             XmlDocument doc = new XmlDocument();
             try
             {
@@ -159,9 +170,13 @@ namespace WindowPlugins.GUITVSeries
                 // Load Skin Settings if they exist
                 SkinSettings.Load(skinSettings);
                 // Reload formatting rules
-                formattingConfiguration1.LoadFromDB();
+                if (!SkinSettings.ImportFormatting) {
+                    formattingConfiguration1.LoadFromDB();
+                }
             }
             catch { }
+
+            textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
             this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
@@ -191,7 +206,28 @@ namespace WindowPlugins.GUITVSeries
             checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
-            checkBox_doFolderWatch.Checked = DBOption.GetOptions("doFolderWatch");
+            checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
+            checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImport_ScanRemoteShare);
+            nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse);
+            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
+
+            if (checkBox_doFolderWatch.Checked) {
+                checkBox_scanRemoteShares.Enabled = true;
+                if (checkBox_scanRemoteShares.Checked) {
+                    nudScanRemoteShareFrequency.Enabled = true;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
+                    nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
+            }
+            else {
+                checkBox_scanRemoteShares.Enabled = false;
+                nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
+            }
+
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
             textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
             this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
@@ -199,10 +235,9 @@ namespace WindowPlugins.GUITVSeries
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
             chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
-            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);
-            checkBox_DontClearMissingLocalFiles.Checked = DBOption.GetOptions(DBOption.cDontClearMissingLocalFiles);
+            checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
-            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cScanOnStartup);
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
@@ -212,11 +247,11 @@ namespace WindowPlugins.GUITVSeries
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
 
-            int nValue = DBOption.GetOptions(DBOption.cAutoUpdateOnlineDataLapse);
+            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
             numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
             numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
-            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cAutoUpdateOnlineData);
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
             chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
@@ -289,19 +324,7 @@ namespace WindowPlugins.GUITVSeries
             FieldValidate(ref richTextBox_episodeFormat_Subtitle);
 
             richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
-            FieldValidate(ref richTextBox_episodeFormat_Main);
-       
-            qualitySeries.Value = DBOption.GetOptions(DBOption.cQualitySeriesBanners);
-            qualityPoster.Value = DBOption.GetOptions(DBOption.cQualitySeriesPosters);
-            qualitySeason.Value = DBOption.GetOptions(DBOption.cQualitySeasonBanners);
-            qualityEpisode.Value = DBOption.GetOptions(DBOption.cQualityEpisodeImages);
-            if (SkinSettings.ImportGraphics)
-            {
-                qualitySeries.Enabled = false;
-                qualitySeason.Enabled = false;
-                qualityEpisode.Enabled = false;
-                qualityPoster.Enabled = false;
-            }
+            FieldValidate(ref richTextBox_episodeFormat_Main);              
 
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
 
@@ -318,22 +341,10 @@ namespace WindowPlugins.GUITVSeries
             TreeNode nodeRoot = null;
             TreeNode nodeChild = null;
             m_paneListExtra.Add(panel_subtitleroot);
-            m_paneListExtra.Add(panel_tvsubtitles);
-            m_paneListExtra.Add(panel_seriessubs);
-            m_paneListExtra.Add(panel_remository);
 
             nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
             nodeRoot.Name = panel_subtitleroot.Name;
             treeView_Extra.Nodes.Add(nodeRoot);
-            nodeChild = new TreeNode(panel_tvsubtitles.Tag.ToString());
-            nodeChild.Name = panel_tvsubtitles.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-            nodeChild = new TreeNode(panel_seriessubs.Tag.ToString());
-            nodeChild.Name = panel_seriessubs.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-            nodeChild = new TreeNode(panel_remository.Tag.ToString());
-            nodeChild.Name = panel_remository.Name;
-            nodeRoot.Nodes.Add(nodeChild);
             m_paneListExtra.Add(panel_torrentroot);
             m_paneListExtra.Add(panel_torrentsearch);
 
@@ -359,50 +370,11 @@ namespace WindowPlugins.GUITVSeries
                 pane.Visible = false;
             }
 
-            treeView_Extra.SelectedNode = treeView_Extra.Nodes[0];
-
-            checkBox_TVSubtitlesEnable.Checked = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_Enable);
-            checkBox_seriessubsEnable.Checked = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_Enable);
-			textBox_seriessubsBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_SeriesSubs_BaseURL);
-          
-          String sTVSubtitlesLanguageFilterList = DBOption.GetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList);
-          if (sTVSubtitlesLanguageFilterList.IndexOf("en") != -1)
-            tvsub_en.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("fr") != -1)
-            tvsub_fr.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("es") != -1)
-            tvsub_es.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("de") != -1)
-            tvsub_de.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("br") != -1)
-            tvsub_br.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("ru") != -1)
-            tvsub_ru.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("it") != -1)
-            tvsub_it.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("gr") != -1)
-            tvsub_gr.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("ar") != -1)
-            tvsub_ar.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("hu") != -1)
-            tvsub_hu.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("pl") != -1)
-            tvsub_pl.Checked = true;
-          if (sTVSubtitlesLanguageFilterList.IndexOf("tr") != -1)
-            tvsub_tr.Checked = true;
-
-            checkBox_remositoryEnable.Checked = DBOption.GetOptions(DBOption.cSubs_Remository_Enable);
-            textBox_remositoryBaseURL.Text = DBOption.GetOptions(DBOption.cSubs_Remository_BaseURL);
-            textBox_remositoryMainIdx.Text = DBOption.GetOptions(DBOption.cSubs_Remository_MainIdx);
-            textBox_remositoryUserId.Text = DBOption.GetOptions(DBOption.cSubs_Remository_UserName);
-            textBox_remositoryPassword.Text = DBOption.GetOptions(DBOption.cSubs_Remository_Password);
-            textBox_RemositoryRegExSeries.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons);
-            textBox_RemositoryRegexEpisode.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexEpisode);
-            textBox_RemositoryRegexDownload.Text = DBOption.GetOptions(DBOption.cSubs_Remository_RegexDownload);
-
             LoadTorrentSearches();
 
-            lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            if (!SkinSettings.ImportLogos) {
+                lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
+            }
 
             comboLanguage.Items.AddRange(Translation.getSupportedLangs().ToArray());
             if (comboLanguage.Items.Count == 0) comboLanguage.Enabled = false;
@@ -430,7 +402,15 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             
-            LoadNewsSearches();
+			LoadNewsSearches();
+
+            if (DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled))
+            {
+                subtitleDownloader_enabled.Checked = true;
+            }
+
+            int endsY = DrawSubtitleDownloaderCheckBoxes();
+            DrawSubtitleLanguageCheckBoxes(endsY);
         }
 
         private void LoadViews()
@@ -505,7 +485,14 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
                 columnRemovable.Name = "removable";
                 columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnRemovable.ToolTipText = @"Enable this option to treat this path as removable e.g. CD\DVD-ROM, USB Drive.";
                 dataGridView_ImportPathes.Columns.Add(columnRemovable);
+
+                DataGridViewCheckBoxColumn columnKeepReference = new DataGridViewCheckBoxColumn();
+                columnKeepReference.Name = "keep_references";
+                columnKeepReference.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                columnKeepReference.ToolTipText = "Enable this option to keep reference to files in database that are not available for this import path.";
+                dataGridView_ImportPathes.Columns.Add(columnKeepReference);
 
                 DataGridViewButtonColumn columnPath = new DataGridViewButtonColumn();
                 columnPath.Name = DBImportPath.cPath;
@@ -516,7 +503,7 @@ namespace WindowPlugins.GUITVSeries
             DBImportPath[] importPathes = DBImportPath.GetAll();
 
             dataGridView_ImportPathes.Rows.Clear();
-            
+
             if (importPathes != null && importPathes.Length > 0)
             {
                 dataGridView_ImportPathes.Rows.Add(importPathes.Length);
@@ -525,15 +512,26 @@ namespace WindowPlugins.GUITVSeries
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
                     row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
                     row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
+
+                    if (row.Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = false;
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
+                    else
+                    {
+                        row.Cells[DBImportPath.cKeepReference].Value = (Boolean)importPath[DBImportPath.cKeepReference];
+                        row.Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
-            }              
+            }
         }
 
         private void LoadExpressions()
         {
             DBExpression[] expressions = DBExpression.GetAll();
-
+            
             
             if (dataGridView_Expressions.Columns.Count == 0)
             {
@@ -566,7 +564,7 @@ namespace WindowPlugins.GUITVSeries
                 if (expressions == null) return;
             }
             
-            dataGridView_Expressions.Rows.Clear();
+            dataGridView_Expressions.Rows.Clear();            
             dataGridView_Expressions.Rows.Add(expressions.Length);
 
             // load each expression into the grid
@@ -600,8 +598,7 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnTagEnabled = new DataGridViewCheckBoxColumn();
                 columnTagEnabled.Name = DBReplacements.cTagEnabled;
                 columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
-                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                
+                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;                
                 dataGridView_Replace.Columns.Add(columnTagEnabled);
 
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
@@ -609,6 +606,12 @@ namespace WindowPlugins.GUITVSeries
                 columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
                 columnBefore.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnBefore);
+
+                DataGridViewCheckBoxColumn columnRegex = new DataGridViewCheckBoxColumn();
+                columnRegex.Name = DBReplacements.cIsRegex;
+                columnRegex.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cIsRegex);
+                columnRegex.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                dataGridView_Replace.Columns.Add(columnRegex);
 
                 DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
                 columnToReplace.Name = DBReplacements.cToReplace;
@@ -642,6 +645,7 @@ namespace WindowPlugins.GUITVSeries
                 row.Cells[DBReplacements.cBefore].Value = (Boolean)replacement[DBReplacements.cBefore];
                 row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
                 row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
+                row.Cells[DBReplacements.cIsRegex].Value = (Boolean)replacement[DBReplacements.cIsRegex];
             }
         }
 
@@ -649,17 +653,18 @@ namespace WindowPlugins.GUITVSeries
         {
             if (initLoading) return;
             if (null == load) load = new loadingDisplay();
-            //this.SuspendLayout();
+           
             TreeView root = this.treeView_Library;
             root.Nodes.Clear();
             SQLCondition condition = new SQLCondition();
             List<DBSeries> seriesList = DBSeries.Get(condition);
             load.updateStats(seriesList.Count, 0, 0);
             List<DBSeason> altSeasonList = DBSeason.Get(new SQLCondition(), false);
-            load.updateStats(seriesList.Count, altSeasonList.Count, 0);
-            List<DBEpisode> altEpList = DBEpisode.Get(new SQLCondition(), false); 
-            load.updateStats(seriesList.Count, altSeasonList.Count, altEpList.Count);
-            aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, altEpList.Count);
+            load.updateStats(seriesList.Count, altSeasonList.Count, 0);            
+            DataTable results = DBTVSeries.Execute("select count(*) from online_episodes");
+
+            load.updateStats(seriesList.Count, altSeasonList.Count, int.Parse(results.Rows[0][0].ToString()));
+            aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, int.Parse(results.Rows[0][0].ToString()));
 
             if (seriesList.Count == 0)
             {
@@ -673,16 +678,23 @@ namespace WindowPlugins.GUITVSeries
                 string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
                 TreeNode seriesNode = new TreeNode(sName);
                 seriesNode.Name = DBSeries.cTableName;
-                seriesNode.Tag = (DBSeries)series;               
+                seriesNode.Tag = (DBSeries)series;
                 root.Nodes.Add(seriesNode);
                 Font fontDefault = treeView_Library.Font;
 
-                //set FontStyle
+                // set color for non-local files
+                if (series[DBOnlineSeries.cEpisodeCount] == 0) {
+                    seriesNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                } 
+                else {
+                    // set color for watched items
+                    if (series[DBOnlineSeries.cUnwatchedItems] == 0)
+                        seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
+                }
+                
+                // set FontStyle
                 if (series[DBSeries.cHidden])
                     seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-                //set color for watched items
-                if (series[DBOnlineSeries.cUnwatchedItems] == 0)
-                    seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
 
                 int seriesID = series[DBSeries.cID];            
                 foreach (DBSeason season in altSeasonList)
@@ -694,54 +706,28 @@ namespace WindowPlugins.GUITVSeries
                             seasonNode = new TreeNode(Translation.specials);
                         else
                             seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
+                        
                         seasonNode.Name = DBSeason.cTableName;
                         seasonNode.Tag = (DBSeason)season;
                         seriesNode.Nodes.Add(seasonNode);
-                        // default a season node to disabled, reenable it if an episode node is valid
-                        seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
                         
-                        //set FontStyle
+                        // set no local files color
+                        if (season[DBSeason.cEpisodeCount] == 0) {
+                            seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                        }
+                        else {
+                            // set color for watched season
+                            if (season[DBSeason.cUnwatchedItems] == 0)
+                                seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
+                        }
+
+                        // set FontStyle
                         if (season[DBSeason.cHidden])
                             seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-
-                        int epCount = 0;
-                        int seasonIndex = season[DBSeason.cIndex];
-                        
-                        foreach (DBEpisode episode in altEpList)
-                        {
-                            if (episode[DBEpisode.cSeriesID] == seriesID && episode[DBEpisode.cSeasonIndex] == seasonIndex)
-                            {
-                                epCount++;                                
-                                String sEpisodeName = (String)episode[DBEpisode.cEpisodeName];
-                                TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + sEpisodeName);
-                                episodeNode.Name = DBEpisode.cTableName;
-                                episodeNode.Tag = (DBEpisode)episode;
-                                if (episode[DBEpisode.cFilename].ToString().Length == 0)
-                                {
-                                    episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
-                                }
-                                else
-                                {
-                                    //set color for watched episode
-                                    if (episode[DBOnlineEpisode.cWatched] == 1)
-                                        episodeNode.ForeColor = System.Drawing.Color.DarkBlue;
-                                    //set color for watched season
-                                    if (season[DBSeason.cEpisodesUnWatched] == 0)
-                                        seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
-                                    else seasonNode.ForeColor = treeView_Library.ForeColor;
-                                }
-                                seasonNode.Nodes.Add(episodeNode);
-                                //set FontStyle
-                                if (episode[DBOnlineEpisode.cHidden])
-                                    episodeNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-                                }
-                            }
-                        if (epCount == 0) // no episodes, then no season node
-                            seriesNode.Nodes.Remove(seasonNode);
                     }
                 }
-            }            
-            this.ResumeLayout();            
+            }
+            this.ResumeLayout();
             load.Close();
             load = null;
         }
@@ -803,6 +789,122 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private int DrawSubtitleDownloaderCheckBoxes()
+        {
+            int counter = 1;
+            int downloaderCheckboxY = 60;
+            int downloaderCheckboxX = 12;
+
+            List<String> downloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
+            downloaders.Sort();
+
+            foreach (var downloader in downloaders)
+            {
+                var downloaderCheckbox = new System.Windows.Forms.CheckBox();
+                downloaderCheckbox.AutoSize = true;
+                downloaderCheckbox.Location = new System.Drawing.Point(downloaderCheckboxX, downloaderCheckboxY);
+                downloaderCheckbox.Name = "subtitleDownloader_" + downloader;
+                downloaderCheckbox.Text = downloader;
+                downloaderCheckbox.UseVisualStyleBackColor = true;
+                downloaderCheckbox.Tag = downloader;
+
+                string checkedDownloaders =
+                    DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+
+                if (checkedDownloaders.Contains((String)downloaderCheckbox.Tag))
+                {
+                    downloaderCheckbox.Checked = true;
+                }
+
+                downloaderCheckbox.CheckedChanged += downloaderCheckBox_CheckedChanged;
+
+                this.subtitleDownloader_DownloaderCheckBoxes.Add(downloaderCheckbox);
+                this.panel_subtitleroot.Controls.Add(downloaderCheckbox);
+                downloaderCheckboxX += 130;
+
+                if (counter % 4 == 0)
+                {
+                    downloaderCheckboxY += 30;
+                    downloaderCheckboxX = 12;
+                }
+                counter++;
+            }
+
+            return downloaderCheckboxY;
+        }
+
+        private void DrawSubtitleLanguageCheckBoxes(int startY)
+        {
+            // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
+
+            int counter = 1;
+            int languageCheckboxY = startY + 60;
+            int languageCheckboxX = 12;
+
+            List<String> languages = Languages.GetLanguageNames();
+            languages.Sort();
+
+            foreach (var languageName in languages)
+            {
+                var languageCheckbox = new System.Windows.Forms.CheckBox();
+                languageCheckbox.AutoSize = true;
+                languageCheckbox.Location = new System.Drawing.Point(languageCheckboxX, languageCheckboxY);
+                languageCheckbox.Name = "subtitleDownloader_" + languageName;
+                languageCheckbox.Text = languageName;
+                languageCheckbox.UseVisualStyleBackColor = true;
+                languageCheckbox.Tag = Languages.GetLanguageCode(languageName);
+
+                string checkedLanguages = 
+                    DBOption.GetOptions(DBOption.cSubtitleDownloaderLanguages);
+
+                if (checkedLanguages.Contains((String) languageCheckbox.Tag))
+                {
+                    languageCheckbox.Checked = true;
+                }
+
+                languageCheckbox.CheckedChanged += languageCheckBox_CheckedChanged;
+
+                this.subtitleDownloader_LanguageCheckBoxes.Add(languageCheckbox);
+                this.panel_subtitleroot.Controls.Add(languageCheckbox);
+                languageCheckboxX += 125;
+
+                if (counter % 4 == 0)
+                {
+                    languageCheckboxY += 30;
+                    languageCheckboxX = 12;
+                }
+                counter++;
+            }
+        }
+
+        private void languageCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            string selectedLanguages = "";
+
+            foreach (var languageCheckbox in subtitleDownloader_LanguageCheckBoxes)
+            {
+                if (languageCheckbox.Checked)
+                {
+                    selectedLanguages += "|" + languageCheckbox.Tag;
+                }
+            }
+            DBOption.SetOptions(DBOption.cSubtitleDownloaderLanguages, selectedLanguages);
+        }
+
+        private void downloaderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            string selectedDownloaders = "";
+
+            foreach (var downloaderCheckbox in subtitleDownloader_DownloaderCheckBoxes)
+            {
+                if (downloaderCheckbox.Checked)
+                {
+                    selectedDownloaders += "|" + downloaderCheckbox.Tag;
+                }
+            }
+            DBOption.SetOptions(DBOption.cSubtitleDownloadersEnabled, selectedDownloaders);
+        }
+
         #endregion
         
         #region Import Handling
@@ -822,16 +924,16 @@ namespace WindowPlugins.GUITVSeries
             }
             importPath.Commit();
         }
-        
+
         private void dataGridView_ImportPathes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Note: Clicking on checkboxes does not trigger the _CellValueChanged event
-                         
+
             if (e.RowIndex < 0)
                 return;
-            
+
             DataGridViewCell cell = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            
+
             // Allow user to delete the row when disabling the 'enabled' checkbox
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cEnabled].Index)
             {
@@ -845,9 +947,9 @@ namespace WindowPlugins.GUITVSeries
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = false;
                         // Prompt to delete the selected 'Import Path'
                         if (MessageBox.Show("Do you want to remove this Import Path?", "Import Paths", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);                        
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     }
-                    else 
+                    else
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                 }
                 else
@@ -856,6 +958,7 @@ namespace WindowPlugins.GUITVSeries
                     // we do this so if user keeps adding empty rows, it wont throw an exception when removed
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
@@ -866,15 +969,52 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string sEnabled = cell.Value.ToString();
                     if (sEnabled == "True")
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                                         
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = false;
+                    }
                     else
+                    {
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = true;
+                    }
                 }
                 else
                 {
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                    
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
+                }
+            }
+
+            if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cKeepReference].Index)
+            {
+                if (!cell.ReadOnly)
+                {
+                    if (cell.Value != null)
+                    {
+                        string sEnabled = cell.Value.ToString();
+                        if (sEnabled == "True")
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        else
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = true;
+
+                        if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
+                        {
+                            DataGridViewCheckBoxCell cbCell = (DataGridViewCheckBoxCell)dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference];
+                            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+
+                        }
+                    }
+                    else
+                    {
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
+                    }
                 }
             }
 
@@ -890,6 +1030,7 @@ namespace WindowPlugins.GUITVSeries
                     // set default values for cells
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     bNewRow = true;
                 }
 
@@ -898,18 +1039,21 @@ namespace WindowPlugins.GUITVSeries
                 // If Path is defined, set path to default in folder browser dialog
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     importPathPopup.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                
+
                 // Open Folder Browser Dialog 
                 importPathPopup.Owner = this;
                 DialogResult result = importPathPopup.ShowDialog();
-                if (result == DialogResult.Cancel) {
+                if (result == DialogResult.Cancel)
+                {
                     // Delete this row if user didnt select a path
                     if (bNewRow)
                         dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     return;
                 }
-                if (result == DialogResult.OK) {
-                    if (!Directory.Exists(importPathPopup.SelectedPath)) {
+                if (result == DialogResult.OK)
+                {
+                    if (!Directory.Exists(importPathPopup.SelectedPath))
+                    {
                         MessageBox.Show("Import path entered does not exist or is invalid.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (bNewRow)
                             dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
@@ -1008,34 +1152,53 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void button_MoveExpUp_Click(object sender, EventArgs e)
-        {
+        {               
             int nCurrentRow = dataGridView_Expressions.CurrentCellAddress.Y;
+            int nCurrentCol = dataGridView_Expressions.CurrentCellAddress.X;
+
             if (nCurrentRow > 0)
-            {
+            {                           
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow);
                 DBExpression expressionGoingDown = new DBExpression(nCurrentRow - 1);
-                expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow - 1);
+                
+                DBExpression.Clear(nCurrentRow - 1);
+                DBExpression.Clear(nCurrentRow);
+                
+                expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow - 1);                                
                 expressionGoingUp.Commit();
+
                 expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow);
                 expressionGoingDown.Commit();
+
                 LoadExpressions();
-                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow - 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
+
+                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow - 1].Cells[nCurrentCol];
             }
         }
 
         private void button_MoveExpDown_Click(object sender, EventArgs e)
         {
             int nCurrentRow = dataGridView_Expressions.CurrentCellAddress.Y;
-            if (nCurrentRow < dataGridView_Expressions.Rows.Count - 2) //don't take in account the new line 
+            int nCurrentCol = dataGridView_Expressions.CurrentCellAddress.X;
+
+            // don't take in account the new line
+            if (nCurrentRow < dataGridView_Expressions.Rows.Count - 2) 
             {
                 DBExpression expressionGoingDown = new DBExpression(nCurrentRow);
                 DBExpression expressionGoingUp = new DBExpression(nCurrentRow + 1);
+                
+                DBExpression.Clear(nCurrentRow);
+                DBExpression.Clear(nCurrentRow + 1);
+
                 expressionGoingUp[DBExpression.cIndex] = Convert.ToString(nCurrentRow);
                 expressionGoingUp.Commit();
+
                 expressionGoingDown[DBExpression.cIndex] = Convert.ToString(nCurrentRow + 1);
                 expressionGoingDown.Commit();
+                
                 LoadExpressions();
-                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[dataGridView_Expressions.CurrentCellAddress.X];
+
+                dataGridView_Expressions.CurrentCell = dataGridView_Expressions.Rows[nCurrentRow + 1].Cells[nCurrentCol];
             }
         }
         #endregion
@@ -1107,6 +1270,7 @@ namespace WindowPlugins.GUITVSeries
             listView_ParsingResults.SuspendLayout();
             //IComparer sorter = listView_ParsingResults.ListViewItemSorter;
             listView_ParsingResults.ListViewItemSorter = null;
+
             foreach (parseResult progress in results)
             {
                 foreach (KeyValuePair<String, String> MatchPair in progress.parser.Matches)
@@ -1187,7 +1351,6 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-
         void TestParsing_LocalParseCompleted(List<parseResult> results)
         {
             MPTVSeriesLog.Write("Parsing test completed");
@@ -1276,16 +1439,103 @@ namespace WindowPlugins.GUITVSeries
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
 
-                button_Start.Text = "Abort";
-                m_timingStart = DateTime.Now;
-                m_parser = new OnlineParsing(this);
-                m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
-                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
-                m_parser.Start(parsingParams);
+                var ParsingWizardHost = new ImportProgessPage(this);
+                var ParsingWizardParsingPage = new ImportPanelParsing();
+                var ParsingWizardSeriesIDPage = new ImportPanelSeriesID();
+                var ParsingWizardEpIDPage = new ImportPanelEpID();
+
+                // bring up the wizard                
+                this.tabPage_Import.Controls.Add(ParsingWizardHost);
+                ParsingWizardHost.Dock = DockStyle.Fill;
+                ParsingWizardHost.BringToFront();
+
+                // now have it host the the initial parsing page                 
+                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
+
+                ParsingWizardHost.AddSleepingDetailsPanel(ParsingWizardEpIDPage);
+
+                // and fire off work on that page
+                ParsingWizardParsingPage.DoLocalParsing();
+
+                ParsingWizardParsingPage.UserFinishedEditing += new userFinishedEditingDel((changedResults, ParsingRequest) =>
+                {
+                    ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+                    if (ParsingRequest == UserFinishedRequestedAction.Next)
+                    {
+                        // show the seriesIdentification Page
+                        ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+                        ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
+
+                        ParsingWizardSeriesIDPage.SetResults(changedResults.ParseResults);
+
+                        ParsingWizardSeriesIDPage.UserFinishedEditing += new userFinishedEditingDel((idSeries, SeriesIDRequest) =>
+                        {
+                            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                            
+                            if (SeriesIDRequest == UserFinishedRequestedAction.Next)
+                            {
+                                m_parser = new OnlineParsing(this);
+
+                                // and give it to the wizard
+                                ParsingWizardHost.AddParser(m_parser);
+
+                                // now show generic progress details (remove seriesIDPage)
+                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+
+                                ParsingWizardHost.ImportFinished += new EventHandler((sender, e) =>
+                                {
+                                    // user clicked finished (can only do so after import is through
+                                    this.tabPage_Import.Controls.Remove(ParsingWizardHost);
+                                });    
+
+                                // only now do we set up the parser itself and fire it off
+                                parsingParams.m_userInputResult = idSeries;
+                                // this will be requested by the the parsing engine at the appropriate time
+                                parsingParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
+                                parsingParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
+
+                                ParsingWizardEpIDPage.UserFinishedEditing += new userFinishedEditingDel((values, req) =>
+                                {
+                                    switch (req)
+                                    {
+                                        case UserFinishedRequestedAction.Cancel:
+                                            m_parser.Cancel();
+                                            break;
+                                        case UserFinishedRequestedAction.Next:
+                                            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardEpIDPage);
+                                            break;
+                                        case UserFinishedRequestedAction.ShowMe:
+                                            // it was requested, tell the progress wizard to show it
+                                            ParsingWizardHost.ShowDetailsPanel(ParsingWizardEpIDPage);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                });
+
+
+                                button_Start.Text = "Abort";
+                                m_timingStart = DateTime.Now;
+
+                                m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
+                                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
+
+                                // finally fire it off
+                                m_parser.Start(parsingParams);
+                            }
+                            else if (SeriesIDRequest == UserFinishedRequestedAction.Prev)
+                            {                                
+                                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
+                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                                ParsingWizardSeriesIDPage.ClearResults();
+                            }
+                        });
+                    }
+                });
             }
         }
 
-        void runner_OnlineParsingProgress(int nProgress)
+        void runner_OnlineParsingProgress(int nProgress, ParsingProgress progress)
         {
             this.progressBar_Parsing.Value = nProgress;
         }
@@ -1298,9 +1548,7 @@ namespace WindowPlugins.GUITVSeries
             button_Start.Text = "Start Import";
             button_Start.Enabled = true;
             m_parser = null;
-            // a full configuration scan counts as a scan - set the dates so we don't rescan everything right away in MP
-            //            DBOption.SetOptions(DBOption.cLocalScanLastTime, DateTime.Now.ToString());
-            DBOption.SetOptions(DBOption.cUpdateScanLastTime, DateTime.Now.ToString());
+            DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
         }
@@ -1368,13 +1616,9 @@ namespace WindowPlugins.GUITVSeries
                         foreach (String key in episode.FieldNames)
                         {
                             switch (key)
-                            {
-                                case DBEpisode.cSeasonIndex:
-                                case DBEpisode.cEpisodeIndex:
-                                case DBEpisode.cSeriesID:
-                                case DBEpisode.cCompositeID:
-                                case DBEpisode.cFilename:
-                                case DBOnlineEpisode.cID:
+                            {                                                                
+                                case DBEpisode.cFilename:                                
+                                    // Read Only Fields
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
 
@@ -1385,7 +1629,73 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cEpisodeName:
                                 case DBEpisode.cImportProcessed:
                                 case DBOnlineEpisode.cOnlineDataImported:
-                                    // hide those, they are handled internally
+                                    // hide these fields, they are handled internally
+                                    break;
+                                
+                                case DBEpisode.cSeasonIndex:
+                                case DBEpisode.cEpisodeIndex:
+                                case DBEpisode.cEpisodeIndex2:
+                                case DBEpisode.cSeriesID:
+                                case DBEpisode.cCompositeID:
+                                case DBEpisode.cCompositeID2:
+                                case DBEpisode.cStopTime:
+                                case DBEpisode.cExtension:
+                                case DBEpisode.cLocalPlaytime:
+                                case DBEpisode.cIsOnRemovable:
+                                case DBOnlineEpisode.cHidden:
+                                case DBOnlineEpisode.cID:
+                                case DBOnlineEpisode.cLastUpdated:
+                                case DBOnlineEpisode.cDownloadExpectedNames:
+                                case DBOnlineEpisode.cDownloadPending:
+                                case DBOnlineEpisode.cWatched:                                
+                                case DBOnlineEpisode.cEpisodeThumbnailFilename:
+                                case DBOnlineEpisode.cEpisodeThumbnailUrl:
+                                case DBOnlineEpisode.cCombinedEpisodeNumber:
+                                case DBOnlineEpisode.cCombinedSeason:
+                                case DBOnlineEpisode.cEpisodeImageFlag:
+                                case DBOnlineEpisode.cIMDBID:
+                                case DBOnlineEpisode.cLanguage:
+                                case DBOnlineEpisode.cProductionCode:
+                                case DBOnlineEpisode.cSeasonID:
+                                case DBOnlineEpisode.cDVDChapter:
+                                case DBOnlineEpisode.cDVDDiscID:
+                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                    // hide these fields as we are not so interested in, 
+                                    // possibly add a toggle option to display all fields later
+                                    break;
+                                
+                                case DBEpisode.cVolumeLabel:
+                                    if (String.IsNullOrEmpty(episode[key]))                                        
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
+                                case DBOnlineEpisode.cAirsAfterSeason:
+                                case DBOnlineEpisode.cAirsBeforeEpisode:
+                                case DBOnlineEpisode.cAirsBeforeSeason:
+                                    if (!String.IsNullOrEmpty(episode[key]))
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
+                                case DBEpisode.cAvailableSubtitles:
+                                case DBEpisode.cVideoWidth:
+                                case DBEpisode.cVideoHeight:
+                                case DBEpisode.cVideoFrameRate:
+                                case DBEpisode.cVideoCodec:
+                                case DBEpisode.cVideoBitRate:
+                                case DBEpisode.cVideoAspectRatio:
+                                case DBEpisode.cAudioTracks:
+                                case DBEpisode.cAudioCodec:
+                                case DBEpisode.cAudioChannels:
+                                case DBEpisode.cAudioBitrate:
+                                case DBEpisode.cFileDateAdded:
+                                case DBEpisode.cFileDateCreated:
+                                    if (!String.IsNullOrEmpty(episode[key]))
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+
+                                case DBEpisode.cTextCount:
+                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 
                                 default:
@@ -1395,9 +1705,11 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // let configs now what was selected (for samples)
-                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                        this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                        this.formattingConfiguration1.Episode = episode;
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                            this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+                            this.formattingConfiguration1.Episode = episode;
+                        }
                     }                    
                     break;
 
@@ -1460,6 +1772,14 @@ namespace WindowPlugins.GUITVSeries
                                     // hide those, they are handled internally
                                     break;
 
+                                case DBSeason.cForomSubtitleRoot:                                                                
+                                case DBSeason.cUnwatchedItems:
+                                case DBSeason.cHasEpisodes:
+                                case DBSeason.cHasEpisodesTemp:
+                                    // hide these fields as we are not so interested in, 
+                                    // possibly add a toggle option to display all fields later
+                                    break;
+
                                 default:
                                     AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
                                     break;
@@ -1467,19 +1787,22 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                         // let configs now what was selected (for samples)
-                        this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
-                        this.formattingConfiguration1.Season = season;
-                        this.formattingConfiguration1.Episode = null;
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
+                            this.formattingConfiguration1.Season = season;
+                            this.formattingConfiguration1.Episode = null;
+                        }
                     }
                     break;
                 #endregion
+                //////////////////////////////////////////////////////////////////////////////
 
                 //////////////////////////////////////////////////////////////////////////////
                 #region When Series Nodes is Clicked
 
                 case DBSeries.cTableName:
-                    {
-                        DBSeries series = (DBSeries)node.Tag;
+                    {                       
+                        DBSeries series = (DBSeries)node.Tag;                        
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
@@ -1547,7 +1870,7 @@ namespace WindowPlugins.GUITVSeries
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
 
-                        // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
+                        // go over all the database fields and add to Grid View
                         foreach (String key in series.FieldNames)
                         {
                             switch (key)
@@ -1560,13 +1883,44 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
-                                case DBSeries.cDuplicateLocalName:
-                                    // hide those, they are handled internally
+                                case DBSeries.cDuplicateLocalName:                                
+                                    // hide these fields, they are handled internally
                                     break;
+                                
+                                case DBOnlineSeries.cGetEpisodesTimeStamp:
+                                case DBOnlineSeries.cUpdateBannersTimeStamp:
+                                case DBOnlineSeries.cWatchedFileTimeStamp:
+                                case DBOnlineSeries.cUnwatchedItems:
+                                case DBOnlineSeries.cZap2ITID:
+                                case DBOnlineSeries.cIMDBID:
+                                case DBOnlineSeries.cNetworkID:
+                                case DBOnlineSeries.cAdded:
+                                case DBOnlineSeries.cAddedBy:
+                                case DBOnlineSeries.cFanart:
+                                case DBOnlineSeries.cLastUpdated:
+                                case DBOnlineSeries.cPoster:
+                                case DBOnlineSeries.cViewTags:
+                                case DBOnlineSeries.cBanner:
+                                case DBOnlineSeries.cEpisodeOrders:                                
+                                case DBOnlineSeries.cLanguage:
+                                case DBOnlineSeries.cSeriesID:
+                                case DBOnlineSeries.cOriginalName:
+                                case DBSeries.cHidden:                                
+                                     // hide these fields as we are not so interested in, 
+                                     // possibly add a toggle option to display all fields later
+                                     break;
 
                                 case DBSeries.cParsedName:
                                 case DBSeries.cID:
+                                case DBOnlineSeries.cEpisodeCount:
+                                case DBOnlineSeries.cEpisodesUnWatched:
+                                    // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    break;
+
+                                case DBOnlineSeries.cChoseEpisodeOrder:
+                                    if (!String.IsNullOrEmpty(series[key]))
+                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
                                 default:
@@ -1575,10 +1929,12 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                        // let configs now what was selected (for samples)                        
-                        this.formattingConfiguration1.Series = series;                        
-                        this.formattingConfiguration1.Season = null;
-                        this.formattingConfiguration1.Episode = null;
+                        // let formatting rules know what was selected (for samples)    
+                        if (!SkinSettings.ImportFormatting) {
+                            this.formattingConfiguration1.Series = series;
+                            this.formattingConfiguration1.Season = null;
+                            this.formattingConfiguration1.Episode = null;
+                        }
                     }
                     break;
 
@@ -1593,6 +1949,53 @@ namespace WindowPlugins.GUITVSeries
                 c.ResumeLayout();
         }
 
+        private void treeView_Library_AfterExpand(object sender, TreeViewEventArgs e) {
+            TreeNode node = e.Node;
+            if (node.Level != 0) return;
+
+            Font defaultFont = treeView_Library.Font;
+            DBSeries series = (DBSeries)node.Tag;
+            int seriesID = series[DBSeries.cID];
+
+            //////////////////////////////////////////////////////////////////////////////
+            #region Load Episodes into season tree child nodes of expanding series
+            foreach (TreeNode childNode in node.Nodes) {
+                // Check if we have already loaded episodes into season nodes
+                if (childNode.Nodes.Count == 0) {
+                    DBSeason season = (DBSeason)childNode.Tag;
+                    int seasonIndex = season[DBSeason.cIndex];
+
+                    List<DBEpisode> episodes = DBEpisode.Get(seriesID, seasonIndex);
+
+                    foreach (DBEpisode episode in episodes) {
+                        String episodeName = (String)episode[DBEpisode.cEpisodeName];
+                        TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episodeName);
+                        episodeNode.Name = DBEpisode.cTableName;
+                        episodeNode.Tag = (DBEpisode)episode;
+
+                        // set color for non-local file
+                        if (episode[DBEpisode.cFilename].ToString().Length == 0) {
+                            episodeNode.ForeColor = System.Drawing.SystemColors.GrayText;
+                        }
+                        else {
+                            // set color for watched episode
+                            if (episode[DBOnlineEpisode.cWatched] == 1)
+                                episodeNode.ForeColor = System.Drawing.Color.DarkBlue;
+                        }
+
+                        // set FontStyle for hidden episodes
+                        if (episode[DBOnlineEpisode.cHidden])
+                            episodeNode.NodeFont = new Font(defaultFont.Name, defaultFont.Size, FontStyle.Italic);
+
+                        childNode.Nodes.Add(episodeNode);
+                    }
+                }
+            }
+
+            #endregion
+            //////////////////////////////////////////////////////////////////////////////
+        }
+
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue)
         {
             AddPropertyBindingSource(FieldPrettyName, FieldName, FieldValue, true, DataGridViewContentAlignment.MiddleLeft);
@@ -1605,11 +2008,35 @@ namespace WindowPlugins.GUITVSeries
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue, bool CanModify, DataGridViewContentAlignment TextAlign)
         {
-            int id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
+            int id = -1;
+            // are we a user_edited item? if so replace the orig entry
+            if (FieldName.EndsWith(DBTable.cUserEditPostFix))
+            {
+                // except if the content is empty, then we just dont display it
+                if (string.IsNullOrEmpty(FieldValue)) return;
+                string origFieldName = FieldName.Replace(DBTable.cUserEditPostFix, "");
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells[1].Tag as string == origFieldName)
+                    {
+                        id = i;
+                        break;
+                    }
 
+                }
+            }
+            if(id < 0)
+            {
+                // Add new Row
+                id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
+            } this.dataGridView1.Rows[id].Cells[1].Value = FieldValue; // we just edit the value
+
+            // First Column (Name)
             DataGridViewCell cell = this.dataGridView1.Rows[id].Cells[0];
+            cell.Style.BackColor = System.Drawing.SystemColors.Control;
             cell.ReadOnly = true;
 
+            // Second Column (Value)
             cell = this.dataGridView1.Rows[id].Cells[1];
             cell.Tag = FieldName;
             if (!CanModify)
@@ -1619,6 +2046,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             cell.Style.Alignment = TextAlign;
+
         }
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -1648,25 +2076,28 @@ namespace WindowPlugins.GUITVSeries
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
             if (nodeEdited != null)
             {
+                string field = (string)cell.Tag;
+                if (!field.EndsWith(DBTable.cUserEditPostFix))
+                    field += DBTable.cUserEditPostFix;
                 switch (nodeEdited.Name)
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        series[(String)cell.Tag] = (String)cell.Value;
+                        series[field] = (String)cell.Value;
                         series.Commit();
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
-                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
+                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
                         break;
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeEdited.Tag;
-                        season[(String)cell.Tag] = (String)cell.Value;
+                        season[field] = (String)cell.Value;
                         season.Commit();
                         break;
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        episode[(String)cell.Tag] = (String)cell.Value;
+                        episode[field] = (String)cell.Value;
                         episode.Commit();
                         if (episode[DBEpisode.cEpisodeName].ToString().Length > 0)
                             nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
@@ -1698,10 +2129,31 @@ namespace WindowPlugins.GUITVSeries
         private void button_Start_Click(object sender, EventArgs e)
         {
             if (m_parser != null) {
-                m_parser.Cancel();
-                button_Start.Enabled = false;
+                AbortImport();
             } else
                 Parsing_Start();
+        }
+
+        public void AbortImport()
+        {
+            if (m_parser != null)
+            {
+                m_parser.Cancel();
+                button_Start.Enabled = false;
+
+                // remove the progress page
+                ImportProgessPage ipp = null;
+                foreach (var control in this.tabPage_Import.Controls)
+	            {
+                    if (control is ImportProgessPage)
+                    {
+                        ipp = control as ImportProgessPage;
+                        break;
+                    }
+	            }
+                if (ipp != null)
+                    this.tabPage_Import.Controls.Remove(ipp);
+            }
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)
@@ -1795,13 +2247,13 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cAutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
+            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
         }
 
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
         }
 
         private void HideNode(TreeNode nodeHidden)
@@ -1889,132 +2341,140 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void RescanMediaInfoNode(TreeNode nodeMediaInfo)
+        {
+            if (nodeMediaInfo == null) return;
+
+            List<DBEpisode> episodes = new List<DBEpisode>();
+
+            switch (nodeMediaInfo.Name)
+            {
+                case DBEpisode.cTableName:
+                    DBEpisode episode = nodeMediaInfo.Tag as DBEpisode;
+                    episodes.Add(episode);
+                    break;
+
+                case DBSeason.cTableName:
+                    DBSeason season = nodeMediaInfo.Tag as DBSeason;
+                    episodes = DBEpisode.Get(season[DBSeason.cSeriesID], season[DBSeason.cIndex], false);                    
+                    break;
+
+                case DBSeries.cTableName:
+                    DBSeries series = nodeMediaInfo.Tag as DBSeries;
+                    episodes = DBEpisode.Get((int)series[DBSeries.cID], false);                    
+                    break;
+            }
+            UpdateMediaInfoASync(episodes);
+        }
+
         private void DeleteNode(TreeNode nodeDeleted)
         {
-            if (nodeDeleted != null)
-            {
-                List<DBEpisode> epsDeletion = new List<DBEpisode>();
+            if (nodeDeleted != null) {
+                List<string> resultMsg = null;
+                string msgDlgCaption = string.Empty;
 
-				string message = string.Empty;
-				deleteDatabaseMemBox.DisableButton(MemoryBoxResult.NoToAll, false);
-				MemoryBoxResult result = MemoryBoxResult.No;
-
-                switch (nodeDeleted.Name)
+                bool hasSubtitles = false;
+                if (nodeDeleted.Name == DBEpisode.cTableName)
                 {
-                    case DBSeries.cTableName:
-						message = "Are you sure you want to delete this series and all the underlying seasons and\nepisodes from the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";						
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Series");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
-                        {
-                            DBSeries series = (DBSeries)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                            DBEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeries(), DBSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBSeries.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, series[DBSeries.cID], SQLConditionType.Equal);
-                            DBOnlineSeries.Clear(condition);
-
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
-
-                    case DBSeason.cTableName:
-						message = "Are you sure you want to delete this season and all the underlying episodes\nfrom the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Season");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
-                        {
-                            DBSeason season = (DBSeason)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                            DBEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-
-                            condition = new SQLCondition();
-                            condition.Add(new DBSeason(), DBSeason.cID, season[DBSeason.cID], SQLConditionType.Equal);
-                            DBSeason.Clear(condition);
-
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
-
-                    case DBEpisode.cTableName:
-						message = "Are you sure you want to delete this episode from the database?\n\n\n";
-						message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";
-						result = deleteDatabaseMemBox.ShowMemoryDialog(message, "Delete Database Episode");
-						if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
-                        {
-                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);                            
-                            epsDeletion.AddRange(DBEpisode.Get(condition, false));
-                            DBEpisode.Clear(condition);
-                                                       
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
-                            treeView_Library.Nodes.Remove(nodeDeleted);
-                        }
-                        break;
+                    DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                    if (episode != null && episode.checkHasLocalSubtitles())
+                        hasSubtitles = true;
                 }
-                if (epsDeletion.Count > 0)
-                {
-                    // delete the actual files!!
-                    List<string> files = Helper.getFieldNameListFromList<DBEpisode>(DBEpisode.cFilename, epsDeletion);
 
-					message = "Would you also like to delete " + files.Count.ToString() + " file(s) from disk?\n\n\n";
-					message += "Select \"Yes to All\" or \"No to All\" to remember choice for this session.";					
-					result = deleteFilesMemBox.ShowMemoryDialog(message, "Delete Files");
-					if (result == MemoryBoxResult.Yes || result == MemoryBoxResult.YesToAll)
+                DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
+                DialogResult result = deleteDialog.ShowDialog(this);
+
+                // nothing to do exit
+                if (result != DialogResult.OK) return;
+
+                #region Delete Subtitles
+                if (deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.subtitles)
+                {
+                    msgDlgCaption = Translation.UnableToDeleteSubtitles;
+                    switch (nodeDeleted.Name)
                     {
-                        foreach (string file in files)
-                        {
-                            try {
-                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
-                                System.IO.File.Delete(file);
-                            }
-                            catch (Exception ex) {
-                                MPTVSeriesLog.Write(string.Format("Failed to delete: {0}, {1}", file, ex.Message));
-                            }
-                        }
+                        case DBEpisode.cTableName:
+                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                            if (episode == null) return;
+                            resultMsg = episode.deleteLocalSubTitles();
+                            break;
                     }
-                }
-
-                if (treeView_Library.Nodes.Count == 0)
-                {
-                    // also clear the data pane
-                    this.detailsPropertyBindingSource.Clear();
                     try
                     {
-                        if (this.pictureBox_Series.Image != null)
-                        {
-                            this.pictureBox_Series.Image.Dispose();
-                            this.pictureBox_Series.Image = null;
-                        }
+                        TreeNode selectedTN = treeView_Library.SelectedNode;
+                        treeView_Library.SelectedNode = null;
+                        treeView_Library.SelectedNode = selectedTN;
                     }
-                    catch { }
+                    catch
+                    {
+                    }                   
                 }
+                #endregion
+
+                #region Delete From Disk, Database or Both
+                if (deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.subtitles)
+                {
+                    msgDlgCaption = Translation.UnableToDelete;
+                    switch (nodeDeleted.Name)
+                    {
+                        #region Delete Series
+                        case DBSeries.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBSeries series = (DBSeries)nodeDeleted.Tag;
+                                resultMsg = series.deleteSeries(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
+
+                        #region Delete Season
+                        case DBSeason.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBSeason season = (DBSeason)nodeDeleted.Tag;
+                                resultMsg = season.deleteSeason(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
+
+                        #region Delete Episode
+                        case DBEpisode.cTableName:
+                            if (result == DialogResult.OK)
+                            {
+                                DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                                resultMsg = episode.deleteEpisode(deleteDialog.DeleteMode);
+                            }
+                            break;
+                        #endregion
+                    }
+
+                    // Delete tree node
+                    if (resultMsg.Count == 0 && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
+                        treeView_Library.Nodes.Remove(nodeDeleted);
+
+                    if (treeView_Library.Nodes.Count == 0)
+                    {
+                        // also clear the data pane
+                        this.detailsPropertyBindingSource.Clear();
+                        try
+                        {
+                            if (this.pictureBox_Series.Image != null)
+                            {
+                                this.pictureBox_Series.Image.Dispose();
+                                this.pictureBox_Series.Image = null;
+                            }
+                        }
+                        catch { }
+                    }
+                }
+                #endregion
+
+                // Show errors, if any
+                if (resultMsg != null && resultMsg.Count > 0)
+                {
+                    MessageBox.Show(string.Join("\n", resultMsg.ToArray()), msgDlgCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
             }
         }
 
@@ -2403,11 +2863,6 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
         }
 
-		private void textBox_seriessubsBaseURL_TextChanged(object sender, EventArgs e)
-		{
-		  DBOption.SetOptions(DBOption.cSubs_SeriesSubs_BaseURL, textBox_seriessubsBaseURL.Text);
-		}
-
         private void log_window_changed()
         {
             this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
@@ -2430,11 +2885,6 @@ namespace WindowPlugins.GUITVSeries
             splitMain_Log.Panel2Collapsed = !splitMain_Log.Panel2Collapsed;
             DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
             log_window_changed();
-        }
-
-        private void checkBox_DontClearMissingLocalFiles_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cDontClearMissingLocalFiles, checkBox_DontClearMissingLocalFiles.Checked);
         }
 
         private void checkBox_ShowHidden_CheckedChanged(object sender, EventArgs e)
@@ -2460,6 +2910,22 @@ namespace WindowPlugins.GUITVSeries
                     DeleteNode(clickedNode);
                     break;
 
+                case "update":
+                    UpdateNode(clickedNode);
+                    break;
+                
+                case "mediainfo":
+                    RescanMediaInfoNode(clickedNode);
+                    break;
+
+                case "watched":
+                    ToggleWatchedNode(clickedNode, 1);
+                    break;
+
+                case "unwatched":
+                    ToggleWatchedNode(clickedNode, 0);
+                    break;
+
                 case "subtitle":
                     GetSubtitles(clickedNode);
                     break;
@@ -2476,17 +2942,6 @@ namespace WindowPlugins.GUITVSeries
                     ResetUserSelectionsToolStripMenuItem(clickedNode);
                     break;
 
-                case "update":
-                    UpdateNode(clickedNode);
-                    break;
-
-                case "watched":
-                    ToggleWatchedNode(clickedNode, 1);
-                    break;
-
-                case "unwatched":
-                    ToggleWatchedNode(clickedNode, 0);
-                    break;
             }
         }
 
@@ -2687,12 +3142,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool NoneFound()
-        {
-            MessageBox.Show("No subtitles were found for this file", "error");
-            return true;
-        }
-
         private void GetSubtitles(TreeNode node)
         {
             if (node == null)
@@ -2710,102 +3159,57 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
-
-                    List<CItem> Choices = new List<CItem>();
-                    if (checkBox_TVSubtitlesEnable.Checked)
-                      Choices.Add(new CItem("TVSubtitles.net", "TVSubtitles.net", "TVSubtitles.net"));
-                    if (checkBox_seriessubsEnable.Checked)
-					  Choices.Add(new CItem("Series Subs", "Series Subs", "Series Subs"));
-                    if (checkBox_remositoryEnable.Checked)
-					  Choices.Add(new CItem("Remository", "Remository", "Remository"));
-
-                    CItem selected = null;
-                    switch (Choices.Count)
-                    {
-                        case 0:
-                            // none enable, do nothing
-                            break;
-
-                        case 1:
-                            // only one enabled, don't bother showing the dialog
-                            selected = Choices[0];
-                            break;
-
-                        default:
-                            // more than 1 choice, show a feedback dialog
-                            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-                            descriptor.m_sTitle = "Get subtitles from?";
-                            descriptor.m_sListLabel = "Enabled subtitle sites:";
-                            descriptor.m_List = Choices;
-                            descriptor.m_sbtnIgnoreLabel = String.Empty;
-                            
-                            bool bReady = false;
-                            while (!bReady)
-                            {
-                                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-                                switch (resultFeedback)
-                                {
-                                    case ReturnCode.NotReady:
-                                        {
-                                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-                                            Thread.Sleep(5000);
-                                        }
-                                        break;
-
-                                    case ReturnCode.OK:
-                                        {
-                                            bReady = true;
-                                        }
-                                        break;
-
-                                    default:
-                                        {
-                                            // exit too if cancelled
-                                            bReady = true;
-                                        }
-                                        break;
-                                }
-                            }
-                            break;
-                    }
-
-                    if (selected != null)
-                    {
-                        switch ((String)selected.m_Tag)
-                        {
-                          case "TVSubtitles.net":
-                                Subtitles.TvSubtitles tvsubs = new Subtitles.TvSubtitles(this);
-                                tvsubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.TvSubtitles.SubtitleRetrievalCompletedHandler(tvsubs_SubtitleRetrievalCompleted);
-                                tvsubs.GetSubs(episode);
-                                break;
-
-                            case "Series Subs":
-								Subtitles.SeriesSubs seriesSubs = new Subtitles.SeriesSubs(this);
-								seriesSubs.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.SeriesSubs.SubtitleRetrievalCompletedHandler(seriesSubs_SubtitleRetrievalCompleted);
-								seriesSubs.GetSubs(episode);
-								break;
-
-                            case "Remository":
-                                Subtitles.Remository remository = new Subtitles.Remository(this);
-                                remository.SubtitleRetrievalCompleted += new WindowPlugins.GUITVSeries.Subtitles.Remository.SubtitleRetrievalCompletedHandler(remository_SubtitleRetrievalCompleted);
-                                remository.GetSubs(episode);
-                                break;
-                        }
-                    }
+                    ShowSubtitleMenu(episode);
                     break;
             }
         }
 
-		void seriesSubs_SubtitleRetrievalCompleted(bool bFound)
-		{
-		}
-
-        void tvsubs_SubtitleRetrievalCompleted(bool bFound)
+        protected void ShowSubtitleMenu(DBEpisode episode)
         {
+            List<CItem> Choices = new List<CItem>();
+            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
+
+            // Get names of the SubtitleDownloader implementations for menu
+            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            {
+                if (enabledDownloaders.Contains(name))
+                {
+                    Choices.Add(new CItem(name, name, name));
+                }
+            }
+
+            if (Choices.Count == 0)
+                return;
+
+            CItem selected = null;
+
+            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
+            descriptor.m_sTitle = Translation.GetSubtitlesFrom;
+            descriptor.m_sItemToMatchLabel = "";
+            descriptor.m_sItemToMatch = "";
+            descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
+            descriptor.m_List = Choices;
+            descriptor.m_sbtnIgnoreLabel = String.Empty;
+
+            ReturnCode returnCode = ChooseFromSelection(descriptor, out selected);
+
+            if (selected != null && returnCode.Equals(ReturnCode.OK))
+            {
+                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
+                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
+
+                if (!subtitleDownloaderWorking)
+                {
+                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
+                    subtitleDownloaderWorking = true;
+                    retriever.GetSubs(episode);
+                }
+            }
         }
 
-        void remository_SubtitleRetrievalCompleted(bool bFound)
+        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
         {
+            subtitleDownloaderWorking = false;
         }
 
         ToolStripMenuItem subMenuItem = null;
@@ -2831,14 +3235,16 @@ namespace WindowPlugins.GUITVSeries
                     // No need to create a Remove Item as we can use the checked state
                     if (subMenuItem == null) {
                         subMenuItem = new ToolStripMenuItem("Add Series to View");
+                        subMenuItem.Name = "addSeriesToView";
                         subMenu = new ContextMenuStrip(this.components);
                         subMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
                         subMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_AddToView_ItemClicked);
                         subMenuItem.DropDown = subMenu;
                         subMenu.ShowCheckMargin = true;
                         subMenu.ShowImageMargin = false;                        
-                    }					
-                                        
+                    }
+                    subMenuItem.Enabled = true;
+                    
                     // Populate View Sub-Menu
 					DBView[] views = DBView.getTaggedViews();                    
                     string viewTags = series[DBOnlineSeries.cViewTags];
@@ -2866,22 +3272,37 @@ namespace WindowPlugins.GUITVSeries
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
+                    
+                    if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
+                        contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
                     break;
 
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = true;
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);                  
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
-                    break;
+                    
+                    if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
+                        contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
+                    
+                        break;
             }
+            // Hide Downloaders not frequently used by users
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
+                contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Visible = false;
+            }
+            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
+                contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Visible = false;
+            }
+
             if (bHidden)
                 contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "UnHide";
             else
                 contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "Hide";
         }
-
+        
 		private void contextMenuStrip_AddToView_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
             TreeNode node = contextMenuStrip_DetailsTree.Tag as TreeNode;           
             ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
@@ -3065,11 +3486,17 @@ namespace WindowPlugins.GUITVSeries
                 List<DBEpisode> todoeps = new List<DBEpisode>();
                 // only get the episodes that dont have their resolutions read out already
                 for (int i = 0; i < episodes.Count; i++)
-                    if (!episodes[i].mediaInfoIsSet)
+                    if (!episodes[i].HasMediaInfo)
                         todoeps.Add(episodes[i]);
                 episodes = todoeps;
             }
 
+            UpdateMediaInfoASync(episodes);
+
+        }
+
+        private void UpdateMediaInfoASync(List<DBEpisode> episodes)
+        {
             if (episodes.Count > 0)
             {
                 MPTVSeriesLog.Write("Updating MediaInfo....(Please be patient!)");
@@ -3078,8 +3505,8 @@ namespace WindowPlugins.GUITVSeries
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 resReader.RunWorkerAsync(episodes);
             }
-            else MPTVSeriesLog.Write("No Episodes found that need updating");
-
+            else 
+                MPTVSeriesLog.Write("No Episodes found that need updating");
         }
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -3093,7 +3520,7 @@ namespace WindowPlugins.GUITVSeries
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
             foreach (DBEpisode ep in episodes)
-                ep.readMediaInfoOfLocal();
+                ep.ReadMediaInfo();
             e.Result = episodes.Count;
         }
 
@@ -3111,16 +3538,16 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        //private void button_dbbrowse_Click(object sender, EventArgs e)
-        //{
-        //    openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
-        //    openFileDialog.Filter = "Executable files (*.db3)|";
-        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        Settings.SetDBPath(openFileDialog.FileName);
-        //        textBox_dblocation.Text = openFileDialog.FileName;
-        //    }
-        //}
+        private void button_dbbrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
+            openFileDialog.Filter = "Executable files (*.db3)|";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Settings.SetDBPath(openFileDialog.FileName);
+                textBox_dblocation.Text = openFileDialog.FileName;
+            }
+        }
         # region Newsbin
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
@@ -3330,7 +3757,32 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_doFolderWatch_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions("doFolderWatch", checkBox_doFolderWatch.Checked);
+            DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
+            if (checkBox_doFolderWatch.Checked) {
+                checkBox_scanRemoteShares.Enabled = true;
+                if (checkBox_scanRemoteShares.Checked) {
+                    nudScanRemoteShareFrequency.Enabled = true;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = true;
+                }
+                else {
+                    nudScanRemoteShareFrequency.Enabled = false;
+                    dbOptChkBoxScanFullscreenVideo.Enabled = false;
+                }
+            }
+            else {
+                checkBox_scanRemoteShares.Enabled = false;
+                nudScanRemoteShareFrequency.Enabled = false;
+                dbOptChkBoxScanFullscreenVideo.Enabled = false;
+            }
+        }
+
+        private void checkBox_scanRemoteShares_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cImport_ScanRemoteShare, checkBox_scanRemoteShares.Checked);
+            if (checkBox_scanRemoteShares.Checked)
+                nudScanRemoteShareFrequency.Enabled = true;
+            else
+                nudScanRemoteShareFrequency.Enabled = false;
         }
 
         //List<logicalView> testViews = new List<logicalView>();
@@ -3414,7 +3866,7 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (string step in Helper.getPropertyListFromList<logicalViewStep, String>("Name", selectedView.m_steps))
                     view_selStepsList.Items.Add(step);
-
+                
                 pauseViewConfigSave = false;
 
                 // Enable 'Edit' button for Simple Views
@@ -3423,9 +3875,9 @@ namespace WindowPlugins.GUITVSeries
                     buttonEditView.Enabled = true;
                 } else {
                     buttonEditView.Enabled = false;
+                }
+            }
         }
-            }
-            }
 
         ~ConfigurationForm()
         {
@@ -3452,9 +3904,7 @@ namespace WindowPlugins.GUITVSeries
             if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
-                DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
-                DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0); // reset the updateStamps so at import everything will get updated
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
                 MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
             }
@@ -3463,9 +3913,6 @@ namespace WindowPlugins.GUITVSeries
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateSeriesTimeStamp, 0);
-            DBOption.SetOptions(DBOption.cUpdateEpisodesTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
             
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
@@ -3497,9 +3944,9 @@ namespace WindowPlugins.GUITVSeries
                             pauseViewConfigSave = false;
                             break;
                         }
+                    }
                 }
             }
-        }
         }
 
         private void view_selectedName_TextChanged(object sender, EventArgs e)
@@ -3580,7 +4027,7 @@ namespace WindowPlugins.GUITVSeries
             fd.Filter = "Exported Parsing Expressions (*.expr)|*.expr";
             if (fd.ShowDialog() == DialogResult.OK)
             {
-                StreamWriter w = new StreamWriter(fd.FileName);
+                StreamWriter w = new StreamWriter(fd.FileName);                
                 foreach (DBExpression expression in expressions)
                 {
                     String val = "";
@@ -3651,7 +4098,7 @@ namespace WindowPlugins.GUITVSeries
                 r.Close();
                 MPTVSeriesLog.Write("Parsing Expressions succesfully imported!");
                 
-                LoadExpressions();
+                LoadExpressions();                
             }
         }
 
@@ -3674,6 +4121,22 @@ namespace WindowPlugins.GUITVSeries
         private void chkBlankBanners_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cGetBlankBanners, chkBlankBanners.Checked);
+        }
+
+        private void lblClearDB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                // we delete everything
+                DBTVSeries.Execute("delete from online_episodes");
+                DBTVSeries.Execute("delete from local_episodes");
+                DBTVSeries.Execute("delete from season");
+                DBTVSeries.Execute("delete from local_series");
+                DBTVSeries.Execute("delete from online_series");
+
+                MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
+                LoadTree();
+            }
         }
 
         private void lnkLogoExport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -3757,86 +4220,6 @@ namespace WindowPlugins.GUITVSeries
             LoadTree();
         }
 
-        private void textBox_remositoryBaseURL_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_BaseURL, textBox_remositoryBaseURL.Text);
-        }
-
-        private void textBox_remositoryMainIdx_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_MainIdx, textBox_remositoryMainIdx.Text);
-        }
-
-        private void textbox_remositoryUserId_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_UserName, textBox_remositoryUserId.Text);
-        }
-
-        private void textbox_remositoryPassword_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_Password, textBox_remositoryPassword.Text);
-        }
-
-        private void textBox_RemositoryRegExSeries_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexSeriesSeasons, textBox_RemositoryRegExSeries.Text);
-        }
-
-        private void textBox_RemositoryRegexEpisode_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexEpisode, textBox_RemositoryRegexEpisode.Text);
-        }
-
-        private void textBox_RemositoryRegexDownload_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_RegexDownload, textBox_RemositoryRegexDownload.Text);
-        }
-        private void checkbox_tvsubsEnable_checkedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_TVSubtitles_Enable, checkBox_TVSubtitlesEnable.Checked);
-        }
-
-        private void tvsub_CheckedChanged(object sender, EventArgs e)
-        {
-          String sFilterList = String.Empty;
-          if (tvsub_en.Checked)
-            sFilterList += "en";
-          if (tvsub_fr.Checked)
-            sFilterList += "|fr";
-          if (tvsub_es.Checked)
-            sFilterList += "|es";
-          if (tvsub_de.Checked)
-            sFilterList += "|de";
-          if (tvsub_br.Checked)
-            sFilterList += "|br";
-          if (tvsub_ru.Checked)
-            sFilterList += "|ru";
-          if (tvsub_it.Checked)
-            sFilterList += "|it";
-          if (tvsub_gr.Checked)
-            sFilterList += "|gr";
-          if (tvsub_ar.Checked)
-            sFilterList += "|ar";
-          if (tvsub_hu.Checked)
-            sFilterList += "|hu";
-          if (tvsub_pl.Checked)
-            sFilterList += "|pl";
-          if (tvsub_tr.Checked)
-            sFilterList += "|tr";
-
-          DBOption.SetOptions(DBOption.cSubs_TVSubtitles_LanguageFilterList, sFilterList);
-        }
-
-        private void checkBox_seriessubEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_SeriesSubs_Enable, checkBox_seriessubsEnable.Checked);
-        }
-
-        private void checkbox_remositoryEnable_checkedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubs_Remository_Enable, checkBox_remositoryEnable.Checked);
-        }  
-
         private void comboOnlineLang_DropDown(object sender, EventArgs e)
         {
             if (onlineLanguages.Count != 0) return;
@@ -3862,27 +4245,7 @@ namespace WindowPlugins.GUITVSeries
         private void txtUserID_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cOnlineUserID, txtUserID.Text);
-        }
-
-        private void qualitySeries_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeriesBanners, (int)qualitySeries.Value);
-        }
-
-        private void qualitySeason_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeasonBanners, (int)qualitySeason.Value);
-        }
-
-        private void qualityEpisode_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualityEpisodeImages, (int)qualityEpisode.Value);
-        }
-        
-        private void qualityPoster_ValueChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cQualitySeriesPosters, (int)qualityPoster.Value);
-        } 
+        }        
 
         private void btnLogoDeleteAll_Click(object sender, EventArgs e)
         {
@@ -3988,7 +4351,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cScanOnStartup, checkBox_ScanOnStartup.Checked);
+            DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
         }
 
         private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
@@ -4050,19 +4413,13 @@ namespace WindowPlugins.GUITVSeries
                     index++;
                 }
             }
-
+            
             // Reload List and available Views
             LoadViews();
             
 			// Select First Item in list
 			if (_availViews.Items.Count > 0)
 				_availViews.SelectedIndex = 0;
-        }
-            
-        private void ConfigureDatabaseButton_Click(object sender, EventArgs e)
-        {
-            DatabaseConfigurator configurer = new DatabaseConfigurator();
-            configurer.ShowDialog(this);
         }
 
         private void btnAddView_Click(object sender, EventArgs e) {
@@ -4232,8 +4589,8 @@ namespace WindowPlugins.GUITVSeries
             if (replacements == null || replacements.Length == 0) {
                 MessageBox.Show("No valid string replacements to export!");
                 return;
-    }
-    
+            }
+            
             SaveFileDialog fd = new SaveFileDialog();
             fd.Filter = "Exported String Replacements (*.strrep)|*.strrep";
             if (fd.ShowDialog() == DialogResult.OK) {
@@ -4246,6 +4603,8 @@ namespace WindowPlugins.GUITVSeries
                     val += (int)replacement[DBReplacements.cBefore];
                     val += ";";
                     val += (int)replacement[DBReplacements.cTagEnabled];
+                    val += ";";
+                    val += (int)replacement[DBReplacements.cIsRegex];
                     val += ";";
                     val += (String)replacement[DBReplacements.cToReplace];
                     val += ";";
@@ -4271,7 +4630,7 @@ namespace WindowPlugins.GUITVSeries
                 StreamReader r = new StreamReader(fd.FileName);
                 DBReplacements replacement;
 
-                //Dialog box to make sure they want to clear out current replacements to import new ones.
+                // Dialog box to make sure they want to clear out current replacements to import new ones.
                 if (DialogResult.Yes ==
                     MessageBox.Show("You are about to delete all current string replacements," + Environment.NewLine +
                         "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
@@ -4285,11 +4644,13 @@ namespace WindowPlugins.GUITVSeries
                 string[] parts;
                 int index = 0;
 
-                // now set watched for all in file
+                // read file and import into database
                 while ((line = r.ReadLine()) != null) {
                     char[] c = { ';' };
-                    parts = line.Split(c, 5);
-                    if (parts.Length != 5) continue;
+                    parts = line.Split(c, 6);
+                    
+                    // support older relacements file 
+                    if (parts.Length < 5 || parts.Length > 6) continue;
 
                     replacement = new DBReplacements();                   
                     replacement[DBReplacements.cIndex] = index;
@@ -4297,10 +4658,18 @@ namespace WindowPlugins.GUITVSeries
                     if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) replacement[DBReplacements.cEnabled] = parts[0]; else continue;
                     if (Convert.ToInt32(parts[1]) == 0 || Convert.ToInt32(parts[1]) == 1) replacement[DBReplacements.cBefore] = parts[1]; else continue;
                     if (Convert.ToInt32(parts[2]) == 0 || Convert.ToInt32(parts[2]) == 1) replacement[DBReplacements.cTagEnabled] = parts[2]; else continue;
-
-                    replacement[DBReplacements.cToReplace] = parts[3];
-                    replacement[DBReplacements.cWith] = parts[4];
-
+                    
+                    // handle upgrade, first version does not contain IsRegEx part
+                    if (parts.Length == 6) {
+                        if (Convert.ToInt32(parts[3]) == 0 || Convert.ToInt32(parts[3]) == 1) replacement[DBReplacements.cIsRegex] = parts[3]; else continue;
+                        replacement[DBReplacements.cToReplace] = parts[4];
+                        replacement[DBReplacements.cWith] = parts[5];
+                    }
+                    else {
+                        replacement[DBReplacements.cIsRegex] = "0";
+                        replacement[DBReplacements.cToReplace] = parts[3];
+                        replacement[DBReplacements.cWith] = parts[4];
+                    }
                     if (replacement.Commit()) index++;
                 }
 
@@ -4324,6 +4693,28 @@ namespace WindowPlugins.GUITVSeries
                 LoadReplacements();
                 MPTVSeriesLog.Write("Replacements reset to defaults");
             }           
+        }
+
+        private void nudScanRemoteShareFrequency_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cImport_ScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
+        }
+
+        private void checkBox_SubDownloadOnPlay_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cPlay_SubtitleDownloadOnPlay, checkBox_SubDownloadOnPlay.Checked);
+        }
+
+        private void subtitleDownloader_enabled_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
+        }
+
+        // Set focus on selected item when using Mouse Right Click
+        private void treeView_Library_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right) {
+                treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
+            } 
         }
     }
     

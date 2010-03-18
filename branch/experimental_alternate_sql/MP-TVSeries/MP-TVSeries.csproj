@@ -25,7 +25,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -79,12 +79,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -103,38 +102,56 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core, Version=0.9.4.21896, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Core, Version=1.0.5.32056, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=0.9.4.21897, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Databases, Version=1.0.5.32058, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=0.9.4.21898, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Dialogs, Version=1.0.5.32061, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="SubtitleDownloader, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MediaRenamer\MediaRenamer\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils, Version=2.2.6.21895, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Utils, Version=2.2.7.32052, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowPlugins, Version=1.0.5.32072, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\WindowPlugins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cache.cs" />
-	<Compile Include="Configuration\PlaylistSettings.cs">
+    <Compile Include="Configuration\DeleteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DeleteDialog.Designer.cs">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PlaylistSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
@@ -152,6 +169,9 @@
     <Compile Include="Configuration\PinCode.Designer.cs">
       <DependentUpon>PinCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
+    <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
+    <Compile Include="DB Classes\DBIgnoreDownloadedFiles.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -164,12 +184,6 @@
     </Compile>
     <Compile Include="Configuration\ChooseFromSelection.designer.cs">
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\DatabaseConfigurator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Configuration\DatabaseConfigurator.Designer.cs">
-      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\ExpressionBuilder.cs">
     </Compile>
@@ -318,12 +332,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
-    <Compile Include="Subtitle Retrievers Classes\Forom.cs" />
-    <Compile Include="Subtitle Retrievers Classes\Remository.cs" />
-    <Compile Include="Subtitle Retrievers Classes\seriessubs.cs" />
-    <Compile Include="Subtitle Retrievers Classes\tvsubtitles.cs" />
-    <Compile Include="Subtitle Retrievers Classes\unrar.cs" />
     <Compile Include="Downloaders\Torrent.cs" />
+    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
@@ -340,8 +350,8 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\DatabaseConfigurator.resx">
-      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\DeleteDialog.resx">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
@@ -355,6 +365,18 @@
     <EmbeddedResource Include="Configuration\GUIConfiguration.resx">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportProgessPage.resx">
+      <DependentUpon>ImportProgessPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\loadingDisplay.resx">
       <DependentUpon>loadingDisplay.cs</DependentUpon>
@@ -378,6 +400,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\PinCode.resx">
       <DependentUpon>PinCode.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ProgressLabel.resx">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
@@ -385,6 +411,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\MemoryBox.resx">
       <DependentUpon>MemoryBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
@@ -396,12 +423,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ViewTemplates.resx">
       <DependentUpon>ViewTemplates.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\SeriesSelect.resx">
       <DependentUpon>SeriesSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-	<EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+    <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -415,24 +445,74 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrows.png" />
-    <None Include="img\arrow_up.png" />
-    <None Include="img\arrow_down.png" />
+    <None Include="Resources\Images\arrow_up.png" />
+    <None Include="Resources\Images\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrow_down_small.png" />
+    <None Include="Resources\Images\arrow_down_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\arrow_up_small.png" />
+    <None Include="Resources\Images\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DB Classes\create_sqlserver_database.sql" />
-    <Content Include="img\control_play_blue.png" />
-    <Content Include="img\folder_explore.png" />
-    <Content Include="img\television_add.png" />
-    <Content Include="img\television_add_unlisted.png" />
-    <Content Include="img\textfield_rename.png" />
-    <None Include="img\tv_series_logo_noreflection.png" />
+    <Content Include="Resources\Images\control_play_blue.png" />
+    <Content Include="Resources\Images\folder_explore.png" />
+    <Content Include="Resources\Images\television_add.png" />
+    <Content Include="Resources\Images\television_add_unlisted.png" />
+    <Content Include="Resources\Images\textfield_rename.png" />
+    <Content Include="Resources\Languages\cs.xml" />
+    <Content Include="Resources\Languages\da.xml" />
+    <Content Include="Resources\Languages\de.xml" />
+    <Content Include="Resources\Languages\el.xml" />
+    <Content Include="Resources\Languages\en%28us%29.xml" />
+    <Content Include="Resources\Languages\es.xml" />
+    <Content Include="Resources\Languages\fr.xml" />
+    <Content Include="Resources\Languages\he.xml" />
+    <Content Include="Resources\Languages\it.xml" />
+    <Content Include="Resources\Languages\nl.xml" />
+    <Content Include="Resources\Languages\no%28nb%29.xml" />
+    <Content Include="Resources\Languages\no.xml" />
+    <Content Include="Resources\Languages\pl.xml" />
+    <Content Include="Resources\Languages\pt_pt.xml" />
+    <Content Include="Resources\Languages\ru.xml" />
+    <Content Include="Resources\Languages\ru_utf8.xml" />
+    <Content Include="Resources\Languages\sv.xml" />
+    <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\ImportPanelEpID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelEpID.Designer.cs">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.Designer.cs">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.Designer.cs">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportProgessPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportProgessPage.Designer.cs">
+      <DependentUpon>ImportProgessPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.Designer.cs">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Local Parsing Classes\DeviceManager.cs" />
+    <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
+    <Compile Include="Online Parsing Classes\UserInputResult.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <None Include="Properties\VersionInfo.cs.tmpl" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -452,14 +532,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cornerstone.MP\Cornerstone.MP.csproj">
-      <Project>{77C78161-3206-45FD-A419-60218F3354C0}</Project>
-      <Name>Cornerstone.MP</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\DataSources\" />
-    <Folder Include="User Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -471,5 +544,6 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+    <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>

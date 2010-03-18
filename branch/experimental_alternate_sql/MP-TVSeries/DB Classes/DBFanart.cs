@@ -274,7 +274,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if(Helper.String.IsNullOrEmpty(this[DBFanart.cLocalPath])) return false;
+                if(String.IsNullOrEmpty(this[DBFanart.cLocalPath])) return false;
                 
                 // Check if file in path exists, remove it from database if not
                 if (System.IO.File.Exists(Settings.GetPath(Settings.Path.fanart) + @"\" + this[DBFanart.cLocalPath])) return true;
@@ -287,7 +287,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (Helper.String.IsNullOrEmpty(this[cLocalPath])) return string.Empty;
+                if (String.IsNullOrEmpty(this[cLocalPath])) return string.Empty;
                 return Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), this[cLocalPath]);
             }
         }
@@ -296,7 +296,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return !Helper.String.IsNullOrEmpty(this[cColors]);
+                return !String.IsNullOrEmpty(this[cColors]);
             }
         }
 

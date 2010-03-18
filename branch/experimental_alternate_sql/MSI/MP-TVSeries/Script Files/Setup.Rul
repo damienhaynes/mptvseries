@@ -97,11 +97,11 @@ STRING g_sThumbsDir;
 STRING g_sCacheDir; 
 STRING g_sPluginsDir;
 STRING g_sConfigDir;
-STRING g_sSkinsDir;
+STRING g_sSkinsDir; 
 STRING g_sDatabaseDir;
 STRING g_sLogsDir;
 STRING g_sTVSeriesPluginFileName; 
-
+ 
 //---------------------------------------------------------------------------
 // OnBegin
 //
@@ -111,33 +111,22 @@ STRING g_sTVSeriesPluginFileName;
 function OnBegin()
 	STRING szVersion, szUpgradeMessage, svResult;
 	NUMBER nResult;
-	BOOL bUpgradeSupported; 
-	
-	//OBJECT colors, myObject;
-begin 
- 	
-	/*set colors = CoCreateObject( "System.Collections.ArrayList");
-	
-	colors.Add( "RED" );
-	colors.Add( "WHITE" );
-	colors.Add( "BLUE" );
-	
-	set myObject = CoCreateObjectDotNet("D:\\Development\\InstallShield.Net\\Sample\\bin\\Release\\Sample.dll", "Sample.Colors" );
-	myObject.MyMethod( colors);*/
-	
+	BOOL bUpgradeSupported;
+begin  	
+
 	// See if older version is installed
 	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
 	if g_bMajorUpgrade then
 		// check if version supports upgrades
 		if bUpgradeSupported then
-			szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
+			/*szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
 							   "be removed during the upgrade, Do you wish to continue?\n\nNote: No user data or artwork downloaded from online will be removed, " + 
 							   "for a full uninstall go to the Add\\Remove programs and select Uninstall.";
 							  
 			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
 			if (nResult != IDYES) then
 				abort;
-			endif;
+			endif;*/
 		else
 		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
 							   "and run setup again.";
@@ -145,9 +134,9 @@ begin
 			abort;							   
 		endif;
 	endif; 
-	                                                              
+	
 	// Configure Setup Defaults                                                              
-	SetDefaults();	
+	SetDefaults();             
 	
 	// Check if files are in use that may interupt setup
 	CheckFilesInUse();
@@ -269,7 +258,7 @@ begin
 	    // Append thumbs to program data dir    
 		g_sThumbsDir = svValue^"thumbs";
 	endif;
-	
+		
 	if GetMediaPortalDirs("Database",g_sDatabaseDir) < 0 then
 		if GetMediaPortalConfigDir(svValue) < 0 then
 	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
@@ -284,7 +273,7 @@ begin
 	    endif;
 		g_sCacheDir = svValue^"Cache";
 	endif;
-   	
+   
    	if GetMediaPortalDirs("Log",g_sLogsDir) < 0 then
 		if GetMediaPortalConfigDir(svValue) < 0 then;
 	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
@@ -351,14 +340,21 @@ begin
 		oXMLdoc.async = FALSE;
 		oXMLdoc.preserveWhiteSpace = TRUE;
 	    
-	    // Load the document 	
 	    // MediaPortalDirs.xml contains a reference to all Paths used by MediaPortal
 	    // Currently this file lives in the main program files directory
-	    sFileName = g_sMediaPortalProgramDir^"MediaPortalDirs.xml";
+	    // But we should first check the personal directory as user can override there as well	   
+	    sFileName = PersonalFolder ^ "Team MediaPortal\\MediaPortalDirs.xml";
 	    if !Is(FILE_EXISTS,sFileName) then
-	    	// If the file does not exist check the program data directory
-	    	sFileName = CommonAppDataFolder ^ "Team MediaPortal\\MediaPortal\\MediaPortalDirs.xml";
-	    endif;
+	        
+	        // Check Default location
+		    sFileName = g_sMediaPortalProgramDir^"MediaPortalDirs.xml";
+		    if !Is(FILE_EXISTS,sFileName) then
+		    	// If the file does not exist check the program data directory
+		    	sFileName = CommonAppDataFolder ^ "Team MediaPortal\\MediaPortal\\MediaPortalDirs.xml";
+		    endif;   
+		
+		endif;
+		// Load the document	
 		oXMLdoc.Load (sFileName);	
 		
 	    sNode = "/Config/Dir";	    
@@ -476,7 +472,7 @@ Dlg_SdStartCopy:
 
     // Added in IS 2009 - Set appropriate StatusEx static text.
     SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_FIRSTUI ) );
-
+    
     // Backup Database before installing new version
     szFileName = GetMPTVSeriesDBPath();
     if Is(FILE_EXISTS,szFileName) then
@@ -593,10 +589,10 @@ begin
 
 	// Clean Cache Folder, old skin may conflict with new changes
 	if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
-    CleanCache("Blue3");
+    	CleanCache("Blue3");
     endif;
     if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
-    CleanCache("Blue3Wide");
+    	CleanCache("Blue3Wide");
     endif;
     
     // Update Settings
@@ -649,7 +645,7 @@ function OnMaintUIAfter()
     STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2;
     NUMBER bOpt1, bOpt2;
 begin
-	
+	    
     if ( !REMOVEALLMODE ) then    	    
     	UpdateSettings();
     	
@@ -658,10 +654,10 @@ begin
         
         // Clean Cache Folder, old skin may conflict with new changes
 		if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
-    CleanCache("Blue3");
+	    	CleanCache("Blue3");
 	    endif;
 	    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
-    CleanCache("Blue3Wide");
+	    	CleanCache("Blue3Wide");
 	    endif;
     
     endif;
@@ -681,7 +677,7 @@ begin
 
     if ( BATCH_INSTALL ) then
     	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
-    else    
+    else
     	if ( REMOVEALLMODE ) then
     		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
     		szOpt2 = "Delete database, all settings will be lost.";
@@ -691,7 +687,7 @@ begin
        	
        	if (REMOVEALLMODE) then
        		UninstallCleanup(bOpt1, bOpt2);
-    endif;
+       	endif;
     endif;
 end;
 
@@ -790,7 +786,7 @@ end;
 
 function VOID UninstallCleanup(bDeleteArtwork, bDeleteDatabase)	
 	STRING szFile, szFolder, szMsg;
-begin         
+begin
     
     // MSI Cleanup
     RemoveNonMSIPlugin();
@@ -972,7 +968,7 @@ begin
 end;
 
 function VOID BackupDatabase(sFileName)
-	STRING sDestinationFolder, svResult, sErrorMsg, svResultDate, svResultTime;   
+	STRING sDestinationFolder, svDateTime, sErrorMsg, svResultDate, svResultTime;   
 	NUMBER nResult;
 begin
  	
@@ -980,15 +976,20 @@ begin
 	
 	// Get Current Date
 	GetSystemInfo ( DATE, nResult, svResultDate );
+		 
+	// Set Destination Folder to current Database directory
+	sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svResultDate;
 	
-	// Get Current Time and remove colons so we can make a valid path
-	GetSystemInfo ( TIME, nResult, svResultTime ); 
- 	StrReplace ( svResultTime, ":", "", 0 ); 
- 	
- 	svResult = svResultDate + "_" + svResultTime;
- 	
-	// Set Destination Folder to Personal Directory
-	sDestinationFolder = PersonalFolder ^ "MP-TVSeries\\Backup" ^ svResult;
+	// If folder exists create a unique foldername based on time
+	if (Is(PATH_EXISTS,sDestinationFolder)) then
+		// Get Current Time and remove colons so we can make a valid path
+		GetSystemInfo ( TIME, nResult, svResultTime ); 
+	 	StrReplace ( svResultTime, ":", "", 0 ); 
+	 	
+	 	svDateTime = svResultDate + "_" + svResultTime;
+	 	
+		sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svDateTime;
+	endif;
 	
 	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
 	if nResult < 0 goto err;

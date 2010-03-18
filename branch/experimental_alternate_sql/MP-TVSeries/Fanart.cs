@@ -235,7 +235,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
 
-                        if (Helper.String.IsNullOrEmpty(_randomPick))
+                        if (String.IsNullOrEmpty(_randomPick))
                         {
                             if (_fanArts != null && _fanArts.Count > 0)
                                 _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
@@ -268,7 +268,7 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         // we couldnt find any fanart set as chosen in db, we try to choose the first available
-                        if (_dbchosenfanart == null || Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        if (_dbchosenfanart == null || String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
                         {
                             foreach (DBFanart f in _faInDB)
                             {
@@ -285,7 +285,7 @@ namespace WindowPlugins.GUITVSeries
                             return _dbchosenfanart.FullLocalPath;
 
                         // If still no fanart found in db, choose from available on harddrive
-                        if (_dbchosenfanart == null || Helper.String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        if (_dbchosenfanart == null || String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
                         {
                             if (_fanArts != null && _fanArts.Count > 0)
                                 return _randomPick = _fanArts[0];

@@ -23,9 +23,9 @@
 
 
 using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Text;
-//using SQLite.NET;
 using System.Data;
 using System.Data.Common;
 //using MediaPortal.Database;
@@ -328,6 +328,7 @@ namespace WindowPlugins.GUITVSeries
     // holds a field hash table, includes an update mechanism to keep the DB tables in sync
     public class DBTable
     {
+        public const string cUserEditPostFix = @"__USEREDIT__";
         public string m_tableName;
         public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
         public bool m_CommitNeeded = false;
@@ -357,6 +358,9 @@ namespace WindowPlugins.GUITVSeries
                 cachedForTable = new Dictionary<string, DBFieldType>();
                 // load up fields from the table
 
+                            //DBFieldType cachedInfo = new DBFieldType();
+                            //cachedInfo.Primary = bPrimary;
+                            //cachedInfo.Type = (sType.ToLowerInvariant() == "int" || sType.ToLowerInvariant() == "integer") ? DBField.cTypeInt : DBField.cType.String;
                 DataTable Columns = DBTVSeries.GetTableColumns(m_tableName);
                 if (Columns != null) {
                     foreach (DataColumn Column in Columns.Columns) {
@@ -570,7 +574,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     }
 
-                if (Helper.String.IsNullOrEmpty(PrimaryField.Value.Value))
+                if (String.IsNullOrEmpty(PrimaryField.Value.Value))
                     return false;
 
                 String sWhere = " where ";
@@ -598,7 +602,7 @@ namespace WindowPlugins.GUITVSeries
                             builder.Append("[").Append(fieldPair.Key).Append("] = ");
                             switch (fieldPair.Value.Type) {
                                 case DBField.cTypeInt:
-                                    if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                    if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                         builder.Append("'',");
                                     else
                                         builder.Append((string)fieldPair.Value.Value).Append(',');
@@ -631,7 +635,7 @@ namespace WindowPlugins.GUITVSeries
                         paramNames.Append("[").Append(fieldPair.Key).Append("]");
                         switch (fieldPair.Value.Type) {
                             case DBField.cTypeInt:
-                                if (Helper.String.IsNullOrEmpty(fieldPair.Value.Value))
+                                if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                     builder.Append("''");
                                 else
                                     builder.Append((string)fieldPair.Value.Value);
@@ -772,7 +776,7 @@ namespace WindowPlugins.GUITVSeries
 
         /// <summary>
         /// For Genre etc. this method will split by each character in "splits"
-        /// Should be used only for fields descriped in FieldsRequiringSplit
+        /// Should be used only for fields described in FieldsRequiringSplit
         /// </summary>
         /// <param name="fieldvalue"></param>
         /// <returns></returns>
@@ -808,7 +812,7 @@ namespace WindowPlugins.GUITVSeries
         public void AddWhat(DBTable table)
         {
             foreach (KeyValuePair<string, DBField> field in table.m_fields) {
-                if (Helper.String.IsNullOrEmpty(m_sWhat))
+                if (String.IsNullOrEmpty(m_sWhat))
                     m_sWhat += table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
                 else
                     m_sWhat += ", " + table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
@@ -964,7 +968,7 @@ namespace WindowPlugins.GUITVSeries
         public void AddCustom(string what, string value, SQLConditionType type, bool EncloseIfString)
         {
             if (EncloseIfString) {
-                if (value.Length > 2 && value[0] != '\'' && !Helper.String.IsNumerical(value))
+                if (value.Length > 2 && value[0] != '\'' && !value.IsNumerical())
                     value = "'" + value + "'";
             }
             AddCustom(what, value, type);
@@ -1349,7 +1353,15 @@ namespace WindowPlugins.GUITVSeries
     // holds the SQLLite object and the log object.
     public class DBTVSeries
     {
-        #region private & init stuff
+
+        #region static imports
+
+        [DllImport("shlwapi.dll")]
+        private static extern bool PathIsNetworkPath(string Path);
+
+        #endregion
+
+        #region private & init stuff        
         //private static SQLiteClient m_db = null;
         private static DBProvider m_DBProvider = null;
 
@@ -1437,6 +1449,24 @@ namespace WindowPlugins.GUITVSeries
             } catch (Exception e) {
                 MPTVSeriesLog.Write("Warning, failed to create Index: " + e.Message);
             }
+        }
+
+        public static void Close ()
+        {
+          String databaseFile = string.Empty;
+          databaseFile = Settings.GetPath(Settings.Path.database);
+
+          try
+          {            
+            //m_db.Close();
+            //m_db.Dispose();
+            //m_db = null; ;
+            MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
+          }
+          catch (Exception)
+          {
+            MPTVSeriesLog.Write("Failed closing Database: " + databaseFile);
+          }              
         }
 
         /// <summary>
@@ -1609,5 +1639,21 @@ namespace WindowPlugins.GUITVSeries
                 return m_DBProvider.bUseLimit;
             }
         }
+
+        #region public properties
+
+        public static bool IsDatabaseOnNetworkPath
+        {
+          get
+          {
+            String databaseFile = string.Empty;
+            databaseFile = Settings.GetPath(Settings.Path.database);
+
+            bool isRemotePath = PathIsNetworkPath(databaseFile);
+            return isRemotePath;
+          }
+        }
+
+        #endregion
     };
 }

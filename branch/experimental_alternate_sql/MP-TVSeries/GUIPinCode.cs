@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
+using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
 
 namespace WindowPlugins.GUITVSeries {
@@ -11,7 +12,7 @@ namespace WindowPlugins.GUITVSeries {
 
 		public GUIPinCode() {
 			GetID = ID;
-		}
+		}		
 
 		[SkinControlAttribute(6)]
 		protected GUILabelControl labelFeedback = null;
@@ -33,6 +34,14 @@ namespace WindowPlugins.GUITVSeries {
 		/// Message reported to user when Pin is incorrect
 		/// </summary>
 		public string Message { get; set; }
+
+		/// <summary>
+		/// MediaPortal will set #currentmodule with GetModuleName()
+		/// </summary>
+		/// <returns>Localized Window Name</returns>
+		//public override string GetModuleName() {
+		//	return Translation.PinCodeDialog;
+		//}
 
 		public override void Reset() {
 			base.Reset();

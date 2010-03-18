@@ -132,7 +132,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            if (Helper.String.IsNullOrEmpty(cApiKey))
+            if (String.IsNullOrEmpty(cApiKey))
             {
                 MPTVSeriesLog.Write("No APIKey...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the resourceFile, nothing will be downloaded!");
                 return;
@@ -270,7 +270,7 @@ namespace WindowPlugins.GUITVSeries
 
         static void initIfNullOrEmpty(string value)
         {
-            if (Helper.String.IsNullOrEmpty(value)) Init();
+            if (String.IsNullOrEmpty(value)) Init();
         }
     }
 }

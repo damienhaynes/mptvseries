@@ -34,12 +34,13 @@ namespace WindowPlugins.GUITVSeries
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
-        public const int cDBVersion = 3;
+        public const int cDBVersion = 4;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
         public const String cTagEnabled = "tagEnabled";
         public const String cToReplace = "toreplace";
+        public const String cIsRegex = "isRegex";
         public const String cWith = "with";
         public const String cBefore = "before";
 
@@ -52,11 +53,13 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cBefore, "Run before matching");
             s_FieldToDisplayNameMap.Add(cToReplace, "Replace this..");
             s_FieldToDisplayNameMap.Add(cWith, "With this");
+            s_FieldToDisplayNameMap.Add(cIsRegex, "Is Regex");
 
             DBReplacements dummy = new DBReplacements();
 
             int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBReplacementsVersion);
+            
             while (nUpgradeDBVersion != nCurrentDBVersion)
             // take care of the upgrade in the table
             {
@@ -150,12 +153,17 @@ namespace WindowPlugins.GUITVSeries
                         nUpgradeDBVersion++;
                         break;
 
+                    case 3:
+                        //Disable regex setting for all
+                        DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
+                        nUpgradeDBVersion++;
+                        break;                        
                     default:
                         {
                             // no replacements in the db => put the default ones
                             AddDefaults();
 
-                            nUpgradeDBVersion=3;
+                            nUpgradeDBVersion=4;
                         }
                         break;
                 }
@@ -264,6 +272,8 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
+            DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
+
         }
 
         public static String PrettyFieldName(String sFieldName)
@@ -298,6 +308,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cBefore, new DBField(DBField.cTypeInt));
             AddColumn(cToReplace, new DBField(DBField.cTypeString));
             AddColumn(cWith, new DBField(DBField.cTypeString));
+            AddColumn(cIsRegex, new DBField(DBField.cTypeInt));
         }
 
         public static void ClearAll()

@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         if (selLang.Length == 0)
         {
           string lang = DBOption.GetOptions(DBOption.cOnlineLanguage);
-          if (!Helper.String.IsNullOrEmpty(lang)) selLang = lang;
+          if (!String.IsNullOrEmpty(lang)) selLang = lang;
           else selLang = "en"; // use english
         }
         return selLang;
@@ -123,16 +123,25 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public XmlNode UpdateSeries(String sSeriesID)
     { return UpdateSeries(sSeriesID, true); }
 
+    static public XmlNode UpdateSeries(String sSeriesID, String languageID)
+    { return UpdateSeries(sSeriesID, languageID, true); }
+
     static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
       int series = Int32.Parse(sSeriesID);
       return getFromCache(series, SelLanguageAsString + ".xml");
     }
 
+    static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
+    {
+        int series = Int32.Parse(sSeriesID);
+        return getFromCache(series, languageID + ".xml", languageID);
+    }
+
     static public bool SubmitRating(RatingType type, string itemId, int rating)
     {
       string account = DBOption.GetOptions(DBOption.cOnlineUserID);
-      if (Helper.String.IsNullOrEmpty(account))
+      if (String.IsNullOrEmpty(account))
       {
         GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
         dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
@@ -157,12 +166,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
           GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
           dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-          if (!TVSeriesPlugin.IsNetworkAvailable)
-          {
-            dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE);
+          if (!TVSeriesPlugin.IsNetworkAvailable) {
+              dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_1);
+              dlgOK.SetLine(2, Translation.NETWORK_ERROR_UNAVAILABLE_2);
           }
-          else
-            dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE);
+          else {
+              dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
+              dlgOK.SetLine(2, Translation.TVDB_ERROR_UNAVAILABLE_2);
+          }
 
           dlgOK.DoModal(GUIWindowManager.ActiveWindow);
           MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
@@ -194,7 +205,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return getFromCache(seriesID, "banners.xml");
     }
 
-    static public bool DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
+    static public string DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
     {
         WebClient webClient = new WebClient();
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
@@ -209,13 +220,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 MPTVSeriesLog.Write("Downloading new Image from: " + fullURL,MPTVSeriesLog.LogLevel.Debug);
                 webClient.DownloadFile(fullURL, fullLocalPath);
+                return fullLocalPath;
             }
-            return true;
+            return string.Empty;
         }
         catch (WebException)
         {
             MPTVSeriesLog.Write("Banner download failed (" + fullURL + ") to " + fullLocalPath);
-            return false;
+            return string.Empty;
         }
     }
 
@@ -270,9 +282,15 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode getFromCache(int seriesID, string elemName)
     {
-      return getFromCache(seriesID, true, elemName);
+        return getFromCache(seriesID, true, elemName, SelLanguageAsString);
     }
-    static XmlNode getFromCache(int seriesID, bool first, string elemName)
+
+    static XmlNode getFromCache(int seriesID, string elemName, string languageID)
+    {
+        return getFromCache(seriesID, true, elemName, languageID);
+    }
+
+    static XmlNode getFromCache(int seriesID, bool first, string elemName, string languageID)
     {
       if (zipCache.ContainsKey(seriesID))
       {
@@ -283,12 +301,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           return d[elemName];
         }
       }
-      else if (first)
+      
+      if (first)
       {
         Generic(string.Format(apiURIs.FullSeriesUpdate,
                                    seriesID,
-                                   SelLanguageAsString), true, true, Format.Zip, SelLanguageAsString, seriesID);
-        return getFromCache(seriesID, false, elemName);
+                                   languageID), true, true, Format.Zip, languageID, seriesID);
+        return getFromCache(seriesID, false, elemName, languageID);
       }
       return null;
     }
@@ -328,7 +347,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       {
         if (format == Format.Zip)
         {
-          if (!Helper.String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
+          if (!String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
           {
             Dictionary<string, XmlDocument> x = DecompressZipToXmls(data);
             entryNameToGetIfZip += ".xml";

@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries
 {
     class UpdateSeries
     {
+        private List<String> sSeriesIDs = null;
         private long m_nServerTimeStamp = 0;
         private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
         private List<int> listIncorrectIDs = new List<int>();
@@ -43,7 +44,29 @@ namespace WindowPlugins.GUITVSeries
 
         public List<DBOnlineSeries> Results
         {
-            get { return listSeries; }
+            get
+            {
+                if (listSeries == null)
+                    listSeries = new List<DBOnlineSeries>(ResultsLazy);
+                return listSeries;
+            }
+        }
+
+        /// <summary>
+        /// Lazily Evaluates
+        /// </summary>
+        public IEnumerable<DBOnlineSeries> ResultsLazy
+        {
+            get
+            {
+                foreach (string id in sSeriesIDs)
+                {
+                    var results = Work(id);
+                    foreach (var r in results)
+                        if(r != null && r[DBOnlineSeries.cID] > 0)
+                          yield return r;
+                }
+            }
         }
 
         public List<int> BadIds
@@ -51,34 +74,56 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
-        public UpdateSeries(List<String> sSeriesIDs)
+        public UpdateSeries(String sSeriesIDs)
         {
-            foreach(string id in sSeriesIDs)
-                Work(id);
+            Work(sSeriesIDs);
         }
 
-        void Work(String sSeriesID)
+        public UpdateSeries(List<String> sSeriesIDs)
+        {
+            this.sSeriesIDs = sSeriesIDs;            
+        }
+
+        public UpdateSeries(String sSeriesIDs, String languageID)
+        {
+            Work(sSeriesIDs, languageID);
+        }
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
+        {
+            return Work(sSeriesID, "");
+        }
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID)
         {
             if (sSeriesID.Length > 0)
             {
                 int result;
                 if (int.TryParse(sSeriesID,out result))
                     MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
-                
-                XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+
+                XmlNode node = null;
+                if (String.IsNullOrEmpty(languageID))
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                }
+                else
+                {
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID);
+                }
 
                 if (node != null)
                 {
                     foreach (XmlNode itemNode in node.ChildNodes)
                     {
                         bool hasDVDOrdering = false;
-                        bool hasAbsoluteOrdering = false;
+                        bool hasAbsoluteOrdering = false;       
                         DBOnlineSeries series = new DBOnlineSeries();
                         foreach (XmlNode seriesNode in itemNode)
                         {
-                            // first return item SHOULD ALWAYS be the series
+                            // first return item SHOULD ALWAYS be the series                            
                             if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {                                                                
+                            {                           
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
@@ -104,10 +149,10 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         case "DVD_episodenumber":
                                         case "DVD_season":
-                                            if(!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
+                                            if(!String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
                                             break;
                                         case "absolute_number":
-                                            if (!Helper.String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
+                                            if (!String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
                                             break;
                                     }
                                 }
@@ -120,6 +165,7 @@ namespace WindowPlugins.GUITVSeries
                             if (hasDVDOrdering) ordering += "DVD";
                             series[DBOnlineSeries.cEpisodeOrders] = ordering;
                         }
+                        if(series != null) yield return series;
                     }
                 }
             }

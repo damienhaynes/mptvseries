@@ -130,7 +130,7 @@ namespace WindowPlugins.GUITVSeries
                 if (timeMovieStopped > 0 && !bExternalPlayer) {                                       
                     MPTVSeriesLog.Write("Asking user to resume episode from: " + Utils.SecondsToHMSString(timeMovieStopped));
                     GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
-                    
+
                     if (null != dlgYesNo) {
                         dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
                         dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
@@ -142,12 +142,12 @@ namespace WindowPlugins.GUITVSeries
                             timeMovieStopped = 0;
                             m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                             m_currentEpisode.Commit();
-                            MPTVSeriesLog.Write("User selected to start episode from beginning",MPTVSeriesLog.LogLevel.Debug);
+                            MPTVSeriesLog.Write("User selected to start episode from beginning", MPTVSeriesLog.LogLevel.Debug);
                         }
                         else {
                             MPTVSeriesLog.Write("User selected to resume episode", MPTVSeriesLog.LogLevel.Debug);
-                    }                    
-                }
+                        }
+                    }                
                 }
 
                 #endregion
@@ -203,11 +203,11 @@ namespace WindowPlugins.GUITVSeries
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
-			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
-				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : localLogos.getFirstEpLogo(m_currentEpisode));
+			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])                
+                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode)));
 			else
 				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : series.Poster);
-
+			
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
@@ -246,7 +246,7 @@ namespace WindowPlugins.GUITVSeries
                 // lets force fullscreen here
                 // note: MP might still be unresponsive during this time, but at least we are in fullscreen and can see video should this happen
                 // I haven't actually found out why it happens, but I strongly believe it has something to do with the video database and the player doing something in the background
-                // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)
+                // (why does it do anything with the video database.....i just want it to play a file and do NOTHING else!)                
                 GUIGraphicsContext.IsFullScreenVideo = true;
                 GUIWindowManager.ActivateWindow((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
 
@@ -255,9 +255,26 @@ namespace WindowPlugins.GUITVSeries
                 if (m_bIsImageFile) { 
                     if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {                        
                         return false;
-                        }
                     }
+                }
 
+                // see if we have an invokeOption set up
+                string invoke;
+                if((invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback)) != null && !string.IsNullOrEmpty(invoke))
+                {
+                    try
+                    {
+                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                        System.Diagnostics.Process.Start(invoke);
+                        MPTVSeriesLog.Write("Sucessfully Invoked BeforeFilePlay Command: " + invoke);
+                    }
+                    catch (Exception e)
+                    {
+                        MPTVSeriesLog.Write("Unable to Invoke BeforeFilePlay Command: " + invoke);
+                        MPTVSeriesLog.Write(e.Message);
+                    }
+                }
+                
                 // Start Listening to any External Player Events
                 listenToExternalPlayerEvents = true;
                 
@@ -267,13 +284,13 @@ namespace WindowPlugins.GUITVSeries
                 // Stope Listening to any External Player Events
 				listenToExternalPlayerEvents = false;
 
-                // tell player where to resume
+                // tell player where to resume                
 				if (g_Player.Playing && timeMovieStopped > 0) {
 					MPTVSeriesLog.Write("Setting seek position at: " + timeMovieStopped, MPTVSeriesLog.LogLevel.Debug);
-                    GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
-                    msg.Param1 = (int)timeMovieStopped;
-                    GUIGraphicsContext.SendMessage(msg);
-                }
+					GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_SEEK_POSITION, 0, 0, 0, 0, 0, null);
+					msg.Param1 = (int)timeMovieStopped;
+					GUIGraphicsContext.SendMessage(msg);
+				}			
 
             }
             catch (Exception e)
@@ -383,20 +400,37 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("This episode counts as watched");
                 if(countAsWatched) MarkEpisodeAsWatched(m_currentEpisode);
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
-                if ((Helper.String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
+                if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
                     MPTVSeriesLog.Write("Episode not rated yet");
                     if(RateRequestOccured != null)
                         RateRequestOccured.Invoke(m_currentEpisode);
                 } else MPTVSeriesLog.Write("Episode has already been rated or option not set");
             }
-            SetGUIProperties(true); // clear GUI Properties          
+            SetGUIProperties(true); // clear GUI Properties
+
+            // see if we have an invokeOption set up
+            string invoke;
+            if (countAsWatched && (invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback)) != null && !string.IsNullOrEmpty(invoke))
+            {
+                try
+                {
+                    invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                    System.Diagnostics.Process.Start(invoke);
+                    MPTVSeriesLog.Write("Sucessfully Invoked AfterFilePlay Command: " + invoke);
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("Unable to Invoke AfterFilePlay Command: " + invoke);
+                    MPTVSeriesLog.Write(e.Message);
+                }
+            }
         }
 
         void LogPlayBackOp(string OperationType, string filename)
         {
             MPTVSeriesLog.Write(string.Format("Playback {0} for: {1}", OperationType, filename), MPTVSeriesLog.LogLevel.Normal);
-        }
+        }        
 
         #endregion
     }

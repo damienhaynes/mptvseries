@@ -33,6 +33,8 @@ namespace WindowPlugins.GUITVSeries
 {
     static class Translation
     {
+        private static Dictionary<string, string> translations;
+
         /// <summary>
         /// These will be loaded with the language files content
         /// if the selected lang file is not found, it will first try to load en(us).xml as a backup
@@ -82,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
         public static string wrongSkin = "Wrong Skin file";
         public static string special = "Special";
         public static string specials = "Specials";
-        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";        
+        public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
         public static string Force_Online_Match = "Force Online Match";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
@@ -100,7 +102,8 @@ namespace WindowPlugins.GUITVSeries
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
         public static string RatingStars = "Stars";        
-        public static string ResetUserSelections = "Reset User Selections";        
+        public static string ResetUserSelections = "Reset User Selections";
+        public static string ResetIgnoredDownloadedFiles = "Reset Ignored Downloaded Files";
         public static string ChangeLayout = "Change Layout";
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";
@@ -109,11 +112,23 @@ namespace WindowPlugins.GUITVSeries
         public static string DeleteFromDisk = "Delete from Disk";       
         public static string DeleteFromDatabase = "Delete from Database";     
         public static string DeleteFromFileDatabase = "Delete from Disk and Database";
-		public static string RateDialogLabel = "Select Your Rating for {0}";
+        public static string DeleteSubtitles = "Delete Subtitles";
+        public static string RateDialogLabel = "Select Your Rating for {0}";
         public static string CycleSeriesBanner = "Cycle Series Banner";
         public static string CycleSeriesPoster = "Cycle Series Poster";
         public static string CycleSeriesThumb = "Cycle Series Panel";
-        public static string CycleSeasonBanner = "Cycle Season Poster";                
+        public static string CycleSeasonBanner = "Cycle Season Poster";
+		public static string Update = "Update";
+		public static string DeleteThumbnailsHeading = "Delete Thumbnails";
+		public static string DeleteThumbnailsLine1 = "Would you also like to Delete and Re-Download";
+		public static string DeleteThumbnailsLine2 = "all episode thumbnails?";
+        public static string EpisodeFilenameEmpty = "Episode Filename is Empty in Database";
+        public static string UnableToDeleteSubtitleFile = "Unable to Delete Subtitle File: {0}";
+        public static string PathNotAvailable = "Path is not available: {0}";
+        public static string UnableToDeleteSubtitles = "Unable to Delete Subtitles";
+        public static string ErrorClear = "Error";
+        public static string UnableToDelete = "Unable to Delete";
+        public static string UnableToDeleteFile = "Unable to Delete File: {0}";
 
         // Views
         public static string Genres = "Genres";
@@ -202,7 +217,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ButtonOptions = "Options";
         public static string ButtonRandomFanart = "Random Fanart";        
         public static string LabelResolution = "Resolution:";
-        public static string LabelChosen = "Chosen:";
+        public static string LabelChosen = "Default:";
         public static string LabelDisabled = "Disabled:";
 
         // ChooseFromSelectionDescriptor
@@ -237,8 +252,10 @@ namespace WindowPlugins.GUITVSeries
         public static string TVDB_INFO_TITLE = "Online TV Database";
         public static string TVDB_INFO_ACCOUNTID_1 = "Account Identifier is not set";
         public static string TVDB_INFO_ACCOUNTID_2 = "Enter your online account ID in Configuration";
-        public static string TVDB_ERROR_UNAVAILABLE = "TheTVDB.com is currently unavailable, try again later";
-        public static string NETWORK_ERROR_UNAVAILABLE = "Network connection is unavailable, check connection and try again";
+        public static string TVDB_ERROR_UNAVAILABLE_1 = "TheTVDB.com is currently unavailable";
+        public static string TVDB_ERROR_UNAVAILABLE_2 = "Please try again later";
+        public static string NETWORK_ERROR_UNAVAILABLE_1 = "Network connection is unavailable";
+        public static string NETWORK_ERROR_UNAVAILABLE_2 = "Check your connection and try again";
 
 		// Rate Movie Descriptions - 5 Stars
 		public static string RateFiveStarOne = "Terrible";
@@ -258,6 +275,73 @@ namespace WindowPlugins.GUITVSeries
 		public static string RateTenStarEight = "Great";
 		public static string RateTenStarNine = "Superb";
 		public static string RateTenStarTen = "Perfect";
+
+		// Dialog Names
+		public static string RateDialog = "Rate Dialog";
+		public static string PinCodeDialog = "Pin Code Dialog";
+
+        // Additional Skin Fields        
+        public static string Aired = "Aired";
+        public static string AiredStatusContinuing = "Continuing";
+        public static string AiredStatusEnded = "Ended";
+        public static string Airs = "Airs";
+        public static string AirsDay = "Airs Day";
+        public static string AirsTime = "Airs Time";
+        public static string Cast = "Cast";
+        public static string Certification = "Certification";
+        public static string Director = "Director";
+        public static string Directors = "Directors";
+        public static string FileSize = "File Size";
+        public static string FirstAired = "First Aired";
+        public static string Genre = "Genre";
+        public static string Group = "Group";
+        public static string Groups = "Groups";
+        public static string GuestStar = "Guest Star";
+        public static string GuestStars = "Guest Stars";
+        public static string LastOnlineUpdate = "Last Online Update";
+        public static string MediaInfo = "Media Info";
+        public static string Minutes = "Minutes";
+        public static string MyRating = "My Rating";
+        public static string Network = "Network";
+        public static string Playlist = "Playlist";
+        public static string Runtime = "Runtime";
+        public static string Rating = "Rating";
+        public static string Rated = "Rated";
+        public static string SeriesDetails = "Series Details";
+        public static string SeriesStatus = "Series Status";
+        public static string Starring = "Starring";
+        public static string Watched = "Watched";
+        public static string Writer = "Writer";
+        public static string Writers = "Writers";
+
+        // Subtitles
+        public static string GetSubtitlesFrom = "Get subtitles from?";
+        public static string EnabledSubtitleSites = "Enabled subtitle sites:";
+        public static string PlayNow = "Play Now";
+        public static string NoSubtitleDownload = "No Subtitle Download";
+        public static string UnableToRetrieveSubtitles = "Unable to retrieve subtitles";
+        public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets the translated strings collection in the active language
+        /// </summary>
+        public static Dictionary<string, string> Strings {
+            get {
+                if (translations == null) {
+                    translations = new Dictionary<string, string>();
+                    Type transType = typeof(Translation);
+                    FieldInfo[] fields = transType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                    foreach (FieldInfo field in fields) {
+                        translations.Add(field.Name, field.GetValue(transType).ToString());
+                    }
+                }
+                return translations;
+            }
+        }
 
         #endregion
 
@@ -279,21 +363,18 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(loadTranslations(lang).ToString() + " translated Strings found");
         }
         static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
-        
-        public static int loadTranslations(string lang)
-        {
-            XmlDocument doc = new XmlDocument();
-            TranslatedStrings = new Dictionary<string, string>();
-            Type TransType = typeof(Translation);
-            FieldInfo[] fieldInfos = TransType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            try
-            {
-                doc.Load(path + "\\" + lang + ".xml");
+        public static int loadTranslations(string lang) {
+            XmlDocument doc=new XmlDocument();
+            TranslatedStrings=new Dictionary<string, string>();
+            Type TransType=typeof(Translation);
+            FieldInfo[] fieldInfos=TransType.GetFields(BindingFlags.Public|BindingFlags.Static);
+
+            try {
+                doc.Load(path+"\\"+lang+".xml");
             }
-            catch (Exception e)
-            {
-                if (lang == "en(us)")
+            catch (Exception e) {
+                if (lang=="en(us)")
                     return 0; // othwerise we are in an endless loop!
                 MPTVSeriesLog.Write("Cannot find Translation File (or error in xml): ", lang, MPTVSeriesLog.LogLevel.Normal);
                 MPTVSeriesLog.Write(e.Message);
@@ -301,24 +382,25 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cLanguage, "en(us)");
                 return loadTranslations("en(us)");
             }
-            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes)
-                if (stringEntry.NodeType == XmlNodeType.Element)
-                    try
-                    {
-                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("Field").Value, stringEntry.InnerText);
+
+            string transField=string.Empty;
+            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes) {
+                if (stringEntry.NodeType==XmlNodeType.Element)
+                    try {
+                        transField=stringEntry.Attributes.GetNamedItem("Field").Value;
+                        TranslatedStrings.Add(transField, stringEntry.InnerText);
                     }
-                    catch (Exception ex)
-                    {
-                        MPTVSeriesLog.Write("Error in Translation Engine: " + ex.Message);
+                    catch (Exception ex) {
+                        MPTVSeriesLog.Write(string.Format("Error adding translation field ({0}:{1}), {2}", transField, stringEntry.InnerText, ex.Message));
                     }
-            foreach (FieldInfo fi in fieldInfos)
-            {
-                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType,
-                    new object[] { Get(fi.Name)});
-                
             }
-            int count = TranslatedStrings.Count;
-            TranslatedStrings = null; // free up
+
+            foreach (FieldInfo fi in fieldInfos) {
+                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { Get(fi.Name) });
+            }
+
+            int count=TranslatedStrings.Count;
+            TranslatedStrings=null; // free up
             return count;
         }
 
@@ -354,6 +436,3 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 }
-
-
-

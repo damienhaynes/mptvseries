@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-//using SQLite.NET;
 using System.Data;
 using MediaPortal.Database;
 
@@ -48,23 +47,25 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBViewsVersion = "DBViewsVersion";
         public const String cDBReplacementsVersion = "DBReplacementsVersion";
         public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
+        public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
         public const String cFullSeriesRetrieval = "FullSeriesRetrieval";
         public const String cAutoChooseSeries = "AutoChooseSeries";
-        public const String cAutoChooseOrder = "AutoChooseOrder";        
-        public const String cAutoScanLocalFiles = "AutoScanLocalFiles";
-        public const String cAutoScanLocalFilesLapse = "AutoScanLocalFilesLapse";
-        public const String cAutoUpdateOnlineData = "AutoUpdateOnlineData";
-        public const String cAutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
-        public const String cDontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
+        public const String cAutoChooseOrder = "AutoChooseOrder";
 
-        public const String cUpdateSeriesTimeStamp = "UpdateSeriesTimeStamp"; // not used anymore
-        public const String cUpdateEpisodesTimeStamp = "UpdateEpisodesTimeStamp"; // not used anymore
+        public const String cImport_FolderWatch = "doFolderWatch";
+        public const String cImport_ScanRemoteShare = "scanRemoteShare";
+        public const String cImport_ScanOnStartup = "ScanOnStartup";
+        public const String cImport_ScanWhileFullscreenVideo = "AutoScanLocalFilesFSV";
+        public const String cImport_ScanRemoteShareLapse = "AutoScanLocalFilesLapse";
+        public const String cImport_AutoUpdateOnlineData = "AutoUpdateOnlineData";
+        public const String cImport_AutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
+        public const String cImport_DontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
+        public const String cImport_OnlineUpdateScanLastTime = "UpdateScanLastTime";
 
-        public const String cLocalScanLastTime = "LocalScanLastTime";
-        public const String cUpdateScanLastTime = "UpdateScanLastTime";
+        public const String cPlay_SubtitleDownloadOnPlay = "SubtitleDownloadOnPlay";
 
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
@@ -96,21 +97,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Title = "View_Episode_Title";
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
-
-        public const String cSubs_TVSubtitles_Enable = "Subs_TVSubtitles_Enable";
-        public const String cSubs_TVSubtitles_LanguageFilterList = "Subs_TVSubtitles_LanguageFilterList";
-
-	    public const String cSubs_SeriesSubs_Enable = "Subs_Series_Enable";
-	    public const String cSubs_SeriesSubs_BaseURL = "Subs_SeriesSubs_BaseURL";
-
-        public const String cSubs_Remository_Enable = "Subs_Remository_Enable";
-        public const String cSubs_Remository_BaseURL = "Subs_Remository_BaseURL";
-        public const String cSubs_Remository_MainIdx = "Subs_Remository_MainIdx";
-        public const String cSubs_Remository_UserName = "Subs_Remository_UserName";
-        public const String cSubs_Remository_Password = "Subs_Remository_Password";
-        public const String cSubs_Remository_RegexSeriesSeasons = "Subs_Remository_RegEx_Series_Seasons";
-        public const String cSubs_Remository_RegexEpisode = "Subs_Remository_RegEx_Episode";
-        public const String cSubs_Remository_RegexDownload = "Subs_Remository_Download";
 
         public const String cUTorrentPath = "uTorrentPath";
         public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
@@ -167,7 +153,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
 
-        public const String cScanOnStartup = "ScanOnStartup";
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
         public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
         public const String cAutoUpdateAllFanart = "AutoUpdateAllFanart";
@@ -179,7 +164,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
-
+       
         public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
 
 		public const String cDefaultRating = "DefaultRating";
@@ -193,20 +178,36 @@ namespace WindowPlugins.GUITVSeries
 		public const String cKeyboardStyle = "KeyboardStyle";
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
 
+        public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
+        public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
+        public const String cSubtitleDownloadersEnabled = "SubtitleDownloadersEnabled";
+
+        public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
+
+        public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
+
+        public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
+        public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
+
+        public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
         {
             try
             {
-                if (!DBTVSeries.TableExists("options")) {
+                DataTable results;
+                results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                if (results == null || results.Rows.Count == 0)
+                {
                     // no table, create it
                     String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
                     DBTVSeries.Execute(sQuery);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
-                    SetOptions(cConfig_LogCollapsed, true);
+                    SetOptions(cConfig_LogCollapsed, false);
 
                 if (GetOptions(cDBSeriesLastLocalID) == null)
                     SetOptions(cDBSeriesLastLocalID, -1);
@@ -228,7 +229,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cAutoChooseSeries, true);
                 
                 if (GetOptions(cAutoChooseOrder) == null)
-                    SetOptions(cAutoChooseOrder, false);
+                    SetOptions(cAutoChooseOrder, true);
 
                 if (GetOptions(cView_Episode_OnlyShowLocalFiles) == null)
                     SetOptions(cView_Episode_OnlyShowLocalFiles, true);
@@ -239,38 +240,44 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_HideUnwatchedThumbnail) == null)
                     SetOptions(cView_Episode_HideUnwatchedThumbnail, false);
                 
-                if (GetOptions(cUpdateSeriesTimeStamp) == null)
-                    SetOptions(cUpdateSeriesTimeStamp, 0);
+                if (GetOptions(cImport_FolderWatch) == null)
+                    SetOptions(cImport_FolderWatch, true);
 
-                if (GetOptions(cUpdateEpisodesTimeStamp) == null)
-                    SetOptions(cUpdateEpisodesTimeStamp, 0);
+                if (GetOptions(cImport_ScanRemoteShare) == null)
+                    SetOptions(cImport_ScanRemoteShare, true);
 
-                if (GetOptions(cAutoScanLocalFiles) == null)
-                    SetOptions(cAutoScanLocalFiles, true);
+                if (GetOptions(cImport_ScanRemoteShareLapse) == null)
+                    SetOptions(cImport_ScanRemoteShareLapse, 5);
 
-                if (GetOptions(cAutoScanLocalFilesLapse) == null)
-                    SetOptions(cAutoScanLocalFilesLapse, 5);
+                if (GetOptions(cImport_AutoUpdateOnlineData) == null)
+                    SetOptions(cImport_AutoUpdateOnlineData, true);
 
-                if (GetOptions(cAutoUpdateOnlineData) == null)
-                    SetOptions(cAutoUpdateOnlineData, true);
+                if (GetOptions(cImport_AutoUpdateOnlineDataLapse) == null)
+                    SetOptions(cImport_AutoUpdateOnlineDataLapse, 12);
 
-                if (GetOptions(cAutoUpdateOnlineDataLapse) == null)
-                    SetOptions(cAutoUpdateOnlineDataLapse, 12);
+                if (GetOptions(cImport_OnlineUpdateScanLastTime) == null)
+                    SetOptions(cImport_OnlineUpdateScanLastTime, 0);
 
-                if (GetOptions(cLocalScanLastTime) == null)
-                    SetOptions(cLocalScanLastTime, 0);
+                if (GetOptions(cImport_DontClearMissingLocalFiles) == null)
+                    SetOptions(cImport_DontClearMissingLocalFiles, 0);
 
-                if (GetOptions(cUpdateScanLastTime) == null)
-                    SetOptions(cUpdateScanLastTime, 0);
-
-                if (GetOptions(cDontClearMissingLocalFiles) == null)
-                    SetOptions(cDontClearMissingLocalFiles, 0);
+                if (GetOptions(cPlay_SubtitleDownloadOnPlay) == null)
+                    SetOptions(cPlay_SubtitleDownloadOnPlay, false);
 
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
 
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
+
+                if (GetOptions(cSubtitleDownloaderEnabled) == null)
+                    SetOptions(cSubtitleDownloaderEnabled, false);
+
+                if (GetOptions(cSubtitleDownloaderLanguages) == null)
+                    SetOptions(cSubtitleDownloaderLanguages, "");
+
+                if (GetOptions(cSubtitleDownloadersEnabled) == null)
+                    SetOptions(cSubtitleDownloadersEnabled, "");
 
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default
@@ -353,27 +360,6 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
-		        if (GetOptions(cSubs_TVSubtitles_Enable) == null)
-		            SetOptions(cSubs_TVSubtitles_Enable, false);
-
-		        if (GetOptions(cSubs_SeriesSubs_Enable) == null)
-		            SetOptions(cSubs_SeriesSubs_Enable, false);
-
-		        if (GetOptions(cSubs_Remository_Enable) == null)
-		            SetOptions(cSubs_Remository_Enable, false);
-
-                if (GetOptions(cSubs_TVSubtitles_LanguageFilterList) == null)
-                  SetOptions(cSubs_TVSubtitles_LanguageFilterList, @"en");
-
-		        if (GetOptions(cSubs_SeriesSubs_BaseURL) == null)
-		            SetOptions(cSubs_SeriesSubs_BaseURL, @"http://www.seriessub.com/sous-titres/");
-
-                if (GetOptions(cSubs_Remository_BaseURL) == null)
-                    SetOptions(cSubs_Remository_BaseURL, @"http://www.italiansubs.net/");
-                
-                if (GetOptions(cSubs_Remository_MainIdx) == null)
-                    SetOptions(cSubs_Remository_MainIdx, "27");
-
                 if (GetOptions(cTorrentSearch) == null)
                     SetOptions(cTorrentSearch, String.Empty);
 
@@ -385,8 +371,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
-                if (GetOptions("doFolderWatch") == null)
-                    SetOptions("doFolderWatch", true); 
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default
@@ -446,8 +430,8 @@ namespace WindowPlugins.GUITVSeries
 				if (GetOptions(cPlaylistAutoShuffle) == null)
 					SetOptions(cPlaylistAutoShuffle, false);
 
-                if (GetOptions(cScanOnStartup) == null)
-                    SetOptions(cScanOnStartup, true);
+                if (GetOptions(cImport_ScanOnStartup) == null)
+                    SetOptions(cImport_ScanOnStartup, true);
 
                 if (GetOptions(cAutoDownloadMissingArtwork) == null)
                     SetOptions(cAutoDownloadMissingArtwork, true);
@@ -475,6 +459,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cUseRegionalDateFormatString) == null)
                     SetOptions(cUseRegionalDateFormatString, 0);
+
 				if (GetOptions(cDefaultRating) == null)
 					SetOptions(cDefaultRating, 7); // Scale 1 - 10
 
@@ -505,6 +490,26 @@ namespace WindowPlugins.GUITVSeries
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
 					SetOptions(cMarkRatedEpisodeAsWatched, 0);
 
+                if (GetOptions(cSubstituteMissingArtwork) == null)
+                    SetOptions(cSubstituteMissingArtwork, 0);
+
+                if (GetOptions(cAskToRate)==null)
+                    SetOptions(cAskToRate, 1);
+
+                if (GetOptions(cSkipSeasonViewOnSingleSeason) == null)
+                    SetOptions(cSkipSeasonViewOnSingleSeason, 1);
+
+                if (GetOptions(cImport_ScanWhileFullscreenVideo) == null)
+                    SetOptions(cImport_ScanWhileFullscreenVideo, 0);
+
+                if (GetOptions(cInvokeExtBeforePlayback) == null)
+                    SetOptions(cInvokeExtBeforePlayback, string.Empty);
+
+                if (GetOptions(cInvokeExtAfterPlayback) == null)
+                    SetOptions(cInvokeExtAfterPlayback, string.Empty);
+
+                if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
+                    SetOptions(cCountEmptyAndFutureAiredEps, 1);
             }
             catch (Exception ex)
             {
@@ -514,18 +519,23 @@ namespace WindowPlugins.GUITVSeries
 
         private static void UpdateTable()
         {
-            try {
-                if (!bTableUpdateDone) {
+            try
+            {
+                if (!bTableUpdateDone)
+                {
                     bTableUpdateDone = true;
-                    if (DBTVSeries.TableExists("options")) {
-                        // table is already there, perfect
-                    } else {
+                    DataTable results;
+                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                    if (results == null || results.Rows.Count == 0)                    
+                    {
                         // no table, create it
-                        String sQuery = "CREATE TABLE options (option_id integer identity primary key, property text, value text);\n";
+                        String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
                         DBTVSeries.Execute(sQuery);
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
             }
         }
@@ -534,7 +544,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-//                UpdateTable();
+				// UpdateTable();
                 if (!optionsCache.ContainsKey(property) || optionsCache[property] != value)
                 {
                     String convertedProperty = property;
@@ -542,7 +552,7 @@ namespace WindowPlugins.GUITVSeries
 
                     String sqlQuery;
                     if (GetOptions(convertedProperty) == null)
-                        sqlQuery = "insert into options (property, value) values('" + convertedProperty + "', '" + convertedvalue + "')";
+                        sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
                     else
                         sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
                     optionsCache[property] = value;
@@ -559,12 +569,12 @@ namespace WindowPlugins.GUITVSeries
 
         public static DBValue GetOptions(String property)
         {
-            try {
+            try
+            {
                 // UpdateTable();
                 String convertedProperty = property;
                 DatabaseUtility.RemoveInvalidChars(ref convertedProperty);
-                if (optionsCache.ContainsKey(convertedProperty))
-                    return optionsCache[convertedProperty];
+                if (optionsCache.ContainsKey(convertedProperty)) return optionsCache[convertedProperty];
 
                 string sqlQuery = "select value from options where property = '" + convertedProperty + "'";
                 Object result = DBTVSeries.ExecuteScalar(sqlQuery);
@@ -574,10 +584,19 @@ namespace WindowPlugins.GUITVSeries
                         optionsCache.Add(property, res);
                     return res;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
             }
             return null;
         }
+
+        public static void LogOptions() {
+            foreach (string key in optionsCache.Keys) {
+                MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
+            }
+        }
+
     };
 }

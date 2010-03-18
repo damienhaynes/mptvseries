@@ -38,7 +38,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
         public const String cPath = "Path";
-        public const String cRemovable = "removable";
+        public const String cRemovable = "removable";        
+        public const String cKeepReference = "keep_references";
 
         private static bool _includesNetworkShares;
         public static bool includesNetworkShares
@@ -63,11 +64,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cEnabled, new DBField(DBField.cTypeInt));
             AddColumn(cPath, new DBField(DBField.cTypeString));
-            AddColumn(cRemovable, new DBField(DBField.cTypeInt));
+            AddColumn(cRemovable, new DBField(DBField.cTypeInt));            
+            AddColumn(cKeepReference, new DBField(DBField.cTypeInt));
         }
 
         public static void ClearAll()

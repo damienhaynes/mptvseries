@@ -44,10 +44,12 @@ namespace WindowPlugins.GUITVSeries
             get { return this; }
             set { overRide(this, value); }
         }
+
         public const String cTableName = "season";
         public const String cOutName = "Season";
         public const int cDBVersion = 5;
-
+        
+        #region DB Field Names
         public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
         public const String cSeriesID = "SeriesID";
         public const String cIndex = "SeasonIndex";
@@ -57,13 +59,14 @@ namespace WindowPlugins.GUITVSeries
         public const String cHasLocalFilesTemp = "HasLocalFilesTemp";
         public const String cHasEpisodes = "HasOnlineEpisodes";
         public const String cHasEpisodesTemp = "HasOnlineEpisodesTemp";
-        public const String cHidden = "Hidden";
+        public const String cHidden = "Hidden";        
 
         public const String cForomSubtitleRoot = "ForomSubtitleRoot";
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
+        #endregion
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
 
@@ -76,11 +79,15 @@ namespace WindowPlugins.GUITVSeries
         {
             DBSeason dummy = new DBSeason();
 
+            ////////////////////////////////////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
             s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
             s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
             s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
-            s_FieldToDisplayNameMap.Add(cBannerFileNames, "Banner FileName List");
-            s_FieldToDisplayNameMap.Add(cCurrentBannerFileName, "Current Banner FileName");            
+            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
+            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
+            #endregion
+            ////////////////////////////////////////////////////////////////////////////////
 
             int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeasonVersion);
@@ -226,7 +233,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
-                if (Helper.String.IsNullOrEmpty(this[cCurrentBannerFileName]))
+                if (String.IsNullOrEmpty(this[cCurrentBannerFileName]))
                     return String.Empty;
                 string filename;
                 if (this[cCurrentBannerFileName].ToString().IndexOf(Directory.GetDirectoryRoot(this[cCurrentBannerFileName])) == -1)
@@ -267,7 +274,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 List<String> outList = new List<string>();
                 String sList = this[cBannerFileNames];
-                if (Helper.String.IsNullOrEmpty(sList))
+                if (String.IsNullOrEmpty(sList))
                     return outList;
 
                 String[] split = sList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);                
@@ -283,7 +290,7 @@ namespace WindowPlugins.GUITVSeries
                 for(int i=0; i<value.Count; i++)
                 {
                     value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                    if (Helper.String.IsNullOrEmpty(sIn))
+                    if (String.IsNullOrEmpty(sIn))
                         sIn += value[i];
                     else
                         sIn += "," + value[i];
@@ -494,6 +501,80 @@ namespace WindowPlugins.GUITVSeries
             if (epsUnWatched == 0) series[DBOnlineSeries.cUnwatchedItems] = false;
             else series[DBOnlineSeries.cUnwatchedItems] = true;
             series.Commit();
+        }
+
+        public List<string> deleteSeason(TVSeriesPlugin.DeleteMenuItems type)
+        {
+            List<string> resultMsg = new List<string>(); 
+
+            // Always delete from Local episode table if deleting from disk or database
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+            /* TODO will include hidden episodes as hidden attribute is only in onlineepisodes. maybe we should include it in localepisodes also..
+             * if hidden episodes are excluded then the if (resultMsg.Count is wrong and should do another select to get proper count
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+            {
+                //don't include hidden seasons unless the ShowHiddenItems option is set
+                condition.Add(new DBEpisode(), idden, 0, SQLConditionType.Equal);
+            }
+            */
+
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+            if (episodes != null)
+            {
+                foreach (DBEpisode episode in episodes)
+                {
+                    resultMsg.AddRange(episode.deleteEpisode(type));
+                }
+
+                // if there are no local episodes, we still need to delete from online table
+                if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+                {
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
+                    DBOnlineEpisode.Clear(condition);
+                }
+            }
+
+            // if there are no error messages and if we need to delete from db
+            if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                condition = new SQLCondition();
+                condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                condition.Add(new DBSeason(), DBSeason.cIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+                DBSeason.Clear(condition);
+            }
+
+            #region Cleanup
+            if (type != TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                // If episode count is zero then delete the series and all seasons
+                condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                episodes = DBEpisode.Get(condition, false);
+                if (episodes.Count == 0)
+                {
+                    // Delete Seasons
+                    condition = new SQLCondition();
+                    condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBSeason.Clear(condition);
+
+                    // Delete Local Series
+                    condition = new SQLCondition();
+                    condition.Add(new DBSeries(), DBSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBSeries.Clear(condition);
+
+                    // Delete Online Series
+                    condition = new SQLCondition();
+                    condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    DBOnlineSeries.Clear(condition);
+                }
+            }
+            #endregion
+
+            return resultMsg;
         }
         
     }

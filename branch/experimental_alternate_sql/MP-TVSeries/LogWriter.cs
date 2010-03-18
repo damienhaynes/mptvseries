@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #region Vars
-        static private LogLevel _selectedLogLevel = LogLevel.Debug;
+        static private LogLevel _selectedLogLevel = LogLevel.Normal;
         static String m_filename = Settings.GetPath(Settings.Path.log);
         static StreamWriter m_LogStream;
         static System.Windows.Forms.ListBox m_ListLog;
@@ -97,14 +97,9 @@ namespace WindowPlugins.GUITVSeries
                 // oopps, can't create file
             }
 
-            int level = 0;
-            int.TryParse(DBOption.GetOptions("logLevel"), out level);
-            selectedLogLevel = (LogLevel)level;
+            selectedLogLevel = LogLevel.Normal;
             pauseAutoWriteDB = true;
             
-            string[] ver = Settings.Version.ToString().Split(new char[] { '.' });            
-            Write(string.Format("MP-TVSeries Version: v{0}.{1}.{2}", ver.GetValue(0), ver.GetValue(1), ver.GetValue(2)));
-            Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
 
@@ -147,7 +142,6 @@ namespace WindowPlugins.GUITVSeries
             WriteMultiLine(entry, LogLevel.Normal);
         }
 
-
         /// <summary>
         /// To avoid having to join values if not needed in lower LogLevels use this
         /// </summary>
@@ -180,6 +174,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        static public void Write(String format, params object[] arg)
+        {
+            Write(string.Format(format, arg), LogLevel.Normal);
+        }
+
         /// <summary>
         /// Use this for Std. Log entries, only show up in LogLevel.Normal
         /// </summary>
@@ -197,7 +196,14 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_LogStream != null)
                 {
-                    lock (m_LogStream)
+                    if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey))
+                        entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
+
+                    String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+
+                    // note: keep the lock block as small as possible
+                    // don't call anything from within that could potentially call for a logwrite itself, or we have a deadlock
+                    lock (m_LogStream) 
                     {
                         try
                         {
@@ -205,12 +211,7 @@ namespace WindowPlugins.GUITVSeries
                                 m_LogStream = File.AppendText(m_filename);
                             else
                                 m_LogStream = File.CreateText(m_filename);
-                            
-                            if (OmmitKey && !Helper.String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey))
-                                entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
-
-                            String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
-                            
+                                                        
                             if (singleLine)
                                 m_LogStream.WriteLine(sPrefix + entry);
                             else

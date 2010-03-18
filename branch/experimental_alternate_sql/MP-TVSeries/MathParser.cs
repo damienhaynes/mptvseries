@@ -35,6 +35,7 @@ namespace WindowPlugins.GUITVSeries.MathParser
         const string floatNumberRegex = @"[+|-]?[0-9]+\.?[0-9]*";
         const string evalFormat = @"Eval(";
         const string optionFormat = "->";
+        const string translateFormat = "Trans(";
         //const string ifForm = "if(";
         //const string thenForm = "then(";
         //const string elseForm = "else(";
@@ -167,6 +168,32 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 else expression = expression.Replace(replace, string.Empty); // return "" and not its input //expression = expression.Replace(replace, with);
             }
             return expression;
+        }
+
+        /// <summary>
+        /// Translates an expression e.g. Trans(FirstAired) => "First Aired"
+        /// </summary>
+        /// <param name="expression">An Expression which may contain one or more translated strings</param>
+        /// <returns>Translated expression</returns>
+        public static string TranslateExpression(string expression) {
+            try {
+                string replace, with;
+                while (parenthesisFinder(expression, translateFormat, out replace, out with)) {
+                    if (Translation.Strings.ContainsKey(with)) {
+                        expression=expression.Replace(replace, Translation.Strings[with]);
+                    }
+                    else {
+                        MPTVSeriesLog.Write("Translation not Found: " + replace);
+                        expression=expression.Replace(replace, string.Empty);
+                    }
+                }
+                return
+                    expression;
+            }
+            catch (Exception e) {
+                MPTVSeriesLog.Write("Error translating expression: " + expression + " [" + e.Message + "]");
+                return "Translation Error!";
+            }
         }
 
         /// <summary>
