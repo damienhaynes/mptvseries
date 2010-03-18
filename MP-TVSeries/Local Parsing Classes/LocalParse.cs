@@ -48,7 +48,7 @@ namespace WindowPlugins.GUITVSeries
             if (importPathes != null)
             {
                 foreach (DBImportPath importPath in importPathes)
-                {
+                {                    
                     if (importPath[DBImportPath.cEnabled] != 0)
                     {
                         listFolders.Add(importPath[DBImportPath.cPath]);
@@ -106,6 +106,11 @@ namespace WindowPlugins.GUITVSeries
             foreach (PathPair file in files)
             {
                 parser = new FilenameParser(file.m_sMatch_FileName);
+                
+                // title case the seriesname
+                if (parser.Matches.ContainsKey(DBSeries.cParsedName))
+                    parser.Matches[DBSeries.cParsedName] = parser.Matches[DBSeries.cParsedName].ToString().ToTitleCase();
+
                 try
                 {
                     if (isOnRemovable(file.m_sFull_FileName))
@@ -175,6 +180,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.match_filename = file.m_sMatch_FileName;
                 progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
+                progressReporter.PathPair = file;
                 if(includeFailed ||progressReporter.success)
                     results.Add(progressReporter);
             }
@@ -220,6 +226,7 @@ namespace WindowPlugins.GUITVSeries
         public FilenameParser parser;
         public string match_filename;
         public string full_filename;
+        public PathPair PathPair;
 
         private static parseResultComparer comparer = new parseResultComparer();
         public static parseResultComparer Comparer { get { return comparer;}}

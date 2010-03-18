@@ -28,22 +28,79 @@ using System.Diagnostics;
 using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using MediaPortal.Ripper;
+using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries
 {
+    #region String Extension Methods
+    public static class StringExtensions
+    {
+        public static bool IsNumerical(this string number)
+        {
+            double isNumber = 0;
+            return System.Double.TryParse(number, out isNumber);
+        }
+
+        /// <summary>
+        /// ASCII chars that are considered "special" in the context of CleanStringOfSpecialChars
+        /// </summary>
+        static int[] specialCharsFromTo = new int[] { 0,  31, 
+                                                     33,  47, 
+                                                     58,  64, 
+                                                     91,  96, 
+                                                    123, 127 };
+        /// <summary>
+        /// Cleans a string of Punctuation and other Special Characters (removes them)
+        /// Leaves ASCII Chars: 0-9, a-z, A-Z, space
+        /// Leaves non-ASCII Chars
+        /// </summary>
+        /// <param name="input">The string to clean</param>
+        /// <returns>The cleaned string</returns>
+        public static string CleanStringOfSpecialChars(this string input)
+        {
+            char[] cInput = input.ToCharArray();
+            int removed = 0;
+            bool isRemoved = false;
+            for (int i = 0; i < cInput.Length; i++)
+            {
+                isRemoved = false;
+                for (int j = 0; j < specialCharsFromTo.Length; j += 2)
+                {
+                    if (cInput[i] >= specialCharsFromTo[j] && cInput[i] <= specialCharsFromTo[j + 1])
+                    {
+                        removed++;
+                        isRemoved = true;
+                        break;
+                    }
+                }
+                if (!isRemoved)
+                    cInput[i - removed] = cInput[i];
+            }
+
+            // shrink the result
+            char[] newLenghtChars = new char[cInput.Length - removed];
+            for (int i = 0; i < newLenghtChars.Length; i++)
+                newLenghtChars[i] = cInput[i];
+
+            return new string(newLenghtChars);
+        }
+        
+        /// <summary>
+        /// TitleCases a string
+        /// </summary>
+        /// <param name="input">The string to TitleCase</param>
+        /// <returns>The TitleCased String</returns>
+        public static string ToTitleCase(this string input)
+        {
+            return textInfo.ToTitleCase(input.ToLower());
+        }
+        static TextInfo textInfo = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo;
+
+    }
+    #endregion
+
     class Helper
     {
-        #region String Methods
-        public static class String
-        {           
-            public static bool IsNumerical(string number)
-            {
-                double isNumber = 0;
-                return System.Double.TryParse(number, out isNumber);
-            }
-        }
-        #endregion
-
         #region List<T> Methods
 
         public static List<T> inverseList<T>(List<T> input)

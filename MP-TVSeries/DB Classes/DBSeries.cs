@@ -197,7 +197,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
-			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));                        
+			base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -250,7 +250,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 // we need to get it
-                                MPTVSeriesLog.Write("Retrieving original Series Name...");                                
+                                MPTVSeriesLog.Write("Retrieving original Series Name...");
                                 UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], origLanguage);
                                 if (origParser != null && origParser.Results.Count == 1)
                                 {
@@ -303,7 +303,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 12;
+        public const int cDBVersion = 13;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
@@ -444,7 +444,21 @@ namespace WindowPlugins.GUITVSeries
 
                         nUpgradeDBVersion++;
                         break;
+                    case 12:
+                        // we now have parsed_series names as titlecased
+                        // to avoid users having to re-identify series for new episodes, and to avoid duplicate entries, we upgrade existing series names
 
+                        foreach (var series in AllSeries)
+                        {
+                            string oldName = series[DBSeries.cParsedName];
+                            string newName = oldName.ToTitleCase();
+                            MPTVSeriesLog.Write(string.Format("Upgrading Parsed Series Name: {0} to {1}", oldName, newName));
+                            series[DBSeries.cParsedName] = newName;
+                            series.Commit();
+                        }
+
+                        nUpgradeDBVersion++;
+                        break;
                     default:
                         // new DB, nothing special to do
                         nUpgradeDBVersion = nCurrentDBVersion;
