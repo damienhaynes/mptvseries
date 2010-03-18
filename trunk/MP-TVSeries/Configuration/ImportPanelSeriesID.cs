@@ -212,6 +212,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             dataGridView1.CellContentClick += new DataGridViewCellEventHandler((sender, e) =>
             {
+                if (e.RowIndex < 0) return;
+
                 // which row was clicked?
                 var row = dataGridView1.Rows[e.RowIndex];
                 
