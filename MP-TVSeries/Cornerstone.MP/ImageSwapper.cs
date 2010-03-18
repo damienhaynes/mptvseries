@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using MediaPortal.GUI.Library;
-//using NLog;
 using System.Threading;
+using WindowPlugins.GUITVSeries;
 
 namespace Cornerstone.MP {
     /// <summary>
@@ -16,8 +16,7 @@ namespace Cornerstone.MP {
     /// dramtically improving GUI performance. It also takes advantage of the Delay feature of
     /// the AsyncImageResource to prevent unneccisary loads when rapid image changes are made.
     /// </summary>
-    public class ImageSwapper {
-        //private static Logger logger = LogManager.GetCurrentClassLogger();
+    public class ImageSwapper {       
         private bool imagesNeedSwapping = false;
         private object loadingLock = new object();
 
@@ -37,7 +36,7 @@ namespace Cornerstone.MP {
 
                 // if we are inactive be sure both properties are cleared
                 if (!Active) {
-                    //logger.Info("Clearing Properties");
+                    MPTVSeriesLog.Write("ImageSwapper: Clearing Properties");
                     _imageResource.Property = _propertyTwo;
                     _imageResource.Property = _propertyOne;
                 }
