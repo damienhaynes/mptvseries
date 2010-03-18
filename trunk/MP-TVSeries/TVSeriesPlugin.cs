@@ -4264,7 +4264,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void parserUpdater_OnlineParsingProgress(int nProgress)
+        void parserUpdater_OnlineParsingProgress(int nProgress, ParsingProgress progress)
         {
             // update the facade when progress has reached 30 (arbitrary point where local media has been scanned)
             if (nProgress == 30 && m_Facade != null) LoadFacade();

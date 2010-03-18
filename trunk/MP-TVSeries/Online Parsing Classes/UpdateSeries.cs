@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries
 {
     class UpdateSeries
     {
+        private List<String> sSeriesIDs = null;
         private long m_nServerTimeStamp = 0;
         private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
         private List<int> listIncorrectIDs = new List<int>();
@@ -43,7 +44,29 @@ namespace WindowPlugins.GUITVSeries
 
         public List<DBOnlineSeries> Results
         {
-            get { return listSeries; }
+            get
+            {
+                if (listSeries == null)
+                    listSeries = new List<DBOnlineSeries>(ResultsLazy);
+                return listSeries;
+            }
+        }
+
+        /// <summary>
+        /// Lazily Evaluates
+        /// </summary>
+        public IEnumerable<DBOnlineSeries> ResultsLazy
+        {
+            get
+            {
+                foreach (string id in sSeriesIDs)
+                {
+                    var results = Work(id);
+                    foreach (var r in results)
+                        if(r != null && r[DBOnlineSeries.cID] > 0)
+                          yield return r;
+                }
+            }
         }
 
         public List<int> BadIds
@@ -51,41 +74,34 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
-        public UpdateSeries(List<String> sSeriesIDs)
-        {
-            foreach(string id in sSeriesIDs)
-                Work(id);
-        }
-        
         public UpdateSeries(String sSeriesIDs)
         {
             Work(sSeriesIDs);
         }
-        
-        public UpdateSeries(List<String> sSeriesIDs, String languageID)
+
+        public UpdateSeries(List<String> sSeriesIDs)
         {
-            foreach (String id in sSeriesIDs)
-                Work(id, languageID);
+            this.sSeriesIDs = sSeriesIDs;            
         }
-        
+
         public UpdateSeries(String sSeriesIDs, String languageID)
         {
             Work(sSeriesIDs, languageID);
         }
-        
-        void Work(String sSeriesID)
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
         {
-            Work(sSeriesID, "");
+            return Work(sSeriesID, "");
         }
-        
-        void Work(String sSeriesID, String languageID)
+
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID)
         {
             if (sSeriesID.Length > 0)
             {
                 int result;
                 if (int.TryParse(sSeriesID,out result))
                     MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
-                
+
                 XmlNode node = null;
                 if (String.IsNullOrEmpty(languageID))
                 {
@@ -101,13 +117,13 @@ namespace WindowPlugins.GUITVSeries
                     foreach (XmlNode itemNode in node.ChildNodes)
                     {
                         bool hasDVDOrdering = false;
-                        bool hasAbsoluteOrdering = false;
+                        bool hasAbsoluteOrdering = false;       
                         DBOnlineSeries series = new DBOnlineSeries();
                         foreach (XmlNode seriesNode in itemNode)
                         {
-                            // first return item SHOULD ALWAYS be the series
+                            // first return item SHOULD ALWAYS be the series                            
                             if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {                                                                
+                            {                           
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
@@ -149,6 +165,7 @@ namespace WindowPlugins.GUITVSeries
                             if (hasDVDOrdering) ordering += "DVD";
                             series[DBOnlineSeries.cEpisodeOrders] = ordering;
                         }
+                        if(series != null) yield return series;
                     }
                 }
             }

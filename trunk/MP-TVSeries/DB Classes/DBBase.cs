@@ -258,6 +258,7 @@ namespace WindowPlugins.GUITVSeries
     // holds a field hash table, includes an update mechanism to keep the DB tables in sync
     public class DBTable
     {
+        public const string cUserEditPostFix = @"__USEREDIT__";
         public string m_tableName;
         public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
         public bool m_CommitNeeded = false;
@@ -966,7 +967,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (EncloseIfString)
             {
-                if (value.Length > 2 && value[0] != '\'' && !Helper.String.IsNumerical(value))
+                if (value.Length > 2 && value[0] != '\'' && !value.IsNumerical())
                     value = "'" + value + "'";
             }
             AddCustom(what, value, type);
@@ -1167,10 +1168,9 @@ namespace WindowPlugins.GUITVSeries
             m_db = null; ;
             MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
           }
-          catch (Exception ex)
+          catch (Exception)
           {
             MPTVSeriesLog.Write("Failed closing Database: " + databaseFile);
-            MPTVSeriesLog.Write(ex.Message);
           }              
         }
 
