@@ -342,6 +342,18 @@
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportProgessPage.resx">
+      <DependentUpon>ImportProgessPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\loadingDisplay.resx">
       <DependentUpon>loadingDisplay.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -365,6 +377,9 @@
     <EmbeddedResource Include="Configuration\PinCode.resx">
       <DependentUpon>PinCode.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ProgressLabel.resx">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
       <SubType>Designer</SubType>
@@ -439,8 +454,39 @@
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\ImportPanelEpID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelEpID.Designer.cs">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.Designer.cs">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.Designer.cs">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportProgessPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportProgessPage.Designer.cs">
+      <DependentUpon>ImportProgessPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.Designer.cs">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
+    <Compile Include="Online Parsing Classes\UserInputResult.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
     <None Include="Properties\VersionInfo.cs.tmpl" />
   </ItemGroup>
