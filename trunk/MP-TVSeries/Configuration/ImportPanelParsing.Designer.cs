@@ -93,13 +93,13 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView1.Size = new System.Drawing.Size(673, 263);
+            this.dataGridView1.Size = new System.Drawing.Size(698, 263);
             this.dataGridView1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(638, 349);
+            this.button1.Location = new System.Drawing.Point(663, 349);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -110,7 +110,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(557, 349);
+            this.button2.Location = new System.Drawing.Point(582, 349);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -131,7 +131,7 @@
             // 
             this.lnkAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkAdd.AutoSize = true;
-            this.lnkAdd.Location = new System.Drawing.Point(643, 41);
+            this.lnkAdd.Location = new System.Drawing.Point(668, 41);
             this.lnkAdd.Name = "lnkAdd";
             this.lnkAdd.Size = new System.Drawing.Size(64, 13);
             this.lnkAdd.TabIndex = 4;
@@ -145,7 +145,7 @@
             this.groupBoxAddCol.Controls.Add(this.buttonAddColCancel);
             this.groupBoxAddCol.Controls.Add(this.buttonAddColOK);
             this.groupBoxAddCol.Controls.Add(this.textBoxAddCol);
-            this.groupBoxAddCol.Location = new System.Drawing.Point(418, 57);
+            this.groupBoxAddCol.Location = new System.Drawing.Point(443, 57);
             this.groupBoxAddCol.Name = "groupBoxAddCol";
             this.groupBoxAddCol.Size = new System.Drawing.Size(295, 85);
             this.groupBoxAddCol.TabIndex = 6;
@@ -184,7 +184,7 @@
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFilter.Location = new System.Drawing.Point(453, 38);
+            this.textBoxFilter.Location = new System.Drawing.Point(478, 38);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(179, 20);
             this.textBoxFilter.TabIndex = 7;
@@ -239,10 +239,9 @@
             // lblCount
             // 
             this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCount.AutoSize = true;
-            this.lblCount.Location = new System.Drawing.Point(563, 326);
+            this.lblCount.Location = new System.Drawing.Point(434, 330);
             this.lblCount.Name = "lblCount";
-            this.lblCount.Size = new System.Drawing.Size(129, 13);
+            this.lblCount.Size = new System.Drawing.Size(304, 13);
             this.lblCount.TabIndex = 10;
             this.lblCount.Text = "0 Files found (0 displayed)";
             this.lblCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -255,26 +254,27 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(343, 16);
             this.label1.TabIndex = 11;
-            this.label1.Text = "Step 1 of 3: Review and Change the local File Information";
+            this.label1.Text = "Step 1 of 4: Review and Change the local File Information";
             // 
             // ImportPanelParsing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.AliceBlue;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblCount);
             this.Controls.Add(this.checkFilterMan);
             this.Controls.Add(this.lnkAddFiles);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.groupBoxAddCol);
+            this.Controls.Add(this.lblCount);
             this.Controls.Add(this.lnkAdd);
             this.Controls.Add(this.label_wait_parse);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
+            this.MinimumSize = new System.Drawing.Size(758, 385);
             this.Name = "ImportPanelParsing";
-            this.Size = new System.Drawing.Size(733, 385);
+            this.Size = new System.Drawing.Size(758, 385);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBoxAddCol.ResumeLayout(false);
             this.groupBoxAddCol.PerformLayout();
