@@ -1200,6 +1200,119 @@ namespace WindowPlugins.GUITVSeries
         }
 }
 
+    public class MySqlProvider : DBProvider
+    {
+        public MySqlProvider(string connectionString)
+        {
+            m_sConnectionString = connectionString;
+        }
+
+        public override string sProviderName
+        {
+            get 
+            { 
+                return "MySql.Data.MySqlClient"; 
+            }
+        }
+
+        public override bool bUseLimit
+        {
+            get 
+            {
+                return false;
+            }
+        }
+
+        public static void TestConnection(string ConnectionString)
+        {
+            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+            using (DbConnection connection = factory.CreateConnection()) {
+                //try and open the database
+                try {
+                    connection.ConnectionString = ConnectionString;
+                    connection.Open();
+                } finally {
+                    connection.Close();
+                }
+            }
+        }
+
+        public static void CreateDatabase(string ConnectionString)
+        {
+            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = ConnectionString;
+
+            string database = builder["Initial Catalog"].ToString();
+
+            //were going to make the database, so remove the database from the connectionstring
+            builder.Remove("Initial Catalog");
+
+            System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
+
+            //initial mysql commands (use GO not ; so that Replace commands below work
+            string createScript = "USE mysql GO\r\n DROP DATABASE IF EXISTS %MpTvSeriesDb4% GO\r\n CREATE DATABASE %MpTvSeriesDb4% GO\r\n use %MpTvSeriesDb4% GO\r\n"
+                + " set SQL_MODE=ANSI_QUOTES GO\r\n";
+            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
+
+            using (StreamReader reader = new StreamReader(stream)) {
+                createScript += reader.ReadToEnd();
+            }
+
+            createScript = createScript.Replace("GO\r\n", ";!");
+            createScript = createScript.Replace("\r\n", " ");
+            createScript = createScript.Replace("\t", " ");
+
+            //convert the script to MySQL syntax
+            createScript = createScript.Replace("[dbo].", "");
+            createScript = createScript.Replace("NONCLUSTERED INDEX", "INDEX");
+            createScript = createScript.Replace('[', '"');
+            createScript = createScript.Replace(']', '"');
+            createScript = createScript.Replace("IDENTITY(1,1) NOT NULL", "NOT NULL AUTO_INCREMENT");
+
+            //MySQL limits keys to 1000 bytes so default utf8 encoding only allows a length of 333 (if not enough  need to change the character encoding)
+            createScript = createScript.Replace("\"EpisodeFilename\" varchar(1024) NOT NULL,--MySqlReplace", "\"EpisodeFilename\" varchar(333) NOT NULL,");
+            createScript = createScript.Replace("\"filename\" varchar(1024) NOT NULL,--MySqlReplace", "\"filename\" varchar(333) NOT NULL,");
+            
+            string[] Commands = createScript.Split('!');
+
+            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+            using (DbConnection connection = factory.CreateConnection()) {
+                try {
+                    connection.ConnectionString = builder.ConnectionString;
+                    connection.Open();
+
+                    foreach (string commandText in Commands) {
+                        string Sql = commandText.Trim();
+                        if (!string.IsNullOrEmpty(Sql) && !Sql.StartsWith("--") && !Sql.StartsWith("/*")) {
+                            using (DbCommand command = connection.CreateCommand()) {
+                                command.CommandText = commandText;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                } finally {
+                    connection.Close();
+                }
+            }
+        }
+
+        public override void InitDB()
+        {
+            TestConnection(sConnectionString);
+        }
+
+        public override void AddColumn(string tableName, string fieldName, DBField field)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CreateTable(string tableName, string fieldName, DBField field)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class SQLClientProvider : DBProvider
     {
         public SQLClientProvider(string connectionString)
@@ -1250,12 +1363,13 @@ namespace WindowPlugins.GUITVSeries
             System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
 
-            string createScript = string.Empty;
+            string createScript = "USE [master] GO\r\n IF EXISTS (SELECT name FROM sysdatabases WHERE name = N'%MpTvSeriesDb4%') DROP DATABASE [%MpTvSeriesDb4%] GO\r\n CREATE DATABASE [%MpTvSeriesDb4%] GO\r\n use [%MpTvSeriesDb4%] GO\r\n";
+            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
+
             using (StreamReader reader = new StreamReader(stream)) {
-                createScript = reader.ReadToEnd();
+                createScript += reader.ReadToEnd();
             }
 
-            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
             createScript = createScript.Replace("GO\r\n", "!");
             createScript = createScript.Replace("\r\n", " ");
             createScript = createScript.Replace("\t", " ");
@@ -1398,10 +1512,16 @@ namespace WindowPlugins.GUITVSeries
             if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
                 return;
 
-            if (Settings.UseSQLClient) {
-                m_DBProvider = new SQLClientProvider(Settings.ConnectionString);
-            } else {
-                m_DBProvider = new SQLiteProvider(Settings.GetPath(Settings.Path.database));
+            switch (Settings.SQLClient) {
+                case Settings.SqlClients.sqlClient:
+                    m_DBProvider = new SQLClientProvider(Settings.ConnectionString);
+                    break;
+                case Settings.SqlClients.mySql:
+                    m_DBProvider = new MySqlProvider(Settings.ConnectionString);
+                    break;
+                default:
+                    m_DBProvider = new SQLiteProvider(Settings.GetPath(Settings.Path.database));
+                    break;
             }
 
             try

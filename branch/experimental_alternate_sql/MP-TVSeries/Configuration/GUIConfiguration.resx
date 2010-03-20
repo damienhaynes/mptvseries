@@ -640,6 +640,54 @@
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>766, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAdNJREFUSEu1Vb0rR1EY/l2SRD6TgWQy+UjJRyklsipZZDHIYJHJYrFYFJvVYLCQ/AMo
+        FJKBiaIYfhaLlI/oep7rHL0O99xzLk493fuej+d53/ec95wgDMMMWxAE0TehdXEqsAt8LPyhac5oiMaX
+        DrvCFIafgHmg1ibwyesgkAeiJmAAWFGe0/trYBIoMoU0Z+S4RaAEC8eBA+BZEJNc4hx2rxRxEWjFAp1n
+        k1DaL5i3CXT6CHSo8DXRG+wdYAZYFd4fq7Tl+6SoBpNPBckJ/vsFwQT+b4FpoNAk1nZciriZi4KcKao2
+        SJpht8QRJwkwj/dK4A7fxiQi3wjmhPc856lbXIq2hEBPanaSqOI164ACrNILoN5TgNdHA8CrpC1OoByD
+        VQC/uZ4CPCCHKgNZl0Lz5M9UYEFWCZz9h8Cw2L/lvxYoBvm+EBhMK9ANkjFjf5j7JUG+jf9SXwFuPOuC
+        J2xNbA5PzYYgZ5H2cdxVoABzR4FLQcKTwntoHXgQ/Y8qukjfRYB1sCcIbFf2FeYNicicBMqUpzcxIq/o
+        Z0HOAnWS3DUCvYa36QLAy49RHAEjAC/Gb0+lXuSSItOpdnTw5eKbnGMO/iYCubYSBh8fHk1rkxG8A28g
+        05d8OjNKAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
+    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
+local/online refresh of series.
+
+This is active when first starting MP or when resuming from standby. A manual scan
+can be started within plugin.</value>
+  </data>
+  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
+    <value>Enable this option to use the TV Series found online when only one exact match was found.
+In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
+  </data>
+  <data name="addLogo.ToolTip" xml:space="preserve">
+    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
+what video and audio codecs the epsiode is encoded in etc...
+
+A Logo package must be installed to display logos succesfully in Media Portal</value>
+  </data>
+  <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
+    <value>Regular expression that is going to extract data from the details page of a specific torrent.
+The plugin is only looking for one group:
+&lt;filecount&gt; is the number of files in the torrent. Only torrents with one file will be taken into account</value>
+  </data>
+  <data name="textBox_TorrentSearchRegex.ToolTip" xml:space="preserve">
+    <value>Regular expression that is going to extract data from the search results.
+Various group names are mandatory:
+
+&lt;name&gt; is the name of the torrent file
+&lt;link&gt; is the url of the torrent file, used to download (should be relative to the search website address)
+&lt;id&gt; is the id of the torrent file, that is used to then go in the details and find out how many files there are in the release (the plugin filters out all multi part torrents; extracting files from a RAR is inpractical)
+&lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
+&lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
+  </data>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 56</value>
   </metadata>
@@ -660,84 +708,6 @@ This setting can also be changed from within Media Portal in the plugins context
 Disable to show all seasons and episodes for series.
 
 This setting can also be changed from within Media Portal</value>
-  </data>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>339, 17</value>
-  </metadata>
-  <data name="label70.Text" xml:space="preserve">
-    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
-Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
-successfully match up with episodes in the online database.
-
-If an expression can not evaluate these items, the next expression in the list is used.
-</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
-        HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
-        pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
-        KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
-        AAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
-        cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
-        fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
-        IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
-        AABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="label69.Text" xml:space="preserve">
-    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
-It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
-replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
-
-Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
-  </data>
-  <data name="label68.Text" xml:space="preserve">
-    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths 
-defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help,
-you can modify the plugins parser behaviour from the left hand side tree view.</value>
-  </data>
-  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
-        CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
-        NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
-        F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
-        kssoNIIlMXqu89SPL0V7AjCQ2p0m5nRwdzIB3KU3UFMggEdHM8SjpNMHqEJlLcR3QSCAC+TUZCCj2WiB
-        /lE1OmQM4Oo/AONi/tb/GlAG82MBGE0L6IfJlDM/zP2aMN/Hd0UogBPPfcEVtiUmh6tmR5hzkw6xXgso
-        RttJ6FaYcKXwHNqGXsT/VxNdlq8BcB8cCQP3DpDlO7QbE5GpAJVmpA8eyCf+c0MuQo3SXBuB7cPTdAXi
-        4cdRn0ETEA/GH1el7aRJkTuoLvzgzcU7Od+t/E0Esm8NCrx8uDQTHxnBNxzK2wROMetMAAAAAElFTkSu
-        QmCC
-</value>
-  </data>
-  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
-    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
-local/online refresh of series.
-
-This is active when first starting MP or when resuming from standby. A manual scan
-can be started within plugin.</value>
-  </data>
-  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
-    <value>Enable this option to use the TV Series found online when only one exact match was found.
-In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
-  </data>
-  <data name="addLogo.ToolTip" xml:space="preserve">
-    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
-what video and audio codecs the epsiode is encoded in etc...
-
-A Logo package must be installed to display logos succesfully in Media Portal</value>
   </data>
   <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
     <value>Enter in the field(s) to be displayed in the main information pane of the season view.
@@ -829,20 +799,50 @@ You can right click on this textbox to bring up a menu of available fields from 
 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
-  <data name="textBox_TorrentDetailsRegex.ToolTip" xml:space="preserve">
-    <value>Regular expression that is going to extract data from the details page of a specific torrent.
-The plugin is only looking for one group:
-&lt;filecount&gt; is the number of files in the torrent. Only torrents with one file will be taken into account</value>
-  </data>
-  <data name="textBox_TorrentSearchRegex.ToolTip" xml:space="preserve">
-    <value>Regular expression that is going to extract data from the search results.
-Various group names are mandatory:
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>339, 17</value>
+  </metadata>
+  <data name="label70.Text" xml:space="preserve">
+    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
+Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
+successfully match up with episodes in the online database.
 
-&lt;name&gt; is the name of the torrent file
-&lt;link&gt; is the url of the torrent file, used to download (should be relative to the search website address)
-&lt;id&gt; is the id of the torrent file, that is used to then go in the details and find out how many files there are in the release (the plugin filters out all multi part torrents; extracting files from a RAR is inpractical)
-&lt;seeds&gt; is the number of seeds for this torrents; this is used to sort the results from highest number to lowest
-&lt;leechers&gt; is the number of leechers; not displayed / used yet</value>
+If an expression can not evaluate these items, the next expression in the list is used.
+</value>
+  </data>
+  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w8NBxCRQNMIqcEXygSjgIDhjUB5UDbK
+        x6eOVg7wg1oOcsAfILbH5QhaOEAdaNkHJAeAHPEKiOWwOYLaDuAHWnIVzXKQA0D4DBBzojuC2g5Yh8Ny
+        mCPm09IBdQQshzkiB9kR1AoBb2hig1mCj/4JVGsDcwQ1HKCCJdERcggoUUqDHEGpA3jwJDpCjjgJ1MtG
+        qQPQ0xQoKvBZrEvLRAgye9QBoyEwGgKjITDgIQAq6WbiweDyn2q1Ia2b7QQbpaMOGA0BWocAABKyBt5g
+        xtkWAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAOBJREFUWEdj/P//P8OAApADBhIPqOXg0B9I3w9+B2BJnLpAsZl4sDS6HkIhjDcKsDjA
+        GygGyja4MMiBKGDUAaMhMBoCoyEw5EOAB1isXSVQ+uEqFU8C9bFRIwRUgAZ9INERr4DqwfUCNRwAMgdU
+        B/wh0hE/gepsYBUCtRwAMq+OSAfkINdG1HQAyNx1BBwxn9a1IT+eRHkGKMdJaweAzFfHkihBiU4O3XJq
+        JkJ0s/2QogKUOO2xWU5LB4DMboQ6Ih+X5bR2AMj8NHyWU+wAQlmIGvIESypqWILPjFEHjIYAAImeBt4g
+        mAY8AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="label69.Text" xml:space="preserve">
+    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
+It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
+replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
+
+Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
+  </data>
+  <data name="label68.Text" xml:space="preserve">
+    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths 
+defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help,
+you can modify the plugins parser behaviour from the left hand side tree view.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>92</value>

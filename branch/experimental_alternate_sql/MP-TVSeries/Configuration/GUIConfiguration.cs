@@ -176,7 +176,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch { }
 
-            textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
+            //textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
             this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
@@ -3538,16 +3538,16 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        private void button_dbbrowse_Click(object sender, EventArgs e)
-        {
-            openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
-            openFileDialog.Filter = "Executable files (*.db3)|";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Settings.SetDBPath(openFileDialog.FileName);
-                textBox_dblocation.Text = openFileDialog.FileName;
-            }
-        }
+        //private void button_dbbrowse_Click(object sender, EventArgs e)
+        //{
+        //    openFileDialog.FileName = Settings.GetPath(Settings.Path.database);
+        //    openFileDialog.Filter = "Executable files (*.db3)|";
+        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        Settings.SetDBPath(openFileDialog.FileName);
+        //        textBox_dblocation.Text = openFileDialog.FileName;
+        //    }
+        //}
         # region Newsbin
         private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
         {
@@ -4715,6 +4715,12 @@ namespace WindowPlugins.GUITVSeries
             if (e.Button == MouseButtons.Right) {
                 treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
             } 
+        }
+
+        private void button_configuredatabase_Click(object sender, EventArgs e)
+        {
+            DatabaseConfigurator dc = new DatabaseConfigurator();
+            dc.ShowDialog(this);
         }
     }
     

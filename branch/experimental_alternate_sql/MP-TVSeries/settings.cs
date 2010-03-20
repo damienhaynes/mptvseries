@@ -68,6 +68,13 @@ namespace WindowPlugins.GUITVSeries
 
         #region SQLCLient
         static string _connectionString = string.Empty;
+        public enum SqlClients
+        {
+            sqLite,
+            sqlClient, // sql2005,sql2008
+            mySql
+        };
+        static SqlClients _currentSqlClient = SqlClients.sqLite;
         #endregion
 
         #region Constructors
@@ -105,6 +112,11 @@ namespace WindowPlugins.GUITVSeries
                 value = rk.GetValue("ConnectionString");
                 if (value != null) {
                     _connectionString = value.ToString();
+                }
+
+                value = rk.GetValue("SqlClient");
+                if (value != null) {
+                    _currentSqlClient = (SqlClients)Enum.Parse(typeof(SqlClients), value.ToString(), true);
                 }
             }
 
@@ -145,8 +157,8 @@ namespace WindowPlugins.GUITVSeries
         public static string UserAgent
         { get { return _userAgent; } }
 
-        public static bool UseSQLClient
-        { get { return !string.IsNullOrEmpty(_connectionString); } }
+        public static SqlClients SQLClient
+        { get { return _currentSqlClient; } }
 
         public static string ConnectionString
         { get { return _connectionString; } }
@@ -204,6 +216,12 @@ namespace WindowPlugins.GUITVSeries
             rk.SetValue("ConnectionString", connectionString);
         }
 
+        public static void SetCurrentClient(SqlClients client)
+        {
+            RegistryKey rk = Registry.CurrentUser.CreateSubKey("Software\\MPTVSeries");
+            rk.SetValue("SqlClient", client);
+        }
+
         /// <summary>
         /// Deletes the Connection string so that MPTVSeries will go back to using SQLite
         /// </summary>
@@ -211,6 +229,7 @@ namespace WindowPlugins.GUITVSeries
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("Software\\MPTVSeries", true);
             rk.DeleteValue("ConnectionString", false);
+            rk.DeleteValue("SqlClient", false);
         }
         #endregion
 

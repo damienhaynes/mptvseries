@@ -47,6 +47,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radio_mysql = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +93,6 @@
             this.textBox_username.Name = "textBox_username";
             this.textBox_username.Size = new System.Drawing.Size(310, 20);
             this.textBox_username.TabIndex = 1;
-            this.textBox_username.Text = "sa";
             this.textBox_username.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_password
@@ -102,7 +102,6 @@
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(310, 20);
             this.textBox_password.TabIndex = 3;
-            this.textBox_password.Text = "mediaportal";
             this.textBox_password.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_server
@@ -112,7 +111,6 @@
             this.textBox_server.Name = "textBox_server";
             this.textBox_server.Size = new System.Drawing.Size(310, 20);
             this.textBox_server.TabIndex = 5;
-            this.textBox_server.Text = "localhost\\SQLEXPRESS";
             this.textBox_server.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBox_database
@@ -122,7 +120,6 @@
             this.textBox_database.Name = "textBox_database";
             this.textBox_database.Size = new System.Drawing.Size(312, 20);
             this.textBox_database.TabIndex = 7;
-            this.textBox_database.Text = "MpTvSeriesDb";
             this.textBox_database.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // label1
@@ -205,15 +202,16 @@
             this.radio_sqlite.TabStop = true;
             this.radio_sqlite.Text = "Use SQLite";
             this.radio_sqlite.UseVisualStyleBackColor = true;
+            this.radio_sqlite.CheckedChanged += new System.EventHandler(this.radio_sqlite_CheckedChanged);
             // 
             // radio_sqlclient
             // 
             this.radio_sqlclient.AutoSize = true;
             this.radio_sqlclient.Location = new System.Drawing.Point(17, 80);
             this.radio_sqlclient.Name = "radio_sqlclient";
-            this.radio_sqlclient.Size = new System.Drawing.Size(86, 17);
+            this.radio_sqlclient.Size = new System.Drawing.Size(103, 17);
             this.radio_sqlclient.TabIndex = 2;
-            this.radio_sqlclient.Text = "Use Sql2005";
+            this.radio_sqlclient.Text = "Use Sql2005/08";
             this.radio_sqlclient.UseVisualStyleBackColor = true;
             this.radio_sqlclient.CheckedChanged += new System.EventHandler(this.radio_sqlclient_CheckedChanged);
             // 
@@ -255,11 +253,23 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             // 
+            // radio_mysql
+            // 
+            this.radio_mysql.AutoSize = true;
+            this.radio_mysql.Location = new System.Drawing.Point(137, 80);
+            this.radio_mysql.Name = "radio_mysql";
+            this.radio_mysql.Size = new System.Drawing.Size(76, 17);
+            this.radio_mysql.TabIndex = 7;
+            this.radio_mysql.Text = "Use MySql";
+            this.radio_mysql.UseVisualStyleBackColor = true;
+            this.radio_mysql.CheckedChanged += new System.EventHandler(this.radio_mysql_CheckedChanged);
+            // 
             // DatabaseConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 314);
+            this.Controls.Add(this.radio_mysql);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.radio_sqlclient);
@@ -300,5 +310,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton radio_mysql;
     }
 }

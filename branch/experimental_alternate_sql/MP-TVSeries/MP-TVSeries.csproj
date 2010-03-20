@@ -118,6 +118,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.2.2.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="SubtitleDownloader, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
@@ -350,6 +351,9 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DatabaseConfigurator.resx">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\DeleteDialog.resx">
       <DependentUpon>DeleteDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -477,7 +481,14 @@
     <Content Include="Resources\Languages\ru.xml" />
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
+    <EmbeddedResource Include="DB Classes\create_sqlserver_database.sql" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\DatabaseConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DatabaseConfigurator.Designer.cs">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ImportPanelEpID.cs">
       <SubType>UserControl</SubType>
     </Compile>
