@@ -125,83 +125,70 @@ namespace Cornerstone.MP {
 
         // Unloads the previous file and sets a new filename. 
         private void setFilenameWorker(object newFilenameObj) {
-            try
-            {
-                int localToken = ++pendingToken;
-                string oldFilename = _filename;
+            int localToken = ++pendingToken;
+            string oldFilename = _filename;
 
-                // check if another thread has locked for loading
-                bool loading = Monitor.TryEnter(loadingLock);
-                if (loading) Monitor.Exit(loadingLock);
+            // check if another thread has locked for loading
+            bool loading = Monitor.TryEnter(loadingLock);
+            if (loading) Monitor.Exit(loadingLock);
 
-                // if a loading action is in progress or another thread is waiting, we wait too
-                if (loading || threadsWaiting > 0)
-                {
-                    threadsWaiting++;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Thread.Sleep(_delay / 5);
-                        if (localToken < pendingToken)
-                            return;
-                    }
-                    threadsWaiting--;
+            // if a loading action is in progress or another thread is waiting, we wait too
+            if (loading || threadsWaiting > 0) {
+                threadsWaiting++;
+                for (int i = 0; i < 5; i++) {
+                    Thread.Sleep(_delay / 5);
+                    if (localToken < pendingToken)
+                        return;
                 }
+                threadsWaiting--;
+            }
 
-                lock (loadingLock)
-                {
-                    if (localToken < pendingToken)
-                        return;
+            lock (loadingLock) {
+                if (localToken < pendingToken) 
+                    return;
 
-                    // type cast and clean our filename
-                    string newFilename = (string)newFilenameObj;
-                    if (newFilename != null && newFilename.Trim().Length == 0)
-                        newFilename = null;
-                    else if (newFilename != null)
-                        newFilename = newFilename.Trim();
+                // type cast and clean our filename
+                string newFilename = (string)newFilenameObj;
+                if (newFilename != null && newFilename.Trim().Length == 0)
+                    newFilename = null;
+                else if (newFilename != null)
+                    newFilename = newFilename.Trim();
 
-                    // if we are not active we should nto be assigning a filename
-                    if (!Active) newFilename = null;
+                // if we are not active we should nto be assigning a filename
+                if (!Active) newFilename = null;
 
-                    // if there is no change, quit
-                    if (_filename != null && _filename.Equals(newFilename))
-                    {
-                        if (ImageLoadingComplete != null)
-                            ImageLoadingComplete(this);
-
-                        return;
-                    }
-
-                    string newIdentifier = loadResourceSafe(newFilename);
-
-                    // check if we have a new loading action pending, if so just quit
-                    if (localToken < pendingToken)
-                    {
-                        unloadResource(newIdentifier);
-                        return;
-                    }
-
-                    // update MediaPortal about the image change
-                    _identifier = newIdentifier;
-                    _filename = newFilename;
-                    writeProperty();
-
-                    // notify any listeners a resource has been loaded
+                // if there is no change, quit
+                if (_filename != null && _filename.Equals(newFilename)) {
                     if (ImageLoadingComplete != null)
                         ImageLoadingComplete(this);
+
+                    return;
                 }
 
-                // wait a few seconds in case we want to quickly reload the previous resource
-                // if it's not reassigned, unload from memory.
-                Thread.Sleep(5000);
-                lock (loadingLock)
-                {
-                    if (_filename != oldFilename)
-                        unloadResource(oldFilename);
+                string newIdentifier = loadResourceSafe(newFilename);
+
+                // check if we have a new loading action pending, if so just quit
+                if (localToken < pendingToken) {
+                    unloadResource(newIdentifier);
+                    return;
                 }
+
+                // update MediaPortal about the image change
+                _identifier = newIdentifier;
+                _filename = newFilename;
+                writeProperty();
+
+                // notify any listeners a resource has been loaded
+                if (ImageLoadingComplete != null)
+                    ImageLoadingComplete(this);
             }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("Error in AsyncImageResource::setFilenameWorker:", ex.Message, MPTVSeriesLog.LogLevel.Normal);
+
+            // wait a few seconds in case we want to quickly reload the previous resource
+            // if it's not reassigned, unload from memory.
+            Thread.Sleep(5000);
+            lock (loadingLock) {
+                if (_filename != oldFilename)
+                    unloadResource(oldFilename);
             }
         }
 
