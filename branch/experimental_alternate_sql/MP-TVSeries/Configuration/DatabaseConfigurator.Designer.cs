@@ -258,9 +258,9 @@
             this.radio_mysql.AutoSize = true;
             this.radio_mysql.Location = new System.Drawing.Point(137, 80);
             this.radio_mysql.Name = "radio_mysql";
-            this.radio_mysql.Size = new System.Drawing.Size(294, 17);
+            this.radio_mysql.Size = new System.Drawing.Size(76, 17);
             this.radio_mysql.TabIndex = 7;
-            this.radio_mysql.Text = "Use MySql (requires NO_BACKSLASH_ESCAPES mode)";
+            this.radio_mysql.Text = "Use MySql";
             this.radio_mysql.UseVisualStyleBackColor = true;
             this.radio_mysql.CheckedChanged += new System.EventHandler(this.radio_mysql_CheckedChanged);
             // 

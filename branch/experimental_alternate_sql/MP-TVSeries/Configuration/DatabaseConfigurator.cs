@@ -27,6 +27,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     break;
                 default:
                     radio_sqlite.Checked = true;
+                    button_create.Enabled = false;
+                    button_test.Enabled = false;
                     break;
 
             }

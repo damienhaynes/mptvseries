@@ -1103,6 +1103,8 @@ namespace WindowPlugins.GUITVSeries
 
         public abstract void InitDB();
 
+        public abstract string Clean(string command);
+
         public abstract void AddColumn(string tableName, string fieldName, DBField field);
 
         public abstract void CreateTable(string tableName, string fieldName, DBField field);
@@ -1153,7 +1155,12 @@ namespace WindowPlugins.GUITVSeries
                 return string.Format("SQLite: {0}", builder["Data Source"]);
             }
         }
-        
+
+        public override string Clean(String command)
+        {
+            return command;
+        }
+
         public override void InitDB()
         {
             DbProviderFactory factory = System.Data.SQLite.SQLiteFactory.Instance;
@@ -1237,6 +1244,9 @@ namespace WindowPlugins.GUITVSeries
 
     public class MySqlProvider : DBProvider
     {
+        //MySQL limitation of 1000 bytes (333 utf8 characters) for primary key
+        private int cMaxKeyLength = 333;
+
         public MySqlProvider(string connectionString)
         {
             m_sConnectionString = connectionString;
@@ -1276,6 +1286,12 @@ namespace WindowPlugins.GUITVSeries
                 builder.ConnectionString = m_sConnectionString;
                 return string.Format("MySQL: Host={0}, Database={1}", builder["Data Source"], builder["Initial Catalog"]);
             }
+        }
+
+        public override string Clean(String command)
+        {
+            //MySql uses \ as escape charaters
+            return command.Replace(@"\", @"\\");
         }
 
         public static void TestConnection(string ConnectionString)
@@ -1326,8 +1342,8 @@ namespace WindowPlugins.GUITVSeries
             createScript = createScript.Replace("IDENTITY(1,1) NOT NULL", "NOT NULL AUTO_INCREMENT");
 
             //MySQL limits keys to 1000 bytes so default utf8 encoding only allows a length of 333 (if not enough  need to change the character encoding)
-            createScript = createScript.Replace("\"EpisodeFilename\" varchar(1024) NOT NULL,--MySqlReplace", "\"EpisodeFilename\" varchar(333) NOT NULL,");
-            createScript = createScript.Replace("\"filename\" varchar(1024) NOT NULL,--MySqlReplace", "\"filename\" varchar(333) NOT NULL,");
+            createScript = createScript.Replace("`EpisodeFilename` varchar(1024) NOT NULL,--MySqlReplace", "`EpisodeFilename` varchar(333) NOT NULL,");
+            createScript = createScript.Replace("`filename` varchar(1024) NOT NULL,--MySqlReplace", "`filename` varchar(333) NOT NULL,");
             
             string[] Commands = createScript.Split('!');
 
@@ -1361,7 +1377,9 @@ namespace WindowPlugins.GUITVSeries
         {
             string type = string.Empty;
             if (field.Type == DBField.cType.String) {
-                if (field.MaxLength <= DBField.cMaxLength) {
+                if (field.Primary && (field.MaxLength <= DBField.cMaxLength || field.MaxLength > cMaxKeyLength)) {
+                    type = string.Format("varchar({0})", cMaxKeyLength);
+                } else if (field.MaxLength <= DBField.cMaxLength) {
                     type = "varchar(2048)";
                 } else {
                     type = string.Format("varchar({0})", field.MaxLength);
@@ -1389,32 +1407,34 @@ namespace WindowPlugins.GUITVSeries
 
         public override void CreateTable(string tableName, string fieldName, DBField field)
         {
-             string type = string.Empty;
-             if (field.Type == DBField.cType.String) {
-                 if (field.MaxLength <= DBField.cMaxLength) {
-                     type = "varchar(max)";
-                 } else {
-                     type = string.Format("varchar({0})", field.MaxLength);
-                 }
-             } else {
-                 type = "int";
-             }
+            string type = string.Empty;
+            if (field.Type == DBField.cType.String) {
+                if (field.Primary && (field.MaxLength <= DBField.cMaxLength || field.MaxLength > cMaxKeyLength)) {
+                    type = string.Format("varchar({0})", cMaxKeyLength);
+                }else if (field.MaxLength <= DBField.cMaxLength) {
+                    type = "varchar(2048)";
+                } else {
+                    type = string.Format("varchar({0})", field.MaxLength);
+                }
+            } else {
+                type = "int";
+            }
 
-             String sQuery = "CREATE TABLE `" + tableName + "` (`" + fieldName + "` " + type + (field.Primary ? " primary key)" : ")");
-             DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+            String sQuery = "CREATE TABLE `" + tableName + "` (`" + fieldName + "` " + type + (field.Primary ? " primary key)" : ")");
+            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
 
-             using (DbConnection connection = factory.CreateConnection()) {
-                 connection.ConnectionString = sConnectionString;
-                 try {
-                     connection.Open();
-                     using (DbCommand command = connection.CreateCommand()) {
-                         command.CommandText = sQuery;
-                         command.ExecuteNonQuery();
-                     }
-                 } finally {
-                     connection.Close();
-                 }
-             }
+            using (DbConnection connection = factory.CreateConnection()) {
+                connection.ConnectionString = sConnectionString;
+                try {
+                    connection.Open();
+                    using (DbCommand command = connection.CreateCommand()) {
+                        command.CommandText = sQuery;
+                        command.ExecuteNonQuery();
+                    }
+                } finally {
+                    connection.Close();
+                }
+            }
         }
     }
 
@@ -1459,6 +1479,11 @@ namespace WindowPlugins.GUITVSeries
                 builder.ConnectionString = m_sConnectionString;
                 return string.Format("Sql Express: Host={0}, Database={1}", builder["DataSource"], builder["Initial Catalog"]);
             }
+        }
+
+        public override string Clean(String command)
+        {
+            return command;
         }
 
         public static void TestConnection(string ConnectionString)
@@ -1622,8 +1647,7 @@ namespace WindowPlugins.GUITVSeries
             //the data provider has been added to the machine.config - so hard code it for now
             if (m_DBProvider.sProviderName == "System.Data.SQLite") {
                 factory = System.Data.SQLite.SQLiteFactory.Instance;
-            }
-            if (m_DBProvider.sProviderName == "MySql.Data.MySqlClient") {
+            } else if (m_DBProvider.sProviderName == "MySql.Data.MySqlClient") {
                 factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
             } else {
                 factory = DbProviderFactories.GetFactory(m_DBProvider.sProviderName);
@@ -1724,6 +1748,8 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public static DataTable Execute(String sCommand)
         {
+            sCommand = m_DBProvider.Clean(sCommand);
+
             DataTable result = new DataTable();
             using (DbConnection connection = GetConnection()) {
                 try {
@@ -1761,7 +1787,9 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public static object ExecuteScalar(String sCommand)
         {
-           using (DbConnection connection = GetConnection()) {
+            sCommand = m_DBProvider.Clean(sCommand);
+
+            using (DbConnection connection = GetConnection()) {
 
                 try {
                     MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
@@ -1965,12 +1993,12 @@ namespace WindowPlugins.GUITVSeries
                 connection.Open();
 
                 foreach (DataTable table in data.Tables) {
-                    string name = table.TableName;
+                    string name = '`' + table.TableName + '`';
                     string columnnames = "(";
                     string parameternames = "(";
                     foreach (DataColumn column in table.Columns) {
                         if (column.ColumnName != "option_id") {
-                            columnnames += m_DBProvider.cIdentifierStart + column.ColumnName + m_DBProvider.cIdentifierFinish + ",";
+                            columnnames += '`' + column.ColumnName + '`' + ",";
                             parameternames += "@" + column.ColumnName + ",";
                         }
                     }
@@ -1979,17 +2007,21 @@ namespace WindowPlugins.GUITVSeries
                     columnnames += ")";
                     parameternames += ")";
                     foreach (DataRow row in table.Rows) {
-                        using (DbCommand command = connection.CreateCommand()) {
-                            command.CommandText = "insert into " + name + columnnames + " values " + parameternames;
-                            foreach (DataColumn column in table.Columns) {
-                                if (column.ColumnName != "option_id") {
-                                    DbParameter parameter = command.CreateParameter();
-                                    parameter.ParameterName = "@" + column.ColumnName;
-                                    parameter.Value = row[column];
-                                    command.Parameters.Add(parameter);
+                        try {
+                            using (DbCommand command = connection.CreateCommand()) {
+                                command.CommandText = "insert into " + name + columnnames + " values " + parameternames;
+                                foreach (DataColumn column in table.Columns) {
+                                    if (column.ColumnName != "option_id") {
+                                        DbParameter parameter = command.CreateParameter();
+                                        parameter.ParameterName = "@" + column.ColumnName;
+                                        parameter.Value = row[column];
+                                        command.Parameters.Add(parameter);
+                                    }
                                 }
+                                command.ExecuteNonQuery();
                             }
-                            command.ExecuteNonQuery();
+                        } catch (Exception e) {
+                            int i = 0;
                         }
                     }
                 }

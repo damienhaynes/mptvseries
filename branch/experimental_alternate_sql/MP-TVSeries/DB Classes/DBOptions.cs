@@ -197,9 +197,7 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                DataTable results;
-                results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
-                if (results == null || results.Rows.Count == 0)
+                if (!DBTVSeries.TableExists("options"))
                 {
                     // no table, create it
                     String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
@@ -525,9 +523,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     bTableUpdateDone = true;
                     DataTable results;
-                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
-                    if (results == null || results.Rows.Count == 0)                    
-                    {
+                    if (!DBTVSeries.TableExists("options")) {
                         // no table, create it
                         String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
                         DBTVSeries.Execute(sQuery);
