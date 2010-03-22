@@ -1409,8 +1409,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
-                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
-                orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
+                //not required as everthing is explictly aliased to avoid ambigous columns
+                //sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+                orderBy = " order by " + ordercol.Replace(".", "_") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
             sqlQuery = sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
