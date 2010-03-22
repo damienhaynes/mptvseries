@@ -2141,21 +2141,21 @@ namespace WindowPlugins.GUITVSeries
             if (m_parser != null)
             {
                 m_parser.Cancel();
-                button_Start.Enabled = false;
-
-                // remove the progress page
-                ImportProgessPage ipp = null;
-                foreach (var control in this.tabPage_Import.Controls)
-	            {
-                    if (control is ImportProgessPage)
-                    {
-                        ipp = control as ImportProgessPage;
-                        break;
-                    }
-	            }
-                if (ipp != null)
-                    this.tabPage_Import.Controls.Remove(ipp);
+                button_Start.Enabled = false;                
             }
+            
+            // remove the progress page
+            ImportProgessPage ipp = null;
+            foreach (var control in this.tabPage_Import.Controls)
+            {
+                if (control is ImportProgessPage)
+                {
+                    ipp = control as ImportProgessPage;
+                    break;
+                }
+            }
+            if (ipp != null)
+                this.tabPage_Import.Controls.Remove(ipp);
         }
 
         private void button_TestReparse_Click(object sender, EventArgs e)

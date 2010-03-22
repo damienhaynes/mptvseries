@@ -246,6 +246,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
         }
 
+        private void buttonAddColCancel_Click(object sender, EventArgs e)
+        {
+            this.groupBoxAddCol.Visible = false;
+        }
+
         parseResult merge(parseResult orig, DataGridViewRow changes)
         {
             foreach (DataGridViewCell cell in changes.Cells)
@@ -461,6 +466,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else RefreshGrid();
         }
+
     }
 
     internal class columns
