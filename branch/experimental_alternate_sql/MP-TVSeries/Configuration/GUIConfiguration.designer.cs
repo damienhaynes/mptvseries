@@ -190,6 +190,7 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.panDBLocation = new System.Windows.Forms.Panel();
+            this.button_configuredatabase = new System.Windows.Forms.Button();
             this.tabPage_Import = new System.Windows.Forms.TabPage();
             this.splitContainer_SettingsOutput = new System.Windows.Forms.SplitContainer();
             this.splitContainerImportSettings = new System.Windows.Forms.SplitContainer();
@@ -344,7 +345,8 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.button_configuredatabase = new System.Windows.Forms.Button();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBox_Database = new System.Windows.Forms.TextBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
@@ -1877,12 +1879,24 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panDBLocation
             // 
+            this.panDBLocation.Controls.Add(this.textBox_Database);
+            this.panDBLocation.Controls.Add(this.label17);
             this.panDBLocation.Controls.Add(this.button_configuredatabase);
             this.panDBLocation.Dock = System.Windows.Forms.DockStyle.Top;
             this.panDBLocation.Location = new System.Drawing.Point(0, 0);
             this.panDBLocation.Name = "panDBLocation";
             this.panDBLocation.Size = new System.Drawing.Size(548, 25);
             this.panDBLocation.TabIndex = 0;
+            // 
+            // button_configuredatabase
+            // 
+            this.button_configuredatabase.Location = new System.Drawing.Point(435, 0);
+            this.button_configuredatabase.Name = "button_configuredatabase";
+            this.button_configuredatabase.Size = new System.Drawing.Size(114, 23);
+            this.button_configuredatabase.TabIndex = 3;
+            this.button_configuredatabase.Text = "Configure Database";
+            this.button_configuredatabase.UseVisualStyleBackColor = true;
+            this.button_configuredatabase.Click += new System.EventHandler(this.button_configuredatabase_Click);
             // 
             // tabPage_Import
             // 
@@ -3774,15 +3788,22 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 17);
             this.listBox_Log.TabIndex = 5;
             // 
-            // button_configuredatabase
+            // label17
             // 
-            this.button_configuredatabase.Location = new System.Drawing.Point(435, 0);
-            this.button_configuredatabase.Name = "button_configuredatabase";
-            this.button_configuredatabase.Size = new System.Drawing.Size(114, 23);
-            this.button_configuredatabase.TabIndex = 3;
-            this.button_configuredatabase.Text = "Configure Database";
-            this.button_configuredatabase.UseVisualStyleBackColor = true;
-            this.button_configuredatabase.Click += new System.EventHandler(this.button_configuredatabase_Click);
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(3, 5);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(90, 13);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Current Database";
+            // 
+            // textBox_Database
+            // 
+            this.textBox_Database.Location = new System.Drawing.Point(99, 2);
+            this.textBox_Database.Name = "textBox_Database";
+            this.textBox_Database.ReadOnly = true;
+            this.textBox_Database.Size = new System.Drawing.Size(330, 20);
+            this.textBox_Database.TabIndex = 5;
             // 
             // ConfigurationForm
             // 
@@ -3814,6 +3835,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
             this.panDBLocation.ResumeLayout(false);
+            this.panDBLocation.PerformLayout();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel2.ResumeLayout(false);
@@ -4151,5 +4173,7 @@ namespace WindowPlugins.GUITVSeries
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBoxCountEmptyFutureEps;
         private System.Windows.Forms.ToolStripMenuItem reScanMediaInfoToolStripMenuItem;
         private System.Windows.Forms.Button button_configuredatabase;
+        private System.Windows.Forms.TextBox textBox_Database;
+        private System.Windows.Forms.Label label17;
     }
 }

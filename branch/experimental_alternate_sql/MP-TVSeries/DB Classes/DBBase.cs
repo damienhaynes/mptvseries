@@ -1096,6 +1096,10 @@ namespace WindowPlugins.GUITVSeries
             get;
         }
 
+        public abstract string Description
+        {
+            get;
+        }
 
         public abstract void InitDB();
 
@@ -1138,6 +1142,16 @@ namespace WindowPlugins.GUITVSeries
         public override char cIdentifierFinish
         {
             get { return ']'; }
+        }
+
+        public override string Description
+        {
+            get
+            {
+                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+                builder.ConnectionString = m_sConnectionString;
+                return string.Format("SQLite: {0}", builder["Data Source"]);
+            }
         }
         
         public override void InitDB()
@@ -1252,6 +1266,16 @@ namespace WindowPlugins.GUITVSeries
         public override char cIdentifierFinish
         {
             get { return '`'; }
+        }
+
+        public override string Description
+        {
+            get
+            {
+                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+                builder.ConnectionString = m_sConnectionString;
+                return string.Format("MySQL: Host={0}, Database={1}", builder["Data Source"], builder["Initial Catalog"]);
+            }
         }
 
         public static void TestConnection(string ConnectionString)
@@ -1427,6 +1451,16 @@ namespace WindowPlugins.GUITVSeries
             get { return ']'; }
         }
 
+        public override string Description
+        {
+            get
+            {
+                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+                builder.ConnectionString = m_sConnectionString;
+                return string.Format("Sql Express: Host={0}, Database={1}", builder["DataSource"], builder["Initial Catalog"]);
+            }
+        }
+
         public static void TestConnection(string ConnectionString)
         {
             DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
@@ -1588,6 +1622,9 @@ namespace WindowPlugins.GUITVSeries
             //the data provider has been added to the machine.config - so hard code it for now
             if (m_DBProvider.sProviderName == "System.Data.SQLite") {
                 factory = System.Data.SQLite.SQLiteFactory.Instance;
+            }
+            if (m_DBProvider.sProviderName == "MySql.Data.MySqlClient") {
+                factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
             } else {
                 factory = DbProviderFactories.GetFactory(m_DBProvider.sProviderName);
             }
@@ -1885,6 +1922,17 @@ namespace WindowPlugins.GUITVSeries
             bool isRemotePath = PathIsNetworkPath(databaseFile);
             return isRemotePath;
           }
+        }
+
+        public static string CurrentDatabaseDescription
+        {
+            get
+            {
+                if (m_DBProvider == null) {
+                    InitDB();
+                }
+                return m_DBProvider.Description;
+            }
         }
 
         #endregion

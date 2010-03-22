@@ -132,6 +132,8 @@ namespace WindowPlugins.GUITVSeries
 
             this.aboutScreen.setUpMPInfo(Settings.Version.ToString(), Settings.BuildDate);
             this.aboutScreen.setUpPaths();
+
+            this.textBox_Database.Text = DBTVSeries.CurrentDatabaseDescription;
         }
 
         void ConfigurationForm_Resize(object sender, EventArgs e)
