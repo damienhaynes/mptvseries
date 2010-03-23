@@ -836,9 +836,9 @@ namespace WindowPlugins.GUITVSeries
 
                         if (type != TVSeriesPlugin.DeleteMenuItems.disk)
                         {
-                            condition = new SQLCondition();
-                            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                            DBOnlineEpisode.Clear(condition);
+                            SQLCondition condition1 = new SQLCondition();
+                            condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                            DBOnlineEpisode.Clear(condition1);
                         }
                     
                     }
