@@ -1277,7 +1277,8 @@ namespace WindowPlugins.GUITVSeries
             SQLWhat what = new SQLWhat(new DBEpisode());
             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
-            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
+            //MySql has a major performace problem with the 'in' keyword, so changed "where compositeid in (" to = (seems to work)
+            string sqlQuery = "select " + what + " where compositeid = ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
                 + @" and online_episodes.hidden = 0 "
                 + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
                 + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "

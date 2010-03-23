@@ -1757,6 +1757,7 @@ namespace WindowPlugins.GUITVSeries
                     connection.Open();
                     using (DbCommand command = connection.CreateCommand()) {
                         command.CommandText = sCommand;
+                        command.CommandTimeout = 120;
                         using (DbDataReader reader = command.ExecuteReader()) {
                             //setup the data types for the columns, to avoid the incorrect columns being loaded
                             for (int i = 0; i < reader.FieldCount; i++) {
@@ -1797,6 +1798,7 @@ namespace WindowPlugins.GUITVSeries
                     Object result = null;
                     using (DbCommand command = connection.CreateCommand()) {
                         command.CommandText = sCommand;
+                        command.CommandTimeout = 120;
                         result = command.ExecuteScalar();
                     }
                     MPTVSeriesLog.Write("Success, returned Value: ", result == null ? "null" : result.ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
