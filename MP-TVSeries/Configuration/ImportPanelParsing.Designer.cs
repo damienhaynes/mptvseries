@@ -29,13 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label_wait_parse = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridViewReview = new System.Windows.Forms.DataGridView();
+            this.labelWaitParse = new System.Windows.Forms.Label();
             this.lnkAdd = new System.Windows.Forms.LinkLabel();
             this.groupBoxAddCol = new System.Windows.Forms.GroupBox();
             this.buttonAddColCancel = new System.Windows.Forms.Button();
@@ -48,90 +46,69 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.checkFilterMan = new System.Windows.Forms.CheckBox();
             this.lblCount = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.labelStep = new System.Windows.Forms.Label();
+            this.labelImportWizardTitle = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).BeginInit();
             this.groupBoxAddCol.SuspendLayout();
             this.contextMenuStripChangeCell.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dataGridViewReview
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.dataGridViewReview.AllowUserToAddRows = false;
+            this.dataGridViewReview.AllowUserToDeleteRows = false;
+            this.dataGridViewReview.AllowUserToOrderColumns = true;
+            this.dataGridViewReview.AllowUserToResizeRows = false;
+            this.dataGridViewReview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dataGridView1.GridColor = System.Drawing.Color.White;
-            this.dataGridView1.Location = new System.Drawing.Point(40, 60);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dataGridView1.Size = new System.Drawing.Size(698, 263);
-            this.dataGridView1.TabIndex = 0;
+            this.dataGridViewReview.BackgroundColor = System.Drawing.Color.White;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewReview.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridViewReview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewReview.DefaultCellStyle = dataGridViewCellStyle8;
+            this.dataGridViewReview.GridColor = System.Drawing.Color.White;
+            this.dataGridViewReview.Location = new System.Drawing.Point(21, 74);
+            this.dataGridViewReview.MultiSelect = false;
+            this.dataGridViewReview.Name = "dataGridViewReview";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewReview.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.dataGridViewReview.Size = new System.Drawing.Size(717, 279);
+            this.dataGridViewReview.TabIndex = 0;
             // 
-            // button1
+            // labelWaitParse
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(663, 349);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Next";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(582, 349);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // label_wait_parse
-            // 
-            this.label_wait_parse.AutoSize = true;
-            this.label_wait_parse.Location = new System.Drawing.Point(37, 35);
-            this.label_wait_parse.Name = "label_wait_parse";
-            this.label_wait_parse.Size = new System.Drawing.Size(225, 13);
-            this.label_wait_parse.TabIndex = 3;
-            this.label_wait_parse.Text = "Please Wait while the files are being Parsed ...";
+            this.labelWaitParse.AutoSize = true;
+            this.labelWaitParse.Location = new System.Drawing.Point(18, 49);
+            this.labelWaitParse.Name = "labelWaitParse";
+            this.labelWaitParse.Size = new System.Drawing.Size(225, 13);
+            this.labelWaitParse.TabIndex = 3;
+            this.labelWaitParse.Text = "Please Wait while the files are being Parsed ...";
             // 
             // lnkAdd
             // 
             this.lnkAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkAdd.AutoSize = true;
-            this.lnkAdd.Location = new System.Drawing.Point(668, 41);
+            this.lnkAdd.Location = new System.Drawing.Point(672, 52);
             this.lnkAdd.Name = "lnkAdd";
             this.lnkAdd.Size = new System.Drawing.Size(64, 13);
             this.lnkAdd.TabIndex = 4;
@@ -145,7 +122,7 @@
             this.groupBoxAddCol.Controls.Add(this.buttonAddColCancel);
             this.groupBoxAddCol.Controls.Add(this.buttonAddColOK);
             this.groupBoxAddCol.Controls.Add(this.textBoxAddCol);
-            this.groupBoxAddCol.Location = new System.Drawing.Point(437, 64);
+            this.groupBoxAddCol.Location = new System.Drawing.Point(443, 74);
             this.groupBoxAddCol.Name = "groupBoxAddCol";
             this.groupBoxAddCol.Size = new System.Drawing.Size(295, 85);
             this.groupBoxAddCol.TabIndex = 6;
@@ -185,7 +162,7 @@
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFilter.Location = new System.Drawing.Point(478, 38);
+            this.textBoxFilter.Location = new System.Drawing.Point(487, 49);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(179, 20);
             this.textBoxFilter.TabIndex = 7;
@@ -213,7 +190,7 @@
             // 
             this.lnkAddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkAddFiles.AutoSize = true;
-            this.lnkAddFiles.Location = new System.Drawing.Point(37, 354);
+            this.lnkAddFiles.Location = new System.Drawing.Point(245, 360);
             this.lnkAddFiles.Name = "lnkAddFiles";
             this.lnkAddFiles.Size = new System.Drawing.Size(125, 13);
             this.lnkAddFiles.TabIndex = 8;
@@ -229,7 +206,7 @@
             // 
             this.checkFilterMan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkFilterMan.AutoSize = true;
-            this.checkFilterMan.Location = new System.Drawing.Point(40, 329);
+            this.checkFilterMan.Location = new System.Drawing.Point(21, 359);
             this.checkFilterMan.Name = "checkFilterMan";
             this.checkFilterMan.Size = new System.Drawing.Size(183, 17);
             this.checkFilterMan.TabIndex = 9;
@@ -240,43 +217,52 @@
             // lblCount
             // 
             this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCount.Location = new System.Drawing.Point(434, 330);
+            this.lblCount.Location = new System.Drawing.Point(434, 356);
             this.lblCount.Name = "lblCount";
             this.lblCount.Size = new System.Drawing.Size(304, 13);
             this.lblCount.TabIndex = 10;
             this.lblCount.Text = "0 Files found (0 displayed)";
             this.lblCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label1
+            // labelStep
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(22, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(343, 16);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Step 1 of 4: Review and Change the local File Information";
+            this.labelStep.AutoSize = true;
+            this.labelStep.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStep.Location = new System.Drawing.Point(3, 25);
+            this.labelStep.Name = "labelStep";
+            this.labelStep.Size = new System.Drawing.Size(343, 16);
+            this.labelStep.TabIndex = 11;
+            this.labelStep.Text = "Step 1 of 4: Review and Change the local File Information";
+            // 
+            // labelImportWizardTitle
+            // 
+            this.labelImportWizardTitle.AutoSize = true;
+            this.labelImportWizardTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelImportWizardTitle.Location = new System.Drawing.Point(3, 3);
+            this.labelImportWizardTitle.Name = "labelImportWizardTitle";
+            this.labelImportWizardTitle.Size = new System.Drawing.Size(234, 16);
+            this.labelImportWizardTitle.TabIndex = 13;
+            this.labelImportWizardTitle.Text = "Import your Series and Episodes";
             // 
             // ImportPanelParsing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkFilterMan);
-            this.Controls.Add(this.lnkAddFiles);
-            this.Controls.Add(this.textBoxFilter);
-            this.Controls.Add(this.lblCount);
+            this.Controls.Add(this.labelImportWizardTitle);
             this.Controls.Add(this.groupBoxAddCol);
+            this.Controls.Add(this.labelStep);
+            this.Controls.Add(this.labelWaitParse);
+            this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.lnkAdd);
-            this.Controls.Add(this.label_wait_parse);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.checkFilterMan);
+            this.Controls.Add(this.dataGridViewReview);
+            this.Controls.Add(this.lblCount);
+            this.Controls.Add(this.lnkAddFiles);
             this.MinimumSize = new System.Drawing.Size(758, 385);
             this.Name = "ImportPanelParsing";
             this.Size = new System.Drawing.Size(758, 385);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).EndInit();
             this.groupBoxAddCol.ResumeLayout(false);
             this.groupBoxAddCol.PerformLayout();
             this.contextMenuStripChangeCell.ResumeLayout(false);
@@ -287,10 +273,8 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label_wait_parse;
+        private System.Windows.Forms.DataGridView dataGridViewReview;
+        private System.Windows.Forms.Label labelWaitParse;
         private System.Windows.Forms.LinkLabel lnkAdd;
         private System.Windows.Forms.GroupBox groupBoxAddCol;
         private System.Windows.Forms.Button buttonAddColCancel;
@@ -303,6 +287,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.CheckBox checkFilterMan;
         private System.Windows.Forms.Label lblCount;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelStep;
+        private System.Windows.Forms.Label labelImportWizardTitle;
     }
 }

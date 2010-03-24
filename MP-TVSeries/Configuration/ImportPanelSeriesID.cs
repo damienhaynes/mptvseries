@@ -12,7 +12,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 {    
     public partial class ImportPanelSeriesID : UserControl
     {
-        public event userFinishedEditingDel UserFinishedEditing;
+        public event UserFinishedEditingDelegate UserFinishedEditing;
 
         const string cSearching = "Searching...";
         const string cWait2Search = "Waiting to Search...";
@@ -43,12 +43,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
         delegate void SearchProgressDelegate(string searchString, GetSeries searchResult, DataGridViewRow row);
         public ImportPanelSeriesID()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         Dictionary<int, string> lastSearch = new Dictionary<int, string>();
 
-        public void SetResults(IList<parseResult> results)
+        public void Init(IList<parseResult> results)
+        {
+            ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
+
+            SetResults(results);
+        }
+
+        private void SetResults(IList<parseResult> results)
         {
             givenResults = results;
 
@@ -76,14 +83,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             givenResults = null;
             displayedActions = new Dictionary<UserInputResults.SeriesAction, string>();
-            dataGridView1.Rows.Clear();
-            dataGridView1.Columns.Clear();
+            dataGridViewIdentifySeries.Rows.Clear();
+            dataGridViewIdentifySeries.Columns.Clear();
             isGridPrepared = false;
         }
 
         int ColIndexOf(string columnName)
         {
-            return dataGridView1.Columns[columnName].Index;
+            return dataGridViewIdentifySeries.Columns[columnName].Index;
         }
 
         bool isGridPrepared = false;
@@ -132,18 +139,18 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dgvcApprove.Name = colAction;
             dgvcApprove.Width = 85;
 
-            dataGridView1.Columns.Add(dgvcI);
-            dataGridView1.Columns.Add(dgvcS);
-            dataGridView1.Columns.Add(dgvcO);
+            dataGridViewIdentifySeries.Columns.Add(dgvcI);
+            dataGridViewIdentifySeries.Columns.Add(dgvcS);
+            dataGridViewIdentifySeries.Columns.Add(dgvcO);
             //dataGridView1.Columns.Add(dgvcOrder);
             //dataGridView1.Columns.Add(dgvcD);
-            dataGridView1.Columns.Add(dgvcSearch);
-            dataGridView1.Columns.Add(dgvcSearchOK);
-            dataGridView1.Columns.Add(dgvcApprove);
+            dataGridViewIdentifySeries.Columns.Add(dgvcSearch);
+            dataGridViewIdentifySeries.Columns.Add(dgvcSearchOK);
+            dataGridViewIdentifySeries.Columns.Add(dgvcApprove);
 
-            dataGridView1.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
+            dataGridViewIdentifySeries.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
             {
-                var row = dataGridView1.Rows[e.RowIndex];
+                var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
                 // did we enter the searchField
                 if (e.ColumnIndex == ColIndexOf(colSearchTXT))
                 {
@@ -156,9 +163,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
             });
 
-            dataGridView1.CellValueChanged += new DataGridViewCellEventHandler((sender, e) =>
+            dataGridViewIdentifySeries.CellValueChanged += new DataGridViewCellEventHandler((sender, e) =>
             {
-                var row = dataGridView1.Rows[e.RowIndex];
+                var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
                 var cell = row.Cells[e.ColumnIndex];
                 // was onlinesearchresult changed?
 
@@ -210,12 +217,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 //}
             });
 
-            dataGridView1.CellContentClick += new DataGridViewCellEventHandler((sender, e) =>
+            dataGridViewIdentifySeries.CellContentClick += new DataGridViewCellEventHandler((sender, e) =>
             {
                 if (e.RowIndex < 0) return;
 
                 // which row was clicked?
-                var row = dataGridView1.Rows[e.RowIndex];
+                var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
                 
                 // was search clicked?
                 if (e.ColumnIndex == ColIndexOf(colSearchBTN))
@@ -237,7 +244,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         void FillGrid(List<IGrouping<string, parseResult>> uniqueNewSeries)
         {
-            dataGridView1.SuspendLayout();
+            dataGridViewIdentifySeries.SuspendLayout();
             
             if (!isGridPrepared) prepareGrid();
             
@@ -282,12 +289,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 row.Cells.Add(approveCell);
 
                 row.Tag = newSeries;
-                dataGridView1.Rows.Add(row);
+                dataGridViewIdentifySeries.Rows.Add(row);
 
                 FireOffSearch(newSeries, row, null);
             }
 
-            dataGridView1.ResumeLayout();
+            dataGridViewIdentifySeries.ResumeLayout();
         }
 
         void FireOffSearch(IGrouping<string, parseResult> newSeries, DataGridViewRow row, string customString)
@@ -314,9 +321,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         void SearchProgress(string searchString, GetSeries searchResult, DataGridViewRow row)
         {            
             // we need to invoke
-            if (this.dataGridView1.InvokeRequired)
+            if (this.dataGridViewIdentifySeries.InvokeRequired)
             {                
-                this.dataGridView1.Invoke(new SearchProgressDelegate(SearchProgress), searchString, searchResult, row);
+                this.dataGridViewIdentifySeries.Invoke(new SearchProgressDelegate(SearchProgress), searchString, searchResult, row);
                 return;
             }
 
@@ -375,7 +382,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         Dictionary<string, UserInputResultSeriesActionPair> getApprovedResults()
         {
             var pageResult = new Dictionary<string, UserInputResultSeriesActionPair>();
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            foreach (DataGridViewRow row in dataGridViewIdentifySeries.Rows)
             {
                 string inputSeriesName = row.Cells[ColIndexOf(colSeries)].Value as string;
                 var requestedAction = getActionFromRow(row);
@@ -408,28 +415,22 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return chosenSeries;
         }
 
-
         void setSearchStatus()
         {
             this.labelSearchStats.Text = string.Format("Searching in progress for {0} series ({1} queued)", activeSearches, queuedSearches);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)
         {
-            if (UserFinishedEditing != null)
-                UserFinishedEditing(null, UserFinishedRequestedAction.Cancel);
-        }
+            if (UserFinishedEditing == null) return;
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (UserFinishedEditing != null)
-                UserFinishedEditing(new UserInputResults(givenResults, getApprovedResults()), UserFinishedRequestedAction.Next);
-        }
+            if (reqAction == UserFinishedRequestedAction.Next)
+                UserFinishedEditing(new UserInputResults(givenResults, getApprovedResults()), reqAction);
+            else           
+                UserFinishedEditing(null, reqAction);
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (UserFinishedEditing != null)
-                UserFinishedEditing(null, UserFinishedRequestedAction.Prev);
+            // we no longer need to listen to navigate event
+            ImportWizard.OnWizardNavigate -= new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
         }
 
         private void linkLabelCloseDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -439,8 +440,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
         {
-            this.dataGridView1.SuspendLayout();
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            this.dataGridViewIdentifySeries.SuspendLayout();
+            foreach (DataGridViewRow row in dataGridViewIdentifySeries.Rows)
             {
                 if (checkBoxFilter.Checked && getActionFromRow(row) == UserInputResults.SeriesAction.Approve)
                 {
@@ -448,7 +449,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
                 else row.Visible = true;
             }
-            this.dataGridView1.ResumeLayout();
+            this.dataGridViewIdentifySeries.ResumeLayout();
         }
 
         UserInputResults.SeriesAction getActionFromRow(DataGridViewRow row)
