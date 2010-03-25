@@ -54,12 +54,12 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.buttonCancel);
             this.splitContainer1.Panel2.Controls.Add(this.buttonPrev);
             this.splitContainer1.Panel2.Controls.Add(this.buttonNext);
+            this.splitContainer1.Panel2.Controls.Add(this.buttonCancel);
             this.splitContainer1.Panel2.Controls.Add(this.buttonFinish);
             this.splitContainer1.Size = new System.Drawing.Size(561, 418);
-            this.splitContainer1.SplitterDistance = 390;
+            this.splitContainer1.SplitterDistance = 392;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -71,13 +71,13 @@
             this.panelWizardSteps.AutoSize = true;
             this.panelWizardSteps.Location = new System.Drawing.Point(3, 3);
             this.panelWizardSteps.Name = "panelWizardSteps";
-            this.panelWizardSteps.Size = new System.Drawing.Size(555, 384);
+            this.panelWizardSteps.Size = new System.Drawing.Size(555, 387);
             this.panelWizardSteps.TabIndex = 0;
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(299, 2);
+            this.buttonCancel.Location = new System.Drawing.Point(462, 2);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -88,22 +88,22 @@
             // buttonPrev
             // 
             this.buttonPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPrev.Location = new System.Drawing.Point(385, 2);
+            this.buttonPrev.Location = new System.Drawing.Point(304, 2);
             this.buttonPrev.Name = "buttonPrev";
             this.buttonPrev.Size = new System.Drawing.Size(75, 23);
             this.buttonPrev.TabIndex = 1;
-            this.buttonPrev.Text = "< Prev";
+            this.buttonPrev.Text = "< &Back";
             this.buttonPrev.UseVisualStyleBackColor = true;
             this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
             // 
             // buttonNext
             // 
             this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNext.Location = new System.Drawing.Point(462, 2);
+            this.buttonNext.Location = new System.Drawing.Point(381, 2);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(75, 23);
             this.buttonNext.TabIndex = 0;
-            this.buttonNext.Text = "Next >";
+            this.buttonNext.Text = "&Next >";
             this.buttonNext.UseVisualStyleBackColor = true;
             this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
             // 
