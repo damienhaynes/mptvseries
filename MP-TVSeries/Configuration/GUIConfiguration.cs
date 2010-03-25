@@ -1470,9 +1470,12 @@ namespace WindowPlugins.GUITVSeries
                                 ParsingWizardHost.Init(m_parser);
 
                                 // now show generic progress details (remove seriesIDPage)
-                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);                                
                                 ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
                                 ParsingWizardProgress.Init(m_parser);
+
+                                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
 
                                 ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);    
 
@@ -1510,7 +1513,6 @@ namespace WindowPlugins.GUITVSeries
 
         #region Import Wizard Events
 
-
         private void ImportWizard_OnFinishedEditingEpisodes(UserInputResults values, UserFinishedRequestedAction reqAction)
         {
             switch (reqAction)
@@ -1522,6 +1524,7 @@ namespace WindowPlugins.GUITVSeries
                 case UserFinishedRequestedAction.Next:
                     ParsingWizardHost.RemoveDetailsPanel(ParsingWizardEpIDPage);
                     ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
+                    ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
                     break;
 
                 case UserFinishedRequestedAction.ShowMe:
@@ -1529,6 +1532,7 @@ namespace WindowPlugins.GUITVSeries
                     ParsingWizardHost.RemoveDetailsPanel(ParsingWizardProgress);
                     ParsingWizardHost.ShowDetailsPanel(ParsingWizardEpIDPage);
                     ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                    ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, true);
                     break;
 
                 default:

@@ -47,9 +47,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(b =>
             {
-                this.buttonFinish.Visible = true;
-                this.buttonNext.Visible = false;
-                this.buttonCancel.Enabled = false;
+                this.buttonFinish.Visible = true;                
+                this.buttonCancel.Visible = false;
+                this.buttonNext.Enabled = false;
                 this.buttonPrev.Enabled = false;
             });            
         }
