@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABS
-        dQAAAk1TRnQBSQFMAgEBCwEAAZQBAAGUAQABGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        dQAAAk1TRnQBSQFMAgEBCwEAAYwBAQGMAQEBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABSAMAAQEBAAEgBgABbDEAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMYASEDEQEXAwoBDgME
         AQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMAAQEXAAEBAxIBGAM1
         AVgDSgGLA1EBogNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQAaMDUAGjA1ABowNQ
@@ -840,9 +840,7 @@ replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
 Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
   </data>
   <data name="label68.Text" xml:space="preserve">
-    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths 
-defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help,
-you can modify the plugins parser behaviour from the left hand side tree view.</value>
+    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>92</value>

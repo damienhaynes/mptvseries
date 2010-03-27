@@ -9,22 +9,14 @@ using System.Linq;
 using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries.Configuration
-{
-    public enum UserFinishedRequestedAction
-    {
-        Cancel,
-        Next,
-        Prev,
-        ShowMe
-    }
-    public delegate void userFinishedEditingDel(UserInputResults userInputResult, UserFinishedRequestedAction RequestedAction);
-    
+{    
     public partial class ImportPanelParsing : UserControl
     {        
-        public event userFinishedEditingDel UserFinishedEditing;
+        public event UserFinishedEditingDelegate UserFinishedEditing;
+
         public ImportPanelParsing()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         public List<PathPair> allFoundFiles = new List<PathPair>();
@@ -35,20 +27,20 @@ namespace WindowPlugins.GUITVSeries.Configuration
         List<parseResult> origResults = null;
         void FillGrid(IList<parseResult> parsingResults)
         {
-            dataGridView1.SuspendLayout();
+            dataGridViewReview.SuspendLayout();
 
-            this.dataGridView1.Rows.Clear();
-            this.dataGridView1.Columns.Clear();
+            this.dataGridViewReview.Rows.Clear();
+            this.dataGridViewReview.Columns.Clear();
             // how many cells?            
             // we have filename + status as a given
             // + all unique regex-group-matches, lets find them
 
-            dataGridView1.Columns.Add("Enabled", "-");
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewReview.Columns.Add("Enabled", "-");
+            dataGridViewReview.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             
-            dataGridView1.Columns.Add("Filename", "Filename");
-            dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[1].ReadOnly = true;
+            dataGridViewReview.Columns.Add("Filename", "Filename");
+            dataGridViewReview.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewReview.Columns[1].ReadOnly = true;
 
             // this is a bit inefficient in the way it joins the the usercols with the autocols
             // but it doesn't really matter
@@ -91,9 +83,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             foreach (var group in uniqueCols)
             {
-                dataGridView1.Columns.Add(group.Name, group.Pretty);
+                dataGridViewReview.Columns.Add(group.Name, group.Pretty);
             }
-
 
             // note: we order by parsed_name (series), which also sorts those with !success at the top
             foreach (var result in parsingResults.OrderBy(r => r.parser.Matches.SingleOrDefault(kv => kv.Key == DBSeries.cParsedName).Value
@@ -132,65 +123,77 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
 
                 r.Tag = result;                
-                this.dataGridView1.Rows.Add(r);
+                this.dataGridViewReview.Rows.Add(r);
             }
-            this.dataGridView1.ResumeLayout();
+            this.dataGridViewReview.ResumeLayout();
 
             updateCount();
         }
 
         void updateCount()
         {
-            int total = this.dataGridView1.Rows.Count;
-            int dis = (from DataGridViewRow row in this.dataGridView1.Rows
+            int total = this.dataGridViewReview.Rows.Count;
+            int dis = (from DataGridViewRow row in this.dataGridViewReview.Rows
                        where row.Visible
                        select row).Count();
             this.lblCount.Text = string.Format("{0} Files found ({1} displayed)", total, dis);
         }
 
-        public void DoLocalParsing()
+        public void Init()
         {
+            ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
+
+            DoLocalParsing();
+        }
+
+        private void DoLocalParsing()
+        {            
             LocalParse runner = new LocalParse();
             runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler( result => 
                 {
                     allFoundFiles = result.Select(r => r.PathPair).ToList();
                     OnlineParsing.RemoveFilesInDB(result);
-                    this.label_wait_parse.Text = "FileParsing is done, displaying Results...";
+                    this.labelWaitParse.Text = "FileParsing is done, displaying Results...";
                     origResults = result;
                     FillGrid(result);
-                    this.label_wait_parse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
+                    this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
                 });
             runner.AsyncFullParse();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)
         {
-            if (UserFinishedEditing != null) UserFinishedEditing(null, UserFinishedRequestedAction.Cancel);
-        }
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var results = IdentifyChanges(false);
-            // TODO: make possible to only have series filled out!
-            // we requrie at least the series to be filled for all enabled ones
-            var invalids = results.Count(pr => !pr.parser.Matches.ContainsKey(DBSeries.cParsedName) || string.IsNullOrEmpty(pr.parser.Matches[DBSeries.cParsedName]));
-            invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex]));
-            invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex]));
-            if (invalids == 0)
+            if (reqAction == UserFinishedRequestedAction.Next)
+            {
+                var results = IdentifyChanges(false);
+                // TODO: make possible to only have series filled out!
+                // we requrie at least the series to be filled for all enabled ones
+                var invalids = results.Count(pr => !pr.parser.Matches.ContainsKey(DBSeries.cParsedName) || string.IsNullOrEmpty(pr.parser.Matches[DBSeries.cParsedName]));
+                invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex]));
+                invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex]));
+                if (invalids == 0)
+                {
+                    if (UserFinishedEditing != null)
+                        UserFinishedEditing(new UserInputResults(results, null), reqAction);
+                }
+                else
+                    MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);                
+            }
+            else if (reqAction == UserFinishedRequestedAction.Cancel)
             {
                 if (UserFinishedEditing != null)
-                    UserFinishedEditing(new UserInputResults(results, null), UserFinishedRequestedAction.Next);
+                    UserFinishedEditing(null, reqAction);
             }
-            else MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);
-                
+
+            // we no longer need to listen to navigate event
+            ImportWizard.OnWizardNavigate -= new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
         }
 
-        IList<parseResult> IdentifyChanges(bool includeDisabled)
+        private IList<parseResult> IdentifyChanges(bool includeDisabled)
         {
             List<parseResult> changes = new List<parseResult>();
 
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
                 if (includeDisabled || (bool)row.Cells[0].Value == true)
                 {
@@ -255,7 +258,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             foreach (DataGridViewCell cell in changes.Cells)
             {
-                var colname = dataGridView1.Columns[cell.ColumnIndex].Name;
+                var colname = dataGridViewReview.Columns[cell.ColumnIndex].Name;
                 if (colname != "Filename" &&
                     colname != "Status")
                 {
@@ -271,7 +274,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         void RefreshGrid()
         {
-            var updatedPRs = from DataGridViewRow r in dataGridView1.Rows
+            var updatedPRs = from DataGridViewRow r in dataGridViewReview.Rows
                              where r.Tag is parseResult
                              select merge(r.Tag as parseResult, r);
             FillGrid(updatedPRs.ToList());
@@ -305,11 +308,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         void resetFilter()
         {
-            dataGridView1.SuspendLayout();
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            dataGridViewReview.SuspendLayout();
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
                 row.Visible = true;
-            dataGridView1.ResumeLayout();
+            dataGridViewReview.ResumeLayout();
         }
+
         void Filter(string needle)
         {
             needle = needle.ToLower();
@@ -330,21 +334,21 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         void Filter(Func<DataGridViewRow, bool> filter)
         {
-            dataGridView1.SuspendLayout();
+            dataGridViewReview.SuspendLayout();
             
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
                 row.Visible = filter(row); ;
             }
-            dataGridView1.ResumeLayout();
+            dataGridViewReview.ResumeLayout();
             updateCount();
         }
 
         void autoChangeAll(int column, string orig, string newval)
         {
-            dataGridView1.SuspendLayout();
+            dataGridViewReview.SuspendLayout();
 
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
                 if (row.Visible) // only filtered (currently displayed)
                 {
@@ -357,19 +361,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
 
             RefreshGrid();
-            dataGridView1.ResumeLayout();
+            dataGridViewReview.ResumeLayout();
         }
 
         private void contextMenuStripChangeCell_Opening(object sender, CancelEventArgs e)
         {
 
             DataGridViewCell cell = null;
-            if(dataGridView1.SelectedCells.Count == 1)
-                cell = dataGridView1.SelectedCells[0];
+            if(dataGridViewReview.SelectedCells.Count == 1)
+                cell = dataGridViewReview.SelectedCells[0];
             if (cell == null) return;
 
             contextMenuStripChangeCell.Items.Clear();
-            parseResult origpr = dataGridView1.Rows[cell.RowIndex].Tag as parseResult;
+            parseResult origpr = dataGridViewReview.Rows[cell.RowIndex].Tag as parseResult;
             contextMenuStripChangeCell.Items.Add("File: " + origpr.full_filename);
             contextMenuStripChangeCell.Items.Add("Matched by: " + origpr.parser.RegexpMatched);
 
@@ -394,7 +398,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if(orig == cellValue) return;
             // else offer to do this change automatically for them all
             
-            contextMenuStripChangeCell.Items.Add(string.Format("Change all \"{0}\" to \"{1}\" in Column \"{2}\"", orig, cellValue, dataGridView1.Columns[cell.ColumnIndex].HeaderText));
+            contextMenuStripChangeCell.Items.Add(string.Format("Change all \"{0}\" to \"{1}\" in Column \"{2}\"", orig, cellValue, dataGridViewReview.Columns[cell.ColumnIndex].HeaderText));
             contextMenuStripChangeCell.Items[2].Tag = new object[] { cell, orig, cellValue };
         }
 
@@ -407,9 +411,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     autoChangeAll((args[0] as DataGridViewCell).ColumnIndex, args[1] as string, args[2] as string);
                 else if (args[1] is bool && args[2] is bool) // for enabled, yikes, copy/paste :-(
                 {
-                    dataGridView1.SuspendLayout();
+                    dataGridViewReview.SuspendLayout();
 
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    foreach (DataGridViewRow row in dataGridViewReview.Rows)
                     {
                         if (row.Visible) // only filtered (currently displayed)
                         {
@@ -418,7 +422,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     }
 
                     RefreshGrid();
-                    dataGridView1.ResumeLayout();
+                    dataGridViewReview.ResumeLayout();
                 }
             }
         }
@@ -474,11 +478,17 @@ namespace WindowPlugins.GUITVSeries.Configuration
         public int Importance;
         public string Name;
         string pretty;
+
         public string Pretty
         {
             get
-            { return string.IsNullOrEmpty(pretty) ? Name : pretty; }
-            set { pretty = value; }
+            { 
+                return string.IsNullOrEmpty(pretty) ? Name : pretty; 
+            }
+            set 
+            { 
+                pretty = value; 
+            }
         }
 
         public columns(string name)

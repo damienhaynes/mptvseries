@@ -12,7 +12,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 {    
     public partial class ImportPanelEpID : UserControl, Feedback.IEpisodeMatchingFeedback
     {
-        public event userFinishedEditingDel UserFinishedEditing;
+        public event UserFinishedEditingDelegate UserFinishedEditing;
         bool isFinished = false;
         Dictionary<DBSeries, List<DBEpisode>> localeps = new Dictionary<DBSeries, List<DBEpisode>>();
         Dictionary<DBSeries, List<DBOnlineEpisode>> onlineeps = new Dictionary<DBSeries, List<DBOnlineEpisode>>();
@@ -40,7 +40,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             tryAddToList(series, onlineCandidates, onlineeps);             
         }
 
-        void FillSeriesList()
+        private void FillSeriesList()
         {
             this.listBoxSeries.Items.Clear();
             this.listBoxOnline.Items.Clear();
@@ -57,13 +57,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 listBoxSeries.SelectedIndex = 0;
         }
 
-        bool seriesHasAllEpsMatched(DBSeries series)
+        private bool seriesHasAllEpsMatched(DBSeries series)
         {
             int unMatchedCount = matches.Single(s => s.Key == series).Value.Count(p => p.Value == null);
             return unMatchedCount == 0;
         }
 
-        void tryAddToList<T>(DBSeries series, List<T> episodes, Dictionary<DBSeries, List<T>> dic)
+        private void tryAddToList<T>(DBSeries series, List<T> episodes, Dictionary<DBSeries, List<T>> dic)
         {
             if (dic.ContainsKey(series))
                 dic[series] = episodes;
@@ -85,12 +85,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
 
-        List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> getResultImpl(bool requestShowOnly)
+        private List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> getResultImpl(bool requestShowOnly)
         {
             if (requestShowOnly)
             {
                 if (UserFinishedEditing != null)
+                {
                     UserFinishedEditing(null, UserFinishedRequestedAction.ShowMe);
+                    ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
+                }
 
                 DoAutoMatchingForAll();
                 FillSeriesList();
@@ -145,18 +148,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
             matches.Add(new KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>(series, newseriesMatches));
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)
         {
-            isFinished = true;
-
+            if (reqAction == UserFinishedRequestedAction.Next) isFinished = true;
+            
             if (UserFinishedEditing != null)
-                UserFinishedEditing(null, UserFinishedRequestedAction.Next);
-        }
+                UserFinishedEditing(null, reqAction);
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (UserFinishedEditing != null)
-                UserFinishedEditing(null, UserFinishedRequestedAction.Cancel);
+            // we no longer need to listen to navigate event
+            ImportWizard.OnWizardNavigate -= new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
         }
 
         private void listBoxSeries_SelectedIndexChanged(object sender, EventArgs e)
@@ -179,7 +179,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             else comboMatchOptions.SelectedItem = preChosen;
         }
 
-        string getDisplayString(DBTable ep)
+        private string getDisplayString(DBTable ep)
         {
             if (ep is DBEpisode)
             {
@@ -200,7 +200,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return string.Empty;
         }
 
-        void fillEpGrid(List<DBEpisode> localEps, List<DBOnlineEpisode> onlineEps)
+        private void fillEpGrid(List<DBEpisode> localEps, List<DBOnlineEpisode> onlineEps)
         {
             listBoxLocal.Items.Clear();
             listBoxOnline.Items.Clear();

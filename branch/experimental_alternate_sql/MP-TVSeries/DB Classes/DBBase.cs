@@ -1152,7 +1152,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
                 builder.ConnectionString = m_sConnectionString;
-                return string.Format("SQLite: {0}", builder["Data Source"]);
+                return string.Format("SQLite: {0}", builder["Server"]);
             }
         }
 
@@ -1284,7 +1284,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
                 builder.ConnectionString = m_sConnectionString;
-                return string.Format("MySQL: Host={0}, Database={1}", builder["Data Source"], builder["Initial Catalog"]);
+                return string.Format("MySQL: Server={0}, Database={1}", builder["Server"], builder["Database"]);
             }
         }
 
@@ -1313,10 +1313,11 @@ namespace WindowPlugins.GUITVSeries
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
             builder.ConnectionString = ConnectionString;
 
-            string database = builder["Initial Catalog"].ToString();
+            string database = builder["Database"].ToString();
 
             //were going to make the database, so remove the database from the connectionstring
             builder.Remove("Initial Catalog");
+            builder.Remove("Database");
 
             System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
@@ -1477,7 +1478,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
                 builder.ConnectionString = m_sConnectionString;
-                return string.Format("Sql Express: Host={0}, Database={1}", builder["DataSource"], builder["Initial Catalog"]);
+                return string.Format("Sql Express: Server={0}, Database={1}", builder["Server"], builder["Database"]);
             }
         }
 
@@ -1505,10 +1506,11 @@ namespace WindowPlugins.GUITVSeries
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
             builder.ConnectionString = ConnectionString;
 
-            string database = builder["Initial Catalog"].ToString();
+            string database = builder["Database"].ToString();
 
             //were going to make the database, so remove the database from the connectionstring
             builder.Remove("Initial Catalog");
+            builder.Remove("Database");
 
             System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");

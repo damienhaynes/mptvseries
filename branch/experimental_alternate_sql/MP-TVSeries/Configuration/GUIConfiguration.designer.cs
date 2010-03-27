@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries
             this.resetExpr = new System.Windows.Forms.LinkLabel();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.button_TestReparse = new System.Windows.Forms.Button();
-            this.button_Start = new System.Windows.Forms.Button();
+            this.buttonStartImport = new System.Windows.Forms.Button();
             this.checkboxAutoDownloadFanartSeriesName = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoDownloadMissingArtwork = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoUpdateEpisodeRatings = new System.Windows.Forms.CheckBox();
@@ -151,12 +151,9 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
-            this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_OnlyShowLocalFiles = new System.Windows.Forms.CheckBox();
-            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.chkUseRegionalDateFormatString = new System.Windows.Forms.CheckBox();
             this.richTextBox_seasonFormat_Col3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seasonFormat_Main = new System.Windows.Forms.RichTextBox();
@@ -176,6 +173,9 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
+            this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -215,8 +215,6 @@ namespace WindowPlugins.GUITVSeries
             this.SeasonID = new System.Windows.Forms.ColumnHeader();
             this.EpisodeID = new System.Windows.Forms.ColumnHeader();
             this.EpisodeTitle = new System.Windows.Forms.ColumnHeader();
-            this.panel_manualEpisodeManagement = new WindowPlugins.GUITVSeries.ManualEpisodeManagementPane();
-            this.progressBar_Parsing = new System.Windows.Forms.ProgressBar();
             this.tabOnlineData = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
@@ -363,7 +361,6 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).BeginInit();
-            this.panDBLocation.SuspendLayout();
             this.tabPage_Import.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel1.SuspendLayout();
             this.splitContainer_SettingsOutput.Panel2.SuspendLayout();
@@ -700,17 +697,20 @@ namespace WindowPlugins.GUITVSeries
             this.button_TestReparse.UseVisualStyleBackColor = true;
             this.button_TestReparse.Click += new System.EventHandler(this.button_TestReparse_Click);
             // 
-            // button_Start
+            // buttonStartImport
             // 
-            this.button_Start.Location = new System.Drawing.Point(21, 5);
-            this.button_Start.Name = "button_Start";
-            this.button_Start.Size = new System.Drawing.Size(105, 23);
-            this.button_Start.TabIndex = 4;
-            this.button_Start.Text = "&Start Import";
-            this.toolTip_Help.SetToolTip(this.button_Start, "Click to Start Importing data from the Online Database, updates data for all seri" +
+            this.buttonStartImport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStartImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonStartImport.Location = new System.Drawing.Point(3, 3);
+            this.buttonStartImport.Name = "buttonStartImport";
+            this.buttonStartImport.Size = new System.Drawing.Size(760, 23);
+            this.buttonStartImport.TabIndex = 4;
+            this.buttonStartImport.Text = "&Start Import Wizard";
+            this.toolTip_Help.SetToolTip(this.buttonStartImport, "Click to Start Importing data from the Online Database, updates data for all seri" +
                     "es, seasons and episodes new and old");
-            this.button_Start.UseVisualStyleBackColor = true;
-            this.button_Start.Click += new System.EventHandler(this.button_Start_Click);
+            this.buttonStartImport.UseVisualStyleBackColor = true;
+            this.buttonStartImport.Click += new System.EventHandler(this.buttonStartImport_Click);
             // 
             // checkboxAutoDownloadFanartSeriesName
             // 
@@ -1312,34 +1312,6 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_InfoHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip_InfoHelp.ToolTipTitle = "View Format Help";
             // 
-            // dbOptChkBoxCountEmptyFutureEps
-            // 
-            this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
-            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 354);
-            this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
-            this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
-            this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
-            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
-            this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
-            this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
-                    "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
-                    "an see when browsing GUI.");
-            this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBoxMarkRatedEpsAsWatched
-            // 
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 32;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
-            // 
             // checkBox_Episode_HideUnwatchedSummary
             // 
             this.checkBox_Episode_HideUnwatchedSummary.AutoSize = true;
@@ -1375,21 +1347,6 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
             this.checkBox_Episode_OnlyShowLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_Episode_OnlyShowLocalFiles_CheckedChanged);
-            // 
-            // optionAsk2Rate
-            // 
-            this.optionAsk2Rate.AutoSize = true;
-            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
-            this.optionAsk2Rate.Name = "optionAsk2Rate";
-            this.optionAsk2Rate.Option = "askToRate";
-            this.optionAsk2Rate.Size = new System.Drawing.Size(234, 17);
-            this.optionAsk2Rate.TabIndex = 11;
-            this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
-            this.optionAsk2Rate.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
-                    "ve watched an episodes which hasn\'t been rated yet.");
-            this.optionAsk2Rate.UseVisualStyleBackColor = true;
-            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
             // 
             // chkUseRegionalDateFormatString
             // 
@@ -1654,6 +1611,49 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Col1, "Enter in the field(s) to be displayed in column one of the series view.\r\nYou can " +
                     "right click on this textbox to bring up a menu of available fields from the data" +
                     "base.\r\n\r\nDefault: Empty");
+            // 
+            // dbOptChkBoxCountEmptyFutureEps
+            // 
+            this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 354);
+            this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
+            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
+            this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
+            this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
+                    "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
+                    "an see when browsing GUI.");
+            this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionCheckBoxMarkRatedEpsAsWatched
+            // 
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 32;
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
+            // 
+            // optionAsk2Rate
+            // 
+            this.optionAsk2Rate.AutoSize = true;
+            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
+            this.optionAsk2Rate.Name = "optionAsk2Rate";
+            this.optionAsk2Rate.Option = "askToRate";
+            this.optionAsk2Rate.Size = new System.Drawing.Size(234, 17);
+            this.optionAsk2Rate.TabIndex = 11;
+            this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
+            this.optionAsk2Rate.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
+                    "ve watched an episodes which hasn\'t been rated yet.");
+            this.optionAsk2Rate.UseVisualStyleBackColor = true;
+            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
             // 
             // splitMain_Log
             // 
@@ -1924,11 +1924,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer_SettingsOutput.Panel2
             // 
-            this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.progressBar_Parsing);
-            this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.button_Start);
+            this.splitContainer_SettingsOutput.Panel2.Controls.Add(this.buttonStartImport);
             this.splitContainer_SettingsOutput.Panel2MinSize = 30;
             this.splitContainer_SettingsOutput.Size = new System.Drawing.Size(766, 513);
-            this.splitContainer_SettingsOutput.SplitterDistance = 457;
+            this.splitContainer_SettingsOutput.SplitterDistance = 477;
             this.splitContainer_SettingsOutput.TabIndex = 157;
             this.splitContainer_SettingsOutput.TabStop = false;
             // 
@@ -1948,8 +1947,7 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_Expressions);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_StringReplacements);
             this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_ImportPathes);
-            this.splitContainerImportSettings.Panel2.Controls.Add(this.panel_manualEpisodeManagement);
-            this.splitContainerImportSettings.Size = new System.Drawing.Size(766, 457);
+            this.splitContainerImportSettings.Size = new System.Drawing.Size(766, 477);
             this.splitContainerImportSettings.SplitterDistance = 151;
             this.splitContainerImportSettings.TabIndex = 156;
             // 
@@ -1958,7 +1956,7 @@ namespace WindowPlugins.GUITVSeries
             this.treeView_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Settings.Location = new System.Drawing.Point(0, 0);
             this.treeView_Settings.Name = "treeView_Settings";
-            this.treeView_Settings.Size = new System.Drawing.Size(151, 457);
+            this.treeView_Settings.Size = new System.Drawing.Size(151, 477);
             this.treeView_Settings.TabIndex = 0;
             this.treeView_Settings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Settings_AfterSelect);
             // 
@@ -2082,7 +2080,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements.Controls.Add(this.linkLabelExportStringReplacements);
             this.panel_StringReplacements.Controls.Add(this.label69);
             this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
-            this.panel_StringReplacements.Location = new System.Drawing.Point(6, 167);
+            this.panel_StringReplacements.Location = new System.Drawing.Point(7, 253);
             this.panel_StringReplacements.Name = "panel_StringReplacements";
             this.panel_StringReplacements.Size = new System.Drawing.Size(164, 152);
             this.panel_StringReplacements.TabIndex = 155;
@@ -2147,10 +2145,11 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label68
             // 
-            this.label68.AutoSize = true;
+            this.label68.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label68.Location = new System.Drawing.Point(1, 117);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(481, 39);
+            this.label68.Size = new System.Drawing.Size(393, 39);
             this.label68.TabIndex = 151;
             this.label68.Text = resources.GetString("label68.Text");
             // 
@@ -2256,23 +2255,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.EpisodeTitle.Text = "Episode Title";
             this.EpisodeTitle.Width = 74;
-            // 
-            // panel_manualEpisodeManagement
-            // 
-            this.panel_manualEpisodeManagement.Location = new System.Drawing.Point(6, 311);
-            this.panel_manualEpisodeManagement.Name = "panel_manualEpisodeManagement";
-            this.panel_manualEpisodeManagement.Size = new System.Drawing.Size(164, 143);
-            this.panel_manualEpisodeManagement.TabIndex = 157;
-            this.panel_manualEpisodeManagement.Tag = "Manual Episode Importer";
-            // 
-            // progressBar_Parsing
-            // 
-            this.progressBar_Parsing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar_Parsing.Location = new System.Drawing.Point(153, 6);
-            this.progressBar_Parsing.Name = "progressBar_Parsing";
-            this.progressBar_Parsing.Size = new System.Drawing.Size(574, 20);
-            this.progressBar_Parsing.TabIndex = 3;
             // 
             // tabOnlineData
             // 
@@ -3834,8 +3816,6 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Series)).EndInit();
-            this.panDBLocation.ResumeLayout(false);
-            this.panDBLocation.PerformLayout();
             this.tabPage_Import.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel1.ResumeLayout(false);
             this.splitContainer_SettingsOutput.Panel2.ResumeLayout(false);
@@ -3849,7 +3829,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_StringReplacements.ResumeLayout(false);
             this.panel_StringReplacements.PerformLayout();
             this.panel_ImportPathes.ResumeLayout(false);
-            this.panel_ImportPathes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).EndInit();
             this.tabOnlineData.ResumeLayout(false);
             this.groupBox12.ResumeLayout(false);
@@ -3920,8 +3899,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Panel panel_ImportPathes;
         private System.Windows.Forms.SplitContainer splitContainerImportSettings;
         private System.Windows.Forms.Panel panel_Expressions;
-        private System.Windows.Forms.Button button_Start;
-        private System.Windows.Forms.ProgressBar progressBar_Parsing;
+        private System.Windows.Forms.Button buttonStartImport;
         private System.Windows.Forms.SplitContainer splitContainer_SettingsOutput;
         private System.Windows.Forms.ListBox listBox_Log;
         private System.Windows.Forms.ComboBox comboBox_BannerSelection;
@@ -4024,7 +4002,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.TextBox textBox_NewsSearchParseArticleRegex;
         private System.Windows.Forms.Label label49;
-        private ManualEpisodeManagementPane panel_manualEpisodeManagement;
         private System.Windows.Forms.CheckBox chkUseRegionalDateFormatString;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.LinkLabel lnkResetView;

@@ -117,19 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="labelBody.Text" xml:space="preserve">
-    <value>This is the text of the Memory Box.  To change, set
-the LabelText property at run time.  Text is included here
-for easier spacing of the control.
-line 1
-line 2
-line 3
-line 4
-line 5
-line 6
-line 7
-line 8
-line 9
-line 10</value>
-  </data>
 </root>

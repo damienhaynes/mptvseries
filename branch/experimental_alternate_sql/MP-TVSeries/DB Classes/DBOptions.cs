@@ -522,7 +522,6 @@ namespace WindowPlugins.GUITVSeries
                 if (!bTableUpdateDone)
                 {
                     bTableUpdateDone = true;
-                    DataTable results;
                     if (!DBTVSeries.TableExists("options")) {
                         // no table, create it
                         String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";

@@ -724,11 +724,9 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
                     }
-                    else
-                    {
-                        DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
-                    }
                 }
+
+                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, true, condition);
 
                 // and copy the HasLocalFileTemp value into the real one
                 DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
