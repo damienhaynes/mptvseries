@@ -1116,6 +1116,7 @@ namespace WindowPlugins.GUITVSeries
         {
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
             builder.Add("Data Source", databaseFile);
+            builder.Add("Pooling", true);   //may not be enalbed by default
 
             m_sConnectionString = builder.ConnectionString;
         }
@@ -1152,7 +1153,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
                 builder.ConnectionString = m_sConnectionString;
-                return string.Format("SQLite: {0}", builder["Server"]);
+                return string.Format("SQLite: {0}", builder["Data Source"]);
             }
         }
 
