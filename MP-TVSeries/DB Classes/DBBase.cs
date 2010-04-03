@@ -289,8 +289,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 cachedForTable = new Dictionary<string, DBFieldType>();
                 // load up fields from the table
-                SQLiteResultSet results;
-                results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
+                SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
                 if (results != null && results.Rows.Count > 0)
                 {
                     // we have the table definition, parse it for names/types
@@ -300,22 +299,23 @@ namespace WindowPlugins.GUITVSeries
                     Match tablematch = Engine.Match(sCreateTable);
                     if (tablematch.Success)
                     {
-                        String sParameters = tablematch.Groups[1].Value;
+                        String sParameters = tablematch.Groups[1].Value + ','; //trailng comma make the regex below find the last column
                         // we have the list of parameters, parse them
-                        RegExp = @"([^\s,]+) ([^\s,]+)( primary key)?";
+                        // group 1: fieldname, group2: type, group3: test for primary key, group4: any thing else until a comma (not null, Default value etc.)
+                        RegExp = @"([^\s]+)\s+([^\s,]+)(\s+primary key)?([^,]+)?,";
                         Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                         MatchCollection matches = Engine.Matches(sParameters);
                         foreach (Match parammatch in matches)
                         {
                             String sName = parammatch.Groups[1].Value;
-                            String sType = parammatch.Groups[2].Value;
-                            bool bPrimary = false;
-                            if (parammatch.Groups[3].Success)
-                                bPrimary = true;
+                            // could be either "int" or "integer"
+                            bool bIntType = parammatch.Groups[2].Value.StartsWith("int", StringComparison.CurrentCultureIgnoreCase);
+                            bool bPrimary = parammatch.Groups[3].Success;
 
-                            DBFieldType cachedInfo = new DBFieldType();
-                            cachedInfo.Primary = bPrimary;
-                            cachedInfo.Type = (sType.ToLowerInvariant() == "int" || sType.ToLowerInvariant() == "integer") ? DBField.cTypeInt : DBField.cType.String;
+                            DBFieldType cachedInfo = new DBFieldType {
+                                                                         Primary = bPrimary,
+                                                                         Type = (bIntType ? DBField.cTypeInt : DBField.cType.String)
+                                                                     };
 
                             if (!m_fields.ContainsKey(sName))
                             {
