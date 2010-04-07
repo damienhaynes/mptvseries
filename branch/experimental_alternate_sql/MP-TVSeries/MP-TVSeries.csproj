@@ -318,7 +318,6 @@
     <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
-    <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
     <Compile Include="GUIUserRating.cs" />
@@ -498,10 +497,21 @@
     <Compile Include="Configuration\ProgressLabel.Designer.cs">
       <DependentUpon>ProgressLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\DBField.cs" />
+    <Compile Include="DataBase\DBTable.cs" />
+    <Compile Include="DataBase\DBTVSeries.cs" />
+    <Compile Include="DataBase\DBValue.cs" />
+    <Compile Include="DataBase\SQLCondition.cs" />
+    <Compile Include="DataBase\SQLWhat.cs" />
+    <Compile Include="DataBase\DBProvider.cs" />
+    <Compile Include="DataBase\Providers\MySqlProvider.cs" />
+    <Compile Include="DataBase\Providers\SQLClientProvider.cs" />
+    <Compile Include="DataBase\Providers\SQLiteProvider.cs" />
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
     <Compile Include="Online Parsing Classes\UserInputResult.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="TVSeriesPlugin.cs" />
     <None Include="Properties\VersionInfo.cs.tmpl" />
   </ItemGroup>
   <ItemGroup>

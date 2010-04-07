@@ -192,6 +192,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
+
+        private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
+
         
         static DBOption()
         {
@@ -200,8 +203,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!DBTVSeries.TableExists("options"))
                 {
                     // no table, create it
-                    String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
-                    DBTVSeries.Execute(sQuery);
+                    DBTVSeries.Execute(cCreateTableQuery);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
@@ -524,8 +526,7 @@ namespace WindowPlugins.GUITVSeries
                     bTableUpdateDone = true;
                     if (!DBTVSeries.TableExists("options")) {
                         // no table, create it
-                        String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
-                        DBTVSeries.Execute(sQuery);
+                        DBTVSeries.Execute(cCreateTableQuery);
                     }
                 }
             }
