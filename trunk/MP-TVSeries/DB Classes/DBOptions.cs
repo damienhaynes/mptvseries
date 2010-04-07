@@ -192,18 +192,19 @@ namespace WindowPlugins.GUITVSeries
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
+
+        private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
+
         
         static DBOption()
         {
             try
             {
-                SQLiteResultSet results;
-                results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
                 if (results == null || results.Rows.Count == 0)
                 {
                     // no table, create it
-                    String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
-                    DBTVSeries.Execute(sQuery);
+                    DBTVSeries.Execute(cCreateTableQuery);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
@@ -524,13 +525,11 @@ namespace WindowPlugins.GUITVSeries
                 if (!bTableUpdateDone)
                 {
                     bTableUpdateDone = true;
-                    SQLiteResultSet results;
-                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
                     if (results == null || results.Rows.Count == 0)                    
                     {
                         // no table, create it
-                        String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
-                        DBTVSeries.Execute(sQuery);
+                        DBTVSeries.Execute(cCreateTableQuery);
                     }
                 }
             }
