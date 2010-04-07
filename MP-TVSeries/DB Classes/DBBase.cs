@@ -201,6 +201,7 @@ namespace WindowPlugins.GUITVSeries
         // private access
         private cType m_type;
         private bool m_primaryKey;
+        private bool m_autoIncrement;
         private DBValue m_value;
 
         private bool wasChanged = false;
@@ -209,17 +210,33 @@ namespace WindowPlugins.GUITVSeries
         {
             m_type = type;
             m_primaryKey = false;
+            m_autoIncrement = false;
         }
         public DBField(cType type, bool primaryKey)
         {
             m_type = type;
             m_primaryKey = primaryKey;
+            m_autoIncrement = false;
+        }
+
+        public DBField(cType type, bool primaryKey, bool autoIncrement)
+        {
+            m_type = type;
+            m_primaryKey = primaryKey;
+            m_autoIncrement = autoIncrement;
         }
 
         public DBField(DBFieldType dbFieldT)
         {
             m_type = dbFieldT.Type;
             m_primaryKey = dbFieldT.Primary;
+            m_autoIncrement = dbFieldT.AutoIncrement;
+        }
+
+        public bool AutoIncrement
+        {
+            get { return this.m_autoIncrement; }
+            set { this.m_autoIncrement = value; }
         }
 
         public bool Primary
@@ -252,6 +269,7 @@ namespace WindowPlugins.GUITVSeries
     {
         public DBField.cType Type;
         public bool Primary;
+        public bool AutoIncrement;
     }
 
     // table class - used as a base for table objects (series, episodes, etc)
@@ -309,12 +327,17 @@ namespace WindowPlugins.GUITVSeries
                         {
                             String sName = parammatch.Groups[1].Value;
                             // could be either "int" or "integer"
-                            bool bIntType = parammatch.Groups[2].Value.StartsWith("int", StringComparison.CurrentCultureIgnoreCase);
+                            bool bIntType = parammatch.Groups[2].Value.StartsWith("int", StringComparison.InvariantCultureIgnoreCase);
                             bool bPrimary = parammatch.Groups[3].Success;
+                            // In Sqlite an "integer" (but not "int") Primary Key is an alias for the sqlite rowid, and therefore auto increments
+                            bool bAutoIncrement = (bPrimary && parammatch.Groups[2].Value.Equals("integer", StringComparison.InvariantCultureIgnoreCase)) ||
+                            // or a column can be set as autoincrement
+                                                  parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
                             DBFieldType cachedInfo = new DBFieldType {
                                                                          Primary = bPrimary,
-                                                                         Type = (bIntType ? DBField.cTypeInt : DBField.cType.String)
+                                                                         Type = (bIntType ? DBField.cTypeInt : DBField.cType.String),
+                                                                         AutoIncrement = bAutoIncrement
                                                                      };
 
                             if (!m_fields.ContainsKey(sName))
@@ -366,7 +389,13 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // new table, create it
                         // no tables, assume it's going to be created later (using AddColumn)
-                        String sQuery = "CREATE TABLE " + m_tableName + " (" + sName + " " + field.Type + (field.Primary ? " primary key)" : ")");
+                        string type = field.Type.ToString();
+                        if (field.Primary && field.Type == DBField.cType.Int && field.AutoIncrement) {
+                            //for the automatic creation of an auto incremental integer primary key you must use the full "Integer" not just "int"
+                            type = "Integer";
+                        }
+
+                        String sQuery = "CREATE TABLE " + m_tableName + " (" + sName + " " + type + (field.Primary ? " primary key)" : ")");
                         DBTVSeries.Execute(sQuery);
                     }
                     // delete the s_fields cache so newed up objects get the right fields
@@ -561,27 +590,37 @@ namespace WindowPlugins.GUITVSeries
                         PrimaryField = field;
                         break;
                     }
+                bool update = false;
 
-                if (String.IsNullOrEmpty(PrimaryField.Value.Value))
+                if (String.IsNullOrEmpty(PrimaryField.Value.Value) && !PrimaryField.Value.AutoIncrement)
                     return false;
 
+                String sqlQuery;
+                StringBuilder builder = new StringBuilder();
                 String sWhere = " where ";
-                switch (PrimaryField.Value.Type)
-                {
-                    case DBField.cTypeInt:
-                        sWhere += PrimaryField.Key + " = " + PrimaryField.Value.Value;
-                        break;
 
-                    case DBField.cTypeString:
-                        sWhere += PrimaryField.Key + " = '" + ((String)PrimaryField.Value.Value).Replace("'", "''") + "'";
-                        break;
+                if (!String.IsNullOrEmpty(PrimaryField.Value.Value)) {
+                    
+                    switch (PrimaryField.Value.Type) {
+                        case DBField.cTypeInt:
+                            sWhere += PrimaryField.Key + " = " + PrimaryField.Value.Value;
+                            break;
+
+                        case DBField.cTypeString:
+                            sWhere += PrimaryField.Key + " = '" + ((String)PrimaryField.Value.Value).Replace("'", "''") +
+                                      "'";
+                            break;
+                    }
+
+                    // use the primary key field
+                    sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
+                    SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
+                    if (records.Rows.Count > 0) {
+                        update = true;
+                    }
                 }
 
-                // use the primary key field
-                String sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
-                SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
-                StringBuilder builder = new StringBuilder();
-                if (records.Rows.Count > 0)
+                if (update)
                 {
                     // already exists, update
                     builder.Append("update ").Append(m_tableName).Append(" set ");
@@ -617,17 +656,20 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // add new record
-                    String sParamValues = String.Empty;
                     StringBuilder paramNames = new StringBuilder();
                     bool first = true;
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
-                        if (!first)
-                        {
+                        if (!first) {
                             paramNames.Append(',');
                             builder.Append(',');
+                        } else {
+                            if (fieldPair.Value.AutoIncrement) {
+                                //skip the autoincrementing field as we want this to be generated
+                                continue;
+                            }
+                            first = false;
                         }
-                        else first = false;
                         paramNames.Append(fieldPair.Key);
                         switch (fieldPair.Value.Type)
                         {
@@ -644,13 +686,22 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                     }
-                    sParamValues = builder.ToString();
+                    String sParamValues = builder.ToString();
                     builder.Remove(0, builder.Length);
                     builder.Append("insert into ").Append(m_tableName).Append(" (").Append(paramNames).Append(") values(").Append(sParamValues).Append(")");
                     sqlQuery = builder.ToString();
 
                     DBTVSeries.Execute(sqlQuery);
+
+                    if (PrimaryField.Value.AutoIncrement) {
+                        //we've just done an insert to an auto crementing field, so fetch the value
+                        SQLiteResultSet results = DBTVSeries.Execute("SELECT last_insert_rowid() AS ID");
+                        this[PrimaryField.Key] = int.Parse(results.Rows[0].fields[0]);
+                        
+                    }
                 }
+
+                m_CommitNeeded = false;
                 return true;
             }
             catch (Exception ex)
