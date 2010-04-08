@@ -19,7 +19,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
     
     public partial class ImportWizard : UserControl
     {
-
         public enum WizardButton
         {
             Cancel,
@@ -60,7 +59,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             DialogResult dialogResult = MessageBox.Show("Are you sure you wish to Cancel the Import?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
-                OnWizardNavigate(UserFinishedRequestedAction.Cancel);
+                if (OnWizardNavigate != null)
+                    OnWizardNavigate(UserFinishedRequestedAction.Cancel);
 
                 if (this.owner != null)
                     owner.AbortImport();

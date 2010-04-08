@@ -904,7 +904,8 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
         
-        #region Import Handling
+        #region Import Path Handling
+        
         private void dataGridView_ImportPathes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             DBImportPath importPath = new DBImportPath();
@@ -1262,6 +1263,11 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Test Parsing Handling
+        private void button_TestReparse_Click(object sender, EventArgs e)
+        {
+            TestParsing_Start(true);
+        }
+
         void TestParsing_FillList(List<parseResult> results)
         {
             listView_ParsingResults.SuspendLayout();
@@ -1405,19 +1411,52 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        ImportWizard ParsingWizardHost;
-        ImportPanelParsing ParsingWizardParsingPage;
-        ImportPanelSeriesID ParsingWizardSeriesIDPage;
-        ImportPanelEpID ParsingWizardEpIDPage;
-        ImportPanelProgress ParsingWizardProgress;
+        #region ImportWizard
 
-        private void Parsing_Start()
+        private ImportWizard ParsingWizardHost;
+        private ImportPanelParsing ParsingWizardParsingPage;
+        private ImportPanelSeriesID ParsingWizardSeriesIDPage;
+        private ImportPanelEpID ParsingWizardEpIDPage;
+        private ImportPanelProgress ParsingWizardProgress;
+
+        private CParsingParameters ImportWizardParseParams;
+
+        private void buttonStartImport_Click(object sender, EventArgs e)
         {
-            Parsing_Start(new CParsingParameters(true, true));
+            if (m_parser != null)
+            {
+                AbortImport();
+            }
+            else
+                StartImport();
         }
 
-        private void Parsing_Start(CParsingParameters parsingParams)
+        public void AbortImport()
         {
+            if (m_parser != null)
+            {
+                m_parser.Cancel();               
+            }
+
+            // remove the progress page
+            ImportWizard ipp = null;
+            foreach (var control in this.tabPage_Import.Controls)
+            {
+                if (control is ImportWizard)
+                {
+                    ipp = control as ImportWizard;
+                    break;
+                }
+            }
+
+            if (ipp != null)
+                this.tabPage_Import.Controls.Remove(ipp);
+        }
+
+        private void StartImport()
+        {
+            ImportWizardParseParams = new CParsingParameters(true, true);
+
             if (m_parser == null)
             {
                 // refresh regex and replacements
@@ -1427,95 +1466,104 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardParsingPage = new ImportPanelParsing();
                 ParsingWizardSeriesIDPage = new ImportPanelSeriesID();
                 ParsingWizardEpIDPage = new ImportPanelEpID();
-                ParsingWizardProgress = new ImportPanelProgress();
+                ParsingWizardProgress = new ImportPanelProgress();                
 
-                #region Import Wizard
-
-                this.tabPage_Import.Controls.Add(ParsingWizardHost);
+                tabPage_Import.Controls.Add(ParsingWizardHost);
                 ParsingWizardHost.Dock = DockStyle.Fill;
                 ParsingWizardHost.BringToFront();
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
 
                 // now have it host the the initial parsing page                 
                 ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
-
                 ParsingWizardHost.AddSleepingDetailsPanel(ParsingWizardEpIDPage);                
 
                 // and fire off work on that page
                 ParsingWizardParsingPage.Init();
-
-                ParsingWizardParsingPage.UserFinishedEditing += new UserFinishedEditingDelegate((changedResults, ParsingRequest) =>
-                {
-                    ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
-                    if (ParsingRequest == UserFinishedRequestedAction.Next)
-                    {
-                        // user can now navigate back
-                        ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, true);
-
-                        // show the seriesIdentification Page
-                        ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
-                        ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
-
-                        ParsingWizardSeriesIDPage.Init(changedResults.ParseResults);
-
-                        ParsingWizardSeriesIDPage.UserFinishedEditing += new UserFinishedEditingDelegate((idSeries, SeriesIDRequest) =>
-                        {
-                            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
-                            
-                            if (SeriesIDRequest == UserFinishedRequestedAction.Next)
-                            {
-                                m_parser = new OnlineParsing(this);
-
-                                // and give it to the wizard
-                                ParsingWizardHost.Init(m_parser);
-
-                                // now show generic progress details (remove seriesIDPage)
-                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);                                
-                                ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
-                                ParsingWizardProgress.Init(m_parser);
-
-                                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
-
-                                ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);    
-
-                                // only now do we set up the parser itself and fire it off
-                                parsingParams.m_userInputResult = idSeries;
-                                
-                                // this will be requested by the the parsing engine at the appropriate time
-                                parsingParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
-                                parsingParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
-
-                                ParsingWizardEpIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedEditingEpisodes);
-
-                                buttonStartImport.Text = "Abort";
-                                m_timingStart = DateTime.Now;
-                                
-                                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
-
-                                // finally fire it off
-                                m_parser.Start(parsingParams);
-                            }
-                            else if (SeriesIDRequest == UserFinishedRequestedAction.Prev)
-                            {
-                                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
-                                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
-                                ParsingWizardParsingPage.Init();
-                                ParsingWizardSeriesIDPage.ClearResults();
-                            }
-                        });
-                    }
-                });
-                #endregion
+                ParsingWizardParsingPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedLocalParsing);               
             }
         }
 
         #region Import Wizard Events
 
-        private void ImportWizard_OnFinishedEditingEpisodes(UserInputResults values, UserFinishedRequestedAction reqAction)
+        private void ImportWizard_OnFinishedLocalParsing(UserInputResults values, UserFinishedRequestedAction reqAction)
         {
-            switch (reqAction)
+            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+            if (reqAction == UserFinishedRequestedAction.Next)
+            {
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
+
+                // show the seriesIdentification Page
+                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
+                ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
+
+                ParsingWizardSeriesIDPage.SeriesGridPopulated += new ImportPanelSeriesID.SeriesGridPopulatedDelegate(ImportWizard_OnSeriesGridPopulated);
+                ParsingWizardSeriesIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
+
+                ParsingWizardSeriesIDPage.Init(values.ParseResults);                                
+            }
+        }
+
+        private void ImportWizard_OnFinishedSeriesID(UserInputResults inputResults, UserFinishedRequestedAction requestAction)
+        {
+            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+
+            if (requestAction == UserFinishedRequestedAction.Next)
+            {
+                m_parser = new OnlineParsing(this);
+
+                // and give it to the wizard
+                ParsingWizardHost.Init(m_parser);
+
+                // now show generic progress details (remove seriesIDPage)
+                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);                                
+                ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
+                ParsingWizardProgress.Init(m_parser);
+
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
+
+                ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);
+
+                // only now do we set up the parser itself and fire it off
+                ImportWizardParseParams.m_userInputResult = inputResults;
+
+                // this will be requested by the the parsing engine at the appropriate time
+                ImportWizardParseParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
+                ImportWizardParseParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
+
+                ParsingWizardEpIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedEditingEpisodes);
+
+                // finally fire it off
+                m_timingStart = DateTime.Now;
+                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+                m_parser.Start(ImportWizardParseParams);
+            }
+            else if (requestAction == UserFinishedRequestedAction.Prev)
+            {
+                // unregister events
+                ParsingWizardSeriesIDPage.UserFinishedEditing -= new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
+                ParsingWizardSeriesIDPage.SeriesGridPopulated -= new ImportPanelSeriesID.SeriesGridPopulatedDelegate(ImportWizard_OnSeriesGridPopulated);
+
+                // remove existing panel and show previous one
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
+                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
+                ParsingWizardParsingPage.Init();
+                ParsingWizardSeriesIDPage.ClearResults();                                
+            }     
+        }
+
+        private void ImportWizard_OnSeriesGridPopulated()
+        {
+            // user can now go forwards or back
+            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, true);
+            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, true);
+        }
+
+        private void ImportWizard_OnFinishedEditingEpisodes(UserInputResults inputResults, UserFinishedRequestedAction requestAction)
+        {
+            switch (requestAction)
             {
                 case UserFinishedRequestedAction.Cancel:
                     m_parser.Cancel();
@@ -1545,19 +1593,37 @@ namespace WindowPlugins.GUITVSeries
             // user clicked finished (can only do this after import wizard is complete)
             this.tabPage_Import.Controls.Remove(ParsingWizardHost);
         }
+        #endregion
+
+        #endregion
+
+        private void Parsing_Start()
+        {
+            Parsing_Start(new CParsingParameters(true, true));
+        }
+
+        private void Parsing_Start(CParsingParameters parsingParams)
+        {
+            if (m_parser == null)
+            {
+                // refresh regex and replacements
+                FilenameParser.reLoadExpressions();
+
+                m_parser = new OnlineParsing(this);
+                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+                m_parser.Start(parsingParams);
+            }
+        }
 
         private void OnlineParsing_OnCompleted(bool bDataUpdated)
         {
             TimeSpan span = DateTime.Now - m_timingStart;
-            MPTVSeriesLog.Write("Parsing Completed in " + span);
-            buttonStartImport.Text = "Start Import";
-            buttonStartImport.Enabled = true;
+            MPTVSeriesLog.Write("Parsing Completed in " + span);           
             m_parser = null;
             DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
-        }
-        #endregion
+        }        
 
         #region Series Details Tab Handling
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
@@ -2123,46 +2189,6 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
             }
-        }
-        #endregion
-
-        #region UI actions       
-        private void buttonStartImport_Click(object sender, EventArgs e)
-        {
-            if (m_parser != null)
-            {
-                AbortImport();
-            }
-            else                
-                Parsing_Start();
-        }
-
-        public void AbortImport()
-        {
-            if (m_parser != null)
-            {
-                m_parser.Cancel();
-                buttonStartImport.Enabled = false;                
-            }
-            
-            // remove the progress page
-            ImportWizard ipp = null;
-            foreach (var control in this.tabPage_Import.Controls)
-            {
-                if (control is ImportWizard)
-                {
-                    ipp = control as ImportWizard;
-                    break;
-                }
-            }
-
-            if (ipp != null)
-                this.tabPage_Import.Controls.Remove(ipp);
-        }
-
-        private void button_TestReparse_Click(object sender, EventArgs e)
-        {
-            TestParsing_Start(true);
         }
         #endregion
 

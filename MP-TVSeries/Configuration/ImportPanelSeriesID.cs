@@ -14,6 +14,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
     {
         public event UserFinishedEditingDelegate UserFinishedEditing;
 
+        public delegate void SeriesGridPopulatedDelegate();
+        public event SeriesGridPopulatedDelegate SeriesGridPopulated;
+
         const string cSearching = "Searching...";
         const string cWait2Search = "Waiting to Search...";
 
@@ -50,8 +53,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         public void Init(IList<parseResult> results)
         {
-            ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
+            if (results.Count == 0)
+            {
+                // nothing to do, skip this step
+                UserFinishedEditing(new UserInputResults(givenResults, getApprovedResults()), UserFinishedRequestedAction.Next);
+            }
 
+            ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
             SetResults(results);
         }
 
@@ -88,13 +96,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
             isGridPrepared = false;
         }
 
-        int ColIndexOf(string columnName)
+        private int ColIndexOf(string columnName)
         {
             return dataGridViewIdentifySeries.Columns[columnName].Index;
         }
 
         bool isGridPrepared = false;
-        void prepareGrid()
+        private void prepareGrid()
         {
             // add the columns, fixed here
             var dgvcI = new DataGridViewImageColumn();
@@ -148,6 +156,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridViewIdentifySeries.Columns.Add(dgvcSearchOK);
             dataGridViewIdentifySeries.Columns.Add(dgvcApprove);
 
+            #region Grid Events
             dataGridViewIdentifySeries.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
             {
                 var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
@@ -234,6 +243,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
 
             });
+            #endregion
 
             displayedActions.Add(UserInputResults.SeriesAction.Approve, "Approved");
             displayedActions.Add(UserInputResults.SeriesAction.Skip, "Skip");
@@ -242,7 +252,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             isGridPrepared = true;
         }
 
-        void FillGrid(List<IGrouping<string, parseResult>> uniqueNewSeries)
+        private void FillGrid(List<IGrouping<string, parseResult>> uniqueNewSeries)
         {
             dataGridViewIdentifySeries.SuspendLayout();
             
@@ -294,10 +304,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 FireOffSearch(newSeries, row, null);
             }
 
-            dataGridViewIdentifySeries.ResumeLayout();
+            dataGridViewIdentifySeries.ResumeLayout();          
         }
 
-        void FireOffSearch(IGrouping<string, parseResult> newSeries, DataGridViewRow row, string customString)
+        private void FireOffSearch(IGrouping<string, parseResult> newSeries, DataGridViewRow row, string customString)
         {
             string toSearch = string.IsNullOrEmpty(customString) ? newSeries.Key : customString;
             if(lastSearch.ContainsKey(row.Index))
@@ -318,7 +328,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             
         }
 
-        void SearchProgress(string searchString, GetSeries searchResult, DataGridViewRow row)
+        private void SearchProgress(string searchString, GetSeries searchResult, DataGridViewRow row)
         {            
             // we need to invoke
             if (this.dataGridViewIdentifySeries.InvokeRequired)
@@ -326,17 +336,17 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 this.dataGridViewIdentifySeries.Invoke(new SearchProgressDelegate(SearchProgress), searchString, searchResult, row);
                 return;
             }
-
+            
             // lets update the combobox
-            var cc = new DataGridViewComboBoxCell();
-            row.Cells[ColIndexOf(colOSeries)] = cc;
+            var comboCell = new DataGridViewComboBoxCell();
+            row.Cells[ColIndexOf(colOSeries)] = comboCell;
 
             // ok, if we only get a string and the row, display that string
             if (searchResult == null)
             {
-                displayValsInCBCell(cc, searchString);
+                displayValsInCBCell(comboCell, searchString);
 
-                // this also means that an queued search went into active status
+                // this also means that a queued search went into active status
                 System.Threading.Interlocked.Decrement(ref queuedSearches);
                 System.Threading.Interlocked.Increment(ref activeSearches);
                 setSearchStatus();
@@ -344,26 +354,26 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
 
             // else we got the results                        
-            cc.Tag = searchResult.Results;
+            comboCell.Tag = searchResult.Results;
 
             // which also means an active search has finished
             System.Threading.Interlocked.Decrement(ref activeSearches);
             setSearchStatus();
 
-            displayValsInCBCell(cc, searchResult.Results.Select(r => getDisplayStringForSeries(r)).ToArray());
+            displayValsInCBCell(comboCell, searchResult.Results.Select(r => getDisplayStringForSeries(r)).ToArray());
 
-            if (cc.Items.Count < 1)
-                displayValsInCBCell(cc, "No Results found");
+            if (comboCell.Items.Count < 1)
+                displayValsInCBCell(comboCell, "No Results found");
 
             var actionCell = row.Cells[ColIndexOf(colAction)] as DataGridViewComboBoxCell;
 
-            // overwrite from the cellchanged event which set it to approve
+            // overwrite from the cellchanged event which set it to approved
             if (searchResult.PerfectMatch == null)
                 actionCell.Value = displayedActions[UserInputResults.SeriesAction.Skip];
 
         }
 
-        void displayValsInCBCell(DataGridViewComboBoxCell cell, params string[] values)
+        private void displayValsInCBCell(DataGridViewComboBoxCell cell, params string[] values)
         {
             cell.Items.Clear();
             for (int i = 0; i < values.Length; i++)
@@ -374,12 +384,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
         }
 
-        string getDisplayStringForSeries(DBOnlineSeries series)
+        private string getDisplayStringForSeries(DBOnlineSeries series)
         {
             return string.Format("{0} ({1})", series[DBOnlineSeries.cPrettyName], series[DBOnlineSeries.cID]);
         }
         
-        Dictionary<string, UserInputResultSeriesActionPair> getApprovedResults()
+        private Dictionary<string, UserInputResultSeriesActionPair> getApprovedResults()
         {
             var pageResult = new Dictionary<string, UserInputResultSeriesActionPair>();
             foreach (DataGridViewRow row in dataGridViewIdentifySeries.Rows)
@@ -402,7 +412,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return pageResult;
         }
 
-        DBOnlineSeries getSeriesFromSelected(DataGridViewRow row)
+        private DBOnlineSeries getSeriesFromSelected(DataGridViewRow row)
         {
             DBOnlineSeries chosenSeries = null;
             var cell = row.Cells[ColIndexOf(colOSeries)] as DataGridViewComboBoxCell;
@@ -415,9 +425,16 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return chosenSeries;
         }
 
-        void setSearchStatus()
+        private void setSearchStatus()
         {
             this.labelSearchStats.Text = string.Format("Searching in progress for {0} series ({1} queued)", activeSearches, queuedSearches);
+
+            // send notification that grid is filled
+            if (activeSearches == 0 && queuedSearches == 0)
+            {
+                if (SeriesGridPopulated != null)
+                    SeriesGridPopulated();
+            }
         }
 
         private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)
@@ -452,7 +469,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.dataGridViewIdentifySeries.ResumeLayout();
         }
 
-        UserInputResults.SeriesAction getActionFromRow(DataGridViewRow row)
+        private UserInputResults.SeriesAction getActionFromRow(DataGridViewRow row)
         {
             string val = ((string)row.Cells[ColIndexOf(colAction)].Value);
             if (val == displayedActions[UserInputResults.SeriesAction.Approve])
