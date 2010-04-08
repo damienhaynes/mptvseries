@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
         protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
-        
+
         public DBTable(string tableName)
         {
             // this base constructor was very expensive
@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
                     if (!m_fields.ContainsKey(entry.Key))
                         m_fields.Add(entry.Key, new DBField(entry.Value));
-                
+
             }
             else // we have to get it, happens when the first object is created or after an alter table
             {
@@ -91,14 +91,15 @@ namespace WindowPlugins.GUITVSeries
                             bool bPrimary = parammatch.Groups[3].Success;
                             // In Sqlite an "integer" (but not "int") Primary Key is an alias for the sqlite rowid, and therefore auto increments
                             bool bAutoIncrement = (bPrimary && parammatch.Groups[2].Value.Equals("integer", StringComparison.InvariantCultureIgnoreCase)) ||
-                                                  // or a column can be set as autoincrement
+                                // or a column can be set as autoincrement
                                                   parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
-                            DBFieldType cachedInfo = new DBFieldType {
-                                                                         Primary = bPrimary,
-                                                                         Type = (bIntType ? DBField.cTypeInt : DBField.cType.String),
-                                                                         AutoIncrement = bAutoIncrement
-                                                                     };
+                            DBFieldType cachedInfo = new DBFieldType
+                            {
+                                Primary = bPrimary,
+                                Type = (bIntType ? DBField.cTypeInt : DBField.cType.String),
+                                AutoIncrement = bAutoIncrement
+                            };
 
                             if (!m_fields.ContainsKey(sName))
                             {
@@ -107,9 +108,9 @@ namespace WindowPlugins.GUITVSeries
 
                             cachedForTable.Add(sName, cachedInfo);
                         }
-                        lock(fields)
+                        lock (fields)
                             fields.Add(tableName, cachedForTable);
-                        
+
                     }
                     else
                     {
@@ -129,7 +130,7 @@ namespace WindowPlugins.GUITVSeries
             // verify if we already have that field avail
             if (!m_fields.ContainsKey(sName))
             {
-                if (m_fields.Count == 0 && !field.Primary) 
+                if (m_fields.Count == 0 && !field.Primary)
                 {
                     throw new Exception("First field added needs to be the index");
                 }
@@ -137,7 +138,8 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     // ok, we don't, add it
-                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + m_tableName + "'");
+                    SQLiteResultSet results;
+                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + m_tableName + "'");
                     if (results != null && results.Rows.Count > 0)
                     {
                         // table already exists, alter it
@@ -149,7 +151,8 @@ namespace WindowPlugins.GUITVSeries
                         // new table, create it
                         // no tables, assume it's going to be created later (using AddColumn)
                         string type = field.Type.ToString();
-                        if (field.Primary && field.Type == DBField.cType.Int && field.AutoIncrement) {
+                        if (field.Primary && field.Type == DBField.cType.Int && field.AutoIncrement)
+                        {
                             //for the automatic creation of an auto incremental integer primary key you must use the full "Integer" not just "int"
                             type = "Integer";
                         }
@@ -180,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     switch (fieldPair.Value.Type)
                     {
-                        case DBField.cTypeInt:                            
+                        case DBField.cTypeInt:
                             fieldPair.Value.Value = 0;
                             break;
 
@@ -216,12 +219,12 @@ namespace WindowPlugins.GUITVSeries
 
         public virtual DBValue this[String fieldName]
         {
-            get 
+            get
             {
                 DBField result;
                 if (!m_fields.TryGetValue(fieldName, out result)) return string.Empty;
                 return result.Value;
-                
+
             }
             set
             {
@@ -237,7 +240,7 @@ namespace WindowPlugins.GUITVSeries
                             else
                                 result.Value = value;
                             result.WasChanged = true;
-                            m_CommitNeeded = true;                            
+                            m_CommitNeeded = true;
                         }
                     }
                     else
@@ -272,7 +275,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public bool Read(ref SQLiteResultSet records, int index)
-        {            
+        {
             if (records.Rows.Count > 0 || records.Rows.Count < index)
             {
                 SQLiteResultSet.Row row = records.Rows[index];
@@ -284,18 +287,20 @@ namespace WindowPlugins.GUITVSeries
         public bool Read(SQLiteResultSet.Row row, System.Collections.Hashtable ColumnIndices)
         {
             if (row == null || row.fields.Count == 0) return false;
+            string res = null;
+            int iCol = 0;
             foreach (KeyValuePair<string, DBField> field in m_fields)
             {
                 object o = null;
-                if (((o = ColumnIndices[field.Key]) != null) 
-                    || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null) 
+                if (((o = ColumnIndices[field.Key]) != null)
+                    || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null)
                     || ((o = ColumnIndices[m_tableName + field.Key]) != null)) // because of order bug in sqlite
                 {
-                    int iCol = (int)o;
-                    string res = row.fields[iCol];
-                    field.Value.Value = res ?? string.Empty;
+                    iCol = (int)o;
+                    res = row.fields[iCol];
+                    field.Value.Value = res == null ? string.Empty : res;
                 }
-                else 
+                else
                     // we have a column in mfields that is not in the database result (or null), as such it is to be empty
                     field.Value.Value = string.Empty;
             }
@@ -356,9 +361,11 @@ namespace WindowPlugins.GUITVSeries
                 StringBuilder builder = new StringBuilder();
                 String sWhere = " where ";
 
-                if (!String.IsNullOrEmpty(PrimaryField.Value.Value)) {
-                    
-                    switch (PrimaryField.Value.Type) {
+                if (!String.IsNullOrEmpty(PrimaryField.Value.Value))
+                {
+
+                    switch (PrimaryField.Value.Type)
+                    {
                         case DBField.cTypeInt:
                             sWhere += PrimaryField.Key + " = " + PrimaryField.Value.Value;
                             break;
@@ -372,7 +379,8 @@ namespace WindowPlugins.GUITVSeries
                     // use the primary key field
                     sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
                     SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
-                    if (records.Rows.Count > 0) {
+                    if (records.Rows.Count > 0)
+                    {
                         update = true;
                     }
                 }
@@ -397,9 +405,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBField.cTypeString:
-                                    builder.Append(" '");
-                                    builder.Append((fieldPair.Value.Value.ToString()).Replace("'", "''"));
-                                    builder.Append("',");
+                                    builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
                                     break;
                             }
                             fieldsNeedingUpdating++;
@@ -419,11 +425,15 @@ namespace WindowPlugins.GUITVSeries
                     bool first = true;
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
-                        if (!first) {
+                        if (!first)
+                        {
                             paramNames.Append(',');
                             builder.Append(',');
-                        } else {
-                            if (fieldPair.Value.AutoIncrement) {
+                        }
+                        else
+                        {
+                            if (fieldPair.Value.AutoIncrement)
+                            {
                                 //skip the autoincrementing field as we want this to be generated
                                 continue;
                             }
@@ -440,9 +450,7 @@ namespace WindowPlugins.GUITVSeries
                                 break;
 
                             case DBField.cTypeString:
-                                builder.Append(" '");
-                                builder.Append((fieldPair.Value.Value.ToString()).Replace("'", "''"));
-                                builder.Append("',");
+                                builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("'");
                                 break;
                         }
 
@@ -454,11 +462,12 @@ namespace WindowPlugins.GUITVSeries
 
                     DBTVSeries.Execute(sqlQuery);
 
-                    if (PrimaryField.Value.AutoIncrement) {
+                    if (PrimaryField.Value.AutoIncrement)
+                    {
                         //we've just done an insert to an auto crementing field, so fetch the value
                         SQLiteResultSet results = DBTVSeries.Execute("SELECT last_insert_rowid() AS ID");
                         this[PrimaryField.Key] = int.Parse(results.Rows[0].fields[0]);
-                        
+
                     }
                 }
 
@@ -537,18 +546,18 @@ namespace WindowPlugins.GUITVSeries
                 List<string> eng = new List<string>();
                 for (int i = 0; i < BannerList.Count; i++)
                 {
-                    if(File.Exists(BannerList[i]))
+                    if (File.Exists(BannerList[i]))
                     {
-                        if(BannerList[i].Contains(graphicalBannerRecognizerSubstring))
+                        if (BannerList[i].Contains(graphicalBannerRecognizerSubstring))
                         {
-                            if(BannerList[i].Contains(langIdentifier))
+                            if (BannerList[i].Contains(langIdentifier))
                                 langG.Add(BannerList[i]);
                             else
                                 engG.Add(BannerList[i]);
                         }
                         else
                         {
-                            if(BannerList[i].Contains(langIdentifier))
+                            if (BannerList[i].Contains(langIdentifier))
                                 lang.Add(BannerList[i]);
                             else
                                 eng.Add(BannerList[i]);
@@ -558,10 +567,10 @@ namespace WindowPlugins.GUITVSeries
 
                 try
                 {
-                    if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
-                    else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
-                    else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                    else if(eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+                    if (langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
+                    else if (lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
+                    else if (engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
+                    else if (eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
                     else return string.Empty;
                 }
                 catch
@@ -569,7 +578,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
                     return string.Empty;
                 }
-            }            
+            }
             return System.IO.File.Exists(randImage) ? randImage : string.Empty;
         }
 
