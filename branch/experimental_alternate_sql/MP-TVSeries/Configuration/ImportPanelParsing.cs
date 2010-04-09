@@ -167,7 +167,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 var results = IdentifyChanges(false);
                 // TODO: make possible to only have series filled out!
-                // we requrie at least the series to be filled for all enabled ones
+                // we require at least the series to be filled for all enabled ones
                 var invalids = results.Count(pr => !pr.parser.Matches.ContainsKey(DBSeries.cParsedName) || string.IsNullOrEmpty(pr.parser.Matches[DBSeries.cParsedName]));
                 invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex]));
                 invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex]));

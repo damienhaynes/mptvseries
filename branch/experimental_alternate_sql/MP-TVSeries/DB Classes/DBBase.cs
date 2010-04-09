@@ -1,34 +1,37 @@
-//#region GNU license
-//// MP-TVSeries - Plugin for Mediaportal
-//// http://www.team-mediaportal.com
-//// Copyright (C) 2006-2007
-////
-//// This library is free software; you can redistribute it and/or
-//// modify it under the terms of the GNU Lesser General Public
-//// License as published by the Free Software Foundation; either
-//// version 2.1 of the License, or (at your option) any later version.
-////
-//// This library is distributed in the hope that it will be useful,
-//// but WITHOUT ANY WARRANTY; without even the implied warranty of
-//// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//// Lesser General Public License for more details.
-////
-//// You should have received a copy of the GNU Lesser General Public
-//// License along with this library; if not, write to the Free Software
-//// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////
-////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//#endregion
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
+
+//Classes moved into seperate files
 
 
 //using System;
 //using System.Runtime.InteropServices;
 //using System.Collections.Generic;
 //using System.Text;
-//using System.Data;
-//using System.Data.Common;
-////using MediaPortal.Database;
+//using SQLite.NET;
+//using MediaPortal.Database;
 //using System.ComponentModel;
 //using System.Text.RegularExpressions;
 //using System.IO;
@@ -38,10 +41,7 @@
 //    public class DBValue
 //    {
 //        static System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
-//        static DBValue()
-//        {
-//            provider.NumberDecimalSeparator = ".";
-//        }
+//        static DBValue() { provider.NumberDecimalSeparator = "."; }
 //        private String value = String.Empty;
 
 //        public override String ToString()
@@ -58,7 +58,8 @@
 //            //   http://go.microsoft.com/fwlink/?LinkId=85238
 //            //
 
-//            if (obj == null || GetType() != obj.GetType()) {
+//            if (obj == null || GetType() != obj.GetType())
+//            {
 //                return false;
 //            }
 //            return this == obj as DBValue;
@@ -111,27 +112,19 @@
 //            else
 //                return false;
 //        }
-
+        
 //        static public implicit operator int(DBValue value)
 //        {
-//            if (null == value)
-//                return 0;
-//            try {
-//                return Convert.ToInt32(value.value);
-//            } catch (System.FormatException) {
-//                return 0;
-//            }
+//            if (null == value) return 0;
+//            try { return Convert.ToInt32(value.value); }
+//            catch (System.FormatException) { return 0; }
 //        }
 
 //        static public implicit operator long(DBValue value)
 //        {
-//            if (null == value)
-//                return 0;
-//            try {
-//                return Convert.ToInt64(value.value);
-//            } catch (System.FormatException) {
-//                return 0;
-//            }
+//            if (null == value) return 0;
+//            try { return Convert.ToInt64(value.value); }
+//            catch (System.FormatException) { return 0; }
 //        }
 
 //        /// <summary>
@@ -141,13 +134,9 @@
 //        /// <returns></returns>
 //        static public implicit operator double(DBValue value)
 //        {
-//            if (null == value)
-//                return 0;
-//            try {
-//                return Convert.ToDouble(value.value, provider);
-//            } catch (System.FormatException) {
-//                return 0;
-//            }
+//            if (null == value) return 0;
+//            try { return Convert.ToDouble(value.value, provider); }
+//            catch (System.FormatException) { return 0; }
 //        }
 
 //        static public implicit operator DBValue(String value)
@@ -175,9 +164,10 @@
 //            return new DBValue(value.ToString(provider));
 //        }
 
-//        static public bool operator ==(DBValue first, DBValue second)
+//        static public bool operator == (DBValue first, DBValue second)
 //        {
-//            if ((object)first == null || (object)second == null) {
+//            if ((object)first == null || (object)second == null)
+//            {
 //                if ((object)first == null && (object)second == null)
 //                    return true;
 //                else
@@ -186,17 +176,17 @@
 //            return first.value == second.value;
 //        }
 
-//        static public bool operator !=(DBValue first, DBValue second)
+//        static public bool operator != (DBValue first, DBValue second)
 //        {
-//            if ((object)first == null || (object)second == null) {
+//            if ((object)first == null || (object)second == null)
+//            {
 //                if ((object)first == null && (object)second == null)
 //                    return false;
 //                else
 //                    return true;
-//            }
-//            return first.value != second.value;
+//            } return first.value != second.value;
 //        }
-
+        
 //    };
 
 //    // field class - used to hold information
@@ -209,7 +199,7 @@
 //        }
 
 //        // the following are remainders to easily change the type (because it was a string! comparision before)
-//        public const cType cTypeInt = cType.Int;
+//        public const cType cTypeInt = cType.Int; 
 //        public const cType cTypeString = cType.String;
 
 //        // private access
@@ -217,13 +207,6 @@
 //        private bool m_primaryKey;
 //        private bool m_autoIncrement;
 //        private DBValue m_value;
-
-//        //the maximum lenght for string fields (only use in making database columns)
-//        // - 1024 is a reasonable default - primary keys can't be any larger
-//        private int m_maxLength = 1024;
-
-//        //use this lenght only when you really need the absolute max field length
-//        public const int cMaxLength = -1;
 
 //        private bool wasChanged = false;
 
@@ -239,17 +222,6 @@
 //            m_primaryKey = primaryKey;
 //            m_autoIncrement = false;
 //        }
-//        public DBField(cType type, bool primaryKey, int maxLength)
-//        {
-//            m_type = type;
-//            m_primaryKey = primaryKey;
-//            m_maxLength = maxLength;
-//        }
-//        public DBField(cType type, int maxLength)
-//        {
-//            m_type = type;
-//            m_maxLength = maxLength;
-//        }
 
 //        public DBField(cType type, bool primaryKey, bool autoIncrement)
 //        {
@@ -263,9 +235,11 @@
 //            m_type = dbFieldT.Type;
 //            m_primaryKey = dbFieldT.Primary;
 //            m_autoIncrement = dbFieldT.AutoIncrement;
-//            m_maxLength = dbFieldT.MaxLength;
 //        }
 
+//        /// <summary>
+//        /// Only works when used on the primary key column
+//        /// </summary>
 //        public bool AutoIncrement
 //        {
 //            get { return this.m_autoIncrement; }
@@ -274,63 +248,27 @@
 
 //        public bool Primary
 //        {
-//            get
-//            {
-//                return this.m_primaryKey;
-//            }
-//            set
-//            {
-//                this.m_primaryKey = value;
-//            }
+//            get { return this.m_primaryKey; }
+//            set { this.m_primaryKey = value; }
 //        }
 
 //        public cType Type
 //        {
-//            get
-//            {
-//                return this.m_type;
-//            }
-//            set
-//            {
-//                this.m_type = value;
-//            }
+//            get { return this.m_type; }
+//            set { this.m_type = value; }
 //        }
 
 //        public DBValue Value
 //        {
 //            // save DB friendly string (doubling singlequotes
-//            get
-//            {
-//                return this.m_value;
-//            }
-//            set
-//            {
-//                this.m_value = value;
-//            }
-//        }
-
-//        public int MaxLength
-//        {
-//            get 
-//            { 
-//                return this.m_maxLength;
-//            }
-//            set
-//            {
-//                this.m_maxLength = value;
-//            }
+//            get { return this.m_value; }
+//            set { this.m_value = value; }
 //        }
 
 //        public bool WasChanged
 //        {
-//            get
-//            {
-//                return wasChanged;
-//            }
-//            set
-//            {
-//                wasChanged = value;
-//            }
+//            get { return wasChanged; }
+//            set { wasChanged = value; }
 //        }
 //    };
 
@@ -339,7 +277,6 @@
 //        public DBField.cType Type;
 //        public bool Primary;
 //        public bool AutoIncrement;
-//        public int MaxLength;
 //    }
 
 //    // table class - used as a base for table objects (series, episodes, etc)
@@ -356,7 +293,7 @@
 //        public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
 //        protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
-
+        
 //        public DBTable(string tableName)
 //        {
 //            // this base constructor was very expensive
@@ -371,39 +308,64 @@
 //                foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
 //                    if (!m_fields.ContainsKey(entry.Key))
 //                        m_fields.Add(entry.Key, new DBField(entry.Value));
-
-//            } else {// we have to get it, happens when the first object is created or after an alter table
+                
+//            }
+//            else // we have to get it, happens when the first object is created or after an alter table
+//            {
 //                cachedForTable = new Dictionary<string, DBFieldType>();
 //                // load up fields from the table
+//                SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
+//                if (results != null && results.Rows.Count > 0)
+//                {
+//                    // we have the table definition, parse it for names/types
+//                    String sCreateTable = results.Rows[0].fields[0];
+//                    String RegExp = @"CREATE TABLE .*?\((.*?)\)";
+//                    Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+//                    Match tablematch = Engine.Match(sCreateTable);
+//                    if (tablematch.Success)
+//                    {
+//                        String sParameters = tablematch.Groups[1].Value + ','; //trailng comma make the regex below find the last column
+//                        // we have the list of parameters, parse them
+//                        // group 1: fieldname, group2: type, group3: test for primary key, group4: any thing else until a comma (not null, Default value etc.)
+//                        RegExp = @"([^\s]+)\s+([^\s,]+)(\s+primary key)?([^,]+)?,";
+//                        Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
+//                        MatchCollection matches = Engine.Matches(sParameters);
+//                        foreach (Match parammatch in matches)
+//                        {
+//                            String sName = parammatch.Groups[1].Value;
+//                            // could be either "int" or "integer"
+//                            bool bIntType = parammatch.Groups[2].Value.StartsWith("int", StringComparison.InvariantCultureIgnoreCase);
+//                            bool bPrimary = parammatch.Groups[3].Success;
+//                            // In Sqlite an "integer" (but not "int") Primary Key is an alias for the sqlite rowid, and therefore auto increments
+//                            bool bAutoIncrement = (bPrimary && parammatch.Groups[2].Value.Equals("integer", StringComparison.InvariantCultureIgnoreCase)) ||
+//                            // or a column can be set as autoincrement
+//                                                  parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
-//                DataTable Columns = DBTVSeries.GetTableColumns(m_tableName);
-//                if (Columns != null) {
-//                    foreach (DataColumn Column in Columns.Columns) {
-//                        String sName = Column.ColumnName;
-//                        bool bInt =  Column.DataType == typeof(Int32) || Column.DataType == typeof(Int64);
-//                        bool bPrimary = new List<DataColumn>(Columns.PrimaryKey).Contains(Column);
-//                        bool bAuto = Column.AutoIncrement ||
-//                            //workaround for SQLite - currently Int64 only occur with SQLite ROWID alias ie. "Integer Primary Key"
-//                            (bPrimary && Column.DataType == typeof(Int64)); 
+//                            DBFieldType cachedInfo = new DBFieldType {
+//                                                                         Primary = bPrimary,
+//                                                                         Type = (bIntType ? DBField.cTypeInt : DBField.cType.String),
+//                                                                         AutoIncrement = bAutoIncrement
+//                                                                     };
 
-//                        DBFieldType cachedInfo = new DBFieldType {
-//                                                                     Primary = bPrimary,
-//                                                                     Type = (bInt ? DBField.cTypeInt : DBField.cType.String),
-//                                                                     AutoIncrement = bAuto,
-//                                                                     MaxLength = Column.MaxLength
-//                                                                 };
+//                            if (!m_fields.ContainsKey(sName))
+//                            {
+//                                m_fields.Add(sName, new DBField(cachedInfo));
+//                            }
 
-//                        if (!m_fields.ContainsKey(sName)) {
-//                            m_fields.Add(sName, new DBField(cachedInfo));
+//                            cachedForTable.Add(sName, cachedInfo);
 //                        }
-
-//                        cachedForTable.Add(sName, cachedInfo);
+//                        lock(fields)
+//                            fields.Add(tableName, cachedForTable);
+                        
+//                    }
+//                    else
+//                    {
+//                        MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
 //                    }
 
-//                    lock (fields) {
-//                        fields.Add(tableName, cachedForTable);
-//                    }
-//                } else {
+//                }
+//                else
+//                {
 //                    // no tables, assume it's going to be created later (using AddColumn)
 //                }
 //            }
@@ -412,20 +374,45 @@
 //        public virtual bool AddColumn(String sName, DBField field)
 //        {
 //            // verify if we already have that field avail
-//            if (!m_fields.ContainsKey(sName)) {
-//                if (m_fields.Count == 0 && !field.Primary) {
+//            if (!m_fields.ContainsKey(sName))
+//            {
+//                if (m_fields.Count == 0 && !field.Primary) 
+//                {
 //                    throw new Exception("First field added needs to be the index");
 //                }
 
-//                try {
-//                    DBTVSeries.AddColumn(m_tableName, sName, field);
+//                try
+//                {
+//                    // ok, we don't, add it
+//                    SQLiteResultSet results;
+//                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + m_tableName + "'");
+//                    if (results != null && results.Rows.Count > 0)
+//                    {
+//                        // table already exists, alter it
+//                        String sQuery = "ALTER TABLE " + m_tableName + " ADD " + sName + " " + field.Type;
+//                        DBTVSeries.Execute(sQuery);
+//                    }
+//                    else
+//                    {
+//                        // new table, create it
+//                        // no tables, assume it's going to be created later (using AddColumn)
+//                        string type = field.Type.ToString();
+//                        if (field.Primary && field.Type == DBField.cType.Int && field.AutoIncrement) {
+//                            //for the automatic creation of an auto incremental integer primary key you must use the full "Integer" not just "int"
+//                            type = "Integer";
+//                        }
 
+//                        String sQuery = "CREATE TABLE " + m_tableName + " (" + sName + " " + type + (field.Primary ? " primary key)" : ")");
+//                        DBTVSeries.Execute(sQuery);
+//                    }
 //                    // delete the s_fields cache so newed up objects get the right fields
 //                    lock (fields)
 //                        fields.Remove(m_tableName);
 //                    m_fields.Add(sName, field);
 //                    return true;
-//                } catch (Exception ex) {
+//                }
+//                catch (Exception ex)
+//                {
 //                    MPTVSeriesLog.Write(m_tableName + " table.AddColumn failed (" + ex.Message + ").");
 //                    return false;
 //                }
@@ -435,10 +422,13 @@
 
 //        public virtual void InitValues()
 //        {
-//            foreach (KeyValuePair<string, DBField> fieldPair in m_fields) {
-//                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null) {
-//                    switch (fieldPair.Value.Type) {
-//                        case DBField.cTypeInt:
+//            foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+//            {
+//                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
+//                {
+//                    switch (fieldPair.Value.Type)
+//                    {
+//                        case DBField.cTypeInt:                            
 //                            fieldPair.Value.Value = 0;
 //                            break;
 
@@ -453,9 +443,12 @@
 
 //        public virtual void InitValues(Int32 iValue, String sValue)
 //        {
-//            foreach (KeyValuePair<string, DBField> fieldPair in m_fields) {
-//                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null) {
-//                    switch (fieldPair.Value.Type) {
+//            foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+//            {
+//                if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
+//                {
+//                    switch (fieldPair.Value.Type)
+//                    {
 //                        case DBField.cTypeInt:
 //                            fieldPair.Value.Value = iValue;
 //                            break;
@@ -471,32 +464,38 @@
 
 //        public virtual DBValue this[String fieldName]
 //        {
-//            get
+//            get 
 //            {
 //                DBField result;
-//                if (!m_fields.TryGetValue(fieldName, out result))
-//                    return string.Empty;
+//                if (!m_fields.TryGetValue(fieldName, out result)) return string.Empty;
 //                return result.Value;
-
+                
 //            }
 //            set
 //            {
-//                try {
+//                try
+//                {
 //                    DBField result;
-//                    if (m_fields.TryGetValue(fieldName, out result)) {
-//                        if (result.Value != value) {
+//                    if (m_fields.TryGetValue(fieldName, out result))
+//                    {
+//                        if (result.Value != value)
+//                        {
 //                            if (result.Type == DBField.cTypeInt)
 //                                result.Value = (long)value;
 //                            else
 //                                result.Value = value;
 //                            result.WasChanged = true;
-//                            m_CommitNeeded = true;
+//                            m_CommitNeeded = true;                            
 //                        }
-//                    } else {
+//                    }
+//                    else
+//                    {
 //                        AddColumn(fieldName, new DBField(DBField.cTypeString));
 //                        this[fieldName] = value;
 //                    }
-//                } catch (SystemException) {
+//                }
+//                catch (SystemException)
+//                {
 //                    MPTVSeriesLog.Write("Cast exception when trying to assign " + value + " to field " + fieldName + " in table " + m_tableName);
 //                }
 //            }
@@ -507,7 +506,8 @@
 //            get
 //            {
 //                List<String> outList = new List<String>();
-//                foreach (KeyValuePair<string, DBField> pair in m_fields) {
+//                foreach (KeyValuePair<string, DBField> pair in m_fields)
+//                {
 //                    outList.Add(pair.Key);
 //                }
 //                return outList;
@@ -519,37 +519,35 @@
 //            return sField;
 //        }
 
-//        public bool Read(DataTable records, int index)
-//        {
-//            if (records.Rows.Count > 0 || records.Rows.Count < index) {
-//                DataRow row = records.Rows[index];
-//                return Read(row);
+//        public bool Read(ref SQLiteResultSet records, int index)
+//        {            
+//            if (records.Rows.Count > 0 || records.Rows.Count < index)
+//            {
+//                SQLiteResultSet.Row row = records.Rows[index];
+//                return Read(row, records.ColumnIndices);
 //            }
 //            return false;
 //        }
 
-//        public bool Read(DataRow row)
+//        public bool Read(SQLiteResultSet.Row row, System.Collections.Hashtable ColumnIndices)
 //        {
-//            if (row == null || row.ItemArray.Length == 0)
-//                return false;
-//            DataColumnCollection columns = row.Table.Columns;
-//            string fullName = string.Empty;
-//            foreach (KeyValuePair<string, DBField> field in m_fields) {
-//                if (columns.Contains(field.Key)) {
-//                    field.Value.Value = row[field.Key].ToString();
-//                    continue;
+//            if (row == null || row.fields.Count == 0) return false;
+//            string res = null;
+//            int iCol = 0;
+//            foreach (KeyValuePair<string, DBField> field in m_fields)
+//            {
+//                object o = null;
+//                if (((o = ColumnIndices[field.Key]) != null) 
+//                    || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null) 
+//                    || ((o = ColumnIndices[m_tableName + field.Key]) != null)) // because of order bug in sqlite
+//                {
+//                    iCol = (int)o;
+//                    res = row.fields[iCol];
+//                    field.Value.Value = res == null ? string.Empty : res;
 //                }
-//                fullName = m_tableName + "_" + field.Key;
-//                if (columns.Contains(fullName)) {
-//                    field.Value.Value = row[fullName].ToString();
-//                    continue;
-//                }
-//                fullName = m_tableName + "." + field.Key;
-//                if (columns.Contains(fullName)) {
-//                    field.Value.Value = row[fullName].ToString();
-//                    continue;
-//                }
-//                field.Value.Value = string.Empty;
+//                else 
+//                    // we have a column in mfields that is not in the database result (or null), as such it is to be empty
+//                    field.Value.Value = string.Empty;
 //            }
 //            m_CommitNeeded = false;
 //            return true;
@@ -558,7 +556,8 @@
 //        public String PrimaryKey()
 //        {
 //            foreach (KeyValuePair<string, DBField> field in m_fields)
-//                if (field.Value.Primary == true) {
+//                if (field.Value.Primary == true)
+//                {
 //                    return field.Key;
 //                }
 
@@ -567,14 +566,17 @@
 
 //        public bool ReadPrimary(DBValue Value)
 //        {
-//            try {
+//            try
+//            {
 //                m_fields[PrimaryKey()].Value = Value;
 //                SQLCondition condition = new SQLCondition();
 //                condition.Add(this, PrimaryKey(), m_fields[PrimaryKey()].Value, SQLConditionType.Equal);
 //                String sqlQuery = "select * from " + m_tableName + condition;
-//                DataTable records = DBTVSeries.Execute(sqlQuery);
-//                return Read(records, 0);
-//            } catch (Exception ex) {
+//                SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
+//                return Read(ref records, 0);
+//            }
+//            catch (Exception ex)
+//            {
 //                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
 //            }
 //            return false;
@@ -582,14 +584,16 @@
 
 //        public virtual bool Commit()
 //        {
-//            try {
+//            try
+//            {
 //                if (!m_CommitNeeded)
 //                    return false;
 
 //                KeyValuePair<string, DBField> PrimaryField = new KeyValuePair<string, DBField>();
 
 //                foreach (KeyValuePair<string, DBField> field in m_fields)
-//                    if (field.Value.Primary == true) {
+//                    if (field.Value.Primary == true)
+//                    {
 //                        PrimaryField = field;
 //                        break;
 //                    }
@@ -597,12 +601,13 @@
 
 //                if (String.IsNullOrEmpty(PrimaryField.Value.Value) && !PrimaryField.Value.AutoIncrement)
 //                    return false;
-                
+
 //                String sqlQuery;
 //                StringBuilder builder = new StringBuilder();
 //                String sWhere = " where ";
-//                if (!String.IsNullOrEmpty(PrimaryField.Value.Value)) {
 
+//                if (!String.IsNullOrEmpty(PrimaryField.Value.Value)) {
+                    
 //                    switch (PrimaryField.Value.Type) {
 //                        case DBField.cTypeInt:
 //                            sWhere += PrimaryField.Key + " = " + PrimaryField.Value.Value;
@@ -616,28 +621,30 @@
 
 //                    // use the primary key field
 //                    sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
-//                    DataTable records = DBTVSeries.Execute(sqlQuery);
+//                    SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
 //                    if (records.Rows.Count > 0) {
 //                        update = true;
 //                    }
 //                }
 
-//                if (update) {
+//                if (update)
+//                {
 //                    // already exists, update
 //                    builder.Append("update ").Append(m_tableName).Append(" set ");
 //                    int fieldsNeedingUpdating = 0;
-//                    foreach (KeyValuePair<string, DBField> fieldPair in m_fields) {
-//                        if (!fieldPair.Value.Primary && fieldPair.Value.WasChanged) {
-//                            //use of indetifier quotes around names allows for keywords to be used as column names (ie. With)
-//                            builder.Append(DBTVSeries.cIdentifierStart).Append(fieldPair.Key).Append(DBTVSeries.cIdentifierFinish + " = ");
-//                            switch (fieldPair.Value.Type) {
+//                    foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+//                    {
+//                        if (!fieldPair.Value.Primary && fieldPair.Value.WasChanged)
+//                        {
+//                            builder.Append(fieldPair.Key).Append(" = ");
+//                            switch (fieldPair.Value.Type)
+//                            {
 //                                case DBField.cTypeInt:
 //                                    if (String.IsNullOrEmpty(fieldPair.Value.Value))
 //                                        builder.Append("'',");
 //                                    else
 //                                        builder.Append((string)fieldPair.Value.Value).Append(',');
 //                                    break;
-
 
 //                                case DBField.cTypeString:
 //                                    builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
@@ -647,16 +654,19 @@
 //                            fieldPair.Value.WasChanged = false;
 //                        }
 //                    }
-//                    if (fieldsNeedingUpdating > 0) {
+//                    if (fieldsNeedingUpdating > 0)
+//                    {
 //                        sqlQuery = builder.ToString().Substring(0, builder.Length - 1) + sWhere;
 //                        DBTVSeries.Execute(sqlQuery);
 //                    }
-//                } else {
+//                }
+//                else
+//                {
 //                    // add new record
-//                    String sParamValues = String.Empty;
 //                    StringBuilder paramNames = new StringBuilder();
 //                    bool first = true;
-//                    foreach (KeyValuePair<string, DBField> fieldPair in m_fields) {
+//                    foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
+//                    {
 //                        if (!first) {
 //                            paramNames.Append(',');
 //                            builder.Append(',');
@@ -667,9 +677,9 @@
 //                            }
 //                            first = false;
 //                        }
-//                        //use of indentifier quotes around names allows for keywords to be used as column names (ie. With)
-//                        paramNames.Append(DBTVSeries.cIdentifierStart).Append(fieldPair.Key).Append(DBTVSeries.cIdentifierFinish);
-//                        switch (fieldPair.Value.Type) {
+//                        paramNames.Append(fieldPair.Key);
+//                        switch (fieldPair.Value.Type)
+//                        {
 //                            case DBField.cTypeInt:
 //                                if (String.IsNullOrEmpty(fieldPair.Value.Value))
 //                                    builder.Append("''");
@@ -683,7 +693,7 @@
 //                        }
 
 //                    }
-//                    sParamValues = builder.ToString();
+//                    String sParamValues = builder.ToString();
 //                    builder.Remove(0, builder.Length);
 //                    builder.Append("insert into ").Append(m_tableName).Append(" (").Append(paramNames).Append(") values(").Append(sParamValues).Append(")");
 //                    sqlQuery = builder.ToString();
@@ -692,22 +702,29 @@
 
 //                    if (PrimaryField.Value.AutoIncrement) {
 //                        //we've just done an insert to an auto crementing field, so fetch the value
-//                        this[PrimaryField.Key] = Convert.ToInt32(DBTVSeries.ExecuteScalar(DBTVSeries.sGetLastIdCommand));
+//                        SQLiteResultSet results = DBTVSeries.Execute("SELECT last_insert_rowid() AS ID");
+//                        this[PrimaryField.Key] = int.Parse(results.Rows[0].fields[0]);
+                        
 //                    }
 //                }
+
+//                m_CommitNeeded = false;
 //                return true;
-//            } catch (Exception ex) {
+//            }
+//            catch (Exception ex)
+//            {
 //                MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
 //                return false;
 //            }
 //        }
 
-
 //        public static void GlobalSet(DBTable obj, String sKey, DBValue Value, SQLCondition conditions)
 //        {
-//            if (obj.m_fields.ContainsKey(sKey)) {
+//            if (obj.m_fields.ContainsKey(sKey))
+//            {
 //                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey + "=";
-//                switch (obj.m_fields[sKey].Type) {
+//                switch (obj.m_fields[sKey].Type)
+//                {
 //                    case DBField.cTypeInt:
 //                        sqlQuery += Value;
 //                        break;
@@ -718,7 +735,7 @@
 //                }
 
 //                sqlQuery += conditions;
-//                DBTVSeries.Execute(sqlQuery);
+//                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
 //                if (dbUpdateOccured != null)
 //                    dbUpdateOccured(obj.m_tableName);
 //            }
@@ -726,9 +743,10 @@
 
 //        public static void GlobalSet(DBTable obj, String sKey1, String sKey2, SQLCondition conditions)
 //        {
-//            if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2)) {
+//            if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2))
+//            {
 //                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2 + conditions;
-//                DBTVSeries.Execute(sqlQuery);
+//                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
 //                if (dbUpdateOccured != null)
 //                    dbUpdateOccured(obj.m_tableName);
 //            }
@@ -737,7 +755,7 @@
 //        public static void Clear(DBTable obj, SQLCondition conditions)
 //        {
 //            String sqlQuery = "delete from " + obj.m_tableName + conditions;
-//            DBTVSeries.Execute(sqlQuery);
+//            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
 //            if (dbUpdateOccured != null)
 //                dbUpdateOccured(obj.m_tableName);
 //        }
@@ -754,25 +772,29 @@
 //            // 4) english but not graphical
 
 //            string randImage = null;
-//            if (BannerList == null || BannerList.Count == 0)
-//                return string.Empty;
-//            if (BannerList.Count == 1)
-//                randImage = BannerList[0];
+//            if (BannerList == null || BannerList.Count == 0) return string.Empty;
+//            if (BannerList.Count == 1) randImage = BannerList[0];
 
-//            if (randImage == null) {
+//            if (randImage == null)
+//            {
 //                List<string> langG = new List<string>();
 //                List<string> lang = new List<string>();
 //                List<string> engG = new List<string>();
 //                List<string> eng = new List<string>();
-//                for (int i = 0; i < BannerList.Count; i++) {
-//                    if (File.Exists(BannerList[i])) {
-//                        if (BannerList[i].Contains(graphicalBannerRecognizerSubstring)) {
-//                            if (BannerList[i].Contains(langIdentifier))
+//                for (int i = 0; i < BannerList.Count; i++)
+//                {
+//                    if(File.Exists(BannerList[i]))
+//                    {
+//                        if(BannerList[i].Contains(graphicalBannerRecognizerSubstring))
+//                        {
+//                            if(BannerList[i].Contains(langIdentifier))
 //                                langG.Add(BannerList[i]);
 //                            else
 //                                engG.Add(BannerList[i]);
-//                        } else {
-//                            if (BannerList[i].Contains(langIdentifier))
+//                        }
+//                        else
+//                        {
+//                            if(BannerList[i].Contains(langIdentifier))
 //                                lang.Add(BannerList[i]);
 //                            else
 //                                eng.Add(BannerList[i]);
@@ -780,22 +802,20 @@
 //                    }
 //                }
 
-//                try {
-//                    if (langG.Count > 0)
-//                        randImage = langG[new Random().Next(0, langG.Count)];
-//                    else if (lang.Count > 0)
-//                        randImage = lang[new Random().Next(0, lang.Count)];
-//                    else if (engG.Count > 0)
-//                        randImage = engG[new Random().Next(0, engG.Count)];
-//                    else if (eng.Count > 0)
-//                        randImage = eng[new Random().Next(0, eng.Count)];
-//                    else
-//                        return string.Empty;
-//                } catch {
+//                try
+//                {
+//                    if(langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
+//                    else if(lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
+//                    else if(engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
+//                    else if(eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+//                    else return string.Empty;
+//                }
+//                catch
+//                {
 //                    MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
 //                    return string.Empty;
 //                }
-//            }
+//            }            
 //            return System.IO.File.Exists(randImage) ? randImage : string.Empty;
 //        }
 
@@ -804,11 +824,15 @@
 
 //            string sql = "select " + field + " from " + obj.m_tableName + conds + conds.orderString + conds.limitString;
 //            List<DBValue> results = new List<DBValue>();
-//            try {
-//                foreach (DataRow result in DBTVSeries.Execute(sql).Rows) {
-//                    results.Add(result[0].ToString());
+//            try
+//            {
+//                foreach (SQLiteResultSet.Row result in DBTVSeries.Execute(sql).Rows)
+//                {
+//                    results.Add(result.fields[0]);
 //                }
-//            } catch (Exception ex) {
+//            }
+//            catch (Exception ex)
+//            {
 //                MPTVSeriesLog.Write("GetSingleField SQL method generated an error: " + ex.Message);
 //            }
 //            return results;
@@ -853,11 +877,12 @@
 
 //        public void AddWhat(DBTable table)
 //        {
-//            foreach (KeyValuePair<string, DBField> field in table.m_fields) {
+//            foreach (KeyValuePair<string, DBField> field in table.m_fields)
+//            {
 //                if (String.IsNullOrEmpty(m_sWhat))
-//                    m_sWhat += table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
+//                    m_sWhat += table.m_tableName + "." + field.Key;
 //                else
-//                    m_sWhat += ", " + table.m_tableName + "." + field.Key + " as " + table.m_tableName + "_" + field.Key;
+//                    m_sWhat += ", " + table.m_tableName + "." + field.Key;
 //            }
 
 //        }
@@ -926,12 +951,8 @@
 //            }
 //        }
 
-//        public enum orderType
-//        {
-//            Ascending,
-//            Descending
-//        };
-
+//        public enum orderType { Ascending, Descending };
+        
 //        public SQLCondition()
 //        {
 //        }
@@ -945,18 +966,20 @@
 //        {
 //            string sValue = value;
 //            if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
-//                sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
+//              sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
 //            else
-//                sValue = ((String)value).Replace("'", "''");
+//               sValue = ((String)value).Replace("'", "''");
 
-//            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + innerConditions.orderString + innerConditions.limitString + " ) ", sValue, type);
+//            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
 //        }
 
 //        public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
 //        {
-//            if (table.m_fields.ContainsKey(sField)) {
+//            if (table.m_fields.ContainsKey(sField))
+//            {
 //                String sValue = String.Empty;
-//                switch (table.m_fields[sField].Type) {
+//                switch (table.m_fields[sField].Type)
+//                {
 //                    case DBField.cTypeInt:
 //                        sValue = value;
 //                        break;
@@ -965,7 +988,7 @@
 //                        if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
 //                            sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
 //                        else
-//                            sValue = "'" + ((String)value).Replace("'", "''") + "'";
+//                        sValue = "'" + ((String)value).Replace("'", "''") + "'";
 //                        break;
 //                }
 //                AddCustom(table.m_tableName + "." + sField, sValue, type);
@@ -974,34 +997,25 @@
 
 //        public void SetLimit(int limit)
 //        {
-//            if (DBTVSeries.bUseLimit) {
-//                m_sLimit = " limit " + limit.ToString();
-//                limitIsSet = true;
-//            }
+//            m_sLimit = " limit " + limit.ToString();
+//            limitIsSet = true;
 //        }
 
 //        public string orderString
 //        {
-//            get
-//            {
-//                return m_sOrderstring;
-//            }
+//            get { return m_sOrderstring; }
 //        }
 
 //        public string limitString
 //        {
-//            get
-//            {
-//                return m_sLimit;
-//            }
+//            get { return m_sLimit; }
 //        }
 
 //        public void AddOrderItem(string qualifiedFieldname, orderType type)
 //        {
 //            if (m_sOrderstring.Length == 0)
 //                m_sOrderstring = " order by ";
-//            else
-//                m_sOrderstring += " , ";
+//            else m_sOrderstring += " , ";
 //            m_sOrderstring += qualifiedFieldname;
 //            m_sOrderstring += type == orderType.Ascending ? " asc " : " desc ";
 //            customOrderStringIsSet = true;
@@ -1009,7 +1023,8 @@
 
 //        public void AddCustom(string what, string value, SQLConditionType type, bool EncloseIfString)
 //        {
-//            if (EncloseIfString) {
+//            if (EncloseIfString)
+//            {
 //                if (value.Length > 2 && value[0] != '\'' && !value.IsNumerical())
 //                    value = "'" + value + "'";
 //            }
@@ -1019,7 +1034,8 @@
 //        public void AddCustom(string what, string value, SQLConditionType type)
 //        {
 //            String sType = String.Empty;
-//            switch (type) {
+//            switch (type)
+//            {
 //                case SQLConditionType.Equal:
 //                    sType = " = ";
 //                    break;
@@ -1063,19 +1079,21 @@
 
 //            if (SQLConditionType.In == type || SQLConditionType.NotIn == type) // reverse
 //                AddCustom(value + sType + "(" + what + ")");
-//            else
+//            else 
 //                AddCustom(what + sType + value);
-//        }
+//            }
 
 //        public void AddCustom(string SQLString)
 //        {
-//            if (m_sConditions.Length > 0 && SQLString.Length > 0) {
+//            if (m_sConditions.Length > 0 && SQLString.Length > 0)
+//            {
 //                if (nextIsOr)
 //                    m_sConditions += " or ";
 //                else
 //                    m_sConditions += " and ";
 //            }
-//            if (_beginGroup) {
+//            if (_beginGroup)
+//            {
 //                m_sConditions += " ( ";
 //                _beginGroup = false;
 //            }
@@ -1084,7 +1102,7 @@
 
 //        public static implicit operator String(SQLCondition conditions)
 //        {
-//            return conditions.m_sConditions.Length > 0 ? " where " + conditions.m_sConditions : conditions.m_sConditions;
+//            return  conditions.m_sConditions.Length > 0 ? " where " + conditions.m_sConditions : conditions.m_sConditions;
 //        }
 
 //        public SQLCondition Copy()
@@ -1092,7 +1110,7 @@
 //            SQLCondition copy = new SQLCondition();
 //            copy.customOrderStringIsSet = customOrderStringIsSet;
 //            copy.limitIsSet = limitIsSet;
-
+            
 //            copy.m_sConditions = m_sConditions;
 //            copy.m_sLimit = m_sLimit;
 //            copy.m_sOrderstring = m_sOrderstring;
@@ -1104,589 +1122,6 @@
 //            return this;
 //        }
 //    };
-
-//    #region DBProviders
-//    public abstract class DBProvider
-//    {
-//        protected String m_sConnectionString = string.Empty;
-
-//        public abstract String sProviderName
-//        {
-//            get;
-//        }
-
-//        public abstract bool bUseLimit
-//        {
-//            get;
-//        }
-
-//        public String sConnectionString
-//        {
-//            get
-//            {
-//                return m_sConnectionString;
-//            }
-//        }
-
-//        public abstract string sGetLastIdCommand
-//        {
-//            get;
-//        }
-
-
-//        public abstract char cIdentifierStart
-//        {
-//            get;
-//        }
-
-//        public abstract char cIdentifierFinish
-//        {
-//            get;
-//        }
-
-//        public abstract string Description
-//        {
-//            get;
-//        }
-
-//        public abstract void InitDB();
-
-//        public abstract string Clean(string command);
-
-//        public abstract void AddColumn(string tableName, string fieldName, DBField field);
-
-//        public abstract void CreateTable(string tableName, string fieldName, DBField field);
-//    }
-
-//    public class SQLiteProvider : DBProvider
-//    {
-//        public SQLiteProvider(string databaseFile)
-//        {
-//            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//            builder.Add("Data Source", databaseFile);
-//            builder.Add("Pooling", true);   //may not be enalbed by default
-
-//            m_sConnectionString = builder.ConnectionString;
-//        }
-
-//        override public String sProviderName
-//        {
-//            get
-//            {
-//                return "System.Data.SQLite";
-//            }
-//        }
-
-//        public override bool bUseLimit
-//        {
-//            get
-//            {
-//                return true;
-//            }
-//        }
-
-//        public override string sGetLastIdCommand
-//        {
-//            get
-//            {
-//                return "SELECT last_insert_rowid() AS ID";
-//            }
-//        }
-
-//        public override char cIdentifierStart
-//        {
-//            get { return '['; }
-//        }
-
-//        public override char cIdentifierFinish
-//        {
-//            get { return ']'; }
-//        }
-
-//        public override string Description
-//        {
-//            get
-//            {
-//                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//                builder.ConnectionString = m_sConnectionString;
-//                return string.Format("SQLite: {0}", builder["Data Source"]);
-//            }
-//        }
-
-//        public override string Clean(String command)
-//        {
-//            return command;
-//        }
-
-//        public override void InitDB()
-//        {
-//            DbProviderFactory factory = System.Data.SQLite.SQLiteFactory.Instance;
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                connection.ConnectionString = sConnectionString;
-//                try {
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA cache_size=5000;";        // Each page uses about 1.5K of memory
-//                        command.ExecuteNonQuery();
-//                    }
-
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA synchronous='OFF';";
-//                        command.ExecuteNonQuery();
-//                    }
-
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA count_changes=1;";
-//                        command.ExecuteNonQuery();
-//                    }
-
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA full_column_names=0;";
-//                        command.ExecuteNonQuery();
-//                    }
-
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA short_column_names=0;";
-//                        command.ExecuteNonQuery();
-//                    }
-
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = "PRAGMA temp_store = MEMORY;";
-//                        command.ExecuteNonQuery();
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public override void AddColumn(string tableName, string fieldName, DBField field)
-//        {
-//            string sQuery = "ALTER TABLE " + tableName + " ADD " + fieldName + " " + field.Type;
-//            DbProviderFactory factory = System.Data.SQLite.SQLiteFactory.Instance;
-
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                connection.ConnectionString = sConnectionString;
-//                try {
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sQuery;
-//                        command.ExecuteNonQuery();
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-    
-//        public override void  CreateTable(string tableName, string fieldName, DBField field)
-//        {
-//            String sQuery = "CREATE TABLE " + tableName + " (" + fieldName + " " + field.Type + (field.Primary ? " primary key)" : ")");
-//            DbProviderFactory factory = System.Data.SQLite.SQLiteFactory.Instance;
-
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                connection.ConnectionString = sConnectionString;
-//                try {
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sQuery;
-//                        command.ExecuteNonQuery();
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-//    }
-
-//    public class MySqlProvider : DBProvider
-//    {
-//        //MySQL limitation of 1000 bytes (333 utf8 characters) for primary key
-//        private int cMaxKeyLength = 333;
-
-//        public MySqlProvider(string connectionString)
-//        {
-//            m_sConnectionString = connectionString;
-//        }
-
-//        public override string sProviderName
-//        {
-//            get 
-//            { 
-//                return "MySql.Data.MySqlClient"; 
-//            }
-//        }
-
-//        public override bool bUseLimit
-//        {
-//            get 
-//            {
-//                return false;
-//            }
-//        }
-
-//        public override string sGetLastIdCommand
-//        {
-//            get
-//            {
-//                return "select LAST_INSERT_ID() as ID";
-//            }
-//        }
-
-//        public override char cIdentifierStart
-//        {
-//            get { return '`'; }
-//        }
-
-//        public override char cIdentifierFinish
-//        {
-//            get { return '`'; }
-//        }
-
-//        public override string Description
-//        {
-//            get
-//            {
-//                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//                builder.ConnectionString = m_sConnectionString;
-//                return string.Format("MySQL: Server={0}, Database={1}", builder["Server"], builder["Database"]);
-//            }
-//        }
-
-//        public override string Clean(String command)
-//        {
-//            //MySql uses \ as escape charaters
-//            return command.Replace(@"\", @"\\");
-//        }
-
-//        public static void TestConnection(string ConnectionString)
-//        {
-//            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                //try and open the database
-//                try {
-//                    connection.ConnectionString = ConnectionString;
-//                    connection.Open();
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public static void CreateDatabase(string ConnectionString)
-//        {
-//            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//            builder.ConnectionString = ConnectionString;
-
-//            string database = builder["Database"].ToString();
-
-//            //were going to make the database, so remove the database from the connectionstring
-//            builder.Remove("Initial Catalog");
-//            builder.Remove("Database");
-
-//            System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
-//            Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
-
-//            //initial mysql commands (use GO not ; so that Replace commands below work
-//            string createScript = "USE mysql GO\r\n DROP DATABASE IF EXISTS %MpTvSeriesDb4% GO\r\n CREATE DATABASE %MpTvSeriesDb4% GO\r\n use %MpTvSeriesDb4% GO\r\n";
-//                //+ " SET GLOBAL SQL_MODE=ANSI_QUOTES GO\r\n";
-//            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
-
-//            using (StreamReader reader = new StreamReader(stream)) {
-//                createScript += reader.ReadToEnd();
-//            }
-
-//            createScript = createScript.Replace("GO\r\n", ";!");
-//            createScript = createScript.Replace("\r\n", " ");
-//            createScript = createScript.Replace("\t", " ");
-
-//            //convert the script to MySQL syntax
-//            createScript = createScript.Replace("[dbo].", "");
-//            createScript = createScript.Replace("NONCLUSTERED INDEX", "INDEX");
-//            createScript = createScript.Replace('[', '`');
-//            createScript = createScript.Replace(']', '`');
-//            createScript = createScript.Replace("IDENTITY(1,1) NOT NULL", "NOT NULL AUTO_INCREMENT");
-
-//            //MySQL limits keys to 1000 bytes so default utf8 encoding only allows a length of 333 (if not enough  need to change the character encoding)
-//            createScript = createScript.Replace("`EpisodeFilename` varchar(1024) NOT NULL,--MySqlReplace", "`EpisodeFilename` varchar(333) NOT NULL,");
-//            createScript = createScript.Replace("`filename` varchar(1024) NOT NULL,--MySqlReplace", "`filename` varchar(333) NOT NULL,");
-            
-//            string[] Commands = createScript.Split('!');
-
-//            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                try {
-//                    connection.ConnectionString = builder.ConnectionString;
-//                    connection.Open();
-
-//                    foreach (string commandText in Commands) {
-//                        string Sql = commandText.Trim();
-//                        if (!string.IsNullOrEmpty(Sql) && !Sql.StartsWith("--") && !Sql.StartsWith("/*")) {
-//                            using (DbCommand command = connection.CreateCommand()) {
-//                                command.CommandText = commandText;
-//                                command.ExecuteNonQuery();
-//                            }
-//                        }
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public override void InitDB()
-//        {
-//            TestConnection(sConnectionString);
-//        }
-
-//        public override void AddColumn(string tableName, string fieldName, DBField field)
-//        {
-//            string type = string.Empty;
-//            if (field.Type == DBField.cType.String) {
-//                if (field.Primary && (field.MaxLength <= DBField.cMaxLength || field.MaxLength > cMaxKeyLength)) {
-//                    type = string.Format("varchar({0})", cMaxKeyLength);
-//                } else if (field.MaxLength <= DBField.cMaxLength) {
-//                    type = "varchar(2048)";
-//                } else {
-//                    type = string.Format("varchar({0})", field.MaxLength);
-//                }
-//            } else {
-//                type = "int";
-//            }
-
-//            string sQuery = "ALTER TABLE `" + tableName + "` ADD `" + fieldName + "` " + type;
-//            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
-
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                connection.ConnectionString = sConnectionString;
-//                try {
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sQuery;
-//                        command.ExecuteNonQuery();
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public override void CreateTable(string tableName, string fieldName, DBField field)
-//        {
-//            string type = string.Empty;
-//            if (field.Type == DBField.cType.String) {
-//                if (field.Primary && (field.MaxLength <= DBField.cMaxLength || field.MaxLength > cMaxKeyLength)) {
-//                    type = string.Format("varchar({0})", cMaxKeyLength);
-//                }else if (field.MaxLength <= DBField.cMaxLength) {
-//                    type = "varchar(2048)";
-//                } else {
-//                    type = string.Format("varchar({0})", field.MaxLength);
-//                }
-//            } else {
-//                type = "int";
-//            }
-
-//            String sQuery = "CREATE TABLE `" + tableName + "` (`" + fieldName + "` " + type + (field.Primary ? " primary key)" : ")");
-//            DbProviderFactory factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
-
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                connection.ConnectionString = sConnectionString;
-//                try {
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sQuery;
-//                        command.ExecuteNonQuery();
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-//    }
-
-//    public class SQLClientProvider : DBProvider
-//    {
-//        public SQLClientProvider(string connectionString)
-//        {
-//            m_sConnectionString = connectionString;
-//        }
-
-//        public override string sProviderName
-//        {
-//            get
-//            {
-//                return "System.Data.SqlClient";
-//            }
-//        }
-
-//        public override bool bUseLimit
-//        {
-//            get
-//            {
-//                return false;
-//            }
-//        }
-
-//        public override char cIdentifierStart
-//        {
-//            get { return '['; }
-//        }
-
-//        public override char cIdentifierFinish
-//        {
-//            get { return ']'; }
-//        }
-
-//        public override string sGetLastIdCommand
-//        {
-//            get
-//            {
-//                return "SELECT @@IDENTITY As ID";
-//            }
-//        }
-
-//        public override string Description
-//        {
-//            get
-//            {
-//                DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//                builder.ConnectionString = m_sConnectionString;
-//                return string.Format("Sql Express: Server={0}, Database={1}", builder["Server"], builder["Database"]);
-//            }
-//        }
-
-//        public override string Clean(String command)
-//        {
-//            return command;
-//        }
-
-//        public static void TestConnection(string ConnectionString)
-//        {
-//            DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                //try and open the database
-//                try {
-//                    connection.ConnectionString = ConnectionString;
-//                    connection.Open();
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public static void CreateDatabase(string ConnectionString)
-//        {
-//            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-//            builder.ConnectionString = ConnectionString;
-
-//            string database = builder["Database"].ToString();
-
-//            //were going to make the database, so remove the database from the connectionstring
-//            builder.Remove("Initial Catalog");
-//            builder.Remove("Database");
-
-//            System.Reflection.Assembly assm = System.Reflection.Assembly.GetExecutingAssembly();
-//            Stream stream = assm.GetManifestResourceStream("WindowPlugins.GUITVSeries.DB_Classes.create_sqlserver_database.sql");
-
-//            string createScript = "USE [master] GO\r\n IF EXISTS (SELECT name FROM sysdatabases WHERE name = N'%MpTvSeriesDb4%') DROP DATABASE [%MpTvSeriesDb4%] GO\r\n CREATE DATABASE [%MpTvSeriesDb4%] GO\r\n use [%MpTvSeriesDb4%] GO\r\n";
-//            createScript = createScript.Replace("%MpTvSeriesDb4%", database);
-
-//            using (StreamReader reader = new StreamReader(stream)) {
-//                createScript += reader.ReadToEnd();
-//            }
-
-//            createScript = createScript.Replace("GO\r\n", "!");
-//            createScript = createScript.Replace("\r\n", " ");
-//            createScript = createScript.Replace("\t", " ");
-//            string[] Commands = createScript.Split('!');
-
-//            DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
-//            using (DbConnection connection = factory.CreateConnection()) {
-//                try {
-//                    connection.ConnectionString = builder.ConnectionString;
-//                    connection.Open();
-
-//                    foreach (string commandText in Commands) {
-//                        string Sql = commandText.Trim();
-//                        if (!string.IsNullOrEmpty(Sql) && !Sql.StartsWith("--") && !Sql.StartsWith("/*")) {
-//                            using (DbCommand command = connection.CreateCommand()) {
-//                                command.CommandText = commandText;
-//                                command.ExecuteNonQuery();
-//                            }
-//                        }
-//                    }
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public override void InitDB()
-//        {
-//            TestConnection(sConnectionString);
-//        }
-
-//         public override void AddColumn(string tableName, string fieldName, DBField field)
-//         {
-//             string type = string.Empty;
-//             if (field.Type == DBField.cType.String) {
-//                 if (field.MaxLength <= DBField.cMaxLength) {
-//                     type = "varchar(max)";
-//                 } else {
-//                     type = string.Format("varchar({0})", field.MaxLength);
-//                 }
-//             } else {
-//                 type = "int";
-//             }
-
-//             string sQuery = "ALTER TABLE [" + tableName + "] ADD [" + fieldName + "] " + type;
-//             DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
-
-//             using (DbConnection connection = factory.CreateConnection()) {
-//                 connection.ConnectionString = sConnectionString;
-//                 try {
-//                     connection.Open();
-//                     using (DbCommand command = connection.CreateCommand()) {
-//                         command.CommandText = sQuery;
-//                         command.ExecuteNonQuery();
-//                     }
-//                 } finally {
-//                     connection.Close();
-//                 }
-//             }
-//         }
-
-//         public override void CreateTable(string tableName, string fieldName, DBField field)
-//         {
-//             string type = string.Empty;
-//             if (field.Type == DBField.cType.String) {
-//                 if (field.MaxLength <= DBField.cMaxLength) {
-//                     type = "varchar(max)";
-//                 } else {
-//                     type = string.Format("varchar({0})", field.MaxLength);
-//                 }
-//             } else {
-//                 type = "int";
-//             }
-
-//             String sQuery = "CREATE TABLE [" + tableName + "] ([" + fieldName + "] " + type + (field.Primary ? " primary key)" : ")");
-//             DbProviderFactory factory = System.Data.SqlClient.SqlClientFactory.Instance;
-
-//             using (DbConnection connection = factory.CreateConnection()) {
-//                 connection.ConnectionString = sConnectionString;
-//                 try {
-//                     connection.Open();
-//                     using (DbCommand command = connection.CreateCommand()) {
-//                         command.CommandText = sQuery;
-//                         command.ExecuteNonQuery();
-//                     }
-//                 } finally {
-//                     connection.Close();
-//                 }
-//             }
-//         }
-//    }
-//    #endregion
 
 //    // DB class - static, one instance only. 
 //    // holds the SQLLite object and the log object.
@@ -1701,65 +1136,44 @@
 //        #endregion
 
 //        #region private & init stuff        
-//        //private static SQLiteClient m_db = null;
-//        private static DBProvider m_DBProvider = null;
-
+//        private static SQLiteClient m_db = null;
 //        private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
 
 //        private static bool m_bIndexOnlineEpisodes;
 //        private static bool m_bIndexLocalEpisodes;
 //        private static bool m_bIndexLocalSeries;
 
-//        private static DbConnection GetConnection()
-//        {
-//            if (m_DBProvider == null) {
-//                InitDB();
-//            }
-            
-//            DbProviderFactory factory = null;
-
-//            //because were making a dll plugin we can't add the dataprovider to the app.config, and can't be sure that
-//            //the data provider has been added to the machine.config - so hard code it for now
-//            if (m_DBProvider.sProviderName == "System.Data.SQLite") {
-//                factory = System.Data.SQLite.SQLiteFactory.Instance;
-//            } else if (m_DBProvider.sProviderName == "MySql.Data.MySqlClient") {
-//                factory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
-//            } else {
-//                factory = DbProviderFactories.GetFactory(m_DBProvider.sProviderName);
-//            }
-
-//            DbConnection connection = factory.CreateConnection();
-//            connection.ConnectionString = m_DBProvider.sConnectionString;
-
-//            return connection;
-//        }
-
 //        private static void InitDB()
 //        {
 //            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
 //                return;
 
-//            switch (Settings.SQLClient) {
-//                case Settings.SqlClients.sqlClient:
-//                    m_DBProvider = new SQLClientProvider(Settings.ConnectionString);
-//                    break;
-//                case Settings.SqlClients.mySql:
-//                    m_DBProvider = new MySqlProvider(Settings.ConnectionString);
-//                    break;
-//                default:
-//                    m_DBProvider = new SQLiteProvider(Settings.GetPath(Settings.Path.database));
-//                    break;
-//            }
+//            String databaseFile = string.Empty;
+
+//            databaseFile = Settings.GetPath(Settings.Path.database);
 
 //            try
 //            {
-//                m_DBProvider.InitDB();
+//                m_db = new SQLiteClient(databaseFile);
 
-//                MPTVSeriesLog.Write("Successfully opened database '" + m_DBProvider.sConnectionString + "'");
+//                m_db.Execute("PRAGMA cache_size=5000;");        // Each page uses about 1.5K of memory
+//                m_db.Execute("PRAGMA synchronous='OFF';");
+//                m_db.Execute("PRAGMA count_changes=1;");
+//                m_db.Execute("PRAGMA full_column_names=0;");
+//                m_db.Execute("PRAGMA short_column_names=0;");
+//                m_db.Execute("PRAGMA temp_store = MEMORY;");
+
+//                // Indicies are now created when the tables exists
+//                //m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
+//                //m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
+//                //m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
+//                //m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
+                
+//                MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'");
 //            }
 //            catch (Exception ex)
 //            {
-//                MPTVSeriesLog.Write("Failed to open database '" + m_DBProvider.sConnectionString + "' (" + ex.Message + ")");
+//                MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ")");
 //            }
 //        }
 //        #endregion
@@ -1768,10 +1182,12 @@
 //            m_nLogLevel = nLevel;
 //        }
 
-//        public static void CreateDBIndices(string sCommand, string sTable, string sIndex, bool bSetFlag)
-//        {
-//            try {
-//                switch (sTable) {
+//        public static void CreateDBIndices(string sCommand, string sTable, bool bSetFlag)
+//        {            
+//            try
+//            {
+//                switch (sTable)
+//                {
 //                    case "online_episodes":
 //                        if (m_bIndexOnlineEpisodes)
 //                            return;
@@ -1788,14 +1204,14 @@
 //                        m_bIndexLocalSeries = bSetFlag;
 //                        break;
 //                    default:
-//                        return;
-//                }
-//                if (!IndexExists(sIndex, sTable)) {
-//                    Execute(sCommand);
-//                }
-//            } catch (Exception e) {
-//                MPTVSeriesLog.Write("Warning, failed to create Index: " + e.Message);
+//                        return;                        
+//                }                                               
+//                m_db.Execute(sCommand);
 //            }
+//            catch (Exception e)
+//            {
+//                MPTVSeriesLog.Write("Warning, failed to create Index: " + e.Message);
+//            }            
 //        }
 
 //        public static void Close ()
@@ -1805,9 +1221,9 @@
 
 //          try
 //          {            
-//            //m_db.Close();
-//            //m_db.Dispose();
-//            //m_db = null; ;
+//            m_db.Close();
+//            m_db.Dispose();
+//            m_db = null; ;
 //            MPTVSeriesLog.Write("Successfully closed Database: " + databaseFile);
 //          }
 //          catch (Exception)
@@ -1816,213 +1232,24 @@
 //          }              
 //        }
 
-//        /// <summary>
-//        /// Get a set of values from the database
-//        /// </summary>
-//        /// <param name="sCommand"></param>
-//        /// <returns></returns>
-//        public static DataTable Execute(String sCommand)
+//        public static SQLiteResultSet Execute(String sCommand)
 //        {
-//            sCommand = m_DBProvider.Clean(sCommand);
-
-//            DataTable result = new DataTable();
-//            using (DbConnection connection = GetConnection()) {
-//                try {
-//                    MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
-//                    connection.Open();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sCommand;
-//                        command.CommandTimeout = 120;
-//                        using (DbDataReader reader = command.ExecuteReader()) {
-//                            //setup the data types for the columns, to avoid the incorrect columns being loaded
-//                            for (int i = 0; i < reader.FieldCount; i++) {
-//                                if (reader.GetFieldType(i) == typeof(int)) {
-//                                    result.Columns.Add(reader.GetName(i), typeof(int));
-//                                } else {
-//                                    result.Columns.Add(reader.GetName(i), typeof(string));
-//                                }
-//                            }
-//                            result.Load(reader);
-//                        }
-//                        MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);
-//                    }
-//                    return result;
-//                } catch (Exception ex) {
-//                    MPTVSeriesLog.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
-//                    return new DataTable();
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        /// <summary>
-//        /// Gets a single value from the Database
-//        /// </summary>
-//        /// <param name="sCommand"></param>
-//        /// <returns></returns>
-//        public static object ExecuteScalar(String sCommand)
-//        {
-//            sCommand = m_DBProvider.Clean(sCommand);
-
-//            using (DbConnection connection = GetConnection()) {
-
-//                try {
-//                    MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
-//                    connection.Open();
-//                    Object result = null;
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = sCommand;
-//                        command.CommandTimeout = 120;
-//                        result = command.ExecuteScalar();
-//                    }
-//                    MPTVSeriesLog.Write("Success, returned Value: ", result == null ? "null" : result.ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
-//                    return result;
-//                } catch (Exception ex) {
-//                    MPTVSeriesLog.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
-//                    return null;
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-        
-//        public static bool TableExists(String sName)
-//        {
-//            using (DbConnection connection = GetConnection()) {
-
-//                try {
-//                    MPTVSeriesLog.Write("Quering SQL Schema: ", string.Format("TableExists: {0}", sName), MPTVSeriesLog.LogLevel.DebugSQL);
-//                    connection.Open();
-
-//                    DataTable tables = connection.GetSchema("Tables");
-//                    foreach (DataRow row in tables.Rows) {
-//                        if (sName.Equals(row["TABLE_NAME"] as string, StringComparison.CurrentCultureIgnoreCase)) {
-//                            MPTVSeriesLog.Write("Success, Table Found: ", "true", MPTVSeriesLog.LogLevel.DebugSQL);
-//                            return true;
-//                        }
-//                    }
-
-//                    MPTVSeriesLog.Write("Success, Table Not Found: ", "false", MPTVSeriesLog.LogLevel.DebugSQL);
-//                    return false;
-//                } catch (Exception ex) {
-//                    MPTVSeriesLog.Write("Query failed looking for this table: <" + sName + "> (" + ex.Message + ").");
-//                    return false;
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public static bool IndexExists(String sName, String sTableName)
-//        {
-//            using (DbConnection connection = GetConnection()) {
-
-//                try {
-//                    MPTVSeriesLog.Write("Quering SQL Schema: ", string.Format("IndexExists: {0}", sName), MPTVSeriesLog.LogLevel.DebugSQL);
-//                    connection.Open();
-
-//                    DataTable tables = connection.GetSchema("Indexes", new string[] { null, null, sTableName, null });
-//                    foreach (DataRow row in tables.Rows) {
-//                        if (sName.Equals(row["index_name"] as string, StringComparison.CurrentCultureIgnoreCase)) {
-//                            MPTVSeriesLog.Write("Success, INdex Found: ", "true", MPTVSeriesLog.LogLevel.DebugSQL);
-//                            return true;
-//                        }
-//                    }
-
-//                    MPTVSeriesLog.Write("Success, Index Not Found: ", "false", MPTVSeriesLog.LogLevel.DebugSQL);
-//                    return false;
-//                } catch (Exception ex) {
-//                    MPTVSeriesLog.Write("Query failed looking for this index: <" + sName + "> (" + ex.Message + ").");
-//                    return false;
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public static DataTable GetTableColumns(String sName)
-//        {
-//            using (DbConnection connection = GetConnection()) {
-//                try {
-//                    MPTVSeriesLog.Write("Quering SQL Schema: ", string.Format("GetTableColumns: {0}", sName), MPTVSeriesLog.LogLevel.DebugSQL);
-//                    connection.Open();
-
-//                    DataTable result = new DataTable();
-//                    using (DbCommand command = connection.CreateCommand()) {
-//                        command.CommandText = string.Format("select * from {0}", sName);
-//                        using (DbDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo)) {
-//                            result.Load(reader);
-//                        }
-//                    }
-//                    if (result != null) {
-//                        MPTVSeriesLog.Write("Success, found x columns: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);
-//                    } else {
-//                        MPTVSeriesLog.Write("Success, but table not found: ", 0, MPTVSeriesLog.LogLevel.DebugSQL);
-//                    }
-//                    return result;
-//                } catch (Exception ex) {
-//                    MPTVSeriesLog.Write("Query failed looking for this table:  <" + sName + "> (" + ex.Message + ").");
-//                    return null;
-//                } finally {
-//                    connection.Close();
-//                }
-//            }
-//        }
-
-//        public static void AddColumn(string tableName, string fieldName, DBField field)
-//        {
-//            if (m_DBProvider == null) {
+//            if (m_db == null)
+//            {
 //                InitDB();
 //            }
-//            if (TableExists(tableName)) {
-//                m_DBProvider.AddColumn(tableName, fieldName, field);
-//            } else {
-//                m_DBProvider.CreateTable(tableName, fieldName, field);
-//            }
-//        }
-
-//        public static bool bUseLimit
-//        {
-//            get
+//            SQLite.NET.SQLiteResultSet result;
+//            try
 //            {
-//                if (m_DBProvider == null) {
-//                    InitDB();
-//                }
-//                return m_DBProvider.bUseLimit;
+//                MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
+//                result = m_db.Execute(sCommand);
+//                MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);
+//                return result;
 //            }
-//        }
-
-//        public static string sGetLastIdCommand
-//        {
-//            get
+//            catch (Exception ex)
 //            {
-//                if (m_DBProvider == null) {
-//                    InitDB();
-//                }
-//                return m_DBProvider.sGetLastIdCommand;
-//            }
-//        }
-
-//        public static char cIdentifierStart
-//        {
-//            get
-//            {
-//                if (m_DBProvider == null) {
-//                    InitDB();
-//                }
-//                return m_DBProvider.cIdentifierStart;
-//            }
-//        }
-
-//        public static char cIdentifierFinish
-//        {
-//            get
-//            {
-//                if (m_DBProvider == null) {
-//                    InitDB();
-//                }
-//                return m_DBProvider.cIdentifierFinish;
+//                MPTVSeriesLog.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
+//                return new SQLiteResultSet();
 //            }
 //        }
 
@@ -2040,80 +1267,6 @@
 //          }
 //        }
 
-//        public static string CurrentDatabaseDescription
-//        {
-//            get
-//            {
-//                if (m_DBProvider == null) {
-//                    InitDB();
-//                }
-//                return m_DBProvider.Description;
-//            }
-//        }
-
 //        #endregion
-
-//        public static void DatabaseToXML()
-//        {
-//            DataTable tables;
-//            using (DbConnection connection = GetConnection()) {
-//                connection.Open();
-//                tables = connection.GetSchema("Tables");
-//            }
-
-//            DataSet data = new DataSet("MPTVSeries");
-
-//            foreach (DataRow row in tables.Rows) {
-//                string tablename = row["TABLE_NAME"].ToString();
-//                DataTable datatable = DBTVSeries.Execute("select * from " + tablename);
-//                data.Tables.Add(datatable);
-//            }
-
-//            data.WriteXml("mptvseries.xml");
-//        }
-
-//        public static void XmlToDatabase()
-//        {
-//            DataSet data = new DataSet("MPTVSeries");
-//            data.ReadXml("mptvseries.xml");
-
-//            using (DbConnection connection = GetConnection()) {
-//                connection.Open();
-
-//                foreach (DataTable table in data.Tables) {
-//                    string name = '`' + table.TableName + '`';
-//                    string columnnames = "(";
-//                    string parameternames = "(";
-//                    foreach (DataColumn column in table.Columns) {
-//                        if (column.ColumnName != "option_id") {
-//                            columnnames += '`' + column.ColumnName + '`' + ",";
-//                            parameternames += "@" + column.ColumnName + ",";
-//                        }
-//                    }
-//                    columnnames = columnnames.Remove(columnnames.Length - 1);
-//                    parameternames = parameternames.Remove(parameternames.Length - 1);
-//                    columnnames += ")";
-//                    parameternames += ")";
-//                    foreach (DataRow row in table.Rows) {
-//                        try {
-//                            using (DbCommand command = connection.CreateCommand()) {
-//                                command.CommandText = "insert into " + name + columnnames + " values " + parameternames;
-//                                foreach (DataColumn column in table.Columns) {
-//                                    if (column.ColumnName != "option_id") {
-//                                        DbParameter parameter = command.CreateParameter();
-//                                        parameter.ParameterName = "@" + column.ColumnName;
-//                                        parameter.Value = row[column];
-//                                        command.Parameters.Add(parameter);
-//                                    }
-//                                }
-//                                command.ExecuteNonQuery();
-//                            }
-//                        } catch (Exception e) {
-//                            int i = 0;
-//                        }
-//                    }
-//                }
-//            }
-//        }
 //    };
 //}
