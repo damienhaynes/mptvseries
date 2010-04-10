@@ -468,6 +468,8 @@
     <Compile Include="DataBase\DBValue.cs" />
     <Compile Include="DataBase\SQLCondition.cs" />
     <Compile Include="DataBase\SQLWhat.cs" />
+    <Compile Include="DB Classes\DBOnlineEpisode.cs" />
+    <Compile Include="DB Classes\DBOnlineSeries.cs" />
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
     <Compile Include="Online Parsing Classes\UserInputResult.cs" />
