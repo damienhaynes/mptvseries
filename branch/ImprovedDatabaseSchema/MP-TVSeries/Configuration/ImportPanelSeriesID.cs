@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {    

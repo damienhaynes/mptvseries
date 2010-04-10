@@ -21,67 +21,82 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
+    public enum DBFieldValueType
+    {
+        Int,
+        String
+    }
+
     public struct DBFieldType
     {
-        public DBField.cType Type;
+        public DBFieldValueType Type;
         public bool Primary;
         public bool AutoIncrement;
     }
-    
+
     /// <summary>
     /// field class - used to hold information
     /// </summary>
     public class DBField
     {
-        public enum cType
+        private DBFieldType m_fieldType;
+
+        public DBField(DBFieldValueType type)
         {
-            Int,
-            String
+            m_fieldType.Type = type;
+            m_fieldType.Primary = false;
+            m_fieldType.AutoIncrement = false;
         }
 
-        // the following are remainders to easily change the type (because it was a string! comparision before)
-        public const cType cTypeInt = cType.Int; 
-        public const cType cTypeString = cType.String;
-
-        // private access
-
-        public DBField(cType type)
+        public DBField(DBFieldValueType type, bool primaryKey)
         {
-            Type = type;
-            Primary = false;
-            AutoIncrement = false;
-        }
-        public DBField(cType type, bool primaryKey)
-        {
-            Type = type;
-            Primary = primaryKey;
-            AutoIncrement = false;
+            m_fieldType.Type = type;
+            m_fieldType.Primary = primaryKey;
+            m_fieldType.AutoIncrement = false;
         }
 
-        public DBField(cType type, bool primaryKey, bool autoIncrement)
+        public DBField(DBFieldValueType type, bool primaryKey, bool autoIncrement)
         {
-            Type = type;
-            Primary = primaryKey;
-            AutoIncrement = autoIncrement;
+            m_fieldType.Type = type;
+            m_fieldType.Primary = primaryKey;
+            m_fieldType.AutoIncrement = autoIncrement;
         }
 
         public DBField(DBFieldType dbFieldT)
         {
-            Type = dbFieldT.Type;
-            Primary = dbFieldT.Primary;
-            AutoIncrement = dbFieldT.AutoIncrement;
+            m_fieldType.Type = dbFieldT.Type;
+            m_fieldType.Primary = dbFieldT.Primary;
+            m_fieldType.AutoIncrement = dbFieldT.AutoIncrement;
         }
 
         /// <summary>
         /// Only works when used on the primary key column
         /// </summary>
-        public bool AutoIncrement { get; set; }
+        public bool AutoIncrement
+        {
+            get
+            {
+                return m_fieldType.AutoIncrement;
+            }
+        }
 
-        public bool Primary { get; set; }
+        public bool Primary
+        {
+            get
+            {
+                return m_fieldType.Primary;
+            }
+        }
 
-        public cType Type { get; set; }
+        public DBFieldValueType ValueType
+        {
+            get
+            {
+                return m_fieldType.Type;
+            }
+        }
 
         /// <summary>
         /// save DB friendly string (doubling singlequotes

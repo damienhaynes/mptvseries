@@ -29,6 +29,7 @@ using System.Text;
 using System.Threading;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
+using WindowPlugins.GUITVSeries.DataBase;
 using WindowPlugins.GUITVSeries.Feedback;
 using Action = MediaPortal.GUI.Library.Action;
 
@@ -520,7 +521,7 @@ namespace WindowPlugins.GUITVSeries
             // Get a list of the most recently added episodes in the database
             SQLCondition conditions = new SQLCondition();
             conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
-            conditions.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLCondition.orderType.Descending);
+            conditions.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLConditionOrder.Descending);
             List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
 
             if (episodes != null)
@@ -936,7 +937,7 @@ namespace WindowPlugins.GUITVSeries
                                         goto default;
                                     break;
                                 default:
-                                    localSeries.AddColumn(key, new DBField(DBField.cTypeString));
+                                    localSeries.AddColumn(key, new DBField(DBFieldValueType.String));
                                     localSeries[key] = updatedSeries[key];
                                     break;
                             }
@@ -1064,7 +1065,7 @@ namespace WindowPlugins.GUITVSeries
                                             break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                         default:
-                                            newOnlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
+                                            newOnlineEpisode.AddColumn(key, new DBField(DBFieldValueType.String));
                                             newOnlineEpisode[key] = onlineEpisode[key];
                                             break;
                                     }
@@ -1105,7 +1106,7 @@ namespace WindowPlugins.GUITVSeries
 
             // let's check which series/episodes we have locally
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
-            cond.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLCondition.orderType.Ascending);
+            cond.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionOrder.Ascending);
 
             List<DBEpisode> episodesInDB = DBEpisode.Get(cond);
 
@@ -1964,7 +1965,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     default:
-                        localEpisode.onlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
+                        localEpisode.onlineEpisode.AddColumn(key, new DBField(DBFieldValueType.String));
                         localEpisode[key] = onlineEpisode[key];
                         break;
                 }
@@ -2316,7 +2317,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (match.Key != DBSeries.cParsedName)
                         {
-                            episode.AddColumn(match.Key, new DBField(DBField.cTypeString));
+                            episode.AddColumn(match.Key, new DBField(DBFieldValueType.String));
                             if (bNewFile || (episode[match.Key] != null && episode[match.Key] != match.Value))
                                 episode[match.Key] = match.Value;
                         }

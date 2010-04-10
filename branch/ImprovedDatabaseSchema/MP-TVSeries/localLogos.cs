@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MediaPortal.GUI.Library;
 using System.Globalization;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

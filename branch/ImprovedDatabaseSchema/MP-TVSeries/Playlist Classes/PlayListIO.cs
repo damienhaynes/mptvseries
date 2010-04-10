@@ -30,6 +30,7 @@ using System.IO;
 using System.Xml;
 using MediaPortal.Util;
 using MediaPortal.GUI.Library;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

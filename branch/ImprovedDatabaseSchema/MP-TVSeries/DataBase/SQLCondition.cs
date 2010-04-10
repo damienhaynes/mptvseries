@@ -23,7 +23,7 @@
 
 using System;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
     public enum SQLConditionType
     {
@@ -39,12 +39,20 @@ namespace WindowPlugins.GUITVSeries
         NotIn,
     };
 
+    public enum SQLConditionOrder
+    {
+        Ascending,
+        Descending
+    };
+
     public class SQLCondition
     {
-        private String m_sConditions = String.Empty;
-        private String m_sLimit = String.Empty;
-        private String m_sOrderstring = String.Empty;
-        bool _beginGroup = false;
+        public bool limitIsSet = false;
+        public bool customOrderStringIsSet = false;
+        public bool nextIsOr = false;
+
+        private bool _beginGroup = false;
+        
         public void beginGroup()
         {
             _beginGroup = true;
@@ -52,38 +60,27 @@ namespace WindowPlugins.GUITVSeries
 
         public void endGroup()
         {
-            m_sConditions += " ) ";
+            ConditionsSQLString += " ) ";
         }
-
-        public bool limitIsSet = false;
-        public bool customOrderStringIsSet = false;
-
-        public bool nextIsOr = false;
 
         // I need this for subqueries
         /// <summary>
         /// Warning: do not set "where", also returns without "where"
         /// </summary>
-        public string ConditionsSQLString
-        {
-            set
-            {
-                m_sConditions = value;
-            }
-            get
-            {
-                return m_sConditions;
-            }
-        }
+        public string ConditionsSQLString { get; set; }
 
-        public enum orderType { Ascending, Descending };
-        
         public SQLCondition()
         {
+            orderString = String.Empty;
+            limitString = String.Empty;
+            ConditionsSQLString = String.Empty;
         }
 
         public SQLCondition(DBTable table, String sField, DBValue value, SQLConditionType type)
         {
+            orderString = String.Empty;
+            limitString = String.Empty;
+            ConditionsSQLString = String.Empty;
             Add(table, sField, value, type);
         }
 
@@ -95,7 +92,7 @@ namespace WindowPlugins.GUITVSeries
             else
                 sValue = ((String)value).Replace("'", "''");
 
-            AddCustom("( select " + field + " from " + table.m_tableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
+            AddCustom("( select " + field + " from " + table.TableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
         }
 
         public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
@@ -103,46 +100,43 @@ namespace WindowPlugins.GUITVSeries
             if (table.m_fields.ContainsKey(sField))
             {
                 String sValue = String.Empty;
-                switch (table.m_fields[sField].Type)
+                switch (table.m_fields[sField].ValueType)
                 {
-                    case DBField.cTypeInt:
+                    case DBFieldValueType.Int:
                         sValue = value;
                         break;
 
-                    case DBField.cTypeString:
-                        if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
+                    case DBFieldValueType.String:
+                        if (type == SQLConditionType.Like || type == SQLConditionType.NotLike) {
                             sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
-                        else
+                        } else {
                             sValue = "'" + ((String)value).Replace("'", "''") + "'";
+                        }
                         break;
                 }
-                AddCustom(table.m_tableName + "." + sField, sValue, type);
+                AddCustom(table.TableName + "." + sField, sValue, type);
             }
         }
 
         public void SetLimit(int limit)
         {
-            m_sLimit = " limit " + limit.ToString();
+            limitString = " limit " + limit.ToString();
             limitIsSet = true;
         }
 
-        public string orderString
-        {
-            get { return m_sOrderstring; }
-        }
+        public string orderString { get; private set; }
 
-        public string limitString
-        {
-            get { return m_sLimit; }
-        }
+        public string limitString { get; private set; }
 
-        public void AddOrderItem(string qualifiedFieldname, orderType type)
+        public void AddOrderItem(string qualifiedFieldname, SQLConditionOrder type)
         {
-            if (m_sOrderstring.Length == 0)
-                m_sOrderstring = " order by ";
-            else m_sOrderstring += " , ";
-            m_sOrderstring += qualifiedFieldname;
-            m_sOrderstring += type == orderType.Ascending ? " asc " : " desc ";
+            if (orderString.Length == 0) {
+                orderString = " order by ";
+            } else {
+                orderString += " , ";
+            }
+            orderString += qualifiedFieldname;
+            orderString += type == SQLConditionOrder.Ascending ? " asc " : " desc ";
             customOrderStringIsSet = true;
         }
 
@@ -210,41 +204,44 @@ namespace WindowPlugins.GUITVSeries
 
         public void AddCustom(string SQLString)
         {
-            if (m_sConditions.Length > 0 && SQLString.Length > 0)
+            if (ConditionsSQLString.Length > 0 && SQLString.Length > 0)
             {
                 if (nextIsOr)
-                    m_sConditions += " or ";
+                    ConditionsSQLString += " or ";
                 else
-                    m_sConditions += " and ";
+                    ConditionsSQLString += " and ";
             }
             if (_beginGroup)
             {
-                m_sConditions += " ( ";
+                ConditionsSQLString += " ( ";
                 _beginGroup = false;
             }
-            m_sConditions += SQLString;
-        }
-
-        public static implicit operator String(SQLCondition conditions)
-        {
-            return  conditions.m_sConditions.Length > 0 ? " where " + conditions.m_sConditions : conditions.m_sConditions;
+            ConditionsSQLString += SQLString;
         }
 
         public SQLCondition Copy()
         {
-            SQLCondition copy = new SQLCondition();
-            copy.customOrderStringIsSet = customOrderStringIsSet;
-            copy.limitIsSet = limitIsSet;
-            
-            copy.m_sConditions = m_sConditions;
-            copy.m_sLimit = m_sLimit;
-            copy.m_sOrderstring = m_sOrderstring;
+            SQLCondition copy = new SQLCondition {
+                                                     customOrderStringIsSet = customOrderStringIsSet,
+                                                     limitIsSet = limitIsSet,
+                                                     ConditionsSQLString = ConditionsSQLString,
+                                                     limitString = limitString,
+                                                     orderString = orderString
+                                                 };
+
             return copy;
         }
 
+        #region toString
         public override string ToString()
         {
             return this;
         }
+
+        public static implicit operator String(SQLCondition conditions)
+        {
+            return conditions.ConditionsSQLString.Length > 0 ? " where " + conditions.ConditionsSQLString : conditions.ConditionsSQLString;
+        }
+        #endregion
     };
 }

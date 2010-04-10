@@ -28,6 +28,7 @@ using System.Text;
 using SQLite.NET;
 using System.IO;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -101,11 +102,11 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBField.cTypeString, true));
-            AddColumn(cSearchUrl, new DBField(DBField.cTypeString));
-            AddColumn(cSearchRegex, new DBField(DBField.cTypeString));
-            AddColumn(cDetailsUrl, new DBField(DBField.cTypeString));
-            AddColumn(cDetailsRegex, new DBField(DBField.cTypeString));
+            AddColumn(cID, new DBField(DBFieldValueType.String, true));
+            AddColumn(cSearchUrl, new DBField(DBFieldValueType.String));
+            AddColumn(cSearchRegex, new DBField(DBFieldValueType.String));
+            AddColumn(cDetailsUrl, new DBField(DBFieldValueType.String));
+            AddColumn(cDetailsRegex, new DBField(DBFieldValueType.String));
         }
 
         public static void Clear(SQLCondition conditions)

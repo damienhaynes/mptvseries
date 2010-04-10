@@ -32,6 +32,7 @@ using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
+using WindowPlugins.GUITVSeries.DataBase;
 using Action = MediaPortal.GUI.Library.Action;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
@@ -4314,7 +4315,7 @@ namespace WindowPlugins.GUITVSeries
                 int count = 0;
                 string seriesNames = string.Empty;
                 SQLCondition cond = new SQLCondition();
-                cond.AddOrderItem(DBOnlineSeries.Q(DBOnlineSeries.cPrettyName), SQLCondition.orderType.Ascending);
+                cond.AddOrderItem(DBOnlineSeries.Q(DBOnlineSeries.cPrettyName), SQLConditionOrder.Ascending);
                 cond.SetLimit(20);
                 if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
                 {

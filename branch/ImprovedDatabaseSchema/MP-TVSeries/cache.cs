@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

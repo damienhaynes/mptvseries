@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -130,10 +131,10 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
-            AddColumn(cEnabled, new DBField(DBField.cTypeInt));
-            AddColumn(cType, new DBField(DBField.cTypeString));
-            AddColumn(cExpression, new DBField(DBField.cTypeString));
+            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
+            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
+            AddColumn(cType, new DBField(DBFieldValueType.String));
+            AddColumn(cExpression, new DBField(DBFieldValueType.String));
         }
 
         public static void ClearAll()

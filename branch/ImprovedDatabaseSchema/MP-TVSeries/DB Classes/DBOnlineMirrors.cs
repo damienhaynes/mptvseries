@@ -28,6 +28,7 @@ using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
 using System.Xml;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -91,14 +92,14 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_fields.ContainsKey(fieldName))
                     {
-                        if (m_fields[fieldName].Type == DBField.cTypeInt)
+                        if (m_fields[fieldName].ValueType == DBFieldValueType.Int)
                             m_fields[fieldName].Value = (long)value;
                         else
                             m_fields[fieldName].Value = value;
                     }
                     else
                     {
-                        m_fields.Add(fieldName, new DBField(DBField.cTypeString));
+                        m_fields.Add(fieldName, new DBField(DBFieldValueType.String));
                         this[fieldName] = value;
                     }
                 }

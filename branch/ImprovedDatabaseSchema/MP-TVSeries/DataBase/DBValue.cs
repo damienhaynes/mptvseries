@@ -23,48 +23,29 @@
 
 using System;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
     public class DBValue
     {
-        static readonly System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
-        static DBValue() { provider.NumberDecimalSeparator = "."; }
-        private String value = String.Empty;
+        private readonly String value = String.Empty;
+
+        #region static properties & constructor
+        private static readonly System.Globalization.NumberFormatInfo provider;
+        static DBValue() 
+        { 
+            provider = new System.Globalization.NumberFormatInfo { NumberDecimalSeparator = "." };
+        }
+        #endregion
 
         public override String ToString()
         {
             return value;
         }
 
-        public override bool Equals(object obj)
-        {
-            //       
-            // See the full list of guidelines at
-            //   http://go.microsoft.com/fwlink/?LinkID=85237  
-            // and also the guidance for operator== at
-            //   http://go.microsoft.com/fwlink/?LinkId=85238
-            //
-
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            return this == obj as DBValue;
-        }
-
-        // override object.GetHashCode
-        public override int GetHashCode()
-        {
-            // TODO: write your implementation of GetHashCode() here
-            return base.GetHashCode();
-        }
-
+        #region constructors
         public DBValue(String value)
         {
-            if (value != null)
-                this.value = value;
-            else
-                this.value = String.Empty;
+            this.value = value ?? String.Empty;
         }
 
         public DBValue(Boolean value)
@@ -83,6 +64,40 @@ namespace WindowPlugins.GUITVSeries
             this.value = value.ToString();
         }
 
+        public DBValue(double value)
+        {
+            this.value = value.ToString(provider);
+        }
+        #endregion
+
+        #region implicit constructors
+        static public implicit operator DBValue(String value)
+        {
+            return new DBValue(value);
+        }
+
+        static public implicit operator DBValue(Boolean value)
+        {
+            return new DBValue(value);
+        }
+
+        static public implicit operator DBValue(int value)
+        {
+            return new DBValue(value);
+        }
+
+        static public implicit operator DBValue(long value)
+        {
+            return new DBValue(value);
+        }
+
+        static public implicit operator DBValue(double value)
+        {
+            return new DBValue(value);
+        }
+        #endregion
+
+        #region implicit converters
         static public implicit operator String(DBValue value)
         {
             if (value == null)
@@ -127,32 +142,9 @@ namespace WindowPlugins.GUITVSeries
             try { return Convert.ToDouble(value.value, provider); }
             catch (System.FormatException) { return 0; }
         }
+        #endregion
 
-        static public implicit operator DBValue(String value)
-        {
-            return new DBValue(value);
-        }
-
-        static public implicit operator DBValue(Boolean value)
-        {
-            return new DBValue(value);
-        }
-
-        static public implicit operator DBValue(int value)
-        {
-            return new DBValue(value);
-        }
-
-        static public implicit operator DBValue(long value)
-        {
-            return new DBValue(value);
-        }
-
-        static public implicit operator DBValue(double value)
-        {
-            return new DBValue(value.ToString(provider));
-        }
-
+        #region eqaulity operators
         static public bool operator == (DBValue first, DBValue second)
         {
             if ((object)first == null || (object)second == null)
@@ -175,6 +167,29 @@ namespace WindowPlugins.GUITVSeries
                     return true;
             } return first.value != second.value;
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType()) {
+                return false;
+            }
+            return this == obj as DBValue;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            // TODO: write your implementation of GetHashCode() here
+            return base.GetHashCode();
+        }
+        #endregion
+
     };
 }

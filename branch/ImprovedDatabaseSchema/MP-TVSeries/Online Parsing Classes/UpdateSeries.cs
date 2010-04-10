@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Xml;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -135,7 +136,7 @@ namespace WindowPlugins.GUITVSeries
                                     else
                                     {
                                         // we don't know that field, add it to the series table
-                                        series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                                        series.AddColumn(propertyNode.Name, new DBField(DBFieldValueType.String));
                                         series[propertyNode.Name] = propertyNode.InnerText;
                                     }
                                 }

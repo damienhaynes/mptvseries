@@ -28,6 +28,7 @@ using System.Text;
 using SQLite.NET;
 using System.IO;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -186,20 +187,20 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBField.cTypeString, true));
-            AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            AddColumn(cIndex, new DBField(DBField.cTypeInt));
-            AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
-            AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
-            AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
-            AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
-            AddColumn(cHasEpisodes, new DBField(DBField.cTypeInt));
-            AddColumn(cHasEpisodesTemp, new DBField(DBField.cTypeInt));
-            AddColumn(cHidden, new DBField(DBField.cTypeInt));
-            AddColumn(cForomSubtitleRoot, new DBField(DBField.cTypeString));
-            AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            AddColumn(cID, new DBField(DBFieldValueType.String, true));
+            AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
+            AddColumn(cIndex, new DBField(DBFieldValueType.Int));
+            AddColumn(cBannerFileNames, new DBField(DBFieldValueType.String));
+            AddColumn(cCurrentBannerFileName, new DBField(DBFieldValueType.String));
+            AddColumn(cHasLocalFiles, new DBField(DBFieldValueType.Int));
+            AddColumn(cHasLocalFilesTemp, new DBField(DBFieldValueType.Int));
+            AddColumn(cHasEpisodes, new DBField(DBFieldValueType.Int));
+            AddColumn(cHasEpisodesTemp, new DBField(DBFieldValueType.Int));
+            AddColumn(cHidden, new DBField(DBFieldValueType.Int));
+            AddColumn(cForomSubtitleRoot, new DBField(DBFieldValueType.String));
+            AddColumn(cUnwatchedItems, new DBField(DBFieldValueType.Int));
+            AddColumn(cEpisodeCount, new DBField(DBFieldValueType.Int));
+            AddColumn(cEpisodesUnWatched, new DBField(DBFieldValueType.Int));
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -448,7 +449,7 @@ namespace WindowPlugins.GUITVSeries
 
             return Get(otherConditions);
         }
-        public static new String Q(String sField)
+        public static String Q(String sField)
         {
             return cTableName + "." + sField;
         }

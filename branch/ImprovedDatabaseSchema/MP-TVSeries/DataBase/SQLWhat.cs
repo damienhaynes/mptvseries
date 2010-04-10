@@ -24,12 +24,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
     public class SQLWhat
     {
-        private String m_sWhat = String.Empty;
-        private String m_sFrom = String.Empty;
+        private String m_sFieldList = String.Empty;
+        private String m_sFromTables = String.Empty;
+
         public SQLWhat()
         {
 
@@ -43,33 +44,34 @@ namespace WindowPlugins.GUITVSeries
         public void Add(DBTable table)
         {
             AddWhat(table);
-            if (m_sFrom.Length > 0)
-                m_sFrom += ", ";
-            m_sFrom += table.m_tableName;
+            if (m_sFromTables.Length > 0) {
+                m_sFromTables += ", ";
+            }
+            m_sFromTables += table.TableName;
         }
 
         public void AddWhat(DBTable table)
         {
             foreach (KeyValuePair<string, DBField> field in table.m_fields)
             {
-                if (String.IsNullOrEmpty(m_sWhat))
-                    m_sWhat += table.m_tableName + "." + field.Key;
-                else
-                    m_sWhat += ", " + table.m_tableName + "." + field.Key;
+                if (String.IsNullOrEmpty(m_sFieldList)) {
+                    m_sFieldList += table.TableName + "." + field.Key;
+                } else {
+                    m_sFieldList += ", " + table.TableName + "." + field.Key;
+                }
             }
-
         }
 
         public void Add(String sField)
         {
-            if (m_sWhat.Length > 0)
-                m_sWhat += ", ";
-            m_sWhat += sField;
+            if (m_sFieldList.Length > 0)
+                m_sFieldList += ", ";
+            m_sFieldList += sField;
         }
 
         public static implicit operator String(SQLWhat what)
         {
-            return what.m_sWhat + " from " + what.m_sFrom;
+            return what.m_sFieldList + " from " + what.m_sFromTables;
         }
     };
 }

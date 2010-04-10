@@ -30,6 +30,7 @@ using SQLite.NET;
 using MediaPortal.Database;
 using System.Text.RegularExpressions;
 using System.IO;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -214,10 +215,6 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
-    
-            DBTVSeries.CreateDBIndices("create index if not exists epComp1 ON local_episodes(CompositeID ASC)","local_episodes",false);
-            DBTVSeries.CreateDBIndices("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)","local_episodes", true);
-
         }
 
         public DBEpisode(bool bCreateEmptyOnline)
@@ -357,25 +354,25 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
-            base.AddColumn(cFilename, new DBField(DBField.cTypeString, true));
-            base.AddColumn(cCompositeID, new DBField(DBField.cTypeString));
-            base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
-            base.AddColumn(cImportProcessed, new DBField(DBField.cTypeInt));
-            base.AddColumn(cAvailableSubtitles, new DBField(DBField.cTypeString));
+            base.AddColumn(cFilename, new DBField(DBFieldValueType.String, true));
+            base.AddColumn(cCompositeID, new DBField(DBFieldValueType.String));
+            base.AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cSeasonIndex, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeIndex, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cImportProcessed, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cAvailableSubtitles, new DBField(DBFieldValueType.String));
 
-            base.AddColumn(cCompositeID2, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeIndex2, new DBField(DBField.cTypeInt));
+            base.AddColumn(cCompositeID2, new DBField(DBFieldValueType.String));
+            base.AddColumn(cEpisodeIndex2, new DBField(DBFieldValueType.Int));
 
-            base.AddColumn(cVideoWidth, new DBField(DBField.cTypeInt));
-            base.AddColumn(cVideoHeight, new DBField(DBField.cTypeInt));
+            base.AddColumn(cVideoWidth, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cVideoHeight, new DBField(DBFieldValueType.Int));
 
-            base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
-            base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));
+            base.AddColumn(cFileDateAdded, new DBField(DBFieldValueType.String));
+            base.AddColumn(cFileDateCreated, new DBField(DBFieldValueType.String));
             
-            base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
+            base.AddColumn(cIsAvailable, new DBField(DBFieldValueType.Int));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -1194,7 +1191,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + first.m_tableName;
+                sqlWhat = "select " + fieldToSelectIfNotFull + " from " + first.TableName;
             }
             // oh, oh, the or join condition is slower than hell
             // its orders of magnitude faster to make two queries instead and do a UNION
@@ -1213,10 +1210,10 @@ namespace WindowPlugins.GUITVSeries
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
-            sqlQuery = sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery = sqlWhat + " left join " + second.TableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsFirst
                 + " union ";
-            sqlQuery += sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
+            sqlQuery += sqlWhat + " left join " + second.TableName + " on (" + DBEpisode.Q(cCompositeID2) + "=" + DBOnlineEpisode.Q(cCompositeID)
                 + ") " + conditionsSecond + orderBy + conditions.limitString;
             
             return sqlQuery;
@@ -1307,7 +1304,7 @@ namespace WindowPlugins.GUITVSeries
             GlobalSet(new DBEpisode(), sKey, Value, condition);
         }
 
-        public static new String Q(String sField)
+        public static String Q(String sField)
         {
             return cTableName + "." + sField;
         }

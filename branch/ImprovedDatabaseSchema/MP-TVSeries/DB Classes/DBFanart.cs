@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -70,15 +71,15 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
-            AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            AddColumn(cChosen, new DBField(DBField.cTypeString));
-            AddColumn(cLocalPath, new DBField(DBField.cTypeString));
-            AddColumn(cBannerPath, new DBField(DBField.cTypeString));
-            AddColumn(cThumbnailPath, new DBField(DBField.cTypeString));
-            AddColumn(cColors, new DBField(DBField.cTypeString));
-            AddColumn(cDisabled, new DBField(DBField.cTypeString));
-            AddColumn(cSeriesName, new DBField(DBField.cTypeString));
+            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
+            AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
+            AddColumn(cChosen, new DBField(DBFieldValueType.String));
+            AddColumn(cLocalPath, new DBField(DBFieldValueType.String));
+            AddColumn(cBannerPath, new DBField(DBFieldValueType.String));
+            AddColumn(cThumbnailPath, new DBField(DBFieldValueType.String));
+            AddColumn(cColors, new DBField(DBFieldValueType.String));
+            AddColumn(cDisabled, new DBField(DBFieldValueType.String));
+            AddColumn(cSeriesName, new DBField(DBFieldValueType.String));
         }
 
         public static void ClearAll()

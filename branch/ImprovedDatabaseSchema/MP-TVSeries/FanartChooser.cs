@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediaPortal.GUI.Library;
+using WindowPlugins.GUITVSeries.DataBase;
 using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
 using System.Drawing;

@@ -25,13 +25,13 @@ using System;
 using System.Runtime.InteropServices;
 using SQLite.NET;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
     /// <summary>
     /// DB class - static, one instance only. 
-    /// holds the SQLLite object and the log object.
+    /// holds the SQLLite object.
     /// </summary>
-    public class DBTVSeries
+    public static class DBTVSeries
     {
 
         #region static imports
@@ -41,21 +41,20 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        #region private & init stuff        
+        #region private variables       
         private static SQLiteClient m_db = null;
-        private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
+        #endregion
 
-        private static bool m_bIndexOnlineEpisodes;
-        private static bool m_bIndexLocalEpisodes;
-        private static bool m_bIndexLocalSeries;
-
-        private static void InitDB()
+        /// <summary>
+        /// 
+        /// </summary>
+        static DBTVSeries()
         {
-            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
-                return;
+            #region init static variables and Properties
+            #endregion
 
+            #region open/create the database
             string databaseFile = Settings.GetPath(Settings.Path.database);
-
             try
             {
                 m_db = new SQLiteClient(databaseFile);
@@ -66,56 +65,25 @@ namespace WindowPlugins.GUITVSeries
                 m_db.Execute("PRAGMA full_column_names=0;");
                 m_db.Execute("PRAGMA short_column_names=0;");
                 m_db.Execute("PRAGMA temp_store = MEMORY;");
-
-                // Indicies are now created when the tables exists
-                //m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
-                //m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
-                //m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
-                //m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
-                
+               
                 MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'");
             }
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ")");
             }
-        }
-        #endregion
-        public static void SetGlobalLogLevel(int nLevel)
-        {
-            m_nLogLevel = nLevel;
-        }
+            #endregion
 
-        public static void CreateDBIndices(string sCommand, string sTable, bool bSetFlag)
-        {            
-            try
-            {
-                switch (sTable)
-                {
-                    case "online_episodes":
-                        if (m_bIndexOnlineEpisodes)
-                            return;
-                        m_bIndexOnlineEpisodes = bSetFlag;
-                        break;
-                    case "local_episodes":
-                        if (m_bIndexLocalEpisodes)
-                            return;
-                        m_bIndexLocalEpisodes = bSetFlag;
-                        break;
-                    case "local_series":
-                        if (m_bIndexLocalSeries)
-                            return;
-                        m_bIndexLocalSeries = bSetFlag;
-                        break;
-                    default:
-                        return;                        
-                }                                               
-                m_db.Execute(sCommand);
-            }
-            catch (Exception e)
-            {
+            #region createindexes
+            try {
+                m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
+                m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
+                m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
+                m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
+            } catch (Exception e) {
                 MPTVSeriesLog.Write("Warning, failed to create Index: " + e.Message);
-            }            
+            }
+            #endregion
         }
 
         public static void Close ()
@@ -137,15 +105,10 @@ namespace WindowPlugins.GUITVSeries
 
         public static SQLiteResultSet Execute(String sCommand)
         {
-            if (m_db == null)
-            {
-                InitDB();
-            }
-            SQLite.NET.SQLiteResultSet result;
             try
             {
                 MPTVSeriesLog.Write("Executing SQL: ", sCommand, MPTVSeriesLog.LogLevel.DebugSQL);
-                result = m_db.Execute(sCommand);
+                SQLiteResultSet result = m_db.Execute(sCommand);
                 MPTVSeriesLog.Write("Success, returned Rows: ", result.Rows.Count, MPTVSeriesLog.LogLevel.DebugSQL);
                 return result;
             }

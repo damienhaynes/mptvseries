@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

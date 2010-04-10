@@ -38,6 +38,7 @@ using MediaPortal.Configuration;
 using System.Windows.Forms;
 using SQLite.NET;
 using WindowPlugins.GUITVSeries;
+using WindowPlugins.GUITVSeries.DataBase;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;

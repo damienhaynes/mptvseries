@@ -28,7 +28,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SQLite.NET;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataBase
 {
     /// <summary>
     /// table class - used as a base for table objects (series, episodes, etc)
@@ -37,15 +37,25 @@ namespace WindowPlugins.GUITVSeries
     public class DBTable
     {
         public const string cUserEditPostFix = @"__USEREDIT__";
-        public string m_tableName;
+
+        public string TableName { get; private set; }
+
+        private bool m_CommitNeeded = false;
+
+        /// <summary>
+        /// a dictionary that maps field names to fields, creates seperate one for each table
+        /// </summary>
         public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
-        public bool m_CommitNeeded = false;
-        public static List<string> FieldsRequiringSplit = new List<string>();
-        public List<string> fieldsRequiringSplit = FieldsRequiringSplit;
+        
+        /// <summary>
+        /// a dictionary that maps tables to (a dictionary of fieldnames mapping to field types)
+        /// </summary>
+        protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
+
+        #region events
         public delegate void dbUpdateOccuredDelegate(string table);
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
-
-        protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
+        #endregion
 
         public DBTable(string tableName)
         {
@@ -54,7 +64,7 @@ namespace WindowPlugins.GUITVSeries
             // this piece of code alone took over 30% of the time on my machine when entering config and newing up all the episodes
 
             Dictionary<string, DBFieldType> cachedForTable;
-            m_tableName = tableName;
+            TableName = tableName;
             //m_fields = new Dictionary<string, DBField>();
             if (fields.TryGetValue(tableName, out cachedForTable)) // good, cached, this happens 99% of the time
             {
@@ -67,7 +77,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 cachedForTable = new Dictionary<string, DBFieldType>();
                 // load up fields from the table
-                SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + m_tableName + "'");
+                SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + TableName + "'");
                 if (results != null && results.Rows.Count > 0)
                 {
                     // we have the table definition, parse it for names/types
@@ -91,15 +101,15 @@ namespace WindowPlugins.GUITVSeries
                             bool bPrimary = parammatch.Groups[3].Success;
                             // In Sqlite an "integer" (but not "int") Primary Key is an alias for the sqlite rowid, and therefore auto increments
                             bool bAutoIncrement = (bPrimary && parammatch.Groups[2].Value.Equals("integer", StringComparison.InvariantCultureIgnoreCase)) ||
-                                // or a column can be set as autoincrement
+                                                  // or a column can be set as autoincrement
                                                   parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
                             DBFieldType cachedInfo = new DBFieldType
-                            {
-                                Primary = bPrimary,
-                                Type = (bIntType ? DBField.cTypeInt : DBField.cType.String),
-                                AutoIncrement = bAutoIncrement
-                            };
+                                                     {
+                                                         Primary = bPrimary,
+                                                         Type = (bIntType ? DBFieldValueType.Int : DBFieldValueType.String),
+                                                         AutoIncrement = bAutoIncrement
+                                                     };
 
                             if (!m_fields.ContainsKey(sName))
                             {
@@ -138,37 +148,36 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     // ok, we don't, add it
-                    SQLiteResultSet results;
-                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + m_tableName + "'");
+                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + TableName + "'");
                     if (results != null && results.Rows.Count > 0)
                     {
                         // table already exists, alter it
-                        String sQuery = "ALTER TABLE " + m_tableName + " ADD " + sName + " " + field.Type;
+                        String sQuery = "ALTER TABLE " + TableName + " ADD " + sName + " " + field.ValueType;
                         DBTVSeries.Execute(sQuery);
                     }
                     else
                     {
                         // new table, create it
                         // no tables, assume it's going to be created later (using AddColumn)
-                        string type = field.Type.ToString();
-                        if (field.Primary && field.Type == DBField.cType.Int && field.AutoIncrement)
+                        string type = field.ValueType.ToString();
+                        if (field.Primary && field.ValueType == DBFieldValueType.Int && field.AutoIncrement)
                         {
                             //for the automatic creation of an auto incremental integer primary key you must use the full "Integer" not just "int"
                             type = "Integer";
                         }
 
-                        String sQuery = "CREATE TABLE " + m_tableName + " (" + sName + " " + type + (field.Primary ? " primary key)" : ")");
+                        String sQuery = "CREATE TABLE " + TableName + " (" + sName + " " + type + (field.Primary ? " primary key)" : ")");
                         DBTVSeries.Execute(sQuery);
                     }
                     // delete the s_fields cache so newed up objects get the right fields
                     lock (fields)
-                        fields.Remove(m_tableName);
+                        fields.Remove(TableName);
                     m_fields.Add(sName, field);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write(m_tableName + " table.AddColumn failed (" + ex.Message + ").");
+                    MPTVSeriesLog.Write(TableName + " table.AddColumn failed (" + ex.Message + ").");
                     return false;
                 }
             }
@@ -181,13 +190,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
                 {
-                    switch (fieldPair.Value.Type)
+                    switch (fieldPair.Value.ValueType)
                     {
-                        case DBField.cTypeInt:
+                        case DBFieldValueType.Int:
                             fieldPair.Value.Value = 0;
                             break;
 
-                        case DBField.cTypeString:
+                        case DBFieldValueType.String:
                             fieldPair.Value.Value = "";
                             break;
                     }
@@ -202,13 +211,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (!fieldPair.Value.Primary || fieldPair.Value.Value == null)
                 {
-                    switch (fieldPair.Value.Type)
+                    switch (fieldPair.Value.ValueType)
                     {
-                        case DBField.cTypeInt:
+                        case DBFieldValueType.Int:
                             fieldPair.Value.Value = iValue;
                             break;
 
-                        case DBField.cTypeString:
+                        case DBFieldValueType.String:
                             fieldPair.Value.Value = sValue;
                             break;
                     }
@@ -222,7 +231,9 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 DBField result;
-                if (!m_fields.TryGetValue(fieldName, out result)) return string.Empty;
+                if (!m_fields.TryGetValue(fieldName, out result)) {
+                    return string.Empty;
+                }
                 return result.Value;
 
             }
@@ -235,23 +246,24 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (result.Value != value)
                         {
-                            if (result.Type == DBField.cTypeInt)
+                            if (result.ValueType == DBFieldValueType.Int) {
                                 result.Value = (long)value;
-                            else
+                            } else {
                                 result.Value = value;
+                            }
                             result.WasChanged = true;
                             m_CommitNeeded = true;
                         }
                     }
                     else
                     {
-                        AddColumn(fieldName, new DBField(DBField.cTypeString));
+                        AddColumn(fieldName, new DBField(DBFieldValueType.String));
                         this[fieldName] = value;
                     }
                 }
                 catch (SystemException)
                 {
-                    MPTVSeriesLog.Write("Cast exception when trying to assign " + value + " to field " + fieldName + " in table " + m_tableName);
+                    MPTVSeriesLog.Write("Cast exception when trying to assign " + value + " to field " + fieldName + " in table " + TableName);
                 }
             }
         }
@@ -269,15 +281,9 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static String Q(String sField)
-        {
-            return sField;
-        }
-
         public bool Read(ref SQLiteResultSet records, int index)
         {
-            if (records.Rows.Count > 0 || records.Rows.Count < index)
-            {
+            if (records.Rows.Count > 0 || records.Rows.Count < index) {
                 SQLiteResultSet.Row row = records.Rows[index];
                 return Read(row, records.ColumnIndices);
             }
@@ -286,19 +292,17 @@ namespace WindowPlugins.GUITVSeries
 
         public bool Read(SQLiteResultSet.Row row, System.Collections.Hashtable ColumnIndices)
         {
-            if (row == null || row.fields.Count == 0) return false;
-            string res = null;
-            int iCol = 0;
+            if (row == null || row.fields.Count == 0) {
+                return false;
+            }
             foreach (KeyValuePair<string, DBField> field in m_fields)
             {
                 object o = null;
                 if (((o = ColumnIndices[field.Key]) != null)
-                    || ((o = ColumnIndices[m_tableName + "." + field.Key]) != null)
-                    || ((o = ColumnIndices[m_tableName + field.Key]) != null)) // because of order bug in sqlite
+                    || ((o = ColumnIndices[TableName + "." + field.Key]) != null)
+                    || ((o = ColumnIndices[TableName + field.Key]) != null)) // because of order bug in sqlite
                 {
-                    iCol = (int)o;
-                    res = row.fields[iCol];
-                    field.Value.Value = res == null ? string.Empty : res;
+                    field.Value.Value = row.fields[(int)o] ?? string.Empty;
                 }
                 else
                     // we have a column in mfields that is not in the database result (or null), as such it is to be empty
@@ -311,8 +315,7 @@ namespace WindowPlugins.GUITVSeries
         public String PrimaryKey()
         {
             foreach (KeyValuePair<string, DBField> field in m_fields)
-                if (field.Value.Primary == true)
-                {
+                if (field.Value.Primary) {
                     return field.Key;
                 }
 
@@ -326,7 +329,7 @@ namespace WindowPlugins.GUITVSeries
                 m_fields[PrimaryKey()].Value = Value;
                 SQLCondition condition = new SQLCondition();
                 condition.Add(this, PrimaryKey(), m_fields[PrimaryKey()].Value, SQLConditionType.Equal);
-                String sqlQuery = "select * from " + m_tableName + condition;
+                String sqlQuery = "select * from " + TableName + condition;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                 return Read(ref records, 0);
             }
@@ -347,11 +350,13 @@ namespace WindowPlugins.GUITVSeries
                 KeyValuePair<string, DBField> PrimaryField = new KeyValuePair<string, DBField>();
 
                 foreach (KeyValuePair<string, DBField> field in m_fields)
-                    if (field.Value.Primary == true)
+                {   
+                    if (field.Value.Primary)
                     {
                         PrimaryField = field;
                         break;
                     }
+                }
                 bool update = false;
 
                 if (String.IsNullOrEmpty(PrimaryField.Value.Value) && !PrimaryField.Value.AutoIncrement)
@@ -364,20 +369,20 @@ namespace WindowPlugins.GUITVSeries
                 if (!String.IsNullOrEmpty(PrimaryField.Value.Value))
                 {
 
-                    switch (PrimaryField.Value.Type)
+                    switch (PrimaryField.Value.ValueType)
                     {
-                        case DBField.cTypeInt:
+                        case DBFieldValueType.Int:
                             sWhere += PrimaryField.Key + " = " + PrimaryField.Value.Value;
                             break;
 
-                        case DBField.cTypeString:
+                        case DBFieldValueType.String:
                             sWhere += PrimaryField.Key + " = '" + ((String)PrimaryField.Value.Value).Replace("'", "''") +
                                       "'";
                             break;
                     }
 
                     // use the primary key field
-                    sqlQuery = "select " + PrimaryField.Key + " from " + m_tableName + sWhere;
+                    sqlQuery = "select " + PrimaryField.Key + " from " + TableName + sWhere;
                     SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                     if (records.Rows.Count > 0)
                     {
@@ -388,23 +393,23 @@ namespace WindowPlugins.GUITVSeries
                 if (update)
                 {
                     // already exists, update
-                    builder.Append("update ").Append(m_tableName).Append(" set ");
+                    builder.Append("update ").Append(TableName).Append(" set ");
                     int fieldsNeedingUpdating = 0;
                     foreach (KeyValuePair<string, DBField> fieldPair in m_fields)
                     {
                         if (!fieldPair.Value.Primary && fieldPair.Value.WasChanged)
                         {
                             builder.Append(fieldPair.Key).Append(" = ");
-                            switch (fieldPair.Value.Type)
+                            switch (fieldPair.Value.ValueType)
                             {
-                                case DBField.cTypeInt:
+                                case DBFieldValueType.Int:
                                     if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                         builder.Append("'',");
                                     else
                                         builder.Append((string)fieldPair.Value.Value).Append(',');
                                     break;
 
-                                case DBField.cTypeString:
+                                case DBFieldValueType.String:
                                     builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("',");
                                     break;
                             }
@@ -440,16 +445,16 @@ namespace WindowPlugins.GUITVSeries
                             first = false;
                         }
                         paramNames.Append(fieldPair.Key);
-                        switch (fieldPair.Value.Type)
+                        switch (fieldPair.Value.ValueType)
                         {
-                            case DBField.cTypeInt:
+                            case DBFieldValueType.Int:
                                 if (String.IsNullOrEmpty(fieldPair.Value.Value))
                                     builder.Append("''");
                                 else
                                     builder.Append((string)fieldPair.Value.Value);
                                 break;
 
-                            case DBField.cTypeString:
+                            case DBFieldValueType.String:
                                 builder.Append(" '").Append(((String)(fieldPair.Value.Value)).Replace("'", "''")).Append("'");
                                 break;
                         }
@@ -457,7 +462,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     String sParamValues = builder.ToString();
                     builder.Remove(0, builder.Length);
-                    builder.Append("insert into ").Append(m_tableName).Append(" (").Append(paramNames).Append(") values(").Append(sParamValues).Append(")");
+                    builder.Append("insert into ").Append(TableName).Append(" (").Append(paramNames).Append(") values(").Append(sParamValues).Append(")");
                     sqlQuery = builder.ToString();
 
                     DBTVSeries.Execute(sqlQuery);
@@ -485,14 +490,14 @@ namespace WindowPlugins.GUITVSeries
         {
             if (obj.m_fields.ContainsKey(sKey))
             {
-                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey + "=";
-                switch (obj.m_fields[sKey].Type)
+                String sqlQuery = "update " + obj.TableName + " SET " + sKey + "=";
+                switch (obj.m_fields[sKey].ValueType)
                 {
-                    case DBField.cTypeInt:
+                    case DBFieldValueType.Int:
                         sqlQuery += Value;
                         break;
 
-                    case DBField.cTypeString:
+                    case DBFieldValueType.String:
                         sqlQuery += "'" + Value + "'";
                         break;
                 }
@@ -500,7 +505,7 @@ namespace WindowPlugins.GUITVSeries
                 sqlQuery += conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (dbUpdateOccured != null)
-                    dbUpdateOccured(obj.m_tableName);
+                    dbUpdateOccured(obj.TableName);
             }
         }
 
@@ -508,21 +513,23 @@ namespace WindowPlugins.GUITVSeries
         {
             if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2))
             {
-                String sqlQuery = "update " + obj.m_tableName + " SET " + sKey1 + " = " + sKey2 + conditions;
+                String sqlQuery = "update " + obj.TableName + " SET " + sKey1 + " = " + sKey2 + conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (dbUpdateOccured != null)
-                    dbUpdateOccured(obj.m_tableName);
+                    dbUpdateOccured(obj.TableName);
             }
         }
 
         public static void Clear(DBTable obj, SQLCondition conditions)
         {
-            String sqlQuery = "delete from " + obj.m_tableName + conditions;
+            String sqlQuery = "delete from " + obj.TableName + conditions;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             if (dbUpdateOccured != null)
-                dbUpdateOccured(obj.m_tableName);
+                dbUpdateOccured(obj.TableName);
         }
 
+        // TODO: extract this to somewhere more appropriate (maybe make a WindowPlugins.GUITVSeries.Banner.cs) 
+        // - it has nothing to to do with DBTable, - it's only here so that series and season can both see it
         protected static string getRandomBanner(List<string> BannerList)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
@@ -585,7 +592,7 @@ namespace WindowPlugins.GUITVSeries
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)
         {
 
-            string sql = "select " + field + " from " + obj.m_tableName + conds + conds.orderString + conds.limitString;
+            string sql = "select " + field + " from " + obj.TableName + conds + conds.orderString + conds.limitString;
             List<DBValue> results = new List<DBValue>();
             try
             {
@@ -601,8 +608,6 @@ namespace WindowPlugins.GUITVSeries
             return results;
         }
 
-        static char[] splits = new char[] { '|', '\\', '/', ',' };
-
         /// <summary>
         /// For Genre etc. this method will split by each character in "splits"
         /// Should be used only for fields described in FieldsRequiringSplit
@@ -611,6 +616,7 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public static string[] splitField(string fieldvalue)
         {
+            char[] splits = new char[] { '|', '\\', '/', ',' };
             return fieldvalue.Split(splits, StringSplitOptions.RemoveEmptyEntries);
         }
 

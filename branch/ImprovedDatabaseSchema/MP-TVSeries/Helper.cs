@@ -29,6 +29,7 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using MediaPortal.Ripper;
 using System.Globalization;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {

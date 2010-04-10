@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -145,31 +146,31 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
-            base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
-            base.AddColumn(cSortName, new DBField(DBField.cTypeString));
-            base.AddColumn(cOriginalName, new DBField(DBField.cTypeString));
-            base.AddColumn(cStatus, new DBField(DBField.cTypeString));
-            base.AddColumn(cGenre, new DBField(DBField.cTypeString));
-            base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
-            base.AddColumn(cPosterFileNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cCurrentPosterFileName, new DBField(DBField.cTypeString));
-            base.AddColumn(cSummary, new DBField(DBField.cTypeString));
-            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
-            base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
-            base.AddColumn(cActors, new DBField(DBField.cTypeString));
-            base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));           
-            base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
-            base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
+            base.AddColumn(cID, new DBField(DBFieldValueType.Int, true));
+            base.AddColumn(cPrettyName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cSortName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cOriginalName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cStatus, new DBField(DBFieldValueType.String));
+            base.AddColumn(cGenre, new DBField(DBFieldValueType.String));
+            base.AddColumn(cBannerFileNames, new DBField(DBFieldValueType.String));
+            base.AddColumn(cCurrentBannerFileName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cPosterFileNames, new DBField(DBFieldValueType.String));
+            base.AddColumn(cCurrentPosterFileName, new DBField(DBFieldValueType.String));
+            base.AddColumn(cSummary, new DBField(DBFieldValueType.String));
+            base.AddColumn(cOnlineDataImported, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cAirsDay, new DBField(DBFieldValueType.String));
+            base.AddColumn(cAirsTime, new DBField(DBFieldValueType.String));
+            base.AddColumn(cActors, new DBField(DBFieldValueType.String));
+            base.AddColumn(cBannersDownloaded, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cHasLocalFiles, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cHasLocalFilesTemp, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBFieldValueType.Int));           
+            base.AddColumn(cWatchedFileTimeStamp, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cUnwatchedItems, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeCount, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodesUnWatched, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cViewTags, new DBField(DBFieldValueType.String));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -194,7 +195,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static new String Q(String sField)
+        public static String Q(String sField)
         {
             return cTableName + "." + sField;
         }

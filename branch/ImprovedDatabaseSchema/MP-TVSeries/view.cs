@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -226,7 +227,7 @@ namespace WindowPlugins.GUITVSeries
             
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
                                  " , count(*) " +
-                                 " from " + step.groupedBy.table.m_tableName + conditions +
+                                 " from " + step.groupedBy.table.TableName + conditions +
                                  " group by " + step.groupedBy.tableField +
                                  step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
@@ -675,11 +676,11 @@ namespace WindowPlugins.GUITVSeries
                         //        {
                         //        }
                         //    }
-                        //    thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.m_tableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
+                        //    thisView.conds.AddSubQuery("compositeid", table, subQueryConditions, table.TableName + "." + DBEpisode.cCompositeID, SQLConditionType.In);
                             
                         //}
 
-                        thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLCondition.orderType.Ascending : SQLCondition.orderType.Descending));
+                        thisView.conds.AddOrderItem(tableField, (orderFields[i + 1] == "asc" ? SQLConditionOrder.Ascending : SQLConditionOrder.Descending));
                     }
                 }
             }
@@ -691,7 +692,7 @@ namespace WindowPlugins.GUITVSeries
                     thisView.conds.AddCustom(" not exists ( select * from " + DBSeries.cTableName + " where id = " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " and " + DBSeries.Q(DBSeries.cHidden) + " = 1)");
                 else if (thisView.groupedBy.table.GetType() == typeof(DBSeason))
                     thisView.conds.Add(new DBSeason(), DBSeason.cHidden, 1, SQLConditionType.NotEqual);
-                thisView.conds.AddOrderItem(thisView.groupedBy.tableField, SQLCondition.orderType.Descending); // tablefield includes tablename itself!
+                thisView.conds.AddOrderItem(thisView.groupedBy.tableField, SQLConditionOrder.Descending); // tablefield includes tablename itself!
             }
             try
             {

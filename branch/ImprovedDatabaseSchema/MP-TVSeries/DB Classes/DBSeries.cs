@@ -28,6 +28,7 @@ using SQLite.NET;
 using MediaPortal.Database;
 using System.IO;
 using System.Xml;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -53,7 +54,7 @@ namespace WindowPlugins.GUITVSeries
         public const int cDBVersion = 13;
 
         private DBOnlineSeries m_onlineSeries = null;
-		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
+		public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
 
@@ -230,9 +231,7 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
-               
-            DBTVSeries.CreateDBIndices("create index if not exists seriesIDLocal on local_series(ID ASC)","local_series",true);
-        }
+                       }
 
         public DBSeries(bool bCreateEmptyOnline)
             : base(cTableName)
@@ -271,14 +270,14 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cParsedName, new DBField(DBField.cTypeString, true));
-            base.AddColumn(cID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cScanIgnore, new DBField(DBField.cTypeInt));
-            base.AddColumn(cDuplicateLocalName, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
+            base.AddColumn(cParsedName, new DBField(DBFieldValueType.String, true));
+            base.AddColumn(cID, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cScanIgnore, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cDuplicateLocalName, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cHidden, new DBField(DBFieldValueType.Int));
         }
 
-        public static new String Q(String sField)
+        public static String Q(String sField)
         {
             return cTableName + "." + sField;
         }

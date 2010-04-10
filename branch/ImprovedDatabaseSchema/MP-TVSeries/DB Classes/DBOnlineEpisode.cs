@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -73,7 +74,7 @@ namespace WindowPlugins.GUITVSeries
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
         
-        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Writer", "Director", "GuestStars" });
+        public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Writer", "Director", "GuestStars" });
 
         static DBOnlineEpisode()
         {
@@ -116,8 +117,6 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
-            
-            DBTVSeries.CreateDBIndices("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)","online_episodes",true);
         }
 
         public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
@@ -134,26 +133,26 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cCompositeID, new DBField(DBField.cTypeString, true));
-            base.AddColumn(cID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
+            base.AddColumn(cCompositeID, new DBField(DBFieldValueType.String, true));
+            base.AddColumn(cID, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeIndex, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cSeasonIndex, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeName, new DBField(DBFieldValueType.String));
 
-            base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
-            base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
-            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            base.AddColumn(cGuestStars, new DBField(DBField.cTypeString));
-            base.AddColumn(cDirector, new DBField(DBField.cTypeString));
-            base.AddColumn(cWriter, new DBField(DBField.cTypeString));
-            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
-            base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
-            base.AddColumn(cDownloadPending, new DBField(DBField.cTypeInt));
-            base.AddColumn(cDownloadExpectedNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
+            base.AddColumn(cWatched, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cEpisodeSummary, new DBField(DBFieldValueType.String));
+            base.AddColumn(cFirstAired, new DBField(DBFieldValueType.String));
+            base.AddColumn(cOnlineDataImported, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cGuestStars, new DBField(DBFieldValueType.String));
+            base.AddColumn(cDirector, new DBField(DBFieldValueType.String));
+            base.AddColumn(cWriter, new DBField(DBFieldValueType.String));
+            base.AddColumn(cHidden, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cLastUpdated, new DBField(DBFieldValueType.String));
+            base.AddColumn(cDownloadPending, new DBField(DBFieldValueType.Int));
+            base.AddColumn(cDownloadExpectedNames, new DBField(DBFieldValueType.String));
+            base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBFieldValueType.String));
+            base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBFieldValueType.String));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -178,7 +177,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static new String Q(String sField)
+        public static String Q(String sField)
         {
             return cTableName + "." + sField;
         }

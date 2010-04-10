@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -88,14 +89,14 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
-            AddColumn(cEnabled, new DBField(DBField.cTypeInt));
-            AddColumn(cSort, new DBField(DBField.cTypeInt));
-            AddColumn(cTransToken, new DBField(DBField.cTypeString));
-            AddColumn(cPrettyName, new DBField(DBField.cTypeString));
-            AddColumn(cViewConfig, new DBField(DBField.cTypeString));
-            AddColumn(cTaggedView, new DBField(DBField.cTypeInt));
-            AddColumn(cParentalControl, new DBField(DBField.cTypeInt));
+            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
+            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
+            AddColumn(cSort, new DBField(DBFieldValueType.Int));
+            AddColumn(cTransToken, new DBField(DBFieldValueType.String));
+            AddColumn(cPrettyName, new DBField(DBFieldValueType.String));
+            AddColumn(cViewConfig, new DBField(DBFieldValueType.String));
+            AddColumn(cTaggedView, new DBField(DBFieldValueType.Int));
+            AddColumn(cParentalControl, new DBField(DBFieldValueType.Int));
         }
 
         public static void ClearAll()

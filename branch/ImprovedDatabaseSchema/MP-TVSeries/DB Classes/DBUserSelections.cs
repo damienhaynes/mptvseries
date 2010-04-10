@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using SQLite.NET;
 using MediaPortal.Database;
 using System.Text.RegularExpressions;
+using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -127,14 +128,14 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            this.AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
-            this.AddColumn(cSelectionLevel, new DBField(DBField.cTypeString));
-            this.AddColumn(cSelectionType, new DBField(DBField.cTypeString));
-            this.AddColumn(cInternalKey, new DBField(DBField.cTypeString));
-            this.AddColumn(cUserKey, new DBField(DBField.cTypeString));
-            this.AddColumn(cTags, new DBField(DBField.cTypeString));
-            this.AddColumn(cContextType, new DBField(DBField.cTypeString));
-            this.AddColumn(cEnabled, new DBField(DBField.cTypeInt));
+            this.AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
+            this.AddColumn(cSelectionLevel, new DBField(DBFieldValueType.String));
+            this.AddColumn(cSelectionType, new DBField(DBFieldValueType.String));
+            this.AddColumn(cInternalKey, new DBField(DBFieldValueType.String));
+            this.AddColumn(cUserKey, new DBField(DBFieldValueType.String));
+            this.AddColumn(cTags, new DBField(DBFieldValueType.String));
+            this.AddColumn(cContextType, new DBField(DBFieldValueType.String));
+            this.AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
         }
 
         #endregion Private Methods 
@@ -189,7 +190,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(new DBUserSelection(), cSelectionType, new DBValue(type.ToString()), SQLConditionType.Equal);
                 condition.Add(new DBUserSelection(), cInternalKey, new DBValue(internalkey.ToString()), SQLConditionType.Equal);
 
-                SQLiteResultSet records = DBTVSeries.Execute("select * from " + base.m_tableName + condition);
+                SQLiteResultSet records = DBTVSeries.Execute("select * from " + base.TableName + condition);
                 return base.Read(ref records, 0);
             }
             catch (Exception exception)
@@ -325,7 +326,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
   
-        public static new string Q(string sField)
+        public static string Q(string sField)
         {
             return (cTableName + "." + sField);
         }
