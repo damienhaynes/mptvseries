@@ -71,15 +71,15 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
-            AddColumn(cChosen, new DBField(DBFieldValueType.String));
-            AddColumn(cLocalPath, new DBField(DBFieldValueType.String));
-            AddColumn(cBannerPath, new DBField(DBFieldValueType.String));
-            AddColumn(cThumbnailPath, new DBField(DBFieldValueType.String));
-            AddColumn(cColors, new DBField(DBFieldValueType.String));
-            AddColumn(cDisabled, new DBField(DBFieldValueType.String));
-            AddColumn(cSeriesName, new DBField(DBFieldValueType.String));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
+            AddColumn(new DBField(cChosen, DBFieldValueType.String));
+            AddColumn(new DBField(cLocalPath, DBFieldValueType.String));
+            AddColumn(new DBField(cBannerPath, DBFieldValueType.String));
+            AddColumn(new DBField(cThumbnailPath, DBFieldValueType.String));
+            AddColumn(new DBField(cColors, DBFieldValueType.String));
+            AddColumn(new DBField(cDisabled, DBFieldValueType.String));
+            AddColumn(new DBField(cSeriesName, DBFieldValueType.String));
         }
 
         public static void ClearAll()

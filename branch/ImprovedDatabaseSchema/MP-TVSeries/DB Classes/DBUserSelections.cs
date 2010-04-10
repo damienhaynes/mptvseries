@@ -128,14 +128,14 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            this.AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            this.AddColumn(cSelectionLevel, new DBField(DBFieldValueType.String));
-            this.AddColumn(cSelectionType, new DBField(DBFieldValueType.String));
-            this.AddColumn(cInternalKey, new DBField(DBFieldValueType.String));
-            this.AddColumn(cUserKey, new DBField(DBFieldValueType.String));
-            this.AddColumn(cTags, new DBField(DBFieldValueType.String));
-            this.AddColumn(cContextType, new DBField(DBFieldValueType.String));
-            this.AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
+            this.AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            this.AddColumn(new DBField(cSelectionLevel, DBFieldValueType.String));
+            this.AddColumn(new DBField(cSelectionType, DBFieldValueType.String));
+            this.AddColumn(new DBField(cInternalKey, DBFieldValueType.String));
+            this.AddColumn(new DBField(cUserKey, DBFieldValueType.String));
+            this.AddColumn(new DBField(cTags, DBFieldValueType.String));
+            this.AddColumn(new DBField(cContextType, DBFieldValueType.String));
+            this.AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
         }
 
         #endregion Private Methods 

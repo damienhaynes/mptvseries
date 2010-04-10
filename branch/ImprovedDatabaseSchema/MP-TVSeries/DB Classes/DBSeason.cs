@@ -187,20 +187,20 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBFieldValueType.String, true));
-            AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int));
-            AddColumn(cBannerFileNames, new DBField(DBFieldValueType.String));
-            AddColumn(cCurrentBannerFileName, new DBField(DBFieldValueType.String));
-            AddColumn(cHasLocalFiles, new DBField(DBFieldValueType.Int));
-            AddColumn(cHasLocalFilesTemp, new DBField(DBFieldValueType.Int));
-            AddColumn(cHasEpisodes, new DBField(DBFieldValueType.Int));
-            AddColumn(cHasEpisodesTemp, new DBField(DBFieldValueType.Int));
-            AddColumn(cHidden, new DBField(DBFieldValueType.Int));
-            AddColumn(cForomSubtitleRoot, new DBField(DBFieldValueType.String));
-            AddColumn(cUnwatchedItems, new DBField(DBFieldValueType.Int));
-            AddColumn(cEpisodeCount, new DBField(DBFieldValueType.Int));
-            AddColumn(cEpisodesUnWatched, new DBField(DBFieldValueType.Int));
+            AddColumn(new DBField(cID, DBFieldValueType.String, true));
+            AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int));
+            AddColumn(new DBField(cBannerFileNames, DBFieldValueType.String));
+            AddColumn(new DBField(cCurrentBannerFileName, DBFieldValueType.String));
+            AddColumn(new DBField(cHasLocalFiles, DBFieldValueType.Int));
+            AddColumn(new DBField(cHasLocalFilesTemp, DBFieldValueType.Int));
+            AddColumn(new DBField(cHasEpisodes, DBFieldValueType.Int));
+            AddColumn(new DBField(cHasEpisodesTemp, DBFieldValueType.Int));
+            AddColumn(new DBField(cHidden, DBFieldValueType.Int));
+            AddColumn(new DBField(cForomSubtitleRoot, DBFieldValueType.String));
+            AddColumn(new DBField(cUnwatchedItems, DBFieldValueType.Int));
+            AddColumn(new DBField(cEpisodeCount, DBFieldValueType.Int));
+            AddColumn(new DBField(cEpisodesUnWatched, DBFieldValueType.Int));
         }
 
         public void ChangeSeriesID(int nSeriesID)

@@ -157,22 +157,22 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBFieldValueType.String, true));
-            AddColumn(cSearchUrl, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexReport, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexName, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexID, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexSize, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexPostDate, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexReportDate, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexFormat, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexLanguage, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexGroup, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexIsolateArticleName, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegexParseArticleName, new DBField(DBFieldValueType.String));
-            AddColumn(cLogin, new DBField(DBFieldValueType.String));
-            AddColumn(cPassword, new DBField(DBFieldValueType.String));
-            AddColumn(cCookieList, new DBField(DBFieldValueType.String));
+            AddColumn(new DBField(cID, DBFieldValueType.String, true));
+            AddColumn(new DBField(cSearchUrl, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexReport, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexName, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexID, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexSize, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexPostDate, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexReportDate, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexFormat, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexLanguage, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexGroup, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexIsolateArticleName, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegexParseArticleName, DBFieldValueType.String));
+            AddColumn(new DBField(cLogin, DBFieldValueType.String));
+            AddColumn(new DBField(cPassword, DBFieldValueType.String));
+            AddColumn(new DBField(cCookieList, DBFieldValueType.String));
         }
 
         public static void Clear(SQLCondition conditions)

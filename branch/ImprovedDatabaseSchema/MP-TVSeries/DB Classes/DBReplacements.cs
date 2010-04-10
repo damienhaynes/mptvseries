@@ -302,13 +302,13 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cTagEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cBefore, new DBField(DBFieldValueType.Int));
-            AddColumn(cToReplace, new DBField(DBFieldValueType.String));
-            AddColumn(cWith, new DBField(DBFieldValueType.String));
-            AddColumn(cIsRegex, new DBField(DBFieldValueType.Int));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cTagEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cBefore, DBFieldValueType.Int));
+            AddColumn(new DBField(cToReplace, DBFieldValueType.String));
+            AddColumn(new DBField(cWith, DBFieldValueType.String));
+            AddColumn(new DBField(cIsRegex, DBFieldValueType.Int));
         }
 
         public static void ClearAll()

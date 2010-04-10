@@ -65,11 +65,11 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cPath, new DBField(DBFieldValueType.String));
-            AddColumn(cRemovable, new DBField(DBFieldValueType.Int));            
-            AddColumn(cKeepReference, new DBField(DBFieldValueType.Int));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cPath, DBFieldValueType.String));
+            AddColumn(new DBField(cRemovable, DBFieldValueType.Int));
+            AddColumn(new DBField(cKeepReference, DBFieldValueType.Int));
         }
 
         public static void ClearAll()

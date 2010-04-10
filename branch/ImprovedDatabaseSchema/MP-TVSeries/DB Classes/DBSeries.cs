@@ -270,11 +270,11 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cParsedName, new DBField(DBFieldValueType.String, true));
-            base.AddColumn(cID, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cScanIgnore, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cDuplicateLocalName, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cHidden, new DBField(DBFieldValueType.Int));
+            base.AddColumn(new DBField(cParsedName, DBFieldValueType.String, true));
+            base.AddColumn(new DBField(cID, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cScanIgnore, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cDuplicateLocalName, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cHidden, DBFieldValueType.Int));
         }
 
         public static String Q(String sField)
@@ -282,11 +282,11 @@ namespace WindowPlugins.GUITVSeries
             return cTableName + "." + sField;
         }
 
-        public override bool AddColumn(string sName, DBField field)
+        public override bool AddColumn(DBField field)
         {
             // can't add columns to 
             if (m_onlineSeries != null)
-                return m_onlineSeries.AddColumn(sName, field);
+                return m_onlineSeries.AddColumn(field);
             else
                 return false;
         }
@@ -314,17 +314,17 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 List<String> outList = new List<String>();                
-                foreach (KeyValuePair<string, DBField> pair in m_fields)
+                foreach (string key in m_fields.Keys)
                 {
-                    if (outList.IndexOf(pair.Key) == -1)
-                        outList.Add(pair.Key);
+                    if (outList.IndexOf(key) == -1)
+                        outList.Add(key);
                 }
                 if (m_onlineSeries != null)
                 {
-                    foreach (KeyValuePair<string, DBField> pair in m_onlineSeries.m_fields)
+                    foreach (string key in m_onlineSeries.m_fields.Keys)
                     {
-                        if (outList.IndexOf(pair.Key) == -1)
-                            outList.Add(pair.Key);
+                        if (outList.IndexOf(key) == -1)
+                            outList.Add(key);
                     }
                 }
 

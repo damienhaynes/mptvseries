@@ -41,34 +41,44 @@ namespace WindowPlugins.GUITVSeries.DataBase
     /// </summary>
     public class DBField
     {
+        private readonly string m_fieldName;
         private DBFieldType m_fieldType;
 
-        public DBField(DBFieldValueType type)
+        public DBField(string fieldName, DBFieldValueType type)
         {
+            m_fieldName = fieldName;
             m_fieldType.Type = type;
             m_fieldType.Primary = false;
             m_fieldType.AutoIncrement = false;
         }
 
-        public DBField(DBFieldValueType type, bool primaryKey)
+        public DBField(string fieldName, DBFieldValueType type, bool primaryKey)
         {
+            m_fieldName = fieldName;
             m_fieldType.Type = type;
             m_fieldType.Primary = primaryKey;
             m_fieldType.AutoIncrement = false;
         }
 
-        public DBField(DBFieldValueType type, bool primaryKey, bool autoIncrement)
+        public DBField(string fieldName, DBFieldValueType type, bool primaryKey, bool autoIncrement)
         {
+            m_fieldName = fieldName;
             m_fieldType.Type = type;
             m_fieldType.Primary = primaryKey;
             m_fieldType.AutoIncrement = autoIncrement;
         }
 
-        public DBField(DBFieldType dbFieldT)
+        public DBField(string fieldName, DBFieldType dbFieldT)
         {
+            m_fieldName = fieldName;
             m_fieldType.Type = dbFieldT.Type;
             m_fieldType.Primary = dbFieldT.Primary;
             m_fieldType.AutoIncrement = dbFieldT.AutoIncrement;
+        }
+
+        public string FieldName
+        {
+            get { return m_fieldName; }
         }
 
         /// <summary>

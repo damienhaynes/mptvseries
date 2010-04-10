@@ -58,10 +58,10 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cReplace, new DBField(DBFieldValueType.String));
-            AddColumn(cWith, new DBField(DBFieldValueType.String));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cReplace,DBFieldValueType.String));
+            AddColumn(new DBField(cWith, DBFieldValueType.String));
         }
 
         public static void ClearAll()

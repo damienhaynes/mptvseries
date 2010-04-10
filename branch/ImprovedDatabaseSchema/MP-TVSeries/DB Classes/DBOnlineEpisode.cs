@@ -133,46 +133,46 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cCompositeID, new DBField(DBFieldValueType.String, true));
-            base.AddColumn(cID, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cEpisodeIndex, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cSeasonIndex, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cEpisodeName, new DBField(DBFieldValueType.String));
+            base.AddColumn(new DBField(cCompositeID, DBFieldValueType.String, true));
+            base.AddColumn(new DBField(cID, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cEpisodeIndex, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cSeasonIndex, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cEpisodeName, DBFieldValueType.String));
 
-            base.AddColumn(cWatched, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cEpisodeSummary, new DBField(DBFieldValueType.String));
-            base.AddColumn(cFirstAired, new DBField(DBFieldValueType.String));
-            base.AddColumn(cOnlineDataImported, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cGuestStars, new DBField(DBFieldValueType.String));
-            base.AddColumn(cDirector, new DBField(DBFieldValueType.String));
-            base.AddColumn(cWriter, new DBField(DBFieldValueType.String));
-            base.AddColumn(cHidden, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cLastUpdated, new DBField(DBFieldValueType.String));
-            base.AddColumn(cDownloadPending, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cDownloadExpectedNames, new DBField(DBFieldValueType.String));
-            base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBFieldValueType.String));
-            base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBFieldValueType.String));
+            base.AddColumn(new DBField(cWatched, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cEpisodeSummary, DBFieldValueType.String));
+            base.AddColumn(new DBField(cFirstAired, DBFieldValueType.String));
+            base.AddColumn(new DBField(cOnlineDataImported, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cGuestStars, DBFieldValueType.String));
+            base.AddColumn(new DBField(cDirector, DBFieldValueType.String));
+            base.AddColumn(new DBField(cWriter, DBFieldValueType.String));
+            base.AddColumn(new DBField(cHidden, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cLastUpdated, DBFieldValueType.String));
+            base.AddColumn(new DBField(cDownloadPending, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cDownloadExpectedNames, DBFieldValueType.String));
+            base.AddColumn(new DBField(cEpisodeThumbnailUrl, DBFieldValueType.String));
+            base.AddColumn(new DBField(cEpisodeThumbnailFilename, DBFieldValueType.String));
 
-            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            foreach (DBField field in m_fields.Values)
             {
-                if (!s_fields.ContainsKey(pair.Key))
-                    s_fields.Add(pair.Key, pair.Value);
+                if (!s_fields.ContainsKey(field.FieldName))
+                    s_fields.Add(field.FieldName, field);
             }
         }
 
-        public override bool AddColumn(string sName, DBField field)
+        public override bool AddColumn(DBField field)
         {
-            if (!s_fields.ContainsKey(sName))
+            if (!s_fields.ContainsKey(field.FieldName))
             {
-                s_fields.Add(sName, field);
-                return base.AddColumn(sName, field);
+                s_fields.Add(field.FieldName, field);
+                return base.AddColumn(field);
             }
             else
             {
                 // we globally know about this key already, so don't call the base
-                if (!m_fields.ContainsKey(sName))
-                    m_fields.Add(sName, field);
+                if (!m_fields.ContainsKey(field.FieldName))
+                    m_fields.Add(field.FieldName, field);
                 return false;
             }
         }

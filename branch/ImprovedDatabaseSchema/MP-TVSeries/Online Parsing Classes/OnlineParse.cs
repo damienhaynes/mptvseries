@@ -937,7 +937,7 @@ namespace WindowPlugins.GUITVSeries
                                         goto default;
                                     break;
                                 default:
-                                    localSeries.AddColumn(key, new DBField(DBFieldValueType.String));
+                                    localSeries.AddColumn(new DBField(key, DBFieldValueType.String));
                                     localSeries[key] = updatedSeries[key];
                                     break;
                             }
@@ -1065,7 +1065,7 @@ namespace WindowPlugins.GUITVSeries
                                             break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                         default:
-                                            newOnlineEpisode.AddColumn(key, new DBField(DBFieldValueType.String));
+                                            newOnlineEpisode.AddColumn(new DBField(key, DBFieldValueType.String));
                                             newOnlineEpisode[key] = onlineEpisode[key];
                                             break;
                                     }
@@ -1965,7 +1965,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     default:
-                        localEpisode.onlineEpisode.AddColumn(key, new DBField(DBFieldValueType.String));
+                        localEpisode.onlineEpisode.AddColumn(new DBField(key, DBFieldValueType.String));
                         localEpisode[key] = onlineEpisode[key];
                         break;
                 }
@@ -2317,7 +2317,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (match.Key != DBSeries.cParsedName)
                         {
-                            episode.AddColumn(match.Key, new DBField(DBFieldValueType.String));
+                            episode.AddColumn(new DBField(match.Key, DBFieldValueType.String));
                             if (bNewFile || (episode[match.Key] != null && episode[match.Key] != match.Value))
                                 episode[match.Key] = match.Value;
                         }

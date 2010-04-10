@@ -99,7 +99,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     else
                     {
-                        m_fields.Add(fieldName, new DBField(DBFieldValueType.String));
+                        m_fields.Add(fieldName, new DBField(fieldName, DBFieldValueType.String));
                         this[fieldName] = value;
                     }
                 }

@@ -102,11 +102,11 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cID, new DBField(DBFieldValueType.String, true));
-            AddColumn(cSearchUrl, new DBField(DBFieldValueType.String));
-            AddColumn(cSearchRegex, new DBField(DBFieldValueType.String));
-            AddColumn(cDetailsUrl, new DBField(DBFieldValueType.String));
-            AddColumn(cDetailsRegex, new DBField(DBFieldValueType.String));
+            AddColumn(new DBField(cID, DBFieldValueType.String, true));
+            AddColumn(new DBField(cSearchUrl, DBFieldValueType.String));
+            AddColumn(new DBField(cSearchRegex, DBFieldValueType.String));
+            AddColumn(new DBField(cDetailsUrl, DBFieldValueType.String));
+            AddColumn(new DBField(cDetailsRegex, DBFieldValueType.String));
         }
 
         public static void Clear(SQLCondition conditions)

@@ -131,10 +131,10 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cType, new DBField(DBFieldValueType.String));
-            AddColumn(cExpression, new DBField(DBFieldValueType.String));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cType, DBFieldValueType.String));
+            AddColumn(new DBField(cExpression, DBFieldValueType.String));
         }
 
         public static void ClearAll()

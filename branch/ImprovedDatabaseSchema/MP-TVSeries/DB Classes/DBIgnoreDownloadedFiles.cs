@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cFilename, new DBField(DBFieldValueType.String, true));
+            AddColumn(new DBField(cFilename, DBFieldValueType.String, true));
         }
 
         public static void ClearAll()

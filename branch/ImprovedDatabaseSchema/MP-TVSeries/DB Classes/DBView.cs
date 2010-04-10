@@ -89,14 +89,14 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(cIndex, new DBField(DBFieldValueType.Int, true));
-            AddColumn(cEnabled, new DBField(DBFieldValueType.Int));
-            AddColumn(cSort, new DBField(DBFieldValueType.Int));
-            AddColumn(cTransToken, new DBField(DBFieldValueType.String));
-            AddColumn(cPrettyName, new DBField(DBFieldValueType.String));
-            AddColumn(cViewConfig, new DBField(DBFieldValueType.String));
-            AddColumn(cTaggedView, new DBField(DBFieldValueType.Int));
-            AddColumn(cParentalControl, new DBField(DBFieldValueType.Int));
+            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
+            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+            AddColumn(new DBField(cSort, DBFieldValueType.Int));
+            AddColumn(new DBField(cTransToken, DBFieldValueType.String));
+            AddColumn(new DBField(cPrettyName, DBFieldValueType.String));
+            AddColumn(new DBField(cViewConfig, DBFieldValueType.String));
+            AddColumn(new DBField(cTaggedView, DBFieldValueType.Int));
+            AddColumn(new DBField(cParentalControl, DBFieldValueType.Int));
         }
 
         public static void ClearAll()

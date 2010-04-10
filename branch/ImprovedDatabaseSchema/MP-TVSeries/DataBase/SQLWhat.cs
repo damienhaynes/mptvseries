@@ -52,12 +52,12 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
         public void AddWhat(DBTable table)
         {
-            foreach (KeyValuePair<string, DBField> field in table.m_fields)
+            foreach (DBField field in table.m_fields.Values)
             {
                 if (String.IsNullOrEmpty(m_sFieldList)) {
-                    m_sFieldList += table.TableName + "." + field.Key;
+                    m_sFieldList += table.TableName + "." + field.FieldName;
                 } else {
-                    m_sFieldList += ", " + table.TableName + "." + field.Key;
+                    m_sFieldList += ", " + table.TableName + "." + field.FieldName;
                 }
             }
         }

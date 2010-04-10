@@ -354,45 +354,45 @@ namespace WindowPlugins.GUITVSeries
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
-            base.AddColumn(cFilename, new DBField(DBFieldValueType.String, true));
-            base.AddColumn(cCompositeID, new DBField(DBFieldValueType.String));
-            base.AddColumn(cSeriesID, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cSeasonIndex, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cEpisodeIndex, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cEpisodeName, new DBField(DBFieldValueType.String));
-            base.AddColumn(cImportProcessed, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cAvailableSubtitles, new DBField(DBFieldValueType.String));
+            base.AddColumn(new DBField(cFilename, DBFieldValueType.String, true));
+            base.AddColumn(new DBField(cCompositeID, DBFieldValueType.String));
+            base.AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cSeasonIndex, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cEpisodeIndex, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cEpisodeName, DBFieldValueType.String));
+            base.AddColumn(new DBField(cImportProcessed, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cAvailableSubtitles, DBFieldValueType.String));
 
-            base.AddColumn(cCompositeID2, new DBField(DBFieldValueType.String));
-            base.AddColumn(cEpisodeIndex2, new DBField(DBFieldValueType.Int));
+            base.AddColumn(new DBField(cCompositeID2, DBFieldValueType.String));
+            base.AddColumn(new DBField(cEpisodeIndex2, DBFieldValueType.Int));
 
-            base.AddColumn(cVideoWidth, new DBField(DBFieldValueType.Int));
-            base.AddColumn(cVideoHeight, new DBField(DBFieldValueType.Int));
+            base.AddColumn(new DBField(cVideoWidth, DBFieldValueType.Int));
+            base.AddColumn(new DBField(cVideoHeight, DBFieldValueType.Int));
 
-            base.AddColumn(cFileDateAdded, new DBField(DBFieldValueType.String));
-            base.AddColumn(cFileDateCreated, new DBField(DBFieldValueType.String));
+            base.AddColumn(new DBField(cFileDateAdded, DBFieldValueType.String));
+            base.AddColumn(new DBField(cFileDateCreated, DBFieldValueType.String));
             
-            base.AddColumn(cIsAvailable, new DBField(DBFieldValueType.Int));
+            base.AddColumn(new DBField(cIsAvailable, DBFieldValueType.Int));
 
-            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            foreach (DBField field in m_fields.Values)
             {
-                if (!s_fields.ContainsKey(pair.Key))
-                    s_fields.Add(pair.Key, pair.Value);
+                if (!s_fields.ContainsKey(field.FieldName))
+                    s_fields.Add(field.FieldName, field);
             }
         }
 
-        public override bool AddColumn(string sName, DBField field)
+        public override bool AddColumn(DBField field)
         {
-            if (!s_fields.ContainsKey(sName))
+            if (!s_fields.ContainsKey(field.FieldName))
             {
-                s_fields.Add(sName, field);
-                return base.AddColumn(sName, field);
+                s_fields.Add(field.FieldName, field);
+                return base.AddColumn(field);
             }
             else
             {
                 // we globally know about this key already, so don't call the base
-                if (!m_fields.ContainsKey(sName))
-                    m_fields.Add(sName, field);
+                if (!m_fields.ContainsKey(field.FieldName))
+                    m_fields.Add(field.FieldName, field);
                 return false;
             }
         }
@@ -793,17 +793,17 @@ namespace WindowPlugins.GUITVSeries
                 outList.Add(cCompositeID);
                 outList.Add(cCompositeID2);
 
-                foreach (KeyValuePair<string, DBField> pair in m_fields)
+                foreach (DBField field in m_fields.Values)
                 {
-                    if (outList.IndexOf(pair.Key) == -1)
-                        outList.Add(pair.Key);
+                    if (outList.IndexOf(field.FieldName) == -1)
+                        outList.Add(field.FieldName);
                 }
                 if (m_onlineEpisode != null)
                 {
-                    foreach (KeyValuePair<string, DBField> pair in m_onlineEpisode.m_fields)
+                    foreach (DBField field in m_onlineEpisode.m_fields.Values)
                     {
-                        if (outList.IndexOf(pair.Key) == -1)
-                            outList.Add(pair.Key);
+                        if (outList.IndexOf(field.FieldName) == -1)
+                            outList.Add(field.FieldName);
                     }
                 }
 
