@@ -28,6 +28,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.InteropServices;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 class MPR
 {

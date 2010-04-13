@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

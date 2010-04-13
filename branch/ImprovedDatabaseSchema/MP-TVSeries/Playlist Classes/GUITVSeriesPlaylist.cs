@@ -35,6 +35,7 @@ using MediaPortal.Playlists;
 using MediaPortal.Util;
 using MediaPortal.Dialogs;
 using MediaPortal.Video.Database;
+using WindowPlugins.GUITVSeries.DataClass;
 using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries

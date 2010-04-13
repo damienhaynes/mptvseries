@@ -22,8 +22,11 @@
 #endregion
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using SQLite.NET;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.DataBase
 {
@@ -50,9 +53,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
         /// </summary>
         static DBTVSeries()
         {
-            #region init static variables and Properties
-            #endregion
-
             #region open/create the database
             string databaseFile = Settings.GetPath(Settings.Path.database);
             try
@@ -71,17 +71,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write("Failed to open database '" + databaseFile + "' (" + ex.Message + ")");
-            }
-            #endregion
-
-            #region createindexes
-            try {
-                m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
-                m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
-                m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
-                m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
-            } catch (Exception e) {
-                MPTVSeriesLog.Write("Warning, failed to create Index: " + e.Message);
             }
             #endregion
         }

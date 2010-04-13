@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {    

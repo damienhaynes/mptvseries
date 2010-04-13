@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Configuration {
 	public partial class SeriesSelect : Form {

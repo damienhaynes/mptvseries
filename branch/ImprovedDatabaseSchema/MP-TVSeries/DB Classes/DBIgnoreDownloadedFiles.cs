@@ -21,83 +21,89 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using System.IO;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
-
     public class DBIgnoredDownloadedFiles : DBTable
     {
         public const String cTableName = "ignored_downloaded_files";
-        public const int cDBVersion = 1;
+        //public const int cDBVersion = 1;
 
-        public const String cFilename = "filename";
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const String cFilename = "filename";
 
-        public override string ToString()
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static DBFieldDefList TableFields = new DBFieldDefList{
+                    {cFilename,    new DBFieldDef{ FieldName = cFilename,     Type = DBFieldType.String,     Primary = true }}
+        };
+		#endregion
+
+		public override string ToString()
         {
             return this[cFilename];
         }
 
-        static DBIgnoredDownloadedFiles()
-        {
-            DBIgnoredDownloadedFiles dummy = new DBIgnoredDownloadedFiles();
+		//static DBIgnoredDownloadedFiles() - Unneeded
+		//{
+		//    const int nCurrentDBVersion = cDBVersion;
+		//    while (DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion) != nCurrentDBVersion)
+		//        // take care of the upgrade in the table
+		//        switch ((int)DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion))
+		//        {
+		//            default:
+		//                {
+		//                    // 1 or nothing: assume it's starting from scratch or it's an older version
+		//                    // put the default ones
+		//                    DBOption.SetOptions(DBOption.cDBIgnoredDownloadedFilesVersion, nCurrentDBVersion);
+		//                }
+		//                break;
+		//        }
+		//}
 
-            int nCurrentDBVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion) != nCurrentDBVersion)
-                // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion))
-                {
-                    default:
-                        {
-                            // 1 or nothing: assume it's starting from scratch or it's an older version
-                            // put the default ones
-                            DBOption.SetOptions(DBOption.cDBIgnoredDownloadedFilesVersion, nCurrentDBVersion);
-                        }
-                        break;
-                }
-        }
-
-        public DBIgnoredDownloadedFiles()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+					return;
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		public DBIgnoredDownloadedFiles()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
-            // all available fields
         }
 
         public DBIgnoredDownloadedFiles(String sName)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(sName))
-            {
-                InitValues();
-            }
+            ReadPrimary(sName);
         }
 
-        private void InitColumns()
+        protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cFilename, DBFieldValueType.String, true));
+            AddColumns(TableFields.Values);
         }
 
         public static void ClearAll()
         {
-            String sqlQuery = "delete from " + cTableName;
-            DBTVSeries.Execute(sqlQuery);
+        	const string sqlQuery = "delete from " + cTableName;
+        	DBTVSeries.Execute(sqlQuery);
         }
 
-        public static List<DBIgnoredDownloadedFiles> Get()
+    	public static List<DBIgnoredDownloadedFiles> Get()
         {
             // create table if it doesn't exist already
-            String sqlQuery = "select * from " + cTableName;
+            const string sqlQuery = "select * from " + cTableName;
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBIgnoredDownloadedFiles> outList = new List<DBIgnoredDownloadedFiles>();
             if (results.Rows.Count > 0)

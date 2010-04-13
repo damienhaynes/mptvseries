@@ -24,46 +24,47 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
         public const int cDBVersion = 4;
 
-        public const String cIndex = "ID";
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const String cIndex = "ID";
         public const String cEnabled = "enabled";
         public const String cTagEnabled = "tagEnabled";
         public const String cToReplace = "toreplace";
         public const String cIsRegex = "isRegex";
         public const String cWith = "with";
         public const String cBefore = "before";
-
-        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+		
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cIndex,		new DBFieldDef{FieldName = cIndex,			Type = DBFieldType.Int,		Primary = true}},
+            {cEnabled,		new DBFieldDef{FieldName = cEnabled,		Type = DBFieldType.Int,		PrettyName = "Enabled"}},
+            {cTagEnabled,	new DBFieldDef{FieldName = cTagEnabled,		Type = DBFieldType.Int,		PrettyName = "Used As Tag"}},
+            {cBefore,		new DBFieldDef{FieldName = cBefore,			Type = DBFieldType.Int,		PrettyName = "Run before matching"}},
+			{cToReplace,	new DBFieldDef{FieldName = cToReplace,		Type = DBFieldType.String,	PrettyName = "Replace this.."}},
+            {cWith,			new DBFieldDef{FieldName = cWith,			Type = DBFieldType.String,	PrettyName = "With this"}},
+            {cIsRegex,		new DBFieldDef{FieldName = cIsRegex,		Type = DBFieldType.Int,		PrettyName = "Is Regex"}}
+		};
+		#endregion
 
         static DBReplacements()
         {
-            s_FieldToDisplayNameMap.Add(cEnabled, "Enabled");
-            s_FieldToDisplayNameMap.Add(cTagEnabled, "Used As Tag");
-            s_FieldToDisplayNameMap.Add(cBefore, "Run before matching");
-            s_FieldToDisplayNameMap.Add(cToReplace, "Replace this..");
-            s_FieldToDisplayNameMap.Add(cWith, "With this");
-            s_FieldToDisplayNameMap.Add(cIsRegex, "Is Regex");
-
-            DBReplacements dummy = new DBReplacements();
-
-            int nCurrentDBVersion = cDBVersion;
+            const int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBReplacementsVersion);
             
             while (nUpgradeDBVersion != nCurrentDBVersion)
-            // take care of the upgrade in the table
+                // take care of the upgrade in the table
             {
-                DBReplacements replacement = new DBReplacements();
+                DBReplacements replacement;
                 switch (nUpgradeDBVersion)
                 {
                     case 2:
@@ -161,7 +162,8 @@ namespace WindowPlugins.GUITVSeries
                     default:
                         {
                             // no replacements in the db => put the default ones
-                            AddDefaults();
+							// - now done when table created
+                            //AddDefaults();
 
                             nUpgradeDBVersion=4;
                         }
@@ -276,55 +278,54 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
-        public static String PrettyFieldName(String sFieldName)
-        {
-            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
-                return s_FieldToDisplayNameMap[sFieldName];
-            else
-                return sFieldName;
-        }
-
         public DBReplacements()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues(-1,"");
         }
 
         public DBReplacements(long ID)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(ID.ToString()))
-                InitValues(-1,"");
+            ReadPrimary(ID.ToString());
         }
 
-        private void InitColumns()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+					AddDefaults();
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
-            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
-            AddColumn(new DBField(cTagEnabled, DBFieldValueType.Int));
-            AddColumn(new DBField(cBefore, DBFieldValueType.Int));
-            AddColumn(new DBField(cToReplace, DBFieldValueType.String));
-            AddColumn(new DBField(cWith, DBFieldValueType.String));
-            AddColumn(new DBField(cIsRegex, DBFieldValueType.Int));
+        	AddColumns(TableFields.Values);
         }
 
+        public override void InitValues()
+        {
+            InitValues(-1, "");
+        }
+        
         public static void ClearAll()
         {
-            String sqlQuery = "delete from "+ cTableName;
-            DBTVSeries.Execute(sqlQuery);
+        	const string sqlQuery = "delete from "+ cTableName;
+        	DBTVSeries.Execute(sqlQuery);
         }
 
-        public static DBReplacements[] GetAll()
+    	public static DBReplacements[] GetAll()
         {
             try
             {
                 // make sure the table is created - create a dummy object
 
                 // retrieve all fields in the table
-                String sqlQuery = "select * from " + cTableName + " order by " + cIndex;
+                const string sqlQuery = "select * from " + cTableName + " order by " + cIndex;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (results.Rows.Count > 0)
                 {

@@ -24,89 +24,86 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using System.IO;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
-
     public class DBTorrentSearch : DBTable
     {
         public const String cTableName = "torrent";
-        public const int cDBVersion = 2;
 
-        public const String cID = "ID";
+		public const String cID = "ID";
         public const String cSearchUrl = "searchUrl";
         public const String cSearchRegex = "searchRegex";
         public const String cDetailsUrl = "detailsUrl";
         public const String cDetailsRegex = "detailsRegex";
+
+        // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
+            {cID,			new DBFieldDef{FieldName = cID,				Type = DBFieldType.String,	Primary = true}},
+            {cSearchUrl,	new DBFieldDef{FieldName = cSearchUrl,		Type = DBFieldType.String}},
+            {cSearchRegex,	new DBFieldDef{FieldName = cSearchRegex,	Type = DBFieldType.String}},
+            {cDetailsUrl,	new DBFieldDef{FieldName = cDetailsUrl,		Type = DBFieldType.String}},
+            {cSearchRegex,	new DBFieldDef{FieldName = cDetailsRegex,	Type = DBFieldType.String}}
+		};
 
         public override string ToString()
         {
             return this[cID];
         }
 
-        static DBTorrentSearch()
-        {
-            DBTorrentSearch dummy = new DBTorrentSearch();
+		//static DBTorrentSearch()
+		//{
+        	
+		//}
 
-            int nCurrentDBTorrentVersion = cDBVersion;
-            while (DBOption.GetOptions(DBOption.cDBTorrentVersion) != nCurrentDBTorrentVersion)
-                // take care of the upgrade in the table
-                switch ((int)DBOption.GetOptions(DBOption.cDBTorrentVersion))
-                {
-                    default:
-                        {
-                            // 1 or nothing: assume it's starting from scratch or it's an older version
-                            // put the default ones
-                            DBTorrentSearch item = new DBTorrentSearch("TorrentPortal");
-                            item[DBTorrentSearch.cSearchUrl] = "http://www.torrentportal.com/torrents-search.php?search=$search$&sort=seeders&d=desc&type=and&sizel=&sizeh=&cat=3&hidedead=on&exclude=";
-                            item[DBTorrentSearch.cSearchRegex] = @"<tr><td class=""alt\d n c""><a href=""(?<link>/download/(?<id>\d*)[^""]*)"">.*?(?:<td.*?/td>){2}<td.*?<a href=""/detail[^>]*>(?:<[^>]*>)*(?<name>[^<]*).*?/td>(?:<td.*?/td>)<td[^>]*>(?:<[^>]*>)*(?<size>[^<]*).*?/td><td[^>]*>(?:<[^>]*>)*(?<seeds>\d*).*?/td><td[^>]*>(?:<[^>]*>)*(?<leechers>\d*).*?/td>";
-                            item[DBTorrentSearch.cDetailsUrl] = "http://www.torrentportal.com/details/$id$";
-                            item[DBTorrentSearch.cDetailsRegex] = "Number of files.*?<td>[^\\d]*(?<filecount>\\d*)";
-                            item.Commit();
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+					AddDefaults();
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
 
-                            item = new DBTorrentSearch("Mininova");
-                            item[DBTorrentSearch.cSearchUrl] = "http://www.mininova.org/search/$search$/seeds";
-                            item[DBTorrentSearch.cSearchRegex] = @"<tr[^>]*><td>(?<date>[^<]*?)</td><td><a[^>]*>TV Shows</a></td><td>.*?<a[^>]*href=""(?<link>/get/(?<id>\d*))""[^>]*>.*?<a[^>]*href=""/tor/\d*"">(?<name>[^<]*).*?right"">(?<size>[^<]*)</td><td align=""right""><span[^>]*>(?<seeds>\d*)</span></td><td align=""right""><span[^>]*>(?<leechers>\d*)</span></td>";
-                            item[DBTorrentSearch.cDetailsUrl] = "http://www.mininova.org/det/$id$";
-                            item[DBTorrentSearch.cDetailsRegex] = @"Total size:</strong>.*?in (?<filecount>\d*)";
-                            item.Commit();
-                            DBOption.SetOptions(DBOption.cDBTorrentVersion, nCurrentDBTorrentVersion);
-                        }
-                        break;
-                }
+		public static void AddDefaults()
+		{
+			// 1 or nothing: assume it's starting from scratch or it's an older version
+            // put the default ones
+            DBTorrentSearch item = new DBTorrentSearch("TorrentPortal");
+            item[DBTorrentSearch.cSearchUrl] = "http://www.torrentportal.com/torrents-search.php?search=$search$&sort=seeders&d=desc&type=and&sizel=&sizeh=&cat=3&hidedead=on&exclude=";
+            item[DBTorrentSearch.cSearchRegex] = @"<tr><td class=""alt\d n c""><a href=""(?<link>/download/(?<id>\d*)[^""]*)"">.*?(?:<td.*?/td>){2}<td.*?<a href=""/detail[^>]*>(?:<[^>]*>)*(?<name>[^<]*).*?/td>(?:<td.*?/td>)<td[^>]*>(?:<[^>]*>)*(?<size>[^<]*).*?/td><td[^>]*>(?:<[^>]*>)*(?<seeds>\d*).*?/td><td[^>]*>(?:<[^>]*>)*(?<leechers>\d*).*?/td>";
+            item[DBTorrentSearch.cDetailsUrl] = "http://www.torrentportal.com/details/$id$";
+            item[DBTorrentSearch.cDetailsRegex] = "Number of files.*?<td>[^\\d]*(?<filecount>\\d*)";
+            item.Commit();
+
+            item = new DBTorrentSearch("Mininova");
+            item[DBTorrentSearch.cSearchUrl] = "http://www.mininova.org/search/$search$/seeds";
+            item[DBTorrentSearch.cSearchRegex] = @"<tr[^>]*><td>(?<date>[^<]*?)</td><td><a[^>]*>TV Shows</a></td><td>.*?<a[^>]*href=""(?<link>/get/(?<id>\d*))""[^>]*>.*?<a[^>]*href=""/tor/\d*"">(?<name>[^<]*).*?right"">(?<size>[^<]*)</td><td align=""right""><span[^>]*>(?<seeds>\d*)</span></td><td align=""right""><span[^>]*>(?<leechers>\d*)</span></td>";
+            item[DBTorrentSearch.cDetailsUrl] = "http://www.mininova.org/det/$id$";
+            item[DBTorrentSearch.cDetailsRegex] = @"Total size:</strong>.*?in (?<filecount>\d*)";
+            item.Commit();
         }
 
         public DBTorrentSearch()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
-            // all available fields
         }
 
         public DBTorrentSearch(String sName)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(sName))
-            {
-                InitValues();
-            }
+            ReadPrimary(sName);
         }
 
-        private void InitColumns()
+        protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cID, DBFieldValueType.String, true));
-            AddColumn(new DBField(cSearchUrl, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegex, DBFieldValueType.String));
-            AddColumn(new DBField(cDetailsUrl, DBFieldValueType.String));
-            AddColumn(new DBField(cDetailsRegex, DBFieldValueType.String));
+        	AddColumns(TableFields.Values);
         }
 
         public static void Clear(SQLCondition conditions)

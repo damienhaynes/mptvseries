@@ -23,18 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using MediaPortal.Database;
 using System.IO;
-using System.Xml;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
-    //moved to DBOnineSeries.cs
-    //public class DBOnlineSeries : DBTable
-
     public class DBSeries : DBTable
     {
         public delegate void dbSeriesUpdateOccuredDelegate(DBSeries updated);
@@ -44,35 +38,42 @@ namespace WindowPlugins.GUITVSeries
         public const String cOutName = "Series";
 
         #region DB Field Names
-        public const String cParsedName = "Parsed_Name";
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const String cParsedName = "Parsed_Name";
         public const String cID = "ID";
         public const String cScanIgnore = "ScanIgnore";
         public const String cDuplicateLocalName = "DuplicateLocalName";
         public const String cHidden = "Hidden";
+
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cParsedName,			new DBFieldDef{FieldName = cParsedName,				Type = DBFieldType.String,	Primary = true, PrettyName = "Parsed Name"}},
+            {cID,					new DBFieldDef{FieldName = cID,						Type = DBFieldType.Int,		Indexed = true}},
+            {cScanIgnore,			new DBFieldDef{FieldName = cScanIgnore,				Type = DBFieldType.Int}},
+            {cDuplicateLocalName,	new DBFieldDef{FieldName = cDuplicateLocalName,		Type = DBFieldType.Int}},
+            {cHidden,				new DBFieldDef{FieldName = cHidden,					Type = DBFieldType.Int}}
+		};
         #endregion
 
         public const int cDBVersion = 13;
 
         private DBOnlineSeries m_onlineSeries = null;
-		public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
-        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+        public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
         static int s_nLastLocalID;
 
         public List<string> cachedLogoResults = null;
 
         static DBSeries()
         {
-            // make sure the table is created on first run (and columns are added before we call SET)
-            DBSeries dummy = new DBSeries();
-
             s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);
 
-            s_FieldToDisplayNameMap.Add(cParsedName, "Parsed Name");
-
-            int nCurrentDBVersion = cDBVersion;
+            const int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeriesVersion);
 
-            while (nUpgradeDBVersion != nCurrentDBVersion)
+			if (nUpgradeDBVersion == nCurrentDBVersion) {
+				return;
+			}
+        	while (nUpgradeDBVersion != nCurrentDBVersion)
             {
                 SQLCondition condEmpty = new SQLCondition();
                 List<DBSeries> AllSeries = Get(condEmpty);
@@ -85,7 +86,7 @@ namespace WindowPlugins.GUITVSeries
                         // upgrade to version 3; clear the series table (we use 2 other tables now)
                         try
                         {
-                            String sqlQuery = "DROP TABLE series";
+                            const string sqlQuery = "DROP TABLE series";
                             DBTVSeries.Execute(sqlQuery);
                             nUpgradeDBVersion++;
                         }
@@ -121,7 +122,7 @@ namespace WindowPlugins.GUITVSeries
 
                     case 7:
                         // all series no tagged for auto download at first
-                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
+						//DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
                         nUpgradeDBVersion++;
                         break;
 
@@ -130,10 +131,7 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBSeries series in AllSeries)
                         {
                             DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
-                            if (episode != null)
-                                series[DBOnlineSeries.cUnwatchedItems] = true;
-                            else
-                                series[DBOnlineSeries.cUnwatchedItems] = false;
+                            series[DBOnlineSeries.cUnwatchedItems] = episode != null;
                             series.Commit();
                         }
                         nUpgradeDBVersion++;
@@ -172,7 +170,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Migrating Favourite Series");
                         foreach (DBSeries series in seriesList) {
                             // Tagged view are seperated with the pipe "|" character
-                            string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
+                            const string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
                             series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
                             series.Commit();                            
                         }
@@ -185,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write("Migrating Online Favourite Series");
                         foreach (DBSeries series in seriesList) {
                             // Tagged view are seperated with the pipe "|" character
-                            string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
+                            const string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
                             series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
                             series.Commit();                            
                         }
@@ -216,28 +214,14 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBVersion);
         }
 
-        public static String PrettyFieldName(String sFieldName)
-        {
-            if (DBOnlineSeries.s_FieldToDisplayNameMap.ContainsKey(sFieldName))
-                return DBOnlineSeries.s_FieldToDisplayNameMap[sFieldName];
-            else if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
-                return s_FieldToDisplayNameMap[sFieldName];
-            else
-                return sFieldName;
-        }
-
         public DBSeries()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
-                       }
+        }
 
         public DBSeries(bool bCreateEmptyOnline)
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
             if (bCreateEmptyOnline)
                 m_onlineSeries = new DBOnlineSeries();
         }
@@ -245,9 +229,7 @@ namespace WindowPlugins.GUITVSeries
         public DBSeries(String SeriesName)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(SeriesName))
-                InitValues();
+            ReadPrimary(SeriesName);
             if (this[cID] == 0)
             {
                 m_onlineSeries = new DBOnlineSeries(s_nLastLocalID);
@@ -267,14 +249,28 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void InitColumns()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+
+				if (lastVersion < new Version("2.6.0.1044")) {
+					//delete all the current indexes as they don't match the new naming scheme
+					DatabaseHelper.DeleteAllIndexes(cTableName);
+				}
+
+				DatabaseHelper.CreateIndexes(cTableName, TableFields.Values);
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(new DBField(cParsedName, DBFieldValueType.String, true));
-            base.AddColumn(new DBField(cID, DBFieldValueType.Int));
-            base.AddColumn(new DBField(cScanIgnore, DBFieldValueType.Int));
-            base.AddColumn(new DBField(cDuplicateLocalName, DBFieldValueType.Int));
-            base.AddColumn(new DBField(cHidden, DBFieldValueType.Int));
+        	AddColumns(TableFields.Values);
         }
 
         public static String Q(String sField)
@@ -282,7 +278,7 @@ namespace WindowPlugins.GUITVSeries
             return cTableName + "." + sField;
         }
 
-        public override bool AddColumn(DBField field)
+        public override bool AddColumn(DBFieldDef field)
         {
             // can't add columns to 
             if (m_onlineSeries != null)
@@ -407,7 +403,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
-                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
+                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return GUITVSeries.Banner.getRandomBanner(BannerList);
                     if (String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentBannerFileName]))
                         return String.Empty;
                     
@@ -435,7 +431,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
-                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(PosterList);
+                    if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return GUITVSeries.Banner.getRandomBanner(PosterList);
                     if (String.IsNullOrEmpty(m_onlineSeries[DBOnlineSeries.cCurrentPosterFileName]))
                         return String.Empty;
                     
@@ -656,13 +652,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 bool bUseSortName = DBOption.GetOptions(DBOption.cSeries_UseSortName);
                 orderBy = conditions.customOrderStringIsSet
-                      ? conditions.orderString
-                      : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+                              ? conditions.orderString
+                              : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
             }
             return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
-                             + conds
-                             + orderBy
-                             + conditions.limitString;
+                   + conds
+                   + orderBy
+                   + conditions.limitString;
 
         }
 

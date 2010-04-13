@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediaPortal.TagReader;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

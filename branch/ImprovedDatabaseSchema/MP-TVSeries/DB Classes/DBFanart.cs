@@ -24,18 +24,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     public class DBFanart : DBTable
     {
         public const String cTableName = "Fanart";
 
-        public const String cIndex = "id"; // comes from online
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const String cIndex = "id"; // comes from online
         public const String cSeriesID = "seriesID";
         public const String cChosen = "Chosen";
         public const String cLocalPath = "LocalPath";
@@ -46,7 +46,22 @@ namespace WindowPlugins.GUITVSeries
         public const String cDisabled = "Disabled";
         public const String cSeriesName = "SeriesName"; // online
 
-        enum FanartResolution
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
+                    {cIndex,        new DBFieldDef{ FieldName = cIndex,          Type = DBFieldType.Int,     Primary = true }},
+                    {cSeriesID,     new DBFieldDef{ FieldName = cSeriesID,       Type = DBFieldType.Int}},
+                    {cChosen,       new DBFieldDef{ FieldName = cChosen,         Type = DBFieldType.String}},
+                    {cLocalPath,    new DBFieldDef{ FieldName = cLocalPath,      Type = DBFieldType.String}},
+                    {cBannerPath,   new DBFieldDef{ FieldName = cBannerPath,     Type = DBFieldType.String}},
+                    {cThumbnailPath,new DBFieldDef{ FieldName = cThumbnailPath,  Type = DBFieldType.String}},
+                    {cColors,       new DBFieldDef{ FieldName = cColors,         Type = DBFieldType.String}},
+                    {cResolution,   new DBFieldDef{ FieldName = cResolution,     Type = DBFieldType.String}},
+                    {cDisabled,     new DBFieldDef{ FieldName = cDisabled,       Type = DBFieldType.String}},
+                    {cSeriesName,   new DBFieldDef{ FieldName = cSeriesName,     Type = DBFieldType.String}}
+        };
+		#endregion
+
+		enum FanartResolution
         {
             BOTH,
             HD,
@@ -56,30 +71,29 @@ namespace WindowPlugins.GUITVSeries
         public DBFanart()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
         }
 
         public DBFanart(long ID)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(ID.ToString()))
-                InitValues();
+            ReadPrimary(ID.ToString());
         }
 
-        private void InitColumns()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
-            AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
-            AddColumn(new DBField(cChosen, DBFieldValueType.String));
-            AddColumn(new DBField(cLocalPath, DBFieldValueType.String));
-            AddColumn(new DBField(cBannerPath, DBFieldValueType.String));
-            AddColumn(new DBField(cThumbnailPath, DBFieldValueType.String));
-            AddColumn(new DBField(cColors, DBFieldValueType.String));
-            AddColumn(new DBField(cDisabled, DBFieldValueType.String));
-            AddColumn(new DBField(cSeriesName, DBFieldValueType.String));
+            AddColumns(TableFields.Values);
         }
 
         public static void ClearAll()
@@ -227,18 +241,18 @@ namespace WindowPlugins.GUITVSeries
             }
             return _FanartsToDownload;
           
-        } List<DBFanart> _FanartsToDownload = new List<DBFanart>();
+        } readonly List<DBFanart> _FanartsToDownload = new List<DBFanart>();
 
         /// <summary>
         /// Checks if a Series Fanart contains a Series Name
         /// </summary>
         public bool HasSeriesName {
-            get {
-                if (this[cSeriesName] = "true")
+            get
+            {
+            	if (this[cSeriesName] == "true")
                     return true;
-                else
-                    return false;
-            }            
+            	return false;
+            }
         }
 
         public bool Chosen

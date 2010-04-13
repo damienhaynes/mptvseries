@@ -30,6 +30,7 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Newzbin
 {

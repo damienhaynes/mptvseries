@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using SubtitleDownloader.Core;
+using WindowPlugins.GUITVSeries.DataClass;
 using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries.Subtitles
@@ -81,7 +82,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             Episode = episode;
 
             Series = new DBOnlineSeries(this.Episode[DBEpisode.cSeriesID]);
-            DBUserSelection seriesSelection = new DBUserSelection(SelectionLevel.series, SelectionType.subtitles, Series[DBSeries.cID]);
+            DBUserSelection seriesSelection = new DBUserSelection(DBUserSelection.SelectionLevel.series, DBUserSelection.SelectionType.subtitles, Series[DBSeries.cID]);
 
             SeriesName = Series[DBOnlineSeries.cOriginalName];
             if (seriesSelection.Enabled) SeriesName = seriesSelection[DBUserSelection.cUserKey];

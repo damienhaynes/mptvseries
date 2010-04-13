@@ -21,19 +21,97 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using System.Collections.Generic;
+using System.Text;
+
 namespace WindowPlugins.GUITVSeries.DataBase
 {
-    public enum DBFieldValueType
+    public enum DBFieldType
     {
         Int,
         String
     }
 
-    public struct DBFieldType
+    public class DBFieldDef
     {
-        public DBFieldValueType Type;
-        public bool Primary;
-        public bool AutoIncrement;
+        public string FieldName { get; set; }
+        public DBFieldType Type { get; set; }
+        public bool Primary { get; set; }
+        public bool AutoIncrement{ get; set; }
+		public bool Indexed { get; set; }
+		public DBValue Default { get; set; }
+
+		//TODO: Add Virtual (bool), OnlineField (string), and Split (bool)
+
+        private string prettyName;
+        public string PrettyName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(prettyName)) {
+                    return FieldName;
+                }
+                return prettyName;
+            }
+            set { prettyName = value; }
+        }
+
+        public string ColumnDefinition
+        {
+            get
+            {
+                string def = FieldName + " " + Type;
+                if (Primary && Type == DBFieldType.Int && AutoIncrement) {
+                    //in SQLite for the automatic creation of an auto incremental primary key you must specify the full "Integer" not just "int"
+                    def = FieldName + " " + "Integer";
+                }
+                if (Primary) {
+                    def += " primary key";
+                }
+                return def;
+            }
+        }
+
+        static public implicit operator string(DBFieldDef value)
+        {
+            return value.FieldName;
+        }
+    }
+
+    public class DBFieldDefList : Dictionary<string, DBFieldDef>
+    {
+        
+    }
+
+    /// <summary>
+    /// A collection of DBFields
+    /// </summary>
+    public class DBFieldList : Dictionary<string, DBField>
+    {
+        public DBField PrimaryKey
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Creates a copy of DBFieldList that has seperate instances of DBValues
+        /// </summary>
+        /// <returns></returns>
+        public DBFieldList Copy()
+        {
+            DBFieldList fieldList = new DBFieldList();
+            foreach (KeyValuePair<string, DBField> pair in this) {
+                //use DBField.Copy as ee need a deep copy of the DBValues so that changes to values in one table are seperate from 
+                //another so until we find a better way
+                DBField field = pair.Value.Copy();
+                fieldList.Add(pair.Key, field);
+                if (pair.Value.Primary) {
+                    fieldList.PrimaryKey = field;
+                }
+            }
+            return fieldList;
+        }
     }
 
     /// <summary>
@@ -41,46 +119,25 @@ namespace WindowPlugins.GUITVSeries.DataBase
     /// </summary>
     public class DBField
     {
-        private readonly string m_fieldName;
-        private DBFieldType m_fieldType;
+        private DBFieldDef m_fieldDef;
 
-        public DBField(string fieldName, DBFieldValueType type)
+        public DBField(DBFieldDef fieldDef)
         {
-            m_fieldName = fieldName;
-            m_fieldType.Type = type;
-            m_fieldType.Primary = false;
-            m_fieldType.AutoIncrement = false;
-        }
-
-        public DBField(string fieldName, DBFieldValueType type, bool primaryKey)
-        {
-            m_fieldName = fieldName;
-            m_fieldType.Type = type;
-            m_fieldType.Primary = primaryKey;
-            m_fieldType.AutoIncrement = false;
-        }
-
-        public DBField(string fieldName, DBFieldValueType type, bool primaryKey, bool autoIncrement)
-        {
-            m_fieldName = fieldName;
-            m_fieldType.Type = type;
-            m_fieldType.Primary = primaryKey;
-            m_fieldType.AutoIncrement = autoIncrement;
-        }
-
-        public DBField(string fieldName, DBFieldType dbFieldT)
-        {
-            m_fieldName = fieldName;
-            m_fieldType.Type = dbFieldT.Type;
-            m_fieldType.Primary = dbFieldT.Primary;
-            m_fieldType.AutoIncrement = dbFieldT.AutoIncrement;
+            m_fieldDef = fieldDef;
         }
 
         public string FieldName
         {
-            get { return m_fieldName; }
+            get { return m_fieldDef.FieldName; }
         }
 
+        public string PrettyName
+        {
+            get
+            {
+                return m_fieldDef.PrettyName;
+            }
+        }
         /// <summary>
         /// Only works when used on the primary key column
         /// </summary>
@@ -88,7 +145,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
         {
             get
             {
-                return m_fieldType.AutoIncrement;
+                return m_fieldDef.AutoIncrement;
             }
         }
 
@@ -96,23 +153,44 @@ namespace WindowPlugins.GUITVSeries.DataBase
         {
             get
             {
-                return m_fieldType.Primary;
+                return m_fieldDef.Primary;
             }
         }
 
-        public DBFieldValueType ValueType
+        public DBFieldType Type
         {
             get
             {
-                return m_fieldType.Type;
+                return m_fieldDef.Type;
             }
         }
 
-        /// <summary>
-        /// save DB friendly string (doubling singlequotes
-        /// </summary>
         public DBValue Value { get; set; }
 
+        /// <summary>
+        /// save DB friendly string (ie. escaping singlequotes into double singlequotes)
+        /// </summary>
+        public string SQLSafeValue
+        {
+            get
+            {
+                if (Type == DBFieldType.String) {
+                    return Value.SQLSafeValue;
+                } else {
+                    return Value;
+                }
+            }
+        }
+
         public bool WasChanged { get; set; }
+
+        /// <summary>
+        /// Creates an new instance of DBField that has a instance of DBValue
+        /// </summary>
+        /// <returns></returns>
+        public DBField Copy()
+        {
+            return new DBField(m_fieldDef) { Value = string.Copy(Value) };
+        }
     };
 }

@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Xml;
 using System.Net;
 using System.IO;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

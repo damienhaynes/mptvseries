@@ -33,6 +33,7 @@ using MediaPortal.Player;
 using MediaPortal.Playlists;
 using MediaPortal.Profile;
 using MediaPortal.Configuration;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

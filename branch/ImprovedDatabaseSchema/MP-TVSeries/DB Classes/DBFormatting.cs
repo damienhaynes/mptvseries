@@ -24,51 +24,63 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     public class DBFormatting : DBTable
     {
         public const String cTableName = "FormattingRules";
 
-        public const String cIndex = "ID";
-        public const String cEnabled = "enabled";
-        public const String cReplace = "Replace";
-        public const String cWith = "With";
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const string cIndex = "ID";
+        public const string cEnabled = "enabled";
+        public const string cReplace = "Replace";
+        public const string cWith = "With";
 
-        public DBFormatting()
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static DBFieldDefList TableFields = new DBFieldDefList{
+                        {cIndex,        new DBFieldDef{ FieldName = cIndex,      Type = DBFieldType.Int,         Primary = true }},
+                        {cEnabled,      new DBFieldDef{ FieldName = cEnabled,    Type = DBFieldType.Int }},
+                        {cReplace,      new DBFieldDef{ FieldName = cReplace,    Type = DBFieldType.String }},
+                        {cWith,         new DBFieldDef{ FieldName = cWith,       Type = DBFieldType.String }}
+        };
+		#endregion
+
+		public DBFormatting()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
         }
 
         public DBFormatting(long ID)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(ID.ToString()))
-                InitValues();
+            ReadPrimary(ID.ToString());
         }
 
-        private void InitColumns()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
-            AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
-            AddColumn(new DBField(cReplace,DBFieldValueType.String));
-            AddColumn(new DBField(cWith, DBFieldValueType.String));
+            AddColumns(TableFields.Values);
         }
 
         public static void ClearAll()
         {
-            String sqlQuery = "delete from " + cTableName;
             cache = null;
-            DBTVSeries.Execute(sqlQuery);
+            DBTVSeries.Execute("delete from " + cTableName);
         }
 
         public static void Clear(int Index)

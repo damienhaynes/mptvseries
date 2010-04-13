@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Configuration {
 	public partial class PlaylistSettings : UserControl {

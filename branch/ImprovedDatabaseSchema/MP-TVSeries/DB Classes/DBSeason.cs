@@ -24,33 +24,34 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
 using System.IO;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     public class DBSeason : DBTable, ICacheable<DBSeason>
     {
-        public static void overRide(DBSeason old, DBSeason newObject)
-        {
-            old = newObject;
-        }
+		private static void overRide(DBSeason old, DBSeason newObject)
+		{
+		    old = newObject;
+		}
 
-        public DBSeason fullItem
-        {
-            get { return this; }
-            set { overRide(this, value); }
-        }
+		public DBSeason fullItem
+		{
+		    get { return this; }
+			set { overRide(this, value); }
+		}
 
         public const String cTableName = "season";
         public const String cOutName = "Season";
         public const int cDBVersion = 5;
         
         #region DB Field Names
-        public const String cID = "ID"; // local name, unique (it's the primary key) which is a composite of the series name & the season index
+		/// <summary>
+		/// local name, unique (it's the primary key) which is a composite of the series name & the season index
+		/// </summary>
+        public const String cID = "ID";
         public const String cSeriesID = "SeriesID";
         public const String cIndex = "SeasonIndex";
         public const String cBannerFileNames = "BannerFileNames";
@@ -60,15 +61,31 @@ namespace WindowPlugins.GUITVSeries
         public const String cHasEpisodes = "HasOnlineEpisodes";
         public const String cHasEpisodesTemp = "HasOnlineEpisodesTemp";
         public const String cHidden = "Hidden";        
-
         public const String cForomSubtitleRoot = "ForomSubtitleRoot";
         public const String cUnwatchedItems = "UnwatchedItems";
-
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
-        #endregion
 
-        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
+        // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+    	public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cID,						new DBFieldDef{FieldName = cID,						Type = DBFieldType.String, 
+																							Primary = true,			PrettyName = "Composite Season ID"}},
+            {cSeriesID,					new DBFieldDef{FieldName = cSeriesID,				Type = DBFieldType.Int, PrettyName = "Series ID"}},
+            {cIndex,					new DBFieldDef{FieldName = cIndex,					Type = DBFieldType.Int, PrettyName = "Season Index"}},
+            {cBannerFileNames,			new DBFieldDef{FieldName = cBannerFileNames,		Type = DBFieldType.String}},
+            {cCurrentBannerFileName,	new DBFieldDef{FieldName = cCurrentBannerFileName,	Type = DBFieldType.String}},
+            {cHasLocalFiles,			new DBFieldDef{FieldName = cHasLocalFiles,			Type = DBFieldType.Int}},
+            {cHasLocalFilesTemp,		new DBFieldDef{FieldName = cHasLocalFilesTemp,		Type = DBFieldType.Int}},
+            {cHasEpisodes,				new DBFieldDef{FieldName = cHasEpisodes,			Type = DBFieldType.Int}},
+            {cHasEpisodesTemp,			new DBFieldDef{FieldName = cHasEpisodesTemp,		Type = DBFieldType.Int}},
+            {cHidden,					new DBFieldDef{FieldName = cHidden,					Type = DBFieldType.Int}},
+            {cForomSubtitleRoot,		new DBFieldDef{FieldName = cForomSubtitleRoot,		Type = DBFieldType.String}},
+            {cUnwatchedItems,			new DBFieldDef{FieldName = cUnwatchedItems,			Type = DBFieldType.Int}},
+            {cEpisodeCount,				new DBFieldDef{FieldName = cEpisodeCount,			Type = DBFieldType.Int, PrettyName = "Episodes"}},
+            {cEpisodesUnWatched,		new DBFieldDef{FieldName = cEpisodesUnWatched,		Type = DBFieldType.Int, PrettyName = "Episodes UnWatched"}}
+    	                                                                       	
+		};
+        #endregion
 
         public delegate void dbSeasonUpdateOccuredDelegate(DBSeason updated);
         public static event dbSeasonUpdateOccuredDelegate dbSeasonUpdateOccured;
@@ -77,20 +94,11 @@ namespace WindowPlugins.GUITVSeries
 
         static DBSeason()
         {
-            DBSeason dummy = new DBSeason();
-
-            ////////////////////////////////////////////////////////////////////////////////
-            #region Pretty Names displayed in Configuration Details Tab
-            s_FieldToDisplayNameMap.Add(cID, "Composite Season ID");
-            s_FieldToDisplayNameMap.Add(cSeriesID, "Series ID");
-            s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
-            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
-            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
-            #endregion
-            ////////////////////////////////////////////////////////////////////////////////
-
-            int nCurrentDBVersion = cDBVersion;
+            const int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeasonVersion);
+			if (nUpgradeDBVersion == nCurrentDBVersion) {
+				return;
+			}
             while (nUpgradeDBVersion != nCurrentDBVersion)
             {
                 SQLCondition condEmpty = new SQLCondition();
@@ -102,7 +110,7 @@ namespace WindowPlugins.GUITVSeries
                         // upgrade to version 2; clear the season table (series table format changed)
                         try
                         {
-                            String sqlQuery = "DROP TABLE season";
+                            const string sqlQuery = "DROP TABLE season";
                             DBTVSeries.Execute(sqlQuery);
                             nUpgradeDBVersion++;
                         }
@@ -151,30 +159,17 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cDBSeasonVersion, nCurrentDBVersion);
         }
 
-        public static String PrettyFieldName(String sFieldName)
-        {
-            if (s_FieldToDisplayNameMap.ContainsKey(sFieldName))
-                return s_FieldToDisplayNameMap[sFieldName];
-            else
-                return sFieldName;
-        }
-
         public DBSeason()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
-            // all available fields
         }
 
         public DBSeason(int nSeriesID, int nSeasonIndex)
             : base(cTableName)
         {
-            InitColumns();
             String sSeasonID = nSeriesID + "_s" + nSeasonIndex;
             if (!ReadPrimary(sSeasonID))
             {
-                InitValues();
                 // set the parent series so that banners will be refreshed from scratched
                 DBOnlineSeries series = new DBOnlineSeries(nSeriesID);
                 series[DBOnlineSeries.cBannersDownloaded] = 0;
@@ -184,23 +179,21 @@ namespace WindowPlugins.GUITVSeries
             this[cIndex] = nSeasonIndex;
         }
 
-        private void InitColumns()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cID, DBFieldValueType.String, true));
-            AddColumn(new DBField(cSeriesID, DBFieldValueType.Int));
-            AddColumn(new DBField(cIndex, DBFieldValueType.Int));
-            AddColumn(new DBField(cBannerFileNames, DBFieldValueType.String));
-            AddColumn(new DBField(cCurrentBannerFileName, DBFieldValueType.String));
-            AddColumn(new DBField(cHasLocalFiles, DBFieldValueType.Int));
-            AddColumn(new DBField(cHasLocalFilesTemp, DBFieldValueType.Int));
-            AddColumn(new DBField(cHasEpisodes, DBFieldValueType.Int));
-            AddColumn(new DBField(cHasEpisodesTemp, DBFieldValueType.Int));
-            AddColumn(new DBField(cHidden, DBFieldValueType.Int));
-            AddColumn(new DBField(cForomSubtitleRoot, DBFieldValueType.String));
-            AddColumn(new DBField(cUnwatchedItems, DBFieldValueType.Int));
-            AddColumn(new DBField(cEpisodeCount, DBFieldValueType.Int));
-            AddColumn(new DBField(cEpisodesUnWatched, DBFieldValueType.Int));
+        	AddColumns(TableFields.Values);
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -232,7 +225,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
+                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return GUITVSeries.Banner.getRandomBanner(BannerList);
                 if (String.IsNullOrEmpty(this[cCurrentBannerFileName]))
                     return String.Empty;
                 string filename;
@@ -360,8 +353,8 @@ namespace WindowPlugins.GUITVSeries
         public static string stdGetSQL(SQLCondition condition, bool selectFull, bool includeStdCond)
         {
             string orderBy = !condition.customOrderStringIsSet
-                  ? " order by " + Q(cIndex)
-                  : condition.orderString;
+                                 ? " order by " + Q(cIndex)
+                                 : condition.orderString;
 
             if (includeStdCond)
             {
@@ -369,7 +362,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (!Settings.isConfig)
                 {
-                    SQLCondition fullSubCond = new SQLCondition();
+                    SQLCondition fullSubCond;
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
                     //condition.AddCustom(" season.seasonindex in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
@@ -379,24 +372,23 @@ namespace WindowPlugins.GUITVSeries
                         fullSubCond = DBEpisode.stdConditions;
                         condition.AddCustom(fullSubCond.ConditionsSQLString.Replace("where", "and"));
                         join = " left join local_episodes on season.seriesid = local_episodes.seriesid " +
-                            " and season.seasonindex = local_episodes.seasonindex left join online_episodes on local_episodes.compositeid = online_episodes.compositeid ";
+                               " and season.seasonindex = local_episodes.seasonindex left join online_episodes on local_episodes.compositeid = online_episodes.compositeid ";
 
                     }
                     else
                     {
                         join = " left join online_episodes on season.seriesid = online_episodes.seriesid " +
-                            " and season.seasonindex = online_episodes.seasonindex";
+                               " and season.seasonindex = online_episodes.seasonindex";
                     }
                     return "select " + new SQLWhat(new DBSeason()) + 
-                        join +
-                        condition  + " group by season.id " + orderBy + condition.limitString;
+                           join +
+                           condition  + " group by season.id " + orderBy + condition.limitString;
                 }
             }
 
             if(selectFull)
-               return "select " + new SQLWhat(new DBSeason()) + condition + orderBy + condition.limitString;
-            else
-               return "select " + DBSeason.cID + " from " + DBSeason.cTableName + " " + condition + orderBy + condition.limitString;
+                return "select " + new SQLWhat(new DBSeason()) + condition + orderBy + condition.limitString;
+        	return "select " + DBSeason.cID + " from " + DBSeason.cTableName + " " + condition + orderBy + condition.limitString;
         }
 
         public static List<DBSeason> Get(int nSeriesID)
@@ -417,8 +409,7 @@ namespace WindowPlugins.GUITVSeries
             List<DBSeason> res = Get(cond, false);
             if (res.Count > 0)
                 return res[0];
-            else
-                return null;
+        	return null;
         }
         public static List<DBSeason> Get(SQLCondition condition)
         {
@@ -482,20 +473,16 @@ namespace WindowPlugins.GUITVSeries
             season[DBSeason.cEpisodeCount] = epsTotal;
             season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
             //UpdateUnWatched - faster than method
-            if (epsUnWatched == 0) season[DBSeason.cUnwatchedItems] = false;
-            else season[DBSeason.cUnwatchedItems] = true;
+            season[DBSeason.cUnwatchedItems] = epsUnWatched != 0;
             season.Commit();
 
             // Now Update the series count
-            epsTotal = 0;
-            epsUnWatched = 0;
 
-            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+        	DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
             series[DBOnlineSeries.cEpisodeCount] = epsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
             //UpdateUnWatched - faster than method
-            if (epsUnWatched == 0) series[DBOnlineSeries.cUnwatchedItems] = false;
-            else series[DBOnlineSeries.cUnwatchedItems] = true;
+            series[DBOnlineSeries.cUnwatchedItems] = epsUnWatched != 0;
             series.Commit();
         }
 

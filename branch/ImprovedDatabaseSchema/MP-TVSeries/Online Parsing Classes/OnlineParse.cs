@@ -30,6 +30,7 @@ using System.Threading;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 using WindowPlugins.GUITVSeries.Feedback;
 using Action = MediaPortal.GUI.Library.Action;
 
@@ -937,7 +938,7 @@ namespace WindowPlugins.GUITVSeries
                                         goto default;
                                     break;
                                 default:
-                                    localSeries.AddColumn(new DBField(key, DBFieldValueType.String));
+                                    localSeries.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
                                     localSeries[key] = updatedSeries[key];
                                     break;
                             }
@@ -1065,7 +1066,7 @@ namespace WindowPlugins.GUITVSeries
                                             break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                         default:
-                                            newOnlineEpisode.AddColumn(new DBField(key, DBFieldValueType.String));
+                                            newOnlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
                                             newOnlineEpisode[key] = onlineEpisode[key];
                                             break;
                                     }
@@ -1965,7 +1966,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     default:
-                        localEpisode.onlineEpisode.AddColumn(new DBField(key, DBFieldValueType.String));
+                        localEpisode.onlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
                         localEpisode[key] = onlineEpisode[key];
                         break;
                 }
@@ -2137,7 +2138,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (condBuilder.Length > 0)
                         condBuilder.Append(" or ");
-                    condBuilder.Append(field).Append(" = '").Append(file.Replace("'", "''")).Append('\'');
+                    condBuilder.Append(field).Append(" = '").Append(DBValue.toSQLSafeString(file)).Append('\'');
                     if (count++ >= 500)
                     {
                         cond.AddCustom(condBuilder.ToString());
@@ -2317,7 +2318,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (match.Key != DBSeries.cParsedName)
                         {
-                            episode.AddColumn(new DBField(match.Key, DBFieldValueType.String));
+                            episode.AddColumn(new DBFieldDef() { FieldName = match.Key, Type = DBFieldType.String });
                             if (bNewFile || (episode[match.Key] != null && episode[match.Key] != match.Value))
                                 episode[match.Key] = match.Value;
                         }

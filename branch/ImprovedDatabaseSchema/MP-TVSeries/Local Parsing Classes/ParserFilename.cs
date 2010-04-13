@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -82,13 +83,13 @@ namespace WindowPlugins.GUITVSeries
                     if (expression[DBExpression.cEnabled] != 0)
                     {
                         String sExpression = String.Empty;
-                        switch ((String)expression[DBExpression.cType])
+                        switch ((DBExpression.ExpressionType)Enum.Parse(typeof(DBExpression.ExpressionType), expression[DBExpression.cType], true))
                         {
-                            case DBExpression.cType_Simple:
+                            case DBExpression.ExpressionType.Simple:
                                 sExpression = ConvertSimpleExpressionToRegEx(expression[DBExpression.cExpression]);
                                 break;
 
-                            case DBExpression.cType_Regexp:
+                            case DBExpression.ExpressionType.RegExp:
                                 sExpression = expression[DBExpression.cExpression];
                                 break;
                         }

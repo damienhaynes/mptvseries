@@ -27,67 +27,92 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using SQLite.NET;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.DataBase
 {
     /// <summary>
+    /// An alias for a Collection of DBTables
+    /// </summary>
+    public class DBTableList : Dictionary<string, DBFieldList>{}
+
+    /// <summary>
     /// table class - used as a base for table objects (series, episodes, etc)
     /// holds a field hash table, includes an update mechanism to keep the DB tables in sync
     /// </summary>
-    public class DBTable
+    public abstract class DBTable
     {
         public const string cUserEditPostFix = @"__USEREDIT__";
 
         public string TableName { get; private set; }
 
-        public DBField PrimaryKey { get; private set; }
+        public DBField PrimaryKey
+        {
+            get
+            {
+                return m_fields.PrimaryKey;
+            }
+        }
 
         private bool m_CommitNeeded = false;
 
         /// <summary>
-        /// a dictionary that maps field names to fields
+        /// list of the tables field names mapped to fields
         /// </summary>
-        public Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
-
+        public DBFieldList m_fields = new DBFieldList();
         
         /// <summary>
-        /// a dictionary that maps tables to (a dictionary of fieldnames mapping to field types)
+        /// a list of all the dbtables in the database
         /// </summary>
-        private static readonly Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
+        private static readonly DBTableList m_tableList = new DBTableList();
 
         #region events
         public delegate void dbUpdateOccuredDelegate(string table);
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
         #endregion
 
-        public DBTable(string tableName)
+        static DBTable()
         {
+            //test the version number
+            Version lastVersion = new Version(DBOption.GetOptions(DBOption.cDBLastVersion));
+            Version currentVersion = Settings.Version;
+            if (lastVersion != currentVersion) {
+                DBEpisode.MaintainDatabaseTable(lastVersion);
+				DBExpression.MaintainDatabaseTable(lastVersion);
+				DBFanart.MaintainDatabaseTable(lastVersion);
+				DBFormatting.MaintainDatabaseTable(lastVersion);
+            	DBIgnoredDownloadedFiles.MaintainDatabaseTable(lastVersion);
+				DBOnlineEpisode.MaintainDatabaseTable(lastVersion);
+
+				DBImportPath.MaintainDatabaseTable(lastVersion);
+
+
+                DBTVSeries.Execute("Vacuum");
+
+                DBOption.SetOptions(DBOption.cDBLastVersion, currentVersion.ToString());
+            }
+        }
+        
+        protected DBTable(string tableName)
+        {
+            TableName = tableName;
+
             // this base constructor was very expensive
             // we now cache the result for all objects : dbtable and only redo it if an alter table occured (this drastically cut down the number of sql statements)
             // this piece of code alone took over 30% of the time on my machine when entering config and newing up all the episodes
-
-            Dictionary<string, DBFieldType> cachedForTable;
-            TableName = tableName;
-
-            if (fields.TryGetValue(tableName, out cachedForTable)) // good, cached, this happens 99% of the time
-            {
-                foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
-                    if (!m_fields.ContainsKey(entry.Key)) {
-                        DBField field = new DBField(entry.Key, entry.Value);
-                        if (field.Primary) {
-                            PrimaryKey = field;
-                        }
-                        m_fields.Add(entry.Key, field);
-                    }
-
-            }
-            else // we have to get it, happens when the first object is created or after an alter table
-            {
-                cachedForTable = new Dictionary<string, DBFieldType>();
+            DBFieldList cachedForTable;
+            if (m_tableList.TryGetValue(tableName, out cachedForTable)) {// good, cached, this happens 99% of the time
+                m_fields = cachedForTable.Copy();
+            } else {
+                // we have to get it, happens when the first object is created or after an alter table
+                cachedForTable = new DBFieldList();
                 // load up fields from the table
+
+                //Test if the table exists
                 SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + TableName + "'");
-                if (results != null && results.Rows.Count > 0)
-                {
+                if (results != null && results.Rows.Count > 0) {
+                    #region read table data from database
+
                     // we have the table definition, parse it for names/types
                     String sCreateTable = results.Rows[0].fields[0];
                     String RegExp = @"CREATE TABLE .*?\((.*?)\)";
@@ -112,79 +137,85 @@ namespace WindowPlugins.GUITVSeries.DataBase
                                                   // or a column can be set as autoincrement
                                                   parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
-                            DBFieldType cachedInfo = new DBFieldType
-                                                     {
-                                                         Primary = bPrimary,
-                                                         Type = (bIntType ? DBFieldValueType.Int : DBFieldValueType.String),
-                                                         AutoIncrement = bAutoIncrement
-                                                     };
+                            DBFieldDef fieldDef = new DBFieldDef() { FieldName = sName,
+                                                       Type = (bIntType ? DBFieldType.Int : DBFieldType.String),
+                                                       Primary = bPrimary, 
+                                                       AutoIncrement = bAutoIncrement};
+                            DBField field = new DBField(fieldDef);
 
                             if (!m_fields.ContainsKey(sName))
                             {
-                                DBField field = new DBField(sName, cachedInfo);
-                                if (field.Primary) {
-                                    PrimaryKey = field;
-                                }
                                 m_fields.Add(sName, field);
+                                if (field.Primary) {
+                                    m_fields.PrimaryKey = field;
+                                }
                             }
-
-                            cachedForTable.Add(sName, cachedInfo);
+                            cachedForTable.Add(sName, field);
                         }
-                        lock (fields)
-                            fields.Add(tableName, cachedForTable);
+                        lock (m_tableList)
+                            m_tableList.Add(tableName, cachedForTable);
 
                     }
                     else
                     {
                         MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
                     }
+                    #endregion
+                } else {
+                    //create the table??
+                }
 
-                }
-                else
-                {
-                    // no tables, assume it's going to be created later (using AddColumn)
-                }
+                //do InitColumns and InitValues here so that they only need to be done once
+
+                //ensure all columns setup in the database
+                InitColumns();
+                //give columns there default values
+                InitValues();
             }
         }
 
-        public virtual bool AddColumn(DBField field)
+        protected abstract void InitColumns();
+
+        public virtual bool AddColumn(DBFieldDef field)
         {
             // verify if we already have that field avail
-            if (!m_fields.ContainsKey(field.FieldName))
-            {
-                if (m_fields.Count == 0 && !field.Primary)
-                {
-                    throw new Exception("First field added needs to be the index");
-                }
+            if (!m_fields.ContainsKey(field.FieldName)) {
+                return AddColumns(new[] { field });
+            }
+            return false;
+        }
 
+        public virtual bool AddColumns(IEnumerable<DBFieldDef> fields)
+        {
+            // verify if we already have that fields
+            List<DBFieldDef> newFields = new List<DBFieldDef>();
+            foreach (DBFieldDef field in fields) {
+                if (!m_fields.ContainsKey(field.FieldName)) {
+                    newFields.Add(field);
+                }
+            }
+
+            if (newFields.Count > 0) 
+            {
                 try
                 {
-                    // ok, we don't, add it
-                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + TableName + "'");
-                    if (results != null && results.Rows.Count > 0)
+                    if (DatabaseHelper.TableExists(TableName))
                     {
                         // table already exists, alter it
-                        String sQuery = "ALTER TABLE " + TableName + " ADD " + field.FieldName + " " + field.ValueType;
-                        DBTVSeries.Execute(sQuery);
+                        foreach (DBFieldDef field in newFields) {
+                            DatabaseHelper.AddColumn(TableName, field);
+                        }
                     }
                     else
                     {
-                        // new table, create it
-                        // no tables, assume it's going to be created later (using AddColumn)
-                        string type = field.ValueType.ToString();
-                        if (field.Primary && field.ValueType == DBFieldValueType.Int && field.AutoIncrement)
-                        {
-                            //for the automatic creation of an auto incremental integer primary key you must use the full "Integer" not just "int"
-                            type = "Integer";
-                        }
-
-                        String sQuery = "CREATE TABLE " + TableName + " (" + field.FieldName + " " + type + (field.Primary ? " primary key)" : ")");
-                        DBTVSeries.Execute(sQuery);
+                        DatabaseHelper.CreateTable(TableName, newFields);
+                        foreach (DBFieldDef field in newFields) {
+                            m_fields.Add(field.FieldName, new DBField(field));
+                        }                        
                     }
                     // delete the s_fields cache so newed up objects get the right fields
-                    lock (fields)
-                        fields.Remove(TableName);
-                    m_fields.Add(field.FieldName, field);
+                    lock (m_tableList)
+                        m_tableList.Remove(TableName);
                     return true;
                 }
                 catch (Exception ex)
@@ -202,13 +233,13 @@ namespace WindowPlugins.GUITVSeries.DataBase
             {
                 if (!field.Primary || field.Value == null)
                 {
-                    switch (field.ValueType)
+                    switch (field.Type)
                     {
-                        case DBFieldValueType.Int:
+                        case DBFieldType.Int:
                             field.Value = 0;
                             break;
 
-                        case DBFieldValueType.String:
+                        case DBFieldType.String:
                             field.Value = "";
                             break;
                     }
@@ -217,19 +248,19 @@ namespace WindowPlugins.GUITVSeries.DataBase
             m_CommitNeeded = true;
         }
 
-        public virtual void InitValues(Int32 iValue, String sValue)
+        protected void InitValues(Int32 iValue, String sValue)
         {
             foreach (DBField field in m_fields.Values)
             {
                 if (!field.Primary || field.Value == null)
                 {
-                    switch (field.ValueType)
+                    switch (field.Type)
                     {
-                        case DBFieldValueType.Int:
+                        case DBFieldType.Int:
                             field.Value = iValue;
                             break;
 
-                        case DBFieldValueType.String:
+                        case DBFieldType.String:
                             field.Value = sValue;
                             break;
                     }
@@ -258,7 +289,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
                     {
                         if (result.Value != value)
                         {
-                            if (result.ValueType == DBFieldValueType.Int) {
+                            if (result.Type == DBFieldType.Int) {
                                 result.Value = (long)value;
                             } else {
                                 result.Value = value;
@@ -269,7 +300,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
                     }
                     else
                     {
-                        AddColumn(new DBField(fieldName, DBFieldValueType.String));
+                        AddColumn(new DBFieldDef() { FieldName = fieldName, Type = DBFieldType.String });
                         this[fieldName] = value;
                     }
                 }
@@ -284,12 +315,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
         {
             get
             {
-                List<String> outList = new List<String>();
-                foreach (string key in m_fields.Keys)
-                {
-                    outList.Add(key);
-                }
-                return outList;
+                return new List<String>(m_fields.Keys);
             }
         }
 
@@ -361,15 +387,14 @@ namespace WindowPlugins.GUITVSeries.DataBase
                 if (!String.IsNullOrEmpty(PrimaryKey.Value))
                 {
 
-                    switch (PrimaryKey.ValueType)
+                    switch (PrimaryKey.Type)
                     {
-                        case DBFieldValueType.Int:
+                        case DBFieldType.Int:
                             sWhere += PrimaryKey.FieldName + " = " + PrimaryKey.Value;
                             break;
 
-                        case DBFieldValueType.String:
-                            sWhere += PrimaryKey.FieldName + " = '" + ((String)PrimaryKey.Value).Replace("'", "''") +
-                                      "'";
+                        case DBFieldType.String:
+                            sWhere += PrimaryKey.FieldName + " = '" + PrimaryKey.SQLSafeValue + "'";
                             break;
                     }
 
@@ -392,17 +417,17 @@ namespace WindowPlugins.GUITVSeries.DataBase
                         if (!field.Primary && field.WasChanged)
                         {
                             builder.Append(field.FieldName).Append(" = ");
-                            switch (field.ValueType)
+                            switch (field.Type)
                             {
-                                case DBFieldValueType.Int:
+                                case DBFieldType.Int:
                                     if (String.IsNullOrEmpty(field.Value))
                                         builder.Append("'',");
                                     else
                                         builder.Append((string)field.Value).Append(',');
                                     break;
 
-                                case DBFieldValueType.String:
-                                    builder.Append(" '").Append(((String)(field.Value)).Replace("'", "''")).Append("',");
+                                case DBFieldType.String:
+                                    builder.Append("'").Append(field.SQLSafeValue).Append("',");
                                     break;
                             }
                             fieldsNeedingUpdating++;
@@ -437,17 +462,17 @@ namespace WindowPlugins.GUITVSeries.DataBase
                             first = false;
                         }
                         paramNames.Append(field.FieldName);
-                        switch (field.ValueType)
+                        switch (field.Type)
                         {
-                            case DBFieldValueType.Int:
+                            case DBFieldType.Int:
                                 if (String.IsNullOrEmpty(field.Value))
                                     builder.Append("''");
                                 else
                                     builder.Append((string)field.Value);
                                 break;
 
-                            case DBFieldValueType.String:
-                                builder.Append(" '").Append(((String)(field.Value)).Replace("'", "''")).Append("'");
+                            case DBFieldType.String:
+                                builder.Append("'").Append(field.SQLSafeValue).Append("'");
                                 break;
                         }
 
@@ -482,13 +507,13 @@ namespace WindowPlugins.GUITVSeries.DataBase
             if (obj.m_fields.ContainsKey(sKey))
             {
                 String sqlQuery = "update " + obj.TableName + " SET " + sKey + "=";
-                switch (obj.m_fields[sKey].ValueType)
+                switch (obj.m_fields[sKey].Type)
                 {
-                    case DBFieldValueType.Int:
+                    case DBFieldType.Int:
                         sqlQuery += Value;
                         break;
 
-                    case DBFieldValueType.String:
+                    case DBFieldType.String:
                         sqlQuery += "'" + Value + "'";
                         break;
                 }
@@ -517,67 +542,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
             SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             if (dbUpdateOccured != null)
                 dbUpdateOccured(obj.TableName);
-        }
-
-        // TODO: extract this to somewhere more appropriate (maybe make a WindowPlugins.GUITVSeries.Banner.cs) 
-        // - it has nothing to to do with DBTable, - it's only here so that series and season can both see it
-        protected static string getRandomBanner(List<string> BannerList)
-        {
-            const string graphicalBannerRecognizerSubstring = "-g";
-            string langIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
-
-            // random banners are prefered in the following order
-            // 1) own lang + graphical
-            // 2) own lang but not graphical
-            // 3) english + graphical (english really is any other language banners that are in db)
-            // 4) english but not graphical
-
-            string randImage = null;
-            if (BannerList == null || BannerList.Count == 0) return string.Empty;
-            if (BannerList.Count == 1) randImage = BannerList[0];
-
-            if (randImage == null)
-            {
-                List<string> langG = new List<string>();
-                List<string> lang = new List<string>();
-                List<string> engG = new List<string>();
-                List<string> eng = new List<string>();
-                for (int i = 0; i < BannerList.Count; i++)
-                {
-                    if (File.Exists(BannerList[i]))
-                    {
-                        if (BannerList[i].Contains(graphicalBannerRecognizerSubstring))
-                        {
-                            if (BannerList[i].Contains(langIdentifier))
-                                langG.Add(BannerList[i]);
-                            else
-                                engG.Add(BannerList[i]);
-                        }
-                        else
-                        {
-                            if (BannerList[i].Contains(langIdentifier))
-                                lang.Add(BannerList[i]);
-                            else
-                                eng.Add(BannerList[i]);
-                        }
-                    }
-                }
-
-                try
-                {
-                    if (langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
-                    else if (lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
-                    else if (engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                    else if (eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
-                    else return string.Empty;
-                }
-                catch
-                {
-                    MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
-                    return string.Empty;
-                }
-            }
-            return System.IO.File.Exists(randImage) ? randImage : string.Empty;
         }
 
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)
@@ -610,6 +574,5 @@ namespace WindowPlugins.GUITVSeries.DataBase
             char[] splits = new char[] { '|', '\\', '/', ',' };
             return fieldvalue.Split(splits, StringSplitOptions.RemoveEmptyEntries);
         }
-
     };
 }

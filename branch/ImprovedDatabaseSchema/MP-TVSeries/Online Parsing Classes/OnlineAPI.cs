@@ -7,6 +7,7 @@ using System.IO;
 using MediaPortal.GUI.Library;
 using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {

@@ -29,6 +29,7 @@ using System.Net;
 using System.Threading;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries.Torrent
 {

@@ -42,6 +42,25 @@ namespace WindowPlugins.GUITVSeries.DataBase
             return value;
         }
 
+        /// <summary>
+        /// save DB friendly string (ie. escaping singlequotes into double singlequotes)
+        /// </summary>
+        public string SQLSafeValue
+        {
+            get
+            {
+                return toSQLSafeString(value);
+            }
+        }
+
+        /// <summary>
+        /// save DB friendly string (ie. escaping singlequotes into double singlequotes)
+        /// </summary>
+        public static string toSQLSafeString(string value)
+        {
+            return value.Replace("'", "''");
+        }
+
         #region constructors
         public DBValue(String value)
         {

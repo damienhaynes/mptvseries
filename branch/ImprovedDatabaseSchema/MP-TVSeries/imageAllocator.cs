@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using aclib.Performance;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

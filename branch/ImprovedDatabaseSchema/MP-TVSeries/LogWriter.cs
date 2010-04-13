@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {

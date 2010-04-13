@@ -24,18 +24,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
 using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     public class DBOption
     {
         public static bool bTableUpdateDone = false;
 
         public const String cConfig_LogCollapsed = "Config_LogShown";
+
+        public const String cDBLastVersion = "DBLastVersion";
 
         public const String cDBSeriesVersion = "DBSeriesVersion";
         public const String cDBOnlineSeriesVersion = "DBOnlineSeriesVersion";
@@ -44,11 +45,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
         public const String cDBExpressionsVersion = "DBExpressionsVersion";
         public const String cDBNewzbinVersion = "DBNewzbinVersion";
-        public const String cDBTorrentVersion = "dbTorrentVersion";
+        //public const String cDBTorrentVersion = "dbTorrentVersion";
         public const String cDBViewsVersion = "DBViewsVersion";
         public const String cDBReplacementsVersion = "DBReplacementsVersion";
-        public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
-        public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
+        //public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
+        //public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -152,7 +153,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cPlaylistPath = "PlayListPath";
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
-		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
+        public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
 
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
         public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
@@ -168,16 +169,16 @@ namespace WindowPlugins.GUITVSeries
        
         public const String cUseRegionalDateFormatString = "UseRegionalDateFormatString";
 
-		public const String cDefaultRating = "DefaultRating";
-		public const String cRatingDisplayStars = "RatingDisplayStars";
+        public const String cDefaultRating = "DefaultRating";
+        public const String cRatingDisplayStars = "RatingDisplayStars";
 
         public const String cSortSpecials = "SortSpecials";
         public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
         public const String cRandomFanartInterval = "RandomFanartInterval";
         public const String cParentalControlPinCode = "ParentalControlPinCode";
-		public const String cKeyboardStyle = "KeyboardStyle";
-		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
+        public const String cKeyboardStyle = "KeyboardStyle";
+        public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
 
         public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
         public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
@@ -192,7 +193,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
-        private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
+        private static readonly Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
 
@@ -429,8 +430,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cPlaylistAutoPlay) == null)
                     SetOptions(cPlaylistAutoPlay, true);
 
-				if (GetOptions(cPlaylistAutoShuffle) == null)
-					SetOptions(cPlaylistAutoShuffle, false);
+                if (GetOptions(cPlaylistAutoShuffle) == null)
+                    SetOptions(cPlaylistAutoShuffle, false);
 
                 if (GetOptions(cImport_ScanOnStartup) == null)
                     SetOptions(cImport_ScanOnStartup, true);
@@ -462,11 +463,11 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cUseRegionalDateFormatString) == null)
                     SetOptions(cUseRegionalDateFormatString, 0);
 
-				if (GetOptions(cDefaultRating) == null)
-					SetOptions(cDefaultRating, 7); // Scale 1 - 10
+                if (GetOptions(cDefaultRating) == null)
+                    SetOptions(cDefaultRating, 7); // Scale 1 - 10
 
-				if (GetOptions(cRatingDisplayStars) == null)
-					SetOptions(cRatingDisplayStars, 10); // 5 or 10 Stars
+                if (GetOptions(cRatingDisplayStars) == null)
+                    SetOptions(cRatingDisplayStars, 10); // 5 or 10 Stars
 
                 if (GetOptions(cSortSpecials) == null)
                     SetOptions(cSortSpecials, 1);
@@ -486,11 +487,11 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cParentalControlPinCode) == null)
                     SetOptions(cParentalControlPinCode, string.Empty);
 
-				if (GetOptions(cKeyboardStyle) == null)
-					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
+                if (GetOptions(cKeyboardStyle) == null)
+                    SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
 
-				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
-					SetOptions(cMarkRatedEpisodeAsWatched, 0);
+                if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
+                    SetOptions(cMarkRatedEpisodeAsWatched, 0);
 
                 if (GetOptions(cSubstituteMissingArtwork) == null)
                     SetOptions(cSubstituteMissingArtwork, 0);
@@ -519,42 +520,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private static void UpdateTable()
-        {
-            try
-            {
-                if (!bTableUpdateDone)
-                {
-                    bTableUpdateDone = true;
-                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
-                    if (results == null || results.Rows.Count == 0)                    
-                    {
-                        // no table, create it
-                        DBTVSeries.Execute(cCreateTableQuery);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("DBOption.UpdateTable failed (" + ex.Message + ").");
-            }
-        }
-
         public static bool SetOptions(String property, DBValue value)
         {
             try
             {
-				// UpdateTable();
                 if (!optionsCache.ContainsKey(property) || optionsCache[property] != value)
                 {
-                    String convertedProperty = property;
-                    String convertedvalue = value.ToString().Replace("'", "''");
-
                     String sqlQuery;
-                    if (GetOptions(convertedProperty) == null)
-                        sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + convertedProperty + "', '" + convertedvalue + "')";
+                    if (GetOptions(property) == null)
+                        sqlQuery = "insert into options (option_id, property, value) values(NULL, '" + property + "', '" + value.SQLSafeValue + "')";
                     else
-                        sqlQuery = "update options set value = '" + convertedvalue + "' where property = '" + convertedProperty + "'";
+                        sqlQuery = "update options set value = '" + value.SQLSafeValue + "' where property = '" + property + "'";
                     optionsCache[property] = value;
                     DBTVSeries.Execute(sqlQuery);
                 } 

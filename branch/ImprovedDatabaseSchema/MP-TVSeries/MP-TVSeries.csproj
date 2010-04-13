@@ -446,6 +446,7 @@
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Banner.cs" />
     <Compile Include="Configuration\ImportPanelEpID.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -482,6 +483,7 @@
     <Compile Include="Configuration\ProgressLabel.Designer.cs">
       <DependentUpon>ProgressLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\DatabaseHelper.cs" />
     <Compile Include="DataBase\DBField.cs" />
     <Compile Include="DataBase\DBTable.cs" />
     <Compile Include="DataBase\DBTVSeries.cs" />

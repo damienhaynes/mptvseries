@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -236,14 +237,13 @@ namespace WindowPlugins.GUITVSeries
                 subItems = new Dictionary<int, S>();
             }
 
-            public void dummySubItems(M dummy)
-            {
-                foreach(KeyValuePair<int, S> sub in subItems)
-                {
-                    currNoObjects--;
-                    sub.Value.fullItem = dummy;
-                }
-            }
+			public void dummySubItems(M dummy)
+			{
+				foreach (KeyValuePair<int, S> sub in subItems) {
+					currNoObjects--;
+					sub.Value.fullItem = dummy;
+				}
+			}
 
             public T fullItem
             {

@@ -23,22 +23,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using System.IO;
-using MediaPortal.Database;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
-        public class DBNewzbin : DBTable
+    public class DBNewzbin : DBTable
     {
         public const String cTableName = "news";
         public const int cDBVersion = 4;
 
-        public const String cID = "ID"; 
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const String cID = "ID"; 
         public const String cSearchUrl = "searchUrl";
-
         public const String cSearchRegexReport = "searchRegexMain";
         public const String cSearchRegexName = "searchRegexName";
         public const String cSearchRegexID = "searchRegexID";
@@ -50,24 +48,45 @@ namespace WindowPlugins.GUITVSeries
         public const String cSearchRegexGroup = "searchRegexGroup";
         public const String cSearchRegexIsolateArticleName = "searchRegexIsolateArticleName";
         public const String cSearchRegexParseArticleName = "searchRegexParseArticleName";
-
         public const String cLogin = "login";
         public const String cPassword = "password";
         public const String cCookieList = "cookielist";
 
-        public override string ToString()
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static DBFieldDefList TableFields = new DBFieldDefList{
+            {cID,                           new DBFieldDef{ FieldName = cID,								Type = DBFieldType.String,      Primary = true}},
+            {cSearchUrl,                    new DBFieldDef{ FieldName = cSearchUrl,						Type = DBFieldType.String}},
+            {cSearchRegexReport,            new DBFieldDef{ FieldName = cSearchRegexReport,				Type = DBFieldType.String}},
+            {cSearchRegexName,              new DBFieldDef{ FieldName = cSearchRegexName,				Type = DBFieldType.String}},
+            {cSearchRegexID,                new DBFieldDef{ FieldName = cSearchRegexID,					Type = DBFieldType.String}},
+            {cSearchRegexSize,              new DBFieldDef{ FieldName = cSearchRegexSize,				Type = DBFieldType.String}},
+            {cSearchRegexPostDate,          new DBFieldDef{ FieldName = cSearchRegexPostDate,			Type = DBFieldType.String}},
+            {cSearchRegexReportDate,        new DBFieldDef{ FieldName = cSearchRegexReportDate,			Type = DBFieldType.String}},
+            {cSearchRegexFormat,			new DBFieldDef{ FieldName = cSearchRegexFormat,				Type = DBFieldType.String}},
+            {cSearchRegexLanguage,			new DBFieldDef{ FieldName = cSearchRegexLanguage,			Type = DBFieldType.String}},
+            {cSearchRegexGroup,				new DBFieldDef{ FieldName = cSearchRegexGroup,				Type = DBFieldType.String}},
+            {cSearchRegexIsolateArticleName,new DBFieldDef{ FieldName = cSearchRegexIsolateArticleName,	Type = DBFieldType.String}},
+            {cSearchRegexParseArticleName,  new DBFieldDef{ FieldName = cSearchRegexParseArticleName,	Type = DBFieldType.String}},
+            {cLogin,						new DBFieldDef{ FieldName = cLogin,							Type = DBFieldType.String}},
+            {cPassword,						new DBFieldDef{ FieldName = cPassword,						Type = DBFieldType.String}},
+            {cCookieList,					new DBFieldDef{ FieldName = cCookieList,						Type = DBFieldType.String}},
+        };
+		#endregion
+
+		public override string ToString()
         {
             return this[cID];
         }
 
         static DBNewzbin()
         {
-            DBNewzbin dummy = new DBNewzbin();
-
-            List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
-            int nCurrentDBVersion = cDBVersion;
+            const int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
-            while (nUpgradeDBVersion != nCurrentDBVersion)
+			if (nUpgradeDBVersion == nCurrentDBVersion) {
+				return;
+			}
+			List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
+			while (nUpgradeDBVersion != nCurrentDBVersion)
                 // take care of the upgrade in the table
                 switch (nUpgradeDBVersion)
                 {
@@ -136,43 +155,33 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
         }
 
-        public DBNewzbin()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+					return;
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		public DBNewzbin()
             : base(cTableName)
         {
-            InitColumns();
-            InitValues();
-            // all available fields
         }
 
         public DBNewzbin(String sName)
             : base(cTableName)
         {
-            InitColumns();
-            if (!ReadPrimary(sName))
-            {
-                InitValues();
-            }
+            ReadPrimary(sName);
         }
 
-        private void InitColumns()
+        protected override void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            AddColumn(new DBField(cID, DBFieldValueType.String, true));
-            AddColumn(new DBField(cSearchUrl, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexReport, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexName, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexID, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexSize, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexPostDate, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexReportDate, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexFormat, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexLanguage, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexGroup, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexIsolateArticleName, DBFieldValueType.String));
-            AddColumn(new DBField(cSearchRegexParseArticleName, DBFieldValueType.String));
-            AddColumn(new DBField(cLogin, DBFieldValueType.String));
-            AddColumn(new DBField(cPassword, DBFieldValueType.String));
-            AddColumn(new DBField(cCookieList, DBFieldValueType.String));
+        	AddColumns(TableFields.Values);
         }
 
         public static void Clear(SQLCondition conditions)

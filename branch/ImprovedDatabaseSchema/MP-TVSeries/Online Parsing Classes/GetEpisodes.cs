@@ -28,6 +28,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Xml;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -67,7 +68,7 @@ namespace WindowPlugins.GUITVSeries
                                 else
                                 {
                                     // we don't know that field, add it to the series table
-                                    episode.AddColumn(new DBField(propertyNode.Name, DBFieldValueType.String));
+                                    episode.AddColumn(new DBFieldDef() {FieldName = propertyNode.Name, Type = DBFieldType.String});
                                     episode[propertyNode.Name] = propertyNode.InnerText;
                                 }
                             }                            

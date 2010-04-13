@@ -21,16 +21,12 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 using System.Xml;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
     class DBOnlineMirror
     {
@@ -50,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cMirrorpath = "mirrorpath";
         public const String cTypeMask = "Typemask";
 
-        Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
+        DBFieldList m_fields = new DBFieldList();
 
         private static String s_sCurrentInterface = String.Empty;
         private static String s_sCurrentBanner = String.Empty;
@@ -92,14 +88,14 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_fields.ContainsKey(fieldName))
                     {
-                        if (m_fields[fieldName].ValueType == DBFieldValueType.Int)
+                        if (m_fields[fieldName].Type == DBFieldType.Int)
                             m_fields[fieldName].Value = (long)value;
                         else
                             m_fields[fieldName].Value = value;
                     }
                     else
                     {
-                        m_fields.Add(fieldName, new DBField(fieldName, DBFieldValueType.String));
+                        m_fields.Add(fieldName, new DBField(new DBFieldDef() {FieldName = fieldName, Type = DBFieldType.String}));
                         this[fieldName] = value;
                     }
                 }
@@ -126,11 +122,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!DBOption.GetOptions(DBOption.cNewAPIUpgradeDone)) // upgrade
             {
-                String sqlDel = "drop table if exists " + cTableName;
-                DBTVSeries.Execute(sqlDel);
+            	const string sqlDel = "drop table if exists " + cTableName;
+            	DBTVSeries.Execute(sqlDel);
             }
 
-            if (String.IsNullOrEmpty(cApiKey))
+        	if (String.IsNullOrEmpty(cApiKey))
             {
                 MPTVSeriesLog.Write("No APIKey...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the resourceFile, nothing will be downloaded!");
                 return;

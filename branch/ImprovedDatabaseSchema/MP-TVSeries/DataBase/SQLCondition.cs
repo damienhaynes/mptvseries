@@ -88,9 +88,9 @@ namespace WindowPlugins.GUITVSeries.DataBase
         {
             string sValue;
             if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
-                sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
+                sValue = "'%" + value.SQLSafeValue + "%'";
             else
-                sValue = ((String)value).Replace("'", "''");
+                sValue = value.SQLSafeValue;
 
             AddCustom("( select " + field + " from " + table.TableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
         }
@@ -100,17 +100,17 @@ namespace WindowPlugins.GUITVSeries.DataBase
             if (table.m_fields.ContainsKey(sField))
             {
                 String sValue = String.Empty;
-                switch (table.m_fields[sField].ValueType)
+                switch (table.m_fields[sField].Type)
                 {
-                    case DBFieldValueType.Int:
+                    case DBFieldType.Int:
                         sValue = value;
                         break;
 
-                    case DBFieldValueType.String:
+                    case DBFieldType.String:
                         if (type == SQLConditionType.Like || type == SQLConditionType.NotLike) {
-                            sValue = "'%" + ((String)value).Replace("'", "''") + "%'";
+                            sValue = "'%" + value.SQLSafeValue + "%'";
                         } else {
-                            sValue = "'" + ((String)value).Replace("'", "''") + "'";
+                            sValue = "'" + value.SQLSafeValue + "'";
                         }
                         break;
                 }

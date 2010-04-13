@@ -39,6 +39,7 @@ using System.Windows.Forms;
 using SQLite.NET;
 using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
@@ -542,8 +543,8 @@ namespace WindowPlugins.GUITVSeries
                 columnType.Name = DBExpression.cType;
                 columnType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 DataGridViewComboBoxCell comboCellTemplate = new DataGridViewComboBoxCell();
-                comboCellTemplate.Items.Add(DBExpression.cType_Simple);
-                comboCellTemplate.Items.Add(DBExpression.cType_Regexp);
+                comboCellTemplate.Items.Add(DBExpression.ExpressionType.Simple.ToString());
+                comboCellTemplate.Items.Add(DBExpression.ExpressionType.RegExp.ToString());
                 columnType.CellTemplate = comboCellTemplate;
                 dataGridView_Expressions.Columns.Add(columnType);
 
@@ -571,8 +572,8 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewRow row = dataGridView_Expressions.Rows[expression[DBExpression.cIndex]];
                 row.Cells[DBExpression.cEnabled].Value = (Boolean)expression[DBExpression.cEnabled];
                 DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
-                comboCell.Items.Add(DBExpression.cType_Simple);
-                comboCell.Items.Add(DBExpression.cType_Regexp);
+                comboCell.Items.Add(DBExpression.ExpressionType.Simple.ToString());
+                comboCell.Items.Add(DBExpression.ExpressionType.RegExp.ToString());
                 comboCell.Value = (String)expression[DBExpression.cType];
                 row.Cells[DBExpression.cType] = comboCell;
                 row.Cells[DBExpression.cExpression].Value = (String)expression[DBExpression.cExpression];
@@ -589,38 +590,38 @@ namespace WindowPlugins.GUITVSeries
             {
                 DataGridViewCheckBoxColumn columnEnabled = new DataGridViewCheckBoxColumn();
                 columnEnabled.Name = DBReplacements.cEnabled;
-                columnEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cEnabled);
+                columnEnabled.HeaderText = DBReplacements.TableFields[DBReplacements.cEnabled].PrettyName;
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnEnabled);
 
                 DataGridViewCheckBoxColumn columnTagEnabled = new DataGridViewCheckBoxColumn();
                 columnTagEnabled.Name = DBReplacements.cTagEnabled;
-                columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
+                columnTagEnabled.HeaderText = DBReplacements.TableFields[DBReplacements.cTagEnabled].PrettyName;
                 columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;                
                 dataGridView_Replace.Columns.Add(columnTagEnabled);
 
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
                 columnBefore.Name = DBReplacements.cBefore;
-                columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
+                columnBefore.HeaderText = DBReplacements.TableFields[DBReplacements.cBefore].PrettyName;
                 columnBefore.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnBefore);
 
                 DataGridViewCheckBoxColumn columnRegex = new DataGridViewCheckBoxColumn();
                 columnRegex.Name = DBReplacements.cIsRegex;
-                columnRegex.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cIsRegex);
+                columnRegex.HeaderText = DBReplacements.TableFields[DBReplacements.cIsRegex].PrettyName;
                 columnRegex.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnRegex);
 
                 DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
                 columnToReplace.Name = DBReplacements.cToReplace;
-                columnToReplace.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cToReplace);
+                columnToReplace.HeaderText = DBReplacements.TableFields[DBReplacements.cToReplace].PrettyName;
                 columnToReplace.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 columnToReplace.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnToReplace);
 
                 DataGridViewTextBoxColumn columnWith = new DataGridViewTextBoxColumn();
                 columnWith.Name = DBReplacements.cWith;
-                columnWith.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cWith);
+                columnWith.HeaderText = DBReplacements.TableFields[DBReplacements.cWith].PrettyName;
                 columnWith.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 columnWith.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dataGridView_Replace.Columns.Add(columnWith);
@@ -1692,13 +1693,14 @@ namespace WindowPlugins.GUITVSeries
                             {                                                                
                                 case DBEpisode.cFilename:                                
                                     // Read Only Fields
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
+                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key], false);
                                     break;
 
                                 case DBEpisode.cEpisodeName:
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), DBOnlineEpisode.cEpisodeName, episode[key]);
+                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, DBOnlineEpisode.cEpisodeName, episode[key]);
                                     break;
 
+                                case DBEpisode.cID:
                                 case DBOnlineEpisode.cEpisodeName:
                                 case DBEpisode.cImportProcessed:
                                 case DBOnlineEpisode.cOnlineDataImported:
@@ -1738,15 +1740,15 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 
                                 case DBEpisode.cVolumeLabel:
-                                    if (String.IsNullOrEmpty(episode[key]))                                        
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    if (String.IsNullOrEmpty(episode[key]))
+                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBOnlineEpisode.cAirsAfterSeason:
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
                                     if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBEpisode.cAvailableSubtitles:
@@ -1763,16 +1765,16 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
                                     if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBEpisode.cTextCount:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
                                     break;
 
                             }
@@ -1854,7 +1856,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
+                                    AddPropertyBindingSource(season.m_fields[key].PrettyName, key, season[key], false);
                                     break;
 
                             }
@@ -1988,16 +1990,16 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                     // fields that can not be modified - read only
-                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key], false);
                                     break;
 
                                 case DBOnlineSeries.cChoseEpisodeOrder:
                                     if (!String.IsNullOrEmpty(series[key]))
-                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
+                                        AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key]);
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
+                                    AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key]);
                                     break;
 
                             }
@@ -2793,7 +2795,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBSeries.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBSeries.PrettyFieldName(sField);
+                    String sPretty = DBSeries.TableFields[sField].PrettyName;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else
@@ -2824,7 +2826,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBSeason.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBSeason.PrettyFieldName(sField);
+                    String sPretty = DBSeason.TableFields[sField].PrettyName;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else
@@ -2853,7 +2855,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBEpisode.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBEpisode.PrettyFieldName(sField);
+                    String sPretty = DBEpisode.TableFields[sField].FieldName;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else
@@ -4120,7 +4122,10 @@ namespace WindowPlugins.GUITVSeries
                     //if (Convert.ToInt32(parts[0]) >= 0) expr[DBExpression.cIndex] = parts[0]; else continue;
                     expr[DBExpression.cIndex] = index;
                     if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) expr[DBExpression.cEnabled] = parts[0]; else continue;
-                    if (parts[1] == DBExpression.cType_Regexp || parts[1] == DBExpression.cType_Simple) expr[DBExpression.cType] = parts[1]; else continue;
+                    if (parts[1] == DBExpression.ExpressionType.RegExp.ToString() || parts[1] == DBExpression.ExpressionType.Simple.ToString())
+                        expr[DBExpression.cType] = parts[1];
+                    else
+                        continue;
                     expr[DBExpression.cExpression] = parts[2];
                    
                     if (expr.Commit()) index++;
@@ -4269,7 +4274,7 @@ namespace WindowPlugins.GUITVSeries
         private void lnkResetView_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBView.ClearAll();
-            DBView.fillDefaults();
+            DBView.AddDefaults();
             LoadViews();
         }
 

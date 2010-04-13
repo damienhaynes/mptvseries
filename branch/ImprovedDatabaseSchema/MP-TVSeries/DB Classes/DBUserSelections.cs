@@ -25,36 +25,31 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Runtime.InteropServices;
 using SQLite.NET;
-using MediaPortal.Database;
-using System.Text.RegularExpressions;
 using WindowPlugins.GUITVSeries.DataBase;
 
-namespace WindowPlugins.GUITVSeries
+namespace WindowPlugins.GUITVSeries.DataClass
 {
-
-    enum SelectionLevel
-    {
-        series,
-        season,
-        episode
-    }
-
-    enum SelectionType
-    {
-        emule,
-        subtitles
-    }
-
     class DBUserSelection : DBTable
     {
-        // Fields
-        
-        public const int cDBVersion = 2;
+        public enum SelectionLevel
+        {
+            series,
+            season,
+            episode
+        }
+
+        public enum SelectionType
+        {
+            emule,
+            subtitles
+        }
+
         public const string cTableName = "user_selection";
- 
-        public const string cIndex = "ID";
+
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
+		public const string cIndex = "ID";
         public const string cSelectionLevel = "selectionLevel";
         public const string cSelectionType = "selectionType";
         public const string cInternalKey = "internalKey";
@@ -62,60 +57,59 @@ namespace WindowPlugins.GUITVSeries
         public const string cTags = "tags";
         public const string cContextType = "contextType";
         public const string cEnabled = "enabled";
-        
-        
-        public const SelectionLevel SelectionLevelEpisode = SelectionLevel.episode;
+
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cIndex,			new DBFieldDef{FieldName = cIndex,			Type = DBFieldType.Int,			Primary = true}},
+            {cSelectionLevel,	new DBFieldDef{FieldName = cSelectionLevel, Type = DBFieldType.String}},
+            {cSelectionType,	new DBFieldDef{FieldName = cSelectionType,	Type = DBFieldType.String}},
+            {cInternalKey,		new DBFieldDef{FieldName = cInternalKey,	Type = DBFieldType.String}},
+            {cUserKey,			new DBFieldDef{FieldName = cUserKey,		Type = DBFieldType.String}},
+            {cTags,				new DBFieldDef{FieldName = cTags,			Type = DBFieldType.String}},
+            {cContextType,		new DBFieldDef{FieldName = cContextType,	Type = DBFieldType.String}},
+            {cEnabled,			new DBFieldDef{FieldName = cEnabled,		Type = DBFieldType.Int}}
+		};
+		#endregion
+
+		public const SelectionLevel SelectionLevelEpisode = SelectionLevel.episode;
         public const SelectionLevel SelectionLevelSeason = SelectionLevel.season;
         public const SelectionLevel SelectionLevelSeries = SelectionLevel.series;
         public const SelectionType SelectionTypeEmule = SelectionType.emule;
         public const SelectionType SelectionTypeSubtiles = SelectionType.subtitles;
 
         #region Constructors
-        static DBUserSelection()
-        {
-            DBUserSelection dummy = new DBUserSelection();
-            int currentVersion = DBOption.GetOptions(DBOption.cDBUserSelectionsVersion);
+		//static DBUserSelection()
+		//{
+		//}
 
-            if (currentVersion != cDBVersion)
-            {
-                while (currentVersion <= cDBVersion)
-                {
-                    switch (currentVersion)
-                    {
-                        default:
-                            currentVersion++;
-                            break;
-                    }
-                }
-
-                DBOption.SetOptions(DBOption.cDBUserSelectionsVersion, currentVersion);
-            }
-        }
-
-        public DBUserSelection()
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+			}
+		}
+		
+		public DBUserSelection()
             : base(cTableName)
         {
-            this.InitColumns();
-            this.InitValues();
         }
 
         public DBUserSelection(long ID)
             : base(cTableName)
         {
-            this.InitColumns();
-            if (!base.ReadPrimary(ID.ToString()))
-            {
-                this.InitValues();
-            }
+            ReadPrimary(ID.ToString());
         }
 
         public DBUserSelection(SelectionLevel level, SelectionType type, string internalkey)
             : base(cTableName)
         {
-            this.InitColumns();
             if (!this.ReadAKInternal(new DBValue(level.ToString()), new DBValue(type.ToString()), new DBValue(internalkey)))
             {
-                this.InitValues();
                 this[cSelectionLevel] = level.ToString();
                 this[cSelectionType] = type.ToString();
                 this[cInternalKey] = internalkey;
@@ -126,16 +120,9 @@ namespace WindowPlugins.GUITVSeries
 
         #region Private Methods
 
-        private void InitColumns()
+        protected override void InitColumns()
         {
-            this.AddColumn(new DBField(cIndex, DBFieldValueType.Int, true));
-            this.AddColumn(new DBField(cSelectionLevel, DBFieldValueType.String));
-            this.AddColumn(new DBField(cSelectionType, DBFieldValueType.String));
-            this.AddColumn(new DBField(cInternalKey, DBFieldValueType.String));
-            this.AddColumn(new DBField(cUserKey, DBFieldValueType.String));
-            this.AddColumn(new DBField(cTags, DBFieldValueType.String));
-            this.AddColumn(new DBField(cContextType, DBFieldValueType.String));
-            this.AddColumn(new DBField(cEnabled, DBFieldValueType.Int));
+        	AddColumns(TableFields.Values);
         }
 
         #endregion Private Methods 

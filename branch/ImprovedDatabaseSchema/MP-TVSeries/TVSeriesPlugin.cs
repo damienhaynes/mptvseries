@@ -33,6 +33,7 @@ using MediaPortal.Player;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 using Action = MediaPortal.GUI.Library.Action;
 using WindowPlugins.GUITVSeries;
 using System.Threading;
@@ -2788,7 +2789,7 @@ namespace WindowPlugins.GUITVSeries
 
                                     if (this.m_SelectedEpisode != null)
                                     {
-                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
+                                        if (episode[DBEpisode.cID] == this.m_SelectedEpisode[DBEpisode.cID])
                                         {
                                             if (!episode[DBOnlineEpisode.cWatched])
                                             {

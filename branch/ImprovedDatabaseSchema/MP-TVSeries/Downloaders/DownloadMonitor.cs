@@ -27,6 +27,7 @@ using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
 using WindowPlugins.GUITVSeries.DataBase;
+using WindowPlugins.GUITVSeries.DataClass;
 using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries.Download
