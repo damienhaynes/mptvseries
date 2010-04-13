@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
+using WindowPlugins.GUITVSeries.Properties;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {    
@@ -207,15 +208,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 else if (e.ColumnIndex == ColIndexOf(colAction))
                 {
                     // seriesAction
-                    // we color code
+                    // we color code and set icon        
 
                     var reqAction = row.Cells[ColIndexOf(colAction)].Value.ToString();
                     if (reqAction == displayedActions[UserInputResults.SeriesAction.Skip])
-                            row.DefaultCellStyle.BackColor = SkipColor;
+                    {
+                        row.Cells[colImage].Value = Resources.importpending;
+                        row.DefaultCellStyle.BackColor = SkipColor;
+                    }
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.IgnoreAlways])
-                            row.DefaultCellStyle.BackColor = IgnoreColor;
+                    {
+                        row.Cells[colImage].Value = Resources.importignored;
+                        row.DefaultCellStyle.BackColor = IgnoreColor;
+                    }
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.Approve])
-                            row.DefaultCellStyle.BackColor = Approved;
+                    {
+                        row.Cells[colImage].Value = Resources.importaccept;
+                        row.DefaultCellStyle.BackColor = Approved;
+                    }
                                       
                 }
                 //else if (e.ColumnIndex == ColIndexOf(colSearchTXT))
@@ -263,7 +273,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 var row = new DataGridViewRow();
 
                 var imageCell = new DataGridViewImageCell();
-                //imageCell.Value = ;
+                imageCell.Value = Resources.importupdating;
                 row.Cells.Add(imageCell);
 
                 var seriesCell = new DataGridViewTextBoxCell();
