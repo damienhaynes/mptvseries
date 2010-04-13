@@ -405,6 +405,10 @@
   <ItemGroup>
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
+    <None Include="Resources\Images\importaccept.png" />
+    <None Include="Resources\Images\importpending.png" />
+    <None Include="Resources\Images\importupdating.png" />
+    <None Include="Resources\Images\importignored.png" />
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
