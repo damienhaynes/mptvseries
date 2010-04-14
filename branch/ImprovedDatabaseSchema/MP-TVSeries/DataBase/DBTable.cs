@@ -54,7 +54,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
             }
         }
 
-        private bool m_CommitNeeded = false;
+		private bool m_CommitNeeded = false;
 
         /// <summary>
         /// list of the tables field names mapped to fields
@@ -76,24 +76,36 @@ namespace WindowPlugins.GUITVSeries.DataBase
             //test the version number
             Version lastVersion = new Version(DBOption.GetOptions(DBOption.cDBLastVersion));
             Version currentVersion = Settings.Version;
-            if (lastVersion != currentVersion) {
-                DBEpisode.MaintainDatabaseTable(lastVersion);
-				DBExpression.MaintainDatabaseTable(lastVersion);
-				DBFanart.MaintainDatabaseTable(lastVersion);
-				DBFormatting.MaintainDatabaseTable(lastVersion);
-            	DBIgnoredDownloadedFiles.MaintainDatabaseTable(lastVersion);
-				DBOnlineEpisode.MaintainDatabaseTable(lastVersion);
+        	if (lastVersion == currentVersion) {
+        		return;
+        	}
+			MPTVSeriesLog.Write("Performing database upgrade - please be patient");
 
-				DBImportPath.MaintainDatabaseTable(lastVersion);
+        	DBEpisode.MaintainDatabaseTable(lastVersion);
+        	DBExpression.MaintainDatabaseTable(lastVersion);
+        	DBFanart.MaintainDatabaseTable(lastVersion);
+        	DBFormatting.MaintainDatabaseTable(lastVersion);
+        	DBIgnoredDownloadedFiles.MaintainDatabaseTable(lastVersion);
+        	DBNewzbin.MaintainDatabaseTable(lastVersion);
+        	DBOnlineEpisode.MaintainDatabaseTable(lastVersion);
 
+        	DBOnlineSeries.MaintainDatabaseTable(lastVersion);
+        	DBImportPath.MaintainDatabaseTable(lastVersion);
+        	DBReplacements.MaintainDatabaseTable(lastVersion);
+        	DBSeason.MaintainDatabaseTable(lastVersion);
+        	DBSeries.MaintainDatabaseTable(lastVersion);
+        	DBTorrentSearch.MaintainDatabaseTable(lastVersion);
+        	DBUserSelection.MaintainDatabaseTable(lastVersion);
+        	DBView.MaintainDatabaseTable(lastVersion);
 
-                DBTVSeries.Execute("Vacuum");
+			MPTVSeriesLog.Write("Cleaning up database");
+        	DBTVSeries.Execute("Vacuum");
+			MPTVSeriesLog.Write("Database upgrade Finished");
 
-                DBOption.SetOptions(DBOption.cDBLastVersion, currentVersion.ToString());
-            }
+			DBOption.SetOptions(DBOption.cDBLastVersion, currentVersion.ToString());
         }
         
-        protected DBTable(string tableName)
+        protected DBTable(string tableName, DBFieldDefList requiredFields)
         {
             TableName = tableName;
 
@@ -106,15 +118,17 @@ namespace WindowPlugins.GUITVSeries.DataBase
             } else {
                 // we have to get it, happens when the first object is created or after an alter table
                 cachedForTable = new DBFieldList();
-                // load up fields from the table
+                // load up fields from the database, this allows for fields which are not referneced by code
 
                 //Test if the table exists
-                SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + TableName + "'");
-                if (results != null && results.Rows.Count > 0) {
+                if (DatabaseHelper.TableExists(TableName)) {
+					//ensure that all required columns are in the table
+					AddColumns(requiredFields.Values);
+
                     #region read table data from database
 
                     // we have the table definition, parse it for names/types
-                    String sCreateTable = results.Rows[0].fields[0];
+                	String sCreateTable = DatabaseHelper.GetTableSQL(TableName);
                     String RegExp = @"CREATE TABLE .*?\((.*?)\)";
                     Regex Engine = new Regex(RegExp, RegexOptions.IgnoreCase);
                     Match tablematch = Engine.Match(sCreateTable);
@@ -162,19 +176,11 @@ namespace WindowPlugins.GUITVSeries.DataBase
                     }
                     #endregion
                 } else {
-                    //create the table??
+                    //create the table
+					DatabaseHelper.CreateTable(tableName, requiredFields.Values);
                 }
-
-                //do InitColumns and InitValues here so that they only need to be done once
-
-                //ensure all columns setup in the database
-                InitColumns();
-                //give columns there default values
-                InitValues();
             }
         }
-
-        protected abstract void InitColumns();
 
         public virtual bool AddColumn(DBFieldDef field)
         {
@@ -185,7 +191,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
             return false;
         }
 
-        public virtual bool AddColumns(IEnumerable<DBFieldDef> fields)
+        private bool AddColumns(IEnumerable<DBFieldDef> fields)
         {
             // verify if we already have that fields
             List<DBFieldDef> newFields = new List<DBFieldDef>();
@@ -225,48 +231,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
                 }
             }
             return false;
-        }
-
-        public virtual void InitValues()
-        {
-            foreach (DBField field in m_fields.Values)
-            {
-                if (!field.Primary || field.Value == null)
-                {
-                    switch (field.Type)
-                    {
-                        case DBFieldType.Int:
-                            field.Value = 0;
-                            break;
-
-                        case DBFieldType.String:
-                            field.Value = "";
-                            break;
-                    }
-                }
-            }
-            m_CommitNeeded = true;
-        }
-
-        protected void InitValues(Int32 iValue, String sValue)
-        {
-            foreach (DBField field in m_fields.Values)
-            {
-                if (!field.Primary || field.Value == null)
-                {
-                    switch (field.Type)
-                    {
-                        case DBFieldType.Int:
-                            field.Value = iValue;
-                            break;
-
-                        case DBFieldType.String:
-                            field.Value = sValue;
-                            break;
-                    }
-                }
-            }
-            m_CommitNeeded = true;
         }
 
         public virtual DBValue this[String fieldName]

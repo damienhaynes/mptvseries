@@ -31,7 +31,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
     public class DBNewzbin : DBTable
     {
         public const String cTableName = "news";
-        public const int cDBVersion = 4;
 
 		#region Local DB Fields
 		//declare fieldsnames as constants here, and then add them to TableFields
@@ -53,23 +52,23 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cCookieList = "cookielist";
 
 		// all mandatory fields. Place the primary key first - it's just good manners
-		public static DBFieldDefList TableFields = new DBFieldDefList{
-            {cID,                           new DBFieldDef{ FieldName = cID,								Type = DBFieldType.String,      Primary = true}},
-            {cSearchUrl,                    new DBFieldDef{ FieldName = cSearchUrl,						Type = DBFieldType.String}},
-            {cSearchRegexReport,            new DBFieldDef{ FieldName = cSearchRegexReport,				Type = DBFieldType.String}},
-            {cSearchRegexName,              new DBFieldDef{ FieldName = cSearchRegexName,				Type = DBFieldType.String}},
-            {cSearchRegexID,                new DBFieldDef{ FieldName = cSearchRegexID,					Type = DBFieldType.String}},
-            {cSearchRegexSize,              new DBFieldDef{ FieldName = cSearchRegexSize,				Type = DBFieldType.String}},
-            {cSearchRegexPostDate,          new DBFieldDef{ FieldName = cSearchRegexPostDate,			Type = DBFieldType.String}},
-            {cSearchRegexReportDate,        new DBFieldDef{ FieldName = cSearchRegexReportDate,			Type = DBFieldType.String}},
-            {cSearchRegexFormat,			new DBFieldDef{ FieldName = cSearchRegexFormat,				Type = DBFieldType.String}},
-            {cSearchRegexLanguage,			new DBFieldDef{ FieldName = cSearchRegexLanguage,			Type = DBFieldType.String}},
-            {cSearchRegexGroup,				new DBFieldDef{ FieldName = cSearchRegexGroup,				Type = DBFieldType.String}},
-            {cSearchRegexIsolateArticleName,new DBFieldDef{ FieldName = cSearchRegexIsolateArticleName,	Type = DBFieldType.String}},
-            {cSearchRegexParseArticleName,  new DBFieldDef{ FieldName = cSearchRegexParseArticleName,	Type = DBFieldType.String}},
-            {cLogin,						new DBFieldDef{ FieldName = cLogin,							Type = DBFieldType.String}},
-            {cPassword,						new DBFieldDef{ FieldName = cPassword,						Type = DBFieldType.String}},
-            {cCookieList,					new DBFieldDef{ FieldName = cCookieList,						Type = DBFieldType.String}},
+		public static DBFieldDefList TableFields = new DBFieldDefList {
+            {cID,                           new DBFieldDef{ FieldName = cID,							TableName = cTableName,	Type = DBFieldType.String,      Primary = true}},
+            {cSearchUrl,                    new DBFieldDef{ FieldName = cSearchUrl,						TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexReport,            new DBFieldDef{ FieldName = cSearchRegexReport,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexName,              new DBFieldDef{ FieldName = cSearchRegexName,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexID,                new DBFieldDef{ FieldName = cSearchRegexID,					TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexSize,              new DBFieldDef{ FieldName = cSearchRegexSize,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexPostDate,          new DBFieldDef{ FieldName = cSearchRegexPostDate,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexReportDate,        new DBFieldDef{ FieldName = cSearchRegexReportDate,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexFormat,			new DBFieldDef{ FieldName = cSearchRegexFormat,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexLanguage,			new DBFieldDef{ FieldName = cSearchRegexLanguage,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexGroup,				new DBFieldDef{ FieldName = cSearchRegexGroup,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexIsolateArticleName,new DBFieldDef{ FieldName = cSearchRegexIsolateArticleName,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegexParseArticleName,  new DBFieldDef{ FieldName = cSearchRegexParseArticleName,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cLogin,						new DBFieldDef{ FieldName = cLogin,							TableName = cTableName,	Type = DBFieldType.String}},
+            {cPassword,						new DBFieldDef{ FieldName = cPassword,						TableName = cTableName,	Type = DBFieldType.String}},
+            {cCookieList,					new DBFieldDef{ FieldName = cCookieList,					TableName = cTableName,	Type = DBFieldType.String}},
         };
 		#endregion
 
@@ -80,80 +79,91 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         static DBNewzbin()
         {
-            const int nCurrentDBVersion = cDBVersion;
-            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
-			if (nUpgradeDBVersion == nCurrentDBVersion) {
-				return;
-			}
-			List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
-			while (nUpgradeDBVersion != nCurrentDBVersion)
-                // take care of the upgrade in the table
-                switch (nUpgradeDBVersion)
-                {
-                    default:
-                        {
-                            // from scratch or from earlier version; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
-                            try
-                            {
-                                DBNewzbin item = null;
-                                if (NewzsSearchList.Count != 0)
-                                    item = NewzsSearchList[0];
-                                else
-                                    item = new DBNewzbin("0");
-
-                                item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
-                                item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
-                                item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
-                                item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
-                                item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
-                                item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
-                                item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
-                                item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
-                                item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
-                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
-                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
-                                item.Commit();
-                                nUpgradeDBVersion = nCurrentDBVersion;
-                            }
-                            catch { }
-                        }
-                        break;
-
-                    case 2:
-                        {
-                            DBNewzbin item = null;
-                            if (NewzsSearchList.Count != 0)
-                            {
-                                item = NewzsSearchList[0];
-                                item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
-                                item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
-                                item.Commit();
-                                nUpgradeDBVersion++;
-                            }
-                            else
-                                nUpgradeDBVersion = 0;
-                            
-                        }
-                        break;
-
-                    case 3:
-                        {
-                            DBNewzbin item = null;
-                            if (NewzsSearchList.Count != 0)
-                            {
-                                item = NewzsSearchList[0];
-                                item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
-                                item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
-                                item.Commit();
-                                nUpgradeDBVersion++;
-                            }
-                            else
-                                nUpgradeDBVersion = 0;
-                        }
-                        break;
-                }
-            DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+        	DatabaseUpgrade();
         }
+
+		#region deprecated database upgrade method - use MaintainDatabaseTable instead
+		private const int cDBVersion = 4;
+		/// <summary>
+		/// deprecated database upgrade method - use MaintainDatabaseTable instead
+		/// </summary>
+		private static void DatabaseUpgrade()
+    	{
+    		const int nCurrentDBVersion = cDBVersion;
+    		int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBNewzbinVersion);
+    		if (nUpgradeDBVersion == nCurrentDBVersion) {
+    			return;
+    		}
+    		List<DBNewzbin> NewzsSearchList = DBNewzbin.Get();
+    		while (nUpgradeDBVersion != nCurrentDBVersion)
+    			// take care of the upgrade in the table
+    			switch (nUpgradeDBVersion)
+    			{
+    				default:
+    					{
+    						// from scratch or from earlier version; logic of parsing changed, it's done in multiple regexp now. So add those new strings 
+    						try
+    						{
+    							DBNewzbin item = null;
+    							if (NewzsSearchList.Count != 0)
+    								item = NewzsSearchList[0];
+    							else
+    								item = new DBNewzbin("0");
+
+    							item[DBNewzbin.cSearchRegexReport] = @"<td colspan=""3"" class=""title"">(?<post>.*?)</tr>\s*</tbody>";
+    							item[DBNewzbin.cSearchRegexName] = "<a href=\"/browse/post.*?>([^<]*)";
+    							item[DBNewzbin.cSearchRegexID] = "<a href=\"/browse/post/(.*?)/\">";
+    							item[DBNewzbin.cSearchRegexSize] = "class=\"fileSize\">.*?<span>([^<]*)";
+    							item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
+    							item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
+    							item[DBNewzbin.cSearchRegexFormat] = "ps_rb_video_format[^>]*>([^<]*)";
+    							item[DBNewzbin.cSearchRegexLanguage] = "ps_rb_language[^>]*>([^<]*)";
+    							item[DBNewzbin.cSearchRegexGroup] = "<a href=\"/browse/group[^\"]*\" title=[^>]*>([^<]*)";
+    							item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
+    							item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
+    							item.Commit();
+    							nUpgradeDBVersion = nCurrentDBVersion;
+    						}
+    						catch { }
+    					}
+    					break;
+
+    				case 2:
+    					{
+    						DBNewzbin item = null;
+    						if (NewzsSearchList.Count != 0)
+    						{
+    							item = NewzsSearchList[0];
+    							item[DBNewzbin.cSearchRegexPostDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?=.*\k<param>)";
+    							item[DBNewzbin.cSearchRegexReportDate] = @"class=""(?<param>age[^""]*)"">([^<]*)(?!.*\k<param>)";
+    							item.Commit();
+    							nUpgradeDBVersion++;
+    						}
+    						else
+    							nUpgradeDBVersion = 0;
+                            
+    					}
+    					break;
+
+    				case 3:
+    					{
+    						DBNewzbin item = null;
+    						if (NewzsSearchList.Count != 0)
+    						{
+    							item = NewzsSearchList[0];
+    							item[DBNewzbin.cSearchRegexIsolateArticleName] = @"</span>\s*([^<]*\.(?:r00|part0?1\.rar|\.0*1)[^<]*)";
+    							item[DBNewzbin.cSearchRegexParseArticleName] = @"(?:&quot;|\[)?(.*?)(?:&quot;|\])?(?:\.r\d\d|\.part0?1\.rar|\.0*1| - | -=- |\]-\[| \(|\) |&quot;)";
+    							item.Commit();
+    							nUpgradeDBVersion++;
+    						}
+    						else
+    							nUpgradeDBVersion = 0;
+    					}
+    					break;
+    			}
+    		DBOption.SetOptions(DBOption.cDBNewzbinVersion, nCurrentDBVersion);
+		}
+		#endregion
 
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
@@ -164,24 +174,19 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					return;
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
 		public DBNewzbin()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBNewzbin(String sName)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(sName);
-        }
-
-        protected override void InitColumns()
-        {
-        	AddColumns(TableFields.Values);
         }
 
         public static void Clear(SQLCondition conditions)

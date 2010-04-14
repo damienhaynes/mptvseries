@@ -1718,7 +1718,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cLocalPlaytime:
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
-                                case DBOnlineEpisode.cID:
+                                case DBOnlineEpisode.cOnlineID:
                                 case DBOnlineEpisode.cLastUpdated:
                                 case DBOnlineEpisode.cDownloadExpectedNames:
                                 case DBOnlineEpisode.cDownloadPending:
@@ -2350,7 +2350,7 @@ namespace WindowPlugins.GUITVSeries
                             DBSeries series = nodeUpdated.Tag as DBSeries;
                             seriesIDsUpdates.Add(series[DBSeries.cID]);
                             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, cond, new DBOnlineEpisode()));
                         }
                         break;
 
@@ -2358,13 +2358,13 @@ namespace WindowPlugins.GUITVSeries
                             DBSeason season = nodeUpdated.Tag as DBSeason;
                             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
                             cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
+                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, cond, new DBOnlineEpisode()));
                         }
                         break;
 
                     case DBEpisode.cTableName: {
                             DBEpisode episode = nodeUpdated.Tag as DBEpisode;
-                            epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
+                            epIdsUpdates.Add(episode[DBOnlineEpisode.cOnlineID]);
                         }
                         break;
                 }
@@ -2521,7 +2521,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + series[DBSeries.cID]);
+                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + series[DBSeries.cID]);
                         //DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 and " + DBSeason.cEpisodesUnWatched + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + series[DBSeries.cID]);
                         //DBTVSeries.Execute("update online_series set " + DBOnlineSeries.cUnwatchedItems + " = 0 and " + DBOnlineSeries.cEpisodesUnWatched + " = 0 where " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " = " + series[DBSeries.cID]);
                         //series[DBOnlineSeries.cUnwatchedItems] = false;
@@ -2559,8 +2559,8 @@ namespace WindowPlugins.GUITVSeries
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + season[DBSeason.cSeriesID] +
-                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + season[DBSeason.cIndex]);
+						DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + season[DBSeason.cSeriesID] +
+                                            " and " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeasonIndex].Q + " = " + season[DBSeason.cIndex]);
                         //season[DBSeason.cUnwatchedItems] = false;
                         //season.Commit();
                         DBSeries series2 = DBSeries.Get(season[DBSeason.cSeriesID]);
@@ -2589,7 +2589,7 @@ namespace WindowPlugins.GUITVSeries
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " = \"" + episode[DBEpisode.cCompositeID] + "\"");/* +
+                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cCompositeID].Q + " = \"" + episode[DBEpisode.cCompositeID] + "\"");/* +
                                             " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + episode[DBEpisode.cSeasonIndex] +
                                             " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cEpisodeIndex) + " = " + episode[DBEpisode.cEpisodeIndex]);*/
                         //episode.Commit();

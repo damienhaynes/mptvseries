@@ -60,14 +60,14 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
 		// all mandatory fields. Place the primary key first - it's just good manners
 		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
-            {cIndex,			new DBFieldDef{FieldName = cIndex,			Type = DBFieldType.Int,			Primary = true}},
-            {cSelectionLevel,	new DBFieldDef{FieldName = cSelectionLevel, Type = DBFieldType.String}},
-            {cSelectionType,	new DBFieldDef{FieldName = cSelectionType,	Type = DBFieldType.String}},
-            {cInternalKey,		new DBFieldDef{FieldName = cInternalKey,	Type = DBFieldType.String}},
-            {cUserKey,			new DBFieldDef{FieldName = cUserKey,		Type = DBFieldType.String}},
-            {cTags,				new DBFieldDef{FieldName = cTags,			Type = DBFieldType.String}},
-            {cContextType,		new DBFieldDef{FieldName = cContextType,	Type = DBFieldType.String}},
-            {cEnabled,			new DBFieldDef{FieldName = cEnabled,		Type = DBFieldType.Int}}
+            {cIndex,			new DBFieldDef{FieldName = cIndex,		TableName = cTableName,	Type = DBFieldType.Int,			Primary = true}},
+            {cSelectionLevel,	new DBFieldDef{FieldName = cSelectionLevel,TableName = cTableName, Type = DBFieldType.String}},
+            {cSelectionType,	new DBFieldDef{FieldName = cSelectionType,TableName = cTableName,	Type = DBFieldType.String}},
+            {cInternalKey,		new DBFieldDef{FieldName = cInternalKey,TableName = cTableName,	Type = DBFieldType.String}},
+            {cUserKey,			new DBFieldDef{FieldName = cUserKey,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cTags,				new DBFieldDef{FieldName = cTags,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cContextType,		new DBFieldDef{FieldName = cContextType,TableName = cTableName,	Type = DBFieldType.String}},
+            {cEnabled,			new DBFieldDef{FieldName = cEnabled,	TableName = cTableName,	Type = DBFieldType.Int}}
 		};
 		#endregion
 
@@ -77,11 +77,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const SelectionType SelectionTypeEmule = SelectionType.emule;
         public const SelectionType SelectionTypeSubtiles = SelectionType.subtitles;
 
-        #region Constructors
-		//static DBUserSelection()
-		//{
-		//}
-
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
 			try {
@@ -90,23 +85,24 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
+		#region Constructors		
 		public DBUserSelection()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBUserSelection(long ID)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(ID.ToString());
         }
 
         public DBUserSelection(SelectionLevel level, SelectionType type, string internalkey)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             if (!this.ReadAKInternal(new DBValue(level.ToString()), new DBValue(type.ToString()), new DBValue(internalkey)))
             {
@@ -119,11 +115,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
         #endregion Constructors
 
         #region Private Methods
-
-        protected override void InitColumns()
-        {
-        	AddColumns(TableFields.Values);
-        }
 
         #endregion Private Methods 
 
@@ -310,12 +301,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             SQLCondition conditions = new SQLCondition();
             return Get(conditions);
-        }
-
-  
-        public static string Q(string sField)
-        {
-            return (cTableName + "." + sField);
         }
 
         #endregion Static Methods

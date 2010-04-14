@@ -47,187 +47,214 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
 		// all mandatory fields. Place the primary key first - it's just good manners
 		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
-            {cParsedName,			new DBFieldDef{FieldName = cParsedName,				Type = DBFieldType.String,	Primary = true, PrettyName = "Parsed Name"}},
-            {cID,					new DBFieldDef{FieldName = cID,						Type = DBFieldType.Int,		Indexed = true}},
-            {cScanIgnore,			new DBFieldDef{FieldName = cScanIgnore,				Type = DBFieldType.Int}},
-            {cDuplicateLocalName,	new DBFieldDef{FieldName = cDuplicateLocalName,		Type = DBFieldType.Int}},
-            {cHidden,				new DBFieldDef{FieldName = cHidden,					Type = DBFieldType.Int}}
+            {cParsedName,			new DBFieldDef{FieldName = cParsedName,			TableName = cTableName,	Type = DBFieldType.String,	Primary = true, PrettyName = "Parsed Name"}},
+            {cID,					new DBFieldDef{FieldName = cID,					TableName = cTableName,	Type = DBFieldType.Int,		Indexed = true}},
+            {cScanIgnore,			new DBFieldDef{FieldName = cScanIgnore,			TableName = cTableName,	Type = DBFieldType.Int}},
+            {cDuplicateLocalName,	new DBFieldDef{FieldName = cDuplicateLocalName,	TableName = cTableName,	Type = DBFieldType.Int}},
+            {cHidden,				new DBFieldDef{FieldName = cHidden,				TableName = cTableName,	Type = DBFieldType.Int}}
 		};
         #endregion
 
-        public const int cDBVersion = 13;
 
         private DBOnlineSeries m_onlineSeries = null;
-        public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
-        static int s_nLastLocalID;
+        public static List<string> FieldsRequiringSplit = new List<string>{ "Genre", "Actors", "Network", "ViewTags" };
+		static int s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);
 
         public List<string> cachedLogoResults = null;
 
         static DBSeries()
         {
-            s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);
-
-            const int nCurrentDBVersion = cDBVersion;
-            int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeriesVersion);
-
-			if (nUpgradeDBVersion == nCurrentDBVersion) {
-				return;
-			}
-        	while (nUpgradeDBVersion != nCurrentDBVersion)
-            {
-                SQLCondition condEmpty = new SQLCondition();
-                List<DBSeries> AllSeries = Get(condEmpty);
-
-                // take care of the upgrade in the table    
-                switch (nUpgradeDBVersion)
-                {
-                    case 1:
-                    case 2:
-                        // upgrade to version 3; clear the series table (we use 2 other tables now)
-                        try
-                        {
-                            const string sqlQuery = "DROP TABLE series";
-                            DBTVSeries.Execute(sqlQuery);
-                            nUpgradeDBVersion++;
-                        }
-                        catch { }
-                        break;
-
-                    case 3:
-                        // set all new perseries timestamps to 0
-                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
-                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 4:
-                        DBSeries.GlobalSet(new DBSeries(), DBSeries.cHidden, 0, new SQLCondition());
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 5:
-                        // copy all local parsed name into the online series if seriesID = 0
-                        SQLCondition conditions = new SQLCondition();
-                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
-                        // just getting the series should be enough
-                        List<DBSeries> seriesList = DBSeries.Get(conditions);
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 6:
-                        // set all watched flag timestamp to 0 (will be created)
-                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 7:
-                        // all series no tagged for auto download at first
-						//DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 8:
-                        // create the unwatcheditem value by parsin the episodes                
-                        foreach (DBSeries series in AllSeries)
-                        {
-                            DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
-                            series[DBOnlineSeries.cUnwatchedItems] = episode != null;
-                            series.Commit();
-                        }
-                        nUpgradeDBVersion++;
-                        break;
-
-                    case 9:
-                        // Set number of watched/unwatched episodes                                       
-                        foreach (DBSeries series in AllSeries)
-                        {                                                                                    
-                            int epsTotal = 0;
-                            int epsUnWatched = 0;
-                            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-                            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-                            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-                            series.Commit();
-                        }
-                        nUpgradeDBVersion++;
-                        break;
-                    
-                    case 10:
-                        // Update Sort Name Column
-                        foreach (DBSeries series in AllSeries)
-                        {
-                            series[DBOnlineSeries.cSortName] = Helper.GetSortByName(series[DBOnlineSeries.cPrettyName]);
-                            series.Commit();
-                        }
-                        nUpgradeDBVersion++;
-                        break;
-                    
-                    case 11:
-                        // Migrate isFavourite to new Tagged View
-                        conditions = new SQLCondition();
-                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
-                        seriesList = DBSeries.Get(conditions);
-
-                        MPTVSeriesLog.Write("Migrating Favourite Series");
-                        foreach (DBSeries series in seriesList) {
-                            // Tagged view are seperated with the pipe "|" character
-                            const string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
-                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
-                            series.Commit();                            
-                        }
-
-                        // Migrate isOnlineFavourite to new TaggedView
-                        conditions = new SQLCondition();
-                        conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
-                        seriesList = DBSeries.Get(conditions);
-
-                        MPTVSeriesLog.Write("Migrating Online Favourite Series");
-                        foreach (DBSeries series in seriesList) {
-                            // Tagged view are seperated with the pipe "|" character
-                            const string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
-                            series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
-                            series.Commit();                            
-                        }
-
-                        nUpgradeDBVersion++;
-                        break;
-                    case 12:
-                        // we now have parsed_series names as titlecased
-                        // to avoid users having to re-identify series for new episodes, and to avoid duplicate entries, we upgrade existing series names
-
-                        foreach (var series in AllSeries)
-                        {
-                            string oldName = series[DBSeries.cParsedName];
-                            string newName = oldName.ToTitleCase();
-                            MPTVSeriesLog.Write(string.Format("Upgrading Parsed Series Name: {0} to {1}", oldName, newName));
-                            series[DBSeries.cParsedName] = newName;
-                            series.Commit();
-                        }
-
-                        nUpgradeDBVersion++;
-                        break;
-                    default:
-                        // new DB, nothing special to do
-                        nUpgradeDBVersion = nCurrentDBVersion;
-                        break;
-                }
-            }
-            DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBVersion);
+        	DatabaseUpgrade();
         }
 
-        public DBSeries()
-            : base(cTableName)
+		#region deprecated database upgrade method - use MaintainDatabaseTable instead
+		private const int cDBVersion = 13;
+		/// <summary>
+		/// deprecated database upgrade method - use MaintainDatabaseTable instead
+		/// </summary>
+		private static void DatabaseUpgrade()
+    	{
+    		const int nCurrentDBVersion = cDBVersion;
+    		int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBSeriesVersion);
+
+    		if (nUpgradeDBVersion == nCurrentDBVersion) {
+    			return;
+    		}
+    		while (nUpgradeDBVersion != nCurrentDBVersion)
+    		{
+    			SQLCondition condEmpty = new SQLCondition();
+    			List<DBSeries> AllSeries = Get(condEmpty);
+
+    			// take care of the upgrade in the table    
+    			switch (nUpgradeDBVersion)
+    			{
+    				case 1:
+    				case 2:
+    					// upgrade to version 3; clear the series table (we use 2 other tables now)
+    					try
+    					{
+    						const string sqlQuery = "DROP TABLE series";
+    						DBTVSeries.Execute(sqlQuery);
+    						nUpgradeDBVersion++;
+    					}
+    					catch { }
+    					break;
+
+    				case 3:
+    					// set all new perseries timestamps to 0
+    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 4:
+    					DBSeries.GlobalSet(new DBSeries(), DBSeries.cHidden, 0, new SQLCondition());
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 5:
+    					// copy all local parsed name into the online series if seriesID = 0
+    					SQLCondition conditions = new SQLCondition();
+    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
+    					// just getting the series should be enough
+    					List<DBSeries> seriesList = DBSeries.Get(conditions);
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 6:
+    					// set all watched flag timestamp to 0 (will be created)
+    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 7:
+    					// all series no tagged for auto download at first
+    					//DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTaggedToDownload, 0, new SQLCondition());
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 8:
+    					// create the unwatcheditem value by parsin the episodes                
+    					foreach (DBSeries series in AllSeries)
+    					{
+    						DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
+    						series[DBOnlineSeries.cUnwatchedItems] = episode != null;
+    						series.Commit();
+    					}
+    					nUpgradeDBVersion++;
+    					break;
+
+    				case 9:
+    					// Set number of watched/unwatched episodes                                       
+    					foreach (DBSeries series in AllSeries)
+    					{                                                                                    
+    						int epsTotal = 0;
+    						int epsUnWatched = 0;
+    						DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+    						series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+    						series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+    						series.Commit();
+    					}
+    					nUpgradeDBVersion++;
+    					break;
+                    
+    				case 10:
+    					// Update Sort Name Column
+    					foreach (DBSeries series in AllSeries)
+    					{
+    						series[DBOnlineSeries.cSortName] = Helper.GetSortByName(series[DBOnlineSeries.cPrettyName]);
+    						series.Commit();
+    					}
+    					nUpgradeDBVersion++;
+    					break;
+                    
+    				case 11:
+    					// Migrate isFavourite to new Tagged View
+    					conditions = new SQLCondition();
+    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
+    					seriesList = DBSeries.Get(conditions);
+
+    					MPTVSeriesLog.Write("Migrating Favourite Series");
+    					foreach (DBSeries series in seriesList) {
+    						// Tagged view are seperated with the pipe "|" character
+    						const string tagName = "|" + DBView.cTranslateTokenFavourite + "|";                      
+    						series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);                             
+    						series.Commit();                            
+    					}
+
+    					// Migrate isOnlineFavourite to new TaggedView
+    					conditions = new SQLCondition();
+    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
+    					seriesList = DBSeries.Get(conditions);
+
+    					MPTVSeriesLog.Write("Migrating Online Favourite Series");
+    					foreach (DBSeries series in seriesList) {
+    						// Tagged view are seperated with the pipe "|" character
+    						const string tagName = "|" + DBView.cTranslateTokenOnlineFavourite + "|";
+    						series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, tagName);
+    						series.Commit();                            
+    					}
+
+    					nUpgradeDBVersion++;
+    					break;
+    				case 12:
+    					// we now have parsed_series names as titlecased
+    					// to avoid users having to re-identify series for new episodes, and to avoid duplicate entries, we upgrade existing series names
+
+    					foreach (var series in AllSeries)
+    					{
+    						string oldName = series[DBSeries.cParsedName];
+    						string newName = oldName.ToTitleCase();
+    						MPTVSeriesLog.Write(string.Format("Upgrading Parsed Series Name: {0} to {1}", oldName, newName));
+    						series[DBSeries.cParsedName] = newName;
+    						series.Commit();
+    					}
+
+    					nUpgradeDBVersion++;
+    					break;
+    				default:
+    					// new DB, nothing special to do
+    					nUpgradeDBVersion = nCurrentDBVersion;
+    					break;
+    			}
+    		}
+    		DBOption.SetOptions(DBOption.cDBSeriesVersion, nCurrentDBVersion);
+		}
+		#endregion
+
+		internal static void MaintainDatabaseTable(Version lastVersion)
+		{
+			try {
+				//test for table existance
+				if (!DatabaseHelper.TableExists(cTableName)) {
+					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+				}
+
+				if (lastVersion < new Version("2.6.0.1044")) {
+					//delete all the current indexes as they don't match the new naming scheme
+					DatabaseHelper.DeleteAllIndexes(cTableName);
+				}
+
+				DatabaseHelper.CreateIndexes(cTableName, TableFields.Values);
+			} catch (Exception) {
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
+			}
+		}
+
+		public DBSeries()
+			: base(cTableName, TableFields)
         {
         }
 
         public DBSeries(bool bCreateEmptyOnline)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             if (bCreateEmptyOnline)
                 m_onlineSeries = new DBOnlineSeries();
         }
 
         public DBSeries(String SeriesName)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(SeriesName);
             if (this[cID] == 0)
@@ -248,36 +275,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 m_onlineSeries = new DBOnlineSeries(this[cID]);
             }
         }
-
-		internal static void MaintainDatabaseTable(Version lastVersion)
-		{
-			try {
-				//test for table existance
-				if (!DatabaseHelper.TableExists(cTableName)) {
-					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
-				}
-
-				if (lastVersion < new Version("2.6.0.1044")) {
-					//delete all the current indexes as they don't match the new naming scheme
-					DatabaseHelper.DeleteAllIndexes(cTableName);
-				}
-
-				DatabaseHelper.CreateIndexes(cTableName, TableFields.Values);
-			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
-			}
-		}
 		
-		protected override void InitColumns()
-        {
-        	AddColumns(TableFields.Values);
-        }
-
-        public static String Q(String sField)
-        {
-            return cTableName + "." + sField;
-        }
-
         public override bool AddColumn(DBFieldDef field)
         {
             // can't add columns to 
@@ -600,7 +598,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                    conditions.AddCustom(" online_series.id in( " + DBEpisode.stdGetSQL(fullSubCond, false, true, "distinct " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
+					conditions.AddCustom(" online_series.id in( " + DBEpisode.stdGetSQL(fullSubCond, false, true, "distinct " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q) + " )");
                 }
                 return conditions;
             }
@@ -638,8 +636,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 SQLWhat what = new SQLWhat(new DBOnlineSeries());
                 what.AddWhat(new DBSeries());
                 field = what;
-            }
-            else field = DBOnlineSeries.Q(DBOnlineSeries.cID) + " from " + DBOnlineSeries.cTableName;
+            } else
+				field = DBOnlineSeries.TableFields[DBOnlineSeries.cID].Q + " from " + DBOnlineSeries.cTableName;
 
             if (includeStdCond)
             {
@@ -653,9 +651,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 bool bUseSortName = DBOption.GetOptions(DBOption.cSeries_UseSortName);
                 orderBy = conditions.customOrderStringIsSet
                               ? conditions.orderString
-                              : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
+                              : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.TableFields[DBOnlineSeries.cSortName].Q + "),":"") + "upper(" + DBOnlineSeries.TableFields[DBOnlineSeries.cPrettyName].Q + ")";
             }
-            return "select " + field + " left join " + cTableName + " on " + DBSeries.Q(cID) + "==" + DBOnlineSeries.Q(cID)
+			return "select " + field + " left join " + cTableName + " on " + DBSeries.TableFields[DBSeries.cID].Q + "==" + DBOnlineSeries.TableFields[DBOnlineSeries.cID].Q
                    + conds
                    + orderBy
                    + conditions.limitString;

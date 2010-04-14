@@ -21,6 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -40,10 +41,11 @@ namespace WindowPlugins.GUITVSeries.DataBase
         public bool AutoIncrement{ get; set; }
 		public bool Indexed { get; set; }
 		public DBValue Default { get; set; }
+		public string TableName { get; set; }
 
 		//TODO: Add Virtual (bool), OnlineField (string), and Split (bool)
 
-        private string prettyName;
+		private string prettyName;
         public string PrettyName
         {
             get
@@ -72,6 +74,20 @@ namespace WindowPlugins.GUITVSeries.DataBase
             }
         }
 
+    	/// <summary>
+    	/// returns the fully qualified field name ie. "TableName.FieldName"
+    	/// </summary>
+		public string Q
+    	{
+			get
+			{
+				if (string.IsNullOrEmpty(TableName)) {
+					throw new Exception("Table Name not set!");
+				}
+				return TableName + "." + FieldName;
+			}
+    	}
+
         static public implicit operator string(DBFieldDef value)
         {
             return value.FieldName;
@@ -80,7 +96,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
     public class DBFieldDefList : Dictionary<string, DBFieldDef>
     {
-        
     }
 
     /// <summary>
@@ -119,11 +134,12 @@ namespace WindowPlugins.GUITVSeries.DataBase
     /// </summary>
     public class DBField
     {
-        private DBFieldDef m_fieldDef;
+        private readonly DBFieldDef m_fieldDef;
 
         public DBField(DBFieldDef fieldDef)
         {
             m_fieldDef = fieldDef;
+        	Value = m_fieldDef.Default;
         }
 
         public string FieldName

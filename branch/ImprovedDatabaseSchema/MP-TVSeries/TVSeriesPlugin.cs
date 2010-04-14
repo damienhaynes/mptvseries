@@ -1095,8 +1095,8 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.actionMarkAllWatched:
 						// all watched
 						if (this.listLevel == Listlevel.Series && m_SelectedSeries != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + m_SelectedSeries[DBSeries.cID]);
+							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 where " + DBSeason.TableFields[DBSeason.cSeriesID].Q + " = " + m_SelectedSeries[DBSeries.cID]);
 							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
 							m_SelectedSeries.Commit();
 							// Updated Episode Counts
@@ -1104,8 +1104,8 @@ namespace WindowPlugins.GUITVSeries
 							cache.dump();
 						}
 						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
-												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
+							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
+												" and " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeasonIndex].Q + " = " + m_SelectedSeason[DBSeason.cIndex]);
 							m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
 							m_SelectedSeason.Commit();
 							DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
@@ -1117,16 +1117,16 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.actionMarkAllUnwatched:
 						// all unwatched
 						if (this.listLevel == Listlevel.Series && m_SelectedSeries != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
+							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + m_SelectedSeries[DBSeries.cID]);
+							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.TableFields[DBSeason.cSeriesID].Q + " = " + m_SelectedSeries[DBSeries.cID]);
 							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
 							m_SelectedSeries.Commit();
 							DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
 							cache.dump();
 						}
 						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
-												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
+							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
+												" and " + DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeasonIndex].Q + " = " + m_SelectedSeason[DBSeason.cIndex]);
 							m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
 							m_SelectedSeason.Commit();
 							DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
@@ -3042,20 +3042,20 @@ namespace WindowPlugins.GUITVSeries
 				case Listlevel.Series:					
 					seriesIDsUpdates.Add(series[DBSeries.cID]);
 					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
+					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, conditions, new DBOnlineEpisode()));
 					searchPattern = "*.jpg";
 					break;
 
 				case Listlevel.Season:
 					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
 					conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
+					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, conditions, new DBOnlineEpisode()));
 					searchPattern = season[DBSeason.cIndex] + "x*.jpg";
 					break;
 
 				case Listlevel.Episode:
-					epIDsUpdates.Add(episode[DBOnlineEpisode.cID]);
-					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
+					epIDsUpdates.Add(episode[DBOnlineEpisode.cOnlineID]);
+					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, episode[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
 					searchPattern = episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
 					break;
 			}
@@ -3198,7 +3198,7 @@ namespace WindowPlugins.GUITVSeries
 			}
 			
 			string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);
-			string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
+			string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cOnlineID : DBOnlineSeries.cID];
 			
 			// Submit rating online database if current rating is different
 			if (!String.IsNullOrEmpty(value) && value != item[type])
@@ -4316,7 +4316,7 @@ namespace WindowPlugins.GUITVSeries
                 int count = 0;
                 string seriesNames = string.Empty;
                 SQLCondition cond = new SQLCondition();
-                cond.AddOrderItem(DBOnlineSeries.Q(DBOnlineSeries.cPrettyName), SQLConditionOrder.Ascending);
+                cond.AddOrderItem(DBOnlineSeries.TableFields[DBOnlineSeries.cPrettyName].Q, SQLConditionOrder.Ascending);
                 cond.SetLimit(20);
                 if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
                 {
@@ -4332,7 +4332,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // not generic
                     SQLCondition fullSubCond = new SQLCondition();
-                    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
+					fullSubCond.AddCustom(DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q, DBOnlineSeries.TableFields[DBOnlineSeries.cID].Q, SQLConditionType.Equal);
                     cond.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                 }
                 cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");

@@ -31,15 +31,14 @@ namespace WindowPlugins.GUITVSeries.DataClass
     public class DBIgnoredDownloadedFiles : DBTable
     {
         public const String cTableName = "ignored_downloaded_files";
-        //public const int cDBVersion = 1;
 
 		#region Local DB Fields
 		//declare fieldsnames as constants here, and then add them to TableFields
 		public const String cFilename = "filename";
 
 		// all mandatory fields. Place the primary key first - it's just good manners
-		public static DBFieldDefList TableFields = new DBFieldDefList{
-                    {cFilename,    new DBFieldDef{ FieldName = cFilename,     Type = DBFieldType.String,     Primary = true }}
+		public static DBFieldDefList TableFields = new DBFieldDefList {
+                    {cFilename,    new DBFieldDef{ FieldName = cFilename,    TableName = cTableName, Type = DBFieldType.String,     Primary = true }}
         };
 		#endregion
 
@@ -47,23 +46,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             return this[cFilename];
         }
-
-		//static DBIgnoredDownloadedFiles() - Unneeded
-		//{
-		//    const int nCurrentDBVersion = cDBVersion;
-		//    while (DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion) != nCurrentDBVersion)
-		//        // take care of the upgrade in the table
-		//        switch ((int)DBOption.GetOptions(DBOption.cDBIgnoredDownloadedFilesVersion))
-		//        {
-		//            default:
-		//                {
-		//                    // 1 or nothing: assume it's starting from scratch or it's an older version
-		//                    // put the default ones
-		//                    DBOption.SetOptions(DBOption.cDBIgnoredDownloadedFilesVersion, nCurrentDBVersion);
-		//                }
-		//                break;
-		//        }
-		//}
 
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
@@ -74,24 +56,19 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					return;
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
 		public DBIgnoredDownloadedFiles()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBIgnoredDownloadedFiles(String sName)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(sName);
-        }
-
-        protected override void InitColumns()
-        {
-            AddColumns(TableFields.Values);
         }
 
         public static void ClearAll()

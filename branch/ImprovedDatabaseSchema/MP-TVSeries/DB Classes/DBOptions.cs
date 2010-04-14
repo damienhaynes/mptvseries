@@ -45,11 +45,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
         public const String cDBExpressionsVersion = "DBExpressionsVersion";
         public const String cDBNewzbinVersion = "DBNewzbinVersion";
-        //public const String cDBTorrentVersion = "dbTorrentVersion";
+		//public const String cDBTorrentVersion = "dbTorrentVersion"; // not used anymore
         public const String cDBViewsVersion = "DBViewsVersion";
         public const String cDBReplacementsVersion = "DBReplacementsVersion";
-        //public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
-        //public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
+		//public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion"; // not used anymore
+		//public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion"; // not used anymore
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -112,7 +112,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
-        public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp"; // not used anymore
+		public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp"; // not used anymore -> tell that to ConfigurationForm.linkDelUpdateTime_LinkClicked
 
         public const String cUsesNewPathFormat = "usesNewPathFormat";
 

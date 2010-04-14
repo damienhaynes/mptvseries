@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using SQLite.NET;
 using WindowPlugins.GUITVSeries.DataBase;
 
 namespace WindowPlugins.GUITVSeries.DataClass
@@ -33,9 +34,10 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         #region Online DB Fields
 		//declare fieldsnames as constants here, and then add them to TableFields
-		public const String cCompositeID = "CompositeID";         // composite string used for primary index, based on series, season & episode
+		public const String cID = "Id";
+		public const String cCompositeID = "CompositeID";         // composite string based on series, season & episode
         public const String cSeriesID = "SeriesID";
-        public const String cID = "EpisodeID";                    // onlineDB episodeID
+        public const String cOnlineID = "OnlineID";              // onlineDB episodeID
         public const String cSeasonIndex = "SeasonIndex";         // season index
         public const String cEpisodeIndex = "EpisodeIndex";       // episode index
         public const String cEpisodeName = "EpisodeName";         // episode name
@@ -72,43 +74,45 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
 		// all mandatory fields. Place the primary key first - it's just good manners
 		public static DBFieldDefList TableFields = new DBFieldDefList {
-            {cCompositeID,				new DBFieldDef{FieldName = cCompositeID,				Type = DBFieldType.String,	Primary = true}},
-            {cID,						new DBFieldDef{FieldName = cID,							Type = DBFieldType.Int,		PrettyName = "Episode ID"}},
-            {cSeriesID,					new DBFieldDef{FieldName = cSeriesID,					Type = DBFieldType.Int,		Indexed = true}},
-            {cEpisodeIndex,				new DBFieldDef{FieldName = cEpisodeIndex,				Type = DBFieldType.Int}},
-            {cSeasonID,					new DBFieldDef{FieldName = cSeasonID,					Type = DBFieldType.String}},
-            {cSeasonIndex,				new DBFieldDef{FieldName = cSeasonIndex,				Type = DBFieldType.Int}},
-            {cEpisodeName,				new DBFieldDef{FieldName = cEpisodeName,				Type = DBFieldType.String}},
-            {cWatched,					new DBFieldDef{FieldName = cWatched,					Type = DBFieldType.Int}},
-            {cEpisodeSummary,			new DBFieldDef{FieldName = cEpisodeSummary,				Type = DBFieldType.String,	PrettyName = "Overview"}},
-            {cFirstAired,				new DBFieldDef{FieldName = cFirstAired,					Type = DBFieldType.String,	PrettyName = "Air Date"}},
-            {cOnlineDataImported,		new DBFieldDef{FieldName = cOnlineDataImported,			Type = DBFieldType.Int}},
-            {cGuestStars,				new DBFieldDef{FieldName = cGuestStars,					Type = DBFieldType.String,	PrettyName = "Guest Stars"}},
-            {cDirector,					new DBFieldDef{FieldName = cDirector,					Type = DBFieldType.String}},
-            {cWriter,					new DBFieldDef{FieldName = cWriter,						Type = DBFieldType.String}},
-            {cHidden,					new DBFieldDef{FieldName = cHidden,						Type = DBFieldType.Int}},
-            {cLastUpdated,				new DBFieldDef{FieldName = cLastUpdated,				Type = DBFieldType.String}},
-            {cDownloadPending,			new DBFieldDef{FieldName = cDownloadPending,			Type = DBFieldType.Int}},
-            {cDownloadExpectedNames,	new DBFieldDef{FieldName = cDownloadExpectedNames,		Type = DBFieldType.String}},
-            {cEpisodeThumbnailUrl,		new DBFieldDef{FieldName = cEpisodeThumbnailUrl,		Type = DBFieldType.String}},
-            {cEpisodeThumbnailFilename,	new DBFieldDef{FieldName = cEpisodeThumbnailFilename,	Type = DBFieldType.String}},
-            {cRating,					new DBFieldDef{FieldName = cRating,						Type = DBFieldType.String}},
-            {cMyRating,					new DBFieldDef{FieldName = cMyRating,					Type = DBFieldType.String}},
-            {cCombinedEpisodeNumber,	new DBFieldDef{FieldName = cCombinedEpisodeNumber,		Type = DBFieldType.String}},
-            {cCombinedSeason,			new DBFieldDef{FieldName = cCombinedSeason,				Type = DBFieldType.String}},
-            {cDVDChapter,				new DBFieldDef{FieldName = cDVDChapter,					Type = DBFieldType.String}},
-            {cDVDDiscID,				new DBFieldDef{FieldName = cDVDDiscID,					Type = DBFieldType.String}},
-            {cDVDEpisodeNumber,			new DBFieldDef{FieldName = cDVDEpisodeNumber,			Type = DBFieldType.String}},
-            {cDVDSeasonNumber,			new DBFieldDef{FieldName = cDVDSeasonNumber,			Type = DBFieldType.String}},
-            {cEpisodeImageFlag,			new DBFieldDef{FieldName = cEpisodeImageFlag,			Type = DBFieldType.String}},
+            {cID,						new DBFieldDef{ FieldName = cID,					TableName = cTableName, Type = DBFieldType.Int,			
+																								Primary = true,     AutoIncrement = true }},
+            {cCompositeID,				new DBFieldDef{FieldName = cCompositeID,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cOnlineID,					new DBFieldDef{FieldName = cOnlineID,				TableName = cTableName,	Type = DBFieldType.Int,		PrettyName = "Online Episode ID"}},
+            {cSeriesID,					new DBFieldDef{FieldName = cSeriesID,				TableName = cTableName,	Type = DBFieldType.Int,		Indexed = true}},
+            {cEpisodeIndex,				new DBFieldDef{FieldName = cEpisodeIndex,			TableName = cTableName,	Type = DBFieldType.Int}},
+            {cSeasonID,					new DBFieldDef{FieldName = cSeasonID,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cSeasonIndex,				new DBFieldDef{FieldName = cSeasonIndex,			TableName = cTableName,	Type = DBFieldType.Int}},
+            {cEpisodeName,				new DBFieldDef{FieldName = cEpisodeName,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cWatched,					new DBFieldDef{FieldName = cWatched,				TableName = cTableName,	Type = DBFieldType.Int}},
+            {cEpisodeSummary,			new DBFieldDef{FieldName = cEpisodeSummary,			TableName = cTableName,	Type = DBFieldType.String,	PrettyName = "Overview"}},
+            {cFirstAired,				new DBFieldDef{FieldName = cFirstAired,				TableName = cTableName,	Type = DBFieldType.String,	PrettyName = "Air Date"}},
+            {cOnlineDataImported,		new DBFieldDef{FieldName = cOnlineDataImported,		TableName = cTableName,	Type = DBFieldType.Int}},
+            {cGuestStars,				new DBFieldDef{FieldName = cGuestStars,				TableName = cTableName,	Type = DBFieldType.String,	PrettyName = "Guest Stars"}},
+            {cDirector,					new DBFieldDef{FieldName = cDirector,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cWriter,					new DBFieldDef{FieldName = cWriter,					TableName = cTableName,	Type = DBFieldType.String}},
+            {cHidden,					new DBFieldDef{FieldName = cHidden,					TableName = cTableName,	Type = DBFieldType.Int}},
+            {cLastUpdated,				new DBFieldDef{FieldName = cLastUpdated,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cDownloadPending,			new DBFieldDef{FieldName = cDownloadPending,		TableName = cTableName,	Type = DBFieldType.Int}},
+            {cDownloadExpectedNames,	new DBFieldDef{FieldName = cDownloadExpectedNames,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cEpisodeThumbnailUrl,		new DBFieldDef{FieldName = cEpisodeThumbnailUrl,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cEpisodeThumbnailFilename,	new DBFieldDef{FieldName = cEpisodeThumbnailFilename,TableName = cTableName,	Type = DBFieldType.String}},
+            {cRating,					new DBFieldDef{FieldName = cRating,					TableName = cTableName,	Type = DBFieldType.String}},
+            {cMyRating,					new DBFieldDef{FieldName = cMyRating,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cCombinedEpisodeNumber,	new DBFieldDef{FieldName = cCombinedEpisodeNumber,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cCombinedSeason,			new DBFieldDef{FieldName = cCombinedSeason,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cDVDChapter,				new DBFieldDef{FieldName = cDVDChapter,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cDVDDiscID,				new DBFieldDef{FieldName = cDVDDiscID,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cDVDEpisodeNumber,			new DBFieldDef{FieldName = cDVDEpisodeNumber,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cDVDSeasonNumber,			new DBFieldDef{FieldName = cDVDSeasonNumber,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cEpisodeImageFlag,			new DBFieldDef{FieldName = cEpisodeImageFlag,		TableName = cTableName,	Type = DBFieldType.String}},
 
-	        {cIMDBID,					new DBFieldDef{FieldName = cIMDBID,						Type = DBFieldType.String}},
-            {cLanguage,					new DBFieldDef{FieldName = cLanguage,					Type = DBFieldType.String}},
-            {cProductionCode,			new DBFieldDef{FieldName = cProductionCode,				Type = DBFieldType.String}},
-            {cAbsoluteNumber,			new DBFieldDef{FieldName = cAbsoluteNumber,				Type = DBFieldType.String}},
-            {cAirsBeforeSeason,			new DBFieldDef{FieldName = cAirsBeforeSeason,			Type = DBFieldType.String}},
-            {cAirsBeforeEpisode,		new DBFieldDef{FieldName = cAirsBeforeEpisode,			Type = DBFieldType.String}},
-            {cAirsAfterSeason,			new DBFieldDef{FieldName = cAirsAfterSeason,			Type = DBFieldType.String}}
+	        {cIMDBID,					new DBFieldDef{FieldName = cIMDBID,					TableName = cTableName,	Type = DBFieldType.String}},
+            {cLanguage,					new DBFieldDef{FieldName = cLanguage,				TableName = cTableName,	Type = DBFieldType.String}},
+            {cProductionCode,			new DBFieldDef{FieldName = cProductionCode,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cAbsoluteNumber,			new DBFieldDef{FieldName = cAbsoluteNumber,			TableName = cTableName,	Type = DBFieldType.String}},
+            {cAirsBeforeSeason,			new DBFieldDef{FieldName = cAirsBeforeSeason,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cAirsBeforeEpisode,		new DBFieldDef{FieldName = cAirsBeforeEpisode,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cAirsAfterSeason,			new DBFieldDef{FieldName = cAirsAfterSeason,		TableName = cTableName,	Type = DBFieldType.String}}
 		};
 		#endregion
 
@@ -123,7 +127,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
             s_OnlineToFieldMap.Add("EpisodeNumber", cEpisodeIndex);
             s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
-            s_OnlineToFieldMap.Add("id", cID);
+            s_OnlineToFieldMap.Add("id", cOnlineID);
             s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
             s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
             s_OnlineToFieldMap.Add("filename", cEpisodeThumbnailUrl);
@@ -141,43 +145,59 @@ namespace WindowPlugins.GUITVSeries.DataClass
 				if (!DatabaseHelper.TableExists(cTableName)) {
 					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
 				}
+				MPTVSeriesLog.Write("Upgrading " + cTableName + " Table");
 
 				if (lastVersion < new Version("2.6.0.1044")) {
+					//needs to be done before DBTable constructor is called
+					//to prevent columns being added to the database
+
+					//rename the EpisodeID column to OnlineID so as to avoid any confusion about the new Id column
+					DatabaseHelper.RenameDatabaseColumn(cTableName, "EpisodeID", cOnlineID);
+
+					DatabaseHelper.CreateAutoIDKey(cTableName);
+
 					//delete all the current indexes as they don't match the new naming scheme
-					DatabaseHelper.DeleteAllIndexes(cTableName);
+					// - CreateAutoIDKey should have done this for us
+					//DatabaseHelper.DeleteAllIndexes(cTableName);
 				}
+				MPTVSeriesLog.Write("Upgrade of " + cTableName + " Finished");
 
 				DatabaseHelper.CreateIndexes(cTableName, TableFields.Values);
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 
         public DBOnlineEpisode()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
-            ReadPrimary(nSeriesID + "_" + nSeasonIndex + "x" + nEpisodeIndex);
+            ReadComposite(nSeriesID + "_" + nSeasonIndex + "x" + nEpisodeIndex);
             this[cSeriesID] = nSeriesID;
             this[cSeasonIndex] = nSeasonIndex;
             this[cEpisodeIndex] = nEpisodeIndex;
         }
 
-        protected override void InitColumns()
-        {
-        	AddColumns(TableFields.Values);
-        }
-
-        public static String Q(String sField)
-        {
-            return cTableName + "." + sField;
-        }
-
-        public static void Clear(SQLCondition conditions)
+		public bool ReadComposite(string composite)
+		{
+			try {
+				m_fields[DBOnlineEpisode.cCompositeID].Value = composite;
+				SQLCondition condition = new SQLCondition();
+				condition.Add(this, cCompositeID, m_fields[DBOnlineEpisode.cCompositeID].Value, SQLConditionType.Equal);
+				String sqlQuery = "select * from " + TableName + condition;
+				SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
+				return Read(ref records, 0);
+			} catch (Exception ex) {
+				MPTVSeriesLog.Write("An Error Occurred (" + ex.Message + ").");
+			}
+			return false;
+		}
+		
+		public static void Clear(SQLCondition conditions)
         {
             Clear(new DBOnlineEpisode(), conditions);
         }

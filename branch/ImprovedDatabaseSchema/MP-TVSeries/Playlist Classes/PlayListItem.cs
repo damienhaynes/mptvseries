@@ -67,7 +67,7 @@ namespace WindowPlugins.GUITVSeries
                 FileName = value[DBEpisode.cFilename];
                 Description = value[DBEpisode.cEpisodeName];
                 Duration = value["localPlaytime"];
-                EpisodeID = value[DBOnlineEpisode.cID];                
+                EpisodeID = value[DBOnlineEpisode.cOnlineID];                
                 Summary = value[DBOnlineEpisode.cEpisodeSummary];
                 FirstAired = value[DBOnlineEpisode.cFirstAired];
                 EpisodeThumb = ImageAllocator.GetEpisodeImage(value);                               

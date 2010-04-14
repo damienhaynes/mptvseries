@@ -47,17 +47,17 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cSeriesName = "SeriesName"; // online
 
 		// all mandatory fields. Place the primary key first - it's just good manners
-		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
-                    {cIndex,        new DBFieldDef{ FieldName = cIndex,          Type = DBFieldType.Int,     Primary = true }},
-                    {cSeriesID,     new DBFieldDef{ FieldName = cSeriesID,       Type = DBFieldType.Int}},
-                    {cChosen,       new DBFieldDef{ FieldName = cChosen,         Type = DBFieldType.String}},
-                    {cLocalPath,    new DBFieldDef{ FieldName = cLocalPath,      Type = DBFieldType.String}},
-                    {cBannerPath,   new DBFieldDef{ FieldName = cBannerPath,     Type = DBFieldType.String}},
-                    {cThumbnailPath,new DBFieldDef{ FieldName = cThumbnailPath,  Type = DBFieldType.String}},
-                    {cColors,       new DBFieldDef{ FieldName = cColors,         Type = DBFieldType.String}},
-                    {cResolution,   new DBFieldDef{ FieldName = cResolution,     Type = DBFieldType.String}},
-                    {cDisabled,     new DBFieldDef{ FieldName = cDisabled,       Type = DBFieldType.String}},
-                    {cSeriesName,   new DBFieldDef{ FieldName = cSeriesName,     Type = DBFieldType.String}}
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+                    {cIndex,        new DBFieldDef{ FieldName = cIndex,         TableName = cTableName, Type = DBFieldType.Int,     Primary = true }},
+                    {cSeriesID,     new DBFieldDef{ FieldName = cSeriesID,      TableName = cTableName, Type = DBFieldType.Int}},
+                    {cChosen,       new DBFieldDef{ FieldName = cChosen,        TableName = cTableName, Type = DBFieldType.String}},
+                    {cLocalPath,    new DBFieldDef{ FieldName = cLocalPath,     TableName = cTableName, Type = DBFieldType.String}},
+                    {cBannerPath,   new DBFieldDef{ FieldName = cBannerPath,    TableName = cTableName, Type = DBFieldType.String}},
+                    {cThumbnailPath,new DBFieldDef{ FieldName = cThumbnailPath, TableName = cTableName, Type = DBFieldType.String}},
+                    {cColors,       new DBFieldDef{ FieldName = cColors,        TableName = cTableName, Type = DBFieldType.String}},
+                    {cResolution,   new DBFieldDef{ FieldName = cResolution,    TableName = cTableName, Type = DBFieldType.String}},
+                    {cDisabled,     new DBFieldDef{ FieldName = cDisabled,      TableName = cTableName, Type = DBFieldType.String}},
+                    {cSeriesName,   new DBFieldDef{ FieldName = cSeriesName,    TableName = cTableName, Type = DBFieldType.String}}
         };
 		#endregion
 
@@ -69,12 +69,12 @@ namespace WindowPlugins.GUITVSeries.DataClass
         }
 
         public DBFanart()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBFanart(long ID)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(ID.ToString());
         }
@@ -87,15 +87,10 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
-		protected override void InitColumns()
-        {
-            AddColumns(TableFields.Values);
-        }
-
         public static void ClearAll()
         {      
             cache.Clear();         

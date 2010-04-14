@@ -33,30 +33,28 @@ namespace WindowPlugins.GUITVSeries.DataClass
     {
         public const String cTableName = "torrent";
 
+		#region Local DB Fields
+		//declare fieldsnames as constants here, and then add them to TableFields
 		public const String cID = "ID";
         public const String cSearchUrl = "searchUrl";
         public const String cSearchRegex = "searchRegex";
         public const String cDetailsUrl = "detailsUrl";
         public const String cDetailsRegex = "detailsRegex";
 
-        // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
-            {cID,			new DBFieldDef{FieldName = cID,				Type = DBFieldType.String,	Primary = true}},
-            {cSearchUrl,	new DBFieldDef{FieldName = cSearchUrl,		Type = DBFieldType.String}},
-            {cSearchRegex,	new DBFieldDef{FieldName = cSearchRegex,	Type = DBFieldType.String}},
-            {cDetailsUrl,	new DBFieldDef{FieldName = cDetailsUrl,		Type = DBFieldType.String}},
-            {cSearchRegex,	new DBFieldDef{FieldName = cDetailsRegex,	Type = DBFieldType.String}}
+		// all mandatory fields. Place the primary key first - it's just good manners
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cID,			new DBFieldDef{FieldName = cID,			TableName = cTableName,	Type = DBFieldType.String,	Primary = true}},
+            {cSearchUrl,	new DBFieldDef{FieldName = cSearchUrl,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegex,	new DBFieldDef{FieldName = cSearchRegex,TableName = cTableName,	Type = DBFieldType.String}},
+            {cDetailsUrl,	new DBFieldDef{FieldName = cDetailsUrl,	TableName = cTableName,	Type = DBFieldType.String}},
+            {cSearchRegex,	new DBFieldDef{FieldName = cDetailsRegex,TableName = cTableName,	Type = DBFieldType.String}}
 		};
+		#endregion
 
-        public override string ToString()
+		public override string ToString()
         {
             return this[cID];
         }
-
-		//static DBTorrentSearch()
-		//{
-        	
-		//}
 
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
@@ -67,7 +65,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					AddDefaults();
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 
@@ -91,19 +89,14 @@ namespace WindowPlugins.GUITVSeries.DataClass
         }
 
         public DBTorrentSearch()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBTorrentSearch(String sName)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(sName);
-        }
-
-        protected override void InitColumns()
-        {
-        	AddColumns(TableFields.Values);
         }
 
         public static void Clear(SQLCondition conditions)

@@ -522,7 +522,7 @@ namespace WindowPlugins.GUITVSeries
             // Get a list of the most recently added episodes in the database
             SQLCondition conditions = new SQLCondition();
             conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
-            conditions.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLConditionOrder.Descending);
+			conditions.AddOrderItem(DBEpisode.TableFields[DBEpisode.cFileDateCreated].Q, SQLConditionOrder.Descending);
             List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
 
             if (episodes != null)
@@ -999,7 +999,7 @@ namespace WindowPlugins.GUITVSeries
                 // lets get the list of unidentified episodes
                 SQLCondition conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, 0, SQLConditionType.Equal);
                 episodesList = DBEpisode.Get(conditions, false);
 
                 epCount += episodesList.Count;
@@ -1045,7 +1045,7 @@ namespace WindowPlugins.GUITVSeries
                                 season.Commit();
 
                                 DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode(series[DBSeries.cID], onlineEpisode[DBOnlineEpisode.cSeasonIndex], onlineEpisode[DBOnlineEpisode.cEpisodeIndex]);
-                                newOnlineEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
+                                newOnlineEpisode[DBOnlineEpisode.cOnlineID] = onlineEpisode[DBOnlineEpisode.cOnlineID];
                                 if (newOnlineEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                                     newOnlineEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
                                 foreach (String key in onlineEpisode.FieldNames) {
@@ -1106,8 +1106,8 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Episodes"));
 
             // let's check which series/episodes we have locally
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.GreaterThan);
-            cond.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), SQLConditionOrder.Ascending);
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, 0, SQLConditionType.GreaterThan);
+			cond.AddOrderItem(DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q, SQLConditionOrder.Ascending);
 
             List<DBEpisode> episodesInDB = DBEpisode.Get(cond);
 
@@ -1116,7 +1116,7 @@ namespace WindowPlugins.GUITVSeries
 
             // let's check which of these we have any interest in
             for (int i = 0; i < episodesInDB.Count; i++)
-                if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cID]))
+                if (!episodesUpdated.Contains(episodesInDB[i][DBOnlineEpisode.cOnlineID]))
                     episodesInDB.RemoveAt(i--);
 
             if (episodesInDB.Count == 0) {
@@ -1484,8 +1484,8 @@ namespace WindowPlugins.GUITVSeries
                         // Set Episode Ratings
                         foreach (DBEpisode episode in episodes)
                         {
-                            if (userRatings.EpisodeUserRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
-                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeUserRatings[episode[DBOnlineEpisode.cID]];
+                            if (userRatings.EpisodeUserRatings.ContainsKey(episode[DBOnlineEpisode.cOnlineID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeUserRatings[episode[DBOnlineEpisode.cOnlineID]];
 
                                 // If user has rated episode then mark as watched
                                 if (MarkWatched)
@@ -1493,15 +1493,15 @@ namespace WindowPlugins.GUITVSeries
 
                                 episode.Commit();
                             }                            
-                            if (userRatings.EpisodeCommunityRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
-                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeCommunityRatings[episode[DBOnlineEpisode.cID]];
+                            if (userRatings.EpisodeCommunityRatings.ContainsKey(episode[DBOnlineEpisode.cOnlineID])) {
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeCommunityRatings[episode[DBOnlineEpisode.cOnlineID]];
                                 episode.Commit();
                             }
 
                             // Is this better?
-                            /*if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cID])) {
-                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].UserRating;
-                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
+                            /*if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cOnlineID])) {
+                                episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cOnlineID]].UserRating;
+                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cOnlineID]].CommunityRating;
                                 
                                 if (MarkWatched)
                                     episode[DBOnlineEpisode.cWatched] = true;
@@ -1938,7 +1938,7 @@ namespace WindowPlugins.GUITVSeries
             season.Commit();
 
             // update data
-            localEpisode[DBOnlineEpisode.cID] = onlineEpisode[DBOnlineEpisode.cID];
+            localEpisode[DBOnlineEpisode.cOnlineID] = onlineEpisode[DBOnlineEpisode.cOnlineID];
             if (localEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                 localEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
 
@@ -2132,7 +2132,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 StringBuilder condBuilder = new StringBuilder();
-                string field = DBEpisode.Q(DBEpisode.cFilename);
+                string field = DBEpisode.TableFields[DBEpisode.cFilename].Q;
                 int count = 0;
                 foreach (string file in filenames)
                 {
@@ -2167,15 +2167,15 @@ namespace WindowPlugins.GUITVSeries
             }
 
             SQLCondition condSeason = new SQLCondition();
-            condSeason.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
-                            + " where " + DBEpisode.cSeriesID + " = " + DBSeason.Q(DBSeason.cSeriesID) + " and "
-                            + DBEpisode.cSeasonIndex + " = " + DBSeason.Q(DBSeason.cIndex) + " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 "   + ")");
+			condSeason.AddCustom(" exists( select " + DBEpisode.TableFields[DBEpisode.cFilename].Q + " from " + DBEpisode.cTableName
+							+ " where " + DBEpisode.cSeriesID + " = " + DBSeason.TableFields[DBSeason.cSeriesID].Q + " and "
+							+ DBEpisode.cSeasonIndex + " = " + DBSeason.TableFields[DBSeason.cIndex].Q + " and " + DBEpisode.TableFields[DBEpisode.cImportProcessed].Q + " = 1 " + ")");
             DBSeason.GlobalSet(DBSeason.cHasLocalFilesTemp, true, condSeason); //takes forever
 
             SQLCondition condSeries = new SQLCondition();
-            condSeries.AddCustom(" exists( select " + DBEpisode.Q(DBEpisode.cFilename) + " from " + DBEpisode.cTableName
-                            + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.Q(DBOnlineSeries.cID) +
-                            " and " + DBEpisode.Q(DBEpisode.cImportProcessed) + " = 1 " + ")");
+			condSeries.AddCustom(" exists( select " + DBEpisode.TableFields[DBEpisode.cFilename].Q + " from " + DBEpisode.cTableName
+                            + " where " + DBEpisode.cSeriesID + " = " + DBOnlineSeries.TableFields[DBOnlineSeries.cID].Q +
+							" and " + DBEpisode.TableFields[DBEpisode.cImportProcessed].Q + " = 1 " + ")");
             DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, true, condSeries); //takes about 1/4 of the time of above
         }
 
@@ -2305,7 +2305,7 @@ namespace WindowPlugins.GUITVSeries
                         if (bNewFile) {
                             //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
                             DBOnlineEpisode doubleEp = new DBOnlineEpisode(episode[DBEpisode.cSeriesID], nSeason, episode[DBEpisode.cEpisodeIndex2]);
-                            if (doubleEp[DBOnlineEpisode.cID] > 0 && doubleEp[DBOnlineEpisode.cHidden] == 1) {
+                            if (doubleEp[DBOnlineEpisode.cOnlineID] > 0 && doubleEp[DBOnlineEpisode.cHidden] == 1) {
                                 doubleEp[DBOnlineEpisode.cHidden] = 0;
                                 doubleEp.Commit();
                             }
@@ -2325,7 +2325,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     //if it's a new file but the DBOnlineEpisode already has the online ID is set, then ensure that the episode is not hidden
-                    if (bNewFile && episode[DBOnlineEpisode.cID] > 0) {
+                    if (bNewFile && episode[DBOnlineEpisode.cOnlineID] > 0) {
                         episode[DBOnlineEpisode.cHidden] = 0;
                     }
 
@@ -2344,7 +2344,7 @@ namespace WindowPlugins.GUITVSeries
             //now make DBOnlineEpisodes for each unmatched double episode
             //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
             SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
-            cond.AddCustom(DBOnlineEpisode.cTableName + "." + DBOnlineEpisode.cCompositeID + " is null");
+			cond.AddCustom(DBOnlineEpisode.TableFields[DBOnlineEpisode.cCompositeID].Q + " is null");
             List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false, true);
             //now foreach episode make a DBOnlineEpisode
             foreach (DBEpisode episode in missingDoubleEpisodes) {

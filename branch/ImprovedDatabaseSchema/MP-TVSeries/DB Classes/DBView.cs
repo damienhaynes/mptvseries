@@ -30,7 +30,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
 	public class DBView : DBTable
 	{
 		public const String cTableName = "Views";
-		public const int cDBVersion = 5;
 
 		#region Local DB Fields
 		//declare fieldsnames as constants here, and then add them to TableFields
@@ -44,15 +43,15 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		public const String cParentalControl = "ParentalControl";
 
 		// all mandatory fields. Place the primary key first - it's just good manners
-		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
-            {cIndex,			new DBFieldDef{FieldName = cIndex,				Type = DBFieldType.Int,		Primary = true}},
-            {cEnabled,			new DBFieldDef{FieldName = cEnabled,			Type = DBFieldType.Int}},
-            {cSort,				new DBFieldDef{FieldName = cSort,				Type = DBFieldType.Int}},
-            {cTransToken,		new DBFieldDef{FieldName = cTransToken,			Type = DBFieldType.String}},
-            {cPrettyName,		new DBFieldDef{FieldName = cPrettyName,			Type = DBFieldType.String}},
-            {cViewConfig,		new DBFieldDef{FieldName = cViewConfig,			Type = DBFieldType.String}},
-            {cTaggedView,		new DBFieldDef{FieldName = cTaggedView,			Type = DBFieldType.Int}},
-            {cParentalControl,	new DBFieldDef{FieldName = cParentalControl,	Type = DBFieldType.Int}}
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+            {cIndex,			new DBFieldDef{FieldName = cIndex,			TableName = cTableName,	Type = DBFieldType.Int,		Primary = true}},
+            {cEnabled,			new DBFieldDef{FieldName = cEnabled,		TableName = cTableName,	Type = DBFieldType.Int}},
+            {cSort,				new DBFieldDef{FieldName = cSort,			TableName = cTableName,	Type = DBFieldType.Int}},
+            {cTransToken,		new DBFieldDef{FieldName = cTransToken,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cPrettyName,		new DBFieldDef{FieldName = cPrettyName,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cViewConfig,		new DBFieldDef{FieldName = cViewConfig,		TableName = cTableName,	Type = DBFieldType.String}},
+            {cTaggedView,		new DBFieldDef{FieldName = cTaggedView,		TableName = cTableName,	Type = DBFieldType.Int}},
+            {cParentalControl,	new DBFieldDef{FieldName = cParentalControl,TableName = cTableName,	Type = DBFieldType.Int}}
 		};
 		#endregion
 
@@ -84,6 +83,16 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		public const String cTranslateTokenKidsSeries = "KidsSeries";
 
 		static DBView()
+		{
+			DatabaseUpgrade();
+		}
+
+		#region deprecated database upgrade method - use MaintainDatabaseTable instead
+		private const int cDBVersion = 5;
+		/// <summary>
+		/// deprecated database upgrade method - use MaintainDatabaseTable instead
+		/// </summary>
+		private static void DatabaseUpgrade()
 		{
 			const int nCurrentDBVersion = cDBVersion;
 			int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBViewsVersion);
@@ -127,9 +136,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
 						view[cTransToken] = cTranslateTokenContentRating;
 						view[cPrettyName] = "";
 						view[cViewConfig] = @"group:<Series.ContentRating><;><;><;>" +
-											"<nextStep>series<;><;><;>" +
-											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+						                    "<nextStep>series<;><;><;>" +
+						                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+						                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 						view[cParentalControl] = "0";
 						view.Commit();
 
@@ -141,9 +150,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
 						view[cTransToken] = cTranslateTokenViewTags;
 						view[cPrettyName] = "";
 						view[cViewConfig] = @"group:<Series.ViewTags><;><;><;>" +
-											"<nextStep>series<;><;><;>" +
-											"<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-											"<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+						                    "<nextStep>series<;><;><;>" +
+						                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
+						                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
 						view[cParentalControl] = "0";
 						view.Commit();
 						nUpgradeDBVersion++;
@@ -186,17 +195,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 			}
 			DBOption.SetOptions(DBOption.cDBViewsVersion, nCurrentDBVersion);
 		}
-
-		public DBView()
-			: base(cTableName)
-		{
-		}
-
-		public DBView(long ID)
-			: base(cTableName)
-		{
-			ReadPrimary(ID.ToString());
-		}
+		#endregion
 
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
@@ -207,13 +206,19 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					AddDefaults();
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 
-		protected override void InitColumns()
+		public DBView()
+			: base(cTableName, TableFields)
 		{
-			AddColumns(TableFields.Values);
+		}
+
+		public DBView(long ID)
+			: base(cTableName, TableFields)
+		{
+			ReadPrimary(ID.ToString());
 		}
 
 		public static void ClearAll()

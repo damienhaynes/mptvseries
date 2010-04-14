@@ -42,23 +42,23 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
 		// all mandatory fields. Place the primary key first - it's just good manners
 		public static readonly DBFieldDefList TableFields = new DBFieldDefList { 
-			{cIndex,			new DBFieldDef { FieldName = cIndex,		Type = DBFieldType.Int,			Primary = true }},
-			{cEnabled,			new DBFieldDef { FieldName = cEnabled,		Type = DBFieldType.Int }},
-			{cPath,				new DBFieldDef { FieldName = cPath,			Type = DBFieldType.String }},
-			{cRemovable,		new DBFieldDef { FieldName = cRemovable,	Type = DBFieldType.Int }},
-			{cKeepReference,	new DBFieldDef { FieldName = cKeepReference,Type = DBFieldType.Int }}
+			{cIndex,			new DBFieldDef { FieldName = cIndex,		TableName = cTableName,	Type = DBFieldType.Int,			Primary = true }},
+			{cEnabled,			new DBFieldDef { FieldName = cEnabled,		TableName = cTableName,	Type = DBFieldType.Int }},
+			{cPath,				new DBFieldDef { FieldName = cPath,			TableName = cTableName,	Type = DBFieldType.String }},
+			{cRemovable,		new DBFieldDef { FieldName = cRemovable,	TableName = cTableName,	Type = DBFieldType.Int }},
+			{cKeepReference,	new DBFieldDef { FieldName = cKeepReference,TableName = cTableName,	Type = DBFieldType.Int }}
 		};
 		#endregion
 
 		public static bool includesNetworkShares { get; private set; }
 
         public DBImportPath()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBImportPath(long ID)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(ID.ToString());
         }
@@ -71,20 +71,10 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
-		protected override void InitColumns()
-        {
-            AddColumns(TableFields.Values);
-        }
-
-        public override void InitValues()
-        {
-            InitValues(-1, "");
-        }
-
         public static void ClearAll()
         {
             DBTVSeries.Execute("delete from " + cTableName);

@@ -31,7 +31,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
     public class DBExpression : DBTable
     {
         public const String cTableName = "expressions";
-        private const int cDBVersion = 4;
 
 		#region Local DB Fields
 		//declare fieldsnames as constants here, and then add them to TableFields
@@ -41,11 +40,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cExpression = "expression";
 
 		// all mandatory fields. Place the primary key first - it's just good manners
-		public static readonly DBFieldDefList TableFields = new DBFieldDefList{
-                    {cIndex,       new DBFieldDef{ FieldName = cIndex,       Type = DBFieldType.Int,     Primary = true }},
-                    {cEnabled,     new DBFieldDef{ FieldName = cEnabled,     Type = DBFieldType.Int }},
-                    {cType,        new DBFieldDef{ FieldName = cType,        Type = DBFieldType.String }},
-                    {cExpression,  new DBFieldDef{ FieldName = cExpression,  Type = DBFieldType.String }}
+		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
+                    {cIndex,       new DBFieldDef{ FieldName = cIndex,      TableName = cTableName, Type = DBFieldType.Int,     Primary = true }},
+                    {cEnabled,     new DBFieldDef{ FieldName = cEnabled,    TableName = cTableName, Type = DBFieldType.Int }},
+                    {cType,        new DBFieldDef{ FieldName = cType,       TableName = cTableName, Type = DBFieldType.String }},
+                    {cExpression,  new DBFieldDef{ FieldName = cExpression, TableName = cTableName, Type = DBFieldType.String }}
         };
 		#endregion
 
@@ -56,34 +55,41 @@ namespace WindowPlugins.GUITVSeries.DataClass
         } 
 
         public DBExpression()
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
         }
 
         public DBExpression(long ID)
-            : base(cTableName)
+			: base(cTableName, TableFields)
         {
             ReadPrimary(ID.ToString());
         }
 
         static DBExpression()
         {
-			#region deprecated database upgrade method - don't add to
+        	DatabaseUpgrade();
+        }
 
-			//TODO: delete this
-			DBExpression[] expressions = DBExpression.GetAll();
-            foreach (DBExpression e in expressions)
-            {
-                if(e[DBExpression.cExpression] == @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\w]+)\](( |)(-( |)|))(?<title>(?![^\]*?sample)[^$]*?)\.(?<ext>[^.]*)")
-                {
-                    // fix typo
-                    e[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>(?![^\\]*?sample)[^$]*?)\.(?<ext>[^.]*)";
-                    e.Commit();
-                    break;
-                }
-			}
-			#endregion
+		#region deprecated database upgrade method - use MaintainDatabaseTable instead
+		/// <summary>
+		/// deprecated database upgrade method - use MaintainDatabaseTable instead
+		/// TODO: delete this
+		/// </summary>
+		private static void DatabaseUpgrade()
+    	{
+    		DBExpression[] expressions = DBExpression.GetAll();
+    		foreach (DBExpression e in expressions)
+    		{
+    			if(e[DBExpression.cExpression] == @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\w]+)\](( |)(-( |)|))(?<title>(?![^\]*?sample)[^$]*?)\.(?<ext>[^.]*)")
+    			{
+    				// fix typo
+    				e[DBExpression.cExpression] = @"(?<series>[^\\\[]*) - \[(?<season>[0-9]{1,2})x(?<episode>[0-9\W]+)\](( |)(-( |)|))(?<title>(?![^\\]*?sample)[^$]*?)\.(?<ext>[^.]*)";
+    				e.Commit();
+    				break;
+    			}
+    		}
 		}
+		#endregion
 
 		internal static void MaintainDatabaseTable(Version lastVersion)
 		{
@@ -94,7 +100,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 					AddDefaults();
 				}
 			} catch (Exception) {
-				MPTVSeriesLog.Write("Unable to Correctly Maintain the " + cTableName + " Table");
+				MPTVSeriesLog.Write("Error Maintaining the " + cTableName + " Table");
 			}
 		}
 		
@@ -138,16 +144,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
             expression[DBExpression.cExpression] = @"<series>\<season>x<episode> - <title>.<ext>";
             expression.Commit();
             
-        }
-
-        protected override void InitColumns()
-        {
-            base.AddColumns(TableFields.Values);
-        }
-
-        public override void InitValues()
-        {
-            InitValues(-1, "");
         }
 
         public static void ClearAll()

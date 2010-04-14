@@ -9,10 +9,17 @@ namespace WindowPlugins.GUITVSeries.DataBase
 {
     internal static class DatabaseHelper
     {
-        internal static bool TableExists(string tableName)
+        internal static string GetTableSQL(string tableName)
         {
-            SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + tableName + "'");
-            return (results != null && results.Rows.Count > 0);
+			SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + tableName + "'");
+			if (results == null || results.Rows.Count == 0)
+				return string.Empty;
+        	return results.Rows[0].fields[0];
+		}
+
+		internal static bool TableExists(string tableName)
+        {
+			return (string.IsNullOrEmpty(GetTableSQL(tableName)));
         }
 
         internal static void AddColumn(string tableName, DBFieldDef newField)
@@ -22,7 +29,8 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
         internal static void CreateTable(string tableName, IEnumerable<DBFieldDef> fields)
         {
-            //we already know we have at least one
+			MPTVSeriesLog.Write("Creating Database Table " + tableName);
+			//we already know we have at least one
             string columnDefs = string.Empty;
             bool first = true;
             foreach (DBFieldDef field in fields) {
@@ -40,6 +48,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
 		internal static void CreateIndexes(string tableName, IEnumerable<DBFieldDef> fields)
         {
+			MPTVSeriesLog.Write("Creating indexes from Database Table " + tableName);
 			IEnumerable<string> indexes = from fieldDef in fields
 								where fieldDef.Indexed && !fieldDef.Primary
 								select fieldDef.FieldName;
@@ -51,6 +60,8 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
 		internal static void DeleteAllIndexes(string tableName)
 		{
+			MPTVSeriesLog.Write("Deleting indexes from Database Table " + tableName);
+			
 			//select all the indexs for the table where sql is not null, so that we don't select the primary keys
 			SQLiteResultSet results = DBTVSeries.Execute(string.Format("SELECT name FROM sqlite_master where type = 'index' and tbl_name = '{0} and sql is not null", tableName));
 			foreach (SQLiteResultSet.Row row in results.Rows) {
@@ -60,32 +71,19 @@ namespace WindowPlugins.GUITVSeries.DataBase
 		
 		internal static bool CreateAutoIDKey(string tableName)
         {
-            SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + tableName + "'");
-            if (results == null || results.Rows.Count == 0) {
-                //table dosen't exist - will be created later
-                return true;
-            }
+			string tableSql = GetTableSQL(tableName);
+			if (string.IsNullOrEmpty(tableSql)) {
+				//table dosen't exist - will be created later
+				return true;
+			}
 
-            // we have the table definition
-            Regex Engine = new Regex(@"CREATE TABLE .*?\((.*?)\)", RegexOptions.IgnoreCase);
-            Match tablematch = Engine.Match(results.Rows[0].fields[0]);
-            if (!tablematch.Success) {
-                MPTVSeriesLog.Write("ID Key creation in " + tableName + " TABLE has failed!");
-                return false;
-            }
-            String sColumns = tablematch.Groups[1].Value;
+			string sColumns = GetColumnsSql(tableSql);
+			if (string.IsNullOrEmpty(sColumns))
+				return false;
 
-            if (Regex.IsMatch(sColumns, @"[(,\s]Id", RegexOptions.IgnoreCase)) {
+			if (Regex.IsMatch(sColumns, @"[(,\s]Id", RegexOptions.IgnoreCase)) {
                 MPTVSeriesLog.Write("ID column already exists in " + tableName + "!");
                 return false;
-            }
-
-            //find the old primary key
-            Engine = new Regex(@"([^\s]+)\s+([^\s]+)\s+primary key", RegexOptions.IgnoreCase);
-            Match oldKeyMatch = Engine.Match(sColumns);
-            String oldKey = null;
-            if (oldKeyMatch.Success) {
-                oldKey = oldKeyMatch.Groups[1].Value;
             }
 
             //remove the current primary key definition
@@ -96,21 +94,11 @@ namespace WindowPlugins.GUITVSeries.DataBase
             String createQuery = String.Format("CREATE TABLE {0} (Id INTEGER PRIMARY KEY, {1})", newTableName, sColumns);
             DBTVSeries.Execute(createQuery);
 
-            //now we need a string only containing all the column names
-            Engine = new Regex(@"([^\s]+)\s+([^,]+)?,", RegexOptions.IgnoreCase);
-            MatchCollection matches = Engine.Matches(sColumns + ',');
-            if (matches.Count == 0) {
-                MPTVSeriesLog.Write("ID Key creation in " + tableName + " TABLE has failed!");
-                return false;
-            }
+			sColumns = ExtractColumnNames(sColumns);
+			if (string.IsNullOrEmpty(sColumns))
+				return false;
 
-            sColumns = String.Empty;
-            foreach (Match match in matches) {
-                sColumns = sColumns + match.Groups[1] + ", ";
-            }
-            sColumns = sColumns.Substring(0, sColumns.Length - 2); // remove trailing comma
-
-            //copy values from the old table to the new
+			//copy values from the old table to the new
             String insertSql = String.Format("insert into {0} ({1}) select {1} from {2}", newTableName, sColumns, tableName);
             DBTVSeries.Execute(insertSql);
 
@@ -122,5 +110,60 @@ namespace WindowPlugins.GUITVSeries.DataBase
             
             return true;
         }
+
+    	private static string ExtractColumnNames(string sColumns)
+    	{
+    		//now we need a string only containing all the column names
+    		Regex Engine = new Regex(@"([^\s]+)\s+([^,]+)?,", RegexOptions.IgnoreCase);
+    		MatchCollection matches = Engine.Matches(sColumns + ',');
+    		if (matches.Count == 0) {
+    			return null;
+    		}
+
+    		sColumns = String.Empty;
+    		foreach (Match match in matches) {
+    			sColumns = sColumns + match.Groups[1] + ", ";
+    		}
+    		return sColumns.Substring(0, sColumns.Length - 2); // remove trailing comma
+    	}
+
+    	private static string GetColumnsSql(string tableSql)
+    	{
+    		// we have the table definition
+    		Regex Engine = new Regex(@"CREATE TABLE .*?\((.*?)\)", RegexOptions.IgnoreCase);
+    		Match tablematch = Engine.Match(tableSql);
+    		if (!tablematch.Success) {
+    			return null;
+    		}
+    		return tablematch.Groups[1].Value;
+    	}
+
+    	internal static void RenameDatabaseColumn(string tableName, string oldName, string newName)
+		{
+			string tableSql = GetTableSQL(tableName);
+
+    		string newTableSql = Regex.Replace(tableSql, @"([\(,\s])" + oldName + @"(\s)", "$1" + newName + "$2", RegexOptions.IgnoreCase);
+
+    		string columnsSql = GetColumnsSql(tableSql);
+
+			string newColumnSql = GetColumnsSql(newTableSql);
+
+    		string newTableName = tableName + "_new";
+
+    		DBTVSeries.Execute(string.Format("CREATE TABLE {0} (Id INTEGER PRIMARY KEY, {1})", newTableName, newColumnSql));
+
+    		columnsSql = ExtractColumnNames(columnsSql);
+    		newColumnSql = ExtractColumnNames(newColumnSql);
+
+			//copy values from the old table to the new
+			String insertSql = String.Format("insert into {0} ({1}) select {2} from {3}", newTableName, newColumnSql, columnsSql, tableName);
+			DBTVSeries.Execute(insertSql);
+
+			//delete the old table
+			DBTVSeries.Execute("Drop Table " + tableName);
+
+			//rename the current table
+			DBTVSeries.Execute(String.Format("alter table {0} rename to {1}", newTableName, tableName));
+		}
     }
 }
