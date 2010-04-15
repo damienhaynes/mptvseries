@@ -119,7 +119,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {cIsOnlineFavourite,	new DBFieldDef{FieldName = cIsOnlineFavourite,	TableName = cTableName,	Type = DBFieldType.String}},
             {cEpisodeOrders,		new DBFieldDef{FieldName = cEpisodeOrders,		TableName = cTableName,	Type = DBFieldType.String, PrettyName = "Episode Orders"}},
 	        {cChoseEpisodeOrder,	new DBFieldDef{FieldName = cChoseEpisodeOrder,	TableName = cTableName,	Type = DBFieldType.String, PrettyName = "Episode Order"}},
-            {cOriginalName,			new DBFieldDef{FieldName = cOriginalName,		TableName = cTableName,	Type = DBFieldType.String}},
             {cRating,				new DBFieldDef{FieldName = cRating,				TableName = cTableName,	Type = DBFieldType.String}},
             {cMyRating,				new DBFieldDef{FieldName = cMyRating,			TableName = cTableName,	Type = DBFieldType.String, PrettyName = "My Rating"}},
             {cBanner,				new DBFieldDef{FieldName = cBanner,				TableName = cTableName,	Type = DBFieldType.String}},

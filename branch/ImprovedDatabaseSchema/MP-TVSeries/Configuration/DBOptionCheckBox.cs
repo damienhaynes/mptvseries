@@ -14,7 +14,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
     {
         #region Vars
         string _option = string.Empty;
-        ToolTip _toolTip = new ToolTip();
+    	readonly ToolTip _toolTip = new ToolTip();
         #endregion
 
         public DBOptionCheckBox() : base() { }

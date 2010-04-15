@@ -55,7 +55,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		};
         #endregion
 
-
         private DBOnlineSeries m_onlineSeries = null;
         public static List<string> FieldsRequiringSplit = new List<string>{ "Genre", "Actors", "Network", "ViewTags" };
 		static int s_nLastLocalID = DBOption.GetOptions(DBOption.cDBSeriesLastLocalID);

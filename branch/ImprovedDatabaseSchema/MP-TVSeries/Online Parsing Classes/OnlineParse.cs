@@ -938,7 +938,7 @@ namespace WindowPlugins.GUITVSeries
                                         goto default;
                                     break;
                                 default:
-                                    localSeries.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
+                                    localSeries.AddColumn(new DBFieldDef() {FieldName = key, TableName = DBSeries.cTableName, Type = DBFieldType.String});
                                     localSeries[key] = updatedSeries[key];
                                     break;
                             }
@@ -1066,7 +1066,7 @@ namespace WindowPlugins.GUITVSeries
                                             break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                         default:
-                                            newOnlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
+                                            newOnlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, TableName = DBOnlineEpisode.cTableName, Type = DBFieldType.String});
                                             newOnlineEpisode[key] = onlineEpisode[key];
                                             break;
                                     }
@@ -1966,7 +1966,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     default:
-                        localEpisode.onlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, Type = DBFieldType.String});
+                        localEpisode.onlineEpisode.AddColumn(new DBFieldDef() {FieldName = key, TableName = DBOnlineEpisode.cTableName, Type = DBFieldType.String});
                         localEpisode[key] = onlineEpisode[key];
                         break;
                 }
@@ -2318,7 +2318,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (match.Key != DBSeries.cParsedName)
                         {
-                            episode.AddColumn(new DBFieldDef() { FieldName = match.Key, Type = DBFieldType.String });
+                            episode.AddColumn(new DBFieldDef() { FieldName = match.Key, TableName = DBEpisode.cTableName, Type = DBFieldType.String });
                             if (bNewFile || (episode[match.Key] != null && episode[match.Key] != match.Value))
                                 episode[match.Key] = match.Value;
                         }

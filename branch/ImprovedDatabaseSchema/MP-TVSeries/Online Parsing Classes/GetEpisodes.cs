@@ -68,7 +68,7 @@ namespace WindowPlugins.GUITVSeries
                                 else
                                 {
                                     // we don't know that field, add it to the series table
-                                    episode.AddColumn(new DBFieldDef() {FieldName = propertyNode.Name, Type = DBFieldType.String});
+                                    episode.AddColumn(new DBFieldDef() {FieldName = propertyNode.Name, TableName = DBOnlineEpisode.cTableName, Type = DBFieldType.String});
                                     episode[propertyNode.Name] = propertyNode.InnerText;
                                 }
                             }                            

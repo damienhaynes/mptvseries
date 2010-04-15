@@ -74,7 +74,8 @@ namespace WindowPlugins.GUITVSeries.DataBase
         static DBTable()
         {
             //test the version number
-            Version lastVersion = new Version(DBOption.GetOptions(DBOption.cDBLastVersion));
+        	string lastVersionString = DBOption.GetOptions(DBOption.cDBLastVersion);
+			Version lastVersion = string.IsNullOrEmpty(lastVersionString) ? new Version() : new Version(lastVersionString);
             Version currentVersion = Settings.Version;
         	if (lastVersion == currentVersion) {
         		return;
@@ -122,9 +123,6 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
                 //Test if the table exists
                 if (DatabaseHelper.TableExists(TableName)) {
-					//ensure that all required columns are in the table
-					AddColumns(requiredFields.Values);
-
                     #region read table data from database
 
                     // we have the table definition, parse it for names/types
@@ -152,6 +150,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
                                                   parammatch.Groups[4].Value.ToLowerInvariant().Contains("autoincrement");
 
                             DBFieldDef fieldDef = new DBFieldDef() { FieldName = sName,
+													   TableName = tableName,
                                                        Type = (bIntType ? DBFieldType.Int : DBFieldType.String),
                                                        Primary = bPrimary, 
                                                        AutoIncrement = bAutoIncrement};
@@ -175,6 +174,10 @@ namespace WindowPlugins.GUITVSeries.DataBase
                         MPTVSeriesLog.Write("parsing of CREATE TABLE failed!!!");
                     }
                     #endregion
+
+					//finally ensure that all required columns are in the table
+					AddColumns(requiredFields.Values);
+
                 } else {
                     //create the table
 					DatabaseHelper.CreateTable(tableName, requiredFields.Values);

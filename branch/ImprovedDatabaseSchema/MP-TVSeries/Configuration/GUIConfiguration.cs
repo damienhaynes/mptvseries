@@ -1693,11 +1693,11 @@ namespace WindowPlugins.GUITVSeries
                             {                                                                
                                 case DBEpisode.cFilename:                                
                                     // Read Only Fields
-                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key], false);
+									AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key], false);
                                     break;
 
                                 case DBEpisode.cEpisodeName:
-                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, DBOnlineEpisode.cEpisodeName, episode[key]);
+									AddPropertyBindingSource(episode.m_fields[key].PrettyName, DBOnlineEpisode.cEpisodeName, episode[key]);
                                     break;
 
                                 case DBEpisode.cID:
@@ -1741,14 +1741,14 @@ namespace WindowPlugins.GUITVSeries
                                 
                                 case DBEpisode.cVolumeLabel:
                                     if (String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
+										AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBOnlineEpisode.cAirsAfterSeason:
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
                                     if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
+										AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBEpisode.cAvailableSubtitles:
@@ -1765,16 +1765,19 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
                                     if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
+                                        AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 case DBEpisode.cTextCount:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
-                                        AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
+										AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key]);
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBEpisode.TableFields[key].PrettyName, key, episode[key]);
+									if (episode.onlineEpisode != null && episode.onlineEpisode.m_fields.ContainsKey(key))
+										AddPropertyBindingSource(episode.onlineEpisode.m_fields[key].PrettyName, key, episode.onlineEpisode[key]);
+									else
+										AddPropertyBindingSource(episode.m_fields[key].PrettyName, key, episode[key]);
                                     break;
 
                             }
@@ -1987,20 +1990,27 @@ namespace WindowPlugins.GUITVSeries
 
                                 case DBSeries.cParsedName:
                                 case DBSeries.cID:
+									 // fields that can not be modified - read only
+									 AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key], false);
+									 break;
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                     // fields that can not be modified - read only
-                                    AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key], false);
+									 AddPropertyBindingSource(series.onlineSeries.m_fields[key].PrettyName, key, series.onlineSeries[key], false);
                                     break;
 
                                 case DBOnlineSeries.cChoseEpisodeOrder:
                                     if (!String.IsNullOrEmpty(series[key]))
-                                        AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key]);
+										AddPropertyBindingSource(series.onlineSeries.m_fields[key].PrettyName, key, series.onlineSeries[key]);
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key]);
-                                    break;
+									if (series.onlineSeries != null && series.onlineSeries.m_fields.ContainsKey(key)) {
+                            			AddPropertyBindingSource(series.onlineSeries.m_fields[key].PrettyName, key, series.onlineSeries[key]);
+                            		} else {
+                            			AddPropertyBindingSource(series.m_fields[key].PrettyName, key, series[key]);
+                            		}
+                            		break;
 
                             }
                         }
@@ -2795,7 +2805,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBSeries.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBSeries.TableFields[sField].PrettyName;
+                	string sPretty = DBSeries.TableFields.ContainsKey(sField) ? DBSeries.TableFields[sField].PrettyName : sField;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else
@@ -2826,7 +2836,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBSeason.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBSeason.TableFields[sField].PrettyName;
+					string sPretty = DBSeason.TableFields.ContainsKey(sField) ? DBSeason.TableFields[sField].PrettyName : sField;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else
@@ -2855,7 +2865,7 @@ namespace WindowPlugins.GUITVSeries
                     ToolStripItem item = new ToolStripLabel();
                     item.Name = "<" + DBEpisode.cOutName + "." + sField + ">";
                     item.Tag = textBox;
-                    String sPretty = DBEpisode.TableFields[sField].FieldName;
+					string sPretty = DBEpisode.TableFields.ContainsKey(sField) ? DBEpisode.TableFields[sField].PrettyName : sField;
                     if (sPretty == sField)
                         item.Text = item.Name;
                     else

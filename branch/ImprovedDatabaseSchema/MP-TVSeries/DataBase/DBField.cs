@@ -96,6 +96,10 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
     public class DBFieldDefList : Dictionary<string, DBFieldDef>
     {
+		public DBFieldDefList() : base(StringComparer.InvariantCultureIgnoreCase)
+		{
+			
+		}
     }
 
     /// <summary>
@@ -103,7 +107,11 @@ namespace WindowPlugins.GUITVSeries.DataBase
     /// </summary>
     public class DBFieldList : Dictionary<string, DBField>
     {
-        public DBField PrimaryKey
+        public DBFieldList() : base(StringComparer.InvariantCultureIgnoreCase)
+        {
+        }
+
+		public DBField PrimaryKey
         {
             get;
             set;
@@ -182,6 +190,25 @@ namespace WindowPlugins.GUITVSeries.DataBase
         }
 
         public DBValue Value { get; set; }
+
+    	public string TableName
+    	{
+    		get
+    		{
+    			return m_fieldDef.TableName;
+    		}
+    	}
+
+		/// <summary>
+		/// returns the fully qualified field name ie. "TableName.FieldName"
+		/// </summary>
+		public string Q
+    	{
+    		get
+    		{
+    			return m_fieldDef.Q;
+    		}
+    	}
 
         /// <summary>
         /// save DB friendly string (ie. escaping singlequotes into double singlequotes)

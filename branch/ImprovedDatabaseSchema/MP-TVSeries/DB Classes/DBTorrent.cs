@@ -47,7 +47,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {cSearchUrl,	new DBFieldDef{FieldName = cSearchUrl,	TableName = cTableName,	Type = DBFieldType.String}},
             {cSearchRegex,	new DBFieldDef{FieldName = cSearchRegex,TableName = cTableName,	Type = DBFieldType.String}},
             {cDetailsUrl,	new DBFieldDef{FieldName = cDetailsUrl,	TableName = cTableName,	Type = DBFieldType.String}},
-            {cSearchRegex,	new DBFieldDef{FieldName = cDetailsRegex,TableName = cTableName,	Type = DBFieldType.String}}
+            {cDetailsRegex,	new DBFieldDef{FieldName = cDetailsRegex,TableName = cTableName,Type = DBFieldType.String}}
 		};
 		#endregion
 

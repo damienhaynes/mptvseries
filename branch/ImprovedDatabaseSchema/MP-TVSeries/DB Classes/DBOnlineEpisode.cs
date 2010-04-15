@@ -144,6 +144,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
 				//test for table existance
 				if (!DatabaseHelper.TableExists(cTableName)) {
 					DatabaseHelper.CreateTable(cTableName, TableFields.Values);
+					DatabaseHelper.CreateIndexes(cTableName, TableFields.Values);
+					return;
 				}
 				MPTVSeriesLog.Write("Upgrading " + cTableName + " Table");
 

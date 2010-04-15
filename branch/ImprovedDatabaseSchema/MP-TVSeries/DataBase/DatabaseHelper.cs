@@ -11,7 +11,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
     {
         internal static string GetTableSQL(string tableName)
         {
-			SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='" + tableName + "'");
+			SQLiteResultSet results = DBTVSeries.Execute("SELECT sql FROM sqlite_master WHERE name='" + tableName + "'");
 			if (results == null || results.Rows.Count == 0)
 				return string.Empty;
         	return results.Rows[0].fields[0];
@@ -19,7 +19,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
 		internal static bool TableExists(string tableName)
         {
-			return (string.IsNullOrEmpty(GetTableSQL(tableName)));
+			return !string.IsNullOrEmpty(GetTableSQL(tableName));
         }
 
         internal static void AddColumn(string tableName, DBFieldDef newField)
@@ -77,14 +77,14 @@ namespace WindowPlugins.GUITVSeries.DataBase
 				return true;
 			}
 
-			string sColumns = GetColumnsSql(tableSql);
+			if (Regex.IsMatch(tableSql, @"[(,\s]Id", RegexOptions.IgnoreCase)) {
+				MPTVSeriesLog.Write("ID column already exists in " + tableName + "!");
+				return false;
+			}
+
+            string sColumns = GetColumnsSql(tableSql);
 			if (string.IsNullOrEmpty(sColumns))
 				return false;
-
-			if (Regex.IsMatch(sColumns, @"[(,\s]Id", RegexOptions.IgnoreCase)) {
-                MPTVSeriesLog.Write("ID column already exists in " + tableName + "!");
-                return false;
-            }
 
             //remove the current primary key definition
             sColumns = Regex.Replace(sColumns, " primary key", String.Empty, RegexOptions.IgnoreCase);
@@ -142,6 +142,12 @@ namespace WindowPlugins.GUITVSeries.DataBase
 		{
 			string tableSql = GetTableSQL(tableName);
 
+			if (!Regex.IsMatch(tableSql, @"([\(,\s])" + oldName + @"(\s)", RegexOptions.IgnoreCase))
+			{
+				//old column not found
+				return;
+			}
+
     		string newTableSql = Regex.Replace(tableSql, @"([\(,\s])" + oldName + @"(\s)", "$1" + newName + "$2", RegexOptions.IgnoreCase);
 
     		string columnsSql = GetColumnsSql(tableSql);
@@ -150,7 +156,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
     		string newTableName = tableName + "_new";
 
-    		DBTVSeries.Execute(string.Format("CREATE TABLE {0} (Id INTEGER PRIMARY KEY, {1})", newTableName, newColumnSql));
+    		DBTVSeries.Execute(string.Format("CREATE TABLE {0} ({1})", newTableName, newColumnSql));
 
     		columnsSql = ExtractColumnNames(columnsSql);
     		newColumnSql = ExtractColumnNames(newColumnSql);

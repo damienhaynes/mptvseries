@@ -424,11 +424,6 @@ namespace WindowPlugins.GUITVSeries
         public grouped groupedBy = null;
         public bool hasSeriesBeforeIt = false;
         
-        static string getQTableNameFromUnknownType(DBTable table, string field)
-        {
-            return (string)table.GetType().InvokeMember("Q", System.Reflection.BindingFlags.InvokeMethod, null, table, new object[1] { field });
-        }
-        
         void setType(string typeString)
         {
             if (typeString.Contains(type.group.ToString()))
@@ -437,7 +432,7 @@ namespace WindowPlugins.GUITVSeries
                 groupedBy = new grouped();
                 groupedBy.PrettyName = typeString.Split(':')[1];
                 getTableFieldname(typeString.Split(':')[1], out groupedBy.table, out groupedBy.rawFieldname);
-                groupedBy.tableField = getQTableNameFromUnknownType(groupedBy.table, groupedBy.rawFieldname);
+            	groupedBy.tableField = groupedBy.table.m_fields[groupedBy.rawFieldname].Q;
                 // DBFields Requiring Split
                 groupedBy.attempSplit = DBSeries.FieldsRequiringSplit.Contains(groupedBy.rawFieldname) 
                                      || DBOnlineEpisode.FieldsRequiringSplit.Contains(groupedBy.rawFieldname);
@@ -560,11 +555,10 @@ namespace WindowPlugins.GUITVSeries
 
         static void getTableFieldname(string what, out DBTable table, out string fieldname)
         {
-            string sTable = string.Empty;
-            fieldname = string.Empty;
+        	fieldname = string.Empty;
             table = null;
             what = what.Replace("<", "").Replace(">", "").Trim();
-            sTable = what.Split('.')[0];
+            string sTable = what.Split('.')[0];
             switch (sTable)
             {
                 case "Series":
@@ -646,10 +640,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if(thisView.Type != type.group)
                     {
-                        DBTable table = null;
-                        string tableField = string.Empty;
+                        DBTable table;
+                        string tableField;
                         getTableFieldname(orderFields[i], out table, out tableField);
-                        tableField = getQTableNameFromUnknownType(table, tableField);
+                        tableField = table.m_fields[tableField].Q;
 
                         // example of how the user can order by a different table
                         // needs to be enabled once definable views are ready

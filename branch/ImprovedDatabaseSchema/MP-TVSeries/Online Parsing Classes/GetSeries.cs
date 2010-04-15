@@ -131,7 +131,7 @@ namespace WindowPlugins.GUITVSeries
                         else
                         {
                             // we don't know that field, add it to the series table
-                            series.AddColumn(new DBFieldDef() { FieldName = propertyNode.Name, Type = DBFieldType.String });
+                            series.AddColumn(new DBFieldDef() { FieldName = propertyNode.Name, TableName = DBOnlineSeries.cTableName, Type = DBFieldType.String });
                             series[propertyNode.Name] = propertyNode.InnerText;
                         }
                     }

@@ -192,12 +192,6 @@
     <Compile Include="Configuration\FormattingConfiguration.Designer.cs">
       <DependentUpon>FormattingConfiguration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\GUIConfiguration.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Configuration\GUIConfiguration.designer.cs">
-      <DependentUpon>GUIConfiguration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Configuration\loadingDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -341,7 +335,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\GUIConfiguration.resx">
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
       <DependentUpon>ImportPanelEpID.cs</DependentUpon>
@@ -447,6 +440,12 @@
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
     <Compile Include="Banner.cs" />
+    <Compile Include="Configuration\GUIConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\GUIConfiguration.designer.cs">
+      <DependentUpon>GUIConfiguration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ImportPanelEpID.cs">
       <SubType>UserControl</SubType>
     </Compile>
