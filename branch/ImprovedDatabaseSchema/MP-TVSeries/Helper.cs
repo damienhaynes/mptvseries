@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
             DBSeries cached = cache.getSeries(id);
             if (cached != null) return cached;
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
+            cond.Add(DBSeries.TableFields, DBSeries.cID, id, SQLConditionType.Equal);
             List<DBSeries> tmpSeries = DBSeries.Get(cond);
             foreach (DBSeries series in tmpSeries) // should only be one!
                 if (series[DBSeries.cID] == id)

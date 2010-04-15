@@ -144,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
                     return;
 
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cFilename, _episode[DBEpisode.cFilename], SQLConditionType.Equal);
+                condition.Add(DBEpisode.TableFields, DBEpisode.cFilename, _episode[DBEpisode.cFilename], SQLConditionType.Equal);
                 List<DBEpisode> episodes = DBEpisode.Get(condition, false);
                 foreach (DBEpisode ep in episodes)
                 {

@@ -1070,7 +1070,7 @@ namespace WindowPlugins.GUITVSeries
 							if (selectedEpisode != null) {
 								if (selectedEpisode[DBEpisode.cFilename].ToString().Length > 0) {
 									SQLCondition condition = new SQLCondition();
-									condition.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+									condition.Add(DBEpisode.TableFields, DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
 									List<DBEpisode> episodes = DBEpisode.Get(condition, false);
 									foreach (DBEpisode episode in episodes) {
 										episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
@@ -1206,22 +1206,22 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.forceSeriesQuery: {
 							// clear the series
 							SQLCondition condition = new SQLCondition();
-							condition.Add(new DBEpisode(), DBEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+							condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
 							DBEpisode.Clear(condition);
 							condition = new SQLCondition();
-							condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+							condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
 							DBOnlineEpisode.Clear(condition);
 
 							condition = new SQLCondition();
-							condition.Add(new DBSeason(), DBSeason.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+							condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
 							DBSeason.Clear(condition);
 
 							condition = new SQLCondition();
-							condition.Add(new DBSeries(), DBSeries.cID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+							condition.Add(DBSeries.TableFields, DBSeries.cID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
 							DBSeries.Clear(condition);
 
 							condition = new SQLCondition();
-							condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+							condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
 							DBOnlineSeries.Clear(condition);
 
 							// look for it again
@@ -3041,21 +3041,21 @@ namespace WindowPlugins.GUITVSeries
 			switch (this.listLevel) {
 				case Listlevel.Series:					
 					seriesIDsUpdates.Add(series[DBSeries.cID]);
-					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+					conditions = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
 					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, conditions, new DBOnlineEpisode()));
 					searchPattern = "*.jpg";
 					break;
 
 				case Listlevel.Season:
-					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-					conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+					conditions = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+					conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
 					epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, conditions, new DBOnlineEpisode()));
 					searchPattern = season[DBSeason.cIndex] + "x*.jpg";
 					break;
 
 				case Listlevel.Episode:
 					epIDsUpdates.Add(episode[DBOnlineEpisode.cOnlineID]);
-					conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, episode[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
+					conditions = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, episode[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
 					searchPattern = episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
 					break;
 			}
@@ -3094,7 +3094,7 @@ namespace WindowPlugins.GUITVSeries
 				}
 
 				// Remove local thumbnail reference from db so that it thumbnails will be downloaded
-				DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", conditions);
+				DBEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", conditions);
 			}
 
 			// Execute Online Parsing Actions
@@ -4320,11 +4320,11 @@ namespace WindowPlugins.GUITVSeries
                 cond.SetLimit(20);
                 if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
                 {
-                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), this.m_Facade.SelectedListItem.Label, SQLConditionType.Like);
+                    cond.Add(DBOnlineSeries.TableFields, groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), this.m_Facade.SelectedListItem.Label, SQLConditionType.Like);
                 }
                 else
                 {
-                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
+                    cond.Add(DBOnlineSeries.TableFields, groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
                              (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label),
                               SQLConditionType.Equal);
                 }
@@ -4960,18 +4960,18 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
             {
-                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
             }
             else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
             {
-                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
             }
             else if (this.listLevel == Listlevel.Episode && m_SelectedEpisode != null)
             {
-                condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cEpisodeIndex, m_SelectedEpisode[DBEpisode.cEpisodeIndex], SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cEpisodeIndex, m_SelectedEpisode[DBEpisode.cEpisodeIndex], SQLConditionType.Equal);
             }
 
             episodes = DBEpisode.Get(condition, false);

@@ -98,14 +98,12 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(int Index)
         {
-            DBFanart dummy = new DBFanart(Index);
-            Clear(dummy, new SQLCondition(dummy, DBFanart.cIndex, Index, SQLConditionType.Equal));
+            Clear(DBFanart.cTableName, new SQLCondition(DBFanart.TableFields, DBFanart.cIndex, Index, SQLConditionType.Equal));
             cache.Remove(Index);
         }
 
         public static void ClearDB(int seriesID) {
-            DBFanart dummy = new DBFanart(seriesID);
-            Clear(dummy, new SQLCondition(dummy, DBFanart.cSeriesID, seriesID, SQLConditionType.Equal));
+            Clear(DBFanart.cTableName, new SQLCondition(DBFanart.TableFields, DBFanart.cSeriesID, seriesID, SQLConditionType.Equal));
             ClearAll();
         }
 
@@ -258,7 +256,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             }
             set
             {
-                GlobalSet(new DBFanart(), cChosen, false, new SQLCondition(new DBFanart(), cSeriesID, this[cSeriesID], SQLConditionType.Equal));
+                GlobalSet(DBFanart.TableFields, cChosen, false, new SQLCondition(DBFanart.TableFields, cSeriesID, this[cSeriesID], SQLConditionType.Equal));
                 this[cChosen] = value;
                 this.Commit();
             }

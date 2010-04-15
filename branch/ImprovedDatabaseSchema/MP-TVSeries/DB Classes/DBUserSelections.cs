@@ -164,9 +164,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
             try
             {
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBUserSelection(), cSelectionLevel, new DBValue(level.ToString()), SQLConditionType.Equal);
-                condition.Add(new DBUserSelection(), cSelectionType, new DBValue(type.ToString()), SQLConditionType.Equal);
-                condition.Add(new DBUserSelection(), cInternalKey, new DBValue(internalkey.ToString()), SQLConditionType.Equal);
+                condition.Add(DBUserSelection.TableFields, cSelectionLevel, new DBValue(level.ToString()), SQLConditionType.Equal);
+				condition.Add(DBUserSelection.TableFields, cSelectionType, new DBValue(type.ToString()), SQLConditionType.Equal);
+				condition.Add(DBUserSelection.TableFields, cInternalKey, new DBValue(internalkey.ToString()), SQLConditionType.Equal);
 
                 SQLiteResultSet records = DBTVSeries.Execute("select * from " + base.TableName + condition);
                 return base.Read(ref records, 0);
@@ -228,28 +228,28 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static void Clear(DBEpisode episode)
         {
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBUserSelection(), cInternalKey, episode[DBEpisode.cCompositeID], SQLConditionType.Equal);
-            cond.Add(new DBUserSelection(), cSelectionType, new DBValue(SelectionLevelEpisode.ToString()), SQLConditionType.Equal);
+            cond.Add(DBUserSelection.TableFields, cInternalKey, episode[DBEpisode.cCompositeID], SQLConditionType.Equal);
+			cond.Add(DBUserSelection.TableFields, cSelectionType, new DBValue(SelectionLevelEpisode.ToString()), SQLConditionType.Equal);
             Clear(cond);
         }
 
         public static void Clear(DBSeason season)
         {
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBUserSelection(), cInternalKey, season[DBSeason.cID], SQLConditionType.Equal);
-            cond.Add(new DBUserSelection(), cSelectionLevel, new DBValue(SelectionLevelSeason.ToString()), SQLConditionType.Equal);
+			cond.Add(DBUserSelection.TableFields, cInternalKey, season[DBSeason.cID], SQLConditionType.Equal);
+			cond.Add(DBUserSelection.TableFields, cSelectionLevel, new DBValue(SelectionLevelSeason.ToString()), SQLConditionType.Equal);
             Clear(cond);
         }
 
         public static void Clear(DBSeries series)
         {
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBUserSelection(), cInternalKey, series[DBSeries.cID], SQLConditionType.Equal);
-            cond.Add(new DBUserSelection(), cSelectionLevel, new DBValue(SelectionLevelSeries.ToString()), SQLConditionType.Equal);
+			cond.Add(DBUserSelection.TableFields, cInternalKey, series[DBSeries.cID], SQLConditionType.Equal);
+			cond.Add(DBUserSelection.TableFields, cSelectionLevel, new DBValue(SelectionLevelSeries.ToString()), SQLConditionType.Equal);
             Clear(cond);
             cond = new SQLCondition();
-            cond.Add(new DBUserSelection(), cSelectionLevel, new DBValue(SelectionLevelSeries.ToString()), SQLConditionType.NotEqual);
-            cond.Add(new DBUserSelection(), cInternalKey, series[DBSeries.cID] + "_", SQLConditionType.Like);
+			cond.Add(DBUserSelection.TableFields, cSelectionLevel, new DBValue(SelectionLevelSeries.ToString()), SQLConditionType.NotEqual);
+			cond.Add(DBUserSelection.TableFields, cInternalKey, series[DBSeries.cID] + "_", SQLConditionType.Like);
             Clear(cond);
         }
 
@@ -291,9 +291,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static DBUserSelection[] Get(SelectionLevel level, SelectionType type, string internalKey)
         {
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBUserSelection(), cSelectionLevel, new DBValue(level.ToString()), SQLConditionType.Equal);
-            conditions.Add(new DBUserSelection(), cSelectionType, new DBValue(type.ToString()), SQLConditionType.Equal);
-            conditions.Add(new DBUserSelection(), cInternalKey, new DBValue(internalKey), SQLConditionType.Equal);
+            conditions.Add(DBUserSelection.TableFields, cSelectionLevel, new DBValue(level.ToString()), SQLConditionType.Equal);
+			conditions.Add(DBUserSelection.TableFields, cSelectionType, new DBValue(type.ToString()), SQLConditionType.Equal);
+			conditions.Add(DBUserSelection.TableFields, cInternalKey, new DBValue(internalKey), SQLConditionType.Equal);
             return Get(conditions);
         }
 

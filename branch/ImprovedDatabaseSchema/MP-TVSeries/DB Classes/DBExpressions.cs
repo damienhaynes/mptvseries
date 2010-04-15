@@ -153,8 +153,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         }
 
     	public static void Clear(int Index) {
-            DBExpression dummy = new DBExpression(Index);
-            Clear(dummy, new SQLCondition(dummy, DBExpression.cIndex, Index, SQLConditionType.Equal));            
+			Clear(DBExpression.cTableName, new SQLCondition(DBExpression.TableFields, DBExpression.cIndex, Index, SQLConditionType.Equal));            
         }
 
         public static DBExpression[] GetAll()

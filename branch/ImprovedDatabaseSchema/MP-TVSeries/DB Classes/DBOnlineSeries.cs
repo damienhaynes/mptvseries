@@ -190,7 +190,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBOnlineSeries(), conditions);
+            Clear(DBOnlineSeries.cTableName, conditions);
         }
 
         public override DBValue this[String fieldName]

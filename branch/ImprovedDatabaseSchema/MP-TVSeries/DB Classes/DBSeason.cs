@@ -300,7 +300,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBSeason(), conditions);
+            Clear(DBSeason.cTableName, conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)
@@ -310,7 +310,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
-            GlobalSet(new DBSeason(), sKey, Value, condition);
+            GlobalSet(DBSeason.TableFields, sKey, Value, condition);
         }
 
         public static void GlobalSet(String sKey1, String sKey2)
@@ -320,7 +320,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
         {
-            GlobalSet(new DBSeason(), sKey1, sKey2, condition);
+            GlobalSet(DBSeason.TableFields, sKey1, sKey2, condition);
         }
 
         public static SQLCondition stdConditions
@@ -332,11 +332,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 //    conditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
 
 
-                if(!Settings.isConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
+                if(!Settings.isConfig) conditions.Add(DBSeason.TableFields, cHasEpisodes, 1, SQLConditionType.Equal);
 
                 // include hidden?
                 if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
-                    conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(DBSeason.TableFields, DBSeason.cHidden, 0, SQLConditionType.Equal);
 
                 if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 {
@@ -409,8 +409,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
         /// <returns></returns>
         public static DBSeason getRaw(int seriesID, int index)
         {
-            SQLCondition cond = new SQLCondition(new DBSeason(), cSeriesID, seriesID, SQLConditionType.Equal);
-            cond.Add(new DBSeason(), cIndex, index, SQLConditionType.Equal);
+            SQLCondition cond = new SQLCondition(DBSeason.TableFields, cSeriesID, seriesID, SQLConditionType.Equal);
+            cond.Add(DBSeason.TableFields, cIndex, index, SQLConditionType.Equal);
             List<DBSeason> res = Get(cond, false);
             if (res.Count > 0)
                 return res[0];
@@ -441,7 +441,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             // create table if it doesn't exist already
             if(nSeriesID != default(int))
-                otherConditions.Add(new DBSeason(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+                otherConditions.Add(DBSeason.TableFields, cSeriesID, nSeriesID, SQLConditionType.Equal);
 
             return Get(otherConditions);
         }
@@ -492,8 +492,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
             // Always delete from Local episode table if deleting from disk or database
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
-            condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+			condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+			condition.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
             /* TODO will include hidden episodes as hidden attribute is only in onlineepisodes. maybe we should include it in localepisodes also..
              * if hidden episodes are excluded then the if (resultMsg.Count is wrong and should do another select to get proper count
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
@@ -515,8 +515,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
                 {
                     condition = new SQLCondition();
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
+                    condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
                     DBOnlineEpisode.Clear(condition);
                 }
             }
@@ -525,8 +525,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
             if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
                 condition = new SQLCondition();
-                condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
-                condition.Add(new DBSeason(), DBSeason.cIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
+                condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                condition.Add(DBSeason.TableFields, DBSeason.cIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
                 DBSeason.Clear(condition);
             }
 
@@ -535,23 +535,23 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {
                 // If episode count is zero then delete the series and all seasons
                 condition = new SQLCondition();
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                 episodes = DBEpisode.Get(condition, false);
                 if (episodes.Count == 0)
                 {
                     // Delete Seasons
                     condition = new SQLCondition();
-                    condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                     DBSeason.Clear(condition);
 
                     // Delete Local Series
                     condition = new SQLCondition();
-                    condition.Add(new DBSeries(), DBSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(DBSeries.TableFields, DBSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                     DBSeries.Clear(condition);
 
                     // Delete Online Series
                     condition = new SQLCondition();
-                    condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                     DBOnlineSeries.Clear(condition);
                 }
             }

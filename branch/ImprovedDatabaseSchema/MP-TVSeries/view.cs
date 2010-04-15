@@ -223,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
             else if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
             {
                 // has to be grouped by something episode
-                conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+                conditions.Add(DBEpisode.TableFields, DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             }
             
             string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
@@ -291,27 +291,27 @@ namespace WindowPlugins.GUITVSeries
                     case logicalViewStep.type.group:
                         // we expect to get the selected group's label
                         if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
-                            conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
+                            conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
                         else 
                             if (m_steps[stepIndex - 1].groupedBy.attempSplit) 
                                 // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
-                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
+								conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
                             else
-                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
+								conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
                         break;
                     case logicalViewStep.type.series:
                         // we expect to get the seriesID as stepSel
-                        conditions.Add(new DBSeason(), DBSeason.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
+                        conditions.Add(DBSeason.TableFields, DBSeason.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         break;
                     case logicalViewStep.type.season:
                         // we expect to get the seriesID/seasonIndex as stepSel
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
+                        conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
+						conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
                         if (DBOption.GetOptions(DBOption.cSortSpecials)) {
                             conditions.nextIsOr = true;
-                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
-                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
+							conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
+							conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
                             conditions.nextIsOr = false;
                         }
                         conditions.endGroup();
@@ -548,7 +548,7 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 // condition is on current table itself
-                conds.Add(table, tableField, condition.Trim(), condtype);
+                conds.Add(table.m_fields.FieldDefList, tableField, condition.Trim(), condtype);
             }
 
         }
@@ -682,11 +682,11 @@ namespace WindowPlugins.GUITVSeries
             if (thisView.Type == type.group && thisView.groupedBy != null) // for groups always by their values (ignore user setting!)
             {
                 if(thisView.groupedBy.table.GetType() == typeof(DBSeries))
-                    thisView.conds.Add(new DBSeries(), DBSeries.cHidden, 1, SQLConditionType.NotEqual);
+                    thisView.conds.Add(DBSeries.TableFields, DBSeries.cHidden, 1, SQLConditionType.NotEqual);
                 else if(thisView.groupedBy.table.GetType() == typeof(DBOnlineSeries))
 					thisView.conds.AddCustom(" not exists ( select * from " + DBSeries.cTableName + " where id = " + DBOnlineSeries.TableFields[DBOnlineSeries.cID].Q + " and " + DBSeries.TableFields[DBSeries.cHidden].Q + " = 1)");
                 else if (thisView.groupedBy.table.GetType() == typeof(DBSeason))
-                    thisView.conds.Add(new DBSeason(), DBSeason.cHidden, 1, SQLConditionType.NotEqual);
+                    thisView.conds.Add(DBSeason.TableFields, DBSeason.cHidden, 1, SQLConditionType.NotEqual);
                 thisView.conds.AddOrderItem(thisView.groupedBy.tableField, SQLConditionOrder.Descending); // tablefield includes tablename itself!
             }
             try

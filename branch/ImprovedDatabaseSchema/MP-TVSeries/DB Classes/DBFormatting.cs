@@ -80,8 +80,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(int Index)
         {
-            DBFormatting dummy = new DBFormatting(Index);
-            Clear(dummy, new SQLCondition(dummy, DBFormatting.cIndex, Index, SQLConditionType.Equal));
+            Clear(DBFormatting.cTableName, new SQLCondition(DBFormatting.TableFields, DBFormatting.cIndex, Index, SQLConditionType.Equal));
             cache = null;
         }
 

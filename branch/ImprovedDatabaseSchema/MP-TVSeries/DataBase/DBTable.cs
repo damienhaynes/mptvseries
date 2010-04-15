@@ -56,10 +56,10 @@ namespace WindowPlugins.GUITVSeries.DataBase
 
 		private bool m_CommitNeeded = false;
 
-        /// <summary>
-        /// list of the tables field names mapped to fields
-        /// </summary>
-        public DBFieldList m_fields = new DBFieldList();
+    	/// <summary>
+    	/// list of the tables field names mapped to fields
+    	/// </summary>
+    	public DBFieldList m_fields;
         
         /// <summary>
         /// a list of all the dbtables in the database
@@ -109,6 +109,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
         protected DBTable(string tableName, DBFieldDefList requiredFields)
         {
             TableName = tableName;
+			m_fields = new DBFieldList(requiredFields);
 
             // this base constructor was very expensive
             // we now cache the result for all objects : dbtable and only redo it if an alter table occured (this drastically cut down the number of sql statements)
@@ -118,7 +119,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
                 m_fields = cachedForTable.Copy();
             } else {
                 // we have to get it, happens when the first object is created or after an alter table
-                cachedForTable = new DBFieldList();
+				cachedForTable = new DBFieldList(requiredFields);
                 // load up fields from the database, this allows for fields which are not referneced by code
 
                 //Test if the table exists
@@ -323,7 +324,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
             {
                 PrimaryKey.Value = Value;
                 SQLCondition condition = new SQLCondition();
-                condition.Add(this, PrimaryKey.FieldName, PrimaryKey.Value, SQLConditionType.Equal);
+                condition.Add(this.m_fields.FieldDefList, PrimaryKey.FieldName, PrimaryKey.Value, SQLConditionType.Equal);
                 String sqlQuery = "select * from " + TableName + condition;
                 SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
                 return Read(ref records, 0);
@@ -469,12 +470,12 @@ namespace WindowPlugins.GUITVSeries.DataBase
             }
         }
 
-        public static void GlobalSet(DBTable obj, String sKey, DBValue Value, SQLCondition conditions)
+        public static void GlobalSet(DBFieldDefList tableFields, String sKey, DBValue Value, SQLCondition conditions)
         {
-            if (obj.m_fields.ContainsKey(sKey))
+            if (tableFields.ContainsKey(sKey))
             {
-                String sqlQuery = "update " + obj.TableName + " SET " + sKey + "=";
-                switch (obj.m_fields[sKey].Type)
+				String sqlQuery = "update " + tableFields[sKey].TableName + " SET " + sKey + "=";
+				switch (tableFields[sKey].Type)
                 {
                     case DBFieldType.Int:
                         sqlQuery += Value;
@@ -488,27 +489,27 @@ namespace WindowPlugins.GUITVSeries.DataBase
                 sqlQuery += conditions;
                 SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
                 if (dbUpdateOccured != null)
-                    dbUpdateOccured(obj.TableName);
+					dbUpdateOccured(tableFields[sKey].TableName);
             }
         }
 
-        public static void GlobalSet(DBTable obj, String sKey1, String sKey2, SQLCondition conditions)
+		public static void GlobalSet(DBFieldDefList tableFields, String sKey1, String sKey2, SQLCondition conditions)
         {
-            if (obj.m_fields.ContainsKey(sKey1) && obj.m_fields.ContainsKey(sKey2))
+			if (tableFields.ContainsKey(sKey1) && tableFields.ContainsKey(sKey2))
             {
-                String sqlQuery = "update " + obj.TableName + " SET " + sKey1 + " = " + sKey2 + conditions;
-                SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+				String sqlQuery = "update " + tableFields[sKey1].TableName + " SET " + sKey1 + " = " + sKey2 + conditions;
+                DBTVSeries.Execute(sqlQuery);
                 if (dbUpdateOccured != null)
-                    dbUpdateOccured(obj.TableName);
+					dbUpdateOccured(tableFields[sKey1].TableName);
             }
         }
 
-        public static void Clear(DBTable obj, SQLCondition conditions)
+        public static void Clear(string tableName, SQLCondition conditions)
         {
-            String sqlQuery = "delete from " + obj.TableName + conditions;
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            String sqlQuery = "delete from " + tableName + conditions;
+            DBTVSeries.Execute(sqlQuery);
             if (dbUpdateOccured != null)
-                dbUpdateOccured(obj.TableName);
+                dbUpdateOccured(tableName);
         }
 
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)

@@ -42,12 +42,12 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 		protected override void OnLoad(EventArgs e) {            
             // Get list of series in view
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.Like);
+            conditions.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.Like);
             m_SeriesChecked = DBSeries.Get(conditions);
             
             // Get list of series not in view                    
             conditions = new SQLCondition();
-            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.NotLike);
+			conditions.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.NotLike);
             m_SeriesUnChecked = DBSeries.Get(conditions);
         
 			// Populate series list, if view already 

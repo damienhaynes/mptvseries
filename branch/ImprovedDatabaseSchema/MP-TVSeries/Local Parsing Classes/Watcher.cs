@@ -366,7 +366,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     removeFromModifiedFilesList(e.FullPath, WatcherItemType.Added, true);
                     
-                    SQLCondition condition = new SQLCondition(new DBEpisode(), DBEpisode.cFilename, e.FullPath + "\\%", SQLConditionType.Like);
+                    SQLCondition condition = new SQLCondition(DBEpisode.TableFields, DBEpisode.cFilename, e.FullPath + "\\%", SQLConditionType.Like);
                     List<DBEpisode> dbepisodes = DBEpisode.Get(condition, false);
                     if (dbepisodes != null && dbepisodes.Count > 0)
                     {

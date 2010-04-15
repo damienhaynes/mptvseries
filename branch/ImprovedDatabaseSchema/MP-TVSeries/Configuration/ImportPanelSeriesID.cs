@@ -77,7 +77,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             
             // now filter by those we don't already have identified in the db
             // get them from the db
-            var alreadyID = DBSeries.GetSingleField(DBSeries.cParsedName, new SQLCondition(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan), new DBSeries());
+            var alreadyID = DBSeries.GetSingleField(DBSeries.cParsedName, new SQLCondition(DBSeries.TableFields, DBSeries.cID, 0, SQLConditionType.GreaterThan), new DBSeries());
 
             // and filter
             uniqueSeries = from uniqueS in uniqueSeries

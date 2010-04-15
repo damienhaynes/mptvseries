@@ -521,7 +521,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Get a list of the most recently added episodes in the database
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
+            conditions.Add(DBEpisode.TableFields, DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
 			conditions.AddOrderItem(DBEpisode.TableFields[DBEpisode.cFileDateCreated].Q, SQLConditionOrder.Descending);
             List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
 
@@ -591,7 +591,7 @@ namespace WindowPlugins.GUITVSeries
                     relatedSeries.Add(new DBOnlineSeries(episode[DBEpisode.cSeriesID]));
 
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
+                condition.Add(DBEpisode.TableFields, DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
                 
                 if (!LocalParse.isOnRemovable(pair.m_sFull_FileName) && !LocalParse.needToKeepReference(pair.m_sFull_FileName)) /*!DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles)*/
                 {
@@ -717,14 +717,14 @@ namespace WindowPlugins.GUITVSeries
 
                 // now, remove all episodes still processed = 0, the weren't find in the scan
                 SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
 
                 foreach (DBEpisode localepisode in DBEpisode.Get(condition))
                 {
                     if (!LocalParse.needToKeepReference(localepisode[DBEpisode.cFilename]))
                     {
-                        DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
+                        DBEpisode.Clear(new SQLCondition(DBEpisode.TableFields, DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
                     }
                     else
                     {
@@ -746,8 +746,8 @@ namespace WindowPlugins.GUITVSeries
 
             condition = new SQLCondition();
             // all series that don't have an onlineID ( < 0) and not marked as ignored
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.LessThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(DBSeries.TableFields, DBSeries.cID, 0, SQLConditionType.LessThan);
+            condition.Add(DBSeries.TableFields, DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
 
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
@@ -802,17 +802,17 @@ namespace WindowPlugins.GUITVSeries
                         season.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
                     SQLCondition setcondition = new SQLCondition();
-                    setcondition.Add(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    setcondition.Add(DBSeason.TableFields, DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     DBSeason.Clear(setcondition);
 
                     setcondition = new SQLCondition();
-                    setcondition.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    setcondition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     List<DBEpisode> episodes = DBEpisode.Get(setcondition, false);
                     foreach (DBEpisode episode in episodes)
                         episode.ChangeSeriesID(UserChosenSeries[DBSeries.cID]);
 
                     setcondition = new SQLCondition();
-                    setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    setcondition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(setcondition);
 
                     int nSeriesID = series[DBSeries.cID];
@@ -821,12 +821,12 @@ namespace WindowPlugins.GUITVSeries
                     series.Commit();
 
                     setcondition = new SQLCondition();
-                    setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
+                    setcondition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, nSeriesID, SQLConditionType.Equal);
                     DBOnlineSeries.Clear(setcondition);
 
                     // only keep one local dbseries marked as non dupe
                     setcondition = new SQLCondition();
-                    setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
+                    setcondition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
                     List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
                     bool bFirst = true;
                     foreach (DBSeries seriesDupeSet in seriesDupeSetList) {
@@ -873,16 +873,16 @@ namespace WindowPlugins.GUITVSeries
             // now retrieve the info about the series
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( != 0)
-            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(DBSeries.TableFields, DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries) {
                 MPTVSeriesLog.Write(bigLogMessage("Retrieving Metadata for new Series"));
                 // and that never had data imported from the online DB
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 0, SQLConditionType.Equal);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cOnlineDataImported, 0, SQLConditionType.Equal);
             } else {
                 MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Series"));
                 // and that already had data imported from the online DB (but not the new ones, that are set to 1) ??
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cOnlineDataImported, 2, SQLConditionType.Equal);
             }
             List<DBSeries> SeriesList = DBSeries.Get(condition, false, false);
 
@@ -976,15 +976,15 @@ namespace WindowPlugins.GUITVSeries
             if (bUpdateScan) {
                 // mark existing online data as "old", needs a refresh
                 condition = new SQLCondition();
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineDataImported, 2, SQLConditionType.Equal);
+                condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineDataImported, 2, SQLConditionType.Equal);
                 DBEpisode.GlobalSet(DBOnlineEpisode.cOnlineDataImported, 1, condition);
             }
 
             condition = new SQLCondition();
             // all series that have an onlineID ( != 0)
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            condition.Add(DBSeries.TableFields, DBSeries.cID, 0, SQLConditionType.GreaterThan);
+			condition.Add(DBSeries.TableFields, DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+			condition.Add(DBSeries.TableFields, DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
 
@@ -998,8 +998,8 @@ namespace WindowPlugins.GUITVSeries
 
                 // lets get the list of unidentified episodes
                 SQLCondition conditions = new SQLCondition();
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, 0, SQLConditionType.Equal);
+                conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+				conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, 0, SQLConditionType.Equal);
                 episodesList = DBEpisode.Get(conditions, false);
 
                 epCount += episodesList.Count;
@@ -1106,7 +1106,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(bigLogMessage("Updating Metadata for existing Episodes"));
 
             // let's check which series/episodes we have locally
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, 0, SQLConditionType.GreaterThan);
+			SQLCondition cond = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, 0, SQLConditionType.GreaterThan);
 			cond.AddOrderItem(DBOnlineEpisode.TableFields[DBOnlineEpisode.cSeriesID].Q, SQLConditionOrder.Ascending);
 
             List<DBEpisode> episodesInDB = DBEpisode.Get(cond);
@@ -1154,8 +1154,8 @@ namespace WindowPlugins.GUITVSeries
         {
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( > 0)
-            condition.Add(new DBOnlineSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            condition.Add(DBOnlineSeries.TableFields, DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(DBSeries.TableFields, DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries) {
                 if (!DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork))
                     return;
@@ -1163,9 +1163,9 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(bigLogMessage("Checking for missing artwork"));
                 // and that never had data imported from the online DB
                 condition.beginGroup();
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.Equal);
                 condition.nextIsOr = true;
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.Equal);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.Equal);
                 condition.nextIsOr = true;
                 condition.AddCustom(" exists (select * from season where season.seriesID = online_series.id and season.bannerfilenames = '')");
                 condition.nextIsOr = false;
@@ -1173,8 +1173,8 @@ namespace WindowPlugins.GUITVSeries
             } else {
                 MPTVSeriesLog.Write(bigLogMessage("Checking for new artwork"));
                 // and that already had data imported from the online DB
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.NotEqual);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
+				condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.NotEqual);
             }
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
@@ -1377,9 +1377,9 @@ namespace WindowPlugins.GUITVSeries
             if (bUpdateNewSeries && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart)) return;
 
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            condition.Add(DBSeries.TableFields, DBSeries.cID, 0, SQLConditionType.GreaterThan);
+			condition.Add(DBSeries.TableFields, DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+			condition.Add(DBSeries.TableFields, DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
             if (!bUpdateNewSeries && seriesList.Count > 0)
@@ -1478,7 +1478,7 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
 
                         SQLCondition condition = new SQLCondition();
-                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
+                        condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series[DBOnlineSeries.cID], SQLConditionType.Equal);
                         List<DBEpisode> episodes = DBEpisode.Get(condition);
 
                         // Set Episode Ratings
@@ -1686,13 +1686,12 @@ namespace WindowPlugins.GUITVSeries
             tMediaInfo.WorkerReportsProgress = true;
 
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
-            cond.Add(new DBEpisode(), DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);            
+            cond.Add(DBEpisode.TableFields, DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+			cond.Add(DBEpisode.TableFields, DBEpisode.cVideoWidth, "0", SQLConditionType.Equal);            
             // Playtime decrements by one every failed attempt(0,-1,-2,..,-5), dont attempt future scans if done more than Maximum attempts
-            cond.Add(new DBEpisode(), "localPlaytime", (DBEpisode.MAX_MEDIAINFO_RETRIES*-1), SQLConditionType.GreaterThan); 
-            List<DBEpisode> episodes = new List<DBEpisode>();
-            // get all the episodes
-            episodes = DBEpisode.Get(cond, false);
+			cond.Add(DBEpisode.TableFields, "localPlaytime", (DBEpisode.MAX_MEDIAINFO_RETRIES * -1), SQLConditionType.GreaterThan);
+        	// get all the episodes
+            List<DBEpisode> episodes = DBEpisode.Get(cond, false);
             
             if (episodes.Count > 0)
             {
@@ -2343,7 +2342,7 @@ namespace WindowPlugins.GUITVSeries
 
             //now make DBOnlineEpisodes for each unmatched double episode
             //fetch all the episodes that have a CompositeID2 with no matching DBOnlineEpisode
-            SQLCondition cond = new SQLCondition(new DBEpisode(), DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
+            SQLCondition cond = new SQLCondition(DBEpisode.TableFields, DBEpisode.cCompositeID2, " ", SQLConditionType.NotEqual);
 			cond.AddCustom(DBOnlineEpisode.TableFields[DBOnlineEpisode.cCompositeID].Q + " is null");
             List<DBEpisode> missingDoubleEpisodes = DBEpisode.Get(cond, false, true);
             //now foreach episode make a DBOnlineEpisode

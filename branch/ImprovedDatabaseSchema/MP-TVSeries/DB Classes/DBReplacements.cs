@@ -77,7 +77,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
     			{
     				case 2:
     					//Add tagEnabled colum
-    					DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cTagEnabled, new DBValue(0), new SQLCondition());
+    					DBReplacements.GlobalSet(DBReplacements.TableFields, DBReplacements.cTagEnabled, new DBValue(0), new SQLCondition());
 
     					replacement = new DBReplacements(3);
     					replacement[DBReplacements.cTagEnabled] = 1;
@@ -164,7 +164,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
     				case 3:
     					//Disable regex setting for all
-    					DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
+    					DBReplacements.GlobalSet(DBReplacements.TableFields, DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
     					nUpgradeDBVersion++;
     					break;                        
     				default:
@@ -297,7 +297,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
+            GlobalSet(DBReplacements.TableFields, DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
 
         }
 

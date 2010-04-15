@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries
         private bool AddItem(string episodeID)
         {
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, episodeID, SQLConditionType.Equal);
+			condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, episodeID, SQLConditionType.Equal);
 
             List<DBEpisode> ep = DBEpisode.Get(condition, false);
 

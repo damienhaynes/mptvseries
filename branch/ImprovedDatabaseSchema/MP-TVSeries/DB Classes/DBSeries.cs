@@ -101,20 +101,20 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
     				case 3:
     					// set all new perseries timestamps to 0
-    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
-    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
+    					DBOnlineSeries.GlobalSet(DBOnlineSeries.TableFields, DBOnlineSeries.cGetEpisodesTimeStamp, 0, new SQLCondition());
+						DBOnlineSeries.GlobalSet(DBOnlineSeries.TableFields, DBOnlineSeries.cUpdateBannersTimeStamp, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
     				case 4:
-    					DBSeries.GlobalSet(new DBSeries(), DBSeries.cHidden, 0, new SQLCondition());
+    					DBSeries.GlobalSet(DBSeries.TableFields, DBSeries.cHidden, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
     				case 5:
     					// copy all local parsed name into the online series if seriesID = 0
     					SQLCondition conditions = new SQLCondition();
-    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
+						conditions.Add(DBOnlineEpisode.TableFields, DBOnlineSeries.cID, 0, SQLConditionType.LessThan);
     					// just getting the series should be enough
     					List<DBSeries> seriesList = DBSeries.Get(conditions);
     					nUpgradeDBVersion++;
@@ -122,7 +122,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
     				case 6:
     					// set all watched flag timestamp to 0 (will be created)
-    					DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
+						DBOnlineSeries.GlobalSet(DBOnlineSeries.TableFields, DBOnlineSeries.cWatchedFileTimeStamp, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
@@ -170,7 +170,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
     				case 11:
     					// Migrate isFavourite to new Tagged View
     					conditions = new SQLCondition();
-    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
+    					conditions.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cIsFavourite, "1", SQLConditionType.Equal);
     					seriesList = DBSeries.Get(conditions);
 
     					MPTVSeriesLog.Write("Migrating Favourite Series");
@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
     					// Migrate isOnlineFavourite to new TaggedView
     					conditions = new SQLCondition();
-    					conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
+						conditions.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cIsOnlineFavourite, "1", SQLConditionType.Equal);
     					seriesList = DBSeries.Get(conditions);
 
     					MPTVSeriesLog.Write("Migrating Online Favourite Series");
@@ -556,7 +556,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBSeries(), conditions);
+            Clear(DBSeries.cTableName, conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)
@@ -566,8 +566,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
-            GlobalSet(new DBSeries(), sKey, Value, condition);
-            GlobalSet(new DBOnlineSeries(), sKey, Value, condition);
+            GlobalSet(DBSeries.TableFields, sKey, Value, condition);
+            GlobalSet(DBOnlineSeries.TableFields, sKey, Value, condition);
         }
 
         public static void GlobalSet(String sKey1, String sKey2)
@@ -577,8 +577,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
         {
-            GlobalSet(new DBSeries(), sKey1, sKey2, condition);
-            GlobalSet(new DBOnlineSeries(), sKey1, sKey2, condition);
+			GlobalSet(DBSeries.TableFields, sKey1, sKey2, condition);
+			GlobalSet(DBOnlineSeries.TableFields, sKey1, sKey2, condition);
         }
 
         public static SQLCondition stdConditions
@@ -587,11 +587,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {
                 SQLCondition conditions = new SQLCondition();
                 // local dups (parsed names)
-                conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                conditions.Add(DBSeries.TableFields, DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
                 // include hidden?
                 if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
-                    conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(DBSeries.TableFields, DBSeries.cHidden, 0, SQLConditionType.Equal);
 
                 if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
                 {
@@ -690,7 +690,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static DBSeries Get(int seriesID, bool includeStdCond)
         {
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBOnlineSeries(), DBOnlineSeries.cID, seriesID, SQLConditionType.Equal);
+            cond.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, seriesID, SQLConditionType.Equal);
             foreach (DBSeries series in Get(cond, false, includeStdCond))
                 return series;
             return null;
@@ -732,7 +732,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             SQLCondition condition = new SQLCondition();
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems)) {
                 //don't include hidden seasons unless the ShowHiddenItems option is set
-                condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+                condition.Add(DBSeason.TableFields, DBSeason.cHidden, 0, SQLConditionType.Equal);
             }
 
             List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID], condition);
@@ -766,7 +766,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
             // Always delete from Local episode table if deleting from disk or database
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBSeries.cID], SQLConditionType.Equal);
+            condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBSeries.cID], SQLConditionType.Equal);
             /* TODO dunno if to include or exclude hidden items. 
              * if they are excluded then the if (resultMsg.Count is wrong and should do another select to get proper count
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
@@ -790,11 +790,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
             if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
                 condition = new SQLCondition();
-                condition.Add(new DBSeries(), DBSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
+                condition.Add(DBSeries.TableFields, DBSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
                 DBSeries.Clear(condition);
 
                 condition = new SQLCondition();
-                condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
+                condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
                 DBOnlineSeries.Clear(condition);
             }
 

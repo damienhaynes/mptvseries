@@ -219,7 +219,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // Could be a double episode, so mark both as watched
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBEpisode(), DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
+            condition.Add(DBEpisode.TableFields, DBEpisode.cFilename, episode[DBEpisode.cFilename], SQLConditionType.Equal);
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             foreach (DBEpisode ep in episodes)
             {

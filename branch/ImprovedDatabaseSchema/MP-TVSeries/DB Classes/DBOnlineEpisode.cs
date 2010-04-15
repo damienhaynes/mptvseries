@@ -189,7 +189,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 			try {
 				m_fields[DBOnlineEpisode.cCompositeID].Value = composite;
 				SQLCondition condition = new SQLCondition();
-				condition.Add(this, cCompositeID, m_fields[DBOnlineEpisode.cCompositeID].Value, SQLConditionType.Equal);
+				condition.Add(DBOnlineEpisode.TableFields, cCompositeID, m_fields[DBOnlineEpisode.cCompositeID].Value, SQLConditionType.Equal);
 				String sqlQuery = "select * from " + TableName + condition;
 				SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
 				return Read(ref records, 0);
@@ -201,7 +201,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		
 		public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBOnlineEpisode(), conditions);
+			Clear(DBOnlineEpisode.cTableName, conditions);
         }
 
         public string Image

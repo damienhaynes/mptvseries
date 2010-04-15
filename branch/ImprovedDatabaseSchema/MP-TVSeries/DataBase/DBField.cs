@@ -107,8 +107,10 @@ namespace WindowPlugins.GUITVSeries.DataBase
     /// </summary>
     public class DBFieldList : Dictionary<string, DBField>
     {
-        public DBFieldList() : base(StringComparer.InvariantCultureIgnoreCase)
+		public DBFieldList(DBFieldDefList fieldDefList)
+			: base(StringComparer.InvariantCultureIgnoreCase)
         {
+			m_fieldDefList = fieldDefList;
         }
 
 		public DBField PrimaryKey
@@ -117,13 +119,21 @@ namespace WindowPlugins.GUITVSeries.DataBase
             set;
         }
 
-        /// <summary>
+    	private DBFieldDefList m_fieldDefList;
+
+    	public DBFieldDefList FieldDefList
+    	{
+    		get { return m_fieldDefList; }
+    		private set { m_fieldDefList = value; }
+    	}
+
+    	/// <summary>
         /// Creates a copy of DBFieldList that has seperate instances of DBValues
         /// </summary>
         /// <returns></returns>
         public DBFieldList Copy()
         {
-            DBFieldList fieldList = new DBFieldList();
+			DBFieldList fieldList = new DBFieldList(FieldDefList);
             foreach (KeyValuePair<string, DBField> pair in this) {
                 //use DBField.Copy as ee need a deep copy of the DBValues so that changes to values in one table are seperate from 
                 //another so until we find a better way

@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cMirrorpath = "mirrorpath";
         public const String cTypeMask = "Typemask";
 
-        DBFieldList m_fields = new DBFieldList();
+		Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
 
         private static String s_sCurrentInterface = String.Empty;
         private static String s_sCurrentBanner = String.Empty;

@@ -76,15 +76,15 @@ namespace WindowPlugins.GUITVSeries.DataBase
             ConditionsSQLString = String.Empty;
         }
 
-        public SQLCondition(DBTable table, String sField, DBValue value, SQLConditionType type)
+		public SQLCondition(DBFieldDefList tableFields, String sField, DBValue value, SQLConditionType type)
         {
             orderString = String.Empty;
             limitString = String.Empty;
             ConditionsSQLString = String.Empty;
-            Add(table, sField, value, type);
+			Add(tableFields, sField, value, type);
         }
 
-        public void AddSubQuery(string field, DBTable table, SQLCondition innerConditions, DBValue value, SQLConditionType type)
+        public void AddSubQuery(string field, string tableName, SQLCondition innerConditions, DBValue value, SQLConditionType type)
         {
             string sValue;
             if (type == SQLConditionType.Like || type == SQLConditionType.NotLike)
@@ -92,15 +92,15 @@ namespace WindowPlugins.GUITVSeries.DataBase
             else
                 sValue = value.SQLSafeValue;
 
-            AddCustom("( select " + field + " from " + table.TableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
+            AddCustom("( select " + field + " from " + tableName + innerConditions + innerConditions.orderString + innerConditions.limitString +  " ) ", sValue, type);
         }
 
-        public void Add(DBTable table, String sField, DBValue value, SQLConditionType type)
+        public void Add(DBFieldDefList tableFields, String sField, DBValue value, SQLConditionType type)
         {
-            if (table.m_fields.ContainsKey(sField))
+			if (tableFields.ContainsKey(sField))
             {
                 String sValue = String.Empty;
-                switch (table.m_fields[sField].Type)
+				switch (tableFields[sField].Type)
                 {
                     case DBFieldType.Int:
                         sValue = value;
@@ -114,7 +114,7 @@ namespace WindowPlugins.GUITVSeries.DataBase
                         }
                         break;
                 }
-                AddCustom(table.TableName + "." + sField, sValue, type);
+				AddCustom(tableFields[sField].TableName + "." + sField, sValue, type);
             }
         }
 

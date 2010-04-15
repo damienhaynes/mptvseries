@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBNewzbin(), conditions);
+            Clear(DBNewzbin.cTableName, conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)
@@ -201,7 +201,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
-            GlobalSet(new DBNewzbin(), sKey, Value, condition);
+            GlobalSet(DBNewzbin.TableFields, sKey, Value, condition);
         }
 
         public static void GlobalSet(String sKey1, String sKey2)
@@ -211,7 +211,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
         {
-            GlobalSet(new DBNewzbin(), sKey1, sKey2, condition);
+			GlobalSet(DBNewzbin.TableFields, sKey1, sKey2, condition);
         }
 
         public static List<DBNewzbin> Get()

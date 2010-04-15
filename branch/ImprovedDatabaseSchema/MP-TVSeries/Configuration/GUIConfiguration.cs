@@ -2359,15 +2359,15 @@ namespace WindowPlugins.GUITVSeries
                     case DBSeries.cTableName: {
                             DBSeries series = nodeUpdated.Tag as DBSeries;
                             seriesIDsUpdates.Add(series[DBSeries.cID]);
-                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+							SQLCondition cond = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                             epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, cond, new DBOnlineEpisode()));
                         }
                         break;
 
                     case DBSeason.cTableName: {
                             DBSeason season = nodeUpdated.Tag as DBSeason;
-                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+							SQLCondition cond = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+							cond.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
                             epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cOnlineID, cond, new DBOnlineEpisode()));
                         }
                         break;
@@ -3466,7 +3466,7 @@ namespace WindowPlugins.GUITVSeries
                         if (MessageBox.Show("Really delete " + comboBox_TorrentPreset.SelectedItem + " ?", "Confirm") == DialogResult.OK)
                         {
                             SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBTorrentSearch(), DBTorrentSearch.cID, comboBox_TorrentPreset.SelectedItem.ToString(), SQLConditionType.Equal);
+                            condition.Add(DBTorrentSearch.TableFields, DBTorrentSearch.cID, comboBox_TorrentPreset.SelectedItem.ToString(), SQLConditionType.Equal);
                             DBTorrentSearch.Clear(condition);
                             comboBox_TorrentPreset.Items.Remove(comboBox_TorrentPreset.SelectedItem);
 
@@ -3519,8 +3519,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             SQLCondition cond = new SQLCondition();
-            cond.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
-            List<DBEpisode> episodes = new List<DBEpisode>();
+            cond.Add(DBEpisode.TableFields, DBEpisode.cFilename, "", SQLConditionType.NotEqual);
+            List<DBEpisode> episodes;
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
 
@@ -4015,7 +4015,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 StreamWriter w = new StreamWriter(fd.FileName);
                 SQLCondition cond = new SQLCondition();
-                cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, SQLConditionType.Equal);
+                cond.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cWatched, true, SQLConditionType.Equal);
                 foreach (DBValue val in DBOnlineEpisode.GetSingleField(DBOnlineEpisode.cCompositeID, cond, new DBOnlineEpisode()))
                 {
                     try
@@ -4044,13 +4044,13 @@ namespace WindowPlugins.GUITVSeries
 
                 string line = string.Empty;
                 // set unwatched for all
-                DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, new SQLCondition());
+                DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cWatched, false, new SQLCondition());
                 // now set watched for all in file
                 while ((line = r.ReadLine()) != null)
                 {
                     cond = new SQLCondition();
-                    cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, line, SQLConditionType.Equal);
-                    DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, true, cond);
+                    cond.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cCompositeID, line, SQLConditionType.Equal);
+                    DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cWatched, true, cond);
                 }
                 r.Close();
                 MPTVSeriesLog.Write("Watched info succesfully imported!");

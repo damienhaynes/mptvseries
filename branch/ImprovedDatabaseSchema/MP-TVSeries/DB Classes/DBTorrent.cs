@@ -101,7 +101,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBTorrentSearch(), conditions);
+            Clear(DBTorrentSearch.cTableName, conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)
@@ -111,7 +111,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
-            GlobalSet(new DBTorrentSearch(), sKey, Value, condition);
+            GlobalSet(DBTorrentSearch.TableFields, sKey, Value, condition);
         }
 
         public static void GlobalSet(String sKey1, String sKey2)
@@ -121,7 +121,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey1, String sKey2, SQLCondition condition)
         {
-            GlobalSet(new DBTorrentSearch(), sKey1, sKey2, condition);
+			GlobalSet(DBTorrentSearch.TableFields, sKey1, sKey2, condition);
         }
 
         public static List<DBTorrentSearch> Get()

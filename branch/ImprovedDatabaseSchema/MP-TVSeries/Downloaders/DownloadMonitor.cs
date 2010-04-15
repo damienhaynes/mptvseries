@@ -106,7 +106,7 @@ namespace WindowPlugins.GUITVSeries.Download
                 m_watcherUpdater.StartFolderWatch();
 
                 SQLCondition setcondition = new SQLCondition();
-                setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
+				setcondition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
                 List<DBEpisode> DownloadPendingEpisodes = DBEpisode.Get(setcondition);
 
                 // for each download pending episodes, check the presence of a path. If there is one, then assume it's been
@@ -252,7 +252,7 @@ namespace WindowPlugins.GUITVSeries.Download
                 files.RemoveAll(file => file.m_sMatch_FileName == sPath);
 
             SQLCondition setcondition = new SQLCondition();
-            setcondition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
+            setcondition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cDownloadPending, 1, SQLConditionType.Equal);
             List<DBEpisode> DownloadPendingEpisodes = DBEpisode.Get(setcondition);
 
             foreach (MonitorPathPair pair in files)
@@ -405,8 +405,8 @@ namespace WindowPlugins.GUITVSeries.Download
 
                             // to figure out where to move the file, first try to see if there is a season folder already present
                             SQLCondition conditions = new SQLCondition();
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, pair.m_episodeBestMatch[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
-                            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                            conditions.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, pair.m_episodeBestMatch[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+							conditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
                             List<DBEpisode> SeriesEpisodes = DBEpisode.Get(conditions);
 
                             if (SeriesEpisodes.Count > 0)
@@ -415,7 +415,7 @@ namespace WindowPlugins.GUITVSeries.Download
                             {
                                 // ok, default back to just the series folder
                                 conditions = new SQLCondition();
-                                conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
+								conditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, pair.m_episodeBestMatch[DBEpisode.cSeriesID], SQLConditionType.Equal);
                                 SeriesEpisodes = DBEpisode.Get(conditions);
 
                                 if (SeriesEpisodes.Count > 0)

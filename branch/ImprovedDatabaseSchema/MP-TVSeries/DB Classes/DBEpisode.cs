@@ -182,23 +182,23 @@ namespace WindowPlugins.GUITVSeries.DataClass
     					break;
 
     				case 2:
-    					DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, new SQLCondition());
+    					DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cHidden, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
     				case 3:
-    					DBEpisode.GlobalSet(new DBEpisode(), DBEpisode.cEpisodeIndex2, 0, new SQLCondition());
+    					DBEpisode.GlobalSet(DBEpisode.TableFields, DBEpisode.cEpisodeIndex2, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
     				case 4:
-    					DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
+						DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
     				case 5:
-    					DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, (DBValue)"init", new SQLCondition());
-    					DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", new SQLCondition());
+						DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cEpisodeThumbnailUrl, (DBValue)"init", new SQLCondition());
+						DBOnlineEpisode.GlobalSet(DBOnlineEpisode.TableFields, DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", new SQLCondition());
     					nUpgradeDBVersion++;
     					break;
 
@@ -564,7 +564,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
             // Always delete from Local episode table if deleting from disk or database
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBEpisode(), DBEpisode.cID, this[DBEpisode.cID], SQLConditionType.Equal);
+            condition.Add(DBEpisode.TableFields, DBEpisode.cID, this[DBEpisode.cID], SQLConditionType.Equal);
 
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
@@ -593,7 +593,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
                         if (type != TVSeriesPlugin.DeleteMenuItems.disk)
                         {
                             SQLCondition condition1 = new SQLCondition();
-                            condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, this[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
+                            condition1.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, this[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition1);
                         }
                     
@@ -608,7 +608,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
                 {
                     condition = new SQLCondition();
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cOnlineID, this[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
+					condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cOnlineID, this[DBOnlineEpisode.cOnlineID], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(condition);
                 }
             }
@@ -618,35 +618,35 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {
                 // If episode count is zero then delete the season
                 condition = new SQLCondition();
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+				condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+				condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
                 episodes = DBEpisode.Get(condition, false);
                 if (episodes.Count == 0)
                 {
                     condition = new SQLCondition();
-                    condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBSeason(), DBSeason.cIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                    condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+					condition.Add(DBSeason.TableFields, DBSeason.cIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
                     DBSeason.Clear(condition);
 
                     // If episode count is still zero, then delete the series\seasons
                     condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                    condition.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                     episodes = DBEpisode.Get(condition, false);
                     if (episodes.Count == 0)
                     {
                         // Delete All Seasons
                         condition = new SQLCondition();
-                        condition.Add(new DBSeason(), DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+						condition.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBSeason.Clear(condition);
 
                         // Delete Local Series
                         condition = new SQLCondition();
-                        condition.Add(new DBSeries(), DBSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                        condition.Add(DBSeries.TableFields, DBSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBSeries.Clear(condition);
 
                         // Delete Online Series
                         condition = new SQLCondition();
-                        condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                        condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBOnlineSeries.Clear(condition);
                     }
                 }
@@ -835,8 +835,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
                     m_onlineEpisode.Commit();
 
                     SQLCondition cleanup = new SQLCondition();
-                    cleanup.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, base[cSeriesID], SQLConditionType.Equal);
-                    cleanup.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, base[cSeriesID] + "_" + base[DBOnlineEpisode.cFirstAired], SQLConditionType.Equal);
+                    cleanup.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, base[cSeriesID], SQLConditionType.Equal);
+					cleanup.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cCompositeID, base[cSeriesID] + "_" + base[DBOnlineEpisode.cFirstAired], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(cleanup);
                 }
             }
@@ -854,7 +854,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static DBEpisode GetFirstUnwatched(int seriesID)
         {
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
+            conditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
             List<DBEpisode> results = GetFirstUnwatched(conditions);
             if (results.Count > 0)
                 return results[0];
@@ -864,8 +864,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static DBEpisode GetFirstUnwatched(int seriesID, int seasonIndex)
         {
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
-            conditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, new DBValue(seasonIndex), SQLConditionType.Equal);
+			conditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, new DBValue(seriesID), SQLConditionType.Equal);
+			conditions.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, new DBValue(seasonIndex), SQLConditionType.Equal);
             List<DBEpisode> results = GetFirstUnwatched(conditions);
             if (results.Count > 0)
                 return results[0];
@@ -881,8 +881,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);           
+            SQLCondition cond = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+			cond.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);           
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
@@ -937,7 +937,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
+			SQLCondition cond = new SQLCondition(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
@@ -986,7 +986,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
         {
             SQLWhat what = new SQLWhat(new DBEpisode());
-            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
+            conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
             string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
                               + @" and online_episodes.hidden = 0 "
@@ -1015,11 +1015,11 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {
                 SQLCondition conditions = new SQLCondition();
                 if ((!Settings.isConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                    conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+                    conditions.Add(DBEpisode.TableFields, DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
                 if ((!Settings.isConfig || m_bUpdateEpisodeCount) || !DBOption.GetOptions(DBOption.cShowHiddenItems))
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
 
                 m_bUpdateEpisodeCount = false;
                 return conditions;
@@ -1066,14 +1066,14 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
             SQLCondition subQueryConditions = new SQLCondition();
             if (matchSeriesID.Success)
-                subQueryConditions.Add(new DBEpisode(), cSeriesID, matchSeriesID.Groups[1].Value, SQLConditionType.Equal);
+				subQueryConditions.Add(DBEpisode.TableFields, cSeriesID, matchSeriesID.Groups[1].Value, SQLConditionType.Equal);
             if (matchSeasonIndex.Success)
-                subQueryConditions.Add(new DBEpisode(), cSeasonIndex, matchSeasonIndex.Groups[1].Value, SQLConditionType.Equal);
-            subQueryConditions.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
+				subQueryConditions.Add(DBEpisode.TableFields, cSeasonIndex, matchSeasonIndex.Groups[1].Value, SQLConditionType.Equal);
+			subQueryConditions.Add(DBEpisode.TableFields, cCompositeID2, "", SQLConditionType.NotEqual);
 
 			String sqlSubQuery = "select distinct " + DBEpisode.TableFields[cCompositeID2].Q + " from " + DBEpisode.cTableName + subQueryConditions;
             conditionsFirst.AddCustom(sqlSubQuery, DBOnlineEpisode.TableFields[cCompositeID].Q, SQLConditionType.NotIn);
-            conditionsSecond.Add(new DBEpisode(), cCompositeID2, "", SQLConditionType.NotEqual);
+			conditionsSecond.Add(DBEpisode.TableFields, cCompositeID2, "", SQLConditionType.NotEqual);
 
             DBTable first = null;
             DBTable second = null;
@@ -1138,7 +1138,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static List<DBEpisode> Get(int nSeriesID, bool inclStdCond)
         {
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
+            conditions.Add(DBOnlineEpisode.TableFields, cSeriesID, nSeriesID, SQLConditionType.Equal);
 
             return Get(conditions, inclStdCond);
         }
@@ -1151,8 +1151,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public static List<DBEpisode> Get(int nSeriesID, int nSeasonIndex, bool includeStdCond)
         {
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), cSeriesID, nSeriesID, SQLConditionType.Equal);
-            conditions.Add(new DBOnlineEpisode(), cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
+            conditions.Add(DBOnlineEpisode.TableFields, cSeriesID, nSeriesID, SQLConditionType.Equal);
+            conditions.Add(DBOnlineEpisode.TableFields, cSeasonIndex, nSeasonIndex, SQLConditionType.Equal);
 
             return Get(conditions, includeStdCond);
         }
@@ -1195,7 +1195,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 			try {
 				m_fields[DBEpisode.cFilename].Value = filename;
 				SQLCondition condition = new SQLCondition();
-				condition.Add(this, cFilename, m_fields[DBEpisode.cFilename].Value, SQLConditionType.Equal);
+				condition.Add(DBEpisode.TableFields, cFilename, m_fields[DBEpisode.cFilename].Value, SQLConditionType.Equal);
 				String sqlQuery = "select * from " + TableName + condition;
 				SQLiteResultSet records = DBTVSeries.Execute(sqlQuery);
 				return Read(ref records, 0);
@@ -1218,7 +1218,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void Clear(SQLCondition conditions)
         {
-            Clear(new DBEpisode(), conditions);
+            Clear(DBEpisode.cTableName, conditions);
         }
 
         public static void GlobalSet(String sKey, DBValue Value)
@@ -1228,8 +1228,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public static void GlobalSet(String sKey, DBValue Value, SQLCondition condition)
         {
-            GlobalSet(new DBOnlineEpisode(), sKey, Value, condition);
-            GlobalSet(new DBEpisode(), sKey, Value, condition);
+            GlobalSet(DBOnlineEpisode.TableFields, sKey, Value, condition);
+            GlobalSet(DBEpisode.TableFields, sKey, Value, condition);
         }
 
         public string Image
