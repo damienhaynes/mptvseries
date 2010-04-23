@@ -157,6 +157,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridViewIdentifySeries.Columns.Add(dgvcSearchOK);
             dataGridViewIdentifySeries.Columns.Add(dgvcApprove);
 
+            dataGridViewIdentifySeries.EditMode = DataGridViewEditMode.EditOnEnter;
+
             #region Grid Events
             dataGridViewIdentifySeries.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
             {
@@ -200,7 +202,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     //orderCell.Items.Clear();                    
                     if (series != null)
                     {
-                        cell.ToolTipText = series[DBOnlineSeries.cSummary];
+                        cell.ToolTipText = series[DBOnlineSeries.cSummary];                        
                         //displayValsInCBCell(orderCell, series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));                        
                     }
                     else cell.ToolTipText = string.Empty;

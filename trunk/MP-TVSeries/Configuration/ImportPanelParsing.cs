@@ -127,6 +127,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             this.dataGridViewReview.ResumeLayout();
 
+            dataGridViewReview.EditMode = DataGridViewEditMode.EditOnEnter;
+
             updateCount();
         }
 
@@ -177,7 +179,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         UserFinishedEditing(new UserInputResults(results, null), reqAction);
                 }
                 else
-                    MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);                
+                {
+                    MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);
+                    return;
+                }
             }
             else if (reqAction == UserFinishedRequestedAction.Cancel)
             {
