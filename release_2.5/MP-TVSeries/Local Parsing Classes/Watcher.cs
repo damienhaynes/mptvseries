@@ -113,7 +113,7 @@ namespace WindowPlugins.GUITVSeries
         public String m_sFullPathFileName;
         public String m_sParsedFileName;
         public WatcherItemType m_type;        
-		private FileInfo fileInfo = null;
+                private FileInfo fileInfo = null;
 
         public WatcherItem(FileSystemWatcher watcher, RenamedEventArgs e, bool bOldName)
         {
@@ -156,7 +156,7 @@ namespace WindowPlugins.GUITVSeries
         {
             m_type = type;
             m_sFullPathFileName = file.m_sFull_FileName;
-            m_sParsedFileName = file.m_sMatch_FileName;           
+            m_sParsedFileName = file.m_sMatch_FileName;          
             if (type == WatcherItemType.Added)
                 fileInfo = new FileInfo(file.m_sFull_FileName);
             MPTVSeriesLog.Write("File monitor: " + m_sParsedFileName + " " + m_type);
@@ -183,7 +183,7 @@ namespace WindowPlugins.GUITVSeries
        
         public bool IsLocked()
         {
-            if (fileInfo != null) 
+            if (fileInfo != null)
             {
                 return IsLocked(fileInfo);
             }
@@ -196,10 +196,11 @@ namespace WindowPlugins.GUITVSeries
         public BackgroundWorker worker = new BackgroundWorker();
         List<String> m_WatchedFolders = new List<String>();
         int m_nScanLapse; // number of minutes between scans
-        
+       
         List<String> m_ScannedFolders = new List<String>();
         List<PathPair> m_PreviousScan = new List<PathPair>();
         List<PathPair> m_PreviousScanRemovable = new List<PathPair>();
+
 
         List<System.IO.FileSystemWatcher> m_watchersList = new List<System.IO.FileSystemWatcher>();
         List<WatcherItem> m_modifiedFilesList = new List<WatcherItem>();
@@ -222,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     DriveInfo info = new DriveInfo(sRoot);
-                    
+                   
                     if (info.DriveType == DriveType.CDRom) {
                         // do nothing as filesystemwatchers do nothing for cd or dvd drives
                         MPTVSeriesLog.Write(string.Format("Watcher: Skipping CD/DVD drive: {0}", sRoot), MPTVSeriesLog.LogLevel.Normal);
@@ -240,12 +241,12 @@ namespace WindowPlugins.GUITVSeries
                 }
                 catch (System.ArgumentException)
                 {
-                	// this has to be a UNC path
+                        // this has to be a UNC path
                     MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
                     m_ScannedFolders.Add(folder);
                 }
             }
-            
+           
             DeviceManager.OnVolumeInserted += OnVolumeInsertedRemoved;
             DeviceManager.OnVolumeRemoved += OnVolumeInsertedRemoved;
 
@@ -266,22 +267,71 @@ namespace WindowPlugins.GUITVSeries
             worker.RunWorkerAsync();
         }
 
+        void removeFromModifiedFilesList(string filePath, WatcherItemType type, bool isFolder)
+        {
+            List<WatcherItem> watcherItemsRemove = new List<WatcherItem>();
+            string completeFilePath = filePath;
+            if (isFolder) completeFilePath = completeFilePath + "\\";
+           
+            foreach (WatcherItem watcherItem in m_modifiedFilesList)
+            {
+                if (watcherItem.m_sFullPathFileName.StartsWith(filePath) && watcherItem.m_type == type)
+                    watcherItemsRemove.Add(watcherItem);
+            }
+            foreach (WatcherItem watcherItem in watcherItemsRemove)
+                m_modifiedFilesList.Remove(watcherItem);
+        }
+
         void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.FullPath);
-            
+            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.OldFullPath + " to " + e.FullPath);
+
+            List<PathPair> filesToRemove = new List<PathPair>();
+            List<PathPair> filesToAdd = new List<PathPair>();
+            bool isDirectoryRename = false;
+
+            if (Directory.Exists(e.FullPath))
+            {
+                isDirectoryRename = true;
+
+                List<string> folder = new List<string>();
+                folder.Add(e.FullPath);
+                filesToAdd = Filelister.GetFiles(folder);
+               
+                foreach (PathPair pathPair in filesToAdd)
+                    filesToRemove.Add(new PathPair(pathPair.m_sMatch_FileName, pathPair.m_sFull_FileName.Replace(e.FullPath, e.OldFullPath)));
+            }
+
             // rename: delete the old, add the new
             lock (m_modifiedFilesList)
             {
-                String sOldExtention = System.IO.Path.GetExtension(e.OldFullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sOldExtention) != -1)
+                if (isDirectoryRename)
                 {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, true));
+                    foreach (PathPair pathPair in filesToRemove)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Added, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Deleted));
+                    }
+                    foreach (PathPair pathPair in filesToAdd)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Added));
+                    }
                 }
-                String sNewExtention = System.IO.Path.GetExtension(e.FullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sNewExtention) != -1)
+                else
                 {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, false));
+                    String sOldExtention = System.IO.Path.GetExtension(e.OldFullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sOldExtention) != -1)
+                    {
+                        removeFromModifiedFilesList(e.OldFullPath, WatcherItemType.Added, false);
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, true));
+                    }
+                    String sNewExtention = System.IO.Path.GetExtension(e.FullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sNewExtention) != -1)
+                    {
+                        removeFromModifiedFilesList(e.FullPath, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e, false));
+                    }
                 }
             }
         }
@@ -294,33 +344,81 @@ namespace WindowPlugins.GUITVSeries
             }
 
             MPTVSeriesLog.Write("Watcher: Changed event: " + e.FullPath);
-            
-            // a file has changed! created, not created, whatever. Just add it to our list. 
+
+            List<PathPair> filesChanged = new List<PathPair>();
+            bool isDirectoryChange = false;
+
+            if (Directory.Exists(e.FullPath))
+            {
+                isDirectoryChange = true;
+
+                List<string> folder = new List<string>();
+                folder.Add(e.FullPath);
+                filesChanged = Filelister.GetFiles(folder);
+            }
+           
+            // a file has changed! created, not created, whatever. Just add it to our list.
             // we only process this list once in a while
             lock (m_modifiedFilesList)
             {
-                foreach (WatcherItem item in m_modifiedFilesList)
+                if (e.ChangeType == WatcherChangeTypes.Deleted)
                 {
-                    if (item.m_sFullPathFileName == e.FullPath)
-                        return;
+                    removeFromModifiedFilesList(e.FullPath, WatcherItemType.Added, true);
+                   
+                    SQLCondition condition = new SQLCondition(new DBEpisode(), DBEpisode.cFilename, e.FullPath + "\\%", SQLConditionType.Like);
+                    List<DBEpisode> dbepisodes = DBEpisode.Get(condition, false);
+                    if (dbepisodes != null && dbepisodes.Count > 0)
+                    {
+                        foreach (DBEpisode dbepisode in dbepisodes)
+                        {
+                            m_modifiedFilesList.Add(new WatcherItem(new PathPair(dbepisode[DBEpisode.cFilename].ToString().Substring(e.FullPath.Length).TrimStart('\\'), dbepisode[DBEpisode.cFilename]), WatcherItemType.Deleted));
+                        }
+                    }
                 }
 
-                String sExtention = System.IO.Path.GetExtension(e.FullPath);
-                if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sExtention) != -1) {
-                    m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+                if (isDirectoryChange)
+                {
+                    foreach (PathPair pathPair in filesChanged)
+                    {
+                        removeFromModifiedFilesList(pathPair.m_sFull_FileName, WatcherItemType.Deleted, false);
+                        m_modifiedFilesList.Add(new WatcherItem(pathPair, WatcherItemType.Added));
+                    }
+                }
+                else
+                {
+                    /* duplicates are removed later
+                    foreach (WatcherItem item in m_modifiedFilesList)
+                    {
+                        if (item.m_sFullPathFileName == e.FullPath)
+                            return;
+                    }
+                    */
+
+                    String sExtention = System.IO.Path.GetExtension(e.FullPath);
+                    if (MediaPortal.Util.Utils.VideoExtensions.IndexOf(sExtention) != -1)
+                    {
+                        if (e.ChangeType == WatcherChangeTypes.Deleted)
+                            removeFromModifiedFilesList(e.FullPath, WatcherItemType.Added, false);
+                        else
+                            removeFromModifiedFilesList(e.FullPath, WatcherItemType.Deleted, false);
+
+
+                        m_modifiedFilesList.Add(new WatcherItem(sender as FileSystemWatcher, e));
+                    }
                 }
             }
         }
 
         void setUpWatches()
         {            
-            if (m_watchersList.Count > 0) 
+            if (m_watchersList.Count > 0)
             {
                 MPTVSeriesLog.Write("Watcher: Cleaning up File System Watchers", MPTVSeriesLog.LogLevel.Normal);
 
                 // do some cleanup first, remove the existing watchers
                 foreach (FileSystemWatcher watcher in m_watchersList)
                 {
+                    watcher.EnableRaisingEvents = false;
                     watcher.Changed -= new FileSystemEventHandler(watcher_Changed);
                     watcher.Created -= new FileSystemEventHandler(watcher_Changed);
                     watcher.Deleted -= new FileSystemEventHandler(watcher_Changed);
@@ -329,7 +427,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 m_watchersList.Clear();
             }
-            
+           
             // go through all enabled import folders, and add a watchfolder on it
             foreach (String sWatchedFolder in m_WatchedFolders)
             {
@@ -340,7 +438,7 @@ namespace WindowPlugins.GUITVSeries
                     // from MSDN, filter doesn't change the amount of stuff looked at internally
                     watcher.Path = sWatchedFolder;
                     watcher.IncludeSubdirectories = true;
-                    watcher.NotifyFilter = NotifyFilters.FileName;                 
+                    watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size;
                     watcher.Changed += new FileSystemEventHandler(watcher_Changed);
                     watcher.Created += new FileSystemEventHandler(watcher_Changed);
                     watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
@@ -359,6 +457,38 @@ namespace WindowPlugins.GUITVSeries
             refreshWatchers = true;
         }
 
+
+        static List<WatcherItem> removeDuplicates(List<WatcherItem> inputList)
+        {
+            Dictionary<string, int> uniqueStore = new Dictionary<string, int>();
+            List<WatcherItem> finalList = new List<WatcherItem>();
+
+            MPTVSeriesLog.Write("Remove duplicates from inputList, starting count: " + inputList.Count, MPTVSeriesLog.LogLevel.DebugSQL);
+
+            foreach (WatcherItem currValue in inputList)
+            {
+                string key = currValue.m_sFullPathFileName;
+                switch (currValue.m_type)
+                {
+                    case WatcherItemType.Deleted:
+                        key += " DELETED";
+                        break;
+                    case WatcherItemType.Added:
+                        key += " ADDED";
+                        break;
+                }
+
+                if (!uniqueStore.ContainsKey(key))
+                {
+                    uniqueStore.Add(key, 0);
+                    finalList.Add(currValue);
+                }
+            }
+
+            MPTVSeriesLog.Write("Removed duplicates from inputList, final count: " + inputList.Count, MPTVSeriesLog.LogLevel.DebugSQL);
+            return finalList;
+        }
+
         void signalModifiedFiles()
         {
             try
@@ -367,6 +497,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_modifiedFilesList.Count > 0)
                     {
+                        m_modifiedFilesList = removeDuplicates(m_modifiedFilesList);
+
                         MPTVSeriesLog.Write("Watcher: Signaling " + m_modifiedFilesList.Count + " modified files");
                         List<WatcherItem> outList = new List<WatcherItem>();
                        
@@ -401,7 +533,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Watcher: Exception happened in Signal Modified Files: " + exp.Message);
             }
         }
-        
+       
         List<String> GetDeviceManagerWatchedFolders()
         {                        
             List<String> result = new List<String>();
@@ -422,11 +554,11 @@ namespace WindowPlugins.GUITVSeries
             }
             return result;
         }
-        
+       
         void OnVolumeInsertedRemoved(string volume, string serial)
         {
             MPTVSeriesLog.Write("On Volume Inserted or Removed: " + volume);
-            
+           
             List<String> folders = new List<String>();
 
             foreach (DBImportPath importPath in DBImportPath.GetAll())
@@ -434,8 +566,8 @@ namespace WindowPlugins.GUITVSeries
                 string sRoot = System.IO.Path.GetPathRoot(importPath[DBImportPath.cPath]);
                 if ((importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot) && sRoot.StartsWith(volume))
                 {                    
-					MPTVSeriesLog.Write("Adding for import or remove: " + importPath[DBImportPath.cPath]);
-                    folders.Add(importPath[DBImportPath.cPath]); 
+                                        MPTVSeriesLog.Write("Adding for import or remove: " + importPath[DBImportPath.cPath]);
+                    folders.Add(importPath[DBImportPath.cPath]);
                 }
             }
 
@@ -457,7 +589,7 @@ namespace WindowPlugins.GUITVSeries
                 m_PreviousScanRemovable.AddRange(m_PreviousScanRemovableTemp);
             }
         }
-        
+       
         void DoFileScan()
         {
             DoFileScan(m_ScannedFolders, ref m_PreviousScan);
@@ -471,25 +603,26 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Watcher: Network not available, aborting file scan");
                 return;
             }                    
-            
+           
             // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
             if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
                 MPTVSeriesLog.Write("Watcher: Fullscreen Video has been detected, aborting file scan");
                 return;
             }
-            
+           
             List<PathPair> newScan = Filelister.GetFiles(scannedFolders);
+
 
             List<PathPair> addedFiles = new List<PathPair>();
             addedFiles.AddRange(newScan);
-            
+           
             foreach (PathPair pair in previousScan)
             {
                 addedFiles.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
             }
 
             List<PathPair> removedFiles = new List<PathPair>();
-            
+           
             removedFiles.AddRange(previousScan);
             foreach (PathPair pair in newScan) {
                 removedFiles.RemoveAll(item => item.m_sFull_FileName == pair.m_sFull_FileName);
@@ -503,14 +636,14 @@ namespace WindowPlugins.GUITVSeries
                 foreach (PathPair pair in removedFiles)
                     m_modifiedFilesList.Add(new WatcherItem(pair, WatcherItemType.Deleted));
             }
-            
+           
             previousScan = newScan;
         }
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
             MPTVSeriesLog.Write("Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
-            
+           
             System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             while (!TVSeriesPlugin.IsNetworkAvailable) {
                 MPTVSeriesLog.Write("Network is not available yet, postponing Watcher setup 30 secs", MPTVSeriesLog.LogLevel.Normal);
@@ -526,9 +659,9 @@ namespace WindowPlugins.GUITVSeries
 
             // then start the watcher loop
             while (!worker.CancellationPending)
-            {               
+            {              
                TimeSpan tsUpdate = DateTime.Now - timeLastScan;
-                if ((int)tsUpdate.TotalMinutes > m_nScanLapse) 
+                if ((int)tsUpdate.TotalMinutes > m_nScanLapse)
                 {
                     timeLastScan = DateTime.Now;
                     DoFileScan();
@@ -545,4 +678,3 @@ namespace WindowPlugins.GUITVSeries
     };
 
 }
-
