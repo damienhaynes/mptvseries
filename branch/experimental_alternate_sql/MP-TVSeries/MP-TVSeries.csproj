@@ -118,6 +118,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=5.0.8.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="SubtitleDownloader, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
@@ -127,6 +131,10 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MediaRenamer\MediaRenamer\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -327,6 +335,9 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DatabaseConfigurator.resx">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\DeleteDialog.resx">
       <DependentUpon>DeleteDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -425,6 +436,10 @@
   <ItemGroup>
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
+    <None Include="Resources\Images\importaccept.png" />
+    <None Include="Resources\Images\importpending.png" />
+    <None Include="Resources\Images\importupdating.png" />
+    <None Include="Resources\Images\importignored.png" />
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
@@ -446,6 +461,12 @@
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\DatabaseConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DatabaseConfigurator.Designer.cs">
+      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ImportPanelEpID.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -483,11 +504,17 @@
       <DependentUpon>ProgressLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="DataBase\DBField.cs" />
+    <Compile Include="DataBase\DBProvider.cs" />
     <Compile Include="DataBase\DBTable.cs" />
     <Compile Include="DataBase\DBTVSeries.cs" />
     <Compile Include="DataBase\DBValue.cs" />
+    <Compile Include="DataBase\MySqlProvider.cs" />
+    <Compile Include="DataBase\SQLClientProvider.cs" />
     <Compile Include="DataBase\SQLCondition.cs" />
+    <Compile Include="DataBase\SQLiteProvider.cs" />
     <Compile Include="DataBase\SQLWhat.cs" />
+    <Compile Include="DB Classes\DBOnlineEpisode.cs" />
+    <Compile Include="DB Classes\DBOnlineSeries.cs" />
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
     <Compile Include="Online Parsing Classes\UserInputResult.cs" />
@@ -522,11 +549,11 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
-xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)MediaInfo.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(ProjectDir)\..\External\7z.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
-    <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
+    <PostBuildEvent>rem xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
+rem xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+rem xcopy "$(TargetDir)MediaInfo.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+rem xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+rem xcopy "$(ProjectDir)\..\External\7z.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
+    <PreBuildEvent>rem subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>

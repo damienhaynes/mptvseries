@@ -26,216 +26,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.Data;
+using SQLite.NET;
 using MediaPortal.Database;
 using System.Text.RegularExpressions;
 using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBOnlineEpisode : DBTable
-    {
-        public const String cTableName = "online_episodes";
-
-        #region Online DB Fields
-        public const String cCompositeID = "CompositeID";         // composite string used for primary index, based on series, season & episode
-        public const String cSeriesID = "SeriesID";
-        public const String cID = "EpisodeID";                    // onlineDB episodeID
-        public const String cSeasonIndex = "SeasonIndex";         // season index
-        public const String cEpisodeIndex = "EpisodeIndex";       // episode index
-        public const String cEpisodeName = "EpisodeName";         // episode name
-        public const String cWatched = "Watched";                 // tag to know if episode has been watched already (overrides the local file's tag)
-        public const String cEpisodeSummary = "Summary";
-        public const String cFirstAired = "FirstAired";
-        public const String cOnlineDataImported = "OnlineDataImported";
-        public const String cGuestStars = "GuestStars";
-        public const String cDirector = "Director";
-        public const String cWriter = "Writer";
-        public const String cHidden = "Hidden";
-        public const String cLastUpdated = "lastupdated";
-        public const String cDownloadPending = "DownloadPending";
-        public const String cDownloadExpectedNames = "DownloadExpectedName";
-        public const String cEpisodeThumbnailUrl = "ThumbUrl";
-        public const String cEpisodeThumbnailFilename = "thumbFilename";
-        public const String cAirsBeforeSeason = "airsbefore_season";
-        public const String cAirsBeforeEpisode = "airsbefore_episode";
-        public const String cAirsAfterSeason = "airsafter_season";
-        public const String cRating = "Rating";
-        public const String cMyRating = "myRating";
-        public const String cCombinedEpisodeNumber = "Combined_episodenumber";
-        public const String cCombinedSeason = "Combined_season";
-        public const String cDVDChapter = "DVD_chapter";
-        public const String cDVDDiscID = "DVD_discid";
-        public const String cDVDEpisodeNumber = "DVD_episodenumber";
-        public const String cDVDSeasonNumber = "DVD_season";
-        public const String cEpisodeImageFlag = "EpImgFlag";
-        public const String cIMDBID = "IMDB_ID";
-        public const String cLanguage = "Language";
-        public const String cProductionCode = "ProductionCode";
-        public const String cAbsoluteNumber = "absolute_number";
-        public const String cSeasonID = "seasonid";
-        #endregion
-
-        public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
-        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
-        public static Dictionary<string, DBField> s_fields = new Dictionary<string,DBField>();
-        
-        new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Writer", "Director", "GuestStars" });
-
-        static DBOnlineEpisode()
-        {
-            //////////////////////////////////////////////////
-            #region Pretty Names displayed in Configuration Details Tab
-            s_FieldToDisplayNameMap.Add(cID, "Episode ID");
-            s_FieldToDisplayNameMap.Add(cEpisodeSummary, "Overview");
-            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
-            s_FieldToDisplayNameMap.Add(cFirstAired, "Air Date");
-            s_FieldToDisplayNameMap.Add(cGuestStars, "Guest Stars");
-            s_FieldToDisplayNameMap.Add(cDVDEpisodeNumber, "DVD Episode Number");
-            s_FieldToDisplayNameMap.Add(cDVDSeasonNumber, "DVD Season Number");
-            s_FieldToDisplayNameMap.Add(cAirsAfterSeason, "Airs After Season");
-            s_FieldToDisplayNameMap.Add(cAirsBeforeSeason, "Airs Before Season");
-            s_FieldToDisplayNameMap.Add(cAirsBeforeEpisode, "Airs Before Episode");
-            #endregion
-            //////////////////////////////////////////////////
-
-            //////////////////////////////////////////////////
-            #region Local DB field mapping to Online DB
-            s_OnlineToFieldMap.Add("SeasonNumber", cSeasonIndex);
-            s_OnlineToFieldMap.Add("EpisodeNumber", cEpisodeIndex);
-            s_OnlineToFieldMap.Add("EpisodeName", cEpisodeName);
-            s_OnlineToFieldMap.Add("id", cID);
-            s_OnlineToFieldMap.Add("Overview", cEpisodeSummary);
-            s_OnlineToFieldMap.Add("FirstAired", cFirstAired);
-            s_OnlineToFieldMap.Add("filename", cEpisodeThumbnailUrl);
-            #endregion
-            //////////////////////////////////////////////////
-
-            // lately it also returns seriesID (which we already had before - but unfortunatly not in all lower case, prevents an error msg, thats all
-            s_OnlineToFieldMap.Add("seriesid", cSeriesID);
-
-            // make sure the table is created on first run
-            DBOnlineEpisode dummy = new DBOnlineEpisode();
-        }
-
-        public DBOnlineEpisode()
-            : base(cTableName)
-        {
-            InitColumns();
-            InitValues();
-
-            DBTVSeries.CreateDBIndices("create index seriesIDOnlineEp on online_episodes(SeriesID ASC)", m_tableName, "seriesIDOnlineEp", false);
-        }
-
-        public DBOnlineEpisode(DBValue nSeriesID, DBValue nSeasonIndex, DBValue nEpisodeIndex)
-            : base(cTableName)
-        {
-            InitColumns();
-            if (!ReadPrimary(nSeriesID + "_" + nSeasonIndex + "x" + nEpisodeIndex))
-                InitValues();
-            this[cSeriesID] = nSeriesID;
-            this[cSeasonIndex] = nSeasonIndex;
-            this[cEpisodeIndex] = nEpisodeIndex;
-        }
-
-        private void InitColumns()
-        {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cCompositeID, new DBField(DBField.cTypeString, true));
-            base.AddColumn(cID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
-
-            base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
-            base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
-            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            base.AddColumn(cGuestStars, new DBField(DBField.cTypeString));
-            base.AddColumn(cDirector, new DBField(DBField.cTypeString));
-            base.AddColumn(cWriter, new DBField(DBField.cTypeString));
-            base.AddColumn(cHidden, new DBField(DBField.cTypeInt));
-            base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));
-            base.AddColumn(cDownloadPending, new DBField(DBField.cTypeInt));
-            base.AddColumn(cDownloadExpectedNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
-
-            foreach (KeyValuePair<String, DBField> pair in m_fields)
-            {
-                if (!s_fields.ContainsKey(pair.Key))
-                    s_fields.Add(pair.Key, pair.Value);
-            }
-        }
-
-        public override bool AddColumn(string sName, DBField field)
-        {
-            if (!s_fields.ContainsKey(sName))
-            {
-                s_fields.Add(sName, field);
-                return base.AddColumn(sName, field);
-            }
-            else
-            {
-                // we globally know about this key already, so don't call the base
-                if (!m_fields.ContainsKey(sName))
-                    m_fields.Add(sName, field);
-                return false;
-            }
-        }
-
-        public static new String Q(String sField)
-        {
-            return cTableName + "." + sField;
-        }
-
-        public static void Clear(SQLCondition conditions)
-        {
-            Clear(new DBOnlineEpisode(), conditions);
-        }
-
-        public string Image
-		{
-			get
-			{
-                if (this[cEpisodeThumbnailFilename].ToString().Length > 0)
-				{
-                    return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cEpisodeThumbnailFilename]);
-				} else return string.Empty;
-			}
-		}
-
-        public string CompleteTitle
-        {
-            get
-            {
-                return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]).ToString() + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
-            }
-        }
-
-        public override DBValue  this[string fieldName]
-        {
-            get
-            {
-                return base[fieldName];
-            }
-            set
-            {
-                base[fieldName] = value;
-            }
-        }
-
-        /// <summary>
-        /// Returns a pretty String representation of this DBOnlineEpisode (Series - 1x01 - Pilot)
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            DBSeries s = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
-            return string.Format("{0} - {1}x{2} - {3}", (s == null ? string.Empty : s[DBOnlineSeries.cPrettyName].ToString()), this[DBOnlineEpisode.cSeasonIndex], this[DBOnlineEpisode.cEpisodeIndex], this[cEpisodeName]);
-        }
-    };
+    //moved to DBOnineEpisodes.cs
+    //public class DBOnlineEpisode : DBTable
 
     public class DBEpisode : DBTable, ICacheable<DBEpisode>
     {
@@ -415,9 +214,10 @@ namespace WindowPlugins.GUITVSeries
         {
             InitColumns();
             InitValues();
+    
+            DBTVSeries.CreateDBIndices("create index if not exists epComp1 ON local_episodes(CompositeID ASC)","local_episodes",false);
+            DBTVSeries.CreateDBIndices("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)","local_episodes", true);
 
-            DBTVSeries.CreateDBIndices("create index epComp1 ON local_episodes(CompositeID ASC)", m_tableName, "epComp1", false);
-            DBTVSeries.CreateDBIndices("create index epComp2 ON local_episodes(CompositeID2 ASC)", m_tableName, "epComp2", true);
         }
 
         public DBEpisode(bool bCreateEmptyOnline)
@@ -1171,7 +971,7 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
             cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);           
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
-            DataTable results = DBTVSeries.Execute(query);
+            SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
             int parseResult = 0;
@@ -1182,13 +982,13 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < results.Rows.Count; i++)
             {
                 // increment watched count if episode is watched
-                if (int.TryParse(results.Rows[i][1].ToString(), out parseResult))
+                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
                 {
                     epsWatched += parseResult;
                 }
                 
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
-                Match match = r.Match(results.Rows[i][2].ToString());
+                Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
 
                 try
@@ -1227,7 +1027,7 @@ namespace WindowPlugins.GUITVSeries
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
-            DataTable results = DBTVSeries.Execute(query);
+            SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
             int parseResult = 0;
@@ -1238,13 +1038,13 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < results.Rows.Count; i++)
             {
                 // increment watched count if episode is watched
-                if (int.TryParse(results.Rows[i][1].ToString(), out parseResult))
+                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
                 {
                     epsWatched += parseResult;
                 }
 
                 Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
-                Match match = r.Match(results.Rows[i][2].ToString());
+                Match match = r.Match(results.Rows[i].fields[2]);
                 DateTime firstAired;
 
                 try
@@ -1277,22 +1077,21 @@ namespace WindowPlugins.GUITVSeries
             SQLWhat what = new SQLWhat(new DBEpisode());
             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
 
-            //MySql has a major performace problem with the 'in' keyword, so changed "where compositeid in (" to = (seems to work)
-            string sqlQuery = "select " + what + " where compositeid = ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
+            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
                 + @" and online_episodes.hidden = 0 "
                 + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
                 + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "
                 + @"group by local_episodes.seriesID );";
-            DataTable results = DBTVSeries.Execute(sqlQuery);
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
             List<DBEpisode> outList = new List<DBEpisode>();
             if (results.Rows.Count > 0)
             {
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBEpisode episode = new DBEpisode();
-                    episode.Read(results, index);
+                    episode.Read(ref results, index);
                     episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index]);
+                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
                     outList.Add(episode);
                 }
             }
@@ -1410,9 +1209,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
-                //not required as everthing is explictly aliased to avoid ambigous columns
-                //sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
-                orderBy = " order by " + ordercol.Replace(".", "_") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
+                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+                orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
             sqlQuery = sqlWhat + " left join " + second.m_tableName + " on (" + DBEpisode.Q(cCompositeID) + "=" + DBOnlineEpisode.Q(cCompositeID)
@@ -1466,16 +1264,16 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(string query)
         {
-            DataTable results = DBTVSeries.Execute(query);
+            SQLiteResultSet results = DBTVSeries.Execute(query);
             List<DBEpisode> outList = new List<DBEpisode>();
             if (results.Rows.Count > 0)
             {
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     DBEpisode episode = new DBEpisode();
-                    episode.Read(results.Rows[index]);
+                    episode.Read(results.Rows[index], results.ColumnIndices);
                     episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index]);
+                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
                     outList.Add(episode);
                 }
             }
