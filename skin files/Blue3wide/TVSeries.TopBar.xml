@@ -53,7 +53,7 @@
 			<align>right</align>
 			<font>font11</font>
 			<textcolor>ffFFFFFF</textcolor>
-			<visible>Control.IsVisible(1239)</visible>			
+			<visible>control.isvisible(1239)</visible>			
 			<animation effect="fade" time="250">WindowClose</animation>
 		</control>
 		<control>
@@ -67,7 +67,7 @@
 			<font>font11</font>
 			<align>right</align>    
 			<textcolor>ffFFFFFF</textcolor>
-			<visible>Control.IsVisible(1238)</visible>			
+			<visible>control.isvisible(1238)</visible>			
 			<animation effect="fade" time="250">WindowClose</animation>
 		</control>		
 		
@@ -82,7 +82,7 @@
 			<align>right</align>
 			<font>font11</font>
 			<textcolor>ffFFFFFF</textcolor>
-			<visible>Control.IsVisible(1237)</visible>			
+			<visible>control.isvisible(1237)</visible>			
 			<animation effect="fade" time="250">WindowClose</animation>
 		</control>		
 		
@@ -97,7 +97,7 @@
 			<align>right</align>
 			<font>font11</font>
 			<textcolor>ffFFFFFF</textcolor>
-			<visible>Control.IsVisible(1240)</visible>			
+			<visible>control.isvisible(1240)</visible>			
 			<animation effect="fade" time="250">WindowClose</animation>
 		</control>
 		
