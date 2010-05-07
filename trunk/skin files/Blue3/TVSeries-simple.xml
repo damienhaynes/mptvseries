@@ -48,7 +48,7 @@
 	<control>
 		<description>group element</description>
 		<type>group</type>
-		<visible>Control.IsVisible(1237)</visible>
+		<visible>control.isvisible(1237)</visible>
 		<control>
 			<type>image</type>
 			<posX>20</posX>
@@ -97,7 +97,7 @@
 		<textureFocus>Backslide.png</textureFocus>
 		<textureNoFocus>Backslide.png</textureNoFocus>
 		<colorDiffuse>fffffffff</colorDiffuse>
-		<visible>Control.IsVisible(1239)</visible>
+		<visible>control.isvisible(1239)</visible>
 		<onleft>50</onleft>
 		<onright>50</onright>
 		<onup>969</onup>
@@ -113,7 +113,7 @@
       <width>308</width>
       <height>180</height>
       <texture>Picture_cover.png</texture>
-      <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+      <visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
     </control>
     <control>
       <description>Big Episode Thumb</description>
@@ -126,7 +126,7 @@
    	  <keepaspectratio>no</keepaspectratio>
 	  <centered>yes</centered>
       <texture>#TVSeries.EpisodeImage</texture>
-      <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+      <visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
     </control>
 	<control>
 		<type>textboxscrollup</type>
@@ -141,7 +141,7 @@
 		<textcolor>d4d2d2</textcolor>
 		<font>font12</font>
 		<label>#TVSeries.Description</label>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
 	</control>	
     <control>
 		<type>image</type>
@@ -154,7 +154,7 @@
 		<texture>#TVSeries.Logos</texture>
 		<keepaspectratio>yes</keepaspectratio>
 		<spaceBetweenItems>2</spaceBetweenItems>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
     </control>
 
 	
@@ -362,12 +362,12 @@
 			<height>473</height>
 			<texture>Backslide.png</texture>
 			<colordiffuse>f5fefaff</colordiffuse>
-			<visible>!Control.IsVisible(1237)+!Control.IsVisible(1239)</visible>
+			<visible>!control.isvisible(1237)+!control.isvisible(1239)</visible>
 		</control>
 		<control>
 			<description>group element</description>
 			<type>group</type>
-			<visible>Control.IsVisible(1238)</visible>
+			<visible>control.isvisible(1238)</visible>
 			<control>
 				<type>label</type>
 				<description>Text: Season</description>
@@ -401,44 +401,44 @@
 				<label>#TVSeries.Description</label>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine1Key</label>
+			  <label>#TVSeries.Series.DataPanelLine1Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>450</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine1Value</label>
+			  <label>#TVSeries.Series.DataPanelLine1Value</label>
 			  <type>fadelabel</type>
 			  <posX>465</posX>
 			  <posY>450</posY>
 			  <width>230</width>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine2Key</label>
+			  <label>#TVSeries.Series.DataPanelLine2Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>475</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine2Value</label>
+			  <label>#TVSeries.Series.DataPanelLine2Value</label>
 			  <type>fadelabel</type>
 			  <posX>500</posX>
 			  <posY>475</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine8Key</label>
+			  <label>#TVSeries.Series.DataPanelLine8Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>500</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine8Value</label>
+			  <label>#TVSeries.Series.DataPanelLine8Value</label>
 			  <type>fadelabel</type>
 			  <posX>455</posX>
 			  <posY>500</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine7Value</label>
+			  <label>#TVSeries.Series.DataPanelLine7Value</label>
 			  <type>fadelabel</type>
 			  <posX>530</posX>
 			  <posY>500</posY>
