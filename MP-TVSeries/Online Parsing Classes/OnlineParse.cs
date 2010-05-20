@@ -1675,7 +1675,7 @@ namespace WindowPlugins.GUITVSeries
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
             List<DBSeries> AllSeries = (List<DBSeries>)e.Argument;
             foreach (DBSeries series in AllSeries)
-                DBSeries.UpdatedEpisodeCounts(series);
+                DBSeries.UpdateEpisodeCounts(series);
             //e.Result = series.Count;
         }
 

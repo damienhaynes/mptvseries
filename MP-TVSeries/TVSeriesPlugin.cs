@@ -1084,7 +1084,7 @@ namespace WindowPlugins.GUITVSeries
 									//DBSeries.UpdateUnWatched(selectedEpisode);
 								}
 								// Update Episode Counts
-								DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+								DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
 								LoadFacade();
 							}
 						}
@@ -1098,7 +1098,7 @@ namespace WindowPlugins.GUITVSeries
 							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
 							m_SelectedSeries.Commit();
 							// Updated Episode Counts
-							DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+							DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
 							cache.dump();
 						}
 						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
@@ -1106,7 +1106,7 @@ namespace WindowPlugins.GUITVSeries
 												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
 							m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
 							m_SelectedSeason.Commit();
-							DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+							DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
 							cache.dump();
 						}
 						LoadFacade(); // refresh
@@ -1119,7 +1119,7 @@ namespace WindowPlugins.GUITVSeries
 							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
 							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
 							m_SelectedSeries.Commit();
-							DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+							DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
 							cache.dump();
 						}
 						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
@@ -1127,7 +1127,7 @@ namespace WindowPlugins.GUITVSeries
 												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
 							m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
 							m_SelectedSeason.Commit();
-							DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+							DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
 							cache.dump();
 						}
 						LoadFacade(); // refresh
@@ -1285,14 +1285,14 @@ namespace WindowPlugins.GUITVSeries
 								case Listlevel.Season:
 									selectedSeason[DBSeason.cHidden] = true;
 									selectedSeason.Commit();
-									DBSeries.UpdatedEpisodeCounts(m_SelectedSeries);
+									DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
 									break;
 
 								case Listlevel.Episode:
 									selectedEpisode[DBOnlineEpisode.cHidden] = true;
 									MPTVSeriesLog.Write(string.Format("Hiding series {0} from view", m_SelectedEpisode));
 									selectedEpisode.Commit();
-									DBSeason.UpdatedEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+									DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
 									break;
 							}
 							LoadFacade();
@@ -2996,36 +2996,38 @@ namespace WindowPlugins.GUITVSeries
                     item.IconImage = sUnWatchedFilename;
             }
             return true;
-        }               
-
-        string getGUIProperty(guiProperty which)
-        {
-          return getGUIProperty(which.ToString());
         }
 
-        public static string getGUIProperty(string which)
+        string getGUIProperty(guiProperty name)
         {
-          return MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + which);
+            return getGUIProperty(name.ToString());
         }
 
-        void setGUIProperty(guiProperty which, string value)
+        public static string getGUIProperty(string name)
         {
-            setGUIProperty(which.ToString(), value);
+            return GUIPropertyManager.GetProperty("#TVSeries." + name);
         }
 
-        public static void setGUIProperty(string which, string value)
+        void setGUIProperty(guiProperty name, string value)
         {
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which, value);
+            setGUIProperty(name.ToString(), value);
         }
 
-        void clearGUIProperty(guiProperty which)
+        public static void setGUIProperty(string name, string value)
         {
-            clearGUIProperty(which.ToString());
+            string property = "#TVSeries." + name;
+            //MPTVSeriesLog.Write("[{0}]: {1}", property, value);
+            GUIPropertyManager.SetProperty(property, value);
         }
 
-        public static void clearGUIProperty(string which)
+        void clearGUIProperty(guiProperty name)
         {
-            setGUIProperty(which, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+            clearGUIProperty(name.ToString());
+        }
+
+        public static void clearGUIProperty(string name)
+        {
+            setGUIProperty(name, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
 
 		private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode) {			
@@ -3461,7 +3463,7 @@ namespace WindowPlugins.GUITVSeries
                         SQLCondition condEmpty = new SQLCondition();
                         List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
                         foreach (DBSeries series in AllSeries)
-                            DBSeries.UpdatedEpisodeCounts(series);
+                            DBSeries.UpdateEpisodeCounts(series);
                         LoadFacade();
                         break;
 
@@ -3764,12 +3766,14 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     #endregion
 
-                    #region Delete Series
+                    #region Delete Episode
                     case Listlevel.Episode:
                         resultMsg = episode.deleteEpisode((DeleteMenuItems)dlg.SelectedId);
                         break;
                     #endregion
                 }
+                // only update the counts if the database entry for the series still exists
+                if (!DBSeries.IsSeriesRemoved) DBSeries.UpdateEpisodeCounts(series);                
             }
             #endregion
 

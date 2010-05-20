@@ -154,7 +154,7 @@ namespace WindowPlugins.GUITVSeries
                 // Update Episode Counts
                 DBSeries series = Helper.getCorrespondingSeries(_episode[DBEpisode.cSeriesID]);
                 DBSeason season = Helper.getCorrespondingSeason(_episode[DBEpisode.cSeriesID], _episode[DBEpisode.cSeasonIndex]);
-                DBSeason.UpdatedEpisodeCounts(series, season);           
+                DBSeason.UpdateEpisodeCounts(series, season);           
             }
         }
 
