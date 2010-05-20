@@ -656,10 +656,48 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            #region Facade Remote Color
+            
+            // if we have removed all local episodes for a season then set HasLocalFiles to false for season
+            if (type == TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                SQLCondition seasonConditions = new SQLCondition();
+                seasonConditions.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                seasonConditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                List<DBEpisode> localEpisodes = DBEpisode.Get(seasonConditions);
+                if (localEpisodes.Count == 0)
+                {
+                    SQLCondition cond = new SQLCondition();
+                    cond.Add(new DBSeason(), DBSeason.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                    cond.Add(new DBSeason(), DBSeason.cIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                    List<DBSeason> season = DBSeason.Get(cond);                    
+                    // should only get one season returned
+                    if (season != null && season.Count == 1)
+                    {
+                        season[0][DBSeason.cHasLocalFiles] = false;
+                        season[0].Commit();
+                    }
+                    
+                    // also check if local files exist for series
+                    SQLCondition seriesConditions = new SQLCondition();
+                    seriesConditions.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);                    
+                    localEpisodes = DBEpisode.Get(seriesConditions);
+                    if (localEpisodes.Count == 0)
+                    {
+                        DBSeries series = DBSeries.Get(this[DBEpisode.cSeriesID]);
+                        series[DBOnlineSeries.cHasLocalFiles] = false;
+                        series.Commit();
+                    }
+                }
+            }
+            
+            #endregion
+
             #region Cleanup
+            DBSeries.IsSeriesRemoved = false;
             if (type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
-                // If episode count is zero then delete the season
+                // If local/online episode count is zero then delete the season
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
@@ -691,6 +729,8 @@ namespace WindowPlugins.GUITVSeries
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBOnlineSeries.Clear(condition);
+
+                        DBSeries.IsSeriesRemoved = true;
                     }
                 }
             }
