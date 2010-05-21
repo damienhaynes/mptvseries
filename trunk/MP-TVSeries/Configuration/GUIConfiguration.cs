@@ -31,6 +31,7 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Threading;
+using System.Linq;
 using System.Text.RegularExpressions;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
@@ -1354,10 +1355,10 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-        void TestParsing_LocalParseCompleted(List<parseResult> results)
+        void TestParsing_LocalParseCompleted(IList<parseResult> results)
         {
             MPTVSeriesLog.Write("Parsing test completed");
-            TestParsing_FillList(results);            
+            TestParsing_FillList(results.ToList<parseResult>());            
         }
 
         void TestParsing_LocalParseProgress(int nProgress, List<parseResult> results)

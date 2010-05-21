@@ -1572,6 +1572,25 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
         {
+            /*
+            // MS TEST SubCentral
+            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+            string episodeTitle = episode[DBEpisode.cEpisodeName];
+            string seasonIdx = episode[DBEpisode.cSeasonIndex];
+            string episodeIdx = episode[DBEpisode.cEpisodeIndex];
+            string seriesTitle = series.ToString();
+            string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
+            string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
+            string episodeFileName = episode[DBEpisode.cFilename];
+
+            List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
+            GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
+            GUIGraphicsContext.SendMessage(msg);
+            //GUIWindowManager.Process();
+            GUIWindowManager.ActivateWindow(84623);
+            return;
+            */
+
             if (!SubtitleDownloaderEnabledAndHasSites()) return;
 
             List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
@@ -3798,7 +3817,7 @@ namespace WindowPlugins.GUITVSeries
 		void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
             if (m_ImportAnimation != null)
-                m_ImportAnimation.FreeResources();
+                m_ImportAnimation.Dispose();
 
             if (!bOK)
             {
@@ -4827,7 +4846,7 @@ namespace WindowPlugins.GUITVSeries
                     if (enable)
                         m_ImportAnimation.AllocResources();
                     else
-                        m_ImportAnimation.FreeResources();
+                        m_ImportAnimation.Dispose();
                     m_ImportAnimation.Visible = enable;                  
                 }
             }
@@ -5146,7 +5165,7 @@ namespace WindowPlugins.GUITVSeries
             // so that locallogos can clean up its stuff
             if (null != this.m_Logos_Image)
             {
-                this.m_Logos_Image.FreeResources();
+                this.m_Logos_Image.Dispose();
                 this.m_Logos_Image = null;
             }
             // only when inside MP
