@@ -344,7 +344,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ParsingAction.LocalScan:
-                        ParseActionLocalScan(m_params.m_bLocalScan, m_params.m_bUpdateScan, m_params.m_userInputResult.ParseResults);
+                        ParseActionLocalScan(m_params.m_bLocalScan, m_params.m_bUpdateScan, m_params.m_userInputResult == null ? null : m_params.m_userInputResult.ParseResults);
                         break;
 
                     case ParsingAction.MediaInfo:
@@ -360,7 +360,7 @@ namespace WindowPlugins.GUITVSeries
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
                         {
-                            GetSeries(m_worker, m_bNoExactMatch, m_params.m_userInputResult.UserChosenSeries);
+                            GetSeries(m_worker, m_bNoExactMatch, m_params.m_userInputResult == null ? null : m_params.m_userInputResult.UserChosenSeries);
                             UpdateSeries(true, null); // todo: ask orderoption
                         }
                         break;
@@ -921,6 +921,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
+                                case DBOnlineSeries.cEpisodesUnWatched:
+                                case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cIsFavourite:
                                 case DBOnlineSeries.cChoseEpisodeOrder:
 
@@ -1503,7 +1505,7 @@ namespace WindowPlugins.GUITVSeries
                                 
                                 if (MarkWatched)
                                     episode[DBOnlineEpisode.cWatched] = true;
-
+    
                                 episode.Commit();
                             }*/
 
@@ -1702,8 +1704,10 @@ namespace WindowPlugins.GUITVSeries
                 tMediaInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 tMediaInfo.ProgressChanged += new ProgressChangedEventHandler((s, e) =>
                 {
-                    object[] userState = e.UserState as object[];
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (userState[0] as DBEpisode)[DBEpisode.cFilenameWOPath], (int)userState[1], episodes.Count));
+                    if (m_worker.IsBusy) { // cannot report progress of finished worker - mepo dies
+                        object[] userState = e.UserState as object[];
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (userState[0] as DBEpisode)[DBEpisode.cFilenameWOPath], (int)userState[1], episodes.Count));
+                    }
                 });
                 tMediaInfo.RunWorkerAsync(episodes);
 
@@ -1714,7 +1718,9 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (int)e.Result));
+            if (m_worker.IsBusy) { // cannot report progress of finished worker - mepo dies
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (int)e.Result));
+            }
             MPTVSeriesLog.Write("Update of MediaInfo complete (processed " + e.Result.ToString() + " files)");
         }
 
@@ -2105,7 +2111,6 @@ namespace WindowPlugins.GUITVSeries
                     int isDistance = MediaPortal.Util.Levenshtein.Match(localTitle.ToLower(), onlineTitle.ToLower());
                     if (isDistance > maxDistance) return int.MaxValue; // we dont return
                     else return isDistance;
-                    break;
             }
             return int.MaxValue;
         }
@@ -2182,7 +2187,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="haystack"></param>
         /// <returns>Returns a list of Files Removed</returns>
-        public static List<string> RemoveFilesInDB(IList<parseResult> haystack)
+        public static List<string> RemoveFilesInDB(ref IList<parseResult> haystack)
         {
             List<string> dbEps = new List<string>();
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute("select episodefilename from local_episodes");
@@ -2218,7 +2223,7 @@ namespace WindowPlugins.GUITVSeries
             IList<parseResult> parsedFiles = resultsFromUser ? UserModifiedParsedResults : LocalParse.Parse(files, false);
 
             // don't process those already in DB
-            var updateStatusEps = RemoveFilesInDB(parsedFiles);
+            var updateStatusEps = RemoveFilesInDB(ref parsedFiles);
 
             UpdateStatus(updateStatusEps); //this is what takes the most time for initial parsing of episode.
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
@@ -2326,6 +2331,9 @@ namespace WindowPlugins.GUITVSeries
                     if (bNewFile && episode[DBOnlineEpisode.cID] > 0) {
                         episode[DBOnlineEpisode.cHidden] = 0;
                     }
+
+                    // newly added should have watched to false
+                    episode[DBOnlineEpisode.cWatched] = false;
 
                     episode.Commit();
 

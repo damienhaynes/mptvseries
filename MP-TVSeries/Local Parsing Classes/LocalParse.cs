@@ -36,7 +36,7 @@ namespace WindowPlugins.GUITVSeries
         private BackgroundWorker worker = null;
 
         public delegate void LocalParseProgressHandler(int nProgress, List<parseResult> results);
-        public delegate void LocalParseCompletedHandler(List<parseResult> results);
+        public delegate void LocalParseCompletedHandler(IList<parseResult> results);
         public event LocalParseProgressHandler LocalParseProgress;
         public event LocalParseCompletedHandler LocalParseCompleted;
 

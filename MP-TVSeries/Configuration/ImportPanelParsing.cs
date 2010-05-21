@@ -151,13 +151,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void DoLocalParsing()
         {            
             LocalParse runner = new LocalParse();
-            runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler( result => 
+            runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler(//runner_LocalParseCompleted);
+                results => 
                 {
-                    allFoundFiles = result.Select(r => r.PathPair).ToList();
-                    OnlineParsing.RemoveFilesInDB(result);
+                    allFoundFiles = results.Select(r => r.PathPair).ToList();
+                    OnlineParsing.RemoveFilesInDB(ref results);
                     this.labelWaitParse.Text = "FileParsing is done, displaying Results...";
-                    origResults = result;
-                    FillGrid(result);
+                    origResults = results.ToList<parseResult>();
+                    FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
                 });
             runner.AsyncFullParse();
