@@ -716,6 +716,8 @@ namespace WindowPlugins.GUITVSeries
 
         public static void UpdateEpisodeCounts(DBSeries series)
         {
+            if (series == null) return;
+
             int seriesEpsTotal = 0;
             int seriesEpsUnWatched = 0;
             int epsTotal = 0;

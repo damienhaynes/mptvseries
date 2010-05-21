@@ -473,6 +473,8 @@ namespace WindowPlugins.GUITVSeries
 
         public static void UpdateEpisodeCounts(DBSeries series, DBSeason season)
         {
+            if (series == null || season == null) return;
+
             int epsTotal = 0;
             int epsUnWatched = 0;
 
