@@ -1443,9 +1443,12 @@ namespace WindowPlugins.GUITVSeries
 								break;
 							case Listlevel.Season:
 								selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                                selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
 								break;
 							case Listlevel.Episode:
 								selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
+                                selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
+                                selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
 								break;
 						}
 						// Invoke Delete Menu
@@ -3746,7 +3749,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }                
             }
-            #endregion
+            #endregion            
 
             #region Delete From Disk, Database or Both
             if (dlg.SelectedId != (int)DeleteMenuItems.subtitles)
