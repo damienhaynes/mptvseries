@@ -732,6 +732,10 @@ namespace WindowPlugins.GUITVSeries
                 // localepisode[DBEpisode.cIsAvailable] = false;
                 // localepisode.Commit;
                 // but my understanding is that executing one "big" query is quicker than executing loads of "smaller" ones
+                // added this because DBEpisode.Get fills the condition with default ones..
+                condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
                 DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
 
                 // and copy the HasLocalFileTemp value into the real one
