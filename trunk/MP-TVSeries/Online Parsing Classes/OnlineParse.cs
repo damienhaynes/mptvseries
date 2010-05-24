@@ -724,11 +724,15 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
                     }
-                    else
-                    {
-                        DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
-                    }
                 }
+
+                // moved global set out of foreach, clear will delete episode which need to be deleted, this global set will update
+                // all other episodes left in db that weren't found in the scan to be marked as not available
+                // other way to do this is to have this lines in else condition of foreach loop:
+                // localepisode[DBEpisode.cIsAvailable] = false;
+                // localepisode.Commit;
+                // but my understanding is that executing one "big" query is quicker than executing loads of "smaller" ones
+                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
 
                 // and copy the HasLocalFileTemp value into the real one
                 DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFiles, DBOnlineSeries.cHasLocalFilesTemp);
