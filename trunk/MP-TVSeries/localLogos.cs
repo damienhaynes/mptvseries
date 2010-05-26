@@ -424,7 +424,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        static string getCleanAbsolutePath(string file)
+        public static string getCleanAbsolutePath(string file)
         {
             if (!System.IO.Path.IsPathRooted(file))
             {

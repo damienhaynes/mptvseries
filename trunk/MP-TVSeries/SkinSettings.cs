@@ -13,6 +13,7 @@ namespace WindowPlugins.GUITVSeries {
         public static bool ImportFormatting { get; set; }
         public static bool ImportLogos { get; set; }
         public static bool ImportViews { get; set; }
+        public static bool ImportVideoOSDImages { get; set; }
 
         public static List<string> SupportedLayouts {
             get {
@@ -31,6 +32,15 @@ namespace WindowPlugins.GUITVSeries {
                 _skinProperties = value;
             }
         } private static Dictionary<string, List<string>> _skinProperties = new Dictionary<string, List<string>>();
+
+        public static Dictionary<string, string> VideoOSDImages {
+            get {
+                return _videoOSDImages;
+            }
+            set {
+                _videoOSDImages = value;
+            }
+        } private static Dictionary<string, string> _videoOSDImages = new Dictionary<string, string>();
 
         #endregion
 
@@ -60,9 +70,10 @@ namespace WindowPlugins.GUITVSeries {
             GetViews(doc);
             GetGraphicsQuality(doc);
             GetFormattingRules(doc);
-            GetLogoRules(doc);           
-        }        
-        
+            GetLogoRules(doc);
+            GetVideoOSDImageType(doc);
+        }
+
         /// <summary>
         /// Gets the number of supported layouts at a particular list level
         /// ListLevel = "Group", "Series", "Season", "Episode"        
@@ -583,7 +594,34 @@ namespace WindowPlugins.GUITVSeries {
                     break;
             }
             return supported;
-        } 
+        }
+
+        /// <summary>
+        /// Read the images to be loaded in Video OSD
+        /// </summary>
+        private static void GetVideoOSDImageType(XmlDocument doc) {
+            XmlNode node = null;
+            List<string> supportedValues = new List<string> { "episode", "season", "series", "custom" };
+
+            node = doc.DocumentElement.SelectSingleNode("/settings/videoosdimages");
+            if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true") {
+                MPTVSeriesLog.Write("Loading images to be loaded in Video OSD", MPTVSeriesLog.LogLevel.Normal);
+
+                foreach (XmlNode innerNode in node.ChildNodes) {
+                    if (supportedValues.Contains(innerNode.Name) && innerNode.Attributes.GetNamedItem("use").Value.ToLower() == "true") {
+                        VideoOSDImages.Add(innerNode.Name, innerNode.InnerText);
+                    }
+                }
+
+                ImportVideoOSDImages = true;
+            }
+
+            // maintain compatibility with old skins
+            if (node == null || !ImportVideoOSDImages /*|| (node.ChildNodes.Count == 0 && ImportVideoOSDImages)*/) {
+                VideoOSDImages.Add("episode", string.Empty);
+                VideoOSDImages.Add("series", string.Empty);
+            }
+        }
         #endregion
     }
 }
