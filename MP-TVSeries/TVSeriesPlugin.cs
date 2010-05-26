@@ -398,6 +398,15 @@ namespace WindowPlugins.GUITVSeries
             UnWatchedCount,
             LastOnlineUpdate
 		}
+
+        public enum OnPlaySeriesOrSeasonAction {
+            DoNothing,
+            Random,
+            FirstUnwatched,
+            RandomUnwatched,
+            Latest,
+            AlwaysAsk
+        }
 		#endregion
 
 		#region Base Overrides
@@ -1396,7 +1405,11 @@ namespace WindowPlugins.GUITVSeries
 		#endregion
 
 		public override void OnAction(Action action) {
-			switch (action.wID) {
+            DBEpisode selectedEpisode = null;
+            DBSeason selectedSeason = null;
+            DBSeries selectedSeries = null;
+
+            switch (action.wID) {
 				case Action.ActionType.ACTION_PARENT_DIR:				
 					ImageAllocator.FlushAll();
 					GUIWindowManager.ShowPreviousWindow();
@@ -1433,9 +1446,9 @@ namespace WindowPlugins.GUITVSeries
 						if (this.listLevel == Listlevel.Group)
 							return;
 
-						DBSeries selectedSeries = null;
-						DBSeason selectedSeason = null;
-						DBEpisode selectedEpisode = null;
+						selectedSeries = null;
+						selectedSeason = null;
+						selectedEpisode = null;
 
 						switch (this.listLevel) {
 							case Listlevel.Series:
@@ -1469,11 +1482,161 @@ namespace WindowPlugins.GUITVSeries
 					base.OnAction(action);
 					break;
 
+                case Action.ActionType.ACTION_PLAY:
+                case Action.ActionType.ACTION_MUSIC_PLAY:
+                    selectedSeries = null;  
+                    selectedSeason = null;
+                    selectedEpisode = null;
+                    string selectedGroup = null;
+
+                    switch (this.listLevel) {
+                        case Listlevel.Group:
+                            selectedGroup = this.m_Facade.SelectedListItem.TVTag as string;
+                            break;
+                        case Listlevel.Series:
+                            selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
+                            break;
+                        case Listlevel.Season:
+                            selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                            //selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
+                            break;
+                        case Listlevel.Episode:
+                            selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
+                            //selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
+                            //selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
+                            break;
+                    }
+
+                    OnPlaySeriesOrSeasonAction onPlayAction = (OnPlaySeriesOrSeasonAction)(int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
+
+                    this.m_SelectedEpisode = null;
+                    if (selectedEpisode != null)
+                    {
+                        if (selectedEpisode[DBEpisode.cIsAvailable])
+                            this.m_SelectedEpisode = selectedEpisode;
+                        else
+                            this.m_SelectedEpisode = null;
+                    }
+                    else if (selectedGroup != null || selectedSeason != null || selectedSeries != null) {
+
+                        if (onPlayAction == OnPlaySeriesOrSeasonAction.AlwaysAsk) {
+                            List<GUIListItem> items = new List<GUIListItem>();
+                            items.Add(new GUIListItem("Random episode"));
+                            items.Add(new GUIListItem("First unwatched episode"));
+                            items.Add(new GUIListItem("Random unwatched episode"));
+                            items.Add(new GUIListItem("Latest episode"));
+
+                            onPlayAction = (OnPlaySeriesOrSeasonAction)(ShowMenuDialog("Play...", items) + 1);
+                        }
+                        
+                        if (onPlayAction != OnPlaySeriesOrSeasonAction.DoNothing) {
+                            List<DBEpisode> episodeList = null;
+                            if (selectedSeason != null) {
+                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedSeason[DBSeason.cSeriesID].ToString(), selectedSeason[DBSeason.cIndex].ToString() });
+                            }
+                            else if (selectedSeries != null) {
+                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedSeries[DBSeries.cID].ToString() });
+                            }
+                            else if (selectedGroup != null) {
+                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedGroup });
+                            }
+
+                            switch (onPlayAction) {
+                                case OnPlaySeriesOrSeasonAction.Random:
+                                    episodeList = FilterEpisodeList(episodeList, true, false);
+                                    m_SelectedEpisode = GetRandomEpisode(episodeList);
+                                    break;
+                                case OnPlaySeriesOrSeasonAction.FirstUnwatched:
+                                    episodeList = FilterEpisodeList(episodeList, true, true);
+                                    m_SelectedEpisode = GetFirstOrLast(episodeList, true);
+                                    break;
+                                case OnPlaySeriesOrSeasonAction.RandomUnwatched:
+                                    episodeList = FilterEpisodeList(episodeList, true, true);
+                                    m_SelectedEpisode = GetRandomEpisode(episodeList);
+                                    break;
+                                case OnPlaySeriesOrSeasonAction.Latest:
+                                    episodeList = FilterEpisodeList(episodeList, true, false);
+                                    m_SelectedEpisode = GetFirstOrLast(episodeList, false);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (m_SelectedEpisode == null) {
+                        switch (onPlayAction) {
+                            case OnPlaySeriesOrSeasonAction.Random:
+                                ShowNotifyDialog("Play error", "Unable to get any random episode");
+                                break;
+                            case OnPlaySeriesOrSeasonAction.FirstUnwatched:
+                                ShowNotifyDialog("Play error", "Unable to get any first unwatched episode");
+                                break;
+                            case OnPlaySeriesOrSeasonAction.RandomUnwatched:
+                                ShowNotifyDialog("Play error", "Unable to get any random unwatched episode");
+                                break;
+                            case OnPlaySeriesOrSeasonAction.Latest:
+                                ShowNotifyDialog("Play error", "Unable to get any latest episode");
+                                break;
+                        }
+                        goto default;
+                    }
+                    CommonPlayEpisodeAction(false);
+
+                    break;
+
 				default:
 					base.OnAction(action);
 					break;
 			}
 		}
+
+        private DBEpisode GetFirstOrLast(List<DBEpisode> episodeList, bool first) {
+            DBEpisode result = null;
+            
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            episodeList.Sort(new Comparison<DBEpisode>((x, y) => {
+                    return 4 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
+                           2 * string.Compare(x[DBEpisode.cFileDateAdded].ToString(), y[DBEpisode.cFileDateAdded].ToString())
+                           ;
+                }));
+
+            if (first)
+                result = episodeList[0];
+            else
+                result = episodeList[episodeList.Count - 1];
+
+            return result;
+        }
+
+        private DBEpisode GetRandomEpisode(List<DBEpisode> episodeList) {
+            DBEpisode result = null;
+
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            result = episodeList[new Random().Next(0, episodeList.Count-1)];
+
+            return result;
+        }
+
+        private List<DBEpisode> FilterEpisodeList(List<DBEpisode> episodeList, bool filterUnavailable, bool filterWatched) {
+            List<DBEpisode> result = new List<DBEpisode>();
+
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            foreach (DBEpisode episode in episodeList) {
+                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)) {
+                    continue;
+                }
+
+                if (filterWatched && episode[DBOnlineEpisode.cWatched]) {
+                    continue;
+                }
+
+                result.Add(episode);
+            }
+
+            return result;
+        }
 
 		public override bool OnMessage(GUIMessage message) {
 			switch (message.Message) {
@@ -1839,23 +2002,13 @@ namespace WindowPlugins.GUITVSeries
 						if (m_SelectedEpisode == null) return;
 						MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
-                        if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0)
-                        {
-                            // we don't have this file - yet. If downloaders are available, show the download pages
-                            ShowDownloadMenu(m_SelectedEpisode);
-                        }
-                        else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay))
-                        {
-                            ShowSubtitleMenu(m_SelectedEpisode, true);
-                        }
-                        else
-    						m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+                        CommonPlayEpisodeAction(true);
 						break;
 				}
 			}
 			base.OnClicked(controlId, control, actionType);
 		}
-		#endregion
+        #endregion
 
 		void m_VideoHandler_RateRequestOccured(DBEpisode episode)
         {
@@ -4828,7 +4981,7 @@ namespace WindowPlugins.GUITVSeries
 		private void playRandomEp()
         {
             List<DBEpisode> episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep, m_stepSelection);
-            DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count)];
+            DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count-1)];
 
             MPTVSeriesLog.Write("Selected Random Episode: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
@@ -5148,7 +5301,93 @@ namespace WindowPlugins.GUITVSeries
 		}
 		#endregion
 
-		private void TellUserSomethingWentWrong()
+        private void CommonPlayEpisodeAction(bool useDownloaders) {
+            if (useDownloaders && m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
+                // we don't have this file - yet. If downloaders are available, show the download pages
+                ShowDownloadMenu(m_SelectedEpisode);
+            }
+            else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay)) {
+                ShowSubtitleMenu(m_SelectedEpisode, true);
+            }
+            else
+                m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+        }
+
+        /// <summary>
+        /// Displays a menu dialog from list of items
+        /// </summary>
+        /// <returns>Selected item index, -1 if exited</returns>
+        public static int ShowMenuDialog(string heading, List<GUIListItem> items) {
+            return ShowMenuDialog(heading, items, -1);
+        }
+
+        private delegate int ShowMenuDialogDelegate(string heading, List<GUIListItem> items);
+
+        /// <summary>
+        /// Displays a menu dialog from list of items
+        /// </summary>
+        /// <returns>Selected item index, -1 if exited</returns>
+        public static int ShowMenuDialog(string heading, List<GUIListItem> items, int selectedItemIndex) {
+            if (GUIGraphicsContext.form.InvokeRequired) {
+                ShowMenuDialogDelegate d = ShowMenuDialog;
+                return (int)GUIGraphicsContext.form.Invoke(d, heading, items);
+            }
+
+            GUIDialogMenu dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlgMenu == null) return -1;
+
+            dlgMenu.Reset();
+
+            dlgMenu.SetHeading(heading);
+
+            foreach (GUIListItem item in items) {
+                dlgMenu.Add(item);
+            }
+
+            if (selectedItemIndex >= 0)
+                dlgMenu.SelectedLabel = selectedItemIndex;
+
+            dlgMenu.DoModal(GUIWindowManager.ActiveWindow);
+
+            if (dlgMenu.SelectedLabel < 0) {
+                return -1;
+            }
+
+            return dlgMenu.SelectedLabel;
+        }
+
+        /// <summary>
+        /// Displays a notification dialog.
+        /// </summary>
+        public static void ShowNotifyDialog(string heading, string text) {
+            ShowNotifyDialog(heading, text, string.Empty);
+        }
+
+        private delegate void ShowNotifyDialogDelegate(string heading, string text, string image);
+
+        /// <summary>
+        /// Displays a notification dialog.
+        /// </summary>
+        public static void ShowNotifyDialog(string heading, string text, string image) {
+            if (GUIGraphicsContext.form.InvokeRequired) {
+                ShowNotifyDialogDelegate d = ShowNotifyDialog;
+                GUIGraphicsContext.form.Invoke(d, heading, text, image);
+                return;
+            }
+
+            GUIDialogNotify pDlgNotify = (GUIDialogNotify)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_NOTIFY);
+            if (pDlgNotify == null) return;
+
+            pDlgNotify.SetHeading(heading);
+
+            pDlgNotify.SetImage(image);
+
+            pDlgNotify.SetText(text);
+
+            pDlgNotify.DoModal(GUIWindowManager.ActiveWindow);
+        }
+
+        private void TellUserSomethingWentWrong()
         {
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
             if (dlgOK != null)

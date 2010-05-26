@@ -236,6 +236,8 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.laOnPlaySeriesOrSeasonAction = new System.Windows.Forms.Label();
+            this.cbOnPlaySeriesOrSeasonAction = new System.Windows.Forms.ComboBox();
             this.dbOptChkBoxScanFullscreenVideo = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox2 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBoxSubstituteMissingArtwork = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -450,94 +452,94 @@ namespace WindowPlugins.GUITVSeries
             this.ResetUserSelToolStripMenuItem,
             this.toolStripSeparator3});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 242);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(191, 242);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete...";
             // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.updateToolStripMenuItem.Tag = "update";
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // reScanMediaInfoToolStripMenuItem
             // 
             this.reScanMediaInfoToolStripMenuItem.Name = "reScanMediaInfoToolStripMenuItem";
-            this.reScanMediaInfoToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.reScanMediaInfoToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.reScanMediaInfoToolStripMenuItem.Tag = "mediainfo";
             this.reScanMediaInfoToolStripMenuItem.Text = "Re-Scan MediaInfo";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(187, 6);
             // 
             // watchedToolStripMenuItem
             // 
             this.watchedToolStripMenuItem.Name = "watchedToolStripMenuItem";
-            this.watchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.watchedToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.watchedToolStripMenuItem.Tag = "watched";
             this.watchedToolStripMenuItem.Text = "Set As Watched";
             // 
             // unWatchedToolStripMenuItem
             // 
             this.unWatchedToolStripMenuItem.Name = "unWatchedToolStripMenuItem";
-            this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.unWatchedToolStripMenuItem.Tag = "unwatched";
             this.unWatchedToolStripMenuItem.Text = "Set As Un-Watched";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles...";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Get Torrent...";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Get NZB...";
             // 
             // ResetUserSelToolStripMenuItem
             // 
             this.ResetUserSelToolStripMenuItem.Name = "ResetUserSelToolStripMenuItem";
-            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.ResetUserSelToolStripMenuItem.Tag = "resetUserSelections";
             this.ResetUserSelToolStripMenuItem.Text = "Reset User Selections";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(187, 6);
             // 
             // contextMenuStrip_InsertFields
             // 
@@ -938,9 +940,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_SubDownloadOnPlay
             // 
+            this.checkBox_SubDownloadOnPlay.AutoSize = true;
             this.checkBox_SubDownloadOnPlay.Location = new System.Drawing.Point(404, 284);
             this.checkBox_SubDownloadOnPlay.Name = "checkBox_SubDownloadOnPlay";
-            this.checkBox_SubDownloadOnPlay.Size = new System.Drawing.Size(417, 17);
+            this.checkBox_SubDownloadOnPlay.Size = new System.Drawing.Size(288, 17);
             this.checkBox_SubDownloadOnPlay.TabIndex = 35;
             this.checkBox_SubDownloadOnPlay.Text = "Suggest subtitles download on play action if not present";
             this.toolTip_Help.SetToolTip(this.checkBox_SubDownloadOnPlay, "Enable this option to allow users to delete items using the context menu from wit" +
@@ -975,9 +978,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_scanRemoteShares
             // 
+            this.checkBox_scanRemoteShares.AutoSize = true;
             this.checkBox_scanRemoteShares.Location = new System.Drawing.Point(32, 284);
             this.checkBox_scanRemoteShares.Name = "checkBox_scanRemoteShares";
-            this.checkBox_scanRemoteShares.Size = new System.Drawing.Size(171, 18);
+            this.checkBox_scanRemoteShares.Size = new System.Drawing.Size(149, 17);
             this.checkBox_scanRemoteShares.TabIndex = 18;
             this.checkBox_scanRemoteShares.Text = "Scan remote shares every";
             this.toolTip_Help.SetToolTip(this.checkBox_scanRemoteShares, "(Recommended) Instead of trying to setup a filesystem  watcher on a remote share " +
@@ -1037,9 +1041,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // chkAllowDeletes
             // 
+            this.chkAllowDeletes.AutoSize = true;
             this.chkAllowDeletes.Location = new System.Drawing.Point(404, 261);
             this.chkAllowDeletes.Name = "chkAllowDeletes";
-            this.chkAllowDeletes.Size = new System.Drawing.Size(417, 17);
+            this.chkAllowDeletes.Size = new System.Drawing.Size(269, 17);
             this.chkAllowDeletes.TabIndex = 34;
             this.chkAllowDeletes.Text = "Allow user to delete &files from the GUI context menu";
             this.toolTip_Help.SetToolTip(this.chkAllowDeletes, "Enable this option to allow users to delete items using the context menu from wit" +
@@ -1049,9 +1054,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // checkBox_doFolderWatch
             // 
+            this.checkBox_doFolderWatch.AutoSize = true;
             this.checkBox_doFolderWatch.Location = new System.Drawing.Point(11, 261);
             this.checkBox_doFolderWatch.Name = "checkBox_doFolderWatch";
-            this.checkBox_doFolderWatch.Size = new System.Drawing.Size(385, 17);
+            this.checkBox_doFolderWatch.Size = new System.Drawing.Size(263, 17);
             this.checkBox_doFolderWatch.TabIndex = 17;
             this.checkBox_doFolderWatch.Text = "Watch my &Import folders for changes automatically";
             this.toolTip_Help.SetToolTip(this.checkBox_doFolderWatch, "Enable this option to allow the plug-in to monitor import folders for new, delete" +
@@ -2525,6 +2531,8 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.laOnPlaySeriesOrSeasonAction);
+            this.groupBox1.Controls.Add(this.cbOnPlaySeriesOrSeasonAction);
             this.groupBox1.Controls.Add(this.dbOptChkBoxCountEmptyFutureEps);
             this.groupBox1.Controls.Add(this.dbOptChkBoxScanFullscreenVideo);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox2);
@@ -2570,6 +2578,33 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // laOnPlaySeriesOrSeasonAction
+            // 
+            this.laOnPlaySeriesOrSeasonAction.AutoSize = true;
+            this.laOnPlaySeriesOrSeasonAction.Location = new System.Drawing.Point(9, 332);
+            this.laOnPlaySeriesOrSeasonAction.Name = "laOnPlaySeriesOrSeasonAction";
+            this.laOnPlaySeriesOrSeasonAction.Size = new System.Drawing.Size(197, 13);
+            this.laOnPlaySeriesOrSeasonAction.TabIndex = 22;
+            this.laOnPlaySeriesOrSeasonAction.Text = "On play action on series or season view:";
+            this.laOnPlaySeriesOrSeasonAction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbOnPlaySeriesOrSeasonAction
+            // 
+            this.cbOnPlaySeriesOrSeasonAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbOnPlaySeriesOrSeasonAction.FormattingEnabled = true;
+            this.cbOnPlaySeriesOrSeasonAction.Items.AddRange(new object[] {
+            "Do nothing",
+            "Play random episode",
+            "Play first unwatched episode",
+            "Play random unwatched episode",
+            "Play latest episode",
+            "Always ask"});
+            this.cbOnPlaySeriesOrSeasonAction.Location = new System.Drawing.Point(12, 350);
+            this.cbOnPlaySeriesOrSeasonAction.Name = "cbOnPlaySeriesOrSeasonAction";
+            this.cbOnPlaySeriesOrSeasonAction.Size = new System.Drawing.Size(191, 21);
+            this.cbOnPlaySeriesOrSeasonAction.TabIndex = 22;
+            this.cbOnPlaySeriesOrSeasonAction.SelectedIndexChanged += new System.EventHandler(this.cbOnPlaySeriesOrSeasonAction_SelectedIndexChanged);
             // 
             // dbOptChkBoxScanFullscreenVideo
             // 
@@ -4182,5 +4217,7 @@ namespace WindowPlugins.GUITVSeries
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBoxScanFullscreenVideo;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBoxCountEmptyFutureEps;
         private System.Windows.Forms.ToolStripMenuItem reScanMediaInfoToolStripMenuItem;
+        private System.Windows.Forms.Label laOnPlaySeriesOrSeasonAction;
+        private System.Windows.Forms.ComboBox cbOnPlaySeriesOrSeasonAction;
     }
 }

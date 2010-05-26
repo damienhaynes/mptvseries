@@ -177,7 +177,9 @@ namespace WindowPlugins.GUITVSeries
 
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
-            this.comboLogLevel.SelectedIndex = 0;
+            //this.comboLogLevel.SelectedIndex = 0;
+            //this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = 2;
+
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
             m_paneListSettings.Add(panel_StringReplacements);            
@@ -388,6 +390,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
+            comboOnlineLang_DropDown(comboOnlineLang, new EventArgs());
             
             LoadViews();
 			// Select First Item in list
@@ -399,6 +402,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
+            this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
             
 			LoadNewsSearches();
 
@@ -4746,6 +4750,11 @@ namespace WindowPlugins.GUITVSeries
             if (e.Button == MouseButtons.Right) {
                 treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
             } 
+        }
+
+        private void cbOnPlaySeriesOrSeasonAction_SelectedIndexChanged(object sender, EventArgs e) {
+            // index must match enum OnPlaySeriesOrSeasonAction
+            DBOption.SetOptions(DBOption.cOnPlaySeriesOrSeasonAction, cbOnPlaySeriesOrSeasonAction.SelectedIndex);
         }
     }
     
