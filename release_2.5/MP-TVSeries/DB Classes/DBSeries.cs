@@ -771,6 +771,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        /// <summary>
+        /// Used to determine if an update of the series counts is needed after Delete operations
+        /// </summary>
+        public static bool IsSeriesRemoved { get; set; }
+
         public override bool Commit()
         {
             if (m_onlineSeries != null)
@@ -779,27 +784,7 @@ namespace WindowPlugins.GUITVSeries
             if (dbSeriesUpdateOccured != null)
                 dbSeriesUpdateOccured(this);
             return base.Commit();
-        }
-
-        /*public void toggleFavourite()
-        {
-            if (this.m_onlineSeries == null) return; // sorry, can only add online series as Favs. for now
-            if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
-            {
-                this.m_onlineSeries[DBOnlineSeries.cIsFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsFavourite];
-            }
-            else
-            {
-                this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite] = !(bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite];
-                // Update online (add/remove)
-                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites((bool)this.m_onlineSeries[DBOnlineSeries.cIsOnlineFavourite], DBOption.GetOptions(DBOption.cOnlineUserID), this.m_onlineSeries[DBOnlineSeries.cID]);
-            }
-
-            this.m_onlineSeries.Commit();
-
-            if (dbSeriesUpdateOccured != null)
-                dbSeriesUpdateOccured(this);
-        }*/
+        }        
 
         public static void Clear(SQLCondition conditions)
         {
@@ -968,8 +953,10 @@ namespace WindowPlugins.GUITVSeries
             series.Commit();
         }
 
-        public static void UpdatedEpisodeCounts(DBSeries series)
+        public static void UpdateEpisodeCounts(DBSeries series)
         {
+            if (series == null) return;
+
             int seriesEpsTotal = 0;
             int seriesEpsUnWatched = 0;
             int epsTotal = 0;
@@ -1032,8 +1019,20 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            #region Facade Remote Color
+            // if we were successful at deleting all episodes of series from disk, set HasLocalFiles to false
+            // note: we only do this if the database entries still exist
+            if (resultMsg.Count == 0 && type == TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                this[DBOnlineSeries.cHasLocalFiles] = false;
+                this.Commit();
+            }
+            #endregion
+
+            #region Cleanup
             // if there are no error messages and if we need to delete from db
             // Delete from online tables and season/series tables
+            IsSeriesRemoved = false;
             if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
                 condition = new SQLCondition();
@@ -1043,7 +1042,10 @@ namespace WindowPlugins.GUITVSeries
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeries.cID], SQLConditionType.Equal);
                 DBOnlineSeries.Clear(condition);
+
+                IsSeriesRemoved = true;
             }
+            #endregion
 
             return resultMsg;
         }

@@ -229,7 +229,7 @@ namespace WindowPlugins.GUITVSeries
             // Update Episode Counts
             DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            DBSeason.UpdatedEpisodeCounts(series, season);           
+            DBSeason.UpdateEpisodeCounts(series, season);           
         }
 
         /// <summary>
@@ -277,7 +277,17 @@ namespace WindowPlugins.GUITVSeries
                 
                 // Start Listening to any External Player Events
                 listenToExternalPlayerEvents = true;
-                
+
+                #region Publish Play properties for InfoService plugin
+                // InfoService plugin can parse this property to send to other services e.g. Twitter
+                string seriesName = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
+                string seasonID = m_currentEpisode[DBEpisode.cSeasonIndex];
+                string episodeID = m_currentEpisode[DBEpisode.cEpisodeIndex];
+                string episodeName = m_currentEpisode[DBEpisode.cEpisodeName];
+                GUIPropertyManager.SetProperty("#TVSeries.Extended.Title",string.Format("{0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                MPTVSeriesLog.Write(string.Format("#TVSeries.Extended.Title: {0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                #endregion
+
                 // Play File
                 result = g_Player.Play(filename, g_Player.MediaType.Video);
                 

@@ -60,7 +60,7 @@ namespace WindowPlugins.GUITVSeries
                         Write("Switched LogLevel to: " + value.ToString());
                         _selectedLogLevel = value;
                         if (!pauseAutoWriteDB)
-                            DBOption.SetOptions("logLevel", (int)value);
+                            DBOption.SetOptions(DBOption.cLogLevel, (int)value);
                     }
                 }
             }

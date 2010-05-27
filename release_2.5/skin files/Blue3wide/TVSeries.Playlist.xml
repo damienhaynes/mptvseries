@@ -478,32 +478,32 @@
         </control>
 		
 		<control>
-			<description>InfoPanelLine2Key Shadow</description>
-            <label>#TVSeries.Episode.InfoPanelLine2Key</label>
+			<description>DataPanelLine2Key Shadow</description>
+            <label>#TVSeries.Episode.DataPanelLine2Key</label>
             <type>label</type>
             <posX>401</posX>
             <posY>364</posY>
 			<width>130</width>
 			<font>font11</font>
             <textcolor>#shadow.dark</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10002)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10002)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine2Key</label>
+            <label>#TVSeries.Episode.DataPanelLine2Key</label>
             <type>label</type>
             <posX>400</posX>
             <posY>363</posY>
 			<width>130</width>
 			<font>font11</font>
 			<textcolor>ffa9d0f7</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10002)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10002)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 		<control>
-			<description>InfoPanelLine2Value Shadow</description>
+			<description>DataPanelLine2Value Shadow</description>
             <id>10002</id>
-            <label>#TVSeries.Episode.InfoPanelLine2Value</label>
+            <label>#TVSeries.Episode.DataPanelLine2Value</label>
             <type>label</type>
             <posX>541</posX>
             <posY>364</posY>
@@ -515,7 +515,7 @@
         </control>
         <control>
             <id>10002</id>
-            <label>#TVSeries.Episode.InfoPanelLine2Value</label>
+            <label>#TVSeries.Episode.DataPanelLine2Value</label>
             <type>label</type>
             <posX>540</posX>
             <posY>363</posY>
@@ -527,8 +527,8 @@
         </control>
 
 		<control>
-			<description>InfoPanelLine3Key Shadow</description>
-            <label>#TVSeries.Episode.InfoPanelLine3Key</label>
+			<description>DataPanelLine3Key Shadow</description>
+            <label>#TVSeries.Episode.DataPanelLine3Key</label>
             <type>label</type>
             <posX>401</posX>
             <posY>387</posY>
@@ -539,7 +539,7 @@
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine3Key</label>
+            <label>#TVSeries.Episode.DataPanelLine3Key</label>
             <type>label</type>
             <posX>400</posX>
             <posY>386</posY>
@@ -551,50 +551,50 @@
         </control>	
 		<control>
             <id>0</id>
-            <label>#TVSeries.Episode.InfoPanelLine31Value #TVSeries.Episode.InfoPanelLine32Value</label>
+            <label>#TVSeries.Episode.DataPanelLine31Value #TVSeries.Episode.DataPanelLine32Value</label>
             <type>label</type>
             <posX>541</posX>
             <posY>387</posY>
 			<font>font11</font>
             <textcolor>#shadow.light</textcolor>
 			<width>190</width>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(5557)+Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(5557)+control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>		
         <control>
             <id>0</id>
-            <label>#TVSeries.Episode.InfoPanelLine31Value #TVSeries.Episode.InfoPanelLine32Value</label>
+            <label>#TVSeries.Episode.DataPanelLine31Value #TVSeries.Episode.DataPanelLine32Value</label>
             <type>label</type>
             <posX>540</posX>
             <posY>386</posY>
             <font>font11</font>
 			<textcolor>ffFFFFFF</textcolor>
 			<width>190</width>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(5557)+Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(5557)+control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 		<control>
             <id>0</id>
-            <label>#TVSeries.Episode.InfoPanelLine31Value</label>
+            <label>#TVSeries.Episode.DataPanelLine31Value</label>
             <type>label</type>
             <posX>541</posX>
             <posY>387</posY>
             <font>font11</font>
 			<width>190</width>
             <textcolor>#shadow.light</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(5557)+!Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(5557)+!control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 		<control>
             <id>0</id>
-            <label>#TVSeries.Episode.InfoPanelLine31Value</label>
+            <label>#TVSeries.Episode.DataPanelLine31Value</label>
             <type>label</type>
             <posX>540</posX>
             <posY>386</posY>
             <font>font11</font>
 			<width>190</width>
 			<textcolor>ffFFFFFF</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(5557)+!Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(5557)+!control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 		<control>
@@ -606,7 +606,7 @@
             <font>font11</font>
 			<width>190</width>
             <textcolor>#shadow.light</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!Control.IsVisible(5557)+!Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!control.isvisible(5557)+!control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 		<control>
@@ -618,35 +618,35 @@
             <font>font11</font>
 			<width>190</width>
 			<textcolor>ffFFFFFF</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!Control.IsVisible(5557)+!Control.IsVisible(5558)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!control.isvisible(5557)+!control.isvisible(5558)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 
 		<control>
-			<description>InfoPanelLine4Key Shadow</description>
-            <label>#TVSeries.Episode.InfoPanelLine4Key</label>
+			<description>DataPanelLine4Key Shadow</description>
+            <label>#TVSeries.Episode.DataPanelLine4Key</label>
             <type>label</type>
             <posX>401</posX>
             <posY>410</posY>
 			<width>130</width>
 			<font>font11</font>
 			<textcolor>#shadow.dark</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10004)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10004)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine4Key</label>
+            <label>#TVSeries.Episode.DataPanelLine4Key</label>
             <type>label</type>
             <posX>400</posX>
             <posY>409</posY>
 			<width>130</width>
 			<font>font11</font>
 			<textcolor>ffa9d0f7</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10004)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10004)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine4Value</label>
+            <label>#TVSeries.Episode.DataPanelLine4Value</label>
             <type>label</type>
             <posX>541</posX>
             <posY>410</posY>
@@ -658,7 +658,7 @@
         </control>
         <control>
             <id>10004</id>
-            <label>#TVSeries.Episode.InfoPanelLine4Value</label>
+            <label>#TVSeries.Episode.DataPanelLine4Value</label>
             <type>label</type>
             <posX>540</posX>
             <posY>409</posY>
@@ -670,30 +670,30 @@
         </control>
 
 		<control>
-			<description>InfoPanelLine5Key Shadow</description>
-            <label>#TVSeries.Episode.InfoPanelLine5Key</label>
+			<description>DataPanelLine5Key Shadow</description>
+            <label>#TVSeries.Episode.DataPanelLine5Key</label>
             <type>label</type>
             <posX>401</posX>
             <posY>433</posY>
 			<width>130</width>
 			<textcolor>#shadow.dark</textcolor>
 			<font>font11</font>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10005)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10005)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine5Key</label>
+            <label>#TVSeries.Episode.DataPanelLine5Key</label>
             <type>label</type>
             <posX>400</posX>
             <posY>432</posY>
 			<width>130</width>
 			<font>font11</font>
 			<textcolor>ffa9d0f7</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+Control.IsVisible(10005)</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+control.isvisible(10005)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
-            <label>#TVSeries.Episode.InfoPanelLine5Value</label>
+            <label>#TVSeries.Episode.DataPanelLine5Value</label>
             <type>label</type>
             <posX>541</posX>
             <posY>433</posY>
@@ -705,7 +705,7 @@
         </control>
         <control>
             <id>10005</id>
-            <label>#TVSeries.Episode.InfoPanelLine5Value</label>
+            <label>#TVSeries.Episode.DataPanelLine5Value</label>
             <type>label</type>
             <posX>540</posX>
             <posY>432</posY>

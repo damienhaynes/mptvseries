@@ -191,6 +191,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
+        public const String cLogLevel = "logLevel";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
         
         static DBOption()
@@ -510,6 +512,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
                     SetOptions(cCountEmptyAndFutureAiredEps, 1);
+
+                if (GetOptions(cLogLevel) == null)
+                    SetOptions(cLogLevel, 0);
             }
             catch (Exception ex)
             {

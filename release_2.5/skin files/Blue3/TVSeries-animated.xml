@@ -172,7 +172,7 @@
 		<textureFocus>Backslide.png</textureFocus>
 		<textureNoFocus>Backslide.png</textureNoFocus>
 		<colorDiffuse>fffffffff</colorDiffuse>
-		<visible>Control.IsVisible(1239)</visible>
+		<visible>control.isvisible(1239)</visible>
 		<onleft>50</onleft>
 		<onright>50</onright>
 		<onup>969</onup>
@@ -194,7 +194,7 @@
       <width>308</width>
       <height>180</height>
       <texture>Picture_cover.png</texture>
-      <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+      <visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
 		<animation effect="rotatey" start="0" end="180" center="183,0" time="500" reversible="false">hidden</animation>
@@ -211,7 +211,7 @@
    	  <keepaspectratio>no</keepaspectratio>
 	  <centered>yes</centered>
       <texture>#TVSeries.EpisodeImage</texture>
-      <visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+      <visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
 		<animation effect="rotatey" start="0" end="180" center="183,0" time="500" reversible="false">hidden</animation>
@@ -230,7 +230,7 @@
 		<textcolor>d4d2d2</textcolor>
 		<font>font12</font>
 		<label>#TVSeries.Description</label>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
 			<animation effect="fade" time="250">hidden</animation>
 			<animation effect="fade" time="250" delay="250">visible</animation>
 			<animation effect="rotatey" start="0" end="180" center="183,0" time="500" reversible="false">hidden</animation>
@@ -247,7 +247,7 @@
 		<texture>#TVSeries.Logos</texture>
 		<keepaspectratio>yes</keepaspectratio>
 		<spaceBetweenItems>2</spaceBetweenItems>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(50)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(50)</visible>
 			<animation effect="fade" time="250">hidden</animation>
 			<animation effect="fade" time="250" delay="250">visible</animation>
 			<animation effect="rotatey" start="0" end="180" center="183,0" time="500" reversible="false">hidden</animation>
@@ -256,7 +256,7 @@
 
 	<!-- BACK of info panel for episode -->
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine4Key</label>
+      <label>#TVSeries.Episode.DataPanelLine4Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>115</posY>
@@ -264,10 +264,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine4Value</label>
+      <label>#TVSeries.Episode.DataPanelLine4Value</label>
       <type>fadelabel</type>
       <posX>160</posX>
       <posY>115</posY>
@@ -276,10 +276,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine5Key</label>
+      <label>#TVSeries.Episode.DataPanelLine5Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>140</posY>
@@ -287,10 +287,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine5Value</label>
+      <label>#TVSeries.Episode.DataPanelLine5Value</label>
       <type>fadelabel</type>
       <posX>160</posX>
       <posY>140</posY>
@@ -299,10 +299,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine1Key</label>
+      <label>#TVSeries.Episode.DataPanelLine1Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>165</posY>
@@ -310,10 +310,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine1Value</label>
+      <label>#TVSeries.Episode.DataPanelLine1Value</label>
       <type>label</type>
       <posX>160</posX>
       <posY>165</posY>
@@ -322,10 +322,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine2Key</label>
+      <label>#TVSeries.Episode.DataPanelLine2Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>190</posY>
@@ -333,10 +333,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine2Value</label>
+      <label>#TVSeries.Episode.DataPanelLine2Value</label>
       <type>label</type>
       <posX>160</posX>
       <posY>190</posY>
@@ -345,10 +345,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine3Key</label>
+      <label>#TVSeries.Episode.DataPanelLine3Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>215</posY>
@@ -356,10 +356,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine3Value</label>
+      <label>#TVSeries.Episode.DataPanelLine3Value</label>
       <type>label</type>
       <posX>160</posX>
       <posY>215</posY>
@@ -368,11 +368,11 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
 	
     <control>
-      <label>#TVSeries.Series.InfoPanelLine5Key</label>
+      <label>#TVSeries.Series.DataPanelLine5Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>240</posY>
@@ -380,10 +380,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Series.InfoPanelLine5Value</label>
+      <label>#TVSeries.Series.DataPanelLine5Value</label>
       <type>textboxscrollup</type>
       <posX>160</posX>
       <posY>247</posY>
@@ -393,11 +393,11 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
 	
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine6Key</label>
+      <label>#TVSeries.Episode.DataPanelLine6Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>315</posY>
@@ -405,10 +405,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine6Value</label>
+      <label>#TVSeries.Episode.DataPanelLine6Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>315</posY>
@@ -416,10 +416,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine7Key</label>
+      <label>#TVSeries.Episode.DataPanelLine7Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>340</posY>
@@ -427,10 +427,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine7Value</label>
+      <label>#TVSeries.Episode.DataPanelLine7Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>340</posY>
@@ -438,10 +438,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine8Key</label>
+      <label>#TVSeries.Episode.DataPanelLine8Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>365</posY>
@@ -449,10 +449,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine8Value</label>
+      <label>#TVSeries.Episode.DataPanelLine8Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>365</posY>
@@ -460,10 +460,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine9Key</label>
+      <label>#TVSeries.Episode.DataPanelLine9Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>390</posY>
@@ -471,10 +471,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine9Value</label>
+      <label>#TVSeries.Episode.DataPanelLine9Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>390</posY>
@@ -482,10 +482,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine10Key</label>
+      <label>#TVSeries.Episode.DataPanelLine10Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>415</posY>
@@ -493,10 +493,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine10Value</label>
+      <label>#TVSeries.Episode.DataPanelLine10Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>415</posY>
@@ -504,10 +504,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine11Key</label>
+      <label>#TVSeries.Episode.DataPanelLine11Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>440</posY>
@@ -515,10 +515,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine11Value</label>
+      <label>#TVSeries.Episode.DataPanelLine11Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>440</posY>
@@ -526,10 +526,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine12Key</label>
+      <label>#TVSeries.Episode.DataPanelLine12Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>465</posY>
@@ -537,10 +537,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine12Value</label>
+      <label>#TVSeries.Episode.DataPanelLine12Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>465</posY>
@@ -548,10 +548,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine13Key</label>
+      <label>#TVSeries.Episode.DataPanelLine13Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>490</posY>
@@ -559,10 +559,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine13Value</label>
+      <label>#TVSeries.Episode.DataPanelLine13Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>490</posY>
@@ -570,10 +570,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine14Key</label>
+      <label>#TVSeries.Episode.DataPanelLine14Key</label>
       <type>label</type>
       <posX>50</posX>
       <posY>515</posY>
@@ -581,10 +581,10 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
     <control>
-      <label>#TVSeries.Episode.InfoPanelLine14Value</label>
+      <label>#TVSeries.Episode.DataPanelLine14Value</label>
       <type>label</type>
       <posX>170</posX>
       <posY>515</posY>
@@ -592,7 +592,7 @@
 		<animation effect="rotatey" start="-180" end="0" center="183,0"  time="500" reversible="false">visible</animation>
 		<animation effect="fade" time="250">hidden</animation>
 		<animation effect="fade" time="250" delay="250">visible</animation>
-		<visible>Control.IsVisible(1239)+Control.HasFocus(969)</visible>
+		<visible>control.isvisible(1239)+Control.HasFocus(969)</visible>
     </control>
 	
 
@@ -810,14 +810,14 @@
 			<colordiffuse>f5fefaff</colordiffuse>
 			<animation effect="slide" time="450" start="300,0" reversible="false">visible</animation>
 			<animation effect="slide" time="450" end="300,0" reversible="false">hidden</animation>
-			<visible>!Control.IsVisible(1237)+!Control.IsVisible(1239)</visible>
+			<visible>!control.isvisible(1237)+!control.isvisible(1239)</visible>
 		</control>
 		<control>
 			<description>group element</description>
 			<type>group</type>
 			<animation effect="slide" time="450" start="300,0" reversible="false">visible</animation>
 			<animation effect="slide" time="450" end="300,0" reversible="false">hidden</animation>
-			<visible>Control.IsVisible(1238)</visible>
+			<visible>control.isvisible(1238)</visible>
 			<control>
 				<type>label</type>
 				<description>Text: Season</description>
@@ -851,44 +851,44 @@
 				<label>#TVSeries.Description</label>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine1Key</label>
+			  <label>#TVSeries.Series.DataPanelLine1Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>450</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine1Value</label>
+			  <label>#TVSeries.Series.DataPanelLine1Value</label>
 			  <type>fadelabel</type>
 			  <posX>465</posX>
 			  <posY>450</posY>
 			  <width>230</width>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine2Key</label>
+			  <label>#TVSeries.Series.DataPanelLine2Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>475</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine2Value</label>
+			  <label>#TVSeries.Series.DataPanelLine2Value</label>
 			  <type>fadelabel</type>
 			  <posX>508</posX>
 			  <posY>475</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine8Key</label>
+			  <label>#TVSeries.Series.DataPanelLine8Key</label>
 			  <type>fadelabel</type>
 			  <posX>410</posX>
 			  <posY>500</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine8Value</label>
+			  <label>#TVSeries.Series.DataPanelLine8Value</label>
 			  <type>fadelabel</type>
 			  <posX>455</posX>
 			  <posY>500</posY>
 			</control>
 			<control>
-			  <label>#TVSeries.Series.InfoPanelLine7Value</label>
+			  <label>#TVSeries.Series.DataPanelLine7Value</label>
 			  <type>fadelabel</type>
 			  <posX>530</posX>
 			  <posY>500</posY>

@@ -178,7 +178,7 @@ namespace WindowPlugins.GUITVSeries
 
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
-            this.comboLogLevel.SelectedIndex = 0;
+            //this.comboLogLevel.SelectedIndex = 0;
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
             m_paneListSettings.Add(panel_StringReplacements);            
@@ -390,7 +390,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            
+            comboOnlineLang_DropDown(comboOnlineLang, new EventArgs());
+
             LoadViews();
 			// Select First Item in list
 			if (_availViews.Items.Count > 0)
@@ -2353,7 +2354,7 @@ namespace WindowPlugins.GUITVSeries
                         //series[DBOnlineSeries.cUnwatchedItems] = false;
                         //series.Commit();
                         // Updated Episode Counts
-                        DBSeries.UpdatedEpisodeCounts(series);
+                        DBSeries.UpdateEpisodeCounts(series);
 
                         if (nodeWatched.Nodes.Count > 0)
                         {
@@ -2390,7 +2391,7 @@ namespace WindowPlugins.GUITVSeries
                         //season[DBSeason.cUnwatchedItems] = false;
                         //season.Commit();
                         DBSeries series2 = DBSeries.Get(season[DBSeason.cSeriesID]);
-                        DBSeason.UpdatedEpisodeCounts(series2, season);
+                        DBSeason.UpdateEpisodeCounts(series2, season);
 
                         //Parent Series color:
                         if (series2[DBOnlineSeries.cUnwatchedItems] == 0)
@@ -2421,7 +2422,7 @@ namespace WindowPlugins.GUITVSeries
                         //episode.Commit();
                         DBSeries series3 = DBSeries.Get(episode[DBEpisode.cSeriesID]);
                         DBSeason season3 = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                        DBSeason.UpdatedEpisodeCounts(series3, season3);
+                        DBSeason.UpdateEpisodeCounts(series3, season3);
 
                         //Parent Series color
                         if (series3[DBOnlineSeries.cUnwatchedItems] == 0)

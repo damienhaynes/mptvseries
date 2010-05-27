@@ -289,6 +289,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cLocalPlaytime = "localPlaytime";
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
         public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
+        public const String cFileDirectory = "EpisodeFilenameDirectory";
         public const String cExtension = "ext";
 
         public const String cIsOnRemovable = "Removable";
@@ -776,7 +777,7 @@ namespace WindowPlugins.GUITVSeries
 
         public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type)
         {
-            List<string> resultMsg = new List<string>(); 
+            List<string> resultMsg = new List<string>();
 
             // Always delete from Local episode table if deleting from disk or database
             SQLCondition condition = new SQLCondition();
@@ -812,7 +813,7 @@ namespace WindowPlugins.GUITVSeries
                             condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
                             DBOnlineEpisode.Clear(condition1);
                         }
-                    
+
                     }
                     else
                     {
@@ -829,10 +830,48 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            #region Facade Remote Color
+
+            // if we have removed all local episodes for a season then set HasLocalFiles to false for season
+            if (type == TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                SQLCondition seasonConditions = new SQLCondition();
+                seasonConditions.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                seasonConditions.Add(new DBEpisode(), DBEpisode.cSeasonIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                List<DBEpisode> localEpisodes = DBEpisode.Get(seasonConditions);
+                if (localEpisodes.Count == 0)
+                {
+                    SQLCondition cond = new SQLCondition();
+                    cond.Add(new DBSeason(), DBSeason.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                    cond.Add(new DBSeason(), DBSeason.cIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                    List<DBSeason> season = DBSeason.Get(cond);
+                    // should only get one season returned
+                    if (season != null && season.Count == 1)
+                    {
+                        season[0][DBSeason.cHasLocalFiles] = false;
+                        season[0].Commit();
+                    }
+
+                    // also check if local files exist for series
+                    SQLCondition seriesConditions = new SQLCondition();
+                    seriesConditions.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                    localEpisodes = DBEpisode.Get(seriesConditions);
+                    if (localEpisodes.Count == 0)
+                    {
+                        DBSeries series = DBSeries.Get(this[DBEpisode.cSeriesID]);
+                        series[DBOnlineSeries.cHasLocalFiles] = false;
+                        series.Commit();
+                    }
+                }
+            }
+
+            #endregion
+
             #region Cleanup
+            DBSeries.IsSeriesRemoved = false;
             if (type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
-                // If episode count is zero then delete the season
+                // If local/online episode count is zero then delete the season
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
@@ -864,6 +903,8 @@ namespace WindowPlugins.GUITVSeries
                         condition = new SQLCondition();
                         condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBOnlineSeries.Clear(condition);
+
+                        DBSeries.IsSeriesRemoved = true;
                     }
                 }
             }
@@ -1005,7 +1046,9 @@ namespace WindowPlugins.GUITVSeries
                         return Helper.MSToMMSS(this["localPlaytime"]);
                     case cFilenameWOPath:
                         return System.IO.Path.GetFileName(this[cFilename]);
-                        }
+                    case cFileDirectory:
+                        return System.IO.Path.GetDirectoryName(this[cFilename]);
+                }
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {
