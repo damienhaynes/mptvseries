@@ -313,6 +313,14 @@ namespace WindowPlugins.GUITVSeries
         public static string Watched = "Watched";
         public static string Writer = "Writer";
         public static string Writers = "Writers";
+        public static string PlaySomething = "Play...";
+        public static string PlayError = "Play error";
+        public static string RandomEpisode = "random episode";
+        public static string FirstUnwatchedEpisode = "first unwatched episode";
+        public static string RandomUnwatchedEpisode = "random unwatched episode";
+        public static string LatestEpisode = "latest episode";
+        public static string UnableToFindAny = "Unable to find any {0}";
+        public static string UnableToFindAnyEpisode = "Unable to find any episodes";
 
         // Subtitles
         public static string GetSubtitlesFrom = "Get subtitles from?";

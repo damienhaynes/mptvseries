@@ -1498,12 +1498,9 @@ namespace WindowPlugins.GUITVSeries
                             break;
                         case Listlevel.Season:
                             selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
-                            //selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
                             break;
                         case Listlevel.Episode:
                             selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
-                            //selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
-                            //selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
                             break;
                     }
 
@@ -1521,12 +1518,12 @@ namespace WindowPlugins.GUITVSeries
 
                         if (onPlayAction == OnPlaySeriesOrSeasonAction.AlwaysAsk) {
                             List<GUIListItem> items = new List<GUIListItem>();
-                            items.Add(new GUIListItem("Random episode"));
-                            items.Add(new GUIListItem("First unwatched episode"));
-                            items.Add(new GUIListItem("Random unwatched episode"));
-                            items.Add(new GUIListItem("Latest episode"));
+                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.RandomEpisode)));
+                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.FirstUnwatchedEpisode)));
+                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.RandomUnwatchedEpisode)));
+                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.LatestEpisode)));
 
-                            onPlayAction = (OnPlaySeriesOrSeasonAction)(ShowMenuDialog("Play...", items) + 1);
+                            onPlayAction = (OnPlaySeriesOrSeasonAction)(ShowMenuDialog(Translation.PlaySomething, items) + 1);
                         }
                         
                         if (onPlayAction != OnPlaySeriesOrSeasonAction.DoNothing) {
@@ -1548,7 +1545,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 case OnPlaySeriesOrSeasonAction.FirstUnwatched:
                                     episodeList = FilterEpisodeList(episodeList, true, true);
-                                    m_SelectedEpisode = GetFirstOrLast(episodeList, true);
+                                    m_SelectedEpisode = GetFirstOrLastEpisode(episodeList, true);
                                     break;
                                 case OnPlaySeriesOrSeasonAction.RandomUnwatched:
                                     episodeList = FilterEpisodeList(episodeList, true, true);
@@ -1556,7 +1553,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 case OnPlaySeriesOrSeasonAction.Latest:
                                     episodeList = FilterEpisodeList(episodeList, true, false);
-                                    m_SelectedEpisode = GetFirstOrLast(episodeList, false);
+                                    m_SelectedEpisode = GetFirstOrLastEpisode(episodeList, false);
                                     break;
                             }
                         }
@@ -1565,20 +1562,21 @@ namespace WindowPlugins.GUITVSeries
                     if (m_SelectedEpisode == null) {
                         switch (onPlayAction) {
                             case OnPlaySeriesOrSeasonAction.Random:
-                                ShowNotifyDialog("Play error", "Unable to get any random episode");
+                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomEpisode));
                                 break;
                             case OnPlaySeriesOrSeasonAction.FirstUnwatched:
-                                ShowNotifyDialog("Play error", "Unable to get any first unwatched episode");
+                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.FirstUnwatchedEpisode));
                                 break;
                             case OnPlaySeriesOrSeasonAction.RandomUnwatched:
-                                ShowNotifyDialog("Play error", "Unable to get any random unwatched episode");
+                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomUnwatchedEpisode));
                                 break;
                             case OnPlaySeriesOrSeasonAction.Latest:
-                                ShowNotifyDialog("Play error", "Unable to get any latest episode");
+                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.LatestEpisode));
                                 break;
                         }
                         goto default;
                     }
+                    MPTVSeriesLog.Write("Selected Episode OnAction Play: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
                     CommonPlayEpisodeAction(false);
 
                     break;
@@ -1588,55 +1586,6 @@ namespace WindowPlugins.GUITVSeries
 					break;
 			}
 		}
-
-        private DBEpisode GetFirstOrLast(List<DBEpisode> episodeList, bool first) {
-            DBEpisode result = null;
-            
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            episodeList.Sort(new Comparison<DBEpisode>((x, y) => {
-                    return 4 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
-                           2 * string.Compare(x[DBEpisode.cFileDateAdded].ToString(), y[DBEpisode.cFileDateAdded].ToString())
-                           ;
-                }));
-
-            if (first)
-                result = episodeList[0];
-            else
-                result = episodeList[episodeList.Count - 1];
-
-            return result;
-        }
-
-        private DBEpisode GetRandomEpisode(List<DBEpisode> episodeList) {
-            DBEpisode result = null;
-
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            result = episodeList[new Random().Next(0, episodeList.Count-1)];
-
-            return result;
-        }
-
-        private List<DBEpisode> FilterEpisodeList(List<DBEpisode> episodeList, bool filterUnavailable, bool filterWatched) {
-            List<DBEpisode> result = new List<DBEpisode>();
-
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            foreach (DBEpisode episode in episodeList) {
-                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)) {
-                    continue;
-                }
-
-                if (filterWatched && episode[DBOnlineEpisode.cWatched]) {
-                    continue;
-                }
-
-                result.Add(episode);
-            }
-
-            return result;
-        }
 
 		public override bool OnMessage(GUIMessage message) {
 			switch (message.Message) {
@@ -4981,13 +4930,22 @@ namespace WindowPlugins.GUITVSeries
 		private void playRandomEp()
         {
             List<DBEpisode> episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep, m_stepSelection);
-            DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count-1)];
 
-            MPTVSeriesLog.Write("Selected Random Episode: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
+            episodeList = FilterEpisodeList(episodeList, true, false);
 
-            // removed the if statement here to mimic functionality when an episode is selected
-            // via the regular UI, since watched flag is now set after viewing (is this right?)
-            m_VideoHandler.ResumeOrPlay(selectedEpisode);
+            m_SelectedEpisode = GetRandomEpisode(episodeList);
+
+            if (m_SelectedEpisode == null) {
+                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomEpisode));
+            }
+            else {
+                MPTVSeriesLog.Write("Selected Random Episode: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
+
+                // removed the if statement here to mimic functionality when an episode is selected
+                // via the regular UI, since watched flag is now set after viewing (is this right?)
+                //m_VideoHandler.ResumeOrPlay(selectedEpisode);
+                CommonPlayEpisodeAction(false);
+            }
         }
 
         private void setProcessAnimationStatus(bool enable)
@@ -5311,6 +5269,105 @@ namespace WindowPlugins.GUITVSeries
             }
             else
                 m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+        }
+
+        private DBEpisode GetFirstOrLastEpisode(List<DBEpisode> episodeList, bool first) {
+            DBEpisode result = null;
+
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            // lame grouping by series / season / episode - doh, results are already sorted that way!
+            //episodeList.Sort(new Comparison<DBEpisode>((x, y) => {
+            //    return 4 * string.Compare(x[DBOnlineEpisode.cSeriesID].ToString(), y[DBOnlineEpisode.cSeriesID].ToString()) +
+            //           2 * string.Compare(x[DBOnlineEpisode.cSeasonIndex].ToString(), y[DBOnlineEpisode.cSeasonIndex].ToString()) +
+            //           1 * string.Compare(x[DBOnlineEpisode.cEpisodeIndex].ToString(), y[DBOnlineEpisode.cEpisodeIndex].ToString())
+            //           ;
+            //}));
+
+            List<DBEpisode> episodeListNew = new List<DBEpisode>();
+
+            // take first or last episode from each series..
+            for (int i = 0; i < episodeList.Count; i++) {
+                if (first) {
+                    if (i > 0) {
+                        if (episodeList[i - 1][DBOnlineEpisode.cSeriesID].ToString() != episodeList[i][DBOnlineEpisode.cSeriesID]) {
+                            // it's the first one in series
+                            episodeListNew.Add(episodeList[i]);
+                        }
+                    }
+                    else {
+                        // add first one
+                        episodeListNew.Add(episodeList[i]);
+                    }
+                }
+                else {
+                    if ((i + 1) < episodeList.Count) {
+                        if (episodeList[i + 1][DBOnlineEpisode.cSeriesID].ToString() != episodeList[i][DBOnlineEpisode.cSeriesID]) {
+                            // it's the last one in series
+                            episodeListNew.Add(episodeList[i]);
+                        }
+                    }
+                    else {
+                        // add the last one
+                        episodeListNew.Add(episodeList[i]);
+                    }
+                }
+            }
+
+            if (episodeListNew.Count == 1) return episodeListNew[0];
+
+            // there are multiple series selected, sort by series name? aired date? date added?
+            // i decided to sort them by aired date and then by series name
+            // only sort when searching for latest...makes sense because first unwatched will then reflect the view data.. and latest does not have to do that
+            if (!first) {
+                episodeListNew.Sort(new Comparison<DBEpisode>((x, y) => {
+                    DBSeries seriesX = Helper.getCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
+                    DBSeries seriesY = Helper.getCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
+                    string seriesXSortName = seriesX != null ? seriesX[DBOnlineSeries.cSortName].ToString() : string.Empty;
+                    string seriesYSortName = seriesY != null ? seriesY[DBOnlineSeries.cSortName].ToString() : string.Empty;
+                    return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
+                        //2 * string.Compare(x[DBEpisode.cFileDateAdded].ToString(), y[DBEpisode.cFileDateAdded].ToString()) +
+                           1 * string.Compare(seriesXSortName, seriesYSortName)
+                           ;
+                }));
+            }
+
+            if (first)
+                result = episodeListNew[0];
+            else
+                result = episodeListNew[episodeListNew.Count - 1];
+
+            return result;
+        }
+
+        private DBEpisode GetRandomEpisode(List<DBEpisode> episodeList) {
+            DBEpisode result = null;
+
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            result = episodeList[new Random().Next(0, episodeList.Count - 1)];
+
+            return result;
+        }
+
+        private List<DBEpisode> FilterEpisodeList(List<DBEpisode> episodeList, bool filterUnavailable, bool filterWatched) {
+            List<DBEpisode> result = new List<DBEpisode>();
+
+            if (episodeList == null || episodeList.Count == 0) return result;
+
+            foreach (DBEpisode episode in episodeList) {
+                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)) {
+                    continue;
+                }
+
+                if (filterWatched && episode[DBOnlineEpisode.cWatched]) {
+                    continue;
+                }
+
+                result.Add(episode);
+            }
+
+            return result;
         }
 
         /// <summary>
