@@ -4680,7 +4680,9 @@ namespace WindowPlugins.GUITVSeries
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
 
             // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest		
-			m_FanartItem = m_SelectedSeries;
+            if (m_SelectedSeries == null) return;
+
+            m_FanartItem = m_SelectedSeries;
 			if (DBOption.GetOptions(DBOption.cFanartRandom)) {
                 // We should update fanart as soon as new series is selected or
                 // if timer was disabled (e.g. fullscreen playback)

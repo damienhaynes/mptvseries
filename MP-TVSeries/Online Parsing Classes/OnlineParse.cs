@@ -543,21 +543,24 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // Get Episode Details and send to InfoService plugin
                     DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                    string episodeTitle = episode[DBEpisode.cEpisodeName];
-                    string seasonIdx = episode[DBEpisode.cSeasonIndex];
-                    string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-                    string seriesTitle = series.ToString();
-                    string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
-                    string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
-                    string sendTitle = string.Format("{0}/{1}/{2}/{3}", seriesTitle, seasonIdx, episodeIdx, episodeTitle);
+                    if (series != null)
+                    {
+                        string episodeTitle = episode[DBEpisode.cEpisodeName];
+                        string seasonIdx = episode[DBEpisode.cSeasonIndex];
+                        string episodeIdx = episode[DBEpisode.cEpisodeIndex];
+                        string seriesTitle = series.ToString();
+                        string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
+                        string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
+                        string sendTitle = string.Format("{0}/{1}/{2}/{3}", seriesTitle, seasonIdx, episodeIdx, episodeTitle);
 
-                    string[] episodeDetails = new string[] { "Series", sendTitle, thumb, fanart };
-                    MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}, {3}", episodeDetails[0], episodeDetails[1], episodeDetails[2], episodeDetails[3]));
+                        string[] episodeDetails = new string[] { "Series", sendTitle, thumb, fanart };
+                        MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}, {3}", episodeDetails[0], episodeDetails[1], episodeDetails[2], episodeDetails[3]));
 
-                    // Send message to InfoService plugin
-                    GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 16000, 9811, 0, 0, 0, episodeDetails);
-                    GUIGraphicsContext.SendMessage(msg);
-                    GUIWindowManager.Process();
+                        // Send message to InfoService plugin
+                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 16000, 9811, 0, 0, 0, episodeDetails);
+                        GUIGraphicsContext.SendMessage(msg);
+                        GUIWindowManager.Process();
+                    }
                 }
             }
         }
@@ -580,8 +583,11 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBEpisode episode in episodes)
             {
                 DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                series[DBOnlineSeries.cHasNewEpisodes] = "1";
-                series.Commit();
+                if (series != null)
+                {
+                    series[DBOnlineSeries.cHasNewEpisodes] = "1";
+                    series.Commit();
+                }
             }
         }
 
