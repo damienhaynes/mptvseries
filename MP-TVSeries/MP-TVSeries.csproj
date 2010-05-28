@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -381,10 +381,12 @@
     <Content Include="Resources\Languages\fr.xml" />
     <Content Include="Resources\Languages\he.xml" />
     <Content Include="Resources\Languages\it.xml" />
+    <Content Include="Resources\Languages\ko.xml" />
     <Content Include="Resources\Languages\nl.xml" />
     <Content Include="Resources\Languages\no%28nb%29.xml" />
     <Content Include="Resources\Languages\no.xml" />
     <Content Include="Resources\Languages\pl.xml" />
+    <Content Include="Resources\Languages\pt-BR.xml" />
     <Content Include="Resources\Languages\pt_pt.xml" />
     <Content Include="Resources\Languages\ru.xml" />
     <Content Include="Resources\Languages\ru_utf8.xml" />
