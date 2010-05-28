@@ -403,6 +403,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
+            this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
             
 			LoadNewsSearches();
 
@@ -4755,6 +4756,11 @@ namespace WindowPlugins.GUITVSeries
         private void cbOnPlaySeriesOrSeasonAction_SelectedIndexChanged(object sender, EventArgs e) {
             // index must match enum OnPlaySeriesOrSeasonAction
             DBOption.SetOptions(DBOption.cOnPlaySeriesOrSeasonAction, cbOnPlaySeriesOrSeasonAction.SelectedIndex);
+        }
+
+        private void cbNewEpisodeThumbIndicator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cNewEpisodeThumbType, cbNewEpisodeThumbIndicator.SelectedIndex);
         }
     }
     

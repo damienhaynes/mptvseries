@@ -193,6 +193,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cOnPlaySeriesOrSeasonAction = "OnPlaySeriesOrSeasonAction";
 
+        public const String cNewEpisodeThumbType = "NewEpisodeThumbType";
+
         public const String cLogLevel = "logLevel";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
@@ -521,6 +523,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cLogLevel) == null)
                     SetOptions(cLogLevel, 0);
+
+                if (GetOptions(cNewEpisodeThumbType) == null)
+                    SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
 
             }
             catch (Exception ex)

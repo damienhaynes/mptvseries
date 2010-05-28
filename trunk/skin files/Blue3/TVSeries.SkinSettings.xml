@@ -36,6 +36,18 @@
 		Only the layouts defined below are currently supported for this skin: Blue3
 	-->
 	
+	<!-- Position of 'NEW' stamp in thumb views -->
+	<thumbstamp>
+		<widebanners>
+			<posx>668</posx>
+			<posy>-5</posy>
+		</widebanners>
+		<posters>
+			<posx>580</posx>
+			<posy>-5</posy>
+		</posters>
+	</thumbstamp>
+		
 	<!-- Define the images loaded in Video OSD -->
 	<!-- Note: You can reorder the items to set priority -->
 	<videoosdimages import="true">
