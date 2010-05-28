@@ -35,6 +35,16 @@
 		
 		Only the layouts defined below are currently supported for this skin: Blue3
 	-->
+	
+	<!-- Define the images loaded in Video OSD -->
+	<!-- Note: You can reorder the items to set priority -->
+	<videoosdimages import="true">
+		<series use="true" />		
+		<season use="true" />
+		<episode use="true" />
+		<!--<custom use="false"><![CDATA[skin\blue3wide\Media\custom.png]]></custom>-->
+	</videoosdimages>
+	
 	<layouts>
 		<group List="true" SmallIcons="true" />
 		<series ListPosters="true" ListBanners="true" Filmstrip="true" WideBanners="true" />

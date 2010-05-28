@@ -37,7 +37,17 @@
 		item1 = <text3> (left aligned)
 		item3 = <text2> (right aligned, useful for numbers)
 		Y-Offset needs to be the same if you want text to cutoff and avoid overlap of another item
-	-->		
+	-->
+	
+	<!-- Define the images loaded in Video OSD -->
+	<!-- Note: You can reorder the items to set priority -->
+	<videoosdimages import="true">
+		<series use="true" />		
+		<season use="true" />
+		<episode use="true" />
+		<!--<custom use="false"><![CDATA[skin\blue3wide\Media\custom.png]]></custom>-->
+	</videoosdimages>
+	
 	<layouts>
 		<group List="true" SmallIcons="true"/>
 		<series ListPosters="true" ListBanners="false" Filmstrip="true" WideBanners="true"/>
