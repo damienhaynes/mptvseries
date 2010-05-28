@@ -39,6 +39,18 @@
 		Y-Offset needs to be the same if you want text to cutoff and avoid overlap of another item
 	-->
 	
+	<!-- Position of 'NEW' stamp in thumb views -->
+	<thumbstamp>
+		<widebanners>
+			<posx>668</posx>
+			<posy>-5</posy>
+		</widebanners>
+		<posters>
+			<posx>580</posx>
+			<posy>-5</posy>
+		</posters>
+	</thumbstamp>
+	
 	<!-- Define the images loaded in Video OSD -->
 	<!-- Note: You can reorder the items to set priority -->
 	<videoosdimages import="true">

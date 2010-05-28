@@ -1997,11 +1997,11 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
-                MPTVSeriesLog.Write("MP-TVSeries is entering standby");
-                // Only disconnect from the database if file exists on the network.
+                MPTVSeriesLog.Write("MP-TVSeries is entering standby");                
                 
                 DeviceManager.StopMonitor();
 
+                // Only disconnect from the database if file exists on the network.
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
                     DBTVSeries.Close();
                 }

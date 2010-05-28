@@ -59,6 +59,7 @@ namespace WindowPlugins.GUITVSeries
         UpdateEpisodeThumbNails,
         UpdateUserFavourites,
 
+        UpdateRecentlyAdded,
         BroadcastRecentlyAdded
     }
 
@@ -108,7 +109,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.UpdateEpisodeThumbNails, 
             ParsingAction.UpdateUserFavourites,
 			ParsingAction.UpdateEpisodeCounts,
-            ParsingAction.BroadcastRecentlyAdded
+            ParsingAction.BroadcastRecentlyAdded,
+            ParsingAction.UpdateRecentlyAdded
 		};
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
@@ -474,6 +476,11 @@ namespace WindowPlugins.GUITVSeries
                             BroadcastRecentlyAdded();
                         }
                         break;
+
+                    case ParsingAction.UpdateRecentlyAdded:
+                        // set hasnewepisodes field on series record
+                        UpdateRecentlyAdded();
+                        break;
                 }
             }
 
@@ -555,7 +562,30 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region ParseActions       
+        private void UpdateRecentlyAdded()
+        {
+            // Clear setting for all series
+            DBSeries.GlobalSet(DBOnlineSeries.cHasNewEpisodes, "0");
+
+            // Calculate date for querying database
+            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            dt = dt.Subtract(new TimeSpan(7, 0, 0, 0, 0));
+            string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
+           
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);            
+            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
+            
+            // set series 'HasNewEpisodes' field if it contains new episodes
+            foreach (DBEpisode episode in episodes)
+            {
+                DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                series[DBOnlineSeries.cHasNewEpisodes] = "1";
+                series.Commit();
+            }
+        }
+
+        #region ParseActions
         private void ParseActionRemove(List<PathPair> files) {
             string initialMsg = "*******************        Remove Run Starting      ***********************";
             MPTVSeriesLog.Write(prettyStars(initialMsg.Length));

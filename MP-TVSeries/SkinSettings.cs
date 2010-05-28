@@ -15,6 +15,11 @@ namespace WindowPlugins.GUITVSeries {
         public static bool ImportViews { get; set; }
         public static bool ImportVideoOSDImages { get; set; }
 
+        public static int WideBannerNewStampPosX { get; set; }
+        public static int WideBannerNewStampPosY { get; set; }
+        public static int PosterNewStampPosX { get; set; }
+        public static int PosterNewStampPosY { get; set; }
+
         public static List<string> SupportedLayouts {
             get {
                 return _supportedLayouts;
@@ -72,6 +77,7 @@ namespace WindowPlugins.GUITVSeries {
             GetFormattingRules(doc);
             GetLogoRules(doc);
             GetVideoOSDImageType(doc);
+            GetThumbNewStampPositions(doc);
         }
 
         /// <summary>
@@ -622,6 +628,44 @@ namespace WindowPlugins.GUITVSeries {
                 VideoOSDImages.Add("series", string.Empty);
             }
         }
+
+        /// <summary>
+        /// Get Position of 'NEW' Stamp for RecentlyAdded/Unwatched Items in Thumbs view
+        /// </summary>
+        /// <param name="doc"></param>
+        private static void GetThumbNewStampPositions(XmlDocument doc)
+        {
+            int posx = 0;
+            int posy = 0;
+
+            XmlNode node = null;
+            node = doc.DocumentElement.SelectSingleNode("/settings/thumbstamp/widebanners/posx");
+            if (node != null)
+            {
+                int.TryParse(node.InnerText, out posx);                
+                WideBannerNewStampPosX = posx;
+            }
+            node = doc.DocumentElement.SelectSingleNode("/settings/thumbstamp/widebanners/posy");
+            if (node != null)
+            {
+                int.TryParse(node.InnerText, out posy);
+                WideBannerNewStampPosY = posy;
+            }
+
+            node = doc.DocumentElement.SelectSingleNode("/settings/thumbstamp/posters/posx");
+            if (node != null)
+            {
+                int.TryParse(node.InnerText, out posx);
+                PosterNewStampPosX = posx;
+            }
+            node = doc.DocumentElement.SelectSingleNode("/settings/thumbstamp/posters/posy");
+            if (node != null)
+            {
+                int.TryParse(node.InnerText, out posy);
+                PosterNewStampPosY = posy;
+            }           
+        }
         #endregion
     }
+
 }

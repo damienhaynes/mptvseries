@@ -65,6 +65,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cFanart = "fanart";
         public const String cLastUpdated = "lastupdated";
         public const String cPoster = "poster";
+
+        public const String cHasNewEpisodes = "HasNewEpisodes";
+
         #endregion
 
         public const int cDBVersion = 3;
