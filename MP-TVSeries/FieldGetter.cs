@@ -267,12 +267,8 @@ namespace WindowPlugins.GUITVSeries
         {          
             string value = what;
             foreach (Match m in matchRegex.Matches(what))
-            {            
-                string result;
-                // check if we have useredted column             
-                string userEditedEquivalent = m.Value + DBTable.cUserEditPostFix;
-                if (string.IsNullOrEmpty((result = item[userEditedEquivalent])))
-                    result = item[m.Value];
+            {                
+                string result = item[m.Value];
                 
                 // Create pretty string for split fields e.g. |SCI-FI|ACTION| => SCI-FI, ACTION
                 if (_splitFields) result = result.Trim('|').Replace("|", ", ");

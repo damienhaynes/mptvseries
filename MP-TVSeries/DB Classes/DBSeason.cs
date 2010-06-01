@@ -502,7 +502,7 @@ namespace WindowPlugins.GUITVSeries
 
         public List<string> deleteSeason(TVSeriesPlugin.DeleteMenuItems type)
         {
-            List<string> resultMsg = new List<string>(); 
+            List<string> resultMsg = new List<string>();
 
             // Always delete from Local episode table if deleting from disk or database
             SQLCondition condition = new SQLCondition();
@@ -516,7 +516,7 @@ namespace WindowPlugins.GUITVSeries
                 condition.Add(new DBEpisode(), idden, 0, SQLConditionType.Equal);
             }
             */
-            
+
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
             {
@@ -530,7 +530,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     condition = new SQLCondition();
                     condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(condition);
                 }
             }
@@ -541,7 +541,7 @@ namespace WindowPlugins.GUITVSeries
             if (resultMsg.Count == 0 && type == TVSeriesPlugin.DeleteMenuItems.disk)
             {
                 this[cHasLocalFiles] = false;
-                this.Commit();                
+                this.Commit();
             }
 
             // if we were successful at deleting all episodes of season from disk, 
@@ -554,7 +554,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBEpisode> localEpisodes = DBEpisode.Get(episodeConditions);
                 if (localEpisodes.Count == 0 && !DBSeries.IsSeriesRemoved)
                 {
-                    DBSeries series = DBSeries.Get(this[DBSeason.cSeriesID]);                   
+                    DBSeries series = DBSeries.Get(this[DBSeason.cSeriesID]);
                     if (series != null)
                     {
                         series[DBOnlineSeries.cHasLocalFiles] = false;
@@ -603,7 +603,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             #endregion
-            
+
             return resultMsg;
         }
         

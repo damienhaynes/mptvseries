@@ -32,7 +32,6 @@ using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public delegate void newArtWorkDownloadDoneHandler(string artworkFile);
     class BannerSeries
     {
         public bool bGraphical = false;
@@ -92,7 +91,6 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
-        public event newArtWorkDownloadDoneHandler BannerDownloadDone;
         public List<seriesBannersMap> seriesBannersMap = new List<seriesBannersMap>();
 
         //static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
@@ -253,11 +251,12 @@ namespace WindowPlugins.GUITVSeries
                     seriesMap.seriesPosters.AddRange(map.seriesPosters);
                 }
                 else seriesBannersMap.Add(map);
+                DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);
 
             }
         }
 
-        public void DownloadBanners(string bannerLang)
+        private void DownloadBanners(string bannerLang)
         {
             // now that we have all the paths, download all the files
             foreach (seriesBannersMap map in seriesBannersMap)
@@ -267,11 +266,8 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
-                        
-                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
-                        if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;                        
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
                         //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeries.sBannerFileName;                        
                         //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeries.sBannerFileName);
                         //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
@@ -284,9 +280,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         // mark the filename with the language                        
                         posterSeries.sPosterFileName = Helper.cleanLocalPath(posterSeries.sSeriesName) + @"\-lang" + posterSeries.sPosterLang + "-" + posterSeries.sOnlinePosterPath;                        
-                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(posterSeries.sOnlinePosterPath, Settings.Path.banners, posterSeries.sPosterFileName);
-                        if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(posterSeries.sOnlinePosterPath, Settings.Path.banners, posterSeries.sPosterFileName);                        
                     }
                 }
 
@@ -295,10 +289,7 @@ namespace WindowPlugins.GUITVSeries
                     if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
                         bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName) + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath;
-                        
-                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
-                        if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);
+                        Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
                         //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeason.sBannerFileName;                        
                         //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeason.sBannerFileName);
                         //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();

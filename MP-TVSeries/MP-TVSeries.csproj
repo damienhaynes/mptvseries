@@ -1,4 +1,14 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugGUI|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -53,6 +63,20 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugConfig\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugGUI|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\DebugGUI\</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -61,12 +85,28 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\DebugConfig\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInclDownloaders|AnyCPU' ">
+    <OutputPath>bin\ReleaseInclDownloaders\</OutputPath>
+    <DefineConstants>TRACE;inclDownloaders</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInclDownloaders|x86' ">
+    <OutputPath>bin\x86\ReleaseInclDownloaders\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
@@ -162,8 +202,20 @@
     <Compile Include="Configuration\logoTemplate.Designer.cs">
       <DependentUpon>logoTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\ManualEpisodeManagementPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ManualEpisodeManagementPane.Designer.cs">
+      <DependentUpon>ManualEpisodeManagementPane.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\DBOptionCheckBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\MemoryBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\MemoryBox.designer.cs">
+      <DependentUpon>MemoryBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\AddImportPathPopup.cs">
       <SubType>Form</SubType>
@@ -200,9 +252,16 @@
     <Compile Include="Helper.cs" />
     <Compile Include="imageAllocator.cs" />
     <Compile Include="Local Parsing Classes\LocalParse.cs" />
+    <Compile Include="Local Parsing Classes\ManualParseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Local Parsing Classes\ManualParseDialog.Designer.cs">
+      <DependentUpon>ManualParseDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Local Parsing Classes\Watcher.cs" />
     <Compile Include="localLogos.cs" />
     <Compile Include="LogWriter.cs" />
+    <Compile Include="DB Classes\DBBase.cs" />
     <Compile Include="DB Classes\DBEpisode.cs" />
     <Compile Include="DB Classes\DBExpressions.cs">
       <SubType>Code</SubType>
@@ -283,21 +342,6 @@
       <DependentUpon>GUIConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
-      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
-      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
-      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ImportWizard.resx">
-      <DependentUpon>ImportWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ImportPanelProgress.resx">
-      <DependentUpon>ImportPanelProgress.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\loadingDisplay.resx">
       <DependentUpon>loadingDisplay.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -314,12 +358,21 @@
       <SubType>Designer</SubType>
       <DependentUpon>logoTemplate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ManualEpisodeManagementPane.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ManualEpisodeManagementPane.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\PinCode.resx">
       <DependentUpon>PinCode.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ProgressLabel.resx">
-      <DependentUpon>ProgressLabel.cs</DependentUpon>
+    <EmbeddedResource Include="Local Parsing Classes\ManualParseDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ManualParseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\MemoryBox.resx">
+      <DependentUpon>MemoryBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
@@ -365,10 +418,6 @@
   <ItemGroup>
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
-    <None Include="Resources\Images\importaccept.png" />
-    <None Include="Resources\Images\importpending.png" />
-    <None Include="Resources\Images\importupdating.png" />
-    <None Include="Resources\Images\importignored.png" />
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
@@ -381,64 +430,17 @@
     <Content Include="Resources\Languages\fr.xml" />
     <Content Include="Resources\Languages\he.xml" />
     <Content Include="Resources\Languages\it.xml" />
-    <Content Include="Resources\Languages\ko.xml" />
     <Content Include="Resources\Languages\nl.xml" />
     <Content Include="Resources\Languages\no%28nb%29.xml" />
     <Content Include="Resources\Languages\no.xml" />
     <Content Include="Resources\Languages\pl.xml" />
-    <Content Include="Resources\Languages\pt-BR.xml" />
     <Content Include="Resources\Languages\pt_pt.xml" />
     <Content Include="Resources\Languages\ru.xml" />
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
-    <Compile Include="Configuration\ImportPanelEpID.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelEpID.Designer.cs">
-      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelParsing.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelParsing.Designer.cs">
-      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelSeriesID.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelSeriesID.Designer.cs">
-      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ImportWizard.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ImportWizard.Designer.cs">
-      <DependentUpon>ImportWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelProgress.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ImportPanelProgress.Designer.cs">
-      <DependentUpon>ImportPanelProgress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ProgressLabel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\ProgressLabel.Designer.cs">
-      <DependentUpon>ProgressLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\DBField.cs" />
-    <Compile Include="DataBase\DBTable.cs" />
-    <Compile Include="DataBase\DBTVSeries.cs" />
-    <Compile Include="DataBase\DBValue.cs" />
-    <Compile Include="DataBase\SQLCondition.cs" />
-    <Compile Include="DataBase\SQLWhat.cs" />
-    <Compile Include="DB Classes\DBOnlineEpisode.cs" />
-    <Compile Include="DB Classes\DBOnlineSeries.cs" />
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
-    <Compile Include="Online Parsing Classes\UserInputResult.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
     <None Include="Properties\VersionInfo.cs.tmpl" />
   </ItemGroup>
@@ -492,9 +494,10 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
+    <PostBuildEvent>copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
+copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
+xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
 xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-xcopy "$(TargetDir)MediaInfo.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
 xcopy "$(ProjectDir)\..\External\7z.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
     <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>

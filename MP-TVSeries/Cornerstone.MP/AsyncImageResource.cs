@@ -1,16 +1,18 @@
-﻿using System;
+﻿//using NLog;
+using System;
 using System.Threading;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using MediaPortal.GUI.Library;
 using System.IO;
-using WindowPlugins.GUITVSeries;
 
 namespace Cornerstone.MP {
     public delegate void AsyncImageLoadComplete(AsyncImageResource image);
     
     public class AsyncImageResource {
+        //private static Logger logger = LogManager.GetCurrentClassLogger();
+        
         private Object loadingLock = new Object();
         private int pendingToken = 0;
         private int threadsWaiting = 0;
@@ -222,7 +224,7 @@ namespace Cornerstone.MP {
             }
             catch (MissingMethodException) {
                 if (!warned) {
-                    MPTVSeriesLog.Write("AsyncImageResource: Cannot preform asynchronous loading with this version of MediaPortal. Please upgrade for improved performance.");
+                    //logger.Warn("Cannot preform asynchronous loading with this version of MediaPortal. Please upgrade for improved performance.");
                     warned = true;
                 }
             }
@@ -268,7 +270,7 @@ namespace Cornerstone.MP {
 
             try {
                 if (GdipLoadImageFromFile(filename, out imagePtr) != 0) {
-                    MPTVSeriesLog.Write("AsyncImageResource: gdiplus.dll method failed. Will degrade performance.");
+                    //logger.Warn("gdiplus.dll method failed. Will degrade performance.");
                     image = Image.FromFile(filename);
                 }
 
@@ -276,7 +278,7 @@ namespace Cornerstone.MP {
                     image = (Image)typeof(Bitmap).InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { imagePtr });
             }
             catch (Exception) {
-                MPTVSeriesLog.Write("AsyncImageResource: Failed to load image from ", filename, MPTVSeriesLog.LogLevel.Normal);
+                //logger.Error("Failed to load image from " + filename);
                 image = null;
             }
 

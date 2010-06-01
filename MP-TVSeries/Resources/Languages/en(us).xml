@@ -262,14 +262,5 @@
 
 	<string Field="UnableToDelete" Original="Unable to Delete">Unable to Delete</string>
 	<string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Unable to Delete File: {0}</string>
-
-	<string Field="PlaySomething" Original="Play...">Play...</string>
-	<string Field="PlayError" Original="Play error">Play error</string>
-	<string Field="RandomEpisode" Original="random episode">random episode</string>
-	<string Field="FirstUnwatchedEpisode" Original="first unwatched episode">first unwatched episode</string>
-	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">random unwatched episode</string>
-	<string Field="LatestEpisode" Original="latest episode">latest episode</string>
-	<string Field="UnableToFindAny" Original="Unable to find any {0}">Unable to find any {0}</string>
-	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Unable to find any episode</string>
-
+  
 </strings>

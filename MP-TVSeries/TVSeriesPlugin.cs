@@ -398,15 +398,6 @@ namespace WindowPlugins.GUITVSeries
             UnWatchedCount,
             LastOnlineUpdate
 		}
-
-        public enum OnPlaySeriesOrSeasonAction {
-            DoNothing,
-            Random,
-            FirstUnwatched,
-            RandomUnwatched,
-            Latest,
-            AlwaysAsk
-        }
 		#endregion
 
 		#region Base Overrides
@@ -1405,11 +1396,7 @@ namespace WindowPlugins.GUITVSeries
 		#endregion
 
 		public override void OnAction(Action action) {
-            DBEpisode selectedEpisode = null;
-            DBSeason selectedSeason = null;
-            DBSeries selectedSeries = null;
-
-            switch (action.wID) {
+			switch (action.wID) {
 				case Action.ActionType.ACTION_PARENT_DIR:				
 					ImageAllocator.FlushAll();
 					GUIWindowManager.ShowPreviousWindow();
@@ -1446,15 +1433,15 @@ namespace WindowPlugins.GUITVSeries
 						if (this.listLevel == Listlevel.Group)
 							return;
 
-						selectedSeries = null;
-						selectedSeason = null;
-						selectedEpisode = null;
+						DBSeries selectedSeries = null;
+						DBSeason selectedSeason = null;
+						DBEpisode selectedEpisode = null;
 
 						switch (this.listLevel) {
 							case Listlevel.Series:
 								selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
 								break;
-							case Listlevel.Season:
+							case Listlevel.Season:                                
 								selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
                                 selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
 								break;
@@ -1481,105 +1468,6 @@ namespace WindowPlugins.GUITVSeries
 					}
 					base.OnAction(action);
 					break;
-
-                case Action.ActionType.ACTION_PLAY:
-                case Action.ActionType.ACTION_MUSIC_PLAY:
-                    selectedSeries = null;  
-                    selectedSeason = null;
-                    selectedEpisode = null;
-                    string selectedGroup = null;
-
-                    switch (this.listLevel) {
-                        case Listlevel.Group:
-                            selectedGroup = this.m_Facade.SelectedListItem.TVTag as string;
-                            break;
-                        case Listlevel.Series:
-                            selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
-                            break;
-                        case Listlevel.Season:
-                            selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
-                            break;
-                        case Listlevel.Episode:
-                            selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
-                            break;
-                    }
-
-                    OnPlaySeriesOrSeasonAction onPlayAction = (OnPlaySeriesOrSeasonAction)(int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
-
-                    this.m_SelectedEpisode = null;
-                    if (selectedEpisode != null)
-                    {
-                        if (selectedEpisode[DBEpisode.cIsAvailable])
-                            this.m_SelectedEpisode = selectedEpisode;
-                        else
-                            this.m_SelectedEpisode = null;
-                    }
-                    else if (selectedGroup != null || selectedSeason != null || selectedSeries != null) {
-
-                        if (onPlayAction == OnPlaySeriesOrSeasonAction.AlwaysAsk) {
-                            List<GUIListItem> items = new List<GUIListItem>();
-                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.RandomEpisode)));
-                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.FirstUnwatchedEpisode)));
-                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.RandomUnwatchedEpisode)));
-                            items.Add(new GUIListItem(Helper.UppercaseFirst(Translation.LatestEpisode)));
-
-                            onPlayAction = (OnPlaySeriesOrSeasonAction)(ShowMenuDialog(Translation.PlaySomething, items) + 1);
-                        }
-                        
-                        if (onPlayAction != OnPlaySeriesOrSeasonAction.DoNothing) {
-                            List<DBEpisode> episodeList = null;
-                            if (selectedSeason != null) {
-                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedSeason[DBSeason.cSeriesID].ToString(), selectedSeason[DBSeason.cIndex].ToString() });
-                            }
-                            else if (selectedSeries != null) {
-                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedSeries[DBSeries.cID].ToString() });
-                            }
-                            else if (selectedGroup != null) {
-                                episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep + 1, new string[] { selectedGroup });
-                            }
-
-                            switch (onPlayAction) {
-                                case OnPlaySeriesOrSeasonAction.Random:
-                                    episodeList = FilterEpisodeList(episodeList, true, false);
-                                    m_SelectedEpisode = GetRandomEpisode(episodeList);
-                                    break;
-                                case OnPlaySeriesOrSeasonAction.FirstUnwatched:
-                                    episodeList = FilterEpisodeList(episodeList, true, true);
-                                    m_SelectedEpisode = GetFirstOrLastEpisode(episodeList, true);
-                                    break;
-                                case OnPlaySeriesOrSeasonAction.RandomUnwatched:
-                                    episodeList = FilterEpisodeList(episodeList, true, true);
-                                    m_SelectedEpisode = GetRandomEpisode(episodeList);
-                                    break;
-                                case OnPlaySeriesOrSeasonAction.Latest:
-                                    episodeList = FilterEpisodeList(episodeList, true, false);
-                                    m_SelectedEpisode = GetFirstOrLastEpisode(episodeList, false);
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (m_SelectedEpisode == null) {
-                        switch (onPlayAction) {
-                            case OnPlaySeriesOrSeasonAction.Random:
-                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomEpisode));
-                                break;
-                            case OnPlaySeriesOrSeasonAction.FirstUnwatched:
-                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.FirstUnwatchedEpisode));
-                                break;
-                            case OnPlaySeriesOrSeasonAction.RandomUnwatched:
-                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomUnwatchedEpisode));
-                                break;
-                            case OnPlaySeriesOrSeasonAction.Latest:
-                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.LatestEpisode));
-                                break;
-                        }
-                        goto default;
-                    }
-                    MPTVSeriesLog.Write("Selected Episode OnAction Play: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-                    CommonPlayEpisodeAction(false);
-
-                    break;
 
 				default:
 					base.OnAction(action);
@@ -1684,25 +1572,6 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
         {
-            /*
-            // MS TEST SubCentral
-            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-            string episodeTitle = episode[DBEpisode.cEpisodeName];
-            string seasonIdx = episode[DBEpisode.cSeasonIndex];
-            string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-            string seriesTitle = series.ToString();
-            string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
-            string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
-            string episodeFileName = episode[DBEpisode.cFilename];
-
-            List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
-            GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
-            GUIGraphicsContext.SendMessage(msg);
-            //GUIWindowManager.Process();
-            GUIWindowManager.ActivateWindow(84623);
-            return;
-            */
-
             if (!SubtitleDownloaderEnabledAndHasSites()) return;
 
             List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
@@ -1951,13 +1820,23 @@ namespace WindowPlugins.GUITVSeries
 						if (m_SelectedEpisode == null) return;
 						MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
-                        CommonPlayEpisodeAction(true);
+                        if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0)
+                        {
+                            // we don't have this file - yet. If downloaders are available, show the download pages
+                            ShowDownloadMenu(m_SelectedEpisode);
+                        }
+                        else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled))
+                        {
+                            ShowSubtitleMenu(m_SelectedEpisode, true);
+                        }
+                        else
+    						m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
 						break;
 				}
 			}
 			base.OnClicked(controlId, control, actionType);
 		}
-        #endregion
+		#endregion
 
 		void m_VideoHandler_RateRequestOccured(DBEpisode episode)
         {
@@ -1997,11 +1876,11 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
-                MPTVSeriesLog.Write("MP-TVSeries is entering standby");                
+                MPTVSeriesLog.Write("MP-TVSeries is entering standby");
+                // Only disconnect from the database if file exists on the network.
                 
                 DeviceManager.StopMonitor();
 
-                // Only disconnect from the database if file exists on the network.
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
                     DBTVSeries.Close();
                 }
@@ -3120,38 +2999,36 @@ namespace WindowPlugins.GUITVSeries
                     item.IconImage = sUnWatchedFilename;
             }
             return true;
+        }               
+
+        string getGUIProperty(guiProperty which)
+        {
+          return getGUIProperty(which.ToString());
         }
 
-        string getGUIProperty(guiProperty name)
+        public static string getGUIProperty(string which)
         {
-            return getGUIProperty(name.ToString());
+          return MediaPortal.GUI.Library.GUIPropertyManager.GetProperty("#TVSeries." + which);
         }
 
-        public static string getGUIProperty(string name)
+        void setGUIProperty(guiProperty which, string value)
         {
-            return GUIPropertyManager.GetProperty("#TVSeries." + name);
+            setGUIProperty(which.ToString(), value);
         }
 
-        void setGUIProperty(guiProperty name, string value)
+        public static void setGUIProperty(string which, string value)
         {
-            setGUIProperty(name.ToString(), value);
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#TVSeries." + which, value);
         }
 
-        public static void setGUIProperty(string name, string value)
+        void clearGUIProperty(guiProperty which)
         {
-            string property = "#TVSeries." + name;
-            //MPTVSeriesLog.Write("[{0}]: {1}", property, value);
-            GUIPropertyManager.SetProperty(property, value);
+            clearGUIProperty(which.ToString());
         }
 
-        void clearGUIProperty(guiProperty name)
+        public static void clearGUIProperty(string which)
         {
-            clearGUIProperty(name.ToString());
-        }
-
-        public static void clearGUIProperty(string name)
-        {
-            setGUIProperty(name, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+            setGUIProperty(which, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
 
 		private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode) {			
@@ -3870,7 +3747,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }                
             }
-            #endregion            
+            #endregion
 
             #region Delete From Disk, Database or Both
             if (dlg.SelectedId != (int)DeleteMenuItems.subtitles)
@@ -3897,7 +3774,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
                 }
                 // only update the counts if the database entry for the series still exists
-                if (!DBSeries.IsSeriesRemoved) DBSeries.UpdateEpisodeCounts(series);                
+                if (!DBSeries.IsSeriesRemoved) DBSeries.UpdateEpisodeCounts(series);
             }
             #endregion
 
@@ -3919,7 +3796,7 @@ namespace WindowPlugins.GUITVSeries
 		void load_LoadNewzBinCompleted(bool bOK, String msgOut)
         {
             if (m_ImportAnimation != null)
-                m_ImportAnimation.Dispose();
+                m_ImportAnimation.FreeResources();
 
             if (!bOK)
             {
@@ -4392,7 +4269,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void parserUpdater_OnlineParsingProgress(int nProgress, ParsingProgress progress)
+        void parserUpdater_OnlineParsingProgress(int nProgress)
         {
             // update the facade when progress has reached 30 (arbitrary point where local media has been scanned)
             if (nProgress == 30 && m_Facade != null) LoadFacade();
@@ -4679,10 +4556,10 @@ namespace WindowPlugins.GUITVSeries
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
 
-            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest		
+            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest
             if (m_SelectedSeries == null) return;
 
-            m_FanartItem = m_SelectedSeries;
+			m_FanartItem = m_SelectedSeries;
 			if (DBOption.GetOptions(DBOption.cFanartRandom)) {
                 // We should update fanart as soon as new series is selected or
                 // if timer was disabled (e.g. fullscreen playback)
@@ -4932,22 +4809,13 @@ namespace WindowPlugins.GUITVSeries
 		private void playRandomEp()
         {
             List<DBEpisode> episodeList = m_CurrLView.getAllEpisodesForStep(m_CurrViewStep, m_stepSelection);
+            DBEpisode selectedEpisode = episodeList[new Random().Next(0, episodeList.Count - 1)];
 
-            episodeList = FilterEpisodeList(episodeList, true, false);
+            MPTVSeriesLog.Write("Selected Random Episode: ", selectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Normal);
 
-            m_SelectedEpisode = GetRandomEpisode(episodeList);
-
-            if (m_SelectedEpisode == null) {
-                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomEpisode));
-            }
-            else {
-                MPTVSeriesLog.Write("Selected Random Episode: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-
-                // removed the if statement here to mimic functionality when an episode is selected
-                // via the regular UI, since watched flag is now set after viewing (is this right?)
-                //m_VideoHandler.ResumeOrPlay(selectedEpisode);
-                CommonPlayEpisodeAction(false);
-            }
+            // removed the if statement here to mimic functionality when an episode is selected
+            // via the regular UI, since watched flag is now set after viewing (is this right?)
+            m_VideoHandler.ResumeOrPlay(selectedEpisode);
         }
 
         private void setProcessAnimationStatus(bool enable)
@@ -4959,7 +4827,7 @@ namespace WindowPlugins.GUITVSeries
                     if (enable)
                         m_ImportAnimation.AllocResources();
                     else
-                        m_ImportAnimation.Dispose();
+                        m_ImportAnimation.FreeResources();
                     m_ImportAnimation.Visible = enable;                  
                 }
             }
@@ -5261,192 +5129,7 @@ namespace WindowPlugins.GUITVSeries
 		}
 		#endregion
 
-        private void CommonPlayEpisodeAction(bool useDownloaders) {
-            if (useDownloaders && m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
-                // we don't have this file - yet. If downloaders are available, show the download pages
-                ShowDownloadMenu(m_SelectedEpisode);
-            }
-            else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled)) {
-                ShowSubtitleMenu(m_SelectedEpisode, true);
-            }
-            else
-                m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
-        }
-
-        private DBEpisode GetFirstOrLastEpisode(List<DBEpisode> episodeList, bool first) {
-            DBEpisode result = null;
-
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            // lame grouping by series / season / episode - doh, results are already sorted that way!
-            //episodeList.Sort(new Comparison<DBEpisode>((x, y) => {
-            //    return 4 * string.Compare(x[DBOnlineEpisode.cSeriesID].ToString(), y[DBOnlineEpisode.cSeriesID].ToString()) +
-            //           2 * string.Compare(x[DBOnlineEpisode.cSeasonIndex].ToString(), y[DBOnlineEpisode.cSeasonIndex].ToString()) +
-            //           1 * string.Compare(x[DBOnlineEpisode.cEpisodeIndex].ToString(), y[DBOnlineEpisode.cEpisodeIndex].ToString())
-            //           ;
-            //}));
-
-            List<DBEpisode> episodeListNew = new List<DBEpisode>();
-
-            // take first or last episode from each series..
-            for (int i = 0; i < episodeList.Count; i++) {
-                if (first) {
-                    if (i > 0) {
-                        if (episodeList[i - 1][DBOnlineEpisode.cSeriesID].ToString() != episodeList[i][DBOnlineEpisode.cSeriesID]) {
-                            // it's the first one in series
-                            episodeListNew.Add(episodeList[i]);
-                        }
-                    }
-                    else {
-                        // add first one
-                        episodeListNew.Add(episodeList[i]);
-                    }
-                }
-                else {
-                    if ((i + 1) < episodeList.Count) {
-                        if (episodeList[i + 1][DBOnlineEpisode.cSeriesID].ToString() != episodeList[i][DBOnlineEpisode.cSeriesID]) {
-                            // it's the last one in series
-                            episodeListNew.Add(episodeList[i]);
-                        }
-                    }
-                    else {
-                        // add the last one
-                        episodeListNew.Add(episodeList[i]);
-                    }
-                }
-            }
-
-            if (episodeListNew.Count == 1) return episodeListNew[0];
-
-            // there are multiple series selected, sort by series name? aired date? date added?
-            // i decided to sort them by aired date and then by series name
-            // only sort when searching for latest...makes sense because first unwatched will then reflect the view data.. and latest does not have to do that
-            if (!first) {
-                episodeListNew.Sort(new Comparison<DBEpisode>((x, y) => {
-                    DBSeries seriesX = Helper.getCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
-                    DBSeries seriesY = Helper.getCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
-                    string seriesXSortName = seriesX != null ? seriesX[DBOnlineSeries.cSortName].ToString() : string.Empty;
-                    string seriesYSortName = seriesY != null ? seriesY[DBOnlineSeries.cSortName].ToString() : string.Empty;
-                    return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
-                        //2 * string.Compare(x[DBEpisode.cFileDateAdded].ToString(), y[DBEpisode.cFileDateAdded].ToString()) +
-                           1 * string.Compare(seriesXSortName, seriesYSortName)
-                           ;
-                }));
-            }
-
-            if (first)
-                result = episodeListNew[0];
-            else
-                result = episodeListNew[episodeListNew.Count - 1];
-
-            return result;
-        }
-
-        private DBEpisode GetRandomEpisode(List<DBEpisode> episodeList) {
-            DBEpisode result = null;
-
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            result = episodeList[new Random().Next(0, episodeList.Count - 1)];
-
-            return result;
-        }
-
-        private List<DBEpisode> FilterEpisodeList(List<DBEpisode> episodeList, bool filterUnavailable, bool filterWatched) {
-            List<DBEpisode> result = new List<DBEpisode>();
-
-            if (episodeList == null || episodeList.Count == 0) return result;
-
-            foreach (DBEpisode episode in episodeList) {
-                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)) {
-                    continue;
-                }
-
-                if (filterWatched && episode[DBOnlineEpisode.cWatched]) {
-                    continue;
-                }
-
-                result.Add(episode);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Displays a menu dialog from list of items
-        /// </summary>
-        /// <returns>Selected item index, -1 if exited</returns>
-        public static int ShowMenuDialog(string heading, List<GUIListItem> items) {
-            return ShowMenuDialog(heading, items, -1);
-        }
-
-        private delegate int ShowMenuDialogDelegate(string heading, List<GUIListItem> items);
-
-        /// <summary>
-        /// Displays a menu dialog from list of items
-        /// </summary>
-        /// <returns>Selected item index, -1 if exited</returns>
-        public static int ShowMenuDialog(string heading, List<GUIListItem> items, int selectedItemIndex) {
-            if (GUIGraphicsContext.form.InvokeRequired) {
-                ShowMenuDialogDelegate d = ShowMenuDialog;
-                return (int)GUIGraphicsContext.form.Invoke(d, heading, items);
-            }
-
-            GUIDialogMenu dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_DIALOG_MENU);
-            if (dlgMenu == null) return -1;
-
-            dlgMenu.Reset();
-
-            dlgMenu.SetHeading(heading);
-
-            foreach (GUIListItem item in items) {
-                dlgMenu.Add(item);
-            }
-
-            if (selectedItemIndex >= 0)
-                dlgMenu.SelectedLabel = selectedItemIndex;
-
-            dlgMenu.DoModal(GUIWindowManager.ActiveWindow);
-
-            if (dlgMenu.SelectedLabel < 0) {
-                return -1;
-            }
-
-            return dlgMenu.SelectedLabel;
-        }
-
-        /// <summary>
-        /// Displays a notification dialog.
-        /// </summary>
-        public static void ShowNotifyDialog(string heading, string text) {
-            ShowNotifyDialog(heading, text, string.Empty);
-        }
-
-        private delegate void ShowNotifyDialogDelegate(string heading, string text, string image);
-
-        /// <summary>
-        /// Displays a notification dialog.
-        /// </summary>
-        public static void ShowNotifyDialog(string heading, string text, string image) {
-            if (GUIGraphicsContext.form.InvokeRequired) {
-                ShowNotifyDialogDelegate d = ShowNotifyDialog;
-                GUIGraphicsContext.form.Invoke(d, heading, text, image);
-                return;
-            }
-
-            GUIDialogNotify pDlgNotify = (GUIDialogNotify)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_NOTIFY);
-            if (pDlgNotify == null) return;
-
-            pDlgNotify.SetHeading(heading);
-
-            pDlgNotify.SetImage(image);
-
-            pDlgNotify.SetText(text);
-
-            pDlgNotify.DoModal(GUIWindowManager.ActiveWindow);
-        }
-
-        private void TellUserSomethingWentWrong()
+		private void TellUserSomethingWentWrong()
         {
             GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
             if (dlgOK != null)
@@ -5463,7 +5146,7 @@ namespace WindowPlugins.GUITVSeries
             // so that locallogos can clean up its stuff
             if (null != this.m_Logos_Image)
             {
-                this.m_Logos_Image.Dispose();
+                this.m_Logos_Image.FreeResources();
                 this.m_Logos_Image = null;
             }
             // only when inside MP

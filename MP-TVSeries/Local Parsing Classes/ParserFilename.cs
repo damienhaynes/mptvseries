@@ -37,9 +37,10 @@ namespace WindowPlugins.GUITVSeries
         private String m_RegexpMatched = string.Empty;
         static List<String> sExpressions = new List<String>();
         static List<Regex> regularExpressions = new List<Regex>();
-        static Dictionary<Regex, string> replacementRegexBefore = new Dictionary<Regex, string>();
-        static Dictionary<Regex, string> replacementRegexAfter = new Dictionary<Regex, string>();
+        //static List<DBReplacements> replacements = new List<DBReplacements>();
+        static Dictionary<string, string> replacements = new Dictionary<string, string>();
         static List<string> tags = new List<string>();
+        static Dictionary<string, string> replacementsBefore = new Dictionary<string, string>();
 
         public Dictionary<string, string> Matches
         {
@@ -74,8 +75,8 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Compiling Parsing Expressions");
                 sExpressions.Clear();
                 regularExpressions.Clear();
-                replacementRegexAfter.Clear();
-                replacementRegexBefore.Clear();
+                replacements.Clear();
+                replacementsBefore.Clear();
                 DBExpression[] expressions = DBExpression.GetAll();
                 foreach (DBExpression expression in expressions)
                 {
@@ -124,44 +125,25 @@ namespace WindowPlugins.GUITVSeries
                 // now go for the replacements
             try
             {
-                MPTVSeriesLog.Write("Compiling Replacement Expressions");
-                
                 foreach (DBReplacements replacement in DBReplacements.GetAll())
                 {
-                    try
-                    {
-                        if (replacement[DBReplacements.cEnabled])
-                        {
-                            String searchString = replacement[DBReplacements.cToReplace];
-                            searchString = searchString
-                                .Replace("<space>", " ");
-                            string regexSearchString = searchString;
-                            if (!replacement[DBReplacements.cIsRegex])
-                                regexSearchString = Regex.Escape(searchString);
+                    String searchString = replacement[DBReplacements.cToReplace];
+                    searchString = searchString
+                        .ToLower()
+                        .Replace("<space>", " ");
 
-                            String replaceString = replacement[DBReplacements.cWith];
-                            replaceString = replaceString
-                                .Replace("<space>", " ")
-                                .Replace("<empty>", "");
-
-                            var replaceRegex = new Regex(regexSearchString, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                            
-                            if (replacement[DBReplacements.cBefore])
-                                replacementRegexBefore.Add(replaceRegex, replaceString);
-                            else
-                                replacementRegexAfter.Add(replaceRegex, replaceString);
-
-                            if (replacement[DBReplacements.cTagEnabled])
-                                tags.Add(searchString);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        MPTVSeriesLog.Write("Cannot use the following Expression: " + e.Message);
-                    }
+                    String replaceString = replacement[DBReplacements.cWith];
+                    replaceString = replaceString
+                        .ToLower()
+                        .Replace("<space>", " ")
+                        .Replace("<empty>", "");
+                    if(replacement[DBReplacements.cBefore])
+                        replacementsBefore.Add(searchString, replaceString);
+                    else
+                        replacements.Add(searchString, replaceString);
+                        if (replacement[DBReplacements.cTagEnabled])
+                            tags.Add(searchString);
                 }
-                MPTVSeriesLog.Write("Finished Compiling Replacement Expressions, found " + (replacementRegexBefore.Count + replacementRegexAfter.Count).ToString() + " valid expressions");
-                
                 return error;
             }
             catch (Exception ex)
@@ -169,20 +151,6 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Error loading String Replacements: " + ex.Message);
                 return false;
             }
-        }
-
-        string RunReplacements(Dictionary<Regex, string> replacements, string runAgainst)
-        {
-            foreach (var replacement in replacements)
-            {
-                if (replacement.Key.IsMatch(runAgainst)
-                    && tags.Contains(replacement.Key.ToString()))
-                {
-                    m_Tags.Add(replacement.Key.ToString());
-                }
-                runAgainst = replacement.Key.Replace(runAgainst, replacement.Value);
-            }
-            return runAgainst;
         }
 
         public FilenameParser(string filename)
@@ -197,10 +165,16 @@ namespace WindowPlugins.GUITVSeries
 
                 int index = 0;
 
-                //m_FileNameAfterReplacement = m_Filename.ToLower();
+                m_FileNameAfterReplacement = m_Filename.ToLower();
                 // run Before replacements
-                m_FileNameAfterReplacement = RunReplacements(replacementRegexBefore, m_Filename);
-                
+                foreach (KeyValuePair<string, string> replacement in replacementsBefore)
+                {
+                    if (m_Filename.ToLower().IndexOf(replacement.Key) != -1
+                        && tags.Contains(replacement.Key) && !m_Tags.Contains(replacement.Key))
+                        m_Tags.Add(replacement.Key);
+                    m_FileNameAfterReplacement = m_FileNameAfterReplacement.Replace(replacement.Key, replacement.Value);
+                }
+                    
                 foreach(Regex regularExpression in regularExpressions)
                 {
                     Match matchResults;
@@ -216,7 +190,13 @@ namespace WindowPlugins.GUITVSeries
                             if (GroupValue.Length > 0 && GroupName != "unknown")
                             {
                                 // ´run after replacements on captures
-                                GroupValue = RunReplacements(replacementRegexAfter, GroupValue);
+                                foreach (KeyValuePair<string, string> replacement in replacements)
+                                {
+                                    if (m_FileNameAfterReplacement.IndexOf(replacement.Key) != -1 
+                                        && tags.Contains(replacement.Key) && !m_Tags.Contains(replacement.Key))
+                                        m_Tags.Add(replacement.Key);
+                                    GroupValue = GroupValue.Replace(replacement.Key, replacement.Value);
+                                }
 
                                 GroupValue = GroupValue.Trim();
                                 m_Matches.Add(GroupName, GroupValue);

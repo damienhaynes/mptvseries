@@ -36,19 +36,6 @@ namespace WindowPlugins.GUITVSeries
 {
     public class ImageAllocator
     {
-        enum ImageType
-        {
-            widebanner,
-            poster,
-        }
-
-        enum NewEpisodeThumbType
-        {
-            none,
-            unwatched,
-            recentlyadded
-        }
-
         static String s_sFontName;
         static List<String> s_SeriesImageList = new List<string>();
         static List<String> s_SeasonsImageList = new List<string>();
@@ -79,37 +66,6 @@ namespace WindowPlugins.GUITVSeries
             Font font = new Font(fontList.FontName, 36);
             gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             gph.DrawString(label, font, new SolidBrush(Color.FromArgb(200, Color.White)), 5, (sizeImage.Height - font.GetHeight()) / 2);
-            gph.Dispose();
-            return image;
-        }
-
-        /// <summary>
-        /// Drawing a 'NEW' stamp on top of an existing banner.
-        /// </summary>
-        /// <param name="origBanner">Location of the original banner.</param>
-        /// <returns>The new banner.</returns>
-        private static Bitmap drawNewBanner(string origBanner, ImageType type)
-        {
-            string newStampLocation = GUIGraphicsContext.Skin + @"\Media\tvseries_newlabel.png";
-            Bitmap image = new Bitmap(LoadImageFastFromFile(origBanner));
-            Graphics gph = Graphics.FromImage(image);
-
-            if (System.IO.File.Exists(newStampLocation))
-            {
-                Bitmap newStamp = new Bitmap(LoadImageFastFromFile(newStampLocation));
-                if (type == ImageType.poster)
-                    gph.DrawImage(newStamp, SkinSettings.PosterNewStampPosX, SkinSettings.PosterNewStampPosY);
-                else
-                    gph.DrawImage(newStamp, SkinSettings.WideBannerNewStampPosX, SkinSettings.WideBannerNewStampPosY);
-            }
-            else
-            {
-                gph.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), new Rectangle(((image.Width - 200) / 2), ((image.Height - 100) / 2), 200, 100));
-                GUIFont fontList = GUIFontManager.GetFont(s_sFontName);
-                Font font = new Font(fontList.FontName, 50);
-                gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                gph.DrawString("New", font, new SolidBrush(Color.FromArgb(200, Color.Red)), ((image.Width - 180) / 2), (image.Height - font.GetHeight()) / 2);
-            }
             gph.Dispose();
             return image;
         }
@@ -231,43 +187,18 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static String GetSeriesBanner(DBSeries series) {
-            string sFileName = series.Banner;;
-            string sTextureName = string.Empty;
-            
-            bool ShowNewImage = false;
+            String sFileName = series.Banner; ;
+            String sTextureName = string.Empty;        
 
-            NewEpisodeThumbType newEpisodeThumbType = (NewEpisodeThumbType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
-
-            if (newEpisodeThumbType == NewEpisodeThumbType.recentlyadded)
-            {
-                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes];
-            }
-            else if (newEpisodeThumbType == NewEpisodeThumbType.unwatched)
-            {
-                ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
-            }
-
-            if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) 
-            {
-                if (ShowNewImage)
-                {
-                    //make banner with new tag
-                    string ident = sFileName + "_new";
-                    sTextureName = buildMemoryImage(drawNewBanner(sFileName, ImageType.widebanner), ident, reqSeriesBannerSize, true);
-                }
+            if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) {
+                if (DBOption.GetOptions(DBOption.cAltImgLoading)) {
+                    // bypass memoryimagebuilder
+                    sTextureName = sFileName;
+                }               
                 else
-                {
-                    if (DBOption.GetOptions(DBOption.cAltImgLoading))
-                    {
-                        // bypass memoryimagebuilder
-                        sTextureName = sFileName;
-                    }
-                    else
-                        sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
-                }
+                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
             }
-            else 
-            {                
+            else {                
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
                 sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
@@ -280,40 +211,16 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static String GetSeriesPoster(DBSeries series) {
-            string sFileName = series.Poster;;
-            string sTextureName = string.Empty;
-
-            bool ShowNewImage = false;
-
-            NewEpisodeThumbType newEpisodeThumbType = (NewEpisodeThumbType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
-
-            if (newEpisodeThumbType == NewEpisodeThumbType.recentlyadded)
-            {
-                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes];
-            }
-            else if (newEpisodeThumbType == NewEpisodeThumbType.unwatched)
-            {
-                ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
-            }
-
+            String sFileName = series.Poster;;
+            String sTextureName = string.Empty;
+                
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) {
-
-                if (ShowNewImage)
-                {
-                    //make banner with new tag
-                    string ident = sFileName + "_new";
-                    sTextureName = buildMemoryImage(drawNewBanner(sFileName, ImageType.poster), ident, reqSeriesPosterSize, true);
+                if (DBOption.GetOptions(DBOption.cAltImgLoading)) {
+                    // bypass memoryimagebuilder
+                    sTextureName = sFileName;
                 }
                 else
-                {
-                    if (DBOption.GetOptions(DBOption.cAltImgLoading))
-                    {
-                        // bypass memoryimagebuilder
-                        sTextureName = sFileName;
-                    }
-                    else
-                        sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);
-                }
+                    sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);              
             }
             else {
                 // no image, use text, create our own

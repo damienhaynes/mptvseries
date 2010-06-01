@@ -191,26 +191,21 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
-        public const String cOnPlaySeriesOrSeasonAction = "OnPlaySeriesOrSeasonAction";
-
-        public const String cNewEpisodeThumbType = "NewEpisodeThumbType";
-
         public const String cLogLevel = "logLevel";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
-
-        private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
-
         
         static DBOption()
         {
             try
             {
-                SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                SQLiteResultSet results;
+                results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
                 if (results == null || results.Rows.Count == 0)
                 {
                     // no table, create it
-                    DBTVSeries.Execute(cCreateTableQuery);
+                    String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
+                    DBTVSeries.Execute(sQuery);
                 }
 
                 if (GetOptions(cConfig_LogCollapsed) == null)
@@ -518,15 +513,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
                     SetOptions(cCountEmptyAndFutureAiredEps, 1);
 
-                if (GetOptions(cOnPlaySeriesOrSeasonAction) == null)
-                    SetOptions(cOnPlaySeriesOrSeasonAction, 2); // set first unwatched as default
-
                 if (GetOptions(cLogLevel) == null)
                     SetOptions(cLogLevel, 0);
-
-                if (GetOptions(cNewEpisodeThumbType) == null)
-                    SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
-
             }
             catch (Exception ex)
             {
@@ -541,11 +529,13 @@ namespace WindowPlugins.GUITVSeries
                 if (!bTableUpdateDone)
                 {
                     bTableUpdateDone = true;
-                    SQLiteResultSet results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
+                    SQLiteResultSet results;
+                    results = DBTVSeries.Execute("SELECT name FROM sqlite_master WHERE name='options' and type='table' UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name");
                     if (results == null || results.Rows.Count == 0)                    
                     {
                         // no table, create it
-                        DBTVSeries.Execute(cCreateTableQuery);
+                        String sQuery = "CREATE TABLE options (option_id integer primary key, property text, value text);\n";
+                        DBTVSeries.Execute(sQuery);
                     }
                 }
             }

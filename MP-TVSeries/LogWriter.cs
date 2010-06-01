@@ -174,11 +174,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        static public void Write(String format, params object[] arg)
-        {
-            Write(string.Format(format, arg), LogLevel.Normal);
-        }
-
         /// <summary>
         /// Use this for Std. Log entries, only show up in LogLevel.Normal
         /// </summary>
@@ -196,14 +191,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_LogStream != null)
                 {
-                    if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey))
-                        entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
-
-                    String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
-
-                    // note: keep the lock block as small as possible
-                    // don't call anything from within that could potentially call for a logwrite itself, or we have a deadlock
-                    lock (m_LogStream) 
+                    lock (m_LogStream)
                     {
                         try
                         {
@@ -211,7 +199,12 @@ namespace WindowPlugins.GUITVSeries
                                 m_LogStream = File.AppendText(m_filename);
                             else
                                 m_LogStream = File.CreateText(m_filename);
-                                                        
+                            
+                            if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey) && entry.Contains(DBOnlineMirror.cApiKey))
+                                entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
+
+                            String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+                            
                             if (singleLine)
                                 m_LogStream.WriteLine(sPrefix + entry);
                             else

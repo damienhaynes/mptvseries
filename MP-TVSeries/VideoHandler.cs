@@ -192,9 +192,7 @@ namespace WindowPlugins.GUITVSeries
         void SetGUIProperties(bool clear)
         {
             DBSeries series = null;
-            if (!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
-            DBSeason season = null;
-            if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
+            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
 
             if (m_currentEpisode == null) return;
 
@@ -205,34 +203,10 @@ namespace WindowPlugins.GUITVSeries
                 MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
-            string osdImage = string.Empty;
-            //bool hiddenEpLogo = false;
-            foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoOSDImages)
-            {
-                switch (kvp.Key) 
-                {
-                    case "episode":
-                        if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
-                            osdImage = ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode));
-                        break;
-                    case "season":
-                        osdImage = season.Banner;
-                        break;
-                    case "series":
-                        osdImage = series.Poster;
-                        break;
-                    case "custom":
-                        string file = localLogos.getCleanAbsolutePath(kvp.Value);
-                        if (System.IO.File.Exists(file))
-                            osdImage = file;
-                        break;
-                }
-
-                osdImage = osdImage.Trim();
-                if (string.IsNullOrEmpty(osdImage)) continue;
-                else break;
-            }
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : osdImage);
+			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])                
+                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode)));
+			else
+				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : series.Poster);
 			
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
@@ -305,11 +279,12 @@ namespace WindowPlugins.GUITVSeries
                 listenToExternalPlayerEvents = true;
 
                 #region Publish Play properties for InfoService plugin
+                // InfoService plugin can parse this property to send to other services e.g. Twitter
                 string seriesName = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
                 string seasonID = m_currentEpisode[DBEpisode.cSeasonIndex];
                 string episodeID = m_currentEpisode[DBEpisode.cEpisodeIndex];
                 string episodeName = m_currentEpisode[DBEpisode.cEpisodeName];
-                GUIPropertyManager.SetProperty("#TVSeries.Extended.Title", string.Format("{0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                GUIPropertyManager.SetProperty("#TVSeries.Extended.Title",string.Format("{0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
                 MPTVSeriesLog.Write(string.Format("#TVSeries.Extended.Title: {0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
                 #endregion
 

@@ -31,7 +31,6 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Threading;
-using System.Linq;
 using System.Text.RegularExpressions;
 using MediaPortal.Dialogs;
 using MediaPortal.Util;
@@ -40,6 +39,7 @@ using System.Windows.Forms;
 using SQLite.NET;
 using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
+using WindowPlugins.GUITVSeries.Local_Parsing_Classes;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
 using SubtitleDownloader.Core;
@@ -109,6 +109,7 @@ namespace WindowPlugins.GUITVSeries
             }
             this.Resize += new EventHandler(ConfigurationForm_Resize);
             Download.Monitor.Start(this);
+            panel_manualEpisodeManagement.SetOwner(this);
 
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
@@ -178,12 +179,11 @@ namespace WindowPlugins.GUITVSeries
             textBox_dblocation.Text = Settings.GetPath(Settings.Path.database);
 
             //this.comboLogLevel.SelectedIndex = 0;
-            //this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = 2;
-
             this.splitContainer2.Panel1.SizeChanged += new EventHandler(Panel1_SizeChanged);
             m_paneListSettings.Add(panel_ImportPathes);
             m_paneListSettings.Add(panel_StringReplacements);            
-            m_paneListSettings.Add(panel_Expressions);
+            m_paneListSettings.Add(panel_Expressions);            
+            m_paneListSettings.Add(panel_manualEpisodeManagement);
 
             foreach (Control pane in m_paneListSettings)
             {
@@ -391,7 +391,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             comboOnlineLang_DropDown(comboOnlineLang, new EventArgs());
-            
+
             LoadViews();
 			// Select First Item in list
 			if (_availViews.Items.Count > 0)
@@ -402,8 +402,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.pauseAutoWriteDB = false;
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
-            this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
-            this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
             
 			LoadNewsSearches();
 
@@ -490,7 +488,7 @@ namespace WindowPlugins.GUITVSeries
                 columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 columnRemovable.ToolTipText = @"Enable this option to treat this path as removable e.g. CD\DVD-ROM, USB Drive.";
                 dataGridView_ImportPathes.Columns.Add(columnRemovable);
-
+               
                 DataGridViewCheckBoxColumn columnKeepReference = new DataGridViewCheckBoxColumn();
                 columnKeepReference.Name = "keep_references";
                 columnKeepReference.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -506,7 +504,7 @@ namespace WindowPlugins.GUITVSeries
             DBImportPath[] importPathes = DBImportPath.GetAll();
 
             dataGridView_ImportPathes.Rows.Clear();
-
+            
             if (importPathes != null && importPathes.Length > 0)
             {
                 dataGridView_ImportPathes.Rows.Add(importPathes.Length);
@@ -515,7 +513,7 @@ namespace WindowPlugins.GUITVSeries
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
                     row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
                     row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
-
+                    
                     if (row.Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
                     {
                         row.Cells[DBImportPath.cKeepReference].Value = false;
@@ -528,7 +526,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
-            }
+            }              
         }
 
         private void LoadExpressions()
@@ -601,7 +599,8 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewCheckBoxColumn columnTagEnabled = new DataGridViewCheckBoxColumn();
                 columnTagEnabled.Name = DBReplacements.cTagEnabled;
                 columnTagEnabled.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cTagEnabled);
-                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;                
+                columnTagEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+                
                 dataGridView_Replace.Columns.Add(columnTagEnabled);
 
                 DataGridViewCheckBoxColumn columnBefore = new DataGridViewCheckBoxColumn();
@@ -609,12 +608,6 @@ namespace WindowPlugins.GUITVSeries
                 columnBefore.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cBefore);
                 columnBefore.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_Replace.Columns.Add(columnBefore);
-
-                DataGridViewCheckBoxColumn columnRegex = new DataGridViewCheckBoxColumn();
-                columnRegex.Name = DBReplacements.cIsRegex;
-                columnRegex.HeaderText = DBReplacements.PrettyFieldName(DBReplacements.cIsRegex);
-                columnRegex.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                dataGridView_Replace.Columns.Add(columnRegex);
 
                 DataGridViewTextBoxColumn columnToReplace = new DataGridViewTextBoxColumn();
                 columnToReplace.Name = DBReplacements.cToReplace;
@@ -648,7 +641,6 @@ namespace WindowPlugins.GUITVSeries
                 row.Cells[DBReplacements.cBefore].Value = (Boolean)replacement[DBReplacements.cBefore];
                 row.Cells[DBReplacements.cToReplace].Value = (String)replacement[DBReplacements.cToReplace];
                 row.Cells[DBReplacements.cWith].Value = (String)replacement[DBReplacements.cWith];
-                row.Cells[DBReplacements.cIsRegex].Value = (Boolean)replacement[DBReplacements.cIsRegex];
             }
         }
 
@@ -910,8 +902,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
         
-        #region Import Path Handling
-        
+        #region Import Handling
         private void dataGridView_ImportPathes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             DBImportPath importPath = new DBImportPath();
@@ -928,16 +919,16 @@ namespace WindowPlugins.GUITVSeries
             }
             importPath.Commit();
         }
-
+        
         private void dataGridView_ImportPathes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Note: Clicking on checkboxes does not trigger the _CellValueChanged event
-
+                         
             if (e.RowIndex < 0)
                 return;
-
+            
             DataGridViewCell cell = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
+            
             // Allow user to delete the row when disabling the 'enabled' checkbox
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cEnabled].Index)
             {
@@ -951,9 +942,9 @@ namespace WindowPlugins.GUITVSeries
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = false;
                         // Prompt to delete the selected 'Import Path'
                         if (MessageBox.Show("Do you want to remove this Import Path?", "Import Paths", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);                        
                     }
-                    else
+                    else 
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
                 }
                 else
@@ -961,7 +952,7 @@ namespace WindowPlugins.GUITVSeries
                     // Set default values of cells for new rows
                     // we do this so if user keeps adding empty rows, it wont throw an exception when removed
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                    
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
@@ -974,12 +965,12 @@ namespace WindowPlugins.GUITVSeries
                     string sEnabled = cell.Value.ToString();
                     if (sEnabled == "True")
                     {
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;                        
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = false;
                     }
                     else
                     {
-                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                        
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                         dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = true;
                     }
@@ -987,12 +978,12 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
+                    dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;                    
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
                 }
             }
-
+            
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cKeepReference].Index)
             {
                 if (!cell.ReadOnly)
@@ -1021,7 +1012,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-
+            
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
             {
                 // Determine if user clicked on the last row, (manually add new row)
@@ -1037,27 +1028,24 @@ namespace WindowPlugins.GUITVSeries
                     dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
                     bNewRow = true;
                 }
-
+                
                 AddImportPathPopup importPathPopup = new AddImportPathPopup();
 
                 // If Path is defined, set path to default in folder browser dialog
                 if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     importPathPopup.SelectedPath = dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-
+                
                 // Open Folder Browser Dialog 
                 importPathPopup.Owner = this;
                 DialogResult result = importPathPopup.ShowDialog();
-                if (result == DialogResult.Cancel)
-                {
+                if (result == DialogResult.Cancel) {
                     // Delete this row if user didnt select a path
                     if (bNewRow)
                         dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                     return;
                 }
-                if (result == DialogResult.OK)
-                {
-                    if (!Directory.Exists(importPathPopup.SelectedPath))
-                    {
+                if (result == DialogResult.OK) {
+                    if (!Directory.Exists(importPathPopup.SelectedPath)) {
                         MessageBox.Show("Import path entered does not exist or is invalid.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (bNewRow)
                             dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
@@ -1269,17 +1257,11 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Test Parsing Handling
-        private void button_TestReparse_Click(object sender, EventArgs e)
-        {
-            TestParsing_Start(true);
-        }
-
         void TestParsing_FillList(List<parseResult> results)
         {
             listView_ParsingResults.SuspendLayout();
             //IComparer sorter = listView_ParsingResults.ListViewItemSorter;
             listView_ParsingResults.ListViewItemSorter = null;
-
             foreach (parseResult progress in results)
             {
                 foreach (KeyValuePair<String, String> MatchPair in progress.parser.Matches)
@@ -1360,14 +1342,17 @@ namespace WindowPlugins.GUITVSeries
             }
 
         }
-        void TestParsing_LocalParseCompleted(IList<parseResult> results)
+
+        void TestParsing_LocalParseCompleted(List<parseResult> results)
         {
             MPTVSeriesLog.Write("Parsing test completed");
-            TestParsing_FillList(results.ToList<parseResult>());            
+            TestParsing_FillList(results);
+            this.progressBar_Parsing.Value = 100;
         }
 
         void TestParsing_LocalParseProgress(int nProgress, List<parseResult> results)
-        {            
+        {
+            this.progressBar_Parsing.Value = nProgress;
             TestParsing_FillList(results);
         }
 
@@ -1415,191 +1400,22 @@ namespace WindowPlugins.GUITVSeries
             runner.AsyncFullParse();
         }
 
-        #endregion
-
-        #region ImportWizard
-
-        private ImportWizard ParsingWizardHost;
-        private ImportPanelParsing ParsingWizardParsingPage;
-        private ImportPanelSeriesID ParsingWizardSeriesIDPage;
-        private ImportPanelEpID ParsingWizardEpIDPage;
-        private ImportPanelProgress ParsingWizardProgress;
-
-        private CParsingParameters ImportWizardParseParams;
-
-        private void buttonStartImport_Click(object sender, EventArgs e)
+        // lanches the manual parse dialog
+        private void manuallyAddEpisodeMI_Click(object sender, EventArgs e)
         {
-            if (m_parser != null)
+            foreach (ListViewItem currItem in listView_ParsingResults.SelectedItems)
             {
-                AbortImport();
-            }
-            else
-                StartImport();
-        }
+                string filename = currItem.SubItems["FullFileName"].Text;
 
-        public void AbortImport()
-        {
-            if (m_parser != null)
-            {
-                m_parser.Cancel();               
+                ManualParseDialog parseDialog = new ManualParseDialog(filename);
+                DialogResult result = parseDialog.ShowDialog(this);
+
+                // refresh the tree socanges are visible
+                if (result == DialogResult.OK)
+                    this.LoadTree();
             }
 
-            // remove the progress page
-            ImportWizard ipp = null;
-            foreach (var control in this.tabPage_Import.Controls)
-            {
-                if (control is ImportWizard)
-                {
-                    ipp = control as ImportWizard;
-                    break;
-                }
-            }
-
-            if (ipp != null)
-                this.tabPage_Import.Controls.Remove(ipp);
         }
-
-        private void StartImport()
-        {
-            ImportWizardParseParams = new CParsingParameters(true, true);
-
-            if (m_parser == null)
-            {
-                // refresh regex and replacements
-                FilenameParser.reLoadExpressions();
-
-                ParsingWizardHost = new ImportWizard(this);
-                ParsingWizardParsingPage = new ImportPanelParsing();
-                ParsingWizardSeriesIDPage = new ImportPanelSeriesID();
-                ParsingWizardEpIDPage = new ImportPanelEpID();
-                ParsingWizardProgress = new ImportPanelProgress();                
-
-                tabPage_Import.Controls.Add(ParsingWizardHost);
-                ParsingWizardHost.Dock = DockStyle.Fill;
-                ParsingWizardHost.BringToFront();
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-
-                // now have it host the the initial parsing page                 
-                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
-                ParsingWizardHost.AddSleepingDetailsPanel(ParsingWizardEpIDPage);                
-
-                // and fire off work on that page
-                ParsingWizardParsingPage.Init();
-                ParsingWizardParsingPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedLocalParsing);               
-            }
-        }
-
-        #region Import Wizard Events
-
-        private void ImportWizard_OnFinishedLocalParsing(UserInputResults values, UserFinishedRequestedAction reqAction)
-        {
-            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
-            if (reqAction == UserFinishedRequestedAction.Next)
-            {
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
-
-                // show the seriesIdentification Page
-                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
-                ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
-
-                ParsingWizardSeriesIDPage.SeriesGridPopulated += new ImportPanelSeriesID.SeriesGridPopulatedDelegate(ImportWizard_OnSeriesGridPopulated);
-                ParsingWizardSeriesIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
-
-                ParsingWizardSeriesIDPage.Init(values.ParseResults);                                
-            }
-        }
-
-        private void ImportWizard_OnFinishedSeriesID(UserInputResults inputResults, UserFinishedRequestedAction requestAction)
-        {
-            ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
-
-            if (requestAction == UserFinishedRequestedAction.Next)
-            {
-                m_parser = new OnlineParsing(this);
-
-                // and give it to the wizard
-                ParsingWizardHost.Init(m_parser);
-
-                // now show generic progress details (remove seriesIDPage)
-                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);                                
-                ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
-                ParsingWizardProgress.Init(m_parser);
-
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
-
-                ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);
-
-                // only now do we set up the parser itself and fire it off
-                ImportWizardParseParams.m_userInputResult = inputResults;
-
-                // this will be requested by the the parsing engine at the appropriate time
-                ImportWizardParseParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
-                ImportWizardParseParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
-
-                ParsingWizardEpIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedEditingEpisodes);
-
-                // finally fire it off
-                m_timingStart = DateTime.Now;
-                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
-                m_parser.Start(ImportWizardParseParams);
-            }
-            else if (requestAction == UserFinishedRequestedAction.Prev)
-            {
-                // unregister events
-                ParsingWizardSeriesIDPage.UserFinishedEditing -= new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
-                ParsingWizardSeriesIDPage.SeriesGridPopulated -= new ImportPanelSeriesID.SeriesGridPopulatedDelegate(ImportWizard_OnSeriesGridPopulated);
-
-                // remove existing panel and show previous one
-                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
-                ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
-                ParsingWizardParsingPage.Init();
-                ParsingWizardSeriesIDPage.ClearResults();                                
-            }     
-        }
-
-        private void ImportWizard_OnSeriesGridPopulated()
-        {
-            // user can now go forwards or back
-            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, true);
-            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, true);
-        }
-
-        private void ImportWizard_OnFinishedEditingEpisodes(UserInputResults inputResults, UserFinishedRequestedAction requestAction)
-        {
-            switch (requestAction)
-            {
-                case UserFinishedRequestedAction.Cancel:
-                    m_parser.Cancel();
-                    break;
-
-                case UserFinishedRequestedAction.Next:
-                    ParsingWizardHost.RemoveDetailsPanel(ParsingWizardEpIDPage);
-                    ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
-                    ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
-                    break;
-
-                case UserFinishedRequestedAction.ShowMe:
-                    // it was requested, tell the progress wizard to show it
-                    ParsingWizardHost.RemoveDetailsPanel(ParsingWizardProgress);
-                    ParsingWizardHost.ShowDetailsPanel(ParsingWizardEpIDPage);
-                    ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
-                    ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, true);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        private void ImportWizard_OnFinished(object sender, EventArgs e)
-        {
-            // user clicked finished (can only do this after import wizard is complete)
-            this.tabPage_Import.Controls.Remove(ParsingWizardHost);
-        }
-        #endregion
 
         #endregion
 
@@ -1615,23 +1431,34 @@ namespace WindowPlugins.GUITVSeries
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
 
+                button_Start.Text = "Abort";
+                m_timingStart = DateTime.Now;
                 m_parser = new OnlineParsing(this);
-                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+                m_parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(runner_OnlineParsingProgress);
+                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(runner_OnlineParsingCompleted);
                 m_parser.Start(parsingParams);
             }
         }
 
-        private void OnlineParsing_OnCompleted(bool bDataUpdated)
+        void runner_OnlineParsingProgress(int nProgress)
         {
+            this.progressBar_Parsing.Value = nProgress;
+        }
+
+        void runner_OnlineParsingCompleted(bool bDataUpdated)
+        {
+            this.progressBar_Parsing.Value = 100;
             TimeSpan span = DateTime.Now - m_timingStart;
-            MPTVSeriesLog.Write("Parsing Completed in " + span);           
+            MPTVSeriesLog.Write("Parsing Completed in " + span);
+            button_Start.Text = "Start Import";
+            button_Start.Enabled = true;
             m_parser = null;
             DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();
-        }        
+        }
 
-        #region Series Details Tab Handling
+        #region Series treeview handling
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
             this.dataGridView1.SuspendLayout();
@@ -1737,7 +1564,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonID:
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
-                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                case DBOnlineEpisode.cAbsoluteNumber:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -2074,19 +1901,6 @@ namespace WindowPlugins.GUITVSeries
             //////////////////////////////////////////////////////////////////////////////
         }
 
-        private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            foreach (Control pane in m_paneListSettings)
-            {
-                if (pane.Name == e.Node.Name)
-                {
-                    pane.Visible = true;
-                }
-                else
-                    pane.Visible = false;
-            }
-        }
-
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue)
         {
             AddPropertyBindingSource(FieldPrettyName, FieldName, FieldValue, true, DataGridViewContentAlignment.MiddleLeft);
@@ -2099,28 +1913,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue, bool CanModify, DataGridViewContentAlignment TextAlign)
         {
-            int id = -1;
-            // are we a user_edited item? if so replace the orig entry
-            if (FieldName.EndsWith(DBTable.cUserEditPostFix))
-            {
-                // except if the content is empty, then we just dont display it
-                if (string.IsNullOrEmpty(FieldValue)) return;
-                string origFieldName = FieldName.Replace(DBTable.cUserEditPostFix, "");
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    if (dataGridView1.Rows[i].Cells[1].Tag as string == origFieldName)
-                    {
-                        id = i;
-                        break;
-                    }
-
-                }
-            }
-            if(id < 0)
-            {
-                // Add new Row
-                id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
-            } this.dataGridView1.Rows[id].Cells[1].Value = FieldValue; // we just edit the value
+            // Add new Row
+            int id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
 
             // First Column (Name)
             DataGridViewCell cell = this.dataGridView1.Rows[id].Cells[0];
@@ -2137,7 +1931,6 @@ namespace WindowPlugins.GUITVSeries
             }
 
             cell.Style.Alignment = TextAlign;
-
         }
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -2167,34 +1960,65 @@ namespace WindowPlugins.GUITVSeries
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
             if (nodeEdited != null)
             {
-                string field = (string)cell.Tag;
-                if (!field.EndsWith(DBTable.cUserEditPostFix))
-                    field += DBTable.cUserEditPostFix;
                 switch (nodeEdited.Name)
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        series[field] = (String)cell.Value;
+                        series[(String)cell.Tag] = (String)cell.Value;
                         series.Commit();
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
-                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
+                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
                         break;
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeEdited.Tag;
-                        season[field] = (String)cell.Value;
+                        season[(String)cell.Tag] = (String)cell.Value;
                         season.Commit();
                         break;
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        episode[field] = (String)cell.Value;
+                        episode[(String)cell.Tag] = (String)cell.Value;
                         episode.Commit();
                         if (episode[DBEpisode.cEpisodeName].ToString().Length > 0)
                             nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
                         break;
                 }
             }
+        }
+        #endregion
+
+        #region UI actions
+
+        private void treeView_Settings_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            foreach (Control pane in m_paneListSettings)
+            {
+                if (pane.Name == e.Node.Name)
+                {
+                    pane.Visible = true;
+                }
+                else
+                    pane.Visible = false;
+            }
+
+            // special behavior for some nodes         
+            if (e.Node.Name == this.panel_manualEpisodeManagement.Name)
+                panel_manualEpisodeManagement.refreshFileList();
+        }
+
+        private void button_Start_Click(object sender, EventArgs e)
+        {
+            if (m_parser != null) {
+                m_parser.Cancel();
+                button_Start.Enabled = false;
+            } else
+                Parsing_Start();
+        }
+
+        private void button_TestReparse_Click(object sender, EventArgs e)
+        {
+            TestParsing_Start(true);
         }
         #endregion
 
@@ -4640,8 +4464,6 @@ namespace WindowPlugins.GUITVSeries
                     val += ";";
                     val += (int)replacement[DBReplacements.cTagEnabled];
                     val += ";";
-                    val += (int)replacement[DBReplacements.cIsRegex];
-                    val += ";";
                     val += (String)replacement[DBReplacements.cToReplace];
                     val += ";";
                     val += (String)replacement[DBReplacements.cWith];                    
@@ -4666,7 +4488,7 @@ namespace WindowPlugins.GUITVSeries
                 StreamReader r = new StreamReader(fd.FileName);
                 DBReplacements replacement;
 
-                // Dialog box to make sure they want to clear out current replacements to import new ones.
+                //Dialog box to make sure they want to clear out current replacements to import new ones.
                 if (DialogResult.Yes ==
                     MessageBox.Show("You are about to delete all current string replacements," + Environment.NewLine +
                         "and replace them with the imported file." + Environment.NewLine + Environment.NewLine +
@@ -4680,13 +4502,11 @@ namespace WindowPlugins.GUITVSeries
                 string[] parts;
                 int index = 0;
 
-                // read file and import into database
+                // now set watched for all in file
                 while ((line = r.ReadLine()) != null) {
                     char[] c = { ';' };
-                    parts = line.Split(c, 6);
-                    
-                    // support older relacements file 
-                    if (parts.Length < 5 || parts.Length > 6) continue;
+                    parts = line.Split(c, 5);
+                    if (parts.Length != 5) continue;
 
                     replacement = new DBReplacements();                   
                     replacement[DBReplacements.cIndex] = index;
@@ -4694,18 +4514,10 @@ namespace WindowPlugins.GUITVSeries
                     if (Convert.ToInt32(parts[0]) == 0 || Convert.ToInt32(parts[0]) == 1) replacement[DBReplacements.cEnabled] = parts[0]; else continue;
                     if (Convert.ToInt32(parts[1]) == 0 || Convert.ToInt32(parts[1]) == 1) replacement[DBReplacements.cBefore] = parts[1]; else continue;
                     if (Convert.ToInt32(parts[2]) == 0 || Convert.ToInt32(parts[2]) == 1) replacement[DBReplacements.cTagEnabled] = parts[2]; else continue;
-                    
-                    // handle upgrade, first version does not contain IsRegEx part
-                    if (parts.Length == 6) {
-                        if (Convert.ToInt32(parts[3]) == 0 || Convert.ToInt32(parts[3]) == 1) replacement[DBReplacements.cIsRegex] = parts[3]; else continue;
-                        replacement[DBReplacements.cToReplace] = parts[4];
-                        replacement[DBReplacements.cWith] = parts[5];
-                    }
-                    else {
-                        replacement[DBReplacements.cIsRegex] = "0";
-                        replacement[DBReplacements.cToReplace] = parts[3];
-                        replacement[DBReplacements.cWith] = parts[4];
-                    }
+
+                    replacement[DBReplacements.cToReplace] = parts[3];
+                    replacement[DBReplacements.cWith] = parts[4];
+
                     if (replacement.Commit()) index++;
                 }
 
@@ -4751,16 +4563,6 @@ namespace WindowPlugins.GUITVSeries
             if (e.Button == MouseButtons.Right) {
                 treeView_Library.SelectedNode = treeView_Library.GetNodeAt(e.X, e.Y);
             } 
-        }
-
-        private void cbOnPlaySeriesOrSeasonAction_SelectedIndexChanged(object sender, EventArgs e) {
-            // index must match enum OnPlaySeriesOrSeasonAction
-            DBOption.SetOptions(DBOption.cOnPlaySeriesOrSeasonAction, cbOnPlaySeriesOrSeasonAction.SelectedIndex);
-        }
-
-        private void cbNewEpisodeThumbIndicator_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cNewEpisodeThumbType, cbNewEpisodeThumbIndicator.SelectedIndex);
         }
     }
     

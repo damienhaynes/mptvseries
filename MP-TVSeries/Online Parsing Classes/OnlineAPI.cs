@@ -122,7 +122,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static public XmlNode UpdateSeries(String sSeriesID)
     { return UpdateSeries(sSeriesID, true); }
-
+    
     static public XmlNode UpdateSeries(String sSeriesID, String languageID)
     { return UpdateSeries(sSeriesID, languageID, true); }
 
@@ -131,7 +131,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       int series = Int32.Parse(sSeriesID);
       return getFromCache(series, SelLanguageAsString + ".xml");
     }
-
+    
     static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
     {
         int series = Int32.Parse(sSeriesID);
@@ -205,7 +205,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return getFromCache(seriesID, "banners.xml");
     }
 
-    static public string DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
+    static public bool DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
     {
         WebClient webClient = new WebClient();
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
@@ -220,14 +220,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 MPTVSeriesLog.Write("Downloading new Image from: " + fullURL,MPTVSeriesLog.LogLevel.Debug);
                 webClient.DownloadFile(fullURL, fullLocalPath);
-                return fullLocalPath;
             }
-            return string.Empty;
+            return true;
         }
         catch (WebException)
         {
             MPTVSeriesLog.Write("Banner download failed (" + fullURL + ") to " + fullLocalPath);           
-            return string.Empty;
+            return false;
         }
     }
 
@@ -279,17 +278,17 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       }
       return false;
     }
-
+    
     static XmlNode getFromCache(int seriesID, string elemName)
     {
-        return getFromCache(seriesID, true, elemName, SelLanguageAsString);
+      return getFromCache(seriesID, true, elemName, SelLanguageAsString);
     }
-
+    
     static XmlNode getFromCache(int seriesID, string elemName, string languageID)
     {
         return getFromCache(seriesID, true, elemName, languageID);
     }
-
+        
     static XmlNode getFromCache(int seriesID, bool first, string elemName, string languageID)
     {
       if (zipCache.ContainsKey(seriesID))
@@ -301,7 +300,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           return d[elemName];
         }
       }
-      
+            
       if (first)
       {
         Generic(string.Format(apiURIs.FullSeriesUpdate,
