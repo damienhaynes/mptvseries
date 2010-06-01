@@ -1825,7 +1825,7 @@ namespace WindowPlugins.GUITVSeries
                             // we don't have this file - yet. If downloaders are available, show the download pages
                             ShowDownloadMenu(m_SelectedEpisode);
                         }
-                        else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay))
+                        else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled))
                         {
                             ShowSubtitleMenu(m_SelectedEpisode, true);
                         }
@@ -4556,7 +4556,9 @@ namespace WindowPlugins.GUITVSeries
             }
             pushFieldsToSkin(m_SelectedEpisode, "Episode");
 
-            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest		
+            // Load Fanart for Selected Series, might be in Episode Only View e.g. Recently Added, Latest
+            if (m_SelectedSeries == null) return;
+
 			m_FanartItem = m_SelectedSeries;
 			if (DBOption.GetOptions(DBOption.cFanartRandom)) {
                 // We should update fanart as soon as new series is selected or
