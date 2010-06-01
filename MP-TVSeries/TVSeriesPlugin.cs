@@ -5266,7 +5266,7 @@ namespace WindowPlugins.GUITVSeries
                 // we don't have this file - yet. If downloaders are available, show the download pages
                 ShowDownloadMenu(m_SelectedEpisode);
             }
-            else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay)) {
+            else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled)) {
                 ShowSubtitleMenu(m_SelectedEpisode, true);
             }
             else
