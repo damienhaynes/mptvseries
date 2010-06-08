@@ -197,6 +197,12 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cLogLevel = "logLevel";
 
+        public const String cSubCentralEnabled = "SubCentralEnabled";
+
+        public const String cSubCentralEnabledForEpisodes = "SubCentralEnabledForEpisodes";
+
+        public const String cUseFullNameInSubDialog = "UseFullNameInSubDialog";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -526,6 +532,15 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cNewEpisodeThumbType) == null)
                     SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
+
+                if (GetOptions(cSubCentralEnabled) == null)
+                    SetOptions(cSubCentralEnabled, true);
+
+                if (GetOptions(cSubCentralEnabledForEpisodes) == null)
+                    SetOptions(cSubCentralEnabledForEpisodes, true);
+
+                if (GetOptions(cUseFullNameInSubDialog) == null)
+                    SetOptions(cUseFullNameInSubDialog, false);
 
             }
             catch (Exception ex)

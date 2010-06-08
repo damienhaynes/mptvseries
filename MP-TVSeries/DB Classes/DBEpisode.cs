@@ -88,6 +88,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cLocalPlaytime = "localPlaytime";
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
         public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
+        public const String cFilenameWOPathAndExtension = "EpisodeFilenameWithoutPathAndExtension";
         public const String cExtension = "ext";
 
         public const String cIsOnRemovable = "Removable";
@@ -546,15 +547,35 @@ namespace WindowPlugins.GUITVSeries
         public bool checkHasSubtitles(bool useMediaInfo)
         {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
+
+            int textCount = -1;
+            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
+                textCount = (int)this["TextCount"];
+
+            if (DBOption.GetOptions(DBOption.cSubCentralEnabled) && DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes) && Helper.IsSubCentralAvailableAndEnabled)
+            {
+                MPTVSeriesLog.Write(string.Format("Using SubCentral for checkHasSubtitles(), useMediaInfo = {0}, textCount = {1}", useMediaInfo.ToString(), textCount.ToString()), MPTVSeriesLog.LogLevel.Debug);
+                List<FileInfo> fiFiles = new List<FileInfo>();
+                fiFiles.Add(new FileInfo(this[DBEpisode.cFilename]));
+                bool result = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles(fiFiles, false, textCount, !useMediaInfo);
+                MPTVSeriesLog.Write(string.Format("SubCentral returned {0}", result.ToString()), MPTVSeriesLog.LogLevel.Debug);
+                return result;
+            }
+
             fillSubTitleExtensions();
 
+            if (textCount > 0)
+                return true;
+
             // Read MediaInfo for embedded subtitles
+            /*
             if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
             {
                 if ((int)this["TextCount"] > 0) 
                     return true;
             }
-
+            */
+            
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {
@@ -859,20 +880,22 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-
                 switch (fieldName)
                 {
                     case cFileSizeBytes:
                         return System.IO.File.Exists(base[DBEpisode.cFilename]) ? new System.IO.FileInfo(base[DBEpisode.cFilename]).Length : 0;
                     case cFileSize:
-                        return  StrFormatByteSize(this[cFileSizeBytes]);
+                        return StrFormatByteSize(this[cFileSizeBytes]);
                     case cAvailableSubtitles:
                         return (this[cAvailableSubtitles] = checkHasSubtitles());
                     case cPrettyPlaytime:
                         return Helper.MSToMMSS(this["localPlaytime"]);
                     case cFilenameWOPath:
                         return System.IO.Path.GetFileName(this[cFilename]);
+                    case cFilenameWOPathAndExtension:
+                        return System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
                         }
+
                 // online data always takes precedence over the local file data
                 if (m_onlineEpisode != null)
                 {

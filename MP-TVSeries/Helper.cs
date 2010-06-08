@@ -29,6 +29,7 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using MediaPortal.Ripper;
 using System.Globalization;
+using System.Reflection;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -512,6 +513,50 @@ namespace WindowPlugins.GUITVSeries
             char[] a = s.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
+        }
+
+        #endregion
+
+        #region Assembly methods
+        public static bool IsAssemblyAvailable(string name, Version ver) {
+            bool result = false;
+
+            MPTVSeriesLog.Write(string.Format("Checking weather assembly {0} is available and loaded...", name), MPTVSeriesLog.LogLevel.Debug);
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly a in assemblies)
+                if (a.GetName().Name == name && a.GetName().Version >= ver) {
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
+                    result = true;
+                    break;
+                }
+
+            if (!result) {
+                MPTVSeriesLog.Write(string.Format("Assembly {0} is not loaded (not available?), trying to load it manually...", name), MPTVSeriesLog.LogLevel.Debug);
+                try {
+                    //Assembly assembly = AppDomain.CurrentDomain.Reflection(new AssemblyName(name));
+                    Assembly assembly = Assembly.ReflectionOnlyLoad(name);
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded successfully.", name), MPTVSeriesLog.LogLevel.Debug);
+                    result = true;
+                }
+                catch (Exception e) {
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is unavailable, load unsuccessful: {1}:{2}", name, e.GetType(), e.Message), MPTVSeriesLog.LogLevel.Debug);
+                }
+            }
+
+            return result;
+        }
+
+        public static bool IsPluginEnabled(string name) {
+            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings()) {
+                return xmlreader.GetValueAsBool("plugins", name, false);
+            }
+        }
+
+        public static bool IsSubCentralAvailableAndEnabled {
+            get {
+                return Helper.IsAssemblyAvailable("SubCentral", new Version(1, 0, 0, 0)) && IsPluginEnabled("SubCentral");
+            }
         }
 
         #endregion
