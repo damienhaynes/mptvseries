@@ -209,7 +209,6 @@ namespace WindowPlugins.GUITVSeries
             checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
             checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImport_ScanRemoteShare);
             nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse);
-            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
 
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
@@ -407,12 +406,30 @@ namespace WindowPlugins.GUITVSeries
             
 			LoadNewsSearches();
 
-            if (DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled))
+            subtitleDownloader_enabled.Checked = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+            subtitleDownloader_enabled_CheckedChanged(this, new EventArgs());
+            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
+            checkBox_UseFullNameInSubDialog.Checked = DBOption.GetOptions(DBOption.cUseFullNameInSubDialog);
+
+            checkBox_EnableSubCentral.Checked = DBOption.GetOptions(DBOption.cSubCentralEnabled);
+            checkBoxEnableSubCentral_CheckedChanged(this, new EventArgs());
+            checkBox_EnableSubCentralForEpisodes.Checked = DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes);
+
+            int checkBoxesY = 145;
+            if (!Helper.IsSubCentralAvailableAndEnabled)
             {
-                subtitleDownloader_enabled.Checked = true;
+                checkBox_EnableSubCentral.Checked = false;
+                checkBox_EnableSubCentralForEpisodes.Checked = false;
+                checkBox_EnableSubCentral.Visible = false;
+                checkBox_EnableSubCentralForEpisodes.Visible = false;
+
+                subtitleDownloader_enabled.Top = 7;
+                checkBox_SubDownloadOnPlay.Top = 30;
+                checkBox_UseFullNameInSubDialog.Top = 53;
+                checkBoxesY = 99;
             }
 
-            int endsY = DrawSubtitleDownloaderCheckBoxes();
+            int endsY = DrawSubtitleDownloaderCheckBoxes(checkBoxesY);
             DrawSubtitleLanguageCheckBoxes(endsY);
         }
 
@@ -792,11 +809,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private int DrawSubtitleDownloaderCheckBoxes()
+        private int DrawSubtitleDownloaderCheckBoxes(int startY)
         {
             int counter = 1;
-            int downloaderCheckboxY = 60;
-            int downloaderCheckboxX = 12;
+            int downloaderCheckboxY = startY;
+            int downloaderCheckboxX = 10;
 
             List<String> downloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
             downloaders.Sort();
@@ -823,12 +840,12 @@ namespace WindowPlugins.GUITVSeries
 
                 this.subtitleDownloader_DownloaderCheckBoxes.Add(downloaderCheckbox);
                 this.panel_subtitleroot.Controls.Add(downloaderCheckbox);
-                downloaderCheckboxX += 130;
+                downloaderCheckboxX += 125;
 
                 if (counter % 4 == 0)
                 {
-                    downloaderCheckboxY += 30;
-                    downloaderCheckboxX = 12;
+                    downloaderCheckboxY += 23;
+                    downloaderCheckboxX = 10;
                 }
                 counter++;
             }
@@ -841,8 +858,8 @@ namespace WindowPlugins.GUITVSeries
             // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
 
             int counter = 1;
-            int languageCheckboxY = startY + 60;
-            int languageCheckboxX = 12;
+            int languageCheckboxY = startY + 46;
+            int languageCheckboxX = 10;
 
             List<String> languages = Languages.GetLanguageNames();
             languages.Sort();
@@ -873,8 +890,8 @@ namespace WindowPlugins.GUITVSeries
 
                 if (counter % 4 == 0)
                 {
-                    languageCheckboxY += 30;
-                    languageCheckboxX = 12;
+                    languageCheckboxY += 23;
+                    languageCheckboxX = 10;
                 }
                 counter++;
             }
@@ -3200,19 +3217,41 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        protected void ShowSubtitleMenu(DBEpisode episode)
+        protected List<CItem> GetEnabledSubtitleDownloaderProviders()
         {
-            List<CItem> Choices = new List<CItem>();
+            List<CItem> providers = new List<CItem>();
             string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
 
-            // Get names of the SubtitleDownloader implementations for menu
-            foreach (var name in SubtitleDownloaderFactory.GetSubtitleDownloaderNames())
+            List<string> availableSubtitleDownloaderNames = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
+
+            if (availableSubtitleDownloaderNames != null)
             {
-                if (enabledDownloaders.Contains(name))
+                foreach (var name in availableSubtitleDownloaderNames)
                 {
-                    Choices.Add(new CItem(name, name, name));
+                    if (enabledDownloaders.Contains(name))
+                    {
+                        providers.Add(new CItem(name, name, name));
+                    }
                 }
             }
+            return providers;
+        }
+
+        protected bool SubtitleDownloaderEnabledAndHasSites()
+        {
+            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
+            if (isSubtitleDownloaderEnabled)
+            {
+                List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
+                if (providers.Count > 0)
+                    return true;
+            }
+            return false;
+        }
+
+        protected void ShowSubtitleMenu(DBEpisode episode)
+        {
+            List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
 
             if (Choices.Count == 0)
                 return;
@@ -3316,7 +3355,7 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);                  
+                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = SubtitleDownloaderEnabledAndHasSites();
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
                     
@@ -4744,6 +4783,28 @@ namespace WindowPlugins.GUITVSeries
         private void subtitleDownloader_enabled_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
+
+            checkBox_SubDownloadOnPlay.Enabled = subtitleDownloader_enabled.Checked;
+            checkBox_UseFullNameInSubDialog.Enabled = subtitleDownloader_enabled.Checked;
+
+            if (this.subtitleDownloader_DownloaderCheckBoxes != null) {
+                foreach (CheckBox checkBox in this.subtitleDownloader_DownloaderCheckBoxes) {
+                    checkBox.Enabled = subtitleDownloader_enabled.Checked;
+                }
+            }
+
+            if (this.subtitleDownloader_LanguageCheckBoxes != null) {
+                foreach (CheckBox checkBox in this.subtitleDownloader_LanguageCheckBoxes) {
+                    checkBox.Enabled = subtitleDownloader_enabled.Checked;
+                }
+            }
+        }
+
+        private void checkBoxEnableSubCentral_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cSubCentralEnabled, checkBox_EnableSubCentral.Checked);
+
+            checkBox_EnableSubCentralForEpisodes.Enabled = checkBox_EnableSubCentral.Checked;
         }
 
         // Set focus on selected item when using Mouse Right Click
@@ -4761,6 +4822,15 @@ namespace WindowPlugins.GUITVSeries
         private void cbNewEpisodeThumbIndicator_SelectedIndexChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cNewEpisodeThumbType, cbNewEpisodeThumbIndicator.SelectedIndex);
+        }
+
+        private void checkBox_UseFullNameInSubDialog_CheckedChanged(object sender, EventArgs e) {
+            DBOption.SetOptions(DBOption.cUseFullNameInSubDialog, checkBox_UseFullNameInSubDialog.Checked);
+        }
+
+        private void checkBox_EnableSubCentralForEpisodes_CheckedChanged(object sender, EventArgs e) {
+
+            DBOption.SetOptions(DBOption.cSubCentralEnabledForEpisodes, checkBox_EnableSubCentralForEpisodes.Checked);
         }
     }
     

@@ -66,9 +66,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
+    </Reference>
+    <Reference Include="SubCentral, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubCentral.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -285,18 +289,23 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
       <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
       <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
       <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportWizard.resx">
       <DependentUpon>ImportWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelProgress.resx">
       <DependentUpon>ImportPanelProgress.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\loadingDisplay.resx">
       <DependentUpon>loadingDisplay.cs</DependentUpon>
@@ -320,6 +329,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ProgressLabel.resx">
       <DependentUpon>ProgressLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>

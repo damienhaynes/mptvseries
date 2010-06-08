@@ -743,7 +743,7 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
-                    bool subtitleDownloaderEnabled = SubtitleDownloaderEnabledAndHasSites();
+                    bool subtitleDownloaderEnabled = SubtitleDownloaderEnabledAndHasSites() || (DBOption.GetOptions(DBOption.cSubCentralEnabled) && Helper.IsSubCentralAvailableAndEnabled);
 					bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
 					bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
 
@@ -1684,24 +1684,24 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
         {
-            /*
-            // MS TEST SubCentral
-            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-            string episodeTitle = episode[DBEpisode.cEpisodeName];
-            string seasonIdx = episode[DBEpisode.cSeasonIndex];
-            string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-            string seriesTitle = series.ToString();
-            string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
-            string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
-            string episodeFileName = episode[DBEpisode.cFilename];
+            if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled) && !fromPlay)
+            {
+                DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                string episodeTitle = episode[DBEpisode.cEpisodeName];
+                string seasonIdx = episode[DBEpisode.cSeasonIndex];
+                string episodeIdx = episode[DBEpisode.cEpisodeIndex];
+                string seriesTitle = series.ToString();
+                string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
+                string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
+                string episodeFileName = episode[DBEpisode.cFilename];
 
-            List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
-            GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
-            GUIGraphicsContext.SendMessage(msg);
-            //GUIWindowManager.Process();
-            GUIWindowManager.ActivateWindow(84623);
-            return;
-            */
+                List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
+                GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
+                GUIGraphicsContext.SendMessage(msg);
+                //GUIWindowManager.Process();
+                GUIWindowManager.ActivateWindow(84623);
+                return;
+            }
 
             if (!SubtitleDownloaderEnabledAndHasSites()) return;
 
@@ -5266,7 +5266,7 @@ namespace WindowPlugins.GUITVSeries
                 // we don't have this file - yet. If downloaders are available, show the download pages
                 ShowDownloadMenu(m_SelectedEpisode);
             }
-            else if (!m_SelectedEpisode.checkHasSubtitles() && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled)) {
+            else if (!m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && SubtitleDownloaderEnabledAndHasSites()) {
                 ShowSubtitleMenu(m_SelectedEpisode, true);
             }
             else

@@ -152,6 +152,10 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_TorrentDetailsUrl = new System.Windows.Forms.TextBox();
             this.textBox_TorrentSearchUrl = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.checkBox_EnableSubCentral = new System.Windows.Forms.CheckBox();
+            this.subtitleDownloader_enabled = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseFullNameInSubDialog = new System.Windows.Forms.CheckBox();
+            this.checkBox_EnableSubCentralForEpisodes = new System.Windows.Forms.CheckBox();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
@@ -339,7 +343,6 @@ namespace WindowPlugins.GUITVSeries
             this.button_uTorrentBrowse = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.panel_subtitleroot = new System.Windows.Forms.Panel();
-            this.subtitleDownloader_enabled = new System.Windows.Forms.CheckBox();
             this.panel_torrentsearch = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -454,94 +457,94 @@ namespace WindowPlugins.GUITVSeries
             this.ResetUserSelToolStripMenuItem,
             this.toolStripSeparator3});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 242);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(191, 242);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.hideToolStripMenuItem.Tag = "hide";
             this.hideToolStripMenuItem.Text = "Hide";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.deleteToolStripMenuItem.Tag = "delete";
             this.deleteToolStripMenuItem.Text = "Delete...";
             // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.updateToolStripMenuItem.Tag = "update";
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // reScanMediaInfoToolStripMenuItem
             // 
             this.reScanMediaInfoToolStripMenuItem.Name = "reScanMediaInfoToolStripMenuItem";
-            this.reScanMediaInfoToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.reScanMediaInfoToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.reScanMediaInfoToolStripMenuItem.Tag = "mediainfo";
             this.reScanMediaInfoToolStripMenuItem.Text = "Re-Scan MediaInfo";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(187, 6);
             // 
             // watchedToolStripMenuItem
             // 
             this.watchedToolStripMenuItem.Name = "watchedToolStripMenuItem";
-            this.watchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.watchedToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.watchedToolStripMenuItem.Tag = "watched";
             this.watchedToolStripMenuItem.Text = "Set As Watched";
             // 
             // unWatchedToolStripMenuItem
             // 
             this.unWatchedToolStripMenuItem.Name = "unWatchedToolStripMenuItem";
-            this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.unWatchedToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.unWatchedToolStripMenuItem.Tag = "unwatched";
             this.unWatchedToolStripMenuItem.Text = "Set As Un-Watched";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
             // 
             // getSubtitlesToolStripMenuItem
             // 
             this.getSubtitlesToolStripMenuItem.Name = "getSubtitlesToolStripMenuItem";
-            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.getSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.getSubtitlesToolStripMenuItem.Tag = "subtitle";
             this.getSubtitlesToolStripMenuItem.Text = "Get Subtitles...";
             // 
             // torrentThToolStripMenuItem
             // 
             this.torrentThToolStripMenuItem.Name = "torrentThToolStripMenuItem";
-            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.torrentThToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.torrentThToolStripMenuItem.Tag = "torrent";
             this.torrentThToolStripMenuItem.Text = "Get Torrent...";
             // 
             // newzbinThisToolStripMenuItem
             // 
             this.newzbinThisToolStripMenuItem.Name = "newzbinThisToolStripMenuItem";
-            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.newzbinThisToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.newzbinThisToolStripMenuItem.Tag = "newzbin";
             this.newzbinThisToolStripMenuItem.Text = "Get NZB...";
             // 
             // ResetUserSelToolStripMenuItem
             // 
             this.ResetUserSelToolStripMenuItem.Name = "ResetUserSelToolStripMenuItem";
-            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.ResetUserSelToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.ResetUserSelToolStripMenuItem.Tag = "resetUserSelections";
             this.ResetUserSelToolStripMenuItem.Text = "Reset User Selections";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(187, 6);
             // 
             // contextMenuStrip_InsertFields
             // 
@@ -943,13 +946,13 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_SubDownloadOnPlay
             // 
             this.checkBox_SubDownloadOnPlay.AutoSize = true;
-            this.checkBox_SubDownloadOnPlay.Location = new System.Drawing.Point(404, 284);
+            this.checkBox_SubDownloadOnPlay.Location = new System.Drawing.Point(27, 76);
             this.checkBox_SubDownloadOnPlay.Name = "checkBox_SubDownloadOnPlay";
             this.checkBox_SubDownloadOnPlay.Size = new System.Drawing.Size(288, 17);
-            this.checkBox_SubDownloadOnPlay.TabIndex = 38;
+            this.checkBox_SubDownloadOnPlay.TabIndex = 4;
             this.checkBox_SubDownloadOnPlay.Text = "Suggest subtitles download on play action if not present";
-            this.toolTip_Help.SetToolTip(this.checkBox_SubDownloadOnPlay, "Enable this option to allow users to delete items using the context menu from wit" +
-                    "h-in Media Portal");
+            this.toolTip_Help.SetToolTip(this.checkBox_SubDownloadOnPlay, "Enable this option to show subtitle download menu before playing, if episode does" +
+                    "n\'t have any subtitles yet");
             this.checkBox_SubDownloadOnPlay.UseVisualStyleBackColor = true;
             this.checkBox_SubDownloadOnPlay.CheckedChanged += new System.EventHandler(this.checkBox_SubDownloadOnPlay_CheckedChanged);
             // 
@@ -1338,6 +1341,57 @@ namespace WindowPlugins.GUITVSeries
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // checkBox_EnableSubCentral
+            // 
+            this.checkBox_EnableSubCentral.AutoSize = true;
+            this.checkBox_EnableSubCentral.Location = new System.Drawing.Point(10, 7);
+            this.checkBox_EnableSubCentral.Name = "checkBox_EnableSubCentral";
+            this.checkBox_EnableSubCentral.Size = new System.Drawing.Size(114, 17);
+            this.checkBox_EnableSubCentral.TabIndex = 1;
+            this.checkBox_EnableSubCentral.Text = "Enable SubCentral";
+            this.toolTip_Help.SetToolTip(this.checkBox_EnableSubCentral, "Enable this option to use SubCentral plugin for searching and downloading of subt" +
+                    "itles");
+            this.checkBox_EnableSubCentral.UseVisualStyleBackColor = true;
+            this.checkBox_EnableSubCentral.CheckedChanged += new System.EventHandler(this.checkBoxEnableSubCentral_CheckedChanged);
+            // 
+            // subtitleDownloader_enabled
+            // 
+            this.subtitleDownloader_enabled.AutoSize = true;
+            this.subtitleDownloader_enabled.Location = new System.Drawing.Point(10, 53);
+            this.subtitleDownloader_enabled.Name = "subtitleDownloader_enabled";
+            this.subtitleDownloader_enabled.Size = new System.Drawing.Size(154, 17);
+            this.subtitleDownloader_enabled.TabIndex = 3;
+            this.subtitleDownloader_enabled.Text = "Enable SubtitleDownloader";
+            this.toolTip_Help.SetToolTip(this.subtitleDownloader_enabled, "Enable this option to use SubttitleDownloader for searching and downloading of su" +
+                    "btitles.\r\nIf SubCentral is enabled, SubtitleDownloader will be used just for dow" +
+                    "nloading subtitles before play.");
+            this.subtitleDownloader_enabled.UseVisualStyleBackColor = true;
+            this.subtitleDownloader_enabled.CheckedChanged += new System.EventHandler(this.subtitleDownloader_enabled_CheckedChanged);
+            // 
+            // checkBox_UseFullNameInSubDialog
+            // 
+            this.checkBox_UseFullNameInSubDialog.AutoSize = true;
+            this.checkBox_UseFullNameInSubDialog.Location = new System.Drawing.Point(27, 99);
+            this.checkBox_UseFullNameInSubDialog.Name = "checkBox_UseFullNameInSubDialog";
+            this.checkBox_UseFullNameInSubDialog.Size = new System.Drawing.Size(262, 17);
+            this.checkBox_UseFullNameInSubDialog.TabIndex = 5;
+            this.checkBox_UseFullNameInSubDialog.Text = "Use full file name in subtitle download menu dialog";
+            this.toolTip_Help.SetToolTip(this.checkBox_UseFullNameInSubDialog, "Enable this option to view full file name when downloading subtitles");
+            this.checkBox_UseFullNameInSubDialog.UseVisualStyleBackColor = true;
+            this.checkBox_UseFullNameInSubDialog.CheckedChanged += new System.EventHandler(this.checkBox_UseFullNameInSubDialog_CheckedChanged);
+            // 
+            // checkBox_EnableSubCentralForEpisodes
+            // 
+            this.checkBox_EnableSubCentralForEpisodes.AutoSize = true;
+            this.checkBox_EnableSubCentralForEpisodes.Location = new System.Drawing.Point(27, 30);
+            this.checkBox_EnableSubCentralForEpisodes.Name = "checkBox_EnableSubCentralForEpisodes";
+            this.checkBox_EnableSubCentralForEpisodes.Size = new System.Drawing.Size(250, 17);
+            this.checkBox_EnableSubCentralForEpisodes.TabIndex = 2;
+            this.checkBox_EnableSubCentralForEpisodes.Text = "Use SubCentral for episode \'HasSubtitles\' query";
+            this.toolTip_Help.SetToolTip(this.checkBox_EnableSubCentralForEpisodes, resources.GetString("checkBox_EnableSubCentralForEpisodes.ToolTip"));
+            this.checkBox_EnableSubCentralForEpisodes.UseVisualStyleBackColor = true;
+            this.checkBox_EnableSubCentralForEpisodes.CheckedChanged += new System.EventHandler(this.checkBox_EnableSubCentralForEpisodes_CheckedChanged);
+            // 
             // toolTip_InfoHelp
             // 
             this.toolTip_InfoHelp.AutoPopDelay = 10000;
@@ -1652,7 +1706,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
             this.dbOptChkBoxCountEmptyFutureEps.Checked = true;
             this.dbOptChkBoxCountEmptyFutureEps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 354);
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 331);
             this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
             this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
             this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
@@ -2541,7 +2595,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.dbOptChkBoxScanFullscreenVideo);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox2);
             this.groupBox1.Controls.Add(this.dbOptionCheckBoxSubstituteMissingArtwork);
-            this.groupBox1.Controls.Add(this.checkBox_SubDownloadOnPlay);
             this.groupBox1.Controls.Add(this.nudScanRemoteShareFrequency);
             this.groupBox1.Controls.Add(this.checkBox_scanRemoteShares);
             this.groupBox1.Controls.Add(this.dbOptionCheckBoxMarkRatedEpsAsWatched);
@@ -2662,7 +2715,7 @@ namespace WindowPlugins.GUITVSeries
             // dbOptionCheckBoxSubstituteMissingArtwork
             // 
             this.dbOptionCheckBoxSubstituteMissingArtwork.AutoSize = true;
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 307);
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 284);
             this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Option = "SubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Size = new System.Drawing.Size(280, 17);
@@ -2674,7 +2727,7 @@ namespace WindowPlugins.GUITVSeries
             // dbOptionCheckBoxSMSKeyboard
             // 
             this.dbOptionCheckBoxSMSKeyboard.AutoSize = true;
-            this.dbOptionCheckBoxSMSKeyboard.Location = new System.Drawing.Point(404, 330);
+            this.dbOptionCheckBoxSMSKeyboard.Location = new System.Drawing.Point(404, 307);
             this.dbOptionCheckBoxSMSKeyboard.Name = "dbOptionCheckBoxSMSKeyboard";
             this.dbOptionCheckBoxSMSKeyboard.Option = "KeyboardStyle";
             this.dbOptionCheckBoxSMSKeyboard.Size = new System.Drawing.Size(305, 17);
@@ -3745,23 +3798,16 @@ namespace WindowPlugins.GUITVSeries
             // panel_subtitleroot
             // 
             this.panel_subtitleroot.AutoScroll = true;
+            this.panel_subtitleroot.Controls.Add(this.checkBox_EnableSubCentralForEpisodes);
+            this.panel_subtitleroot.Controls.Add(this.checkBox_UseFullNameInSubDialog);
+            this.panel_subtitleroot.Controls.Add(this.checkBox_EnableSubCentral);
             this.panel_subtitleroot.Controls.Add(this.subtitleDownloader_enabled);
+            this.panel_subtitleroot.Controls.Add(this.checkBox_SubDownloadOnPlay);
             this.panel_subtitleroot.Location = new System.Drawing.Point(8, 12);
             this.panel_subtitleroot.Name = "panel_subtitleroot";
             this.panel_subtitleroot.Size = new System.Drawing.Size(315, 147);
             this.panel_subtitleroot.TabIndex = 0;
             this.panel_subtitleroot.Tag = "Subtitles";
-            // 
-            // subtitleDownloader_enabled
-            // 
-            this.subtitleDownloader_enabled.AutoSize = true;
-            this.subtitleDownloader_enabled.Location = new System.Drawing.Point(12, 13);
-            this.subtitleDownloader_enabled.Name = "subtitleDownloader_enabled";
-            this.subtitleDownloader_enabled.Size = new System.Drawing.Size(154, 17);
-            this.subtitleDownloader_enabled.TabIndex = 0;
-            this.subtitleDownloader_enabled.Text = "Enable SubtitleDownloader";
-            this.subtitleDownloader_enabled.UseVisualStyleBackColor = true;
-            this.subtitleDownloader_enabled.CheckedChanged += new System.EventHandler(this.subtitleDownloader_enabled_CheckedChanged);
             // 
             // panel_torrentsearch
             // 
@@ -4248,5 +4294,8 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ComboBox cbOnPlaySeriesOrSeasonAction;
         private System.Windows.Forms.ComboBox cbNewEpisodeThumbIndicator;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.CheckBox checkBox_EnableSubCentral;
+        private System.Windows.Forms.CheckBox checkBox_UseFullNameInSubDialog;
+        private System.Windows.Forms.CheckBox checkBox_EnableSubCentralForEpisodes;
     }
 }
