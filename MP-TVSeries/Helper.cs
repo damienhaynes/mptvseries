@@ -555,7 +555,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static bool IsSubCentralAvailableAndEnabled {
             get {
-                return Helper.IsAssemblyAvailable("SubCentral", new Version(1, 0, 0, 0)) && IsPluginEnabled("SubCentral");
+                return Helper.IsAssemblyAvailable("SubCentral", new Version(0, 9, 0, 0)) && IsPluginEnabled("SubCentral");
             }
         }
 
