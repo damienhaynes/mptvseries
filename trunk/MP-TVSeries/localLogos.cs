@@ -431,6 +431,8 @@ namespace WindowPlugins.GUITVSeries
                 // Respect custom skin folders
                 if (file.ToLower().StartsWith("skin\\"))
                     file = file.Replace("skin", Settings.GetPath(Settings.Path.skin));
+                else if (file.ToLower().StartsWith("thumbs\\"))
+                    file = file.Replace("thumbs", Settings.GetPath(Settings.Path.thumbs));
                 else
                     file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
             }
