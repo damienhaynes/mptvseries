@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -222,7 +223,8 @@ namespace WindowPlugins.GUITVSeries
                         osdImage = series.Poster;
                         break;
                     case "custom":
-                        string file = localLogos.getCleanAbsolutePath(kvp.Value);
+                        string value = replaceDynamicFields(kvp.Value);
+                        string file = localLogos.getCleanAbsolutePath(value);
                         if (System.IO.File.Exists(file))
                             osdImage = file;
                         break;
@@ -237,6 +239,20 @@ namespace WindowPlugins.GUITVSeries
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
+        }
+
+        string replaceDynamicFields(string value)
+        {
+            string result = value;
+
+            Regex matchRegEx = new Regex(@"\<[a-zA-Z\.]+\>");
+            foreach (Match m in matchRegEx.Matches(value))
+            {
+                string resolvedValue = FieldGetter.resolveDynString(m.Value, m_currentEpisode, false);
+                result = result.Replace(m.Value, resolvedValue);
+            }
+
+            return result;
         }
 
         void MarkEpisodeAsWatched(DBEpisode episode)
