@@ -251,6 +251,30 @@ namespace WindowPlugins.GUITVSeries
         #region Other Public Methods
 
         /// <summary>
+        /// Resolves skin\\ and thumbs\\ relative paths to absolute.
+        /// Other relative paths are resolved using MediaPortal installation directory.
+        /// Absolute paths are just cleaned.
+        /// </summary>
+        /// <param name="file">Relative or absolute path to resolve</param>
+        /// <returns></returns>
+        public static string getCleanAbsolutePath(string file) {
+            if (!System.IO.Path.IsPathRooted(file)) {
+                // Respect custom skin folders
+                if (file.ToLower().StartsWith("skin\\"))
+                    file = file.Replace("skin", Settings.GetPath(Settings.Path.skin));
+                else if (file.ToLower().StartsWith("thumbs\\"))
+                    file = file.Replace("thumbs", Settings.GetPath(Settings.Path.thumbs));
+                else
+                    file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
+            }
+
+            foreach (char c in System.IO.Path.GetInvalidPathChars())
+                file = file.Replace(c, '_');
+
+            return file;
+        }
+
+        /// <summary>
         /// Removes non-existant files from a list of filenames
         /// </summary>
         /// <param name="filenames"></param>

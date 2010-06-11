@@ -388,7 +388,7 @@ namespace WindowPlugins.GUITVSeries
             if (!dynfilename.Contains("<"))
             {
                 // not dynamic
-                result.Add(getCleanAbsolutePath(dynfilename));
+                result.Add(Helper.getCleanAbsolutePath(dynfilename));
                 return result;
             }
             #pragma warning disable 0642
@@ -422,25 +422,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 return new List<string>(new string[] { string.Empty }); // something went wrong
             }
-        }
-
-        public static string getCleanAbsolutePath(string file)
-        {
-            if (!System.IO.Path.IsPathRooted(file))
-            {
-                // Respect custom skin folders
-                if (file.ToLower().StartsWith("skin\\"))
-                    file = file.Replace("skin", Settings.GetPath(Settings.Path.skin));
-                else if (file.ToLower().StartsWith("thumbs\\"))
-                    file = file.Replace("thumbs", Settings.GetPath(Settings.Path.thumbs));
-                else
-                    file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
-            }
-
-            foreach (char c in System.IO.Path.GetInvalidPathChars())
-               file = file.Replace(c, '_');
-
-           return file;
         }
 
         static bool getFieldValues(string what, out string value, Level level)
