@@ -224,7 +224,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case "custom":
                         string value = replaceDynamicFields(kvp.Value);
-                        string file = localLogos.getCleanAbsolutePath(value);
+                        string file = Helper.getCleanAbsolutePath(value);
                         if (System.IO.File.Exists(file))
                             osdImage = file;
                         break;
