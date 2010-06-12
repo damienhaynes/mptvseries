@@ -56,7 +56,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             List<PathPair> files = Filelister.GetFiles(listFolders);
-            MPTVSeriesLog.Write("LocalParse found " + files.Count.ToString() + " supported video files in " + listFolders.ToString() + " and it's sub-folders");
+            MPTVSeriesLog.Write("Found " + files.Count.ToString() + " supported video files in your import paths");
             e.Result = Parse(files);
         }
 
