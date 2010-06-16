@@ -43,7 +43,8 @@ namespace WindowPlugins.GUITVSeries
     {
         #region Vars
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
-        DBEpisode m_currentEpisode;      
+        DBEpisode m_currentEpisode;
+        DBEpisode m_previousEpisode;
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
         public event rateRequest RateRequestOccured;
@@ -70,7 +71,8 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackStopped += new MediaPortal.Player.g_Player.StoppedHandler(OnPlayBackStopped);
             g_Player.PlayBackEnded += new MediaPortal.Player.g_Player.EndedHandler(OnPlayBackEnded);
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
-			//g_Player.PlayBackChanged += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
+            g_Player.PlayBackChanged += new g_Player.ChangedHandler(OnPlaybackChanged);
+            w.WorkerSupportsCancellation = true;
             w.DoWork += new System.ComponentModel.DoWorkEventHandler(w_DoWork);
         }
 
@@ -86,6 +88,7 @@ namespace WindowPlugins.GUITVSeries
                 if (episode[DBEpisode.cFilename].ToString().Length == 0)
                     return false;
 
+                m_previousEpisode = m_currentEpisode;
                 m_currentEpisode = episode;
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 
@@ -178,6 +181,8 @@ namespace WindowPlugins.GUITVSeries
             bool clear = (bool)e.Argument;
             if (!clear)
                 System.Threading.Thread.Sleep(2000);
+
+            if (w.CancellationPending) return;
             
             SetGUIProperties((bool)e.Argument);
         }
@@ -192,53 +197,78 @@ namespace WindowPlugins.GUITVSeries
         /// <param name="clear">Clears the properties instead of filling them if True</param>
         void SetGUIProperties(bool clear)
         {
+            if (m_currentEpisode == null) return;
+
             DBSeries series = null;
             if (!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = null;
             if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
 
-            if (m_currentEpisode == null) return;
-
 			// Show Plot in OSD or Hide Spoilers
-            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || m_currentEpisode[DBOnlineEpisode.cWatched])
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);                
+            if ((!clear) && (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || m_currentEpisode[DBOnlineEpisode.cWatched]))
+                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);                
             else
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
+                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : Translation._Hidden_to_prevent_spoilers_);
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
             string osdImage = string.Empty;
             //bool hiddenEpLogo = false;
-            foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoOSDImages)
+            if (!clear)
             {
-                switch (kvp.Key) 
+                foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoOSDImages)
                 {
-                    case "episode":
-                        if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
-                            osdImage = ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode));
-                        break;
-                    case "season":
-                        osdImage = season.Banner;
-                        break;
-                    case "series":
-                        osdImage = series.Poster;
-                        break;
-                    case "custom":
-                        string value = replaceDynamicFields(kvp.Value);
-                        string file = Helper.getCleanAbsolutePath(value);
-                        if (System.IO.File.Exists(file))
-                            osdImage = file;
-                        break;
-                }
+                    switch (kvp.Key) 
+                    {
+                        case "episode":
+                            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
+                                osdImage = ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode));
+                            break;
+                        case "season":
+                            osdImage = season.Banner;
+                            break;
+                        case "series":
+                            osdImage = series.Poster;
+                            break;
+                        case "custom":
+                            string value = replaceDynamicFields(kvp.Value);
+                            string file = Helper.getCleanAbsolutePath(value);
+                            if (System.IO.File.Exists(file))
+                                osdImage = file;
+                            break;
+                    }
 
-                osdImage = osdImage.Trim();
-                if (string.IsNullOrEmpty(osdImage)) continue;
-                else break;
+                    osdImage = osdImage.Trim();
+                    if (string.IsNullOrEmpty(osdImage)) continue;
+                    else break;
+                }
             }
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : osdImage);
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
+
+            // double check, i don't want play images to be cleared on ended or stopped...
+            if (w.CancellationPending) return;
+
+            foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoPlayImages)
+            {
+                if (!clear)
+                {
+                    string value = replaceDynamicFields(kvp.Value);
+                    string file = Helper.getCleanAbsolutePath(value);
+                    if (System.IO.File.Exists(file))
+                    {
+                        MPTVSeriesLog.Write(string.Format("Setting play image {0} for property {1}", file, kvp.Key), MPTVSeriesLog.LogLevel.Debug);
+                        MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
+                    }
+                }
+                else
+                {
+                    MPTVSeriesLog.Write(string.Format("Clearing play image for property {0}", kvp.Key), MPTVSeriesLog.LogLevel.Debug);
+                    MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, " ");
+                }
+            }
 			
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);            
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
+            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? " " : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
         }
 
         string replaceDynamicFields(string value)
@@ -358,6 +388,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
+                if (w.IsBusy) w.CancelAsync();
                 LogPlayBackOp("stopped", filename);
                 try
                 {
@@ -366,6 +397,8 @@ namespace WindowPlugins.GUITVSeries
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
+                        m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode.Commit();
                         PlaybackOperationEnded(true);
                     }
                     else
@@ -375,7 +408,9 @@ namespace WindowPlugins.GUITVSeries
                         PlaybackOperationEnded(false);                        
                     }
                     #endregion
-                    
+
+                    m_currentEpisode = null;
+                    m_previousEpisode = null;
                 }
                 catch (Exception e)
                 {
@@ -388,15 +423,56 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
+                if (w.IsBusy) w.CancelAsync();
                 LogPlayBackOp("ended", filename);
                 try
                 {
                     m_currentEpisode[DBEpisode.cStopTime] = 0;
+                    m_currentEpisode.Commit();
                     PlaybackOperationEnded(true);
+
+                    m_currentEpisode = null;
+                    m_previousEpisode = null;
                 }
                 catch (Exception e)
                 {
                     MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
+                }
+            }
+        }
+
+        void OnPlaybackChanged(g_Player.MediaType type, int timeMovieStopped, string filename)
+        {
+            if (PlayBackOpWasOfConcern(g_Player.IsVideo? g_Player.MediaType.Video : g_Player.MediaType.Unknown, g_Player.CurrentFile))
+            {
+                if (w.IsBusy) w.CancelAsync();
+                LogPlayBackOp("changed", g_Player.CurrentFile);
+                try 
+                {
+                    #region Set Resume Point or Watched
+                    double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
+                    if (!m_previousEpisode[DBOnlineEpisode.cWatched]
+                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100) 
+                    {
+                        m_previousEpisode[DBEpisode.cStopTime] = 0;
+                        m_previousEpisode.Commit();
+                        MPTVSeriesLog.Write("This episode counts as watched");
+                        MarkEpisodeAsWatched(m_previousEpisode);
+                        SetGUIProperties(true);
+                    }
+                    else
+                    {
+                        m_previousEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                        m_previousEpisode.Commit();
+                        SetGUIProperties(true);
+                    }
+                    #endregion
+
+                    m_previousEpisode = null;
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlaybackChanged()\r\n" + e.ToString());
                 }
             }
         }
@@ -439,9 +515,19 @@ namespace WindowPlugins.GUITVSeries
         #region Helpers
         bool PlayBackOpIsOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
+            if (string.IsNullOrEmpty(filename)) return false;
+
             return (m_currentEpisode != null && 
                     type == g_Player.MediaType.Video && 
                     m_currentEpisode[DBEpisode.cFilename] == filename);
+        }
+
+        bool PlayBackOpWasOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename) {
+            if (string.IsNullOrEmpty(filename)) return false;
+
+            return (m_previousEpisode != null &&
+                    type == g_Player.MediaType.Video &&
+                    m_previousEpisode[DBEpisode.cFilename] == filename);
         }
 
         void PlaybackOperationEnded(bool countAsWatched)
