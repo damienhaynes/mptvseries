@@ -82,7 +82,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (progress != null)
             {
-                MPTVSeriesLog.Write(string.Format("progress received: {0} {1} {2} {3}", progress.CurrentAction, progress.CurrentItem, progress.CurrentProgress, progress.TotalItems));
+                MPTVSeriesLog.Write(string.Format("progress received: {0} [{1}/{2}] {3}", progress.CurrentAction, progress.CurrentItem, progress.TotalItems, progress.CurrentProgress));
                 
                 switch (progress.CurrentAction)
                 {

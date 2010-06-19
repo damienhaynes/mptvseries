@@ -57,7 +57,7 @@
             this.panelProgress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelProgress.Location = new System.Drawing.Point(0, 0);
             this.panelProgress.Name = "panelProgress";
-            this.panelProgress.Size = new System.Drawing.Size(545, 406);
+            this.panelProgress.Size = new System.Drawing.Size(817, 423);
             this.panelProgress.TabIndex = 31;
             // 
             // groupBoxLocal
@@ -69,7 +69,7 @@
             this.groupBoxLocal.Controls.Add(this.labelMediaInfoProgress);
             this.groupBoxLocal.Location = new System.Drawing.Point(3, 6);
             this.groupBoxLocal.Name = "groupBoxLocal";
-            this.groupBoxLocal.Size = new System.Drawing.Size(539, 90);
+            this.groupBoxLocal.Size = new System.Drawing.Size(811, 94);
             this.groupBoxLocal.TabIndex = 26;
             this.groupBoxLocal.TabStop = false;
             this.groupBoxLocal.Text = "Local Files";
@@ -83,9 +83,9 @@
             this.groupBoxMetaData.Controls.Add(this.labelRetrievingSeriesMetaDataProgress);
             this.groupBoxMetaData.Controls.Add(this.labelIdentifyEpisodesProgress);
             this.groupBoxMetaData.Controls.Add(this.labelUpdatingEpisodeMetaDataProgress);
-            this.groupBoxMetaData.Location = new System.Drawing.Point(2, 101);
+            this.groupBoxMetaData.Location = new System.Drawing.Point(3, 106);
             this.groupBoxMetaData.Name = "groupBoxMetaData";
-            this.groupBoxMetaData.Size = new System.Drawing.Size(540, 161);
+            this.groupBoxMetaData.Size = new System.Drawing.Size(812, 167);
             this.groupBoxMetaData.TabIndex = 27;
             this.groupBoxMetaData.TabStop = false;
             this.groupBoxMetaData.Text = "Metadata";
@@ -98,9 +98,9 @@
             this.groupBoxArtwork.Controls.Add(this.labelRetrievingEpisodeThumbsProgress);
             this.groupBoxArtwork.Controls.Add(this.labelRetrievingFanartProgress);
             this.groupBoxArtwork.Controls.Add(this.labelRetrievingSeriesArtworkProgress);
-            this.groupBoxArtwork.Location = new System.Drawing.Point(3, 268);
+            this.groupBoxArtwork.Location = new System.Drawing.Point(3, 279);
             this.groupBoxArtwork.Name = "groupBoxArtwork";
-            this.groupBoxArtwork.Size = new System.Drawing.Size(538, 133);
+            this.groupBoxArtwork.Size = new System.Drawing.Size(810, 136);
             this.groupBoxArtwork.TabIndex = 28;
             this.groupBoxArtwork.TabStop = false;
             this.groupBoxArtwork.Text = "Artwork";
@@ -109,9 +109,9 @@
             // 
             this.labelFilenameProcessingProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFilenameProcessingProgress.Location = new System.Drawing.Point(6, 16);
+            this.labelFilenameProcessingProgress.Location = new System.Drawing.Point(18, 16);
             this.labelFilenameProcessingProgress.Name = "labelFilenameProcessingProgress";
-            this.labelFilenameProcessingProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelFilenameProcessingProgress.Size = new System.Drawing.Size(778, 39);
             this.labelFilenameProcessingProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelFilenameProcessingProgress.TabIndex = 16;
             // 
@@ -119,9 +119,9 @@
             // 
             this.labelMediaInfoProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMediaInfoProgress.Location = new System.Drawing.Point(6, 49);
+            this.labelMediaInfoProgress.Location = new System.Drawing.Point(18, 50);
             this.labelMediaInfoProgress.Name = "labelMediaInfoProgress";
-            this.labelMediaInfoProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelMediaInfoProgress.Size = new System.Drawing.Size(778, 39);
             this.labelMediaInfoProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelMediaInfoProgress.TabIndex = 22;
             // 
@@ -129,9 +129,9 @@
             // 
             this.labelMatchingSeriesProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMatchingSeriesProgress.Location = new System.Drawing.Point(6, 19);
+            this.labelMatchingSeriesProgress.Location = new System.Drawing.Point(18, 19);
             this.labelMatchingSeriesProgress.Name = "labelMatchingSeriesProgress";
-            this.labelMatchingSeriesProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelMatchingSeriesProgress.Size = new System.Drawing.Size(778, 39);
             this.labelMatchingSeriesProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelMatchingSeriesProgress.TabIndex = 17;
             // 
@@ -139,9 +139,9 @@
             // 
             this.labelRetrievingSeriesMetaDataProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRetrievingSeriesMetaDataProgress.Location = new System.Drawing.Point(6, 51);
+            this.labelRetrievingSeriesMetaDataProgress.Location = new System.Drawing.Point(18, 53);
             this.labelRetrievingSeriesMetaDataProgress.Name = "labelRetrievingSeriesMetaDataProgress";
-            this.labelRetrievingSeriesMetaDataProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelRetrievingSeriesMetaDataProgress.Size = new System.Drawing.Size(778, 39);
             this.labelRetrievingSeriesMetaDataProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingSeriesMetaDataProgress.TabIndex = 18;
             // 
@@ -149,9 +149,9 @@
             // 
             this.labelIdentifyEpisodesProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelIdentifyEpisodesProgress.Location = new System.Drawing.Point(6, 84);
+            this.labelIdentifyEpisodesProgress.Location = new System.Drawing.Point(18, 87);
             this.labelIdentifyEpisodesProgress.Name = "labelIdentifyEpisodesProgress";
-            this.labelIdentifyEpisodesProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelIdentifyEpisodesProgress.Size = new System.Drawing.Size(778, 39);
             this.labelIdentifyEpisodesProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelIdentifyEpisodesProgress.TabIndex = 19;
             // 
@@ -159,9 +159,9 @@
             // 
             this.labelUpdatingEpisodeMetaDataProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelUpdatingEpisodeMetaDataProgress.Location = new System.Drawing.Point(6, 116);
+            this.labelUpdatingEpisodeMetaDataProgress.Location = new System.Drawing.Point(18, 121);
             this.labelUpdatingEpisodeMetaDataProgress.Name = "labelUpdatingEpisodeMetaDataProgress";
-            this.labelUpdatingEpisodeMetaDataProgress.Size = new System.Drawing.Size(518, 39);
+            this.labelUpdatingEpisodeMetaDataProgress.Size = new System.Drawing.Size(778, 39);
             this.labelUpdatingEpisodeMetaDataProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelUpdatingEpisodeMetaDataProgress.TabIndex = 21;
             // 
@@ -169,9 +169,9 @@
             // 
             this.labelRetrievingEpisodeThumbsProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRetrievingEpisodeThumbsProgress.Location = new System.Drawing.Point(6, 85);
+            this.labelRetrievingEpisodeThumbsProgress.Location = new System.Drawing.Point(18, 87);
             this.labelRetrievingEpisodeThumbsProgress.Name = "labelRetrievingEpisodeThumbsProgress";
-            this.labelRetrievingEpisodeThumbsProgress.Size = new System.Drawing.Size(517, 39);
+            this.labelRetrievingEpisodeThumbsProgress.Size = new System.Drawing.Size(778, 39);
             this.labelRetrievingEpisodeThumbsProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingEpisodeThumbsProgress.TabIndex = 24;
             // 
@@ -179,9 +179,9 @@
             // 
             this.labelRetrievingFanartProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRetrievingFanartProgress.Location = new System.Drawing.Point(6, 51);
+            this.labelRetrievingFanartProgress.Location = new System.Drawing.Point(18, 53);
             this.labelRetrievingFanartProgress.Name = "labelRetrievingFanartProgress";
-            this.labelRetrievingFanartProgress.Size = new System.Drawing.Size(517, 39);
+            this.labelRetrievingFanartProgress.Size = new System.Drawing.Size(778, 39);
             this.labelRetrievingFanartProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingFanartProgress.TabIndex = 23;
             // 
@@ -189,9 +189,9 @@
             // 
             this.labelRetrievingSeriesArtworkProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRetrievingSeriesArtworkProgress.Location = new System.Drawing.Point(6, 19);
+            this.labelRetrievingSeriesArtworkProgress.Location = new System.Drawing.Point(18, 19);
             this.labelRetrievingSeriesArtworkProgress.Name = "labelRetrievingSeriesArtworkProgress";
-            this.labelRetrievingSeriesArtworkProgress.Size = new System.Drawing.Size(517, 39);
+            this.labelRetrievingSeriesArtworkProgress.Size = new System.Drawing.Size(778, 39);
             this.labelRetrievingSeriesArtworkProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingSeriesArtworkProgress.TabIndex = 20;
             // 
@@ -201,7 +201,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelProgress);
             this.Name = "ImportPanelProgress";
-            this.Size = new System.Drawing.Size(545, 406);
+            this.Size = new System.Drawing.Size(817, 423);
             this.panelProgress.ResumeLayout(false);
             this.groupBoxLocal.ResumeLayout(false);
             this.groupBoxMetaData.ResumeLayout(false);
