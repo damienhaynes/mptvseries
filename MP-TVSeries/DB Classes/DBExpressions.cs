@@ -78,7 +78,7 @@ namespace WindowPlugins.GUITVSeries
 
             expression[DBExpression.cIndex] = "0";
             expression[DBExpression.cType] = DBExpression.cType_Regexp;
-            expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)[ .-]+[\#s]?(?<season>\d+)[ .-]?[ex.](?<episode>\d+)[+-]?(?<episode2>\d+)?[ .-]*(?<title>(?![^\\]*?sample[ .-])[^$]*?)\.(?<ext>[^.]*)$";
+            expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)[ .-]+(?:[s]?(?<season>\d+)[ .-]?[ex](?<episode>\d+)|(?:\#|\-\s)(?<season>\d+)\.(?<episode>\d+))(?:[ex+-]*(?<episode2>\d+))?[ .-]*(?<title>(?![^\\]*?sample[ .-])[^$]*?)\.(?<ext>[^.]*)$";
             expression.Commit();
 
             expression[DBExpression.cIndex] = "1";

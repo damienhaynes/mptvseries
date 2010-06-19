@@ -160,6 +160,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     origResults = results.ToList<parseResult>();
                     FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
+
                 });
             runner.AsyncFullParse();
         }
