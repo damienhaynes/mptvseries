@@ -2000,7 +2000,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cLanguage:
                                 case DBOnlineSeries.cSeriesID:
                                 case DBOnlineSeries.cOriginalName:
-                                case DBSeries.cHidden:                                
+                                case DBOnlineSeries.cHasNewEpisodes:
+                                case DBSeries.cHidden:                   
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
@@ -3859,63 +3860,6 @@ namespace WindowPlugins.GUITVSeries
             else
                 nudScanRemoteShareFrequency.Enabled = false;
         }
-
-        //List<logicalView> testViews = new List<logicalView>();
-        //string[] viewArgument = null;
-        //logicalViewStep.type currType = logicalViewStep.type.group;
-        //bool isinit = false;
-        /*private void button3_Click(object sender, EventArgs e)
-        {
-            if (!isinit)
-                this.listBox1.DoubleClick += new EventHandler(listBox1_DoubleClick);
-            isinit = true;
-            if (viewArgument == null) this.numericUpDown1.Value = 0;
-            //testViews = logicalView.getAllFromString(this.richTextBox1.Text.Trim(), true);
-            logicalViewStep.type curType = testViews[0].gettypeOfStep((int)this.numericUpDown1.Value);
-            this.listBox1.Items.Clear();
-            currType = curType;
-            switch (curType)
-            {
-                case logicalViewStep.type.group:
-                    foreach (string group in testViews[0].getGroupItems((int)this.numericUpDown1.Value, viewArgument))
-                    {
-                        this.listBox1.Items.Add(group);
-                    }
-                    break;
-                case logicalViewStep.type.series:
-                    foreach (DBSeries series in testViews[0].getSeriesItems((int)this.numericUpDown1.Value, viewArgument))
-                    {
-                        this.listBox1.Items.Add(series[DBOnlineSeries.cPrettyName] + " <-> " + series[DBOnlineSeries.cID]);
-                    }
-                    break;
-                case logicalViewStep.type.season:
-                    foreach (DBSeason season in testViews[0].getSeasonItems((int)this.numericUpDown1.Value, viewArgument))
-                    {
-                        this.listBox1.Items.Add(season[DBSeason.cIndex]);
-                    }
-                    break;
-            }
-
-            viewArgument = null;
-        }
-
-        void listBox1_DoubleClick(object sender, EventArgs e)
-        {
-            if (currType != logicalViewStep.type.episode)
-            {
-                this.numericUpDown1.Value++;
-                switch (currType)
-                {
-                    case logicalViewStep.type.group:
-                        viewArgument = new string[] { (string)listBox1.SelectedItem };
-                        break;
-                    case logicalViewStep.type.series:
-                        viewArgument = new string[] { ((string)listBox1.SelectedItem).Split(new string[] { " <-> " }, StringSplitOptions.None)[1].Trim() };
-                        break;
-                }
-                button3_Click(new object(), new EventArgs());
-            }
-        }*/
 
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
