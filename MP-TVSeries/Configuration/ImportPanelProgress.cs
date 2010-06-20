@@ -26,7 +26,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             this.labelRetrievingSeriesArtworkProgress.Label.Text = "Retrieving Series and Season Artwork";
             this.labelRetrievingEpisodeThumbsProgress.Label.Text = "Retrieving Episode Thumbnails";
-            this.labelRetrievingFanartProgress.Label.Text = "Retrieving Fanart";            
+            this.labelRetrievingFanartProgress.Label.Text = "Retrieving Fanart";
+
+            this.labelRetrievingUserRatings.Label.Text = "Retrieving User Ratings";
+            this.labelRetrievingFavourites.Label.Text = "Retrieving User Favourites";
         }
 
         internal void Init(OnlineParsing parser)
@@ -52,6 +55,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 case ParsingAction.UpdateFanart:
                 case ParsingAction.GetNewBanners:
                 case ParsingAction.GetNewFanArt:
+                case ParsingAction.UpdateUserFavourites:
+                case ParsingAction.UpdateUserRatings:
                     type = "series";
                     break;
 
@@ -82,7 +87,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (progress != null)
             {
-                MPTVSeriesLog.Write(string.Format("progress received: {0} [{1}/{2}] {3}", progress.CurrentAction, progress.CurrentItem, progress.TotalItems, progress.CurrentProgress));
+                if (progress.CurrentItem != -1) 
+                    MPTVSeriesLog.Write(string.Format("progress received: {0} [{1}/{2}] {3}", progress.CurrentAction, progress.CurrentItem, progress.TotalItems, progress.CurrentProgress));
                 
                 switch (progress.CurrentAction)
                 {
@@ -115,6 +121,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     case ParsingAction.UpdateEpisodeCounts:
                         break;
                     case ParsingAction.UpdateUserRatings:
+                        SetProgressLabel(this.labelRetrievingUserRatings, progress);
                         break;
                     case ParsingAction.UpdateBanners:
                         SetProgressLabel(this.labelRetrievingSeriesArtworkProgress, progress);
@@ -130,6 +137,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         SetProgressLabel(this.labelRetrievingEpisodeThumbsProgress, progress);
                         break;
                     case ParsingAction.UpdateUserFavourites:
+                        SetProgressLabel(this.labelRetrievingFavourites, progress);
                         break;
                     case ParsingAction.BroadcastRecentlyAdded:
                         break;

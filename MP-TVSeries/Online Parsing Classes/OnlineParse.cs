@@ -1508,14 +1508,18 @@ namespace WindowPlugins.GUITVSeries
 
             if (!String.IsNullOrEmpty(sAccountID))
             {
+                int nIndex = 0;
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
                     bool MarkWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
-
+                    
                     foreach (DBOnlineSeries series in seriesList)
                     {
                         MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
                         GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
+                        
+                        // Update Progress
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                         // Set Series Ratings
                         // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
@@ -1567,6 +1571,9 @@ namespace WindowPlugins.GUITVSeries
                     GetUserRatings userRatings = new GetUserRatings(null, sAccountID);
                     foreach (DBOnlineSeries series in seriesList)
                     {
+                        // Update Progress
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+
                         if (userRatings.AllSeriesUserRatings.ContainsKey(series[DBOnlineSeries.cID]))
                         {
                             MPTVSeriesLog.Write("User ratings retrieved for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
@@ -1585,12 +1592,13 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            
+            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, seriesList.Count));
         }
 
         public void UpdateUserFavourites()
         {
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
+            int nIndex = 0;
 
             if (!String.IsNullOrEmpty(sAccountID)) {
                 MPTVSeriesLog.Write(bigLogMessage("Get User Favourites"));
@@ -1601,6 +1609,9 @@ namespace WindowPlugins.GUITVSeries
                 List<DBSeries> seriesList = DBSeries.Get(conditions);
                 
                 foreach (DBSeries series in seriesList) {
+                    // Update Progress
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
                         MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]));
                         series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cTranslateTokenOnlineFavourite);
@@ -1610,7 +1621,8 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
                     }
                 }
-            }
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, seriesList.Count));
+            }            
         }
 
         public void UpdateEpisodeThumbNails()
