@@ -28,20 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.labelStep = new System.Windows.Forms.Label();
             this.labelWaitParse = new System.Windows.Forms.Label();
             this.checkBoxFilter = new System.Windows.Forms.CheckBox();
             this.listBoxSeries = new System.Windows.Forms.ListBox();
             this.listBoxLocal = new System.Windows.Forms.ListBox();
             this.listBoxOnline = new System.Windows.Forms.ListBox();
-            this.textBoxDetails = new System.Windows.Forms.TextBox();
-            this.textDetailsLocal = new System.Windows.Forms.TextBox();
-            this.labelFilename = new System.Windows.Forms.Label();
-            this.labelOnlineEpisode = new System.Windows.Forms.Label();
             this.comboMatchOptions = new System.Windows.Forms.ComboBox();
             this.buttonMatchAgain = new System.Windows.Forms.Button();
             this.labelMatchOrder = new System.Windows.Forms.Label();
             this.labelImportWizardTitle = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.toolTipLocalEpisode = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // labelStep
@@ -65,13 +66,12 @@
             // 
             // checkBoxFilter
             // 
-            this.checkBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxFilter.AutoSize = true;
-            this.checkBoxFilter.Location = new System.Drawing.Point(579, 45);
+            this.checkBoxFilter.Location = new System.Drawing.Point(6, 472);
             this.checkBoxFilter.Name = "checkBoxFilter";
-            this.checkBoxFilter.Size = new System.Drawing.Size(248, 17);
+            this.checkBoxFilter.Size = new System.Drawing.Size(246, 17);
             this.checkBoxFilter.TabIndex = 15;
-            this.checkBoxFilter.Text = "Show only Episodes requiring manual Selection";
+            this.checkBoxFilter.Text = "&Show only Episodes requiring manual selection";
             this.checkBoxFilter.UseVisualStyleBackColor = true;
             this.checkBoxFilter.CheckedChanged += new System.EventHandler(this.checkBoxFilter_CheckedChanged);
             // 
@@ -80,9 +80,9 @@
             this.listBoxSeries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxSeries.FormattingEnabled = true;
-            this.listBoxSeries.Location = new System.Drawing.Point(6, 85);
+            this.listBoxSeries.Location = new System.Drawing.Point(6, 111);
             this.listBoxSeries.Name = "listBoxSeries";
-            this.listBoxSeries.Size = new System.Drawing.Size(197, 381);
+            this.listBoxSeries.Size = new System.Drawing.Size(197, 355);
             this.listBoxSeries.TabIndex = 17;
             this.listBoxSeries.SelectedIndexChanged += new System.EventHandler(this.listBoxSeries_SelectedIndexChanged);
             // 
@@ -91,11 +91,12 @@
             this.listBoxLocal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxLocal.FormattingEnabled = true;
-            this.listBoxLocal.Location = new System.Drawing.Point(209, 85);
+            this.listBoxLocal.Location = new System.Drawing.Point(209, 111);
             this.listBoxLocal.Name = "listBoxLocal";
-            this.listBoxLocal.Size = new System.Drawing.Size(189, 381);
+            this.listBoxLocal.Size = new System.Drawing.Size(271, 355);
             this.listBoxLocal.TabIndex = 18;
             this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);
+            this.listBoxLocal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listBoxLocal_MouseMove);
             // 
             // listBoxOnline
             // 
@@ -103,57 +104,18 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxOnline.FormattingEnabled = true;
-            this.listBoxOnline.Location = new System.Drawing.Point(404, 85);
+            this.listBoxOnline.Location = new System.Drawing.Point(486, 111);
             this.listBoxOnline.Name = "listBoxOnline";
-            this.listBoxOnline.Size = new System.Drawing.Size(205, 381);
+            this.listBoxOnline.Size = new System.Drawing.Size(270, 355);
             this.listBoxOnline.TabIndex = 19;
             this.listBoxOnline.SelectedIndexChanged += new System.EventHandler(this.listBoxOnline_SelectedIndexChanged);
-            // 
-            // textBoxDetails
-            // 
-            this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDetails.Location = new System.Drawing.Point(615, 170);
-            this.textBoxDetails.Multiline = true;
-            this.textBoxDetails.Name = "textBoxDetails";
-            this.textBoxDetails.Size = new System.Drawing.Size(212, 296);
-            this.textBoxDetails.TabIndex = 20;
-            // 
-            // textDetailsLocal
-            // 
-            this.textDetailsLocal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textDetailsLocal.Location = new System.Drawing.Point(615, 85);
-            this.textDetailsLocal.Multiline = true;
-            this.textDetailsLocal.Name = "textDetailsLocal";
-            this.textDetailsLocal.Size = new System.Drawing.Size(212, 55);
-            this.textDetailsLocal.TabIndex = 21;
-            // 
-            // labelFilename
-            // 
-            this.labelFilename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFilename.AutoSize = true;
-            this.labelFilename.Location = new System.Drawing.Point(612, 68);
-            this.labelFilename.Name = "labelFilename";
-            this.labelFilename.Size = new System.Drawing.Size(54, 13);
-            this.labelFilename.TabIndex = 22;
-            this.labelFilename.Text = "FileName:";
-            // 
-            // labelOnlineEpisode
-            // 
-            this.labelOnlineEpisode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelOnlineEpisode.AutoSize = true;
-            this.labelOnlineEpisode.Location = new System.Drawing.Point(615, 152);
-            this.labelOnlineEpisode.Name = "labelOnlineEpisode";
-            this.labelOnlineEpisode.Size = new System.Drawing.Size(81, 13);
-            this.labelOnlineEpisode.TabIndex = 23;
-            this.labelOnlineEpisode.Text = "Online Episode:";
             // 
             // comboMatchOptions
             // 
             this.comboMatchOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboMatchOptions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMatchOptions.FormattingEnabled = true;
-            this.comboMatchOptions.Location = new System.Drawing.Point(350, 43);
+            this.comboMatchOptions.Location = new System.Drawing.Point(553, 65);
             this.comboMatchOptions.Name = "comboMatchOptions";
             this.comboMatchOptions.Size = new System.Drawing.Size(121, 21);
             this.comboMatchOptions.TabIndex = 24;
@@ -161,11 +123,11 @@
             // buttonMatchAgain
             // 
             this.buttonMatchAgain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonMatchAgain.Location = new System.Drawing.Point(477, 43);
+            this.buttonMatchAgain.Location = new System.Drawing.Point(680, 64);
             this.buttonMatchAgain.Name = "buttonMatchAgain";
             this.buttonMatchAgain.Size = new System.Drawing.Size(75, 23);
             this.buttonMatchAgain.TabIndex = 25;
-            this.buttonMatchAgain.Text = "Match";
+            this.buttonMatchAgain.Text = "&Match";
             this.buttonMatchAgain.UseVisualStyleBackColor = true;
             this.buttonMatchAgain.Click += new System.EventHandler(this.buttonMatchAgain_Click);
             // 
@@ -173,7 +135,7 @@
             // 
             this.labelMatchOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelMatchOrder.AutoSize = true;
-            this.labelMatchOrder.Location = new System.Drawing.Point(347, 22);
+            this.labelMatchOrder.Location = new System.Drawing.Point(475, 42);
             this.labelMatchOrder.Name = "labelMatchOrder";
             this.labelMatchOrder.Size = new System.Drawing.Size(280, 13);
             this.labelMatchOrder.TabIndex = 26;
@@ -189,19 +151,54 @@
             this.labelImportWizardTitle.TabIndex = 27;
             this.labelImportWizardTitle.Text = "Import your Series and Episodes";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 94);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "Series:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(209, 94);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(97, 13);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Local Episodes:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(486, 94);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(102, 13);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "Online Episodes:";
+            // 
+            // toolTipLocalEpisode
+            // 
+            this.toolTipLocalEpisode.IsBalloon = true;
+            this.toolTipLocalEpisode.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTipLocalEpisode.ToolTipTitle = "Local Episode Information";
+            // 
             // ImportPanelEpID
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.labelImportWizardTitle);
             this.Controls.Add(this.labelMatchOrder);
             this.Controls.Add(this.buttonMatchAgain);
             this.Controls.Add(this.comboMatchOptions);
-            this.Controls.Add(this.labelOnlineEpisode);
-            this.Controls.Add(this.labelFilename);
-            this.Controls.Add(this.textDetailsLocal);
-            this.Controls.Add(this.textBoxDetails);
             this.Controls.Add(this.listBoxOnline);
             this.Controls.Add(this.listBoxLocal);
             this.Controls.Add(this.listBoxSeries);
@@ -209,7 +206,7 @@
             this.Controls.Add(this.labelStep);
             this.Controls.Add(this.labelWaitParse);
             this.Name = "ImportPanelEpID";
-            this.Size = new System.Drawing.Size(861, 482);
+            this.Size = new System.Drawing.Size(771, 504);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -223,13 +220,13 @@
         private System.Windows.Forms.ListBox listBoxSeries;
         private System.Windows.Forms.ListBox listBoxLocal;
         private System.Windows.Forms.ListBox listBoxOnline;
-        private System.Windows.Forms.TextBox textBoxDetails;
-        private System.Windows.Forms.TextBox textDetailsLocal;
-        private System.Windows.Forms.Label labelFilename;
-        private System.Windows.Forms.Label labelOnlineEpisode;
         private System.Windows.Forms.ComboBox comboMatchOptions;
         private System.Windows.Forms.Button buttonMatchAgain;
         private System.Windows.Forms.Label labelMatchOrder;
         private System.Windows.Forms.Label labelImportWizardTitle;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ToolTip toolTipLocalEpisode;
     }
 }
