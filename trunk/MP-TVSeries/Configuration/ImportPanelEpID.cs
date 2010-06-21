@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else if (ep is DBOnlineEpisode)
             {
-                return string.Format("{0,2:D}{1,2:D}{2} {3}",
+                return string.Format("{0,2:D}{1,2:D}{2} - {3}",
                     ep[DBEpisode.cSeasonIndex] > 0 ? (string)ep[DBEpisode.cSeasonIndex] + "x" : "Special: ",
                     ep[DBEpisode.cEpisodeIndex] > 0 ? (string)ep[DBEpisode.cEpisodeIndex] : "?",
                     ep[DBEpisode.cEpisodeIndex2] > 0 ? "-" + ep[DBEpisode.cEpisodeIndex2] : string.Empty,
@@ -254,7 +254,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];
             var onlineEp = displayedOEps[listBoxOnline.SelectedIndex];
-
+            
             // update the pair
             var pairS = matches.Single(s => s.Key == series).Value;
             int toReplace = pairS.FindIndex(kv => kv.Key == localEp);

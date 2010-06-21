@@ -66,8 +66,9 @@
             // 
             // checkBoxFilter
             // 
+            this.checkBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxFilter.AutoSize = true;
-            this.checkBoxFilter.Location = new System.Drawing.Point(6, 472);
+            this.checkBoxFilter.Location = new System.Drawing.Point(6, 502);
             this.checkBoxFilter.Name = "checkBoxFilter";
             this.checkBoxFilter.Size = new System.Drawing.Size(246, 17);
             this.checkBoxFilter.TabIndex = 15;
@@ -82,7 +83,7 @@
             this.listBoxSeries.FormattingEnabled = true;
             this.listBoxSeries.Location = new System.Drawing.Point(6, 111);
             this.listBoxSeries.Name = "listBoxSeries";
-            this.listBoxSeries.Size = new System.Drawing.Size(197, 355);
+            this.listBoxSeries.Size = new System.Drawing.Size(197, 381);
             this.listBoxSeries.TabIndex = 17;
             this.listBoxSeries.SelectedIndexChanged += new System.EventHandler(this.listBoxSeries_SelectedIndexChanged);
             // 
@@ -93,7 +94,7 @@
             this.listBoxLocal.FormattingEnabled = true;
             this.listBoxLocal.Location = new System.Drawing.Point(209, 111);
             this.listBoxLocal.Name = "listBoxLocal";
-            this.listBoxLocal.Size = new System.Drawing.Size(271, 355);
+            this.listBoxLocal.Size = new System.Drawing.Size(271, 381);
             this.listBoxLocal.TabIndex = 18;
             this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);
             this.listBoxLocal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listBoxLocal_MouseMove);
@@ -106,7 +107,7 @@
             this.listBoxOnline.FormattingEnabled = true;
             this.listBoxOnline.Location = new System.Drawing.Point(486, 111);
             this.listBoxOnline.Name = "listBoxOnline";
-            this.listBoxOnline.Size = new System.Drawing.Size(270, 355);
+            this.listBoxOnline.Size = new System.Drawing.Size(270, 381);
             this.listBoxOnline.TabIndex = 19;
             this.listBoxOnline.SelectedIndexChanged += new System.EventHandler(this.listBoxOnline_SelectedIndexChanged);
             // 
@@ -206,7 +207,7 @@
             this.Controls.Add(this.labelStep);
             this.Controls.Add(this.labelWaitParse);
             this.Name = "ImportPanelEpID";
-            this.Size = new System.Drawing.Size(771, 504);
+            this.Size = new System.Drawing.Size(771, 522);
             this.ResumeLayout(false);
             this.PerformLayout();
 

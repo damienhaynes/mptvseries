@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -373,6 +373,7 @@
     <None Include="Resources\Images\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Images\busy.gif" />
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
     <None Include="Resources\Images\importaccept.png" />
@@ -382,6 +383,7 @@
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
+    <None Include="Resources\Images\tick.png" />
     <Content Include="Resources\Languages\cs.xml" />
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />
