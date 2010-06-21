@@ -54,6 +54,7 @@
             this.dataGridViewIdentifySeries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewIdentifySeries.Location = new System.Drawing.Point(21, 72);
             this.dataGridViewIdentifySeries.Name = "dataGridViewIdentifySeries";
+            this.dataGridViewIdentifySeries.RowHeadersVisible = false;
             this.dataGridViewIdentifySeries.Size = new System.Drawing.Size(531, 308);
             this.dataGridViewIdentifySeries.TabIndex = 0;
             // 

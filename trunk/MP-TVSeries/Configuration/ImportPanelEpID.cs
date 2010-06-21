@@ -187,7 +187,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     ep[DBEpisode.cSeasonIndex],
                     ep[DBEpisode.cEpisodeIndex] > 0 ? (string)ep[DBEpisode.cEpisodeIndex] : "?",
                     ep[DBEpisode.cEpisodeIndex2] > 0 ? "-" + ep[DBEpisode.cEpisodeIndex2] : string.Empty,
-                    ep[DBEpisode.cEpisodeName].ToString() + ep[DBOnlineEpisode.cEpisodeName].ToString());
+                    ep[DBEpisode.cEpisodeName].ToString());
             }
             else if (ep is DBOnlineEpisode)
             {
@@ -224,7 +224,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         continue;
                 }
                 displayedEps.Add(local);
-                listBoxLocal.Items.Add(getDisplayString(local));
+                listBoxLocal.Items.Add(local[DBEpisode.cFilenameWOPath]);
+                //listBoxLocal.Items.Add(getDisplayString(local));                
             }
 
             listBoxLocal.SelectedIndex = 0;
@@ -239,26 +240,25 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 listBoxOnline.SelectedItem = getDisplayString(matchedOnlineEp);                     
             else listBoxOnline.SelectedIndex = 0;
 
-            textDetailsLocal.Text = localEp[DBEpisode.cFilename];
+            string toolTipText = string.Empty;
+
+            // Set Tooltip                          
+            //toolTipText = string.Concat("Filename: ", localEp[DBEpisode.cFilename], "\n");
+            //toolTipText = string.Concat(toolTipText, "Parsed Result: ", getDisplayString(localEp));           
+            //toolTipLocalEpisode.SetToolTip(listBoxLocal, toolTipText);
+
         }
 
         private void listBoxOnline_SelectedIndexChanged(object sender, EventArgs e)
         {
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];
-
             var onlineEp = displayedOEps[listBoxOnline.SelectedIndex];
 
             // update the pair
             var pairS = matches.Single(s => s.Key == series).Value;
             int toReplace = pairS.FindIndex(kv => kv.Key == localEp);
             pairS[toReplace] = new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, onlineEp);
-
-            // display the summary
-            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) && onlineEp != null)
-                this.textBoxDetails.Text = onlineEp[DBOnlineEpisode.cEpisodeSummary];
-            else this.textBoxDetails.Text = string.Empty;
-
         }
 
         private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
@@ -272,6 +272,22 @@ namespace WindowPlugins.GUITVSeries.Configuration
             DoAutoMatching(listBoxSeries.SelectedItem as DBSeries, selected);
             listBoxSeries_SelectedIndexChanged(listBoxSeries, null);
             comboMatchOptions.SelectedItem = selected;
+        }
+
+        private void listBoxLocal_MouseMove(object sender, MouseEventArgs e)
+        {
+            string toolTipText = string.Empty;
+            
+            // Get the item
+            int nIdx = listBoxLocal.IndexFromPoint(e.Location);
+            if ((nIdx >= 0) && (nIdx < listBoxLocal.Items.Count))
+            {
+                var localEp = displayedEps[nIdx];
+                toolTipText = string.Concat("Filename: ", localEp[DBEpisode.cFilename], "\n");
+                toolTipText = string.Concat(toolTipText, "Parsed Result: ", getDisplayString(localEp));
+            }
+            if (toolTipLocalEpisode.GetToolTip(listBoxLocal) != toolTipText) 
+                toolTipLocalEpisode.SetToolTip(listBoxLocal, toolTipText);            
         }
     }
 }
