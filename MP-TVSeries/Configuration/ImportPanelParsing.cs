@@ -13,6 +13,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
     public partial class ImportPanelParsing : UserControl
     {        
         public event UserFinishedEditingDelegate UserFinishedEditing;
+        public delegate void ParsingGridPopulatedDelegate();
+        public event ParsingGridPopulatedDelegate ParsingGridPopulated;
 
         public ImportPanelParsing()
         {
@@ -131,6 +133,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if (dataGridViewReview.ColumnCount < 9 && dataGridViewReview.Rows.Count > 0) lnkAdd.Visible = true;
 
             updateCount();
+
+            pictureBoxWork.Visible = false;
         }
 
         void updateCount()
@@ -163,7 +167,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     origResults = results.ToList<parseResult>();
                     FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
-
+                    // fire off event so user can click Next is wizard
+                    if (ParsingGridPopulated != null)
+                        ParsingGridPopulated();
                 });
             runner.AsyncFullParse();
         }
