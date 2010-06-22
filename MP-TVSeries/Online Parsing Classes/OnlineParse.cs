@@ -1256,7 +1256,8 @@ namespace WindowPlugins.GUITVSeries
                 GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);
                 bannerParser.BannerDownloadDone += new newArtWorkDownloadDoneHandler(name =>
                 {
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], name), nIndex, seriesList.Count, series, name));
+                    if (!string.IsNullOrEmpty(name))
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], name), nIndex, seriesList.Count, series, name));
                 });
                 bannerParser.DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);
 

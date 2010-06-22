@@ -1653,7 +1653,7 @@ namespace WindowPlugins.GUITVSeries
         private void OnlineParsing_OnCompleted(bool bDataUpdated)
         {
             TimeSpan span = DateTime.Now - m_timingStart;
-            MPTVSeriesLog.Write("Parsing Completed in " + span);           
+            MPTVSeriesLog.Write("Online Parsing Completed in " + span);           
             m_parser = null;
             DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
