@@ -1495,6 +1495,10 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardHost.Dock = DockStyle.Fill;
                 ParsingWizardHost.BringToFront();
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Cancel, false);
+
+                ParsingWizardParsingPage.ParsingGridPopulated += new ImportPanelParsing.ParsingGridPopulatedDelegate(ImportWizard_OnParsingGridPopulated);
 
                 // now have it host the the initial parsing page                 
                 ParsingWizardHost.ShowDetailsPanel(ParsingWizardParsingPage);
@@ -1506,10 +1510,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region Import Wizard Events
-
+        #region Import Wizard Events        
         private void ImportWizard_OnFinishedLocalParsing(UserInputResults values, UserFinishedRequestedAction reqAction)
         {
+            ParsingWizardParsingPage.ParsingGridPopulated -= new ImportPanelParsing.ParsingGridPopulatedDelegate(ImportWizard_OnParsingGridPopulated);
+
             ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
             if (reqAction == UserFinishedRequestedAction.Next)
             {
@@ -1519,7 +1524,7 @@ namespace WindowPlugins.GUITVSeries
                 // show the seriesIdentification Page
                 ParsingWizardHost.RemoveDetailsPanel(ParsingWizardParsingPage);
                 ParsingWizardHost.ShowDetailsPanel(ParsingWizardSeriesIDPage);
-
+                
                 ParsingWizardSeriesIDPage.SeriesGridPopulated += new ImportPanelSeriesID.SeriesGridPopulatedDelegate(ImportWizard_OnSeriesGridPopulated);
                 ParsingWizardSeriesIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
 
@@ -1575,6 +1580,13 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardParsingPage.Init();
                 ParsingWizardSeriesIDPage.ClearResults();                                
             }     
+        }
+
+        private void ImportWizard_OnParsingGridPopulated()
+        {
+            // user can now go forwards or cancel (back is the same on 1st step)            
+            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, true);
+            ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Cancel, true);
         }
 
         private void ImportWizard_OnSeriesGridPopulated()

@@ -34,7 +34,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
 
         Color Approved = Color.LightGreen;
-        Color SkipColor = Color.Yellow;
+        Color SkipColor = Color.LightYellow;
         Color IgnoreColor = Color.LightGray;
 
         IList<parseResult> givenResults = null;

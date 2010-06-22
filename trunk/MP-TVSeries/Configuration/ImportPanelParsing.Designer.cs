@@ -48,9 +48,11 @@
             this.lblCount = new System.Windows.Forms.Label();
             this.labelStep = new System.Windows.Forms.Label();
             this.labelImportWizardTitle = new System.Windows.Forms.Label();
+            this.pictureBoxWork = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).BeginInit();
             this.groupBoxAddCol.SuspendLayout();
             this.contextMenuStripChangeCell.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWork)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridViewReview
@@ -253,11 +255,21 @@
             this.labelImportWizardTitle.TabIndex = 13;
             this.labelImportWizardTitle.Text = "Import your Series and Episodes";
             // 
+            // pictureBoxWork
+            // 
+            this.pictureBoxWork.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.busy;
+            this.pictureBoxWork.Location = new System.Drawing.Point(248, 40);
+            this.pictureBoxWork.Name = "pictureBoxWork";
+            this.pictureBoxWork.Size = new System.Drawing.Size(32, 34);
+            this.pictureBoxWork.TabIndex = 15;
+            this.pictureBoxWork.TabStop = false;
+            // 
             // ImportPanelParsing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.pictureBoxWork);
             this.Controls.Add(this.labelImportWizardTitle);
             this.Controls.Add(this.groupBoxAddCol);
             this.Controls.Add(this.labelStep);
@@ -274,6 +286,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).EndInit();
             this.groupBoxAddCol.ResumeLayout(false);
             this.contextMenuStripChangeCell.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWork)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -297,5 +310,6 @@
         private System.Windows.Forms.Label labelStep;
         private System.Windows.Forms.Label labelImportWizardTitle;
         private System.Windows.Forms.ComboBox comboBoxAddColumn;
+        private System.Windows.Forms.PictureBox pictureBoxWork;
     }
 }
