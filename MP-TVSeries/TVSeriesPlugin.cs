@@ -165,7 +165,7 @@ namespace WindowPlugins.GUITVSeries
         private Listlevel listLevel = Listlevel.Series;        
 		private DBSeries m_SelectedSeries;
         private DBSeason m_SelectedSeason;
-        private DBEpisode m_SelectedEpisode;
+        public static DBEpisode m_SelectedEpisode;
 		
 		private DBTable m_FanartItem;
         private VideoHandler m_VideoHandler;
@@ -1506,13 +1506,13 @@ namespace WindowPlugins.GUITVSeries
 
                     OnPlaySeriesOrSeasonAction onPlayAction = (OnPlaySeriesOrSeasonAction)(int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
 
-                    this.m_SelectedEpisode = null;
+                    m_SelectedEpisode = null;
                     if (selectedEpisode != null)
                     {
                         if (selectedEpisode[DBEpisode.cIsAvailable])
-                            this.m_SelectedEpisode = selectedEpisode;
+                            m_SelectedEpisode = selectedEpisode;
                         else
-                            this.m_SelectedEpisode = null;
+                            m_SelectedEpisode = null;
                     }
                     else if (selectedGroup != null || selectedSeason != null || selectedSeries != null) {
 
@@ -1686,19 +1686,22 @@ namespace WindowPlugins.GUITVSeries
         {
             if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled) && !fromPlay)
             {
+                /*
                 DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
                 string episodeTitle = episode[DBEpisode.cEpisodeName];
                 string seasonIdx = episode[DBEpisode.cSeasonIndex];
                 string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-                string seriesTitle = series.ToString();
+                string seriesTitle = series[DBOnlineSeries.cOriginalName];
                 string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
                 string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
                 string episodeFileName = episode[DBEpisode.cFilename];
 
                 List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
+
                 GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
                 GUIGraphicsContext.SendMessage(msg);
                 //GUIWindowManager.Process();
+                */
                 GUIWindowManager.ActivateWindow(84623);
                 return;
             }
@@ -1947,9 +1950,9 @@ namespace WindowPlugins.GUITVSeries
 						this.m_Facade.Focus = true;
 						break;
 					case Listlevel.Episode:
-						this.m_SelectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
+						m_SelectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
 						if (m_SelectedEpisode == null) return;
-						MPTVSeriesLog.Write("Selected: ", this.m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
+						MPTVSeriesLog.Write("Selected: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
                         CommonPlayEpisodeAction(true);
 						break;
@@ -2909,9 +2912,9 @@ namespace WindowPlugins.GUITVSeries
 
                                     item.TVTag = episode;
 
-                                    if (this.m_SelectedEpisode != null)
+                                    if (m_SelectedEpisode != null)
                                     {
-                                        if (episode[DBEpisode.cCompositeID] == this.m_SelectedEpisode[DBEpisode.cCompositeID])
+                                        if (episode[DBEpisode.cCompositeID] == m_SelectedEpisode[DBEpisode.cCompositeID])
                                         {
                                             if (!episode[DBOnlineEpisode.cWatched])
                                             {
@@ -4629,7 +4632,7 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsWatched != null) dummyIsWatched.Visible = episode[DBOnlineEpisode.cWatched];
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = episode[DBEpisode.cFilename].ToString().Length > 0;
            
-            this.m_SelectedEpisode = episode;
+            m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
 
             if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail)))

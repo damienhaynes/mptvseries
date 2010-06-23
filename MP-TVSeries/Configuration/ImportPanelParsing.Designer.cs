@@ -98,6 +98,8 @@
             this.dataGridViewReview.RowHeadersVisible = false;
             this.dataGridViewReview.Size = new System.Drawing.Size(717, 279);
             this.dataGridViewReview.TabIndex = 0;
+            this.dataGridViewReview.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewReview_CellValueChanged);
+            this.dataGridViewReview.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewReview_CurrentCellDirtyStateChanged);
             // 
             // labelWaitParse
             // 
@@ -187,14 +189,14 @@
             this.changeActionToolStripMenuItem});
             this.contextMenuStripChangeCell.Name = "contextMenuStripChangeCell";
             this.contextMenuStripChangeCell.ShowImageMargin = false;
-            this.contextMenuStripChangeCell.Size = new System.Drawing.Size(129, 26);
+            this.contextMenuStripChangeCell.Size = new System.Drawing.Size(133, 26);
             this.contextMenuStripChangeCell.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStripChangeCell_ItemClicked);
             this.contextMenuStripChangeCell.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripChangeCell_Opening);
             // 
             // changeActionToolStripMenuItem
             // 
             this.changeActionToolStripMenuItem.Name = "changeActionToolStripMenuItem";
-            this.changeActionToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.changeActionToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.changeActionToolStripMenuItem.Text = "Change Action";
             // 
             // lnkAddFiles
