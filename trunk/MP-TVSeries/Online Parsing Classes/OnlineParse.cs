@@ -2384,7 +2384,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
 
-                    episode[DBEpisode.cAvailableSubtitles] = episode.checkHasSubtitles();
+                    //episode[DBEpisode.cAvailableSubtitles] = episode.checkHasSubtitles();
                     
                     foreach (KeyValuePair<string, string> match in progress.parser.Matches)
                     {

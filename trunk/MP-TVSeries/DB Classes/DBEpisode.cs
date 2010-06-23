@@ -477,6 +477,9 @@ namespace WindowPlugins.GUITVSeries
                         this["AudioTracks"] = MI.AudioStreamCount;
 
                         this["TextCount"] = MI.SubtitleCount;
+                        
+                        // check for subtitles in mediainfo
+                        this[cAvailableSubtitles] = checkHasSubtitles();
                     }
                     else 
                         failed = true;
@@ -886,8 +889,8 @@ namespace WindowPlugins.GUITVSeries
                         return System.IO.File.Exists(base[DBEpisode.cFilename]) ? new System.IO.FileInfo(base[DBEpisode.cFilename]).Length : 0;
                     case cFileSize:
                         return StrFormatByteSize(this[cFileSizeBytes]);
-                    case cAvailableSubtitles:
-                        return (this[cAvailableSubtitles] = checkHasSubtitles());
+                    //case cAvailableSubtitles:
+                    //    return (this[cAvailableSubtitles] = checkHasSubtitles());
                     case cPrettyPlaytime:
                         return Helper.MSToMMSS(this["localPlaytime"]);
                     case cFilenameWOPath:
