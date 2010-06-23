@@ -18,7 +18,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         public ImportPanelParsing()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         public List<PathPair> allFoundFiles = new List<PathPair>();
@@ -300,6 +300,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             foreach (DataGridViewCell cell in changes.Cells)
             {
                 var colname = dataGridViewReview.Columns[cell.ColumnIndex].Name;
+                if (colname == "Status")
+                    orig.success = (bool)cell.Value;
                 if (colname != "Filename" &&
                     colname != "Status")
                 {
@@ -322,9 +324,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         string filterDefault = "Filter by..";
-        bool clearedByClick = false;
+        //bool clearedByClick = false;
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
+            Filter();
+            /*
             if (textBoxFilter.Text == string.Empty)
             {
                 if (!clearedByClick)
@@ -335,6 +339,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else if (textBoxFilter.Text != filterDefault)
                 Filter(this.textBoxFilter.Text);
+            */
 
         }
 
@@ -342,7 +347,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (textBoxFilter.Text == filterDefault)
             {
-                clearedByClick = true;
+                //clearedByClick = true;
                 textBoxFilter.Text = string.Empty;
             }
         }
@@ -373,13 +378,56 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 });
         }
 
+        bool filteringResultForRow(DataGridViewRow row)
+        {
+            bool matches = false;
+            foreach (DataGridViewCell cell in row.Cells)
+            {
+                if (textBoxFilter.Text != filterDefault && textBoxFilter.Text != string.Empty)
+                {
+                    if (cell.Value != null && cell.Value.ToString().ToLower().Contains(textBoxFilter.Text.ToLower()))
+                    {
+                        matches = true;
+                        break;
+                    }
+                }
+                else
+                    matches = true;
+            }
+
+            bool matchesManual = false;
+            if (checkFilterMan.Checked)
+            {
+                parseResult pr = row.Tag as parseResult;
+                matchesManual = pr != null && pr.match_filename == pr.full_filename;
+            }
+            else
+                matchesManual = true;
+
+            return matches && matchesManual;
+        }
+
+        void Filter()
+        {
+            dataGridViewReview.SuspendLayout();
+
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
+            {
+                row.Visible = filteringResultForRow(row);
+            }
+            
+            dataGridViewReview.ResumeLayout();
+            updateCount();
+
+        }
+
         void Filter(Func<DataGridViewRow, bool> filter)
         {
             dataGridViewReview.SuspendLayout();
             
             foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
-                row.Visible = filter(row); ;
+                row.Visible = filter(row);
             }
             dataGridViewReview.ResumeLayout();
             updateCount();
@@ -476,11 +524,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             // add them to the origlist
             if (origResults == null) origResults = new List<parseResult>();
-            origResults.AddRange(parseResult);
+            foreach (parseResult pr in parseResult)
+            {
+                if (origResults.Find(match => match.full_filename == pr.full_filename) == null)
+                    origResults.Add(pr);
+            }
 
             // now merge them with the changes
             List<parseResult> allResults = (List<parseResult>)IdentifyChanges(true);
-            allResults.AddRange(parseResult);
+            foreach (parseResult pr in parseResult)
+            {
+                if (allResults.Find(match => match.full_filename == pr.full_filename) == null)
+                    allResults.Add(pr);
+            }
 
             // and refresh the grid
             FillGrid(allResults);
@@ -500,6 +556,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void checkFilterMan_CheckedChanged(object sender, EventArgs e)
         {
+            Filter();
+            /*
             if (checkFilterMan.Checked)
             {
                 // we identify manually added as having the same fullfilename as matchfilename
@@ -511,6 +569,21 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     });
             }
             else RefreshGrid();
+            */
+        }
+
+        void dataGridViewReview_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewReview.CurrentCell.ColumnIndex == 0 && (bool)dataGridViewReview.CurrentCell.Value)
+                dataGridViewReview.CurrentRow.DefaultCellStyle.BackColor = Color.LightGreen;
+            else
+                dataGridViewReview.CurrentRow.DefaultCellStyle.BackColor = Color.LemonChiffon;
+        }
+
+        void dataGridViewReview_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewReview.CurrentCell.ColumnIndex == 0 && dataGridViewReview.IsCurrentCellDirty)
+                dataGridViewReview.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
     }
