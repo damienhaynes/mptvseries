@@ -100,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
     }
     #endregion
 
-    class Helper
+    public class Helper
     {
         #region List<T> Methods
 
