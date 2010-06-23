@@ -353,8 +353,6 @@ namespace WindowPlugins.GUITVSeries
                         //Threaded MediaInfo.dll parsing of new files - goes straight to next task
                         tMediaInfo = new BackgroundWorker();
                         MediaInfoParse(tMediaInfo);
-                        // at this point, notify the UI we have new files available
-                        m_worker.ReportProgress(30);
                         break;
 
                     case ParsingAction.IdentifyNewSeries:
@@ -372,8 +370,7 @@ namespace WindowPlugins.GUITVSeries
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
                         {
-                            GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);
-                            m_worker.ReportProgress(50);
+                            GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);                            
                         }
                         break;
 
@@ -407,8 +404,7 @@ namespace WindowPlugins.GUITVSeries
                                 UpdateEpisodes(updates.UpdatedEpisodes);
                             if (m_params.m_episodes != null)
                             {
-                                UpdateEpisodes(m_params.m_episodes);
-                                m_worker.ReportProgress(70);
+                                UpdateEpisodes(m_params.m_episodes);                               
                             }
                         }
                         break;
@@ -753,7 +749,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                ParseLocal(UserModifiedParsedResults == null ? Filelister.GetFiles(listFolders) : null, UserModifiedParsedResults);
+                //ParseLocal(UserModifiedParsedResults == null ? Filelister.GetFiles(listFolders) : null, UserModifiedParsedResults);
+                ParseLocal(Filelister.GetFiles(listFolders), UserModifiedParsedResults);              
 
                 // now, remove all episodes still processed = 0, the weren't find in the scan
                 SQLCondition condition = new SQLCondition();
@@ -2283,13 +2280,22 @@ namespace WindowPlugins.GUITVSeries
             bool resultsFromUser = UserModifiedParsedResults != null;
             MPTVSeriesLog.Write(bigLogMessage("Gathering Local Information"));
             // dont parse if we get results from user (already done)
-            IList<parseResult> parsedFiles = resultsFromUser ? UserModifiedParsedResults : LocalParse.Parse(files, false);
+            //IList<parseResult> parsedFiles = resultsFromUser ? UserModifiedParsedResults : LocalParse.Parse(files, false);            
+            IList<parseResult> parsedFiles = LocalParse.Parse(files, true);
 
-            // don't process those already in DB
+            // get a list of files that are on disk and still in database
+            // also get a list of new files for import returned in parsedFiles
             var updateStatusEps = RemoveFilesInDB(ref parsedFiles);
+            // update the importprocessed state for files we previously set as not processed
+            UpdateStatus(updateStatusEps);
 
-            UpdateStatus(updateStatusEps); //this is what takes the most time for initial parsing of episode.
+            // if we have user modified parse results, use these instead
+            // user may have manually input for series/season/episodes.
+            if (resultsFromUser)
+                parsedFiles = UserModifiedParsedResults;
+
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
+            
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
             List<DBSeason> relatedSeasons = new List<DBSeason>();

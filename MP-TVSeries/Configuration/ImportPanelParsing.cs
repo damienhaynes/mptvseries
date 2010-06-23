@@ -167,7 +167,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     origResults = results.ToList<parseResult>();
                     FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
-                    // fire off event so user can click Next is wizard
+                    // fire off event so user can click Next in wizard
                     if (ParsingGridPopulated != null)
                         ParsingGridPopulated();
                 });
