@@ -49,8 +49,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     break;
 
                 case ParsingAction.IdentifyNewSeries:
-                case ParsingAction.UpdateSeries:
-                case ParsingAction.UpdateEpisodes:
+                case ParsingAction.UpdateSeries:                
                 case ParsingAction.UpdateBanners:
                 case ParsingAction.UpdateFanart:
                 case ParsingAction.GetNewBanners:
@@ -60,6 +59,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     type = "series";
                     break;
 
+                case ParsingAction.UpdateEpisodes:
                 case ParsingAction.IdentifyNewEpisodes:
                 case ParsingAction.UpdateEpisodeThumbNails:
                     type = "episodes";
