@@ -203,6 +203,9 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cUseFullNameInSubDialog = "UseFullNameInSubDialog";
 
+        public const String cConfigSizeHeight = "configSizeHeight";
+        public const String cConfigSizeWidth = "configSizeWidth";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";

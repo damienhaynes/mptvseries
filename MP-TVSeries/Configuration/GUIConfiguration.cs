@@ -100,8 +100,8 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
             
             // set height/width
-            int height = DBOption.GetOptions("configSizeHeight");
-            int width = DBOption.GetOptions("configSizeWidth");
+            int height = DBOption.GetOptions(DBOption.cConfigSizeHeight);
+            int width = DBOption.GetOptions(DBOption.cConfigSizeWidth);
             if (height > this.MinimumSize.Height && width > this.MinimumSize.Width)
             {
                 System.Drawing.Size s = new Size(width, height);
@@ -3916,8 +3916,8 @@ namespace WindowPlugins.GUITVSeries
             localLogos.cleanUP();
 
             // save the config size
-            DBOption.SetOptions("configSizeHeight", this.Size.Height);
-            DBOption.SetOptions("configSizeWidth", this.Size.Width);
+            DBOption.SetOptions(DBOption.cConfigSizeHeight, this.Size.Height);
+            DBOption.SetOptions(DBOption.cConfigSizeWidth, this.Size.Width);
         }
 
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
