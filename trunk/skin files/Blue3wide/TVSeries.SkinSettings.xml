@@ -153,15 +153,19 @@ skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\DivX.png;-;<Episode.VideoCodec>;
 skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\xvid.png;-;<Episode.VideoCodec>;-;contains;-;XVID;-;OR;-;<Episode.VideoCodec>;-;contains;-;MPG4;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\wmv.png;-;<Episode.VideoCodec>;-;contains;-;WMV;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\realvideo.png;-;<Episode.VideoCodec>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\vc-1.png;-;<Episode.VideoCodec>;-;contains;-;VC-1;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\vc-1.png;-;<Episode.VideoCodec>;-;contains;-;VC-1;-;OR;-;<Episode.VideoFormat>;-;=;-;VC-1;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\VideoCodecs\avc.png;-;<Episode.VideoFormat>;-;=;-;AVC;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AAC.png;-;<Episode.AudioCodec>;-;contains;-;AAC;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3.png;-;<Episode.AudioCodec>;-;=;-;AC3;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3+.png;-;<Episode.AudioCodec>;-;=;-;AC3+;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\TrueHD.png;-;<Episode.AudioCodec>;-;=;-;TrueHD;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3.png;-;<Episode.AudioCodec>;-;contains;-;AC3;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\AC3+.png;-;<Episode.AudioCodec>;-;=;-;AC3+;-;OR;-;<Episode.AudioFormat>;-;=;-;E-AC-3;-;OR;-;<Episode.AudioFormat>;-;=;-;AC3+;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\TrueHD.png;-;<Episode.AudioCodec>;-;=;-;TrueHD;-;OR;-;<Episode.AudioFormatProfile>;-;contains;-;TrueHD;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTSHD.png;-;<Episode.AudioCodec>;-;=;-;DTS-HD;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTS HRA.png;-;<Episode.AudioFormat>;-;=;-;DTS;-;AND;-;<Episode.AudioFormatProfile>;-;=;-;HRA;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTS MA.png;-;<Episode.AudioFormat>;-;=;-;DTS;-;AND;-;<Episode.AudioFormatProfile>;-;=;-;MA;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\DTS.png;-;<Episode.AudioCodec>;-;=;-;DTS;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\FLAC.png;-;<Episode.AudioCodec>;-;contains;-;FLAC;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\MP3.png;-;<Episode.AudioCodec>;-;contains;-;MPA1L3;-;OR;-;<Episode.AudioCodec>;-;contains;-;MPA2L3;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\MP3.png;-;<Episode.AudioFormat>;-;=;-;MPEG Audio;-;AND;-;<Episode.AudioFormatProfile>;-;=;-;Layer 3;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\MP2A.png;-;<Episode.AudioCodec>;-;contains;-;MPA1L2;-;OR;-;<Episode.AudioCodec>;-;contains;-;MPA2L2;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\wma.png;-;<Episode.AudioCodec>;-;contains;-;WMA;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Blue3wide\Media\TVSeries\Logos\AudioCodecs\realaudio.png;-;<Episode.AudioCodec>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>

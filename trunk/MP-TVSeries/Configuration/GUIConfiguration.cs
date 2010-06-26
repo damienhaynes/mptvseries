@@ -1746,8 +1746,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cCompositeID:
                                 case DBEpisode.cCompositeID2:
                                 case DBEpisode.cStopTime:
-                                case DBEpisode.cExtension:
-                                case DBEpisode.cLocalPlaytime:
+                                case DBEpisode.cExtension:                                
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
                                 case DBOnlineEpisode.cID:
@@ -1766,7 +1765,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonID:
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
-                                case DBOnlineEpisode.cAbsoluteNumber:                                
+                                case DBOnlineEpisode.cAbsoluteNumber:
+                                case DBEpisode.cIsAvailable:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1788,16 +1788,25 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cVideoHeight:
                                 case DBEpisode.cVideoFrameRate:
                                 case DBEpisode.cVideoCodec:
+                                case DBEpisode.cVideoFormat:
+                                case DBEpisode.cVideoFormatProfile:
                                 case DBEpisode.cVideoBitRate:
                                 case DBEpisode.cVideoAspectRatio:
                                 case DBEpisode.cAudioTracks:
                                 case DBEpisode.cAudioCodec:
+                                case DBEpisode.cAudioFormat:
+                                case DBEpisode.cAudioFormatProfile:
                                 case DBEpisode.cAudioChannels:
                                 case DBEpisode.cAudioBitrate:
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
-                                    if (!String.IsNullOrEmpty(episode[key]))
+                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    break;
+                                
+                                case DBEpisode.cLocalPlaytime:
+                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, Helper.MSToMMSS(episode[key]));
                                     break;
 
                                 case DBEpisode.cTextCount:
