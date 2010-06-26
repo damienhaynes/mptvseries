@@ -94,8 +94,49 @@ namespace WindowPlugins.GUITVSeries
 
                 // Check if file is an Image e.g. ISO
                 string filename = m_currentEpisode[DBEpisode.cFilename];
-                m_bIsImageFile = Helper.IsImageFile(filename);                               
-                
+                m_bIsImageFile = Helper.IsImageFile(filename);
+
+                #region Invoke Before Playback
+                // see if we have an invokeOption set up
+                string invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback);                
+                if (!string.IsNullOrEmpty(invoke))
+                {
+                    string invokeArgs = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlaybackArgs);
+                    try
+                    {
+                        // replace any placeholders in the arguments for the script if any have been supplied.
+                        if (!string.IsNullOrEmpty(invokeArgs))
+                        {
+                            invokeArgs = FieldGetter.resolveDynString(invokeArgs, m_currentEpisode, true);
+                        }
+                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                        
+                        // use ProcessStartInfo instead of Process.Start(string) as latter produces a "cannot find file"
+                        // error if you pass in command line arguments.
+                        // also allows us to run the script hidden, preventing, for example, a command prompt popping up.
+                        ProcessStartInfo psi = new ProcessStartInfo(invoke, invokeArgs);
+                        psi.WindowStyle = ProcessWindowStyle.Hidden;
+                        Process proc = System.Diagnostics.Process.Start(psi);
+                        MPTVSeriesLog.Write(string.Format("Sucessfully Invoked BeforeFilePlay Command: '{0}' '{1}'",  invoke, invokeArgs));
+
+                        // if not present in database this evaluates to false. If present and not a valid bool then
+                        // it evaluates to true
+                        bool waitForExit = (bool)DBOption.GetOptions(DBOption.cInvokeExtBeforePlaybackWaitForExit);
+                        
+                        // if true this thread will wait for the external user script to complete before continuing.
+                        if (waitForExit)
+                        {
+                            proc.WaitForExit();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MPTVSeriesLog.Write(string.Format("Unable to Invoke BeforeFilePlay Command: '{0}' '{1}'",  invoke, invokeArgs));
+                        MPTVSeriesLog.Write(e.Message);
+                    }
+                }
+                #endregion
+
                 #region Removable Media Handling
                 bool isOnRemovable = false;
                 if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
@@ -329,23 +370,6 @@ namespace WindowPlugins.GUITVSeries
                         return false;
                     }
                 }
-
-                // see if we have an invokeOption set up
-                string invoke;
-                if((invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback)) != null && !string.IsNullOrEmpty(invoke))
-                {
-                    try
-                    {
-                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
-                        System.Diagnostics.Process.Start(invoke);
-                        MPTVSeriesLog.Write("Sucessfully Invoked BeforeFilePlay Command: " + invoke);
-                    }
-                    catch (Exception e)
-                    {
-                        MPTVSeriesLog.Write("Unable to Invoke BeforeFilePlay Command: " + invoke);
-                        MPTVSeriesLog.Write(e.Message);
-                    }
-                }
                 
                 // Start Listening to any External Player Events
                 listenToExternalPlayerEvents = true;
@@ -546,22 +570,45 @@ namespace WindowPlugins.GUITVSeries
             }
             SetGUIProperties(true); // clear GUI Properties
 
-            // see if we have an invokeOption set up
-            string invoke;
-            if (countAsWatched && (invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback)) != null && !string.IsNullOrEmpty(invoke))
+            #region Invoke After Playback
+            string invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback);
+            if (countAsWatched && !string.IsNullOrEmpty(invoke))
             {
+                string invokeArgs = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlaybackArgs);
                 try
-                {
+                {                    
+                    // replace any placeholders in the arguments for the script if any have been supplied.
+                    if (!string.IsNullOrEmpty(invokeArgs))
+                    {
+                        invokeArgs = FieldGetter.resolveDynString(invokeArgs, m_currentEpisode, true);
+                    }
                     invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
-                    System.Diagnostics.Process.Start(invoke);
-                    MPTVSeriesLog.Write("Sucessfully Invoked AfterFilePlay Command: " + invoke);
+
+                    // use ProcessStartInfo instead of Process.Start(string) as latter produces a "cannot find file"
+                    // error if you pass in command line arguments.
+                    // also allows us to run the script hidden, preventing, for example, a command prompt popping up.
+                    ProcessStartInfo psi = new ProcessStartInfo(invoke, invokeArgs);
+                    psi.WindowStyle = ProcessWindowStyle.Hidden;
+                    Process proc = System.Diagnostics.Process.Start(psi);
+                    MPTVSeriesLog.Write(string.Format("Sucessfully Invoked AfterFilePlay Command: '{0}' '{1}'", invoke, invokeArgs));
+
+                    // if not present in database this evaluates to false. If present and not a valid bool then
+                    // it evaluates to true
+                    bool waitForExit = (bool)DBOption.GetOptions(DBOption.cInvokeExtAfterPlaybackWaitForExit);
+
+                    // if true this thread will wait for the external user script to complete before continuing.
+                    if (waitForExit)
+                    {
+                        proc.WaitForExit();
+                    }
                 }
                 catch (Exception e)
                 {
-                    MPTVSeriesLog.Write("Unable to Invoke AfterFilePlay Command: " + invoke);
+                    MPTVSeriesLog.Write(string.Format("Unable to Invoke ExtAfterPlayback Command: '{0}' '{1}'", invoke, invokeArgs));
                     MPTVSeriesLog.Write(e.Message);
                 }
             }
+            #endregion
         }
 
         void LogPlayBackOp(string OperationType, string filename)

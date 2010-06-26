@@ -187,7 +187,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
 
         public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
+        public const String cInvokeExtBeforePlaybackArgs = "InvokeExtBeforePlaybackArgs";
+        public const String cInvokeExtBeforePlaybackWaitForExit = "InvokeExtBeforePlaybackWaitForExit";
         public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
+        public const String cInvokeExtAfterPlaybackArgs = "InvokeExtAfterPlaybackArgs";
+        public const String cInvokeExtAfterPlaybackWaitForExit = "InvokeExtAfterPlaybackWaitForExit";
 
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
 
