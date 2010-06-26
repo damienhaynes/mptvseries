@@ -68,7 +68,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cImportProcessed = "LocalImportProcessed";
         public const String cAvailableSubtitles = "AvailableSubtitles";
 
-        public const String cAudioCodec = "AudioCodec";
+        public const String cAudioCodec = "AudioCodec";        
+        public const String cAudioFormat = "AudioFormat";
+        public const String cAudioFormatProfile = "AudioFormatProfile";
         public const String cAudioBitrate = "AudioBitrate";
         public const String cAudioChannels = "AudioChannels";
         public const String cAudioTracks = "AudioTracks";
@@ -78,7 +80,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cVideoBitRate = "VideoBitrate";
         public const String cVideoFrameRate = "VideoFrameRate";
         public const String cVideoAspectRatio = "VideoAspectRatio";
-        public const String cVideoCodec = "VideoCodec";
+        public const String cVideoCodec = "VideoCodec";                
+        public const String cVideoFormat = "VideoFormat";
+        public const String cVideoFormatProfile = "VideoFormatProfile";
         
         public const String cStopTime = "StopTime";
 
@@ -138,13 +142,18 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cVideoAspectRatio, "Video Aspect Ratio");
             s_FieldToDisplayNameMap.Add(cVideoBitRate, "Video Bit Rate");
             s_FieldToDisplayNameMap.Add(cVideoCodec, "Video Codec");
+            s_FieldToDisplayNameMap.Add(cVideoFormat, "Video Format");
+            s_FieldToDisplayNameMap.Add(cVideoFormatProfile, "Video Format Profile");
             s_FieldToDisplayNameMap.Add(cVideoFrameRate, "Video Frame Rate");
-            s_FieldToDisplayNameMap.Add(cAudioBitrate, "Audio Bitrate");
+            s_FieldToDisplayNameMap.Add(cAudioBitrate, "Audio Bit Rate");
             s_FieldToDisplayNameMap.Add(cVolumeLabel, "Volume Label");
             s_FieldToDisplayNameMap.Add(cAudioChannels, "Audio Channels");
-            s_FieldToDisplayNameMap.Add(cAudioCodec, "Audio Codec");
+            s_FieldToDisplayNameMap.Add(cAudioCodec, "Audio Codec");            
+            s_FieldToDisplayNameMap.Add(cAudioFormat, "Audio Format");
+            s_FieldToDisplayNameMap.Add(cAudioFormatProfile, "Audio Format Profile");
             s_FieldToDisplayNameMap.Add(cAudioTracks, "Audio Tracks");
             s_FieldToDisplayNameMap.Add(cTextCount, "Subtitle Count");
+            s_FieldToDisplayNameMap.Add(cLocalPlaytime, "Runtime");
             #endregion
             ///////////////////////////////////////////////////
 
@@ -413,12 +422,12 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 // Check at least one MediaInfo field has been populated                
-                if (String.IsNullOrEmpty(this["localPlaytime"]))                                
+                if (String.IsNullOrEmpty(this[cLocalPlaytime]))                                
                     return false;
                 else
                 {
                     int noAttempts = 0;
-                    if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
+                    if (!int.TryParse(this[cLocalPlaytime], out noAttempts)) return true;
                     
                     // local playtime will be greater than zero if mediainfo has been retrieved
                     if (noAttempts > 0) return true;
@@ -454,31 +463,35 @@ namespace WindowPlugins.GUITVSeries
                                         
                     // check number of failed attempts at mediainfo extraction                    
                     int noAttempts = 0;
-                    int.TryParse(this["localPlaytime"], out noAttempts);
+                    int.TryParse(this[cLocalPlaytime], out noAttempts);
                     noAttempts--;
                     
                     // Get Playtime (runtime)
                     string result = MI.VideoPlaytime;
-                    this["localPlaytime"] = result != "-1" ? result : noAttempts.ToString();
+                    this[cLocalPlaytime] = result != "-1" ? result : noAttempts.ToString();
 
                     bool failed = false;
                     if (result != "-1")
                     {
-                        this["VideoCodec"] = MI.VideoCodec;
-                        this["VideoBitrate"] = MI.VideoBitrate;
-                        this["VideoFrameRate"] = MI.VideoFramesPerSecond;
-                        this["videoWidth"] = MI.VideoWidth;
-                        this["videoHeight"] = MI.VideoHeight;
-                        this["VideoAspectRatio"] = MI.VideoAspectRatio;
+                        this[cVideoCodec] = MI.VideoCodec;
+                        this[cVideoFormat] = MI.VideoCodecFormat;
+                        this[cVideoFormatProfile] = MI.VideoFormatProfile;
+                        this[cVideoBitRate] = MI.VideoBitrate;
+                        this[cVideoFrameRate] = MI.VideoFramesPerSecond;
+                        this[cVideoWidth] = MI.VideoWidth;
+                        this[cVideoHeight] = MI.VideoHeight;
+                        this[cVideoAspectRatio] = MI.VideoAspectRatio;
 
-                        this["AudioCodec"] = MI.AudioCodec;
-                        this["AudioBitrate"] = MI.AudioBitrate;
-                        this["AudioChannels"] = MI.AudioChannelCount;
-                        this["AudioTracks"] = MI.AudioStreamCount;
+                        this[cAudioCodec] = MI.AudioCodec;                        
+                        this[cAudioFormat] = MI.AudioCodecFormat;
+                        this[cAudioFormatProfile] = MI.AudioFormatProfile;
+                        this[cAudioBitrate] = MI.AudioBitrate;
+                        this[cAudioChannels] = MI.AudioChannelCount;
+                        this[cAudioTracks] = MI.AudioStreamCount;
 
-                        this["TextCount"] = MI.SubtitleCount;
+                        this[cTextCount] = MI.SubtitleCount;
                         
-                        // check for subtitles in mediainfo
+                        // check for subtitles in mediainfo                        
                         this[cAvailableSubtitles] = checkHasSubtitles();
                     }
                     else 

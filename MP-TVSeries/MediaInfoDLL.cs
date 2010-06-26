@@ -218,9 +218,28 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         #region Video Properties
 
-        public string VideoCodec {
+        public string VideoCodec
+        {
             get {
-                string result = this.Get(StreamKind.Video, 0, "Codec");
+                string result = this.Get(StreamKind.Video, 0, "CodecID");
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string VideoCodecFormat
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Video, 0, "Format");
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string VideoFormatProfile
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Video, 0, "Format_Profile");
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -248,14 +267,14 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         public string VideoAspectRatio {
             get {
-                string result = this.Get(StreamKind.Video, 0, "AspectRatio");
+                string result = this.Get(StreamKind.Video, 0, "DisplayAspectRatio");
                 return result.Length > 0 ? result : "-1";
             }
         }
 
         public string VideoPlaytime {
             get {
-                string result = this.Get(StreamKind.Video, 0, "PlayTime");
+                string result = this.Get(StreamKind.Video, 0, "Duration");
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -273,7 +292,25 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         public string AudioCodec {
             get {
-                string result = this.Get(StreamKind.Audio, 0, "Codec");
+                string result = this.Get(StreamKind.Audio, 0, "CodecID");
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string AudioCodecFormat
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Audio, 0, "Format");
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string AudioFormatProfile
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Audio, 0, "Format_Profile");
                 return result.Length > 0 ? result : "-1";
             }
         }
