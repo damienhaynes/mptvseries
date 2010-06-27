@@ -138,8 +138,7 @@ namespace WindowPlugins.GUITVSeries
             currentFolder = Directory.GetCurrentDirectory();
 
             string xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml";
-            MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
-            //SkinSettings.GetSkinProperties(xmlSkin);
+            MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);            
 
             return Load(xmlSkin);
         }
