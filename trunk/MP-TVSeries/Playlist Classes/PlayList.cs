@@ -193,7 +193,7 @@ namespace WindowPlugins.GUITVSeries
 
             try
             {
-                MPTVSeriesLog.Write(string.Format("Moving playlist item {0} up. Old index:{1}, new index{2}", playListItem1.Description, iItem, iPreviousItem));
+                MPTVSeriesLog.Write(string.Format("Moving playlist item {0} up. Old index:{1}, new index{2}", playListItem1.EpisodeName, iItem, iPreviousItem));
                 System.Threading.Monitor.Enter(this);
                 _listPlayListItems[iItem] = playListItem2;
                 _listPlayListItems[iPreviousItem] = playListItem1;
@@ -232,7 +232,7 @@ namespace WindowPlugins.GUITVSeries
 
             try
             {
-                MPTVSeriesLog.Write(string.Format("Moving playlist item {0} down. Old index:{1}, new index{2}", playListItem1.Description, iItem, iNextItem));
+                MPTVSeriesLog.Write(string.Format("Moving playlist item {0} down. Old index:{1}, new index{2}", playListItem1.EpisodeName, iItem, iNextItem));
                 System.Threading.Monitor.Enter(this);
                 _listPlayListItems[iItem] = playListItem2;
                 _listPlayListItems[iNextItem] = playListItem1;
