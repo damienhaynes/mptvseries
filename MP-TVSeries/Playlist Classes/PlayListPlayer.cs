@@ -461,7 +461,10 @@ namespace WindowPlugins.GUITVSeries
         private void SetProperties(PlayListItem item, bool clear)
         {
             if (item == null) return;
-            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : item.Description);
+
+            string title = string.Format("{0}x{1}: {2}", item.SeasonIndex, item.EpisodeIndex, item.EpisodeName);
+
+            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : title);
             GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : item.Summary);
             GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : item.EpisodeThumb);
             GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : item.FirstAired);            

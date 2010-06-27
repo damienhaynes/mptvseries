@@ -34,10 +34,13 @@ namespace WindowPlugins.GUITVSeries
     public class PlayListItem
     {
         protected string _fileName = "";
-        protected string _description = "";
+        protected string _episodeName = "";
         protected double _duration = 0;
         protected string _episodeThumb = "-";
         protected string _episodeID = "";
+        protected string _seasonIndex = "";
+        protected string _episodeIndex = "";
+        protected string _seriesName = "";
         protected string _summary = "";
         protected string _firstAired = "";
         bool _isPlayed = false;       
@@ -63,9 +66,12 @@ namespace WindowPlugins.GUITVSeries
                 _episode = value;
 
                 FileName = value[DBEpisode.cFilename];
-                Description = value[DBEpisode.cEpisodeName];
+                EpisodeName = value[DBEpisode.cEpisodeName];
                 Duration = value["localPlaytime"];
-                EpisodeID = value[DBOnlineEpisode.cID];                
+                EpisodeID = value[DBOnlineEpisode.cID];
+                EpisodeIndex = value[DBOnlineEpisode.cEpisodeIndex];
+                SeasonIndex = value[DBOnlineEpisode.cSeasonIndex];
+                SeriesName = Helper.getCorrespondingSeries(value[DBOnlineEpisode.cSeriesID]).ToString();
                 Summary = value[DBOnlineEpisode.cEpisodeSummary];
                 FirstAired = value[DBOnlineEpisode.cFirstAired];
                 EpisodeThumb = ImageAllocator.GetEpisodeImage(value);                               
@@ -94,6 +100,39 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public virtual string EpisodeIndex
+        {
+            get { return _episodeIndex; }
+            set
+            {
+                if (value == null)
+                    return;
+                _episodeIndex = value;
+            }
+        }
+
+        public virtual string SeasonIndex
+        {
+            get { return _seasonIndex; }
+            set
+            {
+                if (value == null)
+                    return;
+                _seasonIndex = value;
+            }
+        }
+
+        public virtual string SeriesName
+        {
+            get { return _seriesName; }
+            set
+            {
+                if (value == null)
+                    return;
+                _seriesName = value;
+            }
+        }
+
         public virtual string FileName
         {
             get { return _fileName; }
@@ -105,14 +144,14 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public string Description
+        public string EpisodeName
         {
-            get { return _description; }
+            get { return _episodeName; }
             set
             {
                 if (value == null)
                     return;
-                _description = value;
+                _episodeName = value;
             }
         }
 
@@ -147,9 +186,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode ep in episodes)
                 {
                     ep[DBOnlineEpisode.cWatched] = "1";
-                    ep.Commit();
-                    //DBSeason.UpdateUnWatched(ep);
-                    //DBSeries.UpdateUnWatched(ep);
+                    ep.Commit();   
                 }
                 // Update Episode Counts
                 DBSeries series = Helper.getCorrespondingSeries(_episode[DBEpisode.cSeriesID]);

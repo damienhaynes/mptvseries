@@ -518,7 +518,7 @@ namespace WindowPlugins.GUITVSeries
                     PlayListItem item = playlist[i];
                     strFileName = item.FileName;
 
-                    GUIListItem pItem = new GUIListItem(item.Description);
+                    GUIListItem pItem = new GUIListItem(item.EpisodeName);
                     pItem.Path = strFileName;
                     pItem.IsFolder = false;
                     pItem.TVTag = item.Episode;

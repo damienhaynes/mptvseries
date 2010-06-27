@@ -545,7 +545,7 @@ namespace WindowPlugins.GUITVSeries
         public static bool IsAssemblyAvailable(string name, Version ver) {
             bool result = false;
 
-            MPTVSeriesLog.Write(string.Format("Checking weather assembly {0} is available and loaded...", name), MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(string.Format("Checking whether assembly {0} is available and loaded...", name), MPTVSeriesLog.LogLevel.Debug);
 
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly a in assemblies)
