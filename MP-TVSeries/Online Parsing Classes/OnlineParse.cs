@@ -985,8 +985,11 @@ namespace WindowPlugins.GUITVSeries
                                         goto default;
                                     break;
                                 default:
-                                    localSeries.AddColumn(key, new DBField(DBField.cTypeString));
-                                    localSeries[key] = updatedSeries[key];
+                                    if (!key.Contains(DBTable.cUserEditPostFix))
+                                    {
+                                        localSeries.AddColumn(key, new DBField(DBField.cTypeString));
+                                        localSeries[key] = updatedSeries[key];
+                                    }
                                     break;
                             }
                         }
@@ -1113,8 +1116,11 @@ namespace WindowPlugins.GUITVSeries
                                             break; // those must not get overwritten from what they were set to by getEpisodes (because of different order options)
 
                                         default:
-                                            newOnlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
-                                            newOnlineEpisode[key] = onlineEpisode[key];
+                                            if (!key.Contains(DBTable.cUserEditPostFix))
+                                            {
+                                                newOnlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
+                                                newOnlineEpisode[key] = onlineEpisode[key];
+                                            }
                                             break;
                                     }
                                 }
