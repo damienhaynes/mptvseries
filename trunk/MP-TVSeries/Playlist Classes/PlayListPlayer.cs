@@ -410,7 +410,16 @@ namespace WindowPlugins.GUITVSeries
 
                 // Start Listening to any External Player Events
 				listenToExternalPlayerEvents = true;
-                
+
+                #region Publish Play properties for InfoService plugin
+                string seriesName = item.SeriesName;
+                string seasonID = item.SeasonIndex;
+                string episodeID = item.EpisodeIndex;
+                string episodeName = item.EpisodeName;
+                GUIPropertyManager.SetProperty("#TVSeries.Extended.Title", string.Format("{0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                MPTVSeriesLog.Write(string.Format("#TVSeries.Extended.Title: {0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                #endregion
+
                 // Play File
                 playResult = g_Player.Play(filename);
 
