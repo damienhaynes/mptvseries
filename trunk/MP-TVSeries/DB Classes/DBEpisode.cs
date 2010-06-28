@@ -566,7 +566,10 @@ namespace WindowPlugins.GUITVSeries
 
             int textCount = -1;
             if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
+            {
                 textCount = (int)this["TextCount"];
+                if (textCount == -1) textCount = 0;
+            }
 
             if (DBOption.GetOptions(DBOption.cSubCentralEnabled) && DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes) && Helper.IsSubCentralAvailableAndEnabled)
             {
