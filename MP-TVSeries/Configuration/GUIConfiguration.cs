@@ -2244,7 +2244,14 @@ namespace WindowPlugins.GUITVSeries
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        episode[editFieldName] = newValue;
+                        
+                        if (episode.onlineEpisode.FieldNames.Contains(origFieldName))
+                        {
+                            episode.onlineEpisode[editFieldName] = newValue;
+                        }
+                        else
+                            episode[editFieldName] = newValue;
+
                         episode.Commit();
 
                         if (string.IsNullOrEmpty(newValue))
