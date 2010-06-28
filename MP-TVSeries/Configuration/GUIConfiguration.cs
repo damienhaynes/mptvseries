@@ -2139,6 +2139,7 @@ namespace WindowPlugins.GUITVSeries
         private void AddPropertyBindingSource(string FieldPrettyName, string FieldName, string FieldValue, bool CanModify, DataGridViewContentAlignment TextAlign)
         {
             int id = -1;
+            bool userEdited = false;
             // are we a user_edited item? if so replace the orig entry
             if (FieldName.EndsWith(DBTable.cUserEditPostFix))
             {
@@ -2150,6 +2151,7 @@ namespace WindowPlugins.GUITVSeries
                     if (dataGridView1.Rows[i].Cells[1].Tag as string == origFieldName)
                     {
                         id = i;
+                        userEdited = true;
                         break;
                     }
 
@@ -2174,6 +2176,10 @@ namespace WindowPlugins.GUITVSeries
                 cell.ReadOnly = true;
                 cell.Style.BackColor = System.Drawing.SystemColors.Control;
             }
+            if (userEdited)
+            {
+                cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+            }
 
             cell.Style.Alignment = TextAlign;
 
@@ -2181,24 +2187,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            nodeEdited = treeView_Library.SelectedNode;
-            /*
-            if (this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString() == "Filename")
-            {
-                openFileDialog1.FileName = this.dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-                openFileDialog1.ShowDialog();
-                if (this.dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString() != openFileDialog1.FileName)
-                {
-                    this.dataGridView1.Rows[e.RowIndex].Cells[1].Value = openFileDialog1.FileName;
-                    m_PropertySaveRequired = true;
-                }
-                e.Cancel = true;
-                return;
-            }
-
-            if (this.treeView_Library.Nodes.Count > 0)
-                m_PropertySaveRequired = true;
-            */
+            nodeEdited = treeView_Library.SelectedNode;           
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -2206,29 +2195,67 @@ namespace WindowPlugins.GUITVSeries
             DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[1];
             if (nodeEdited != null)
             {
-                string field = (string)cell.Tag;
-                if (!field.EndsWith(DBTable.cUserEditPostFix))
-                    field += DBTable.cUserEditPostFix;
+                string origFieldName = (string)cell.Tag;
+                string editFieldName = origFieldName;
+
+                if (!editFieldName.EndsWith(DBTable.cUserEditPostFix))
+                    editFieldName += DBTable.cUserEditPostFix;
+
+                if (origFieldName.EndsWith(DBTable.cUserEditPostFix))
+                    origFieldName = origFieldName.Replace(DBTable.cUserEditPostFix, string.Empty);
+
+                string newValue = (String)cell.Value;
+
                 switch (nodeEdited.Name)
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        series[field] = (String)cell.Value;
+                        series[editFieldName] = newValue;
                         series.Commit();
+
+                        if (string.IsNullOrEmpty(newValue))
+                        {
+                            // restore the old value in the cell so dont need to reload the datagrid
+                            cell.Value = series[origFieldName].ToString();
+                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                        }
+                        else
+                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
                             nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
                         break;
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeEdited.Tag;
-                        season[field] = (String)cell.Value;
+                        season[editFieldName] = newValue;
+
+                        if (string.IsNullOrEmpty(newValue))
+                        {
+                            // restore the old value in the cell so dont need to reload the datagrid
+                            cell.Value = season[origFieldName].ToString();
+                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                        }
+                        else
+                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+
                         season.Commit();
                         break;
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        episode[field] = (String)cell.Value;
+                        episode[editFieldName] = newValue;
                         episode.Commit();
+
+                        if (string.IsNullOrEmpty(newValue))
+                        {
+                            // restore the old value in the cell so dont need to reload the datagrid
+                            cell.Value = episode[origFieldName].ToString();
+                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                        }
+                        else
+                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+
                         if (episode[DBEpisode.cEpisodeName].ToString().Length > 0)
                             nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
                         break;
