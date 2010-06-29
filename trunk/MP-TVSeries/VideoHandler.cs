@@ -245,11 +245,8 @@ namespace WindowPlugins.GUITVSeries
             DBSeason season = null;
             if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
 
-			// Show Plot in OSD or Hide Spoilers
-            if ((!clear) && (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || m_currentEpisode[DBOnlineEpisode.cWatched]))
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);                
-            else
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : Translation._Hidden_to_prevent_spoilers_);
+			// Show Plot in OSD or Hide Spoilers (note: FieldGetter takes care of that)         
+            GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeMain, m_currentEpisode));
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
             string osdImage = string.Empty;
@@ -283,7 +280,7 @@ namespace WindowPlugins.GUITVSeries
                     else break;
                 }
             }
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
+            GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
 
             // double check, i don't want play images to be cleared on ended or stopped...
             if (w.CancellationPending) return;
@@ -297,19 +294,19 @@ namespace WindowPlugins.GUITVSeries
                     if (System.IO.File.Exists(file))
                     {
                         MPTVSeriesLog.Write(string.Format("Setting play image {0} for property {1}", file, kvp.Key), MPTVSeriesLog.LogLevel.Debug);
-                        MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
+                        GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
                     }
                 }
                 else
                 {
                     MPTVSeriesLog.Write(string.Format("Clearing play image for property {0}", kvp.Key), MPTVSeriesLog.LogLevel.Debug);
-                    MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, " ");
+                    GUIPropertyManager.SetProperty(kvp.Key, " ");
                 }
             }
 			
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);            
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? " " : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
+            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);            
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
+            GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeSubtitle, m_currentEpisode));
         }
 
         string replaceDynamicFields(string value)
