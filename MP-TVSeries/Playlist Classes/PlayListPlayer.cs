@@ -478,15 +478,13 @@ namespace WindowPlugins.GUITVSeries
 
             if (!clear)
             {
-                title = string.Format("{0}x{1}: {2}", item.SeasonIndex, item.EpisodeIndex, item.EpisodeName);
+                title = string.Format("{0} - {1}x{2} - {3}", item.SeriesName, item.SeasonIndex, item.EpisodeIndex, item.EpisodeName);
                 series = Helper.getCorrespondingSeries(item.Episode[DBEpisode.cSeriesID]);
                 season = Helper.getCorrespondingSeason(item.Episode[DBEpisode.cSeriesID], int.Parse(item.SeasonIndex));
             }
 
-            if ((!clear) && (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || item.Episode[DBOnlineEpisode.cWatched]))
-                GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : item.Summary);
-            else
-                GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : Translation._Hidden_to_prevent_spoilers_);
+            // Show Plot in OSD or Hide Spoilers (note: FieldGetter takes care of that)         
+            GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeMain, item.Episode));
 
             // Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
             string osdImage = string.Empty;            
@@ -519,7 +517,7 @@ namespace WindowPlugins.GUITVSeries
                     else break;
                 }
             }
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
+            GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
 
             foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoPlayImages)
             {
@@ -530,18 +528,19 @@ namespace WindowPlugins.GUITVSeries
                     if (System.IO.File.Exists(file))
                     {
                         MPTVSeriesLog.Write(string.Format("Setting play image {0} for property {1}", file, kvp.Key), MPTVSeriesLog.LogLevel.Debug);
-                        MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
+                        GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
                     }
                 }
                 else
                 {
                     MPTVSeriesLog.Write(string.Format("Clearing play image for property {0}", kvp.Key), MPTVSeriesLog.LogLevel.Debug);
-                    MediaPortal.GUI.Library.GUIPropertyManager.SetProperty(kvp.Key, " ");
+                    GUIPropertyManager.SetProperty(kvp.Key, " ");
                 }
             }
 
             GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : title);
-            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : item.FirstAired);            
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : item.FirstAired);
+            GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeSubtitle, item.Episode));
         }
 
         private string replaceDynamicFields(string value, DBTable item)

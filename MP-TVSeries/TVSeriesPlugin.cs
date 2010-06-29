@@ -197,26 +197,27 @@ namespace WindowPlugins.GUITVSeries
         private int m_nInitialIconYOffset = 0;
         private int m_nInitialItemHeight = 0;
 
-        private String m_sFormatSeriesCol1 = String.Empty;
-        private String m_sFormatSeriesCol2 = String.Empty;
-        private String m_sFormatSeriesCol3 = String.Empty;
-        private String m_sFormatSeriesTitle = String.Empty;
-        private String m_sFormatSeriesSubtitle = String.Empty;
-        private String m_sFormatSeriesMain = String.Empty;
+        public static String m_sFormatSeriesCol1 = String.Empty;
+        public static String m_sFormatSeriesCol2 = String.Empty;
+        public static String m_sFormatSeriesCol3 = String.Empty;
+        public static String m_sFormatSeriesTitle = String.Empty;
+        public static String m_sFormatSeriesSubtitle = String.Empty;
+        public static String m_sFormatSeriesMain = String.Empty;
 
-        private String m_sFormatSeasonCol1 = String.Empty;
-        private String m_sFormatSeasonCol2 = String.Empty;
-        private String m_sFormatSeasonCol3 = String.Empty;
-        private String m_sFormatSeasonTitle = String.Empty;
-        private String m_sFormatSeasonSubtitle = String.Empty;
-        private String m_sFormatSeasonMain = String.Empty;
+        public static String m_sFormatSeasonCol1 = String.Empty;
+        public static String m_sFormatSeasonCol2 = String.Empty;
+        public static String m_sFormatSeasonCol3 = String.Empty;
+        public static String m_sFormatSeasonTitle = String.Empty;
+        public static String m_sFormatSeasonSubtitle = String.Empty;
+        public static String m_sFormatSeasonMain = String.Empty;
 
-        private String m_sFormatEpisodeCol1 = String.Empty;
-        private String m_sFormatEpisodeCol2 = String.Empty;
-        private String m_sFormatEpisodeCol3 = String.Empty;
-        private String m_sFormatEpisodeTitle = String.Empty;
-        private String m_sFormatEpisodeSubtitle = String.Empty;
-        private String m_sFormatEpisodeMain = String.Empty;
+        public static String m_sFormatEpisodeCol1 = String.Empty;
+        public static String m_sFormatEpisodeCol2 = String.Empty;
+        public static String m_sFormatEpisodeCol3 = String.Empty;
+        public static String m_sFormatEpisodeTitle = String.Empty;
+        public static String m_sFormatEpisodeSubtitle = String.Empty;
+        public static String m_sFormatEpisodeMain = String.Empty;
+
         private String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
         public static int logosHeight = 100;
         public static int logosWidth = 250;
@@ -4448,16 +4449,14 @@ namespace WindowPlugins.GUITVSeries
                 cond.AddOrderItem(DBOnlineSeries.Q(DBOnlineSeries.cPrettyName), SQLCondition.orderType.Ascending);
                 cond.SetLimit(20);
 
-                bool requiresSplit = false; // use sql 'like' for split fields                        
-                bool isEmpty = false;
+                bool requiresSplit = false; // use sql 'like' for split fields
                 
                 // selected group label
                 string selectedItem = this.m_Facade.SelectedListItem.Label.ToString();
                 
                 // unknown really is "" so get all with null values here
                 if (selectedItem == Translation.Unknown)
-                {
-                    isEmpty = true;
+                {                    
                     selectedItem = string.Empty;
                 }
                 else
