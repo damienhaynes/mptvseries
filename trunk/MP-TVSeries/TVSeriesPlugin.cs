@@ -4447,16 +4447,47 @@ namespace WindowPlugins.GUITVSeries
                 SQLCondition cond = new SQLCondition();
                 cond.AddOrderItem(DBOnlineSeries.Q(DBOnlineSeries.cPrettyName), SQLCondition.orderType.Ascending);
                 cond.SetLimit(20);
-                if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && this.m_Facade.SelectedListItem.Label.ToString() != Translation.Unknown)
+
+                bool requiresSplit = false; // use sql 'like' for split fields                        
+                bool isEmpty = false;
+                
+                // selected group label
+                string selectedItem = this.m_Facade.SelectedListItem.Label.ToString();
+                
+                // unknown really is "" so get all with null values here
+                if (selectedItem == Translation.Unknown)
                 {
-                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), this.m_Facade.SelectedListItem.Label, SQLConditionType.Like);
+                    isEmpty = true;
+                    selectedItem = string.Empty;
+                }
+                else
+                    if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit) requiresSplit = true;
+
+                string tableName = "online_series";
+                string tableField = tableName + "." + groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", "");
+                string userEditField = tableField + DBTable.cUserEditPostFix;
+                string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
+
+                bool userEditExists = false;
+
+                // check if the useredit column exists
+                string sql = "select " + userEditField + " from " + tableName;
+                SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
+                if (results.Rows.Count > 0) userEditExists = true;
+
+                if (userEditExists)
+                {
+                    sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
+                             "then " + tableField + " else " + userEditField + " " +
+                             "end) " + value;
                 }
                 else
                 {
-                    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
-                             (this.m_Facade.SelectedListItem.Label.ToString() == Translation.Unknown ? string.Empty : this.m_Facade.SelectedListItem.Label),
-                              SQLConditionType.Equal);
+                    sql = tableField + " " + value;
                 }
+
+                cond.AddCustom(sql);
+
                 if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
                 {
                     // not generic
