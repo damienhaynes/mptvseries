@@ -223,17 +223,39 @@ namespace WindowPlugins.GUITVSeries
                 // has to be grouped by something episode
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             }
-            
-            string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
-                                 " , count(*) " +
-                                 " from " + step.groupedBy.table.m_tableName + conditions +
-                                 " group by " + step.groupedBy.tableField +
-                                 step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
+
+            bool userEditExists = false;
+
+            string tableName = step.groupedBy.table.m_tableName;
+            string tableField = step.groupedBy.tableField;
+            string userEditField = tableField + DBTable.cUserEditPostFix;
+
+            // check if the useredit column exists
+            string sql = "select " + userEditField + " from " + tableName;
             SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
+            if (results.Rows.Count > 0) userEditExists = true;
+
+            if (userEditExists)
+            {
+                sql = "select distinct(" +
+                             "case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
+                             "then " + tableField + " else " + userEditField + " " +
+                             "end) as gnr, " +
+                             "count(*) from " + tableName + conditions + " group by gnr" + step.conds.orderString;
+            }
+            else
+            {
+                sql = "select distinct " + tableField +
+                             " , count(*) " +
+                             " from " + tableName + conditions +
+                             " group by " + tableField +
+                             step.conds.orderString;
+
+            }
+            results = DBTVSeries.Execute(sql);
             MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
             if (results.Rows.Count > 0)
-            {
-                
+            {                
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     string tmpItem = results.Rows[index].fields[0];
@@ -287,15 +309,41 @@ namespace WindowPlugins.GUITVSeries
                 switch (m_steps[stepIndex - 1].Type)
                 {
                     case logicalViewStep.type.group:
+                        bool requiresSplit = false; // use sql 'like' for split fields                        
+                        bool isEmpty = false;
+
                         // we expect to get the selected group's label
-                        if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
-                            conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
-                        else 
-                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) 
-                                // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
-                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
-                            else
-                                conditions.Add(m_steps[stepIndex - 1].groupedBy.table, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
+                        // unknown really is "" so get all with null values here
+                        if (currentStepSelection[0] == Translation.Unknown)                             
+                            isEmpty = true;
+                        else
+                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) requiresSplit = true;
+
+                        string tableName = m_steps[stepIndex - 1].groupedBy.table.m_tableName;
+                        string tableField = tableName + "." + m_steps[stepIndex - 1].groupedBy.rawFieldname;
+                        string userEditField = tableField + DBTable.cUserEditPostFix;
+                        string stepSelection = isEmpty ? string.Empty : currentStepSelection[0];
+                        string value = requiresSplit ? "like " + "'%" + stepSelection + "%'" : "= " + "'" + stepSelection + "'";
+
+                        bool userEditExists = false;
+
+                        // check if the useredit column exists
+                        string sql = "select " + userEditField + " from " + tableName;
+                        SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
+                        if (results.Rows.Count > 0) userEditExists = true;
+
+                        if (userEditExists)
+                        {
+                            sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
+                                     "then " + tableField + " else " + userEditField + " " +
+                                     "end) " + value;
+                        }
+                        else
+                        {
+                            sql = tableField + " " + value;
+                        }
+
+                        conditions.AddCustom(sql);
                         break;
                     case logicalViewStep.type.series:
                         // we expect to get the seriesID as stepSel
