@@ -246,7 +246,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                         }
-                        else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
+                        //else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
                     }
                     catch (Exception ex)
                     {

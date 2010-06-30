@@ -224,18 +224,15 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             }
 
-            bool userEditExists = false;
-
             string tableName = step.groupedBy.table.m_tableName;
             string tableField = step.groupedBy.tableField;
             string userEditField = tableField + DBTable.cUserEditPostFix;
 
             // check if the useredit column exists
             string sql = "select " + userEditField + " from " + tableName;
-            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
-            if (results.Rows.Count > 0) userEditExists = true;
+            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);            
 
-            if (userEditExists)
+            if (results.Rows.Count > 0)
             {
                 sql = "select distinct(" +
                              "case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
@@ -309,30 +306,28 @@ namespace WindowPlugins.GUITVSeries
                 switch (m_steps[stepIndex - 1].Type)
                 {
                     case logicalViewStep.type.group:
-                        bool requiresSplit = false; // use sql 'like' for split fields                        
-                        bool isEmpty = false;
+                        bool requiresSplit = false; // use sql 'like' for split fields                                             
+
+                        // selected group label
+                        string selectedItem = currentStepSelection[0];
 
                         // we expect to get the selected group's label
                         // unknown really is "" so get all with null values here
-                        if (currentStepSelection[0] == Translation.Unknown)                             
-                            isEmpty = true;
+                        if (selectedItem == Translation.Unknown)
+                            selectedItem = string.Empty;
                         else
                             if (m_steps[stepIndex - 1].groupedBy.attempSplit) requiresSplit = true;
 
                         string tableName = m_steps[stepIndex - 1].groupedBy.table.m_tableName;
                         string tableField = tableName + "." + m_steps[stepIndex - 1].groupedBy.rawFieldname;
-                        string userEditField = tableField + DBTable.cUserEditPostFix;
-                        string stepSelection = isEmpty ? string.Empty : currentStepSelection[0];
-                        string value = requiresSplit ? "like " + "'%" + stepSelection + "%'" : "= " + "'" + stepSelection + "'";
-
-                        bool userEditExists = false;
+                        string userEditField = tableField + DBTable.cUserEditPostFix;                        
+                        string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
 
                         // check if the useredit column exists
                         string sql = "select " + userEditField + " from " + tableName;
-                        SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
-                        if (results.Rows.Count > 0) userEditExists = true;
+                        SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);                        
 
-                        if (userEditExists)
+                        if (results.Rows.Count > 0)
                         {
                             sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
                                      "then " + tableField + " else " + userEditField + " " +

@@ -4379,8 +4379,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
-        {
-            MPTVSeriesLog.Write("Online Parsing done");
+        {            
             setProcessAnimationStatus(false);
 
             if (m_parserUpdater.UpdateScan)
@@ -4398,10 +4397,12 @@ namespace WindowPlugins.GUITVSeries
 
         void parserUpdater_OnlineParsingProgress(int nProgress, ParsingProgress progress)
         {
+            if (progress != null && progress.CurrentItem > 0)
+                MPTVSeriesLog.Write("progress received: {0} [{1}/{2}] {3}", progress.CurrentAction, progress.CurrentItem, progress.TotalItems, progress.CurrentProgress);
+
             // update the facade when progress has reached 30 (arbitrary point where local media has been scanned)
             if (nProgress == 30 && m_Facade != null) LoadFacade();
         }
-
 
 		#region Facade Item Selected
 		// triggered when a selection change was made on the facade
@@ -4467,14 +4468,11 @@ namespace WindowPlugins.GUITVSeries
                 string userEditField = tableField + DBTable.cUserEditPostFix;
                 string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
 
-                bool userEditExists = false;
-
                 // check if the useredit column exists
                 string sql = "select " + userEditField + " from " + tableName;
-                SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
-                if (results.Rows.Count > 0) userEditExists = true;
+                SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);                
 
-                if (userEditExists)
+                if (results.Rows.Count > 0)
                 {
                     sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
                              "then " + tableField + " else " + userEditField + " " +
