@@ -29,25 +29,26 @@
         private void InitializeComponent()
         {
             this.panelProgress = new System.Windows.Forms.Panel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.labelRetrievingFavourites = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingUserRatings = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.labelFilenameProcessingProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelMediaInfoProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.labelMatchingSeriesProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingSeriesMetaDataProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelIdentifyEpisodesProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.labelUpdatingEpisodeMetaDataProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingEpisodeThumbsProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingFanartProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingSeriesArtworkProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.labelRetrievingEpisodeCounts = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.panelProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,6 +56,7 @@
             // 
             this.panelProgress.AutoScroll = true;
             this.panelProgress.BackColor = System.Drawing.SystemColors.Window;
+            this.panelProgress.Controls.Add(this.labelRetrievingEpisodeCounts);
             this.panelProgress.Controls.Add(this.labelRetrievingFavourites);
             this.panelProgress.Controls.Add(this.labelRetrievingUserRatings);
             this.panelProgress.Controls.Add(this.groupBox4);
@@ -77,71 +79,24 @@
             this.panelProgress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelProgress.Location = new System.Drawing.Point(0, 0);
             this.panelProgress.Name = "panelProgress";
-            this.panelProgress.Size = new System.Drawing.Size(695, 506);
+            this.panelProgress.Size = new System.Drawing.Size(695, 551);
             this.panelProgress.TabIndex = 31;
             // 
-            // groupBox3
+            // labelRetrievingFavourites
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Location = new System.Drawing.Point(122, 18);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(553, 3);
-            this.groupBox3.TabIndex = 33;
-            this.groupBox3.TabStop = false;
+            this.labelRetrievingFavourites.Location = new System.Drawing.Point(12, 452);
+            this.labelRetrievingFavourites.Name = "labelRetrievingFavourites";
+            this.labelRetrievingFavourites.Size = new System.Drawing.Size(656, 39);
+            this.labelRetrievingFavourites.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
+            this.labelRetrievingFavourites.TabIndex = 37;
             // 
-            // label3
+            // labelRetrievingUserRatings
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.label3.Location = new System.Drawing.Point(9, 11);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 13);
-            this.label3.TabIndex = 32;
-            this.label3.Text = "Local File Parsing";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Location = new System.Drawing.Point(73, 110);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(602, 3);
-            this.groupBox2.TabIndex = 31;
-            this.groupBox2.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.label2.Location = new System.Drawing.Point(9, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 13);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "MetaData";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Location = new System.Drawing.Point(63, 272);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(612, 3);
-            this.groupBox1.TabIndex = 29;
-            this.groupBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.label1.Location = new System.Drawing.Point(9, 266);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 13);
-            this.label1.TabIndex = 28;
-            this.label1.Text = "Artwork";
+            this.labelRetrievingUserRatings.Location = new System.Drawing.Point(12, 418);
+            this.labelRetrievingUserRatings.Name = "labelRetrievingUserRatings";
+            this.labelRetrievingUserRatings.Size = new System.Drawing.Size(656, 39);
+            this.labelRetrievingUserRatings.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
+            this.labelRetrievingUserRatings.TabIndex = 36;
             // 
             // groupBox4
             // 
@@ -164,21 +119,26 @@
             this.label4.TabIndex = 34;
             this.label4.Text = "Misc";
             // 
-            // labelRetrievingFavourites
+            // groupBox3
             // 
-            this.labelRetrievingFavourites.Location = new System.Drawing.Point(12, 452);
-            this.labelRetrievingFavourites.Name = "labelRetrievingFavourites";
-            this.labelRetrievingFavourites.Size = new System.Drawing.Size(656, 39);
-            this.labelRetrievingFavourites.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
-            this.labelRetrievingFavourites.TabIndex = 37;
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Location = new System.Drawing.Point(122, 18);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(553, 3);
+            this.groupBox3.TabIndex = 33;
+            this.groupBox3.TabStop = false;
             // 
-            // labelRetrievingUserRatings
+            // label3
             // 
-            this.labelRetrievingUserRatings.Location = new System.Drawing.Point(12, 418);
-            this.labelRetrievingUserRatings.Name = "labelRetrievingUserRatings";
-            this.labelRetrievingUserRatings.Size = new System.Drawing.Size(656, 39);
-            this.labelRetrievingUserRatings.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
-            this.labelRetrievingUserRatings.TabIndex = 36;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label3.Location = new System.Drawing.Point(9, 11);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Local File Parsing";
             // 
             // labelFilenameProcessingProgress
             // 
@@ -200,6 +160,27 @@
             this.labelMediaInfoProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelMediaInfoProgress.TabIndex = 22;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Location = new System.Drawing.Point(73, 110);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(602, 3);
+            this.groupBox2.TabIndex = 31;
+            this.groupBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label2.Location = new System.Drawing.Point(9, 104);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(62, 13);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "MetaData";
+            // 
             // labelMatchingSeriesProgress
             // 
             this.labelMatchingSeriesProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -220,6 +201,16 @@
             this.labelRetrievingSeriesMetaDataProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingSeriesMetaDataProgress.TabIndex = 18;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Location = new System.Drawing.Point(63, 272);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(612, 3);
+            this.groupBox1.TabIndex = 29;
+            this.groupBox1.TabStop = false;
+            // 
             // labelIdentifyEpisodesProgress
             // 
             this.labelIdentifyEpisodesProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -229,6 +220,17 @@
             this.labelIdentifyEpisodesProgress.Size = new System.Drawing.Size(656, 39);
             this.labelIdentifyEpisodesProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelIdentifyEpisodesProgress.TabIndex = 19;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label1.Location = new System.Drawing.Point(9, 266);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 13);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "Artwork";
             // 
             // labelUpdatingEpisodeMetaDataProgress
             // 
@@ -270,13 +272,21 @@
             this.labelRetrievingSeriesArtworkProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingSeriesArtworkProgress.TabIndex = 20;
             // 
+            // labelRetrievingEpisodeCounts
+            // 
+            this.labelRetrievingEpisodeCounts.Location = new System.Drawing.Point(12, 486);
+            this.labelRetrievingEpisodeCounts.Name = "labelRetrievingEpisodeCounts";
+            this.labelRetrievingEpisodeCounts.Size = new System.Drawing.Size(656, 39);
+            this.labelRetrievingEpisodeCounts.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
+            this.labelRetrievingEpisodeCounts.TabIndex = 38;
+            // 
             // ImportPanelProgress
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelProgress);
             this.Name = "ImportPanelProgress";
-            this.Size = new System.Drawing.Size(695, 506);
+            this.Size = new System.Drawing.Size(695, 551);
             this.panelProgress.ResumeLayout(false);
             this.panelProgress.PerformLayout();
             this.ResumeLayout(false);
@@ -305,5 +315,6 @@
         private ProgressLabel labelRetrievingUserRatings;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label4;
+        private ProgressLabel labelRetrievingEpisodeCounts;
     }
 }

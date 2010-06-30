@@ -507,7 +507,7 @@ namespace WindowPlugins.GUITVSeries
                         string retriesLeft = retries > 0 ? retries.ToString() : "No";
                         retriesLeft = string.Format("Problem parsing MediaInfo for: {0}, ({1} retries left)", this[DBEpisode.cFilename].ToString(), retriesLeft);
 
-                        MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Debug);
                     }
                     else {
                         if (OnlineParsing.IsMainOnlineParseComplete) {

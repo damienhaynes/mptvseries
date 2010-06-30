@@ -128,24 +128,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         private void DoAutoMatching(DBSeries series, string orderingOption)
-        {            
+        { 
             var seriesMatches = matches.SingleOrDefault(kv => kv.Key == series);
             List<DBEpisode> localEps = localeps[series];
-            
+
             var newseriesMatches = new List<KeyValuePair<DBEpisode, DBOnlineEpisode>>();
             foreach (var localEp in localEps)
             {
                 var bestMatchVal = from oe in onlineeps.Single(s => s.Key == series).Value
                                    select new { Episode = oe, MatchValue = OnlineParsing.matchOnlineToLocalEpisode(series, localEp, oe, orderingOption, false) };
                 var matchedEp = bestMatchVal.OrderBy(me => me.MatchValue).FirstOrDefault(me => me.MatchValue < int.MaxValue);
-                if(matchedEp != null)
+                if (matchedEp != null)
                     newseriesMatches.Add(new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, matchedEp.Episode));
                 else newseriesMatches.Add(new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, null));
 
             }
             if (seriesMatches.Key != null)
                 matches.Remove(seriesMatches);
-            matches.Add(new KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>(series, newseriesMatches));
+            matches.Add(new KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>(series, newseriesMatches));                     
         }
 
         private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)

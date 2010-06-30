@@ -30,6 +30,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             this.labelRetrievingUserRatings.Label.Text = "Retrieving User Ratings";
             this.labelRetrievingFavourites.Label.Text = "Retrieving User Favourites";
+            this.labelRetrievingEpisodeCounts.Label.Text = "Retrieving Episode Counts";
         }
 
         internal void Init(OnlineParsing parser)
@@ -56,11 +57,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 case ParsingAction.GetNewFanArt:
                 case ParsingAction.UpdateUserFavourites:
                 case ParsingAction.UpdateUserRatings:
+                case ParsingAction.UpdateEpisodeCounts:                
                     type = "series";
                     break;
 
-                case ParsingAction.UpdateEpisodes:
                 case ParsingAction.IdentifyNewEpisodes:
+                case ParsingAction.UpdateEpisodes:                
                 case ParsingAction.UpdateEpisodeThumbNails:
                     type = "episodes";
                     break;
@@ -119,6 +121,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         SetProgressLabel(this.labelUpdatingEpisodeMetaDataProgress, progress);
                         break;
                     case ParsingAction.UpdateEpisodeCounts:
+                        SetProgressLabel(this.labelRetrievingEpisodeCounts, progress);
                         break;
                     case ParsingAction.UpdateUserRatings:
                         SetProgressLabel(this.labelRetrievingUserRatings, progress);

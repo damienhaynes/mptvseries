@@ -729,7 +729,7 @@ namespace WindowPlugins.GUITVSeries
                 //don't include hidden seasons unless the ShowHiddenItems option is set
                 condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
             }
-
+            
             List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID], condition);
             foreach (DBSeason season in Seasons)
             {
@@ -744,7 +744,11 @@ namespace WindowPlugins.GUITVSeries
                 else
                     season[DBSeason.cUnwatchedItems] = true;
                 season.Commit();
+
+                MPTVSeriesLog.Write(string.Format("Series \"{0} Season {1}\" has {2}/{3} unwatched episodes", series.ToString(), season[DBSeason.cIndex], epsUnWatched, epsTotal), MPTVSeriesLog.LogLevel.Debug);
             }
+
+            MPTVSeriesLog.Write(string.Format("Series \"{0}\" has {1}/{2} unwatched episodes", series.ToString(), seriesEpsUnWatched, seriesEpsTotal), MPTVSeriesLog.LogLevel.Debug);
 
             series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
