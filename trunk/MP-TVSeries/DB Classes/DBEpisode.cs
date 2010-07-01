@@ -507,17 +507,12 @@ namespace WindowPlugins.GUITVSeries
                         string retriesLeft = retries > 0 ? retries.ToString() : "No";
                         retriesLeft = string.Format("Problem parsing MediaInfo for: {0}, ({1} retries left)", this[DBEpisode.cFilename].ToString(), retriesLeft);
 
-                        MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Normal);
                     }
                     else {
-                        if (OnlineParsing.IsMainOnlineParseComplete) {
-                            // we can now log output to keep user informed of scan progress
-                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(),MPTVSeriesLog.LogLevel.Normal);
-                        }
-                        else {                            
-                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
-                        }
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);                   
                     }
+
                     // Commit MediaInfo to database
                     Commit();
                     

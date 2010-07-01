@@ -328,7 +328,7 @@ namespace WindowPlugins.GUITVSeries
    
             Online_Parsing_Classes.GetUpdates updates = null;
             foreach (ParsingAction action in m_params.m_actions) {
-                MPTVSeriesLog.Write("Begin Parsing action: {0}", action.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Begin Parsing action: ", action.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 if (m_worker.CancellationPending)
                     break;
 
@@ -798,10 +798,9 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBSeries series in seriesList) {
                 if (worker.CancellationPending)
                     return;
-
-                nIndex++;                
+                
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];
-                worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, sSeriesNameToSearch, nIndex, seriesList.Count, series, null));
+                worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, sSeriesNameToSearch, ++nIndex, seriesList.Count, series, null));
                 DBOnlineSeries UserChosenSeries = null;
                 UserInputResultSeriesActionPair sap = null;
 
@@ -828,7 +827,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (UserChosenSeries != null) // make sure selection was not cancelled
-                    {
+                {
                     worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, UserChosenSeries[DBOnlineSeries.cPrettyName], nIndex, seriesList.Count, series, null));
                     // set the ID on the current series with the one from the chosen one
                     // we need to update all depending items - seasons & episodes
@@ -950,7 +949,7 @@ namespace WindowPlugins.GUITVSeries
                 // find the corresponding series in our list
                 foreach (DBSeries localSeries in SeriesList) {
                     if (localSeries[DBSeries.cID] == updatedSeries[DBSeries.cID]) {
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, updatedSeries[DBOnlineSeries.cPrettyName], nIndex++, SeriesList.Count, updatedSeries, null));
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, updatedSeries[DBOnlineSeries.cPrettyName], ++nIndex, SeriesList.Count, updatedSeries, null));
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in updatedSeries.FieldNames) {
                             switch (key) {
@@ -1044,7 +1043,6 @@ namespace WindowPlugins.GUITVSeries
 
                 epCount += episodesList.Count;
                 
-
                 if (bFullSeriesRetrieval || episodesList.Count > 0) {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
                     m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));                    
@@ -1445,7 +1443,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBSeries series in seriesList)
             {
                 MPTVSeriesLog.Write("Retrieving Fanart for: " + Helper.getCorrespondingSeries(series[DBSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series[DBOnlineSeries.cPrettyName], nIndex++, seriesList.Count, series, null));
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
                 try {
                     GetFanart gf = new GetFanart(series[DBSeries.cID]);
                     foreach (DBFanart f in gf.Fanart)
@@ -1468,7 +1466,7 @@ namespace WindowPlugins.GUITVSeries
                             toDownload[DBFanart.cLocalPath] = localFilename;
                             toDownload.Commit();
 
-                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series[DBOnlineSeries.cPrettyName], nIndex++, seriesList.Count, series, result ));
+                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename)), nIndex, seriesList.Count, series, result));
                         }
                     }
                 } catch (Exception ex) {
@@ -1685,7 +1683,7 @@ namespace WindowPlugins.GUITVSeries
 										MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
                                         webClient.DownloadFile(url, completePath);
 
-                                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), nIndex++, episodes.Count, episode, completePath));
+                                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, episodes.Count, episode, completePath));
                                     }
                                     episode.Commit();
                                 } catch (System.Net.WebException) {
@@ -1710,7 +1708,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
+        void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
             tEpisodeCounts.WorkerReportsProgress = true;
 
@@ -1755,7 +1753,7 @@ namespace WindowPlugins.GUITVSeries
             e.Result = allSeries.Count;
         }
 
-        public void MediaInfoParse(BackgroundWorker tMediaInfo)
+        void MediaInfoParse(BackgroundWorker tMediaInfo)
         {
             tMediaInfo.WorkerReportsProgress = true;
 
