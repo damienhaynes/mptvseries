@@ -4462,6 +4462,25 @@ namespace WindowPlugins.GUITVSeries
 			if (result == DialogResult.No)
 				return;
 
+            // if view is a tagged view, remove series attached to view
+            if (selectedView.IsTaggedView)
+            {
+                // Get list of series in view
+                SQLCondition conditions = new SQLCondition();
+                conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, selectedView.Name, SQLConditionType.Like);
+                List<DBSeries> series = DBSeries.Get(conditions);
+
+                foreach (DBSeries s in series)
+                {
+                    s[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(s, false, selectedView.Name);
+                    s.Commit();
+
+                    // Remove from online database
+                    if (selectedView.Name == DBView.cTranslateTokenOnlineFavourite)
+                        Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), s[DBOnlineSeries.cID]);                    
+                }
+            }
+
             // Get All current Views
             DBView[] views = DBView.getAll(true);
 
