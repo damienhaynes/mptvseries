@@ -152,6 +152,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
+        public const String cPlaylistUnwatchedOnly = "PlaylistUnwatchedOnly";
 
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
         public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
@@ -548,6 +549,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cUseFullNameInSubDialog) == null)
                     SetOptions(cUseFullNameInSubDialog, false);
+
+                if (GetOptions(cPlaylistUnwatchedOnly) == null)
+                    SetOptions(cPlaylistUnwatchedOnly, false);
 
             }
             catch (Exception ex)
