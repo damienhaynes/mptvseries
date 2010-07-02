@@ -43,6 +43,7 @@ namespace WindowPlugins.GUITVSeries
         protected string _seriesName = "";
         protected string _summary = "";
         protected string _firstAired = "";
+        protected bool _iswatched = false;
         bool _isPlayed = false;       
         protected DBEpisode _episode = null;
 
@@ -74,8 +75,15 @@ namespace WindowPlugins.GUITVSeries
                 SeriesName = Helper.getCorrespondingSeries(value[DBOnlineEpisode.cSeriesID]).ToString();
                 Summary = value[DBOnlineEpisode.cEpisodeSummary];
                 FirstAired = value[DBOnlineEpisode.cFirstAired];
-                EpisodeThumb = ImageAllocator.GetEpisodeImage(value);                               
+                EpisodeThumb = ImageAllocator.GetEpisodeImage(value);
+                IsWatched = value[DBOnlineEpisode.cWatched];
             }
+        }
+
+        public virtual bool IsWatched
+        {
+            get { return _iswatched; }
+            set { _iswatched = value; }
         }
 
         public virtual string Summary

@@ -327,10 +327,10 @@
                     <posY>305</posY>
 					<width>459</width>
 					<height>390</height>
-					<itemWidth>32</itemWidth>
-					<itemHeight>32</itemHeight>
-					<IconXOff>12</IconXOff>
-					<IconYOff>4</IconYOff>
+					<itemWidth>20</itemWidth>
+					<itemHeight>20</itemHeight>
+					<IconXOff>10</IconXOff>
+					<IconYOff>10</IconYOff>
 					<scrollOffset>2</scrollOffset>										
 					<upBtnXOffset>361</upBtnXOffset>
 					<downBtnXOffset>411</downBtnXOffset>									
@@ -340,7 +340,7 @@
 					<spinWidth>30</spinWidth>
 					<spinHeight>30</spinHeight>
                     <spinPosX>1210</spinPosX>
-                    <spinPosY>645</spinPosY>
+                    <spinPosY>645</spinPosY>					
 				</control>
 			</control> 
 		</control>
