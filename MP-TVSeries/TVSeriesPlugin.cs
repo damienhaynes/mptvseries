@@ -5129,11 +5129,15 @@ namespace WindowPlugins.GUITVSeries
             else if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
             {
                 condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                if (DBOption.GetOptions(DBOption.cPlaylistUnwatchedOnly))
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
             }
             else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
             {
                 condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
                 condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                if (DBOption.GetOptions(DBOption.cPlaylistUnwatchedOnly))
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
             }
             else if (this.listLevel == Listlevel.Episode && m_SelectedEpisode != null)
             {
