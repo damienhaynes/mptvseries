@@ -445,6 +445,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     item.Played = true;
+                    item.IsWatched = true; // for facade watched icons
                     skipmissing = false;
                     if (MediaPortal.Util.Utils.IsVideo(item.FileName))
                     {
