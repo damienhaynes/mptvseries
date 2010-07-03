@@ -76,7 +76,7 @@
 	<videoplayimages import="true">
 		<property>
 			<name>TVSeries.Play.ClearArt</name>
-			<value><![CDATA[thumbs\ClearArt\<Series.origName>.png]]></value>
+			<value><![CDATA[thumbs\ClearArt\<Series.ID>.png]]></value>
 		</property>
 		<!-- You can define multiple properties -->
 	</videoplayimages>
