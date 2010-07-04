@@ -510,7 +510,7 @@ namespace WindowPlugins.GUITVSeries
                         MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Normal);
                     }
                     else {
-                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);                   
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), OnlineParsing.IsMainOnlineParseComplete ? MPTVSeriesLog.LogLevel.Normal : MPTVSeriesLog.LogLevel.Debug);                   
                     }
 
                     // Commit MediaInfo to database
