@@ -3611,7 +3611,7 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = new List<DBEpisode>();
             // get all the episodes
             episodes = DBEpisode.Get(cond, false);
-
+            
             if (result == DialogResult.No)
             {
                 List<DBEpisode> todoeps = new List<DBEpisode>();
