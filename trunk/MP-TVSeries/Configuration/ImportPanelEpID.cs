@@ -45,7 +45,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.listBoxSeries.Items.Clear();
             this.listBoxOnline.Items.Clear();
             this.listBoxLocal.Items.Clear();
-            foreach (var s in matches.Select( m => m.Key))
+            foreach (var s in matches.Where(leps => leps.Value.Count > 0).Select(m => m.Key))
             {
                 if (!listBoxSeries.Items.Contains(s))
                 {
@@ -228,7 +228,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 //listBoxLocal.Items.Add(getDisplayString(local));                
             }
 
-            listBoxLocal.SelectedIndex = 0;
+            if (listBoxLocal.SelectedIndex < 0 && listBoxLocal.Items.Count > 0)
+                listBoxLocal.SelectedIndex = 0;
         }
 
         private void listBoxLocal_SelectedIndexChanged(object sender, EventArgs e)
