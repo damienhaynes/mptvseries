@@ -2204,6 +2204,18 @@ namespace WindowPlugins.GUITVSeries
                 if (origFieldName.EndsWith(DBTable.cUserEditPostFix))
                     origFieldName = origFieldName.Replace(DBTable.cUserEditPostFix, string.Empty);
 
+                bool bUserEdit = true;
+
+                // dont store every edit as a user_edit
+                switch (origFieldName)
+                {
+                    case DBSeries.cScanIgnore:
+                    case DBOnlineSeries.cMyRating:                    
+                        editFieldName = origFieldName;
+                        bUserEdit = false;
+                        break;
+                }
+                
                 string newValue = (String)cell.Value;
 
                 switch (nodeEdited.Name)
@@ -2213,14 +2225,17 @@ namespace WindowPlugins.GUITVSeries
                         series[editFieldName] = newValue;
                         series.Commit();
 
-                        if (string.IsNullOrEmpty(newValue))
+                        if (bUserEdit)
                         {
-                            // restore the old value in the cell so dont need to reload the datagrid
-                            cell.Value = series[origFieldName].ToString();
-                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                            if (string.IsNullOrEmpty(newValue))
+                            {
+                                // restore the old value in the cell so dont need to reload the datagrid
+                                cell.Value = series[origFieldName].ToString();
+                                cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                            }
+                            else
+                                cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
                         }
-                        else
-                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
 
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
                             nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
@@ -2229,17 +2244,20 @@ namespace WindowPlugins.GUITVSeries
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeEdited.Tag;
                         season[editFieldName] = newValue;
-
-                        if (string.IsNullOrEmpty(newValue))
-                        {
-                            // restore the old value in the cell so dont need to reload the datagrid
-                            cell.Value = season[origFieldName].ToString();
-                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
-                        }
-                        else
-                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
-
                         season.Commit();
+
+                        if (bUserEdit)
+                        {
+                            if (string.IsNullOrEmpty(newValue))
+                            {
+                                // restore the old value in the cell so dont need to reload the datagrid
+                                cell.Value = season[origFieldName].ToString();
+                                cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                            }
+                            else
+                                cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+                        }
+
                         break;
 
                     case DBEpisode.cTableName:
@@ -2254,14 +2272,17 @@ namespace WindowPlugins.GUITVSeries
 
                         episode.Commit();
 
-                        if (string.IsNullOrEmpty(newValue))
+                        if (bUserEdit)
                         {
-                            // restore the old value in the cell so dont need to reload the datagrid
-                            cell.Value = episode[origFieldName].ToString();
-                            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                            if (string.IsNullOrEmpty(newValue))
+                            {
+                                // restore the old value in the cell so dont need to reload the datagrid
+                                cell.Value = episode[origFieldName].ToString();
+                                cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                            }
+                            else
+                                cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
                         }
-                        else
-                            cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
 
                         if (episode[DBEpisode.cEpisodeName].ToString().Length > 0)
                             nodeEdited.Text = episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episode[DBEpisode.cEpisodeName];
