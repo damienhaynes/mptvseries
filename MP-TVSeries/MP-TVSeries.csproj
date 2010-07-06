@@ -374,6 +374,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Images\busy.gif" />
+    <None Include="Resources\Images\big_spinner.gif" />
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
     <None Include="Resources\Images\importaccept.png" />
