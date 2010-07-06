@@ -88,6 +88,13 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap big_spinner {
+            get {
+                object obj = ResourceManager.GetObject("big_spinner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap busy {
             get {
                 object obj = ResourceManager.GetObject("busy", resourceCulture);

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewReview = new System.Windows.Forms.DataGridView();
             this.labelWaitParse = new System.Windows.Forms.Label();
             this.lnkAdd = new System.Windows.Forms.LinkLabel();
@@ -47,8 +47,8 @@
             this.lblCount = new System.Windows.Forms.Label();
             this.labelStep = new System.Windows.Forms.Label();
             this.labelImportWizardTitle = new System.Windows.Forms.Label();
-            this.pictureBoxWork = new System.Windows.Forms.PictureBox();
             this.lnkAddFiles = new System.Windows.Forms.LinkLabel();
+            this.pictureBoxWork = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).BeginInit();
             this.groupBoxAddCol.SuspendLayout();
             this.contextMenuStripChangeCell.SuspendLayout();
@@ -65,36 +65,36 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewReview.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewReview.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewReview.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridViewReview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewReview.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewReview.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridViewReview.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewReview.GridColor = System.Drawing.Color.White;
             this.dataGridViewReview.Location = new System.Drawing.Point(21, 74);
             this.dataGridViewReview.MultiSelect = false;
             this.dataGridViewReview.Name = "dataGridViewReview";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewReview.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewReview.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridViewReview.RowHeadersVisible = false;
             this.dataGridViewReview.Size = new System.Drawing.Size(717, 279);
             this.dataGridViewReview.TabIndex = 0;
@@ -246,27 +246,29 @@
             this.labelImportWizardTitle.TabIndex = 13;
             this.labelImportWizardTitle.Text = "Import your Series and Episodes";
             // 
-            // pictureBoxWork
-            // 
-            this.pictureBoxWork.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.busy;
-            this.pictureBoxWork.Location = new System.Drawing.Point(248, 40);
-            this.pictureBoxWork.Name = "pictureBoxWork";
-            this.pictureBoxWork.Size = new System.Drawing.Size(32, 34);
-            this.pictureBoxWork.TabIndex = 15;
-            this.pictureBoxWork.TabStop = false;
-            // 
             // lnkAddFiles
             // 
             this.lnkAddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkAddFiles.AutoSize = true;
             this.lnkAddFiles.Location = new System.Drawing.Point(245, 360);
             this.lnkAddFiles.Name = "lnkAddFiles";
-            this.lnkAddFiles.Size = new System.Drawing.Size(125, 13);
+            this.lnkAddFiles.Size = new System.Drawing.Size(110, 13);
             this.lnkAddFiles.TabIndex = 8;
             this.lnkAddFiles.TabStop = true;
-            this.lnkAddFiles.Text = "Manually Add (a) File(s)...";
+            this.lnkAddFiles.Text = "Manually Add File(s)...";
             this.lnkAddFiles.Visible = false;
             this.lnkAddFiles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAddFiles_LinkClicked);
+            // 
+            // pictureBoxWork
+            // 
+            this.pictureBoxWork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxWork.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.big_spinner;
+            this.pictureBoxWork.InitialImage = global::WindowPlugins.GUITVSeries.Properties.Resources.big_spinner;
+            this.pictureBoxWork.Location = new System.Drawing.Point(696, 0);
+            this.pictureBoxWork.Name = "pictureBoxWork";
+            this.pictureBoxWork.Size = new System.Drawing.Size(42, 44);
+            this.pictureBoxWork.TabIndex = 16;
+            this.pictureBoxWork.TabStop = false;
             // 
             // ImportPanelParsing
             // 
@@ -313,7 +315,7 @@
         private System.Windows.Forms.Label labelStep;
         private System.Windows.Forms.Label labelImportWizardTitle;
         private System.Windows.Forms.ComboBox comboBoxAddColumn;
-        private System.Windows.Forms.PictureBox pictureBoxWork;
         private System.Windows.Forms.LinkLabel lnkAddFiles;
+        private System.Windows.Forms.PictureBox pictureBoxWork;
     }
 }
