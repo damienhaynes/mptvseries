@@ -351,8 +351,11 @@ namespace WindowPlugins.GUITVSeries
 
                     case ParsingAction.MediaInfo:
                         //Threaded MediaInfo.dll parsing of new files - goes straight to next task
-                        tMediaInfo = new BackgroundWorker();
-                        MediaInfoParse(tMediaInfo);
+                        if (!DBOption.GetOptions(DBOption.cDisableMediaInfo))
+                        {
+                            tMediaInfo = new BackgroundWorker();
+                            MediaInfoParse(tMediaInfo);
+                        }
                         break;
 
                     case ParsingAction.IdentifyNewSeries:
