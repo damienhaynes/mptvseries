@@ -1086,7 +1086,7 @@ namespace WindowPlugins.GUITVSeries
                 dataGridView_ImportPathes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = importPathPopup.SelectedPath;
 
                 // Update Parsing Test
-                TestParsing_Start(true);
+                //TestParsing_Start(true);
             }
 
         }
@@ -1116,7 +1116,7 @@ namespace WindowPlugins.GUITVSeries
         {        
             SaveAllImportPathes();
             // Update Parsing Test
-            TestParsing_Start(true);
+            //TestParsing_Start(true);
         }
 
         private void dataGridView_ImportPathes_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
