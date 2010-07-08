@@ -1,4 +1,5 @@
 24
+Battlestar Galactica
 Battlestar Galactica (2003)
 Chuck
 Damages
@@ -18,12 +19,10 @@ Sanctuary
 Scrubs
 Skins
 Smallville
-The Animated Series
-The Clone Wars
+Star Wars - The Clone Wars
 Superjail
 The Big Bang Theory
 The Drinky Crow Show
-The Office (US)
 The Simpsons
 The Universe
 The Xtacles
@@ -39,7 +38,7 @@ Tim and Eric Awesome Show, Great Job!
 A Haunting
 A History of Britain
 According to Jim
-Pet Detective
+Ace Ventura: Pet Detective
 Action
 Adventures of Superman
 Aeon Flux
@@ -67,7 +66,7 @@ Army Wives
 Arrested Development
 Ashes to Ashes
 Atom
-The Last Airbender
+Avatar: The Last Airbender
 Ax Men
 Baby Looney Tunes
 Babylon 5
@@ -77,7 +76,6 @@ Band Of Brothers
 Batman Beyond
 Battle 360
 Battlefield
-Battlestar Galactica
 Baywatch
 Beast Wars
 Beautiful People
@@ -106,30 +104,28 @@ Boy Meets World
 BraveStarr
 Britain From Above
 Brotherhood
-Brothers and Sisters
+Brothers & Sisters
 Buck Rogers in the 25th Century
 Buffy the Vampire Slayer
 Burn Notice
 Californication
 Captain N & the Adventures of Super Mario Bros. 3
 Captain N and the New Super Mario World
-The Game Master
+Captain N: The Game Master
 Captain Planet and the Planeteers
-Care Bears
+The Care Bears
 Carrier
 Cashmere Mafia
-The Series
 Celebrity Deathmatch
 Centennial
 Chappelle's Show
 Charles in Charge
-Charley Boorman Ireland to Sydney by any means
 Charlie Jade
 Charmed
 Cheers
 Chip 'N Dale Rescue Rangers
 CHiPs
-Karate Kommandos
+Chuck Norris: Karate Kommandos
 Cities of the Underworld
 Clarissa Explains It All
 Clerks
@@ -149,9 +145,9 @@ Criss Angel Mindfreak
 Crooked House
 Crossing Jordan
 Crusade
-Crime Scene Investigation
-Miami
-NY
+CSI: Crime Scene Investigation
+CSI: Miami
+CSI: NY
 Curb Your Enthusiasm
 Da Ali G Show
 Danger Mouse
@@ -177,7 +173,7 @@ Dirty Sanchez
 Dirty Sexy Money
 Doctor Who (2005)
 Dogfights
-Doogie Howser, M.D.
+Doogie Howser MD
 Dr. Katz, Professional Therapist
 Dragnet
 Drawn Together
@@ -187,9 +183,9 @@ DuckTales
 Dungeons & Dragons
 Early Edition
 Earth 2
-Final Conflict
+Earth: Final Conflict
 Earth Story
-The Biography
+Earth: The Biography
 Earthworm Jim
 Edge of Darkness
 Eerie, Indiana
@@ -229,7 +225,6 @@ Frasier
 Freakazoid!
 Freaks and Geeks
 Friday Night Lights
-The Series
 Friends
 Frisky Dingo
 From the Earth to the Moon
@@ -237,7 +232,7 @@ Full House
 Funland
 Futurama
 Future Weapons
-G.I. Joe
+GI Joe
 Galactica 1980
 Galapagos
 Ganges
@@ -269,11 +264,10 @@ He-Man and the Masters of the Universe (2002)
 Headcases
 Heathcliff and the Catillac Cats
 Hell's Kitchen
-The Legendary Journeys
+Hercules: The Legendary Journeys
 Heroes and Villains
 Hex
-Highlander
-The Animated Series
+Highlander The Animated Series
 Hogan's Heroes
 Home Improvement
 Home Movies
@@ -292,7 +286,6 @@ I Love Lucy
 I Shouldn't Be Alive
 Ice Road Truckers
 Ideal
-Toughest Race on Earth
 In Living Color
 Inspector Gadget
 Intelligence
@@ -334,8 +327,8 @@ Kyle XY
 La Femme Nikita
 Las Vegas
 Law & Order
-Criminal Intent
-Special Victims Unit
+Law & Order: Criminal Intent
+Law & Order: Special Victims Unit
 Trial by Jury
 Lead Balloon
 Legend of Prince Valiant
@@ -362,15 +355,13 @@ Long Way Down
 Long Way Round
 Lost in Austen
 Lost Land of the Jaguar
-Special Episodes
 Louis Theroux's Weird Weekends
 Lucky Louie
-Lucy, The Daughter of the Devil
-M.A.S.K.
+MASK
 MacGyver
 Mad About You
 Mad Men
-Magnum, P.I.
+Magnum, PI
 Man Stroke Woman
 Man vs. Wild
 Married with Children
@@ -385,7 +376,6 @@ Medium
 Meerkat Manor
 Mega Man
 Melrose Place
-The Series
 Merlin (2008)
 Metalocalypse
 Miami Vice
@@ -393,13 +383,13 @@ Michael Palin's New Europe
 Midnight Man
 Millennium
 Minoriteam
-Impossible
+Mission: Impossible (1988)
 Monk
 Monty Python's Flying Circus
 Moonlight
 Moonlighting
 Conquest
-Defenders of the Realm
+Mortal Kombat: Defenders of the Realm
 Mr. Bean
 Mr. Show
 Muppet Babies
@@ -418,7 +408,7 @@ Neverwhere
 NewsRadio
 Night Court
 Night Stalker
-From the Stories of Stephen King
+Nightmares & Dreamscapes: From the Stories of Stephen King
 Nip Tuck
 No Heroics
 Noble House
@@ -436,10 +426,11 @@ Paranormal State
 Parking Wars
 Party of Five
 Peep Show
-Bullshit!
+Penn & Teller: Bullshit!
 Perfect Hair Forever
 Perfect Strangers
 Perry Mason
+Persons Unknown
 Phoenix Nights
 Picket Fences
 Pinky and the Brain
@@ -476,7 +467,7 @@ Rick Steves' Europe
 Rob & Big
 Robin Hood
 Robin of Sherwood
-Prime Directives
+RoboCop: Prime Directives
 Rocko's Modern Life
 Rome
 Root of all Evil
@@ -490,8 +481,8 @@ Salute Your Shorts
 Samurai Jack
 Saved by the Bell
 Saving Grace
-School House Rock
-Scooby-Doo Where Are You!
+Schoolhouse Rock!
+Scooby-Doo, Where Are You!
 Sealab 2021
 seaQuest DSV
 Secret Diary of a Call Girl
@@ -499,7 +490,7 @@ Seinfeld
 Sex And The City
 Shameless
 Shark
-Princess of Power
+She-Ra: Princess of Power
 Shockwave
 Silk Stalkings
 SilverHawks
@@ -515,14 +506,13 @@ Sons of Anarchy
 Sorted
 South of Nowhere
 South Park
-Above and Beyond
+Space: Above and Beyond
 Space Academy
-Coast to Coast
+Birdman Coast to Coast
 Voyage To The Planets
 Space Rangers
 Spaced
 Speed Racer
-The Animated Series
 Spin City
 Spooks
 Code 9
@@ -531,14 +521,14 @@ Squidbillies
 Stacked
 Standoff
 Star Trek
-Deep Space Nine
-Enterprise
-The Animated Series
-The Next Generation
-Voyager
-Clone Wars
+Star Trek Deep Space Nine
+Star Trek Enterprise
+Star Trek The Next Generation
+Star Trek Voyager
+Star Wars: Clone Wars
 Stargate Atlantis
 Stargate SG-1
+Stargate Universe
 Starhunter
 Starved
 State of Play
@@ -549,22 +539,21 @@ Stroker and Hoop
 Studio 60 on the Sunset Strip
 Suburban Shootout
 Sunshine (2008)
-The Animated Series
 Supernatural
 Superstorm
 Surface
 Survivorman
 Swamp Thing
-The Radical Squadron
+Swat Kats: The Radical Squadron
 Swingtown
 Sylvester & Tweety Mysteries
-T.V. Funhouse
+TV Funhouse
 Taken
 Tales from the Crypt
 TaleSpin
 Teenage Mutant Ninja Turtles (1987)
 Teenage Mutant Ninja Turtles (2003)
-The Sarah Connor Chronicles
+Terminator: The Sarah Connor Chronicles
 Terry Pratchett's The Colour of Magic
 Testees
 That '70s Show
@@ -631,7 +620,6 @@ The Kill Point
 The King of Queens
 The L Word
 The Last Days of World War II
-The Last Days of World War II (2008)
 The Last Enemy
 The Legend of Zelda
 The Little Mermaid
@@ -645,7 +633,6 @@ The Martian Chronicles
 The Mighty Boosh
 The Mitchell and Webb Situation
 The Most Extreme
-The Animated Series
 The Munsters
 The Muppet Show
 The Mysterious Cities of Gold
@@ -655,8 +642,9 @@ The New Adventures of Old Christine
 The New Adventures of Superman
 The New Animated Adventures of Flash Gordon
 The New Batman Adventures
-The O.C.
+The OC
 The Office (UK)
+The Office (US)
 The Outer Limits
 The Outer Limits (1995)
 The Pink Panther
@@ -707,7 +695,7 @@ Threshold
 ThunderCats
 Tiger - Spy in the Jungle
 Til Death
-Carmen + Dave
+Til Death Do Us Part: Carmen + Dave
 Tilt
 Tin Man
 Tiny Toon Adventures
@@ -733,10 +721,11 @@ Ultimate Force
 Undeclared
 Underbelly
 V
+V (2009)
 Veronica Mars
 Vietnam War with Walter Cronkite
 Vinnie Jones' Toughest Cops
-Knights of the Magical Light
+Visionaries: Knights of the Magical Light
 Viva la Bam
 Voyagers!
 Walker, Texas Ranger
@@ -745,7 +734,7 @@ Wallander
 Weeds
 Weird Science
 When Louis Met
-The NASA Missions
+When we left Earth: The NASA Missions
 Where on Earth is Carmen Sandiego
 Whose Line Is It Anyway
 Whose Line Is It Anyway (UK)
@@ -763,8 +752,7 @@ Wonder Woman
 Wonderfalls
 Behind Closed Doors
 Evolution
-The Animated Series
-Warrior Princess
+Xena: Warrior Princess
 XIII
 Zoey 101
 Zorro
