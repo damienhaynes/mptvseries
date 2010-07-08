@@ -211,6 +211,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cConfigSizeHeight = "configSizeHeight";
         public const String cConfigSizeWidth = "configSizeWidth";
 
+        public const String cDisableMediaInfo = "DisableMediaInfo";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -552,6 +554,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cPlaylistUnwatchedOnly) == null)
                     SetOptions(cPlaylistUnwatchedOnly, false);
+
+                if (GetOptions(cDisableMediaInfo) == null)
+                    SetOptions(cDisableMediaInfo, false);
 
             }
             catch (Exception ex)
