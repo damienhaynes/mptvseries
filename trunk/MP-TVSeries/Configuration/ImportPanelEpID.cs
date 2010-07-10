@@ -101,16 +101,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else
             {
-                // update localEpsIds with chosen ep ids
+                bool isSecondPart = false;
 
+                // update local episode ids with chosen episode ids
                 foreach (var series in matches)
                 {
                     foreach (var pair in series.Value)
                     {
                         if (pair.Value != null)
                         {
-                            // this is hardly the righ place to do this....
-                            pair.Key.ChangeIndexes(pair.Value[DBOnlineEpisode.cSeasonIndex], pair.Value[DBOnlineEpisode.cEpisodeIndex]);
+                            // check if its a double episode
+                            isSecondPart = false;
+                            if (!string.IsNullOrEmpty(pair.Key[DBEpisode.cCompositeID2]))
+                            {
+                                // check if its the second part of a double episode
+                                if (pair.Key[DBEpisode.cEpisodeIndex] == pair.Key[DBEpisode.cEpisodeIndex2])
+                                    isSecondPart = true;
+                            }
+                            pair.Key.ChangeIndexes(pair.Value[DBOnlineEpisode.cSeasonIndex], pair.Value[DBOnlineEpisode.cEpisodeIndex], isSecondPart);
                         }
                     }
                 }

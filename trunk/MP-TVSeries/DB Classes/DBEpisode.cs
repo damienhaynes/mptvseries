@@ -274,10 +274,24 @@ namespace WindowPlugins.GUITVSeries
 
         public void ChangeIndexes(int seasonIndex, int episodeIndex)
         {
+            ChangeIndexes(seasonIndex, episodeIndex, false);
+        }
+        public void ChangeIndexes(int seasonIndex, int episodeIndex, bool isSecondPart)
+        {
             string composite = base[cSeriesID] + "_" + seasonIndex + "x" + episodeIndex;
             base[cSeasonIndex] = seasonIndex;
-            base[cEpisodeIndex] = episodeIndex;
-            base[cCompositeID] = composite;
+
+            if (!isSecondPart)
+            {                                
+                base[cEpisodeIndex] = episodeIndex;
+                base[cCompositeID] = composite;
+            }
+            else
+            {
+                // only update second part of episode
+                base[cEpisodeIndex2] = episodeIndex;
+                base[cCompositeID2] = composite;
+            }
 
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
             if (!newOnlineEpisode.ReadPrimary(composite))
@@ -293,8 +307,16 @@ namespace WindowPlugins.GUITVSeries
                 }
                 newOnlineEpisode[cSeriesID] = this[cSeriesID];
                 newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
-                newOnlineEpisode[cCompositeID] = base[cCompositeID];
+                if (!isSecondPart)
+                {
+                    newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
+                    newOnlineEpisode[cCompositeID] = base[cCompositeID];
+                }
+                else
+                {
+                    newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex2];
+                    newOnlineEpisode[cCompositeID] = base[cCompositeID2];
+                }
             }
             m_onlineEpisode = newOnlineEpisode;
             Commit();
