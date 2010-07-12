@@ -164,7 +164,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     allFoundFiles = results.Select(r => r.PathPair).ToList();
                     OnlineParsing.RemoveFilesInDB(ref results);
                     this.labelWaitParse.Text = "Local File Parsing is done, displaying Results...";
-                    origResults = results.ToList<parseResult>();
+                    MPTVSeriesLog.Write(this.labelWaitParse.Text);
+                    origResults = results.ToList<parseResult>();                    
                     FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
                     // fire off event so user can click Next in wizard
@@ -209,6 +210,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             List<parseResult> changes = new List<parseResult>();
 
+            Dictionary<string, parseResult> origParseResults = origResults.ToDictionary(pr => pr.full_filename, pr => pr);
+
             foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
                 if (includeDisabled || (bool)row.Cells[0].Value == true)
@@ -218,8 +221,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     {
                         if (row.Tag is parseResult)
                         {
-                            var origPR = origResults.SingleOrDefault(pr => pr.full_filename == (row.Tag as parseResult).full_filename);
-                            if (origPR != null)
+                            //var origPR = origResults.SingleOrDefault(pr => pr.full_filename == (row.Tag as parseResult).full_filename);
+                            
+                            parseResult origPR;
+                            if (origParseResults.TryGetValue((row.Tag as parseResult).full_filename, out origPR))
+                            //if (origPR != null)
                             {
                                 origPR.success = (bool)row.Cells[0].Value == true;
                                 var colname = uniqueCols[i].Name;
