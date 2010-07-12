@@ -802,8 +802,7 @@ namespace WindowPlugins.GUITVSeries
                 if (worker.CancellationPending)
                     return;
                 
-                String sSeriesNameToSearch = series[DBSeries.cParsedName];
-                worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, sSeriesNameToSearch, ++nIndex, seriesList.Count, series, null));
+                String sSeriesNameToSearch = series[DBSeries.cParsedName];                
                 DBOnlineSeries UserChosenSeries = null;
                 UserInputResultSeriesActionPair sap = null;
 
@@ -829,9 +828,11 @@ namespace WindowPlugins.GUITVSeries
                     series.Commit();
                 }
 
+                string seriesName = UserChosenSeries != null ? UserChosenSeries[DBOnlineSeries.cPrettyName].ToString() : sSeriesNameToSearch;
+                worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, seriesName, ++nIndex, seriesList.Count, series, null));
+
                 if (UserChosenSeries != null) // make sure selection was not cancelled
-                {
-                    worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, UserChosenSeries[DBOnlineSeries.cPrettyName], nIndex, seriesList.Count, series, null));
+                {                    
                     // set the ID on the current series with the one from the chosen one
                     // we need to update all depending items - seasons & episodes
                     List<DBSeason> seasons = DBSeason.Get(series[DBSeries.cID]);
@@ -866,18 +867,21 @@ namespace WindowPlugins.GUITVSeries
                     setcondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, UserChosenSeries[DBSeries.cID], SQLConditionType.Equal);
                     List<DBSeries> seriesDupeSetList = DBSeries.Get(setcondition);
                     bool bFirst = true;
-                    foreach (DBSeries seriesDupeSet in seriesDupeSetList) {
-                        if (bFirst) {
+                    foreach (DBSeries seriesDupeSet in seriesDupeSetList)
+                    {
+                        if (bFirst)
+                        {
                             seriesDupeSet[DBSeries.cDuplicateLocalName] = 0;
                             seriesDupeSet.Commit();
                             bFirst = false;
-                        } else {
+                        }
+                        else
+                        {
                             seriesDupeSet[DBSeries.cDuplicateLocalName] = 1;
                             seriesDupeSet.Commit();
                         }
                     }
-                }
-
+                }               
             }
             // that is done
             worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewSeries, seriesList.Count));
