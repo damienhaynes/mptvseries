@@ -2468,6 +2468,8 @@ namespace WindowPlugins.GUITVSeries
                 onlineEpisode.Commit();
             }
 
+            // This section needs optimizing and is very slow when dealing with many episodes...see Issue #425
+
             // now go over the touched seasons & series
             foreach (DBSeason season in relatedSeasons)
             {

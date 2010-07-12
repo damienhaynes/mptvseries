@@ -375,7 +375,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             }
             catch (Exception e)
             {                
-                MPTVSeriesLog.Write("Error reading stream: ", e.Message);
+                MPTVSeriesLog.Write("Error reading stream: {0}", e.Message);
             }
             data.Close();
             reader.Close();
