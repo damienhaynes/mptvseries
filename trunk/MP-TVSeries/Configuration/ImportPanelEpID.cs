@@ -55,6 +55,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             if (listBoxSeries.SelectedIndex < 0 && listBoxSeries.Items.Count > 0) 
                 listBoxSeries.SelectedIndex = 0;
+
+            if (listBoxSeries.Items.Count == 0)
+            {
+                comboMatchOptions.Enabled = false;
+                comboMatchOptions.Items.Clear();
+                buttonMatchAgain.Enabled = false;
+                txtBoxStatusBar.Text = "There are no episodes requiring manual selection...";
+            }
+            else
+            {
+                comboMatchOptions.Enabled = true;
+                buttonMatchAgain.Enabled = true;
+            }
         }
 
         private bool seriesHasAllEpsMatched(DBSeries series)

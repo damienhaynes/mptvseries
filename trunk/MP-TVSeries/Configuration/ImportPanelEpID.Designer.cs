@@ -97,7 +97,7 @@
             this.listBoxLocal.Name = "listBoxLocal";
             this.listBoxLocal.Size = new System.Drawing.Size(271, 355);
             this.listBoxLocal.TabIndex = 18;
-            this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);            
+            this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);
             // 
             // listBoxOnline
             // 
