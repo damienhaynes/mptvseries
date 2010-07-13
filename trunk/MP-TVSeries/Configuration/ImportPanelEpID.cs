@@ -245,17 +245,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];            
             var matchedOnlineEp = matches.Single(s => s.Key == series).Value.Single(eps => eps.Key == localEp).Value;          
+            
+            string selectedItem = string.Empty;
             if (matchedOnlineEp != null)
-                listBoxOnline.SelectedItem = getDisplayString(matchedOnlineEp);                     
+                listBoxOnline.SelectedItem = getDisplayString(matchedOnlineEp);
             else listBoxOnline.SelectedIndex = 0;
-
-            string toolTipText = string.Empty;
-
-            // Set Tooltip                          
-            //toolTipText = string.Concat("Filename: ", localEp[DBEpisode.cFilename], "\n");
-            //toolTipText = string.Concat(toolTipText, "Parsed Result: ", getDisplayString(localEp));           
-            //toolTipLocalEpisode.SetToolTip(listBoxLocal, toolTipText);
-
+       
+            txtBoxStatusBar.Text = localEp[DBEpisode.cFilename];
         }
 
         private void listBoxOnline_SelectedIndexChanged(object sender, EventArgs e)
@@ -272,6 +268,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
         {
+            txtBoxStatusBar.Text = string.Empty;
             FillSeriesList();
         }
 
@@ -281,22 +278,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             DoAutoMatching(listBoxSeries.SelectedItem as DBSeries, selected);
             listBoxSeries_SelectedIndexChanged(listBoxSeries, null);
             comboMatchOptions.SelectedItem = selected;
-        }
-
-        private void listBoxLocal_MouseMove(object sender, MouseEventArgs e)
-        {
-            string toolTipText = string.Empty;
-            
-            // Get the item
-            int nIdx = listBoxLocal.IndexFromPoint(e.Location);
-            if ((nIdx >= 0) && (nIdx < listBoxLocal.Items.Count))
-            {
-                var localEp = displayedEps[nIdx];
-                toolTipText = string.Concat("Filename: ", localEp[DBEpisode.cFilename], "\n");
-                toolTipText = string.Concat(toolTipText, "Parsed Result: ", getDisplayString(localEp));
-            }
-            if (toolTipLocalEpisode.GetToolTip(listBoxLocal) != toolTipText) 
-                toolTipLocalEpisode.SetToolTip(listBoxLocal, toolTipText);            
         }
     }
 }
