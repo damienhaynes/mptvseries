@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.toolTipLocalEpisode = new System.Windows.Forms.ToolTip(this.components);
+            this.txtBoxStatusBar = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelStep
@@ -83,7 +84,7 @@
             this.listBoxSeries.FormattingEnabled = true;
             this.listBoxSeries.Location = new System.Drawing.Point(6, 111);
             this.listBoxSeries.Name = "listBoxSeries";
-            this.listBoxSeries.Size = new System.Drawing.Size(197, 381);
+            this.listBoxSeries.Size = new System.Drawing.Size(197, 355);
             this.listBoxSeries.TabIndex = 17;
             this.listBoxSeries.SelectedIndexChanged += new System.EventHandler(this.listBoxSeries_SelectedIndexChanged);
             // 
@@ -94,10 +95,9 @@
             this.listBoxLocal.FormattingEnabled = true;
             this.listBoxLocal.Location = new System.Drawing.Point(209, 111);
             this.listBoxLocal.Name = "listBoxLocal";
-            this.listBoxLocal.Size = new System.Drawing.Size(271, 381);
+            this.listBoxLocal.Size = new System.Drawing.Size(271, 355);
             this.listBoxLocal.TabIndex = 18;
-            this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);
-            this.listBoxLocal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listBoxLocal_MouseMove);
+            this.listBoxLocal.SelectedIndexChanged += new System.EventHandler(this.listBoxLocal_SelectedIndexChanged);            
             // 
             // listBoxOnline
             // 
@@ -107,7 +107,7 @@
             this.listBoxOnline.FormattingEnabled = true;
             this.listBoxOnline.Location = new System.Drawing.Point(486, 111);
             this.listBoxOnline.Name = "listBoxOnline";
-            this.listBoxOnline.Size = new System.Drawing.Size(270, 381);
+            this.listBoxOnline.Size = new System.Drawing.Size(270, 355);
             this.listBoxOnline.TabIndex = 19;
             this.listBoxOnline.SelectedIndexChanged += new System.EventHandler(this.listBoxOnline_SelectedIndexChanged);
             // 
@@ -188,11 +188,22 @@
             this.toolTipLocalEpisode.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTipLocalEpisode.ToolTipTitle = "Local Episode Information";
             // 
+            // txtBoxStatusBar
+            // 
+            this.txtBoxStatusBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBoxStatusBar.Enabled = false;
+            this.txtBoxStatusBar.Location = new System.Drawing.Point(6, 473);
+            this.txtBoxStatusBar.Name = "txtBoxStatusBar";
+            this.txtBoxStatusBar.Size = new System.Drawing.Size(750, 20);
+            this.txtBoxStatusBar.TabIndex = 31;
+            // 
             // ImportPanelEpID
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.txtBoxStatusBar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -229,5 +240,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolTip toolTipLocalEpisode;
+        private System.Windows.Forms.TextBox txtBoxStatusBar;
     }
 }
