@@ -29,7 +29,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             InitializeComponent();
         }
 
-
         public void MatchEpisodesForSeries(DBSeries series, List<DBEpisode> localEpisodes, List<DBOnlineEpisode> onlineCandidates)
         {
             if (this.InvokeRequired)
@@ -97,7 +96,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK;
         }
 
-
         private List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> getResultImpl(bool requestShowOnly)
         {
             if (requestShowOnly)
@@ -157,7 +155,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             foreach (var localEp in localEps)
             {
                 var bestMatchVal = from oe in onlineeps.Single(s => s.Key == series).Value
-                                   select new { Episode = oe, MatchValue = OnlineParsing.matchOnlineToLocalEpisode(series, localEp, oe, orderingOption, false) };
+                                   select new { Episode = oe, MatchValue = OnlineParsing.matchOnlineToLocalEpisode(series, localEp, oe, orderingOption) };
                 var matchedEp = bestMatchVal.OrderBy(me => me.MatchValue).FirstOrDefault(me => me.MatchValue < int.MaxValue);
                 if (matchedEp != null)
                     newseriesMatches.Add(new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, matchedEp.Episode));
@@ -194,7 +192,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 comboMatchOptions.Items.Add(ordering); 
 	        }
             comboMatchOptions.Items.Add("Title");
-            string preChosen = selectedSeries[DBOnlineSeries.cChoseEpisodeOrder];
+            string preChosen = selectedSeries[DBOnlineSeries.cChosenEpisodeOrder];
             if (string.IsNullOrEmpty(preChosen))
                 comboMatchOptions.SelectedIndex = 0;
             else comboMatchOptions.SelectedItem = preChosen;
@@ -288,7 +286,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void buttonMatchAgain_Click(object sender, EventArgs e)
         {
             string selected = comboMatchOptions.SelectedItem.ToString();
-            DoAutoMatching(listBoxSeries.SelectedItem as DBSeries, selected);
+            DBSeries series = listBoxSeries.SelectedItem as DBSeries;
+            series[DBOnlineSeries.cChosenEpisodeOrder] = selected;
+            series.Commit();
+            DoAutoMatching(series, selected);
             listBoxSeries_SelectedIndexChanged(listBoxSeries, null);
             comboMatchOptions.SelectedItem = selected;
         }

@@ -1734,8 +1734,9 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBOnlineEpisode.cEpisodeName:
-                                case DBEpisode.cImportProcessed:
                                 case DBOnlineEpisode.cOnlineDataImported:
+                                case DBEpisode.cImportProcessed:                                
+                                case DBEpisode.cCompositeUpdated:                                
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -1745,15 +1746,17 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cSeriesID:
                                 case DBEpisode.cCompositeID:
                                 case DBEpisode.cCompositeID2:
+                                case DBEpisode.cOriginalComposite:
+                                case DBEpisode.cOriginalComposite2:
                                 case DBEpisode.cStopTime:
-                                case DBEpisode.cExtension:                                
+                                case DBEpisode.cExtension:
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
                                 case DBOnlineEpisode.cID:
                                 case DBOnlineEpisode.cLastUpdated:
                                 case DBOnlineEpisode.cDownloadExpectedNames:
                                 case DBOnlineEpisode.cDownloadPending:
-                                case DBOnlineEpisode.cWatched:                                
+                                case DBOnlineEpisode.cWatched:
                                 case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                 case DBOnlineEpisode.cEpisodeThumbnailUrl:
                                 case DBOnlineEpisode.cCombinedEpisodeNumber:
@@ -2035,7 +2038,7 @@ namespace WindowPlugins.GUITVSeries
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;
 
-                                case DBOnlineSeries.cChoseEpisodeOrder:
+                                case DBOnlineSeries.cChosenEpisodeOrder:
                                     if (!String.IsNullOrEmpty(series[key]))
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
