@@ -539,6 +539,22 @@ namespace WindowPlugins.GUITVSeries
             return new string(a);
         }
 
+        public static void GetEpisodeIndexesFromComposite(string compositeID, out int seasonIndex, out int episodeIndex)
+        {
+            seasonIndex = 0;
+            episodeIndex = 0;
+
+            if (string.IsNullOrEmpty(compositeID)) return;
+        
+            string[] splits = compositeID.Split(new char[] { '_' });
+            string[] epComp = splits[1].Split(new char[] { 'x' });
+
+            int.TryParse(epComp[0], out seasonIndex);
+            int.TryParse(epComp[1], out episodeIndex);
+            
+            return;
+        }
+
         #endregion
 
         #region Assembly methods

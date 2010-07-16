@@ -305,7 +305,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_onlineSeries[DBOnlineSeries.cHasLocalFiles])
                 newOnlineSeries[DBOnlineSeries.cHasLocalFiles] = 1;
             newOnlineSeries[DBOnlineSeries.cEpisodeOrders] = m_onlineSeries[DBOnlineSeries.cEpisodeOrders];
-            newOnlineSeries[DBOnlineSeries.cChoseEpisodeOrder] = m_onlineSeries[DBOnlineSeries.cChoseEpisodeOrder];
+            newOnlineSeries[DBOnlineSeries.cChosenEpisodeOrder] = m_onlineSeries[DBOnlineSeries.cChosenEpisodeOrder];
             m_onlineSeries = newOnlineSeries;
             this[cID] = nSeriesID;
         }

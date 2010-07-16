@@ -66,6 +66,9 @@ namespace WindowPlugins.GUITVSeries
         
         public const String cEpisodeName = "LocalEpisodeName";
         public const String cImportProcessed = "LocalImportProcessed";
+        public const String cCompositeUpdated = "CompositeUpdated";
+        public const String cOriginalComposite = "OriginalComposite";
+        public const String cOriginalComposite2 = "OriginalComposite2";
         public const String cAvailableSubtitles = "AvailableSubtitles";
 
         public const String cAudioCodec = "AudioCodec";        
@@ -276,8 +279,24 @@ namespace WindowPlugins.GUITVSeries
         {
             ChangeIndexes(seasonIndex, episodeIndex, false);
         }
+
+        /// <summary>
+        /// Change the local episode composite, season and episode indexes
+        /// </summary>
+        /// <param name="seasonIndex">Season Index of new episode ID</param>
+        /// <param name="episodeIndex">Episode Index of new episode ID</param>
+        /// <param name="isSecondPart">Set to true if its the 2nd part of a double episode</param>
         public void ChangeIndexes(int seasonIndex, int episodeIndex, bool isSecondPart)
         {
+            string currentComposite = base[cCompositeID];
+            string currentComposite2 = base[cCompositeID2];
+
+            // save original composite id's for when we do online updates and re-matching
+            if (!isSecondPart && string.IsNullOrEmpty(base[cOriginalComposite]))
+                base[cOriginalComposite] = currentComposite;
+            if (isSecondPart && string.IsNullOrEmpty(base[cOriginalComposite2]))
+                base[cOriginalComposite2] = currentComposite2;
+
             string composite = base[cSeriesID] + "_" + seasonIndex + "x" + episodeIndex;
             base[cSeasonIndex] = seasonIndex;
 
@@ -294,6 +313,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
+            bool bNewOnlineEpsisode = false;
             if (!newOnlineEpisode.ReadPrimary(composite))
             {                
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
@@ -305,8 +325,10 @@ namespace WindowPlugins.GUITVSeries
                             break;
                     }
                 }
+
                 newOnlineEpisode[cSeriesID] = this[cSeriesID];
                 newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
+
                 if (!isSecondPart)
                 {
                     newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
@@ -317,9 +339,23 @@ namespace WindowPlugins.GUITVSeries
                     newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex2];
                     newOnlineEpisode[cCompositeID] = base[cCompositeID2];
                 }
+
+                bNewOnlineEpsisode = true;
             }
             m_onlineEpisode = newOnlineEpisode;
             Commit();
+
+            // cleanup old reference if we needed to create a new online episode
+            // only remove if no online data associated with it
+            if (bNewOnlineEpsisode)
+            {
+                string compositeID = isSecondPart ? currentComposite2 : currentComposite;
+
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cCompositeID, compositeID, SQLConditionType.Equal);
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
+                DBOnlineEpisode.Clear(condition);
+            }
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -390,14 +426,17 @@ namespace WindowPlugins.GUITVSeries
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             base.AddColumn(cFilename, new DBField(DBField.cTypeString, true));
+            base.AddColumn(cOriginalComposite, new DBField(DBField.cTypeString));
             base.AddColumn(cCompositeID, new DBField(DBField.cTypeString));
             base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
             base.AddColumn(cSeasonIndex, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeIndex, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
             base.AddColumn(cImportProcessed, new DBField(DBField.cTypeInt));
+            base.AddColumn(cCompositeUpdated, new DBField(DBField.cTypeInt));
             base.AddColumn(cAvailableSubtitles, new DBField(DBField.cTypeString));
 
+            base.AddColumn(cOriginalComposite2, new DBField(DBField.cTypeString));
             base.AddColumn(cCompositeID2, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeIndex2, new DBField(DBField.cTypeInt));
 

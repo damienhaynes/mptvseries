@@ -61,7 +61,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cUnwatchedItems = "UnwatchedItems";
 
         public const String cEpisodeOrders = "EpisodeOrders";
-        public const String cChoseEpisodeOrder = "choosenOrder";
+        public const String cChosenEpisodeOrder = "choosenOrder";
 
         public const String cOriginalName = "origName";
 
@@ -114,7 +114,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cLanguage, "Language");
             s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
             s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
-            s_FieldToDisplayNameMap.Add(cChoseEpisodeOrder, "Episode Order");
+            s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
             s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
             s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
             s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
