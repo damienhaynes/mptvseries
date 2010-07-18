@@ -1848,7 +1848,7 @@ namespace WindowPlugins.GUITVSeries
                 //        }
                 //    }
                 //}
-                if (GetSeriesParser.PerfectMatch != null)
+                if (GetSeriesParser.PerfectMatch != null && !bNoExactMatch)
                 {
                     MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, GetSeriesParser.PerfectMatch.ToString(), GetSeriesParser.PerfectMatch[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
                     return GetSeriesParser.PerfectMatch;
