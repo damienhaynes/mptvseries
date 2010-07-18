@@ -47,7 +47,7 @@
 	<string Field="special" Original="Special">Special</string>
 	<string Field="specials" Original="Specials">Specials</string>
 	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"You are about to permanently delete {0} physical file(s).\nWould you like to proceed?"</string>
-	<string Field="Force_Online_Match" Original="Force Online Match">Force Online Match</string>
+	<string Field="Force_Online_Match" Original="Force New Online Lookup For Series">Force New Online Lookup For Series</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Load via NewsLeecher</string>
 	<string Field="Download" Original="Download">Download</string>
 	<string Field="Actions" Original="Actions">Actions</string>

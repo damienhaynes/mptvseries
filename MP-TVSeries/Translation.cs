@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
         public static string special = "Special";
         public static string specials = "Specials";
         public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
-        public static string Force_Online_Match = "Force Online Match";
+        public static string Force_Online_Match = "Force New Online Lookup For Series";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
         public static string Actions = "Actions";
