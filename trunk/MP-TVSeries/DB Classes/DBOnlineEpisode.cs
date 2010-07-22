@@ -203,7 +203,17 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]).ToString() + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
+                string completeTitle = string.Empty;
+                DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                if (series[DBOnlineSeries.cEpisodeSortOrder] != "DVD")
+                {
+                    completeTitle = series.ToString() + " " + this[DBOnlineEpisode.cSeasonIndex] + "x" + this[DBOnlineEpisode.cEpisodeIndex] + ": " + this[DBOnlineEpisode.cEpisodeName];
+                }
+                else
+                {
+                    completeTitle = series.ToString() + " " + this[DBOnlineEpisode.cCombinedSeason] + "x" + this[DBOnlineEpisode.cCombinedEpisodeNumber] + ": " + this[DBOnlineEpisode.cEpisodeName];
+                }
+                return completeTitle;
             }
         }
 

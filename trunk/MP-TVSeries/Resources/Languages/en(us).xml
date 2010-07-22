@@ -272,4 +272,8 @@
 	<string Field="UnableToFindAny" Original="Unable to find any {0}">Unable to find any {0}</string>
 	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Unable to find any episode</string>
 
+  <string Field="SortBy" Original="Sort By">Sort By</string>
+  <string Field="DVDOrder" Original="DVD Order">DVD Order</string>
+  <string Field="AiredOrder" Original="Aired Order">Aired Order</string>
+  
 </strings>

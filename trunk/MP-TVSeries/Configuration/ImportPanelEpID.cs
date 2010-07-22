@@ -288,6 +288,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             string selected = comboMatchOptions.SelectedItem.ToString();
             DBSeries series = listBoxSeries.SelectedItem as DBSeries;
             series[DBOnlineSeries.cChosenEpisodeOrder] = selected;
+            // default sort order should correspond to the chosen episode order
+            series[DBOnlineSeries.cEpisodeSortOrder] = selected == "DVD" ? "DVD" : "Aired";
             series.Commit();
             DoAutoMatching(series, selected);
             listBoxSeries_SelectedIndexChanged(listBoxSeries, null);

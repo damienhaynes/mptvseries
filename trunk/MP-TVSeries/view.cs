@@ -119,17 +119,24 @@ namespace WindowPlugins.GUITVSeries
 
         double getRelSortingIndexOfEp(DBEpisode ep)
         {
-            if (ep[DBEpisode.cSeasonIndex] == 0)
+            // consider episode sort order when sorting
+            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
+            bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+
+            string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+            string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
+            if (ep[seasonIndex] == 0)
             {
                 if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
                 {
-                    return 9999 + ep[DBOnlineEpisode.cEpisodeIndex];
+                    return 9999 + ep[episodeIndex];
                 }
                 else
-                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
+                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
             }
             else
-                return ((int)ep[DBEpisode.cEpisodeIndex] + ep[DBOnlineEpisode.cSeasonIndex]*100);
+                return ((int)ep[episodeIndex] + ep[seasonIndex] * 100);
         }
 
         /*
@@ -346,10 +353,18 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case logicalViewStep.type.season:
                         // we expect to get the seriesID/seasonIndex as stepSel
+                        
+                        // we want to query episodes using the CombinedSeason if Sort Order is "DVD"
+                        // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
+                        DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
+                        bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                        string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
-                        if (DBOption.GetOptions(DBOption.cSortSpecials)) {
+                        conditions.Add(new DBOnlineEpisode(), seasonIndex, currentStepSelection[1], SQLConditionType.Equal);
+                        if (DBOption.GetOptions(DBOption.cSortSpecials) && SortByDVD)
+                        {
                             conditions.nextIsOr = true;
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
