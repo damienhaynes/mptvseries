@@ -2025,6 +2025,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cSeriesID:
                                 case DBOnlineSeries.cOriginalName:
                                 case DBOnlineSeries.cHasNewEpisodes:
+                                case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBSeries.cHidden:                   
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later

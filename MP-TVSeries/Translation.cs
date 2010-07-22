@@ -54,6 +54,9 @@ namespace WindowPlugins.GUITVSeries
         public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";
         public static string Delete = "Delete";
+        public static string SortBy = "Sort By";
+        public static string DVDOrder = "DVD Order";
+        public static string AiredOrder = "Aired Order";
         public static string Remove_series_from_Favourites = "Remove from Favourites";
         public static string Add_series_to_Favourites = "Add to Favourites";
         public static string Force_Local_Scan = "Force Local Scan ";
@@ -353,6 +356,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
+        #region Public Methods
         static string path = string.Empty;
         static public void Init()
         {
@@ -442,5 +446,6 @@ namespace WindowPlugins.GUITVSeries
             }
             return langs;
         }
+        #endregion
     }
 }

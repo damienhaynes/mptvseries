@@ -87,6 +87,29 @@ namespace WindowPlugins.GUITVSeries
                                    });
             formatingRules.Add(fr);
 
+            // replace seasonindex and episodeindex for different episode sortby
+            // skins using these properties will display correct indexes based on sort order
+            fr = new formatingRule(delegate(string value, string field, DBTable item)
+                                   {
+                                       DBEpisode e = item as DBEpisode;
+                                       if (null == e) return false;
+
+                                       if (field.Contains("<Episode.SeasonIndex>") || field.Contains("<Episode.EpisodeIndex>"))
+                                       {
+                                           DBSeries s = Helper.getCorrespondingSeries(e[DBOnlineEpisode.cSeriesID]);
+                                           if (s[DBOnlineSeries.cEpisodeSortOrder] == "DVD") return true;
+                                       }
+                                       return false;
+                                   },
+                                   delegate(string value, string field, DBTable item)
+                                   {                                      
+                                       string replacement = string.Empty;
+                                       replacement = field.Replace("<Episode.SeasonIndex>", "<Episode.Combined_season>");
+                                       replacement = replacement.Replace("<Episode.EpisodeIndex>", "<Episode.Combined_episodenumber>");
+                                       return resolveDynString(replacement, item);
+                                   });
+            formatingRules.Add(fr);
+
             fr = new formatingRule("\\n", Environment.NewLine);
             formatingRules.Add(fr);
 

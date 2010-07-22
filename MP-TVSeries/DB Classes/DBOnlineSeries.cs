@@ -62,6 +62,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cEpisodeOrders = "EpisodeOrders";
         public const String cChosenEpisodeOrder = "choosenOrder";
+        public const String cEpisodeSortOrder = "EpisodeSortOrder";
 
         public const String cOriginalName = "origName";
 
@@ -187,6 +188,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
             base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
             base.AddColumn(cActors, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeOrders, new DBField(DBField.cType.String));
+            base.AddColumn(cChosenEpisodeOrder, new DBField(DBField.cType.String));
+            base.AddColumn(cEpisodeSortOrder, new DBField(DBField.cType.String));
             base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
             base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));

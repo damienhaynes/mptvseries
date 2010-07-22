@@ -328,6 +328,7 @@ namespace WindowPlugins.GUITVSeries
 			actionUpdate,
 			actionLocalScan,
 			actionFullRefresh,
+            actionEpisodeSortBy,
 			actionPlayRandom,
             actionLockViews,
             actionResetIgnoredDownloadedFiles,
@@ -364,6 +365,12 @@ namespace WindowPlugins.GUITVSeries
             subtitles,
 			cancel
 		}
+
+        public enum EpisodeSortByMenuItems
+        {
+            aired,
+            dvd
+        }
 
         enum Listlevel
         {
@@ -842,24 +849,7 @@ namespace WindowPlugins.GUITVSeries
 								pItem.ItemId = (int)eContextItems.cycleSeasonPoster;
 							}
 						}
-
-						/*if (listLevel != Listlevel.Group) {
-							// Fav. handling
-							DBSeries currentSeries;
-							if (listLevel == Listlevel.Series)
-								currentSeries = (DBSeries)currentitem.TVTag;
-							else currentSeries = m_SelectedSeries;
-
-							if (!DBOption.GetOptions(DBOption.cOnlineFavourites)) {
-								pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
-							}
-							else
-								pItem = new GUIListItem(currentSeries[DBOnlineSeries.cIsOnlineFavourite] == 1 ? Translation.Remove_series_from_Favourites : Translation.Add_series_to_Favourites);
-
-							dlg.Add(pItem);
-							pItem.ItemId = (int)eContextItems.actionToggleFavorite;
-						}*/
-
+						
 						// Can always add to existing or new view
 						if (listLevel == Listlevel.Series) {
 							pItem = new GUIListItem(Translation.AddViewTag + " ...");
@@ -978,7 +968,18 @@ namespace WindowPlugins.GUITVSeries
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.resetUserSelections;
 								}
-																
+                                
+                                // Episode Sort By
+                                if (this.listLevel == Listlevel.Episode || this.listLevel == Listlevel.Season)
+                                {
+                                    // get current episode sort order (DVD or Aired)
+                                    string currSortBy = selectedSeries[DBOnlineSeries.cEpisodeSortOrder].ToString();
+                                    if (string.IsNullOrEmpty(currSortBy)) currSortBy = "Aired";
+
+                                    pItem = new GUIListItem(string.Format("{0}: {1}", Translation.SortBy, Translation.Get(currSortBy + "Order")));
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionEpisodeSortBy;
+                                }
 								
 								pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
@@ -989,7 +990,7 @@ namespace WindowPlugins.GUITVSeries
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionFullRefresh;							
                                 */
-
+                                
                                 pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionPlayRandom;
@@ -1384,9 +1385,17 @@ namespace WindowPlugins.GUITVSeries
 						break;
 					#endregion
 
+                    #region Episode Sort By
+                    case (int)eContextItems.actionEpisodeSortBy:
+                        ShowEpisodeSortByMenu(selectedSeries);
+                        break;
+                    #endregion
+
+                    #region Ignore Downloaded Files
                     case (int)eContextItems.actionResetIgnoredDownloadedFiles:
                         DBIgnoredDownloadedFiles.ClearAll();
                         break;
+                    #endregion
 
                     #region Lock Views
                     case (int)eContextItems.actionLockViews:
@@ -2837,7 +2846,7 @@ namespace WindowPlugins.GUITVSeries
                             bool bFindNext = false;
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
                             
-							// Get a list of Episode to display for current view							
+							// Get a list of Episodes to display for current view							
 							List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);							
 
                             // Update Filtered Episode Count Property, this acurately displays the number of items on the facade
@@ -2851,8 +2860,8 @@ namespace WindowPlugins.GUITVSeries
                             item = null;
 
 							if (episodesToDisplay.Count == 0)							
-								bFacadeEmpty = true;							
-
+								bFacadeEmpty = true;
+                          
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
                                 try
@@ -3800,6 +3809,52 @@ namespace WindowPlugins.GUITVSeries
             dlgOK.SetHeading(Translation.ViewTags);
             dlgOK.SetLine(1, string.Format(Translation.ViewTagExistsMessage,view));
             dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+        }
+        #endregion
+
+        #region Episode Sort By Menu
+        private void ShowEpisodeSortByMenu(DBSeries series)
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlg == null)
+                return;
+
+            dlg.Reset();
+            dlg.SetHeading(Translation.SortBy);
+
+            // Add Menu items
+            GUIListItem pItem = null;
+            
+            // For now we will just add sort options for the Aired and DVD Order
+            pItem = new GUIListItem(Translation.AiredOrder);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)EpisodeSortByMenuItems.aired;
+
+            if (series[DBOnlineSeries.cEpisodeOrders].ToString().Contains("DVD"))
+            {
+                pItem = new GUIListItem(Translation.DVDOrder);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)EpisodeSortByMenuItems.dvd;
+            }
+
+            // Show Menu
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId < 0)
+                return;
+
+            switch (dlg.SelectedId)
+            {
+                case (int)EpisodeSortByMenuItems.aired:
+                    series[DBOnlineSeries.cEpisodeSortOrder] = "Aired";
+                    break;
+                case (int)EpisodeSortByMenuItems.dvd:
+                    series[DBOnlineSeries.cEpisodeSortOrder] = "DVD";
+                    break;
+            }
+            series.Commit();
+
+            // Re-load the facade to re-sort episodes
+            LoadFacade();
         }
         #endregion
 

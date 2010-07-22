@@ -968,7 +968,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cIsFavourite:
                                 case DBOnlineSeries.cChosenEpisodeOrder:
-
+                                case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBOnlineSeries.cBannerFileNames: // banners get handled differently (later on)
                                 case DBOnlineSeries.cPosterFileNames:
                                 case DBOnlineSeries.cCurrentBannerFileName:
@@ -1983,13 +1983,18 @@ namespace WindowPlugins.GUITVSeries
                         if (result == ReturnCode.OK)
                         {
                             series[DBOnlineSeries.cChosenEpisodeOrder] = (string)selectedOrdering.m_Tag;
+                            // set default episode sort order to match chosen episode order
+                            series[DBOnlineSeries.cEpisodeSortOrder] = (string)selectedOrdering.m_Tag == "DVD" ? "DVD" : "Aired";
                             MPTVSeriesLog.Write(string.Format("{0} order option chosen for series \"{1}\"", (string)selectedOrdering.m_Tag, series.ToString()), MPTVSeriesLog.LogLevel.Normal);
                         }
                     }
                     else
                     {
-                        if (series[DBOnlineSeries.cEpisodeOrders] != "")
+                        if (!string.IsNullOrEmpty(series[DBOnlineSeries.cEpisodeOrders]))
+                        {
                             series[DBOnlineSeries.cChosenEpisodeOrder] = "Aired";
+                            series[DBOnlineSeries.cEpisodeSortOrder] = "Aired";
+                        }
                         MPTVSeriesLog.Write(string.Format("Aired order option chosen for series \"{0}\"", series.ToString()), MPTVSeriesLog.LogLevel.Normal);
                     }
                 }
@@ -2125,12 +2130,15 @@ namespace WindowPlugins.GUITVSeries
                         else return int.MaxValue;
 
                     case "DVD":
+                        // use cCombinedEpisodeNumber and cCombinedSeasonNumber for DVD matching as
+                        // this will return the correct DVD order if any, otherwise will return aired order.
+                        
                         System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
                         provider.NumberDecimalSeparator = ".";
                                                 
                         float onlineSeasonTemp;
                         int onlineSeason = -1;
-                        if (float.TryParse(onlineEpisode[DBOnlineEpisode.cDVDSeasonNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
+                        if (float.TryParse(onlineEpisode[DBOnlineEpisode.cCombinedSeason], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
                             onlineSeason = (int)onlineSeasonTemp;
 
                         int localSeason = 0;
@@ -2149,14 +2157,14 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         float onlineEp = -1;
-                        if (onlineSeason != -1 && float.TryParse(onlineEpisode[DBOnlineEpisode.cDVDEpisodeNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
+                        if (onlineSeason != -1 && float.TryParse(onlineEpisode[DBOnlineEpisode.cCombinedEpisodeNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
                         {
                             string localstring;
                             double localcomp;
                             localstring = (localEp.ToString() + "." + localEp2.ToString());
                             localcomp = Convert.ToDouble(localstring, provider);
-                            if (!String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cDVDSeasonNumber]) && 
-                                !String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cDVDEpisodeNumber]) && 
+                            if (!String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cCombinedSeason]) &&
+                                !String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cCombinedEpisodeNumber]) && 
                                 (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp)))
                             {
                                 return 0;
