@@ -328,6 +328,7 @@ namespace WindowPlugins.GUITVSeries
 			actionUpdate,
 			actionLocalScan,
 			actionFullRefresh,
+            actionChangeOnlineEpisodeMatchOrder,
             actionEpisodeSortBy,
 			actionPlayRandom,
             actionLockViews,
@@ -368,8 +369,10 @@ namespace WindowPlugins.GUITVSeries
 
         public enum EpisodeSortByMenuItems
         {
-            aired,
-            dvd
+            Aired,
+            DVD,
+            Absolute,   // used for matching only
+            Title       // used for matching only
         }
 
         enum Listlevel
@@ -968,7 +971,19 @@ namespace WindowPlugins.GUITVSeries
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.resetUserSelections;
 								}
-                                
+
+                                // Online to Local Episode Matching order
+                                if (this.listLevel != Listlevel.Group)
+                                {
+                                    // get current online episode to local episode matching order
+                                    string currMatchOrder = selectedSeries[DBOnlineSeries.cChosenEpisodeOrder].ToString();
+                                    if (string.IsNullOrEmpty(currMatchOrder)) currMatchOrder = "Aired";
+
+                                    pItem = new GUIListItem(Translation.ChangeOnlineMatchOrder);
+                                    dlg.Add(pItem);
+                                    pItem.ItemId = (int)eContextItems.actionChangeOnlineEpisodeMatchOrder;
+                                }
+
                                 // Episode Sort By
                                 if (this.listLevel == Listlevel.Episode || this.listLevel == Listlevel.Season)
                                 {
@@ -979,7 +994,7 @@ namespace WindowPlugins.GUITVSeries
                                     pItem = new GUIListItem(string.Format("{0}: {1}", Translation.SortBy, Translation.Get(currSortBy + "Order")));
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionEpisodeSortBy;
-                                }
+                                }                                
 								
 								pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
@@ -1387,7 +1402,13 @@ namespace WindowPlugins.GUITVSeries
 
                     #region Episode Sort By
                     case (int)eContextItems.actionEpisodeSortBy:
-                        ShowEpisodeSortByMenu(selectedSeries);
+                        ShowEpisodeSortByMenu(selectedSeries, false);
+                        break;
+                    #endregion
+
+                    #region Local to Online Episode Match Order
+                    case (int)eContextItems.actionChangeOnlineEpisodeMatchOrder:
+                        ShowEpisodeSortByMenu(selectedSeries, true);
                         break;
                     #endregion
 
@@ -3813,48 +3834,117 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Episode Sort By Menu
-        private void ShowEpisodeSortByMenu(DBSeries series)
+        private void ShowEpisodeSortByMenu(DBSeries series, bool ChangeMatchingOrder)
         {
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null)
                 return;
 
             dlg.Reset();
-            dlg.SetHeading(Translation.SortBy);
+            if (ChangeMatchingOrder) 
+                dlg.SetHeading(Translation.ChangeOnlineMatchOrder);
+            else 
+                dlg.SetHeading(Translation.SortBy);
 
-            // Add Menu items
+            #region Add Menu items
             GUIListItem pItem = null;
-            
-            // For now we will just add sort options for the Aired and DVD Order
+
+            string currMatchOrder = series[DBOnlineSeries.cChosenEpisodeOrder].ToString();
+            if (string.IsNullOrEmpty(currMatchOrder)) currMatchOrder = EpisodeSortByMenuItems.Aired.ToString();
+
+            string currSortOrder = series[DBOnlineSeries.cEpisodeSortOrder].ToString();
+            if (string.IsNullOrEmpty(currSortOrder)) currSortOrder = EpisodeSortByMenuItems.Aired.ToString();
+
+            string selection = ChangeMatchingOrder ? currMatchOrder : currSortOrder;
+
+            // For now we will just add sort options for the Aired and DVD Order            
             pItem = new GUIListItem(Translation.AiredOrder);
             dlg.Add(pItem);
-            pItem.ItemId = (int)EpisodeSortByMenuItems.aired;
+            pItem.ItemId = (int)EpisodeSortByMenuItems.Aired;
+            if (selection == EpisodeSortByMenuItems.Aired.ToString()) pItem.Selected = true;
 
-            if (series[DBOnlineSeries.cEpisodeOrders].ToString().Contains("DVD"))
+            if (series[DBOnlineSeries.cEpisodeOrders].ToString().Contains(EpisodeSortByMenuItems.DVD.ToString()))
             {
                 pItem = new GUIListItem(Translation.DVDOrder);
                 dlg.Add(pItem);
-                pItem.ItemId = (int)EpisodeSortByMenuItems.dvd;
+                pItem.ItemId = (int)EpisodeSortByMenuItems.DVD;
+                if (selection == EpisodeSortByMenuItems.DVD.ToString()) pItem.Selected = true;
             }
 
-            // Show Menu
+            // TODO: sort by absolute order and just show a single season in GUI...later
+            if (series[DBOnlineSeries.cEpisodeOrders].ToString().Contains(EpisodeSortByMenuItems.Absolute.ToString()) && ChangeMatchingOrder)
+            {
+                pItem = new GUIListItem(Translation.AbsoluteOrder);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)EpisodeSortByMenuItems.Absolute;
+                if (selection == EpisodeSortByMenuItems.Absolute.ToString()) pItem.Selected = true;
+            }
+
+            if (ChangeMatchingOrder)
+            {
+                pItem = new GUIListItem(Translation.Title);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)EpisodeSortByMenuItems.Title;
+                if (selection == EpisodeSortByMenuItems.Title.ToString()) pItem.Selected = true;
+            }
+            #endregion
+
+            #region Show Menu
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId < 0)
                 return;
 
+            // if we change matching order then we should also change
+            // corresponding sort order
             switch (dlg.SelectedId)
             {
-                case (int)EpisodeSortByMenuItems.aired:
-                    series[DBOnlineSeries.cEpisodeSortOrder] = "Aired";
+                case (int)EpisodeSortByMenuItems.Aired:
+                    if (ChangeMatchingOrder)
+                    {
+                        series[DBOnlineSeries.cChosenEpisodeOrder] = EpisodeSortByMenuItems.Aired.ToString();
+                        ChangeEpisodeMatchingOrder(series, EpisodeSortByMenuItems.Aired.ToString());
+                    }
+                    series[DBOnlineSeries.cEpisodeSortOrder] = EpisodeSortByMenuItems.Aired.ToString();
                     break;
-                case (int)EpisodeSortByMenuItems.dvd:
-                    series[DBOnlineSeries.cEpisodeSortOrder] = "DVD";
+                case (int)EpisodeSortByMenuItems.DVD:
+                    if (ChangeMatchingOrder)
+                    {
+                        series[DBOnlineSeries.cChosenEpisodeOrder] = EpisodeSortByMenuItems.DVD.ToString();
+                        ChangeEpisodeMatchingOrder(series, EpisodeSortByMenuItems.DVD.ToString());
+                    }
+                    series[DBOnlineSeries.cEpisodeSortOrder] = EpisodeSortByMenuItems.DVD.ToString();
+                    break;
+                case (int)EpisodeSortByMenuItems.Absolute:
+                    if (ChangeMatchingOrder)
+                    {
+                        series[DBOnlineSeries.cChosenEpisodeOrder] = EpisodeSortByMenuItems.Absolute.ToString();
+                        ChangeEpisodeMatchingOrder(series, EpisodeSortByMenuItems.Absolute.ToString());
+                    }
+                    break;
+                case (int)EpisodeSortByMenuItems.Title:
+                    series[DBOnlineSeries.cChosenEpisodeOrder] = EpisodeSortByMenuItems.Title.ToString();
+                    ChangeEpisodeMatchingOrder(series, EpisodeSortByMenuItems.Title.ToString());
                     break;
             }
+            #endregion
+
+            // commit selection
             series.Commit();
 
             // Re-load the facade to re-sort episodes
             LoadFacade();
+        }
+
+        private void ChangeEpisodeMatchingOrder(DBSeries series, string order)
+        {
+            MPTVSeriesLog.Write("Changing Episode Match Order for {0}, to {1}", series.ToString(), order);
+
+            // get list of local episodes to re-match
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+            List<DBEpisode> localEpisodes = DBEpisode.Get(conditions);
+            OnlineParsing.matchOnlineToLocalEpisodes(series, localEpisodes, new GetEpisodes(series[DBSeries.cID]), order);
+            return;
         }
         #endregion
 
