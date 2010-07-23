@@ -275,5 +275,8 @@
   <string Field="SortBy" Original="Sort By">Sort By</string>
   <string Field="DVDOrder" Original="DVD Order">DVD Order</string>
   <string Field="AiredOrder" Original="Aired Order">Aired Order</string>
+  <string Field="AbsoluteOrder" Original="Absolute Order">Absolute Order</string>  
+  <string Field="Title" Original="Title">Title</string>
+  <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Change Online Matching Method</string>
   
 </strings>

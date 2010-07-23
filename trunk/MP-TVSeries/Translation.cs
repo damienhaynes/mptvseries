@@ -57,6 +57,9 @@ namespace WindowPlugins.GUITVSeries
         public static string SortBy = "Sort By";
         public static string DVDOrder = "DVD Order";
         public static string AiredOrder = "Aired Order";
+        public static string AbsoluteOrder = "Absolute Order";
+        public static string Title = "Title";
+        public static string ChangeOnlineMatchOrder = "Change Online Matching Method";
         public static string Remove_series_from_Favourites = "Remove from Favourites";
         public static string Add_series_to_Favourites = "Add to Favourites";
         public static string Force_Local_Scan = "Force Local Scan ";

@@ -1957,7 +1957,7 @@ namespace WindowPlugins.GUITVSeries
                 if (string.IsNullOrEmpty(series[DBOnlineSeries.cChosenEpisodeOrder]) && !Settings.isConfig)
                 {
                     List<string> episodeOrders = new List<string>(series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-                    if (episodeOrders.Count > 1 && (DBOption.GetOptions(DBOption.cAutoChooseOrder) == 0))
+                    if (episodeOrders.Count > 1 && !DBOption.GetOptions(DBOption.cAutoChooseOrder))
                     {
                         MPTVSeriesLog.Write(string.Format("\"{0}\" supports {1} different ordering options, asking user...", series.ToString(), episodeOrders.Count), MPTVSeriesLog.LogLevel.Debug);
                         // let the user choose
@@ -1968,10 +1968,11 @@ namespace WindowPlugins.GUITVSeries
                         List<CItem> Choices = new List<CItem>();
                         foreach (string orderOption in episodeOrders)
                             Choices.Add(new CItem(orderOption, helpText, orderOption));
+                        Choices.Add(new CItem("Title", helpText, "Title"));
 
                         ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
                         descriptor.m_sTitle = "Multiple ordering Options detected";
-                        descriptor.m_sItemToMatchLabel = "The following Series supports multiple Order Options:";
+                        descriptor.m_sItemToMatchLabel = Translation.ChangeOnlineMatchOrder + ":";
                         descriptor.m_sItemToMatch = series[DBOnlineSeries.cPrettyName];
                         descriptor.m_sListLabel = "Please choose the desired Option:";
                         descriptor.m_List = Choices;
@@ -2010,6 +2011,10 @@ namespace WindowPlugins.GUITVSeries
         #region EpisodeHelpers
         private static void matchOnlineToLocalEpisodes(DBSeries series, List<DBEpisode> episodesList, GetEpisodes episodesParser)
         {
+            matchOnlineToLocalEpisodes(series, episodesList, episodesParser, null);
+        }
+        public static void matchOnlineToLocalEpisodes(DBSeries series, List<DBEpisode> episodesList, GetEpisodes episodesParser, string orderOption)
+        {
             if (episodesList == null || episodesList.Count == 0)
                 return;
 
@@ -2017,9 +2022,9 @@ namespace WindowPlugins.GUITVSeries
                 bool bMatchFound = false;
                 foreach (DBOnlineEpisode onlineEpisode in episodesParser.Results) {
                     if ((int)localEpisode[DBEpisode.cSeriesID] == (int)onlineEpisode[DBOnlineEpisode.cSeriesID]) {
-                        if (matchOnlineToLocalEpisode(series, localEpisode, onlineEpisode, null) == 0)
+                        if (matchOnlineToLocalEpisode(series, localEpisode, onlineEpisode, orderOption) == 0)
                         {
-                            #region change episode ids
+                            #region change local episode ids to match online ids
                             bool isSecondPart = false;
                             // check if its a double episode
                             if (!string.IsNullOrEmpty(localEpisode[DBEpisode.cCompositeID2]))
@@ -2145,9 +2150,9 @@ namespace WindowPlugins.GUITVSeries
                         int localEp = 0;
                         int localEp2 = 0;
                         if (!string.IsNullOrEmpty(localEpisode[DBEpisode.cOriginalComposite]))
-                        {
-                            Helper.GetEpisodeIndexesFromComposite(localEpisode[DBEpisode.cOriginalComposite], out localSeason, out localEp);
+                        {                            
                             Helper.GetEpisodeIndexesFromComposite(localEpisode[DBEpisode.cOriginalComposite2], out localSeason, out localEp2);
+                            Helper.GetEpisodeIndexesFromComposite(localEpisode[DBEpisode.cOriginalComposite], out localSeason, out localEp);
                         }
                         else
                         {
@@ -2171,7 +2176,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                             else
                             {
-                                MPTVSeriesLog.Write(string.Format("File does not match current parse Series: {0} Episode: {1} : Online Episode: {2}", localSeason, localcomp, onlineEp), MPTVSeriesLog.LogLevel.Debug);
+                                //MPTVSeriesLog.Write(string.Format("File does not match current parse Series: {0} Episode: {1} : Online Episode: {2}", localSeason, localcomp, onlineEp), MPTVSeriesLog.LogLevel.Debug);
                                 return int.MaxValue;
                             }
                         }
@@ -2203,12 +2208,12 @@ namespace WindowPlugins.GUITVSeries
                             float.TryParse(onlineEpisode[DBOnlineEpisode.cAbsoluteNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provided, out onlineabs);
                             if (localabs == onlineabs)
                             {
-                                MPTVSeriesLog.Write(string.Format("Matched Absolute Ep {0} to local ep {1}x{2}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
+                                //MPTVSeriesLog.Write(string.Format("Matched Absolute Ep {0} to local ep {1}x{2}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
                                 return 0;
                             }
                             else
                             {
-                                MPTVSeriesLog.Write(string.Format("Failed to Match local ep {1}x{2} to Absolute ep {0}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
+                                //MPTVSeriesLog.Write(string.Format("Failed to Match local ep {1}x{2} to Absolute ep {0}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
                                 return int.MaxValue;
                             }
                         }
