@@ -58,7 +58,7 @@
 		<comments>Contact:  Your local administrator</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
-		<revnumber>{BBC2FD2A-89D3-4D5F-903D-CF7BEFCAECE9}</revnumber>
+		<revnumber>{C47850C5-1ECB-4B82-BCAB-90A19DE309AD}</revnumber>
 		<lastprinted/>
 		<createdtm>06/22/1999 00:00</createdtm>
 		<lastsavedtm>07/15/2000 03:50</lastsavedtm>
@@ -1357,12 +1357,14 @@
 		<row><td>icsharpcode.sharpziplib.dll</td><td>ICSharpCode.SharpZipLib.dll</td><td>ICSHAR~1.DLL|ICSharpCode.SharpZipLib.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\ICSharpCode.SharpZipLib.dll</td><td>1</td><td/></row>
 		<row><td>issues.url</td><td>Issues</td><td>Issues.url</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISPROJECTDIR&gt;\web\Issues.url</td><td>1</td><td/></row>
 		<row><td>it.xml</td><td>Languages</td><td>it.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\it.xml</td><td>1</td><td/></row>
+		<row><td>ko.xml</td><td>Languages</td><td>ko.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ko.xml</td><td>1</td><td/></row>
 		<row><td>mp_tvseries.dll</td><td>MP_TVSeries.dll</td><td>MP-TVS~1.DLL|MP-TVSeries.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BinDir&gt;\MP-TVSeries.dll</td><td>1</td><td/></row>
 		<row><td>nl.xml</td><td>Languages</td><td>nl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\nl.xml</td><td>1</td><td/></row>
 		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>1</td><td/></row>
 		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>1</td><td/></row>
 		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>1</td><td/></row>
 		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;UtilsDir&gt;\pluginconfigloader\pluginconfigloader\bin\release\PluginConfigLoader.exe</td><td>1</td><td/></row>
+		<row><td>pt_br.xml</td><td>Languages</td><td>pt-BR.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt-BR.xml</td><td>1</td><td/></row>
 		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>1</td><td/></row>
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
@@ -1972,8 +1974,8 @@
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SkinDir</td><td>&lt;TrunkDir&gt;\skin files</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
-		<row><td>TrunkDir</td><td>D:\Development\MP-TVSeries\trunk</td><td/><td>2</td></row>
-		<row><td>UtilsDir</td><td>D:\Development\MP-TVSeries\utils</td><td/><td>2</td></row>
+		<row><td>TrunkDir</td><td>D:\Development\MP-TVSeries\</td><td/><td>2</td></row>
+		<row><td>UtilsDir</td><td>D:\Development\MP-TVSeries-Tools</td><td/><td>2</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
 
@@ -1996,7 +1998,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.5.3</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.6.0</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -3526,7 +3528,7 @@
 		<row><td>ID_STRING9</td><td>1033</td><td>Skins</td><td>0</td><td/><td>463289649</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>1386000544</td></row>
 		<row><td>MPMINREQNOTMET</td><td>1033</td><td>It appears you are not running a version of MediaPortal that is supported by TVSeries, Please upgrade to MP 1.0.2 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>463289393</td></row>
-		<row><td>MPNOTFOUND</td><td>1033</td><td>MediaPortal could not be found or is not installed correctly, please Install MP 1.0.2 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>463332337</td></row>
+		<row><td>MPNOTFOUND</td><td>1033</td><td>MediaPortal could not be found or is not installed correctly, please Install MP 1.1.0 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>-1013053806</td></row>
 		<row><td>MPOLDVERSION</td><td>1033</td><td>It appears your MediaPortal version is out of date, some features of TVSeries may not be available or not work correctly.</td><td>0</td><td/><td>463309841</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.</td><td>0</td><td/><td>463323411</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>Release Notes HTML goes here</td><td>0</td><td/><td>-1281533039</td></row>
@@ -4126,7 +4128,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>ProductCode</td><td>{8457C8E4-89C5-4F55-8E69-D41FEA157305}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries 2.6.0</td><td/></row>
-		<row><td>ProductVersion</td><td>2.6.0.1100</td><td/></row>
+		<row><td>ProductVersion</td><td>2.6.0.1157</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>

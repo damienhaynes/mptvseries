@@ -59,6 +59,124 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+	<div class="main_title">TVSeries v2.6 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import Process</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Improved Import Process in configuration</strong></p>
+		<p>Importing in configuration has had a major overhaul, its now a wizard based process.</p>
+		<p>Users can change the local file information before import begins in the wizard e.g. edit the episode number or season 
+			number if tvseries does not recognise it.</p>
+		<p>No more annoying popup dialogs awaiting series approval or episode order approval. This is now done as part of the wizard.</p>
+		<p>Wizard also allows Local File to Online Episode Matching, e.g. Aired, DVD Order, Title matching or users
+			can manually match an episode from the list.</p>
+		<p>Improved feedback of Import Process, users can see a breakdown of the entire import procedure instead of a single progress bar.</p>
+		<p>Improved Default Regular Expression, so now even more files are automatically recognized. Click Reset in 'Regular Expression' page in configuration if upgrading.</p>
+		<p>Improved DVD Ordering such that it uses the Aired Order if DVD values are not set online.</p>
+		<p>Forcing a new online match for a series online will now always prompt to choose series.</p>
+		<p>Users can now change the 'Local File to Online Matching Method' for a series from the GUI in the Action Menu. 
+			This allows your files to be rematched against different ordering such as DVD Order.</p>
+		<p>Users can now sort the episode view by DVD Ordering or Aired Ordering.</p>
+		<p>Note: Due to changes above, users whom already have episodes imported by DVD order need to delete these series from database and re-import.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">User Edits</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>User modifications on database now persist</strong></p>
+		<p>You can now edit a field in the database via the Details screen in configuration and have its data persist. i.e. it will 
+			not be overwritten when an online update is run. For instance you can modify the Genres or a Series Title to your preference.</p>
+		<p>Changes done to fields in database are highlighted with a different colour in configuration.</p>
+		<p>To restore the default data for a field, simply delete the contents and it will automatically restore.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Play Behaviour</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Pressing 'Play' button on a series now has a whole range of play options</strong></p>
+		<p>Configuration 'General' tab, allows user to modify the behaviour of the 'Play' button when a series is selected. 
+			User can set to play the first unwatched episode, random episode, latest episode etc.</p>
+		<p>User can also configure to display a menu of choices when 'Play' is pressed.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">New Episodes Indicator</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>New Episodes for a series can easily be identified by user in banner views</strong></p>
+		<p>Configuration allows user to display a 'New' image icon on a banner/poster in 'WideBanners' and 'Filmstrip' layouts.</p>
+		<p>Behaviour of image can either be changed from 'Recently Added Episodes' or 'Unwatched Episodes'. This can be changed in 
+			the 'General' tab in configuration. Option can also be disabled</p>
+		<p>New Skin Settings for skinner to control the position of the image on a thumbnail.</p>
+		<p>If setting is enabled, but skin does not support it. A text style image is overlayed on banner/poster.</p>
+		<p>Note: see Blue3Wide for reference settings and image</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Subtitle Central Support</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Support for Subcentral has been added to TVSeries</strong></p>
+		<p>Sub-Central for TVSeries can be enabled in the 'Extras' tab in configuration.</p>
+		<p>Note: the 'Sub-Central' plugin must be installed, see 'Sub-Central' plugin for MediaPortal for more information.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Video Play and OSD Images</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>New Image support for OSD and custom Skin Properties on Play</strong></p>
+		<p>Skinner can now change the image pushed to the skin in OSD. This can be configured in TVSeries Skin Settings. 
+			Series Poster, Season Poster, Episode Image or even a custom image can be displayed.</p>
+		<p>New 'Play' properties can be created in Skin Settings e.g. skinner can create a property to display 'ClearArt' as seen in some 
+			XBMC skins on the OSD.</p>
+		<p>Note: see Blue3Wide for reference settings</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">General / Misc</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">		
+		<p>New option to display full filename in dialog when choosing subtitle to download.</p>
+		<p>Updated MediaInfo support to include new fields, better support/detection for HD codecs. It's recommended users Update MediaInfo 
+			using the link in the 'Details' tab in configuration. Skinners may need to be aware of some possible changes to some fields.</p>
+		<p>Fixed issue with importer failing to detect move/copy of folders to local import paths.</p>
+		<p>Full details of episode played in playlist view will now be shown in OSD.</p>
+		<p>Added Watched/Unwatched icons to playlist view.</p>
+		<p>New setting in configuration to add only 'Unwatched' episodes to a playlist.</p>
+		<p>When removing a custom view, all series associated with that view are now removed also.</p>
+		<p>Renamed 'Force Online Match' has been renamed to better describe its function.</p>
+		<p>Improved support for user defined scripts before/after playback.</p>
+		<p>Added Regular Expression support in 'String Replacements' section.</p>
+	</div>
+		
+	<div class="main_title">TVSeries v2.5.4 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.5.3:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>						
+			<li><p>Issue 408: Publish a new extended GUI Property for 'Currently Playing' in InfoService v1.6 Twitter.</p></li>			
+			<li><p>Issue 401: Fixed Episodes wont play if check for subtitles on play is enabled and subtitledownloader disabled.</p></li>
+			<li><p>Issue 400: Fixed skin files to work with Turkish Regional settings.</p></li>
+			<li><p>Issue 382: Fixed Importer failed when moving/copying folders to 'Local' import paths.</p></li>
+			<li><p>Issue 339: Fixed Episode counts and Remote colour not updating after episodes were deleted.</p></li>			
+			<li><p>Issue N/A: Fixed a possible exception when navigating episode view when an episode has not been parsed from online.</p></li>
+			<li><p>Issue N/A: Updated error checking when deleting files, now will handle any error when unable to access a file.</p></li>
+			<li><p>Issue N/A: Updated Recently Added episodes sent to Infoservice to send the three most recently added after each import.</p></li>
+			<li><p>Issue N/A: Updated Subtitle Downloader library to v2.0.0.</p></li>
+			<li><p>Issue N/A: Updated MediaInfo library to v0.7.33.</p></li>						
+			<li><p>Issue N/A: Updated Spanish translations, thanks joarreba.</p></li>
+			<li><p>Issue N/A: Added Korean translations, thanks seungjong.lee.</p></li>
+			<li><p>Issue N/A: Added Portuguese (Brazilian) translations, thanks pauloturij.</p></li>						
+		</ul>
+	</div>
+	
 	<div class="main_title">TVSeries v2.5.3 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log since v2.5.2:</div>
