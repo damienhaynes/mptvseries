@@ -1,0 +1,1251 @@
+//===========================================================================
+//
+//  File Name:    Setup.rul
+//
+//  Description:  TVSeries setup main script file
+//
+//  Comments:     
+//
+//===========================================================================
+
+/////////////////////////////////////////////////////////////////////////////
+//   INSTALLATION    	 MAINTENANCE           PATCH          RESUME/UPGRADE
+//       |                   |                   |                   |
+//       '-------------------'---------,---------'-------------------'
+//                                     |
+//                                 OnBegin()
+//                                     |
+//       ,-------------------,---------'---------,-------------------,
+//       |                   |                   |                   |
+// OnFirstUIBefore()  OnMaintUIBefore()  OnPatchUIBefore()  OnResumeUIBefore()
+//       |                   |                   |                   |
+//      ...                 ...                 ...                 ...
+//       |                   |                   |                   |
+//  OnFirstUIAfter()  OnMaintUIAfter()    OnPatchUIAfter()   OnResumeUIAfter()
+//       |                   |                   |                   |
+//       '-------------------'---------,---------'-------------------'
+//                                     |
+//                                   OnEnd()
+//
+/////////////////////////////////////////////////////////////////////////////
+
+// Included header files ----------------------------------------------------
+#include "ifx.h"
+
+// Registry Defines
+#define MEDIAPORTAL_REG_KEY  			"SOFTWARE\\Team MediaPortal\\MediaPortal"
+#define MEDIAPORTALUNINSTALL_REG_KEY    "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MediaPortal"
+#define MPTVSERIES_REG_KEY  			"SOFTWARE\\MP-TVSeries"
+
+// Web URL Defines
+#define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
+
+// Version Defines
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.0.0"
+#define MEDIAPORTAL_MIN_VERSION				"1.0.7.0" // Use at your own risk, for most part should work
+
+// Common Dialog Controls
+#define RES_PBUT_NEXT         			1   			// ID of Next button
+#define RES_PBUT_CLOSE		  			2     			// ID of the (X) button
+#define RES_PBUT_CANCEL       			9   			// ID of Cancel button
+#define RES_PBUT_BACK        			12   			// ID of Back button
+
+#define RES_TEXT_RELEASENOTES			1301 			// Placeholder text label to load release notes
+
+#define RES_DLG_RELEASENOTES			14000			// Release Notes dialog
+
+// CSIDL values
+#ifndef CSIDL_PROFILE
+	#define CSIDL_PROFILE          		0x0028      
+#endif
+
+// Prototype Functions         
+prototype VOID 		CleanCache(STRING);
+prototype NUMBER 	GetMediaPortalProgramDir(BYREF STRING);
+prototype NUMBER 	GetMediaPortalConfigDir(BYREF STRING); 
+prototype NUMBER	GetMediaPortalDirs(STRING, BYREF STRING);
+prototype VOID 		SetDefaults();
+prototype NUMBER	GetFileVersion(BYREF STRING, STRING);
+prototype VOID		CheckMPVersion();		
+prototype NUMBER	LaunchBrowser(STRING);   
+prototype BOOL 		IsMajorUpgrade(BYREF STRING, BYREF STRING, BYREF BOOL);
+prototype VOID		MajorUpgradeCleanup();
+prototype VOID		GetCachedInstallDir();  
+prototype VOID		UninstallCleanup(BOOL, BOOL);       
+prototype NUMBER 	SHFolder.SHGetFolderPathA(HWND,NUMBER,NUMBER,NUMBER,BYREF STRING);
+prototype BOOL 		GetInstalledVersion(STRING,BYREF STRING);
+prototype VOID		SetInstallationDirectories();
+prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
+prototype VOID 		UpdateSettings();
+prototype VOID		BackupDatabase(STRING);
+prototype STRING	GetMPTVSeriesDBPath();
+prototype VOID		CheckFilesInUse();    
+prototype VOID		VerifyPluginCount();
+prototype VOID		RemoveNonMSIPlugin();
+
+// Custom Dialogs
+prototype NUMBER 	ShowReleaseNotesDlg();
+
+// Global Variables
+BOOL g_bMajorUpgrade;
+
+STRING g_sMajorUpgradeGUID;
+
+STRING g_sMediaPortalProgramDir;
+STRING g_sLanguageDir;
+STRING g_sThumbsDir;
+STRING g_sCacheDir; 
+STRING g_sPluginsDir;
+STRING g_sConfigDir;
+STRING g_sSkinsDir; 
+STRING g_sDatabaseDir;
+STRING g_sLogsDir;
+STRING g_sTVSeriesPluginFileName; 
+ 
+//---------------------------------------------------------------------------
+// OnBegin
+//
+// The OnBegin event is called directly by the framework after the setup
+// initializes.
+//---------------------------------------------------------------------------
+function OnBegin()
+	STRING szVersion, szUpgradeMessage, svResult;
+	NUMBER nResult;
+	BOOL bUpgradeSupported;
+begin  	
+
+	// See if older version is installed
+	g_bMajorUpgrade = IsMajorUpgrade(szVersion, g_sMajorUpgradeGUID, bUpgradeSupported);
+	if g_bMajorUpgrade then
+		// check if version supports upgrades
+		if bUpgradeSupported then
+			/*szUpgradeMessage = "Setup is about to perform an upgrade from: v" + szVersion + "\nThe previous installation will " +
+							   "be removed during the upgrade, Do you wish to continue?\n\nNote: No user data or artwork downloaded from online will be removed, " + 
+							   "for a full uninstall go to the Add\\Remove programs and select Uninstall.";
+							  
+			nResult = SprintfBox( YES|NO|CANCEL,"Major Upgrade",szUpgradeMessage, INFORMATION);
+			if (nResult != IDYES) then
+				abort;
+			endif;*/
+		else
+		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
+							   "and run setup again.";
+			MessageBox(szUpgradeMessage,INFORMATION);
+			abort;							   
+		endif;
+	endif; 
+	
+	// Configure Setup Defaults                                                              
+	SetDefaults();             
+	
+	// Check if files are in use that may interupt setup
+	CheckFilesInUse();
+ 		
+end;           
+
+function BOOL IsMajorUpgrade(sMajorUpgradeVersion, sMajorUpgradeGUID, bUpgradeSupported)
+	STRING szKey;
+	NUMBER nvBufferSize, nResult;
+	BOOL bUpgrade;
+begin
+    nvBufferSize = 256;
+    bUpgrade = TRUE;
+    
+    // Major Upgrades requires a change to the ProductCode GUID and Version every release
+    // Don't change the UpgradeCode
+    
+    // Get Properties for MajorUpgrade
+    // Returns the GUID in svMajorUpgrade of previous install             
+ 	MsiGetProperty(ISMSI_HANDLE,"MAJORUPGRADE_01",sMajorUpgradeGUID,nvBufferSize);
+ 	if StrLength(sMajorUpgradeGUID) = 0 then
+ 		return FALSE;
+ 	endif;
+ 	
+ 	// Check if there is any versions we dont want to support upgrades on		
+	if sMajorUpgradeGUID = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" then
+		
+		sMajorUpgradeVersion = "X.X.XXX";
+		bUpgradeSupported = FALSE;		
+		return TRUE;
+	
+	else
+		// Return the previous product version if GUID matches
+	 	bUpgradeSupported = GetInstalledVersion(sMajorUpgradeGUID,sMajorUpgradeVersion);
+		return bUpgradeSupported;
+			
+	endif;   
+		
+ 	return FALSE;
+end; 
+
+function BOOL GetInstalledVersion(sGUID, sMajorUpgradeVersion)
+	NUMBER nvType, nvSize;
+	STRING svValue;
+begin
+    
+    RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+        
+    if RegDBKeyExist(MPTVSERIES_REG_KEY) < 0 then
+    	return FALSE;
+    endif;
+    
+    if RegDBGetKeyValueEx(MPTVSERIES_REG_KEY,"PRODUCTGUID",nvType,svValue,nvSize) < 0 then
+    	return FALSE;
+    else
+        if svValue != sGUID then
+        	return FALSE;
+        endif;
+        
+        RegDBGetKeyValueEx(MPTVSERIES_REG_KEY,"VERSION",nvType,sMajorUpgradeVersion,nvSize);
+    endif;
+    
+    return TRUE;
+end; 
+
+function VOID SetDefaults()
+	STRING svValue, svString, sFile;
+	NUMBER nvType, nvSize;
+begin 
+	
+	// Set Installation Directories
+	SetInstallationDirectories();
+	
+	// Read Defaults 
+	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+		
+end;
+
+function void SetInstallationDirectories()
+	STRING svValue;	
+begin
+	// Set the installation directory to one currently used by MediaPortal
+	if (GetMediaPortalProgramDir(g_sMediaPortalProgramDir) < 0) then
+		g_sMediaPortalProgramDir = ProgramFilesFolder^"Team MediaPortal\\MediaPortal";	
+	endif;	
+	
+	// Get any custom defined paths from MediaPortalDirs.xml
+	// Fallback to best known path if reading from XML fails
+		
+	if GetMediaPortalDirs("Plugins",g_sPluginsDir) < 0 then
+		g_sPluginsDir = g_sMediaPortalProgramDir^"plugins";
+	endif;	
+	INSTALLDIR = g_sPluginsDir;
+	
+	g_sTVSeriesPluginFileName = g_sPluginsDir ^ "Windows\\MP-TVSeries.dll";
+	
+	if GetMediaPortalDirs("Skin",g_sSkinsDir) < 0 then
+		g_sSkinsDir = CommonAppDataFolder^"Team MediaPortal\\MediaPortal\\skin";
+	endif;	
+	                
+	if GetMediaPortalDirs("Config",g_sConfigDir) < 0 then
+		if GetMediaPortalConfigDir(g_sConfigDir) < 0 then
+		    g_sConfigDir = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+		endif;		
+	endif;               
+	
+	if GetMediaPortalDirs("Language",g_sLanguageDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then
+			svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";			
+		endif;
+		// Append Language to program data dir
+		g_sLanguageDir = svValue^"language";
+	endif;                                              	           	
+	
+	if GetMediaPortalDirs("Thumbs",g_sThumbsDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+	    // Append thumbs to program data dir    
+		g_sThumbsDir = svValue^"thumbs";
+	endif;
+		
+	if GetMediaPortalDirs("Database",g_sDatabaseDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+	    // Append database to program data dir    
+		g_sDatabaseDir = svValue^"Database";
+	endif;
+	
+	if GetMediaPortalDirs("Cache",g_sCacheDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then;
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+		g_sCacheDir = svValue^"Cache";
+	endif;
+   
+   	if GetMediaPortalDirs("Log",g_sLogsDir) < 0 then
+		if GetMediaPortalConfigDir(svValue) < 0 then;
+	    	svValue = CommonAppDataFolder^"Team MediaPortal\\MediaPortal";
+	    endif;
+		g_sLogsDir = svValue^"log";
+	endif;
+		
+   	// Set MSI Dirs as properties   	   	
+   	MsiSetProperty(ISMSI_HANDLE,"MPLANGUAGESDIR",g_sLanguageDir);
+   	MsiSetProperty(ISMSI_HANDLE,"MPSKINSDIR",g_sSkinsDir);
+   	MsiSetProperty(ISMSI_HANDLE,"MPPROGRAMDIR",g_sMediaPortalProgramDir);
+   	   	
+	// Set Installation Directories used by MSI		
+	FeatureSetTarget(MEDIA,"<MPLANGUAGESDIR>",g_sLanguageDir);
+	FeatureSetTarget(MEDIA,"<MPSKINSDIR>",g_sSkinsDir);	
+	FeatureSetTarget(MEDIA,"<MPPROGRAMDIR>",g_sMediaPortalProgramDir);
+
+end;
+
+function NUMBER GetMediaPortalProgramDir(svValue)	
+	NUMBER nvSize,nvType;
+begin
+
+   	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+	
+	// Get MediaPortal Install Directory from Uninstall path in registry
+	// This should exist if MediaPortal is correctly installed
+	if (RegDBGetKeyValueEx(MEDIAPORTALUNINSTALL_REG_KEY,"InstallPath",nvType,svValue,nvSize) < 0) then
+        // Fallback to this directory incase its a development build
+        // Note: This Key is no longer created in MediaPortal 1.1.0+
+		if (RegDBGetKeyValueEx(MEDIAPORTAL_REG_KEY,"ApplicationDir",nvType,svValue,nvSize) < 0) then
+			return -1;	
+		endif;
+		
+	endif;
+		
+	return 0;
+end; 
+
+function NUMBER GetMediaPortalConfigDir(svValue)
+	NUMBER nvSize,nvType;
+begin    
+	// Fallback incase MediaPortalDirs.xml fails us  
+	// Note: This key no longer creted in MediaPortal 1.1.0+
+   	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+	
+	// Note: This Key is no longer created in MediaPortal 1.1.0+	
+	if (RegDBGetKeyValueEx(MEDIAPORTAL_REG_KEY,"ConfigDir",nvType,svValue,nvSize) < 0) then
+		return -1;	
+	endif;
+	
+	return 0;
+end; 
+
+function NUMBER GetMediaPortalDirs(sType, sValue)
+	OBJECT oXMLdoc, oNodeList, oDirID;
+	STRING sNode, sPath, sDisk, sFileName;
+	INT i;
+begin                        
+    
+    try 
+	   	set oXMLdoc = CreateObject("Microsoft.XMLDOM");
+		    
+		oXMLdoc.async = FALSE;
+		oXMLdoc.preserveWhiteSpace = TRUE;
+	    
+	    // MediaPortalDirs.xml contains a reference to all Paths used by MediaPortal
+	    // Currently this file lives in the main program files directory
+	    // But we should first check the personal directory as user can override there as well	   
+	    sFileName = PersonalFolder ^ "Team MediaPortal\\MediaPortalDirs.xml";
+	    if !Is(FILE_EXISTS,sFileName) then
+	        
+	        // Check Default location
+		    sFileName = g_sMediaPortalProgramDir^"MediaPortalDirs.xml";
+		    if !Is(FILE_EXISTS,sFileName) then
+		    	// If the file does not exist check the program data directory
+		    	sFileName = CommonAppDataFolder ^ "Team MediaPortal\\MediaPortal\\MediaPortalDirs.xml";
+		    endif;   
+		
+		endif;
+		// Load the document	
+		oXMLdoc.Load (sFileName);	
+		
+	    sNode = "/Config/Dir";	    
+	    set oNodeList = oXMLdoc.DocumentElement.SelectNodes(sNode); 	    	    
+	    
+	    // Examine all <Dir> nodes to find id
+	    for i=0 to oNodeList.length - 1
+		 	
+		 	// The id attribute holds the path identifier e.g. Config, Plugins, Skin
+		 	set oDirID = oNodeList.Item(i).Attributes.GetNamedItem("id");
+		 	
+		 	// Get Path Property value
+		 	if oDirID.Text = sType then
+		 		sPath = oNodeList.Item(i).SelectSingleNode("Path").Text;		 		
+		 	endif;
+		
+		endfor;
+		
+		// Replace path variables
+		StrToLower(sPath,sPath);
+		StrReplace(sPath,"%programdata%\\","%programdata%",0);
+		StrReplace(sPath,"%programdata%",CommonAppDataFolder,0);
+		
+		// Check if Path is valid, otherwise append MediaPortal root directory
+		if (GetDisk(sPath, sDisk) < 0) then
+		     sPath = g_sMediaPortalProgramDir^sPath;
+		endif;
+		
+		StrAddLastSlash(sPath);
+		
+		// Return value
+		sValue = sPath;
+		    
+	    // release objects used
+	    set oXMLdoc = NOTHING;	    
+	    set oNodeList = NOTHING;
+	    set oDirID = NOTHING;	    	    
+	 	   
+	catch                  
+		
+	    return -1;    
+	    
+	endcatch;	       
+
+    Enable(LOGGING);         
+    
+    if !Is(VALID_PATH,sValue) then
+    	return -1;
+    endif;
+    
+    return 0;
+    	 	
+end; 
+
+//---------------------------------------------------------------------------
+// OnFirstUIBefore
+//
+// The OnFirstUIBefore event is called by the framework when the setup is
+// running in first install mode. By default this event displays UI allowing
+// the end user to specify installation parameters.
+//---------------------------------------------------------------------------
+function OnFirstUIBefore()
+    NUMBER nResult, nSetupType, nvSize, nUser;
+    STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile, szFileName;
+    STRING szLicenseFile;
+	BOOL bCustom, bIgnore1, bIgnore2;
+begin	   			   
+
+    // Added in InstallShield 15 - Show an appropriate error message if
+    // -uninst is specified and the product is not installed.
+    if( REMOVEONLY ) then
+        Disable( DIALOGCACHE );
+		szMsg = SdLoadString( IDS_IFX_ERROR_PRODUCT_NOT_INSTALLED_UNINST );
+   		SdSubstituteProductInfo( szMsg );
+		MessageBox( szMsg, SEVERE );
+		abort;
+    endif;
+    
+    // Check that MediaPortal is installed, also check version
+    CheckMPVersion();
+    
+	nSetupType = TYPICAL;	
+
+Dlg_SdWelcome:
+    szTitle = "";
+    szMsg   = "";
+    nResult = SdWelcome(szTitle, szMsg);
+    if (nResult = BACK) goto Dlg_SdWelcome;
+	
+	szTitle   = "";
+	svName    = "";
+    svCompany = "";
+
+Dlg_ReleaseNotes:
+	nResult = ShowReleaseNotesDlg();
+	if (nResult = BACK) goto Dlg_SdWelcome;
+
+Dlg_SdFeatureTree: 
+    szTitle    = "";
+    szMsg      = "";
+    if (nSetupType = TYPICAL) then
+		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
+		if (nResult = BACK) goto Dlg_ReleaseNotes;  
+    endif;
+
+
+Dlg_SdStartCopy:
+    szTitle = "";
+    szMsg   = "";      
+    nResult = SdStartCopy2( szTitle, szMsg );
+    	
+	if (nResult = BACK) then
+    	goto Dlg_SdFeatureTree;
+    endif;
+
+    // Added in IS 2009 - Set appropriate StatusEx static text.
+    SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_FIRSTUI ) );
+    
+    // Backup Database before installing new version
+    szFileName = GetMPTVSeriesDBPath();
+    if Is(FILE_EXISTS,szFileName) then
+    	BackupDatabase(szFileName);
+    endif;
+    
+    // MSI cleanup
+    RemoveNonMSIPlugin();
+    
+    // setup default status
+    Enable(STATUSEX);
+      
+    return 0;
+end;         
+
+//---------------------------------------------------------------------------
+// OnMaintUIBefore
+//
+// The OnMaintUIBefore event is called by the framework when the setup is
+// running in maintenance mode. By default this event displays UI that
+// allows the end user to add or remove features, repair currently
+// installed features or uninstall the application.
+//---------------------------------------------------------------------------
+function OnMaintUIBefore()
+	NUMBER nResult, nType;
+	STRING szTitle, szMsg, svDir, svResult, szCaption;
+begin
+	
+Dlg_Start:
+
+    // Added in Version 9.5 - Support for REMOVEONLY option.
+    if( !REMOVEONLY ) then
+		// In standard mode show maintenance dialog
+		Disable(BACKBUTTON);
+		nType = SdWelcomeMaint(szTitle, szMsg, MODIFY);
+		Enable(BACKBUTTON);
+	else
+        // Hide the initial progress dialog as otherwise the user can
+        // click on it, and hide the MessageBox.
+        Disable( DIALOGCACHE );
+
+        // In RemoveOnly mode, set to remove.
+        nType = REMOVEALL;
+    endif;
+	
+	// Show Uninstall Confirmation Dialog
+    if ( nType = REMOVEALL ) then
+		nResult = MessageBox( SdLoadString( IFX_MAINTUI_MSG ), MB_YESNO );
+		if (nResult != IDYES ) then
+            
+            if( REMOVEONLY ) then
+                // In REMOVEONLY mode, abort the setup.
+                abort;
+            else
+                // In non-REMOVEONLY mode, redisplay the previous dialog.
+			    goto Dlg_Start;
+            endif;
+
+		endif;
+	endif;
+
+	nResult = NEXT;
+
+Dlg_SdFeatureTree:
+	if (nType = MODIFY) then
+		szTitle = "";
+		szMsg = "";
+		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
+		if (nResult = BACK) goto Dlg_Start;
+	endif;
+
+	switch(nType)
+        case REMOVEALL: 
+        
+            ComponentRemoveAll();
+
+            // Added in IS 2009 - Set appropriate StatusEx static text.
+            SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_REMOVEALL ) );
+
+        case REPAIR:
+        
+            ComponentReinstall();
+
+            // Added in IS 2009 - Set appropriate StatusEx static text.
+            SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_REPAIR ) );
+
+
+        case MODIFY:
+
+            // Added in IS 2009 - Set appropriate StatusEx static text.
+            SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_MODIFY ) );
+
+    endswitch;
+    
+	// setup default status 
+	SetStatusWindow(0, "");
+	Enable(STATUSEX);
+	StatusUpdate(ON, 100);
+		
+end;                
+
+//---------------------------------------------------------------------------
+// OnFirstUIAfter
+//
+// The OnFirstUIAfter event called by the framework after the file transfer
+// of the setup when the setup is running in first install mode. By default
+// this event displays UI that informs the end user that the setup has been
+// completed successfully.
+//---------------------------------------------------------------------------
+function OnFirstUIAfter()
+    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite, szFileName, szParams;
+    NUMBER bOpt1, bOpt2;
+begin
+
+	// Clean Cache Folder, old skin may conflict with new changes
+	if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
+    	CleanCache("Blue3");
+    endif;
+    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
+    	CleanCache("Blue3Wide");
+    endif;
+    
+    // Update Settings
+	UpdateSettings();
+	
+	// Confirm only one running instance of plugin
+ 	VerifyPluginCount();
+	
+    // Major Upgrade Cleanup
+    if g_bMajorUpgrade then
+    	MajorUpgradeCleanup();
+    endif;
+    
+	Disable(STATUSEX);
+
+	bOpt1   = FALSE;
+    bOpt2   = TRUE;    
+
+    if ( BATCH_INSTALL ) then
+    	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
+    else
+    	szOpt1 = "&Launch Home Page in default Browser";
+    	szOpt2 = "Launch &MP-TV-Series Configuration";
+	    SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+	    
+	    if bOpt1 then
+		    // Launch webpage
+			szSite = MPTVSERIES_HOMEPAGE_URL;
+			LaunchBrowser(szSite);	    
+	    endif;
+	    
+	    if bOpt2 then
+	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
+	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
+	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName;
+	    	LaunchApp(szFileName, szParams);	    
+	    endif;
+	endif;
+end; 
+
+//---------------------------------------------------------------------------
+// OnMaintUIAfter
+//
+// The OnMaintUIAfter event called by the framework after the file transfer
+// of the setup when the setup is running in maintenance mode. By default
+// this event displays UI that informs the end user that the maintenance setup
+// has been completed successfully.
+//---------------------------------------------------------------------------
+function OnMaintUIAfter()
+    STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2;
+    NUMBER bOpt1, bOpt2;
+begin
+	    
+    if ( !REMOVEALLMODE ) then    	    
+    	UpdateSettings();
+    	
+    	// Confirm only one running instance of plugin
+ 		VerifyPluginCount();
+        
+        // Clean Cache Folder, old skin may conflict with new changes
+		if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
+	    	CleanCache("Blue3");
+	    endif;
+	    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
+	    	CleanCache("Blue3Wide");
+	    endif;
+    
+    endif;
+    
+	Disable(STATUSEX);
+    
+    if( REMOVEALLMODE ) then
+        szTitle = SdLoadString(IFX_SDFINISH_REMOVE_TITLE);
+        szMsg1 = SdLoadString(IFX_SDFINISH_REMOVE_MSG1);
+    else
+        szTitle = SdLoadString(IFX_SDFINISH_MAINT_TITLE);    
+        szMsg1  = SdLoadString(IFX_SDFINISH_MAINT_MSG1);
+    endif;
+
+	bOpt1   = FALSE;
+    bOpt2   = FALSE;    
+
+    if ( BATCH_INSTALL ) then
+    	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
+    else
+    	if ( REMOVEALLMODE ) then
+    		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
+    		szOpt2 = "Delete database, all settings will be lost.";
+    	endif;
+        
+       	SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+       	
+       	if (REMOVEALLMODE) then
+       		UninstallCleanup(bOpt1, bOpt2);
+       	endif;
+    endif;
+end;
+
+function VOID CheckMPVersion()
+	STRING svVersion2, svVersion1;  
+	NUMBER nResult;
+begin
+    
+    // Warn user of old version of MediaPortal
+    if (GetFileVersion(svVersion2,"MEDIAPORTAL") < 0) then    	
+    	MessageBox(@MPNOTFOUND,SEVERE);
+    	abort;                 	    	
+    endif;
+    
+    // VerCompare Return Codes:
+    // Return Code = 2 (Version1 = Version2)
+    // Return Code = 1 (Version1 < Version2)
+    // Return Code = 0 (Version1 > Version2)
+    
+    // Check Minimum requirements are met
+    svVersion1 = MEDIAPORTAL_MIN_VERSION;
+    if VerCompare(svVersion1, svVersion2, VERSION) = 0 then
+    	MessageBox(@MPMINREQNOTMET,SEVERE);
+    	abort; 
+    endif;
+    
+    // Check if warning should be prompted
+    svVersion1 = MEDIAPORTAL_MINNOWARN_VERSION;
+    if VerCompare(svVersion1, svVersion2, VERSION) = 0 then
+    	MessageBox(@MPOLDVERSION,WARNING);
+    endif;
+    
+end; 
+
+function NUMBER	GetFileVersion(svVersionNumber,sType)
+	STRING svValue,szFileName;	
+begin
+		
+	switch (sType) 
+
+        case "MEDIAPORTAL": 
+            szFileName = g_sMediaPortalProgramDir^"MediaPortal.exe"; 
+
+        case "TVSERIES": 
+            szFileName = g_sPluginsDir^"windows\\MP-TVSeries.dll";       
+
+    endswitch; 
+
+    return VerGetFileVersion(szFileName,svVersionNumber);
+    
+end; 
+
+function VOID CleanCache(sSkin)
+	STRING svValue;	
+begin
+    
+    // Delete Skin Cache Folder
+    SetStatusWindow(100, "Removing " + sSkin + " from MediaPortal cache.");
+    Delay(1);
+    svValue = g_sCacheDir ^ sSkin;
+    DeleteDir(svValue,ALLCONTENTS);
+    
+end; 
+
+function VOID MajorUpgradeCleanup()
+	STRING szUninstallKey, svSubStr, svValue;
+	NUMBER nvSize, nvType;
+begin 
+	// For some reason InstallShield doesnt cleanup files/settings properly
+	// after upgrade, this function removes them manually
+
+    // Check if old Uninstall Entry exists
+   	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+   	
+   	szUninstallKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\InstallShield_"+g_sMajorUpgradeGUID;
+   	if (RegDBKeyExist(szUninstallKey) < 0) then
+   		// Nothing to remove
+   		return;
+   	endif;
+   	
+   	// Get Path 
+	RegDBGetKeyValueEx(szUninstallKey,"LogFile",nvType,svValue,nvSize);
+	// Remove filename 'Setup.ilg' to path
+	StrSub ( svSubStr, svValue, 0, (StrLength(svValue) - 9) );	
+	
+	// Remove leftover files/folder from previous install
+	DeleteDir(svSubStr,ALLCONTENTS);
+	
+	RegDBGetKeyValueEx(szUninstallKey,"InstallSource",nvType,svValue,nvSize);
+	DeleteDir(svValue,ALLCONTENTS);
+
+    // Remove Uninstall entry in Add/Remove programs
+    RegDBDeleteKey(szUninstallKey);
+                       
+end; 
+
+function VOID UninstallCleanup(bDeleteArtwork, bDeleteDatabase)	
+	STRING szFile, szFolder, szMsg;
+begin
+    
+    // MSI Cleanup
+    RemoveNonMSIPlugin();
+         
+	// Remove Logs
+	szFile = g_sLogsDir ^ "MP-TVSeries.*";
+	DeleteFile(szFile);
+	
+	// Remove TVSeries Database
+    if bDeleteDatabase then    
+	    szFile = GetMPTVSeriesDBPath();
+		DeleteFile(szFile);
+    endif;    
+  
+	if bDeleteArtwork then
+	 	// Show Msg, this operation may take a while...   
+	    szMsg = "Removing TVSeries artwork from computer...";
+		SdShowMsg ( szMsg, TRUE );
+	
+	    // Remove Series Artwork (Posters & Banners), Season Banners & Episode Thumbs, 
+		szFolder = g_sThumbsDir ^ "MPTVSeriesBanners";
+		DeleteDir(szFolder, ALLCONTENTS);
+		
+	    // Remove Fanart Folder
+	    szFolder = g_sThumbsDir ^ "Fan Art";
+		DeleteDir(szFolder, ALLCONTENTS);
+	   
+	   	SdShowMsg ( szMsg, FALSE );
+	   	
+	endif;
+    
+end;
+     
+function NUMBER LaunchBrowser(szSite)
+	STRING szKey, szDir;
+	STRING svValue, svReturnString1, svReturnString2;
+	NUMBER nvType, nvSize;
+begin
+    RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
+    
+	// Find the value in the registry under "HKey_Classes_Root\.htm" file,
+	// to see where the browser address is kept.
+	RegDBGetKeyValueEx(".htm", "", nvType, svValue, nvSize);
+	
+	// Append the return value to Shell\open\command
+	// to get the path to executable of the browser
+	szKey = svValue+"\\shell\\open\\command";
+	RegDBGetKeyValueEx(szKey, "", nvType, svValue, nvSize);
+	
+	// Because the value in the command usually has %1 or other placeholders,
+	// we parse the path to get the directory first and then the file name
+	// (this way all the characters after the file name including the placeholder are removed)
+	ParsePath(svReturnString1, svValue, PATH);
+	ParsePath(svReturnString2, svValue, FILENAME_ONLY);
+	
+	// Now append the .exe extension to the file name.
+	// If the browser is IE, the path contains an extra quote("").
+	// By removing the placeholder, we also removed the ending close quote("),
+	// but it still has the beginning opening quote ("),
+	// so you have to put and ending quote (" to make if a correct path.
+	// Netscape does not have the extra "" in the path.
+	szDir=svReturnString1^svReturnString2+".exe";
+	if ( svReturnString2 = "iexplore" ) then
+		szDir=svReturnString1^svReturnString2+".exe\"";
+	endif;
+	
+	// Now the path to the browser is available.
+	// You can launch the browser and pass your .htm file as a parameter to it.
+	if LaunchAppAndWait(szDir, szSite, NOWAIT) < 0 then
+		return -1;
+	else
+		return 0;
+	endif;
+	
+end;
+
+function NUMBER SetMPXMLProperty(sSectionAttribute,sEntryAttribute, sValue)
+	STRING sFile, sNode, svString;
+	OBJECT oXMLdoc, oNodeListRoot, oNodeListElements;
+	INT i, j;
+begin
+   	
+   	sFile = g_sConfigDir^"MediaPortal.xml";        	 
+    Disable(LOGGING);
+    
+    try
+	    // Prepare XML parser object
+	    set oXMLdoc = CreateObject("Microsoft.XMLDOM");
+	    
+		oXMLdoc.async = FALSE;
+		oXMLdoc.preserveWhiteSpace = TRUE;
+	    
+	    // Load the document 	    
+		oXMLdoc.Load (sFile);
+		
+		sNode = "/profile/section";	    
+	    set oNodeListRoot = oXMLdoc.DocumentElement.SelectNodes(sNode); 	    	    
+	    
+	    // Traverse all section elements in xml until 
+	    // we reach the the required configuration section    
+	    for i=0 to oNodeListRoot.length - 1
+		
+			if oNodeListRoot(i).Attributes(0).Text = sSectionAttribute then                
+                // retrieve the list of configurable elements for the section
+            	set oNodeListElements = oNodeListRoot(i).childNodes;
+            
+            	for j = 0 to oNodeListElements.length - 1
+                    
+                    // we are only interested in the 'entry' elements
+	                if oNodeListElements(j).baseName = "entry" then
+	                    
+	                    if oNodeListElements(j).Attributes(0).Text = sEntryAttribute then
+	                		// set the MediaPortal property
+	                        oNodeListElements(j).Text = sValue;	                       
+	                    endif;
+                
+                	endif;	                               
+                	
+            	endfor;	       
+            	
+	        endif;
+		
+		endfor;   		    
+	    
+	    // save the xml	    
+	    oXMLdoc.Save (sFile);
+	    
+	    // release objects used
+	    set oXMLdoc = NOTHING;
+	    set oNodeListRoot = NOTHING;
+	    set oNodeListElements = NOTHING;	    	    
+	    
+	catch                  
+		
+	    return -1;    
+	    
+	endcatch;	       
+
+    Enable(LOGGING);         
+    return 0;
+    
+end;
+
+function VOID UpdateSettings()		
+begin
+	
+	// Enable Animations & Transistions, this is required for the plugin to work in skin 
+	// Dont need to worry about 1st time installs of mediaportal with XML
+	// as this is setting is enabled by default for MediaPortal
+	SetMPXMLProperty("general","animations","yes");	
+	
+end;
+
+function STRING GetMPTVSeriesDBPath()
+	STRING szKey, svValue;
+	NUMBER nvType, nvSize;
+begin
+	
+	// The MP-TVSeries database location can optionally be overridden by the user in configuration
+	// This location is stored in the Users Registry Hive
+	RegDBSetDefaultRoot(HKEY_CURRENT_USER);
+	
+	szKey = "SOFTWARE\\MPTVSeries";
+	if (RegDBKeyExist(szKey)) then
+		RegDBGetKeyValueEx(szKey,"DBFile",nvType,svValue,nvSize);		
+	endif;
+	
+	// Confirm DB File exists, and return if found.
+	if StrLength(svValue) > 0 then
+		if (Is(FILE_EXISTS,svValue)) then
+			return svValue;
+		endif;
+	endif;
+	
+	// If not found above, check the default location
+	// Use MediaPortals DB location to find file
+	return g_sDatabaseDir ^ "TVSeriesDatabase4.db3";
+			
+end;
+
+function VOID BackupDatabase(sFileName)
+	STRING sDestinationFolder, svDateTime, sErrorMsg, svResultDate, svResultTime;   
+	NUMBER nResult;
+begin
+ 	
+ 	Disable(LOGGING);
+	
+	// Get Current Date
+	GetSystemInfo ( DATE, nResult, svResultDate );
+		 
+	// Set Destination Folder to current Database directory
+	sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svResultDate;
+	
+	// If folder exists create a unique foldername based on time
+	if (Is(PATH_EXISTS,sDestinationFolder)) then
+		// Get Current Time and remove colons so we can make a valid path
+		GetSystemInfo ( TIME, nResult, svResultTime ); 
+	 	StrReplace ( svResultTime, ":", "", 0 ); 
+	 	
+	 	svDateTime = svResultDate + "_" + svResultTime;
+	 	
+		sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svDateTime;
+	endif;
+	
+	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
+	if nResult < 0 goto err;
+	
+	Enable(LOGGING);
+	return;
+	
+err:
+	if (nResult < 0) then
+	    
+	    sErrorMsg = "Unable to backup tvseries database file to:\n" + sDestinationFolder + "\n\nError Message: ";
+	    
+		switch (nResult)
+			
+			case COPY_ERR_CREATEDIR:
+				MessageBox(sErrorMsg + "Unable to create Destination Directory", INFORMATION);
+			
+			case COPY_ERR_MEMORY:
+				MessageBox(sErrorMsg + "Unable to allocate enough memory to copy file", INFORMATION);
+				
+			case COPY_ERR_NODISKSPACE:
+				MessageBox(sErrorMsg + "Not enough Disk Space", INFORMATION);
+				
+			case COPY_ERR_OPENINPUT:
+				MessageBox(sErrorMsg + "Unable to open file", INFORMATION);
+				
+			case COPY_ERR_OPENOUTPUT:
+				MessageBox(sErrorMsg + "Unable to copy file", INFORMATION);
+				
+			case COPY_ERR_TARGETREADONLY:
+				MessageBox(sErrorMsg + "Target Directory is Read Only!", INFORMATION);
+				
+		endswitch;
+	
+	endif;	
+
+end;
+
+function VOID CheckFilesInUse()
+	STRING szIsData, szMessage;
+	BOOL bFileLocked;
+	NUMBER nvType, nvValue, nvExitCode, nReturn;
+	LIST OpenFilesList;
+begin
+
+FilesInUse:
+	bFileLocked = FALSE;
+	
+	OpenFilesList = ListCreate(STRINGLIST);
+	
+	// Determine if files are running
+    szIsData = g_sMediaPortalProgramDir ^ "MediaPortal.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal [MediaPortal.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;
+
+	szIsData = g_sMediaPortalProgramDir ^ "Configuration.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Configuration [Configuration.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif;  
+ 	
+ 	szIsData = g_sMediaPortalProgramDir ^ "PluginConfigLoader.exe";	    
+    if Is(FILE_LOCKED, szIsData) then
+    	ListAddString(OpenFilesList,"MediaPortal Plugin Configuration Loader [PluginConfigLoader.exe]",AFTER);	 		
+ 		bFileLocked = TRUE;
+ 	endif; 
+		 	
+	if (bFileLocked) then
+						
+		nReturn = SdFilesInUse("", szMessage, "", OpenFilesList);		
+		
+		ListDestroy(OpenFilesList);
+	
+		// Retry Pressed
+		if nReturn = 1 goto FilesInUse;
+        
+        // Exit Pressed
+        if nReturn = 2 then 
+        	Do (EXIT);        	
+        endif;
+        
+	endif;
+	
+	ListDestroy(OpenFilesList);
+	
+end;
+
+////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Confirm there is only one instance of the  TVSeries plugin
+///
+////////////////////////////////////////////////////////////////////////
+function VOID VerifyPluginCount()
+	STRING szDir, szFileName, svResult, szMessage, szPlugin, szFiles;
+	LIST listDuplicateFiles;
+	NUMBER nResult;
+begin
+	
+	listDuplicateFiles = ListCreate(STRINGLIST);
+	
+	szDir = g_sPluginsDir ^ "windows";
+	szFileName = "*MP-TVSeries*.dll";
+	
+	// Find Match
+	nResult = FindAllFiles ( szDir, szFileName, svResult, RESET );
+	while (nResult = 0)
+	
+		// Ignore the real plugin
+		szPlugin = szDir ^ "MP-TVSeries.dll";
+		
+		if (svResult != szPlugin) then        
+        	// Build list of duplicate plugins
+        	ListAddString(listDuplicateFiles,svResult,AFTER);			
+		endif;
+	 	
+ 		// Continue Search
+		nResult = FindAllFiles ( szDir, szFileName, svResult, CONTINUE );				
+	 	
+	endwhile;
+   	
+   	if ListCount(listDuplicateFiles) = 0 then
+   		return;
+   	endif;
+   	   	
+   	// Inform user that there is a problem as duplicates were detected
+   	nResult = ListGetFirstString(listDuplicateFiles,svResult);
+   	
+   	while (nResult != END_OF_LIST)
+   	
+   		szFiles = szFiles + "\n" + svResult;
+   		nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   	endwhile;
+   	
+   	// Match Found, inform user there is going to be a problem
+	szMessage = "Setup has detected that there is multiple instances of the plugin installed:\n";
+	szMessage = szMessage + szFiles + "\n\n";
+	szMessage = szMessage + "It's recommended for the correct operation of the plugin to \n";
+	szMessage = szMessage + "delete these files. Would you like setup to delete these files now?";
+		
+	if (AskYesNo ( szMessage, YES ) = YES) then
+		// Delete Files
+		nResult = ListGetFirstString(listDuplicateFiles,svResult);
+		while (nResult != END_OF_LIST)
+   	
+   			DeleteFile(svResult);
+   			nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   		endwhile;
+	
+	endif;
+	
+end;
+
+///////////////////////////////////////////////////////////////////////////
+///
+///  Purpose: Remove non-msi installation so file is not reference counted
+///
+///////////////////////////////////////////////////////////////////////////
+function void RemoveNonMSIPlugin()
+	STRING szKey, szName, szFile, svValue, szFiles;
+	NUMBER nvSize, nvType;
+begin
+    
+    // If the plugin exists, check that the file is reference countered
+    // if the file is not reference countered then it was probably 
+    // previously installed by a manual method, its safe to cleanup
+    // We do this so when the product is removed, the file is also removed
+    // If we dont, the file will be reference countered and left behind
+    Disable(LOGGING);
+    RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
+    	
+	szKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SharedDLLs";
+	  
+    // Check if plugin file exists
+    szFile = g_sPluginsDir ^ "windows\\mp-tvseries.dll";   
+    szName = szFile;
+    
+    if (Is(FILE_EXISTS, szFile)) then
+    	// If the file exists, check if file is reference countered    	    
+    	if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) < 0 then
+    		// Reference counter doesnt exist, delete file
+    		DeleteFile(szFile);
+    	endif;	
+	else
+		//If the file doesnt exist, then ensure reference counter also doesnt exist
+		if RegDBGetKeyValueEx(szKey, szName, nvType, svValue, nvSize) = 0 then
+    		// Reference counter doesnt exist, clean registry
+    		RegDBDeleteValue(szKey, szName);
+    	endif;		    
+    endif;
+    
+    // Delete skin file(s) if they exist (no shared pacakges for these)
+    szFiles = g_sSkinsDir ^ "Blue3\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
+    szFiles = g_sSkinsDir ^ "Blue3Wide\\TVSeries*.xml";
+    DeleteFile(szFiles);
+    
+    Enable(LOGGING);
+end;
+
+function number ShowReleaseNotesDlg()
+	STRING szDialogName, szFileName;
+	NUMBER nCmdValue;
+	BOOL bDone;
+begin
+
+	szDialogName = "ReleaseNotes";
+   	bDone = FALSE;
+      	                         	                     
+    EzDefineDialog(szDialogName,"","",RES_DLG_RELEASENOTES);
+
+Dlg_Wait:  
+    // Loop unitl done
+    repeat
+    	nCmdValue = WaitOnDialog(szDialogName);
+
+	    switch (nCmdValue)
+	    	
+	    	case DLG_CLOSE:
+	            // The user clicked the window's close button.
+	            Do (EXIT);
+	            
+	        case DLG_ERR:
+	            MessageBox ("Unable to display Release Notes dialog. Setup canceled.", SEVERE);
+	            abort;
+	            
+	        case DLG_INIT:
+	        	// Load Release Notes
+	        	szFileName = SUPPORTDIR ^ "ReleaseNote.html";	        	     			     			     			
+	        	//szFileName = "c:/releasenote.html";
+ 				CtrlSetText(szDialogName, RES_TEXT_RELEASENOTES, "[html]file://" + szFileName);
+ 				         		      
+			case RES_PBUT_BACK:
+				bDone = TRUE;	 	        
+	   	        	   	        	   	        
+	        case RES_PBUT_NEXT:
+	            bDone = TRUE;	        
+	        
+	        case RES_PBUT_CANCEL:
+	        	Do (EXIT);
+	        	
+	        case RES_PBUT_CLOSE:
+	        	Do (EXIT);
+	        	
+	     endswitch;
+    
+    until bDone;       
+		
+	bDone = FALSE;	
+		
+    EndDialog (szDialogName);
+    ReleaseDialog (szDialogName);
+        
+   	return nCmdValue;
+end;
