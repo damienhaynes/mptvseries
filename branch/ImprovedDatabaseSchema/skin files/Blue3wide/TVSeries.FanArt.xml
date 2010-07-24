@@ -231,7 +231,7 @@
 			<textcolor>ffFFFFFF</textcolor>
 			<animation effect="fade" time="250">WindowOpen</animation>
 			<animation effect="fade" time="250">WindowClose</animation>
-			<visible>!facadeview.filmstrip+Control.IsVisible(50)</visible>
+			<visible>!facadeview.filmstrip+control.isvisible(50)</visible>
 		</control>
 			<control>
 			<description>Selected item Label</description>
@@ -246,7 +246,7 @@
 			<textcolor>ffFFFFFF</textcolor>
 			<animation effect="fade" time="250">WindowOpen</animation>
 			<animation effect="fade" time="250">WindowClose</animation>
-			<visible>facadeview.filmstrip+Control.IsVisible(50)</visible>			
+			<visible>facadeview.filmstrip+control.isvisible(50)</visible>			
 		</control>
 				
 		<!-- :::::::::::::: INFO :::::::::::::: -->

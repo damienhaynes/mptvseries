@@ -36,21 +36,23 @@
             this.labelWaitParse = new System.Windows.Forms.Label();
             this.lnkAdd = new System.Windows.Forms.LinkLabel();
             this.groupBoxAddCol = new System.Windows.Forms.GroupBox();
+            this.comboBoxAddColumn = new System.Windows.Forms.ComboBox();
             this.buttonAddColCancel = new System.Windows.Forms.Button();
             this.buttonAddColOK = new System.Windows.Forms.Button();
-            this.textBoxAddCol = new System.Windows.Forms.TextBox();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.contextMenuStripChangeCell = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lnkAddFiles = new System.Windows.Forms.LinkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.checkFilterMan = new System.Windows.Forms.CheckBox();
             this.lblCount = new System.Windows.Forms.Label();
             this.labelStep = new System.Windows.Forms.Label();
             this.labelImportWizardTitle = new System.Windows.Forms.Label();
+            this.lnkAddFiles = new System.Windows.Forms.LinkLabel();
+            this.pictureBoxWork = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).BeginInit();
             this.groupBoxAddCol.SuspendLayout();
             this.contextMenuStripChangeCell.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWork)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridViewReview
@@ -80,6 +82,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridViewReview.DefaultCellStyle = dataGridViewCellStyle8;
+            this.dataGridViewReview.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewReview.GridColor = System.Drawing.Color.White;
             this.dataGridViewReview.Location = new System.Drawing.Point(21, 74);
             this.dataGridViewReview.MultiSelect = false;
@@ -92,8 +95,11 @@
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewReview.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.dataGridViewReview.RowHeadersVisible = false;
             this.dataGridViewReview.Size = new System.Drawing.Size(717, 279);
             this.dataGridViewReview.TabIndex = 0;
+            this.dataGridViewReview.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewReview_CellValueChanged);
+            this.dataGridViewReview.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewReview_CurrentCellDirtyStateChanged);
             // 
             // labelWaitParse
             // 
@@ -108,7 +114,7 @@
             // 
             this.lnkAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkAdd.AutoSize = true;
-            this.lnkAdd.Location = new System.Drawing.Point(672, 52);
+            this.lnkAdd.Location = new System.Drawing.Point(489, 51);
             this.lnkAdd.Name = "lnkAdd";
             this.lnkAdd.Size = new System.Drawing.Size(64, 13);
             this.lnkAdd.TabIndex = 4;
@@ -119,9 +125,9 @@
             // groupBoxAddCol
             // 
             this.groupBoxAddCol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAddCol.Controls.Add(this.comboBoxAddColumn);
             this.groupBoxAddCol.Controls.Add(this.buttonAddColCancel);
             this.groupBoxAddCol.Controls.Add(this.buttonAddColOK);
-            this.groupBoxAddCol.Controls.Add(this.textBoxAddCol);
             this.groupBoxAddCol.Location = new System.Drawing.Point(443, 74);
             this.groupBoxAddCol.Name = "groupBoxAddCol";
             this.groupBoxAddCol.Size = new System.Drawing.Size(295, 85);
@@ -129,6 +135,22 @@
             this.groupBoxAddCol.TabStop = false;
             this.groupBoxAddCol.Text = "Add a Column";
             this.groupBoxAddCol.Visible = false;
+            // 
+            // comboBoxAddColumn
+            // 
+            this.comboBoxAddColumn.FormattingEnabled = true;
+            this.comboBoxAddColumn.Items.AddRange(new object[] {
+            "Series Name",
+            "Season Index",
+            "Episode Index",
+            "Episode Index 2",
+            "File Extension",
+            "Removable",
+            "Episode Name"});
+            this.comboBoxAddColumn.Location = new System.Drawing.Point(6, 29);
+            this.comboBoxAddColumn.Name = "comboBoxAddColumn";
+            this.comboBoxAddColumn.Size = new System.Drawing.Size(277, 21);
+            this.comboBoxAddColumn.TabIndex = 3;
             // 
             // buttonAddColCancel
             // 
@@ -150,19 +172,10 @@
             this.buttonAddColOK.UseVisualStyleBackColor = true;
             this.buttonAddColOK.Click += new System.EventHandler(this.buttonAddColOK_Click);
             // 
-            // textBoxAddCol
-            // 
-            this.textBoxAddCol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAddCol.Location = new System.Drawing.Point(6, 29);
-            this.textBoxAddCol.Name = "textBoxAddCol";
-            this.textBoxAddCol.Size = new System.Drawing.Size(283, 20);
-            this.textBoxAddCol.TabIndex = 0;
-            // 
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFilter.Location = new System.Drawing.Point(487, 49);
+            this.textBoxFilter.Location = new System.Drawing.Point(559, 48);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(179, 20);
             this.textBoxFilter.TabIndex = 7;
@@ -186,18 +199,6 @@
             this.changeActionToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.changeActionToolStripMenuItem.Text = "Change Action";
             // 
-            // lnkAddFiles
-            // 
-            this.lnkAddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lnkAddFiles.AutoSize = true;
-            this.lnkAddFiles.Location = new System.Drawing.Point(245, 360);
-            this.lnkAddFiles.Name = "lnkAddFiles";
-            this.lnkAddFiles.Size = new System.Drawing.Size(125, 13);
-            this.lnkAddFiles.TabIndex = 8;
-            this.lnkAddFiles.TabStop = true;
-            this.lnkAddFiles.Text = "Manually Add (a) File(s)...";
-            this.lnkAddFiles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAddFiles_LinkClicked);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -212,6 +213,7 @@
             this.checkFilterMan.TabIndex = 9;
             this.checkFilterMan.Text = "Only display manually added Files";
             this.checkFilterMan.UseVisualStyleBackColor = true;
+            this.checkFilterMan.Visible = false;
             this.checkFilterMan.CheckedChanged += new System.EventHandler(this.checkFilterMan_CheckedChanged);
             // 
             // lblCount
@@ -244,19 +246,44 @@
             this.labelImportWizardTitle.TabIndex = 13;
             this.labelImportWizardTitle.Text = "Import your Series and Episodes";
             // 
+            // lnkAddFiles
+            // 
+            this.lnkAddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lnkAddFiles.AutoSize = true;
+            this.lnkAddFiles.Location = new System.Drawing.Point(245, 360);
+            this.lnkAddFiles.Name = "lnkAddFiles";
+            this.lnkAddFiles.Size = new System.Drawing.Size(110, 13);
+            this.lnkAddFiles.TabIndex = 8;
+            this.lnkAddFiles.TabStop = true;
+            this.lnkAddFiles.Text = "Manually Add File(s)...";
+            this.lnkAddFiles.Visible = false;
+            this.lnkAddFiles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAddFiles_LinkClicked);
+            // 
+            // pictureBoxWork
+            // 
+            this.pictureBoxWork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxWork.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.big_spinner;
+            this.pictureBoxWork.InitialImage = global::WindowPlugins.GUITVSeries.Properties.Resources.big_spinner;
+            this.pictureBoxWork.Location = new System.Drawing.Point(696, 0);
+            this.pictureBoxWork.Name = "pictureBoxWork";
+            this.pictureBoxWork.Size = new System.Drawing.Size(42, 44);
+            this.pictureBoxWork.TabIndex = 16;
+            this.pictureBoxWork.TabStop = false;
+            // 
             // ImportPanelParsing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.pictureBoxWork);
             this.Controls.Add(this.labelImportWizardTitle);
             this.Controls.Add(this.groupBoxAddCol);
             this.Controls.Add(this.labelStep);
             this.Controls.Add(this.labelWaitParse);
-            this.Controls.Add(this.textBoxFilter);
-            this.Controls.Add(this.lnkAdd);
             this.Controls.Add(this.checkFilterMan);
+            this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.dataGridViewReview);
+            this.Controls.Add(this.lnkAdd);
             this.Controls.Add(this.lblCount);
             this.Controls.Add(this.lnkAddFiles);
             this.MinimumSize = new System.Drawing.Size(758, 385);
@@ -264,8 +291,8 @@
             this.Size = new System.Drawing.Size(758, 385);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).EndInit();
             this.groupBoxAddCol.ResumeLayout(false);
-            this.groupBoxAddCol.PerformLayout();
             this.contextMenuStripChangeCell.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWork)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,15 +306,16 @@
         private System.Windows.Forms.GroupBox groupBoxAddCol;
         private System.Windows.Forms.Button buttonAddColCancel;
         private System.Windows.Forms.Button buttonAddColOK;
-        private System.Windows.Forms.TextBox textBoxAddCol;
         private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripChangeCell;
         private System.Windows.Forms.ToolStripMenuItem changeActionToolStripMenuItem;
-        private System.Windows.Forms.LinkLabel lnkAddFiles;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.CheckBox checkFilterMan;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.Label labelStep;
         private System.Windows.Forms.Label labelImportWizardTitle;
+        private System.Windows.Forms.ComboBox comboBoxAddColumn;
+        private System.Windows.Forms.LinkLabel lnkAddFiles;
+        private System.Windows.Forms.PictureBox pictureBoxWork;
     }
 }

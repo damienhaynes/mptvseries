@@ -21,6 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+
 using System;
 using System.Collections.Generic;
 using WindowPlugins.GUITVSeries.DataBase;
@@ -58,6 +59,18 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp";
         public const String cWatchedFileTimeStamp = "WatchedFileTimeStamp";
         public const String cUnwatchedItems = "UnwatchedItems";
+
+        public const String cEpisodeOrders = "EpisodeOrders";
+        public const String cChosenEpisodeOrder = "choosenOrder";
+        public const String cEpisodeSortOrder = "EpisodeSortOrder";
+
+        public const String cOriginalName = "origName";
+
+        public const String cTaggedToDownload = "taggedToDownload";
+
+        public const String cRating = "Rating";
+        public const String cMyRating = "myRating";
+
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
 		public const String cViewTags = "ViewTags";
@@ -65,11 +78,6 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		public const String cFirstAired = "FirstAired";
 		public const String cIsFavourite = "isFavourite";
 		public const String cIsOnlineFavourite = "isOnlineFavourite";
-		public const String cEpisodeOrders = "EpisodeOrders";
-		public const String cChoseEpisodeOrder = "choosenOrder";
-		public const String cOriginalName = "origName";
-		public const String cRating = "Rating";
-		public const String cMyRating = "myRating";
 		public const String cBanner = "banner";
 		public const String cLanguage = "language";
 		public const String cIMDBID = "IMDB_ID";
@@ -118,7 +126,7 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {cIsFavourite,			new DBFieldDef{FieldName = cIsFavourite,		TableName = cTableName,	Type = DBFieldType.String}},
             {cIsOnlineFavourite,	new DBFieldDef{FieldName = cIsOnlineFavourite,	TableName = cTableName,	Type = DBFieldType.String}},
             {cEpisodeOrders,		new DBFieldDef{FieldName = cEpisodeOrders,		TableName = cTableName,	Type = DBFieldType.String, PrettyName = "Episode Orders"}},
-	        {cChoseEpisodeOrder,	new DBFieldDef{FieldName = cChoseEpisodeOrder,	TableName = cTableName,	Type = DBFieldType.String, PrettyName = "Episode Order"}},
+	        {cChosenEpisodeOrder,	new DBFieldDef{FieldName = cChosenEpisodeOrder,	TableName = cTableName,	Type = DBFieldType.String, PrettyName = "Episode Order"}},
             {cRating,				new DBFieldDef{FieldName = cRating,				TableName = cTableName,	Type = DBFieldType.String}},
             {cMyRating,				new DBFieldDef{FieldName = cMyRating,			TableName = cTableName,	Type = DBFieldType.String, PrettyName = "My Rating"}},
             {cBanner,				new DBFieldDef{FieldName = cBanner,				TableName = cTableName,	Type = DBFieldType.String}},
@@ -135,9 +143,36 @@ namespace WindowPlugins.GUITVSeries.DataClass
 		};
 		#endregion
 
+        public const String cHasNewEpisodes = "HasNewEpisodes";
+
+        public const int cDBVersion = 3;
+
+        public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
 
         static DBOnlineSeries() {
+            ///////////////////////////////////////////////////
+            #region Pretty Names displayed in Configuration Details Tab
+            s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
+            s_FieldToDisplayNameMap.Add(cPrettyName, "Title");
+            s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
+            s_FieldToDisplayNameMap.Add(cGenre, "Genre");
+            s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");            
+            s_FieldToDisplayNameMap.Add(cAirsDay, "Aired Day");
+            s_FieldToDisplayNameMap.Add(cAirsTime, "Aired Time");
+            s_FieldToDisplayNameMap.Add(cSortName, "Sort By");
+            s_FieldToDisplayNameMap.Add(cLanguage, "Language");
+            s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
+            s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
+            s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
+            s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
+            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
+            s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
+            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
+            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");            
+            #endregion
+            ///////////////////////////////////////////////////
+
             //////////////////////////////////////////////////
             #region Local DB field mapping to Online DB
             s_OnlineToFieldMap.Add("id", cID);            

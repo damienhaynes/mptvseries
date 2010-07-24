@@ -139,8 +139,7 @@ namespace WindowPlugins.GUITVSeries
             currentFolder = Directory.GetCurrentDirectory();
 
             string xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.Playlist.xml";
-            MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
-            //SkinSettings.GetSkinProperties(xmlSkin);
+            MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);            
 
             return Load(xmlSkin);
         }
@@ -340,7 +339,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (control == btnPlay || control == this.m_Facade)
             {
-                if (actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
+                if (control == this.m_Facade && actionType != Action.ActionType.ACTION_SELECT_ITEM) return; // some other events raised onClicked too for some reason?
 
                 playlistPlayer.CurrentPlaylistType = PlayListType.PLAYLIST_TVSERIES;
                 playlistPlayer.Reset();
@@ -519,15 +518,26 @@ namespace WindowPlugins.GUITVSeries
                     PlayListItem item = playlist[i];
                     strFileName = item.FileName;
 
-                    GUIListItem pItem = new GUIListItem(item.Description);
+                    GUIListItem pItem = new GUIListItem(item.EpisodeName);
                     pItem.Path = strFileName;
                     pItem.IsFolder = false;
                     pItem.TVTag = item.Episode;
                     
                     // update images
                     pItem.ThumbnailImage = item.EpisodeThumb;
-                    pItem.IconImageBig = item.EpisodeThumb;
-                    pItem.IconImage = item.EpisodeThumb;
+                    //pItem.IconImageBig = item.EpisodeThumb;
+                    //pItem.IconImage = item.EpisodeThumb;                    
+
+                    if (item.IsWatched)
+                    {
+                        pItem.IsPlayed = true; // facade colours...dont seem to work!
+                        pItem.IconImage = GUIGraphicsContext.Skin + @"\Media\tvseries_Watched.png";
+                    }
+                    else
+                    {
+                        pItem.IsPlayed = false;
+                        pItem.IconImage = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatched.png";
+                    }
 
                     if (item.Duration > 0)
                     {
@@ -544,7 +554,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     itemlist.Add(pItem);
-                    MediaPortal.Util.Utils.SetDefaultIcons(pItem);
+                    //MediaPortal.Util.Utils.SetDefaultIcons(pItem);
                 }
 
                 iCurrentItem = 0;
@@ -665,12 +675,24 @@ namespace WindowPlugins.GUITVSeries
             if (episode == null || prevSelectedEpisode == episode) 
                 return;
 
+            if (item.IsPlayed) episode[DBOnlineEpisode.cWatched] = true;
+
             // Push properties to skin            
             TVSeriesPlugin.setGUIProperty(guiProperty.Title.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
             TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Logos.ToString(), localLogos.getLogos(ref episode, TVSeriesPlugin.logosHeight, TVSeriesPlugin.logosWidth));
-          
+            if (episode[DBOnlineEpisode.cWatched] || item.IsPlayed || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail))
+            {
+                GUIPropertyManager.SetProperty("#selectedthumb", ImageAllocator.GetEpisodeImage(episode));
+                TVSeriesPlugin.setGUIProperty(guiProperty.EpisodeImage.ToString(), ImageAllocator.GetEpisodeImage(episode));
+            }
+            else
+            {
+                GUIPropertyManager.SetProperty("#selectedthumb", " ");
+                TVSeriesPlugin.clearGUIProperty(guiProperty.EpisodeImage.ToString());
+            }
+
             TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
             
             // Some strange issues with logos when using mouse and hovering over current item
@@ -684,7 +706,8 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.clearGUIProperty(guiProperty.Title.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Subtitle.ToString());
             TVSeriesPlugin.clearGUIProperty(guiProperty.Description.ToString());
-            TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());            
+            TVSeriesPlugin.clearGUIProperty(guiProperty.Logos.ToString());
+            TVSeriesPlugin.clearGUIProperty(guiProperty.EpisodeImage.ToString());
             TVSeriesPlugin.clearFieldsForskin("Episode");
         }
 

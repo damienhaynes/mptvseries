@@ -66,6 +66,10 @@ namespace WindowPlugins.GUITVSeries.DataClass
         // ids for the second episode if it's a double (and please don't ever do triple episodes)
         public const String cCompositeID2 = DBOnlineEpisode.cCompositeID + "2";
         public const String cEpisodeIndex2 = DBOnlineEpisode.cEpisodeIndex + "2";
+        
+        public const String cCompositeUpdated = "CompositeUpdated";
+        public const String cOriginalComposite = "OriginalComposite";
+        public const String cOriginalComposite2 = "OriginalComposite2";
 
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
@@ -82,9 +86,13 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cVideoBitRate = "VideoBitrate";
         public const String cVideoFrameRate = "VideoFrameRate";
         public const String cVideoAspectRatio = "VideoAspectRatio";
-        public const String cVideoCodec = "VideoCodec";
+        public const String cVideoCodec = "VideoCodec";                
+        public const String cVideoFormat = "VideoFormat";
+        public const String cVideoFormatProfile = "VideoFormatProfile";
         public const String cAudioCodec = "AudioCodec";
-        public const String cAudioBitrate = "AudioBitrate";
+		public const String cAudioFormat = "AudioFormat";
+		public const String cAudioFormatProfile = "AudioFormatProfile";
+		public const String cAudioBitrate = "AudioBitrate";
         public const String cAudioChannels = "AudioChannels";
         public const String cAudioTracks = "AudioTracks";
         public const String cTextCount = "TextCount";
@@ -94,7 +102,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
         public const String cFileSize = "FileSize";
         public const String cPrettyPlaytime = "PrettyLocalPlaytime";
         public const String cFilenameWOPath = "EpisodeFilenameWithoutPath";
-        
+        public const String cFilenameWOPathAndExtension = "EpisodeFilenameWithoutPathAndExtension";
+       
         // all mandatory fields. Place the primary key first - it's just good manners
 		public static readonly DBFieldDefList TableFields = new DBFieldDefList {
             {cID,                 new DBFieldDef{ FieldName = cID,                TableName = cTableName, Type = DBFieldType.Int,     Primary = true,     AutoIncrement = true }},
@@ -124,6 +133,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
             {cVideoFrameRate,     new DBFieldDef{ FieldName = cVideoFrameRate,    TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Video Frame Rate"}},
             {cVideoAspectRatio,   new DBFieldDef{ FieldName = cVideoAspectRatio,  TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Video Aspect Ratio"}},
             {cAudioCodec,         new DBFieldDef{ FieldName = cAudioCodec,        TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Codec"}},
+            {cAudioFormat,        new DBFieldDef{ FieldName = cAudioFormat,       TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Format"}},
+            {cAudioFormatProfile, new DBFieldDef{ FieldName = cAudioFormatProfile,TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Format Profile"}},
             {cAudioBitrate,       new DBFieldDef{ FieldName = cAudioBitrate,      TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Bitrate"}},
             {cAudioChannels,      new DBFieldDef{ FieldName = cAudioChannels,     TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Channels"}},
             {cAudioTracks,        new DBFieldDef{ FieldName = cAudioTracks,       TableName = cTableName, Type = DBFieldType.String,  PrettyName = "Audio Tracks"}},
@@ -283,12 +294,43 @@ namespace WindowPlugins.GUITVSeries.DataClass
 
         public void ChangeIndexes(int seasonIndex, int episodeIndex)
         {
+            ChangeIndexes(seasonIndex, episodeIndex, false);
+        }
+
+        /// <summary>
+        /// Change the local episode composite, season and episode indexes
+        /// </summary>
+        /// <param name="seasonIndex">Season Index of new episode ID</param>
+        /// <param name="episodeIndex">Episode Index of new episode ID</param>
+        /// <param name="isSecondPart">Set to true if its the 2nd part of a double episode</param>
+        public void ChangeIndexes(int seasonIndex, int episodeIndex, bool isSecondPart)
+        {
+            string currentComposite = base[cCompositeID];
+            string currentComposite2 = base[cCompositeID2];
+
+            // save original composite id's for when we do online updates and re-matching
+            if (!isSecondPart && string.IsNullOrEmpty(base[cOriginalComposite]))
+                base[cOriginalComposite] = currentComposite;
+            if (isSecondPart && string.IsNullOrEmpty(base[cOriginalComposite2]))
+                base[cOriginalComposite2] = currentComposite2;
+
             string composite = base[cSeriesID] + "_" + seasonIndex + "x" + episodeIndex;
             base[cSeasonIndex] = seasonIndex;
-            base[cEpisodeIndex] = episodeIndex;
-            base[cCompositeID] = composite;
+
+            if (!isSecondPart)
+            {                                
+                base[cEpisodeIndex] = episodeIndex;
+                base[cCompositeID] = composite;
+            }
+            else
+            {
+                // only update second part of episode
+                base[cEpisodeIndex2] = episodeIndex;
+                base[cCompositeID2] = composite;
+            }
 
             DBOnlineEpisode newOnlineEpisode = new DBOnlineEpisode();
+            bool bNewOnlineEpsisode = false;
             if (!newOnlineEpisode.ReadPrimary(composite))
             {                
                 foreach (String fieldName in m_onlineEpisode.FieldNames)
@@ -300,13 +342,37 @@ namespace WindowPlugins.GUITVSeries.DataClass
                             break;
                     }
                 }
+
                 newOnlineEpisode[cSeriesID] = this[cSeriesID];
                 newOnlineEpisode[cSeasonIndex] = base[cSeasonIndex];
-                newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
-                newOnlineEpisode[cCompositeID] = base[cCompositeID];
+
+                if (!isSecondPart)
+                {
+                    newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex];
+                    newOnlineEpisode[cCompositeID] = base[cCompositeID];
+                }
+                else
+                {
+                    newOnlineEpisode[cEpisodeIndex] = base[cEpisodeIndex2];
+                    newOnlineEpisode[cCompositeID] = base[cCompositeID2];
+                }
+
+                bNewOnlineEpsisode = true;
             }
             m_onlineEpisode = newOnlineEpisode;
             Commit();
+
+            // cleanup old reference if we needed to create a new online episode
+            // only remove if no online data associated with it
+            if (bNewOnlineEpsisode)
+            {
+                string compositeID = isSecondPart ? currentComposite2 : currentComposite;
+
+                SQLCondition condition = new SQLCondition();
+                condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cCompositeID, compositeID, SQLConditionType.Equal);
+				condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
+                DBOnlineEpisode.Clear(condition);
+            }
         }
 
         public void ChangeSeriesID(int nSeriesID)
@@ -378,12 +444,12 @@ namespace WindowPlugins.GUITVSeries.DataClass
             get
             {
                 // Check at least one MediaInfo field has been populated                
-                if (String.IsNullOrEmpty(this["localPlaytime"]))                                
+                if (String.IsNullOrEmpty(this[cLocalPlaytime]))                                
                     return false;
                 else
                 {
                     int noAttempts = 0;
-                    if (!int.TryParse(this["localPlaytime"], out noAttempts)) return true;
+                    if (!int.TryParse(this[cLocalPlaytime], out noAttempts)) return true;
                     
                     // local playtime will be greater than zero if mediainfo has been retrieved
                     if (noAttempts > 0) return true;
@@ -417,29 +483,36 @@ namespace WindowPlugins.GUITVSeries.DataClass
                                         
                     // check number of failed attempts at mediainfo extraction                    
                     int noAttempts = 0;
-                    int.TryParse(this["localPlaytime"], out noAttempts);
+                    int.TryParse(this[cLocalPlaytime], out noAttempts);
                     noAttempts--;
                     
                     // Get Playtime (runtime)
                     string result = MI.VideoPlaytime;
-                    this["localPlaytime"] = result != "-1" ? result : noAttempts.ToString();
+                    this[cLocalPlaytime] = result != "-1" ? result : noAttempts.ToString();
 
                     bool failed = false;
                     if (result != "-1")
                     {
                         this[cVideoCodec] = MI.VideoCodec;
+                        this[cVideoFormat] = MI.VideoCodecFormat;
+                        this[cVideoFormatProfile] = MI.VideoFormatProfile;
                         this[cVideoBitRate] = MI.VideoBitrate;
                         this[cVideoFrameRate] = MI.VideoFramesPerSecond;
                         this[cVideoWidth] = MI.VideoWidth;
                         this[cVideoHeight] = MI.VideoHeight;
                         this[cVideoAspectRatio] = MI.VideoAspectRatio;
 
-                        this[cAudioCodec] = MI.AudioCodec;
+                        this[cAudioCodec] = MI.AudioCodec;                        
+                        this[cAudioFormat] = MI.AudioCodecFormat;
+                        this[cAudioFormatProfile] = MI.AudioFormatProfile;
                         this[cAudioBitrate] = MI.AudioBitrate;
                         this[cAudioChannels] = MI.AudioChannelCount;
                         this[cAudioTracks] = MI.AudioStreamCount;
 
                         this[cTextCount] = MI.SubtitleCount;
+                        
+                        // check for subtitles in mediainfo                        
+                        this[cAvailableSubtitles] = checkHasSubtitles();
                     }
                     else 
                         failed = true;
@@ -457,14 +530,9 @@ namespace WindowPlugins.GUITVSeries.DataClass
                         MPTVSeriesLog.Write(retriesLeft, MPTVSeriesLog.LogLevel.Normal);
                     }
                     else {
-                        if (OnlineParsing.IsMainOnlineParseComplete) {
-                            // we can now log output to keep user informed of scan progress
-                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(),MPTVSeriesLog.LogLevel.Normal);
-                        }
-                        else {                            
-                            MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
-                        }
+                        MPTVSeriesLog.Write("Succesfully read MediaInfo for ", this[DBEpisode.cFilename].ToString(), OnlineParsing.IsMainOnlineParseComplete ? MPTVSeriesLog.LogLevel.Normal : MPTVSeriesLog.LogLevel.Debug);                   
                     }
+
                     // Commit MediaInfo to database
                     Commit();
                     
@@ -509,13 +577,32 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
 
+            int textCount = -1;
+            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
+            {
+                textCount = (int)this["TextCount"];
+                if (textCount == -1) textCount = 0;
+            }
+
+            if (DBOption.GetOptions(DBOption.cSubCentralEnabled) && DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes) && Helper.IsSubCentralAvailableAndEnabled)
+            {
+                return checkHasSubtitlesFromSubCentral(useMediaInfo, textCount);
+            }
+
+            fillSubTitleExtensions();
+
+            if (textCount > 0)
+                return true;
+
             // Read MediaInfo for embedded subtitles
+            /*
             if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
             {
                 if ((int)this["TextCount"] > 0) 
                     return true;
             }
-
+            */
+            
             string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {
@@ -532,7 +619,17 @@ namespace WindowPlugins.GUITVSeries.DataClass
             return false;
         }
 
-    	static bool isWritable(FileInfo fileInfo)
+        private bool checkHasSubtitlesFromSubCentral(bool useMediaInfo, int textCount)
+        {
+            MPTVSeriesLog.Write(string.Format("Using SubCentral for checkHasSubtitles(), useMediaInfo = {0}, textCount = {1}", useMediaInfo.ToString(), textCount.ToString()), MPTVSeriesLog.LogLevel.Debug);
+            List<FileInfo> fiFiles = new List<FileInfo>();
+            fiFiles.Add(new FileInfo(this[DBEpisode.cFilename]));
+            bool result = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles(fiFiles, false, textCount, !useMediaInfo);
+            MPTVSeriesLog.Write(string.Format("SubCentral returned {0}", result.ToString()), MPTVSeriesLog.LogLevel.Debug);
+            return result;
+        }
+
+        bool isWritable(FileInfo fileInfo)
         {
             FileStream stream = null;
             try
@@ -613,10 +710,48 @@ namespace WindowPlugins.GUITVSeries.DataClass
                 }
             }
 
+            #region Facade Remote Color
+            
+            // if we have removed all local episodes for a season then set HasLocalFiles to false for season
+            if (type == TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                SQLCondition seasonConditions = new SQLCondition();
+                seasonConditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                seasonConditions.Add(DBEpisode.TableFields, DBEpisode.cSeasonIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                List<DBEpisode> localEpisodes = DBEpisode.Get(seasonConditions);
+                if (localEpisodes.Count == 0)
+                {
+                    SQLCondition cond = new SQLCondition();
+                    cond.Add(DBSeason.TableFields, DBSeason.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);
+                    cond.Add(DBSeason.TableFields, DBSeason.cIndex, this[DBEpisode.cSeasonIndex], SQLConditionType.Equal);
+                    List<DBSeason> season = DBSeason.Get(cond);                    
+                    // should only get one season returned
+                    if (season != null && season.Count == 1)
+                    {
+                        season[0][DBSeason.cHasLocalFiles] = false;
+                        season[0].Commit();
+                    }
+                    
+                    // also check if local files exist for series
+                    SQLCondition seriesConditions = new SQLCondition();
+                    seriesConditions.Add(DBEpisode.TableFields, DBEpisode.cSeriesID, this[DBEpisode.cSeriesID], SQLConditionType.Equal);                    
+                    localEpisodes = DBEpisode.Get(seriesConditions);
+                    if (localEpisodes.Count == 0)
+                    {
+                        DBSeries series = DBSeries.Get(this[DBEpisode.cSeriesID]);
+                        series[DBOnlineSeries.cHasLocalFiles] = false;
+                        series.Commit();
+                    }
+                }
+            }
+            
+            #endregion
+
             #region Cleanup
+            DBSeries.IsSeriesRemoved = false;
             if (type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
-                // If episode count is zero then delete the season
+                // If local/online episode count is zero then delete the season
                 condition = new SQLCondition();
 				condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
 				condition.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
@@ -648,6 +783,8 @@ namespace WindowPlugins.GUITVSeries.DataClass
                         condition = new SQLCondition();
                         condition.Add(DBOnlineSeries.TableFields, DBOnlineSeries.cID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                         DBOnlineSeries.Clear(condition);
+
+                        DBSeries.IsSeriesRemoved = true;
                     }
                 }
             }
@@ -695,7 +832,44 @@ namespace WindowPlugins.GUITVSeries.DataClass
             return resultMsg;
         }
 
-        public DBOnlineEpisode onlineEpisode
+		private void fillSubTitleExtensions()
+		{
+			if (subTitleExtensions.Count == 0) {
+				// load them in first time
+				subTitleExtensions.Add(".aqt");
+				subTitleExtensions.Add(".asc");
+				subTitleExtensions.Add(".ass");
+				subTitleExtensions.Add(".dat");
+				subTitleExtensions.Add(".dks");
+				subTitleExtensions.Add(".js");
+				subTitleExtensions.Add(".jss");
+				subTitleExtensions.Add(".lrc");
+				subTitleExtensions.Add(".mpl");
+				subTitleExtensions.Add(".ovr");
+				subTitleExtensions.Add(".pan");
+				subTitleExtensions.Add(".pjs");
+				subTitleExtensions.Add(".psb");
+				subTitleExtensions.Add(".rt");
+				subTitleExtensions.Add(".rtf");
+				subTitleExtensions.Add(".s2k");
+				subTitleExtensions.Add(".sbt");
+				subTitleExtensions.Add(".scr");
+				subTitleExtensions.Add(".smi");
+				subTitleExtensions.Add(".son");
+				subTitleExtensions.Add(".srt");
+				subTitleExtensions.Add(".ssa");
+				subTitleExtensions.Add(".sst");
+				subTitleExtensions.Add(".ssts");
+				subTitleExtensions.Add(".stl");
+				subTitleExtensions.Add(".sub");
+				subTitleExtensions.Add(".txt");
+				subTitleExtensions.Add(".vkt");
+				subTitleExtensions.Add(".vsf");
+				subTitleExtensions.Add(".zeg");
+			}
+		}
+		
+		public DBOnlineEpisode onlineEpisode
         {
             get { return m_onlineEpisode; }
         }
@@ -737,19 +911,22 @@ namespace WindowPlugins.GUITVSeries.DataClass
         {
             get
             {
-            	switch (fieldName)
+                switch (fieldName)
                 {
                     case cFileSizeBytes:
                         return System.IO.File.Exists(base[DBEpisode.cFilename]) ? new System.IO.FileInfo(base[DBEpisode.cFilename]).Length : 0;
                     case cFileSize:
-                        return  StrFormatByteSize(this[cFileSizeBytes]);
-                    case cAvailableSubtitles:
-                        return (this[cAvailableSubtitles] = checkHasSubtitles());
+                        return StrFormatByteSize(this[cFileSizeBytes]);
+                    //case cAvailableSubtitles:
+                    //    return (this[cAvailableSubtitles] = checkHasSubtitles());
                     case cPrettyPlaytime:
                         return Helper.MSToMMSS(this["localPlaytime"]);
                     case cFilenameWOPath:
                         return System.IO.Path.GetFileName(this[cFilename]);
-                }
+                    case cFilenameWOPathAndExtension:
+                        return System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+                        }
+
                 // online data always takes precedence over the local file data
             	if (m_onlineEpisode == null) {
             		return base[fieldName];

@@ -36,6 +36,7 @@ namespace WindowPlugins.GUITVSeries
         private Dictionary<string, string> m_Matches = new Dictionary<string, string>();
         private List<string> m_Tags = new List<string>();
         private String m_RegexpMatched = string.Empty;
+        private int m_RegexpMatchedIdx = 0;
         static List<String> sExpressions = new List<String>();
         static List<Regex> regularExpressions = new List<Regex>();
         static Dictionary<Regex, string> replacementRegexBefore = new Dictionary<Regex, string>();
@@ -55,6 +56,11 @@ namespace WindowPlugins.GUITVSeries
         public String RegexpMatched
         {
             get { return m_RegexpMatched; }
+        }
+
+        public int RegexpMatchedIndex
+        {
+            get { return m_RegexpMatchedIdx; }
         }
 
         public string FileNameAfterReplacement
@@ -225,6 +231,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // stop on the first successful match
                         m_RegexpMatched = sExpressions[index];
+                        m_RegexpMatchedIdx = index;
                         return;
                     }
                   index++;

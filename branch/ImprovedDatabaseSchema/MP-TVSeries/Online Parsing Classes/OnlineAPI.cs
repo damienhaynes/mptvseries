@@ -368,25 +368,36 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
         else
         {
-          StreamReader reader = new StreamReader(data);
-          String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
-          data.Close();
-          reader.Close();
-          MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
-          MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug);
-          MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
-          try
-          {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(sXmlData);
-            XmlNode root = doc.FirstChild.NextSibling;
-            return root;
-          }
-          catch (XmlException e)
-          {
-            // bummer
-            MPTVSeriesLog.Write("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
-          }
+            StreamReader reader = new StreamReader(data);
+            String sXmlData = string.Empty;
+            try
+            {
+                sXmlData = reader.ReadToEnd().Replace('\0', ' ');
+            }
+            catch (Exception e)
+            {                
+                MPTVSeriesLog.Write("Error reading stream: {0}", e.Message);
+            }
+            data.Close();
+            reader.Close();
+            if (!string.IsNullOrEmpty(sXmlData))
+            {
+                MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
+                try
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(sXmlData);
+                    XmlNode root = doc.FirstChild.NextSibling;
+                    return root;
+                }
+                catch (XmlException e)
+                {
+                    // Most likely bad xml formatting, tvdb does not use CDATA structures so good luck.
+                    MPTVSeriesLog.Write("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
+                }
+            }
         }
       }
       return null;

@@ -28,7 +28,7 @@ using WindowPlugins.GUITVSeries.DataClass;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class Fanart : IDisposable
+    public class Fanart : IDisposable
     {
         #region config Constants
         

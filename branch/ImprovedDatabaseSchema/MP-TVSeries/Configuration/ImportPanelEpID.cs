@@ -31,7 +31,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             InitializeComponent();
         }
 
-
         public void MatchEpisodesForSeries(DBSeries series, List<DBEpisode> localEpisodes, List<DBOnlineEpisode> onlineCandidates)
         {
             if (this.InvokeRequired)
@@ -47,7 +46,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.listBoxSeries.Items.Clear();
             this.listBoxOnline.Items.Clear();
             this.listBoxLocal.Items.Clear();
-            foreach (var s in matches.Select( m => m.Key))
+            foreach (var s in matches.Where(leps => leps.Value.Count > 0).Select(m => m.Key))
             {
                 if (!listBoxSeries.Items.Contains(s))
                 {
@@ -57,6 +56,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             if (listBoxSeries.SelectedIndex < 0 && listBoxSeries.Items.Count > 0) 
                 listBoxSeries.SelectedIndex = 0;
+
+            if (listBoxSeries.Items.Count == 0)
+            {
+                comboMatchOptions.Enabled = false;
+                comboMatchOptions.Items.Clear();
+                buttonMatchAgain.Enabled = false;
+                txtBoxStatusBar.Text = "There are no episodes requiring manual selection...";
+            }
+            else
+            {
+                comboMatchOptions.Enabled = true;
+                buttonMatchAgain.Enabled = true;
+            }
         }
 
         private bool seriesHasAllEpsMatched(DBSeries series)
@@ -86,7 +98,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             return WindowPlugins.GUITVSeries.Feedback.ReturnCode.OK;
         }
 
-
         private List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> getResultImpl(bool requestShowOnly)
         {
             if (requestShowOnly)
@@ -103,16 +114,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else
             {
-                // update localEpsIds with chosen ep ids
+                bool isSecondPart = false;
 
+                // update local episode ids with chosen episode ids
                 foreach (var series in matches)
                 {
                     foreach (var pair in series.Value)
                     {
                         if (pair.Value != null)
                         {
-                            // this is hardly the righ place to do this....
-                            pair.Key.ChangeIndexes(pair.Value[DBOnlineEpisode.cSeasonIndex], pair.Value[DBOnlineEpisode.cEpisodeIndex]);
+                            // check if its a double episode
+                            isSecondPart = false;
+                            if (!string.IsNullOrEmpty(pair.Key[DBEpisode.cCompositeID2]))
+                            {
+                                // check if its the second part of a double episode
+                                if (pair.Key[DBEpisode.cEpisodeIndex] == pair.Key[DBEpisode.cEpisodeIndex2])
+                                    isSecondPart = true;
+                            }
+                            pair.Key.ChangeIndexes(pair.Value[DBOnlineEpisode.cSeasonIndex], pair.Value[DBOnlineEpisode.cEpisodeIndex], isSecondPart);
                         }
                     }
                 }
@@ -130,24 +149,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         private void DoAutoMatching(DBSeries series, string orderingOption)
-        {            
+        { 
             var seriesMatches = matches.SingleOrDefault(kv => kv.Key == series);
             List<DBEpisode> localEps = localeps[series];
-            
+
             var newseriesMatches = new List<KeyValuePair<DBEpisode, DBOnlineEpisode>>();
             foreach (var localEp in localEps)
             {
                 var bestMatchVal = from oe in onlineeps.Single(s => s.Key == series).Value
-                                   select new { Episode = oe, MatchValue = OnlineParsing.matchOnlineToLocalEpisode(series, localEp, oe, orderingOption, false) };
+                                   select new { Episode = oe, MatchValue = OnlineParsing.matchOnlineToLocalEpisode(series, localEp, oe, orderingOption) };
                 var matchedEp = bestMatchVal.OrderBy(me => me.MatchValue).FirstOrDefault(me => me.MatchValue < int.MaxValue);
-                if(matchedEp != null)
+                if (matchedEp != null)
                     newseriesMatches.Add(new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, matchedEp.Episode));
                 else newseriesMatches.Add(new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, null));
 
             }
             if (seriesMatches.Key != null)
                 matches.Remove(seriesMatches);
-            matches.Add(new KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>(series, newseriesMatches));
+            matches.Add(new KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>(series, newseriesMatches));                     
         }
 
         private void ImportWizard_OnWizardNavigate(UserFinishedRequestedAction reqAction)
@@ -175,7 +194,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 comboMatchOptions.Items.Add(ordering); 
 	        }
             comboMatchOptions.Items.Add("Title");
-            string preChosen = selectedSeries[DBOnlineSeries.cChoseEpisodeOrder];
+            string preChosen = selectedSeries[DBOnlineSeries.cChosenEpisodeOrder];
             if (string.IsNullOrEmpty(preChosen))
                 comboMatchOptions.SelectedIndex = 0;
             else comboMatchOptions.SelectedItem = preChosen;
@@ -189,11 +208,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     ep[DBEpisode.cSeasonIndex],
                     ep[DBEpisode.cEpisodeIndex] > 0 ? (string)ep[DBEpisode.cEpisodeIndex] : "?",
                     ep[DBEpisode.cEpisodeIndex2] > 0 ? "-" + ep[DBEpisode.cEpisodeIndex2] : string.Empty,
-                    ep[DBEpisode.cEpisodeName].ToString() + ep[DBOnlineEpisode.cEpisodeName].ToString());
+                    ep[DBEpisode.cEpisodeName].ToString());
             }
             else if (ep is DBOnlineEpisode)
             {
-                return string.Format("{0,2:D}{1,2:D}{2} {3}",
+                return string.Format("{0,2:D}{1,2:D}{2} - {3}",
                     ep[DBEpisode.cSeasonIndex] > 0 ? (string)ep[DBEpisode.cSeasonIndex] + "x" : "Special: ",
                     ep[DBEpisode.cEpisodeIndex] > 0 ? (string)ep[DBEpisode.cEpisodeIndex] : "?",
                     ep[DBEpisode.cEpisodeIndex2] > 0 ? "-" + ep[DBEpisode.cEpisodeIndex2] : string.Empty,
@@ -226,10 +245,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         continue;
                 }
                 displayedEps.Add(local);
-                listBoxLocal.Items.Add(getDisplayString(local));
+                listBoxLocal.Items.Add(local[DBEpisode.cFilenameWOPath]);
+                //listBoxLocal.Items.Add(getDisplayString(local));                
             }
 
-            listBoxLocal.SelectedIndex = 0;
+            if (listBoxLocal.SelectedIndex < 0 && listBoxLocal.Items.Count > 0)
+                listBoxLocal.SelectedIndex = 0;
         }
 
         private void listBoxLocal_SelectedIndexChanged(object sender, EventArgs e)
@@ -237,41 +258,42 @@ namespace WindowPlugins.GUITVSeries.Configuration
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];            
             var matchedOnlineEp = matches.Single(s => s.Key == series).Value.Single(eps => eps.Key == localEp).Value;          
+            
+            string selectedItem = string.Empty;
             if (matchedOnlineEp != null)
-                listBoxOnline.SelectedItem = getDisplayString(matchedOnlineEp);                     
+                listBoxOnline.SelectedItem = getDisplayString(matchedOnlineEp);
             else listBoxOnline.SelectedIndex = 0;
-
-            textDetailsLocal.Text = localEp[DBEpisode.cFilename];
+       
+            txtBoxStatusBar.Text = localEp[DBEpisode.cFilename];
         }
 
         private void listBoxOnline_SelectedIndexChanged(object sender, EventArgs e)
         {
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];
-
             var onlineEp = displayedOEps[listBoxOnline.SelectedIndex];
-
+            
             // update the pair
             var pairS = matches.Single(s => s.Key == series).Value;
             int toReplace = pairS.FindIndex(kv => kv.Key == localEp);
             pairS[toReplace] = new KeyValuePair<DBEpisode, DBOnlineEpisode>(localEp, onlineEp);
-
-            // display the summary
-            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) && onlineEp != null)
-                this.textBoxDetails.Text = onlineEp[DBOnlineEpisode.cEpisodeSummary];
-            else this.textBoxDetails.Text = string.Empty;
-
         }
 
         private void checkBoxFilter_CheckedChanged(object sender, EventArgs e)
         {
+            txtBoxStatusBar.Text = string.Empty;
             FillSeriesList();
         }
 
         private void buttonMatchAgain_Click(object sender, EventArgs e)
         {
             string selected = comboMatchOptions.SelectedItem.ToString();
-            DoAutoMatching(listBoxSeries.SelectedItem as DBSeries, selected);
+            DBSeries series = listBoxSeries.SelectedItem as DBSeries;
+            series[DBOnlineSeries.cChosenEpisodeOrder] = selected;
+            // default sort order should correspond to the chosen episode order
+            series[DBOnlineSeries.cEpisodeSortOrder] = selected == "DVD" ? "DVD" : "Aired";
+            series.Commit();
+            DoAutoMatching(series, selected);
             listBoxSeries_SelectedIndexChanged(listBoxSeries, null);
             comboMatchOptions.SelectedItem = selected;
         }

@@ -7,7 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("MP-TVSeries")]
 [assembly: AssemblyDescription("MP-TVSeries plugin for MediaPortal")]
-[assembly: AssemblyConfiguration("Release")]
+#if DEBUG
+    [assembly: AssemblyConfiguration("Debug")]
+#else
+    [assembly: AssemblyConfiguration("Release")]
+#endif
+
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
 [assembly: AssemblyCopyright("Copyright © 2010")]

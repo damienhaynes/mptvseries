@@ -123,7 +123,8 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             if (subtitles.Count > 0)
             {
                 List<CItem> choices = GetSubtitleChoices(subtitles);
-                CItem selected = ChooseSubtitleDialog(SeriesName, SeasonIndex, EpisodeIndex, choices);
+
+                CItem selected = ChooseSubtitleDialog(SeriesName, SeasonIndex, EpisodeIndex, Episode[DBEpisode.cFilenameWOPathAndExtension], choices);
 
                 if (selected != null)
                 {
@@ -186,12 +187,30 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             }
         }
 
-        private CItem ChooseSubtitleDialog(string seriesName, int seasonIndex, int episodeIndex, List<CItem> choices)
+        private CItem ChooseSubtitleDialog(string seriesName, int seasonIndex, int episodeIndex, string fileName, List<CItem> choices)
         {
             ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = Translation.CFS_Choose_Correct_Episode;
-            descriptor.m_sItemToMatchLabel = Translation.CFS_Local_Episode_Index;
-            descriptor.m_sItemToMatch = seriesName + " " + seasonIndex + "x" + episodeIndex;
+            if (DBOption.GetOptions(DBOption.cUseFullNameInSubDialog))
+            {
+                if (Settings.isConfig)
+                {
+                    descriptor.m_sTitle = Translation.CFS_Choose_Correct_Episode;
+                    descriptor.m_sItemToMatchLabel = Translation.CFS_Local_Episode_Index;
+                    descriptor.m_sItemToMatch = fileName;
+                }
+                else
+                {
+                    descriptor.m_sTitle = fileName;
+                    descriptor.m_sItemToMatchLabel = string.Empty;
+                    descriptor.m_sItemToMatch = string.Empty;
+                }
+            }
+            else 
+            {
+                descriptor.m_sTitle = Translation.CFS_Choose_Correct_Episode;
+                descriptor.m_sItemToMatchLabel = Translation.CFS_Local_Episode_Index;
+                descriptor.m_sItemToMatch = seriesName + " " + seasonIndex + "x" + episodeIndex;
+            }
             descriptor.m_sListLabel = Translation.CFS_Available_Episode_List;
             descriptor.m_List = choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;

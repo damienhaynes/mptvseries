@@ -121,17 +121,24 @@ namespace WindowPlugins.GUITVSeries
 
         double getRelSortingIndexOfEp(DBEpisode ep)
         {
-            if (ep[DBEpisode.cSeasonIndex] == 0)
+            // consider episode sort order when sorting
+            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
+            bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+
+            string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+            string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
+            if (ep[seasonIndex] == 0)
             {
                 if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
                 {
-                    return 9999 + ep[DBOnlineEpisode.cEpisodeIndex];
+                    return 9999 + ep[episodeIndex];
                 }
                 else
-                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[DBOnlineEpisode.cEpisodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
+                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
             }
             else
-                return ((int)ep[DBEpisode.cEpisodeIndex] + ep[DBOnlineEpisode.cSeasonIndex]*100);
+                return ((int)ep[episodeIndex] + ep[seasonIndex] * 100);
         }
 
         /*
@@ -225,17 +232,36 @@ namespace WindowPlugins.GUITVSeries
                 // has to be grouped by something episode
                 conditions.Add(DBEpisode.TableFields, DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             }
-            
-            string sql = "select distinct " + step.groupedBy.tableField + // tablefield includes table name itself!
-                                 " , count(*) " +
-                                 " from " + step.groupedBy.table.TableName + conditions +
-                                 " group by " + step.groupedBy.tableField +
-                                 step.conds.orderString; // orderstring pointless if actors/genres, so is limitstring (so is limitstring)
-            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
-            MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
+
+            string tableName = step.groupedBy.table.TableName;
+            string tableField = step.groupedBy.tableField;
+            string userEditField = tableField + DBTable.cUserEditPostFix;
+
+            // check if the useredit column exists
+            string sql = "select " + userEditField + " from " + tableName;
+            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);            
+
             if (results.Rows.Count > 0)
             {
-                
+                sql = "select distinct(" +
+                             "case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
+                             "then " + tableField + " else " + userEditField + " " +
+                             "end) as gnr, " +
+                             "count(*) from " + tableName + conditions + " group by gnr" + step.conds.orderString;
+            }
+            else
+            {
+                sql = "select distinct " + tableField +
+                             " , count(*) " +
+                             " from " + tableName + conditions +
+                             " group by " + tableField +
+                             step.conds.orderString;
+
+            }
+            results = DBTVSeries.Execute(sql);
+            MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
+            if (results.Rows.Count > 0)
+            {                
                 for (int index = 0; index < results.Rows.Count; index++)
                 {
                     string tmpItem = results.Rows[index].fields[0];
@@ -289,15 +315,39 @@ namespace WindowPlugins.GUITVSeries
                 switch (m_steps[stepIndex - 1].Type)
                 {
                     case logicalViewStep.type.group:
+                        bool requiresSplit = false; // use sql 'like' for split fields                                             
+
+                        // selected group label
+                        string selectedItem = currentStepSelection[0];
+
                         // we expect to get the selected group's label
-                        if (currentStepSelection[0] == Translation.Unknown) // Unknown really is "" so get all with null values here
-                            conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, "", SQLConditionType.Equal);
-                        else 
-                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) 
-                                // because we split distinct group values such as Drama|Action we can't do an equal compare, use like instead
-								conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Like);
-                            else
-								conditions.Add(m_steps[stepIndex - 1].groupedBy.table.m_fields.FieldDefList, m_steps[stepIndex - 1].groupedBy.rawFieldname, currentStepSelection[0], SQLConditionType.Equal);
+                        // unknown really is "" so get all with null values here
+                        if (selectedItem == Translation.Unknown)
+                            selectedItem = string.Empty;
+                        else
+                            if (m_steps[stepIndex - 1].groupedBy.attempSplit) requiresSplit = true;
+
+                		string tableName = m_steps[stepIndex - 1].groupedBy.table.TableName;
+                        string tableField = tableName + "." + m_steps[stepIndex - 1].groupedBy.rawFieldname;
+                        string userEditField = tableField + DBTable.cUserEditPostFix;                        
+                        string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
+
+                        // check if the useredit column exists
+                        string sql = "select " + userEditField + " from " + tableName;
+                        SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);                        
+
+                        if (results.Rows.Count > 0)
+                        {
+                            sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
+                                     "then " + tableField + " else " + userEditField + " " +
+                                     "end) " + value;
+                        }
+                        else
+                        {
+                            sql = tableField + " " + value;
+                        }
+
+                        conditions.AddCustom(sql);
                         break;
                     case logicalViewStep.type.series:
                         // we expect to get the seriesID as stepSel
@@ -305,10 +355,18 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case logicalViewStep.type.season:
                         // we expect to get the seriesID/seasonIndex as stepSel
-                        conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
+                        
+                        // we want to query episodes using the CombinedSeason if Sort Order is "DVD"
+                        // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
+                        DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
+                        bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                        string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+
+						conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
-						conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cSeasonIndex, currentStepSelection[1], SQLConditionType.Equal);
-                        if (DBOption.GetOptions(DBOption.cSortSpecials)) {
+						conditions.Add(DBOnlineEpisode.TableFields, seasonIndex, currentStepSelection[1], SQLConditionType.Equal);
+                        if (DBOption.GetOptions(DBOption.cSortSpecials) && !SortByDVD)
+                        {
                             conditions.nextIsOr = true;
 							conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
 							conditions.Add(DBOnlineEpisode.TableFields, DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);

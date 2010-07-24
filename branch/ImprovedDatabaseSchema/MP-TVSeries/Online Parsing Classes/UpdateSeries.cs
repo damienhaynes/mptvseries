@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 int result;
                 if (int.TryParse(sSeriesID,out result))
-                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)));
+                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)), MPTVSeriesLog.LogLevel.Debug);
 
                 XmlNode node = null;
                 if (String.IsNullOrEmpty(languageID))

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using WindowPlugins.GUITVSeries.DataBase;
 using WindowPlugins.GUITVSeries.DataClass;
+using WindowPlugins.GUITVSeries.Properties;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {    
@@ -35,8 +36,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
 
         Color Approved = Color.LightGreen;
-        Color SkipColor = Color.Yellow;
-        Color IgnoreColor = Color.Gray;
+        Color SkipColor = Color.LightYellow;
+        Color IgnoreColor = Color.LightGray;
 
         IList<parseResult> givenResults = null;
 
@@ -137,7 +138,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             var dgvcSearch = new DataGridViewTextBoxColumn();
             dgvcSearch.Name = colSearchTXT;
-            dgvcSearch.HeaderText = "Search different Name";
+            dgvcSearch.HeaderText = "Custom Search Name";
             dgvcSearch.Width = 180;
 
             var dgvcSearchOK = new DataGridViewButtonColumn();
@@ -158,7 +159,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridViewIdentifySeries.Columns.Add(dgvcSearchOK);
             dataGridViewIdentifySeries.Columns.Add(dgvcApprove);
 
-            #region Grid Events
+            dataGridViewIdentifySeries.EditMode = DataGridViewEditMode.EditOnEnter;
+
+            #region Grid Events        
             dataGridViewIdentifySeries.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
             {
                 var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
@@ -168,8 +171,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     var cell = row.Cells[e.ColumnIndex];
                     if ((string)cell.Value == searchTip)
                     {
-                        cell.Value = string.Empty;
-                        //cell.Tag = new object(); // prevent auto change back
+                        // make it easier to do custom search, 
+                        // new search name will most likely be like parsed name
+                        cell.Value = row.Cells[colSeries].Value;                       
                     }
                 }
             });
@@ -178,8 +182,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
                 var cell = row.Cells[e.ColumnIndex];
-                // was onlinesearchresult changed?
-
+                
+                // has online search result changed?
                 if (e.ColumnIndex == ColIndexOf(colOSeries))
                 {
                     var actionCell = row.Cells[colAction] as DataGridViewComboBoxCell;
@@ -201,7 +205,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     //orderCell.Items.Clear();                    
                     if (series != null)
                     {
-                        cell.ToolTipText = series[DBOnlineSeries.cSummary];
+                        cell.ToolTipText = AdjustSummaryTooltip(series[DBOnlineSeries.cSummary].ToString());
                         //displayValsInCBCell(orderCell, series[DBOnlineSeries.cEpisodeOrders].ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));                        
                     }
                     else cell.ToolTipText = string.Empty;
@@ -209,15 +213,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 else if (e.ColumnIndex == ColIndexOf(colAction))
                 {
                     // seriesAction
-                    // we color code
+                    // we color code and set icon        
 
                     var reqAction = row.Cells[ColIndexOf(colAction)].Value.ToString();
                     if (reqAction == displayedActions[UserInputResults.SeriesAction.Skip])
-                            row.DefaultCellStyle.BackColor = SkipColor;
+                    {
+                        row.Cells[colImage].Value = Resources.importpending;
+                        row.DefaultCellStyle.BackColor = SkipColor;
+                    }
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.IgnoreAlways])
-                            row.DefaultCellStyle.BackColor = IgnoreColor;
+                    {
+                        row.Cells[colImage].Value = Resources.importignored;
+                        row.DefaultCellStyle.BackColor = IgnoreColor;
+                    }
                     else if (reqAction == displayedActions[UserInputResults.SeriesAction.Approve])
-                            row.DefaultCellStyle.BackColor = Approved;
+                    {
+                        row.Cells[colImage].Value = Resources.importaccept;
+                        row.DefaultCellStyle.BackColor = Approved;
+                    }
                                       
                 }
                 //else if (e.ColumnIndex == ColIndexOf(colSearchTXT))
@@ -265,7 +278,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 var row = new DataGridViewRow();
 
                 var imageCell = new DataGridViewImageCell();
-                //imageCell.Value = ;
+                imageCell.Value = Resources.importupdating;
                 row.Cells.Add(imageCell);
 
                 var seriesCell = new DataGridViewTextBoxCell();
@@ -450,6 +463,27 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             // we no longer need to listen to navigate event
             ImportWizard.OnWizardNavigate -= new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
+        }
+
+        private string AdjustSummaryTooltip(string summary)
+        {
+            string newSummary = string.Empty;
+            string[] words = summary.Split(' ');
+
+            // Build a string for the tooltip that doesnt span whole width of screen
+            int wordCount = 0;
+            foreach (string word in words)
+            {
+                wordCount++;
+                newSummary += word + " ";
+                if (wordCount > 10)
+                {
+                    // insert a newline
+                    newSummary += "\r\n";
+                    wordCount = 0;
+                }
+            }
+            return newSummary;
         }
 
         private void linkLabelCloseDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
