@@ -368,9 +368,19 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         else
         {
           StreamReader reader = new StreamReader(data);
-          String sXmlData = reader.ReadToEnd().Replace('\0', ' ');
+            String sXmlData = string.Empty;
+            try
+            {
+                sXmlData = reader.ReadToEnd().Replace('\0', ' ');
+            }
+            catch (Exception e)
+            {                
+                MPTVSeriesLog.Write("Error reading stream: {0}", e.Message);
+            }
           data.Close();
           reader.Close();
+            if (!string.IsNullOrEmpty(sXmlData))
+            {
           MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
           MPTVSeriesLog.Write(sXmlData, MPTVSeriesLog.LogLevel.Debug);
           MPTVSeriesLog.Write("*************************************", MPTVSeriesLog.LogLevel.Debug);
@@ -383,10 +393,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           }
           catch (XmlException e)
           {
-            // bummer
+                    // Most likely bad xml formatting, tvdb does not use CDATA structures so good luck.
             MPTVSeriesLog.Write("Xml parsing of " + sUrl + " failed (line " + e.LineNumber + " - " + e.Message + ")");
           }
         }
+      }
       }
       return null;
     }

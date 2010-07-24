@@ -88,6 +88,20 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap big_spinner {
+            get {
+                object obj = ResourceManager.GetObject("big_spinner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap busy {
+            get {
+                object obj = ResourceManager.GetObject("busy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap control_play_blue {
             get {
                 object obj = ResourceManager.GetObject("control_play_blue", resourceCulture);
@@ -147,6 +161,13 @@ namespace WindowPlugins.GUITVSeries.Properties {
         internal static System.Drawing.Bitmap textfield_rename {
             get {
                 object obj = ResourceManager.GetObject("textfield_rename", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tick {
+            get {
+                object obj = ResourceManager.GetObject("tick", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

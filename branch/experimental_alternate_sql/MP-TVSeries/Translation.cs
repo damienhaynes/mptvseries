@@ -54,6 +54,12 @@ namespace WindowPlugins.GUITVSeries
         public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";
         public static string Delete = "Delete";
+        public static string SortBy = "Sort By";
+        public static string DVDOrder = "DVD Order";
+        public static string AiredOrder = "Aired Order";
+        public static string AbsoluteOrder = "Absolute Order";
+        public static string Title = "Title";
+        public static string ChangeOnlineMatchOrder = "Change Online Matching Method";
         public static string Remove_series_from_Favourites = "Remove from Favourites";
         public static string Add_series_to_Favourites = "Add to Favourites";
         public static string Force_Local_Scan = "Force Local Scan ";
@@ -85,7 +91,7 @@ namespace WindowPlugins.GUITVSeries
         public static string special = "Special";
         public static string specials = "Specials";
         public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
-        public static string Force_Online_Match = "Force Online Match";
+        public static string Force_Online_Match = "Force New Online Lookup For Series";
         public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
         public static string Actions = "Actions";
@@ -313,6 +319,14 @@ namespace WindowPlugins.GUITVSeries
         public static string Watched = "Watched";
         public static string Writer = "Writer";
         public static string Writers = "Writers";
+        public static string PlaySomething = "Play...";
+        public static string PlayError = "Play error";
+        public static string RandomEpisode = "random episode";
+        public static string FirstUnwatchedEpisode = "first unwatched episode";
+        public static string RandomUnwatchedEpisode = "random unwatched episode";
+        public static string LatestEpisode = "latest episode";
+        public static string UnableToFindAny = "Unable to find any {0}";
+        public static string UnableToFindAnyEpisode = "Unable to find any episodes";
 
         // Subtitles
         public static string GetSubtitlesFrom = "Get subtitles from?";
@@ -345,6 +359,7 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
+        #region Public Methods
         static string path = string.Empty;
         static public void Init()
         {
@@ -434,5 +449,6 @@ namespace WindowPlugins.GUITVSeries
             }
             return langs;
         }
+        #endregion
     }
 }

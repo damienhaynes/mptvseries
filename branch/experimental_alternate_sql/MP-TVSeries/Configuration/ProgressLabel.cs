@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using WindowPlugins.GUITVSeries.Properties;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {
@@ -33,10 +34,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     this.pictureBox1.BackColor = Color.White;
                     break;
                 case ProgressLabelStatus.InProgress:
-                    this.pictureBox1.BackColor = Color.Yellow;
+                    this.pictureBox1.Image = Resources.busy;
                     break;
                 case ProgressLabelStatus.Finished:
-                    this.pictureBox1.BackColor = Color.Green;
+                    this.pictureBox1.Image = Resources.tick;
                     break;
                 default:
                     break;

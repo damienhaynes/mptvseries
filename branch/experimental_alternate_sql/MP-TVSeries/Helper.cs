@@ -29,6 +29,7 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using MediaPortal.Ripper;
 using System.Globalization;
+using System.Reflection;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -99,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
     }
     #endregion
 
-    class Helper
+    public class Helper
     {
         #region List<T> Methods
 
@@ -248,6 +249,30 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Other Public Methods
+
+        /// <summary>
+        /// Resolves skin\\ and thumbs\\ relative paths to absolute.
+        /// Other relative paths are resolved using MediaPortal installation directory.
+        /// Absolute paths are just cleaned.
+        /// </summary>
+        /// <param name="file">Relative or absolute path to resolve</param>
+        /// <returns></returns>
+        public static string getCleanAbsolutePath(string file) {
+            if (!System.IO.Path.IsPathRooted(file)) {
+                // Respect custom skin folders
+                if (file.ToLower().StartsWith("skin\\"))
+                    file = file.Replace("skin", Settings.GetPath(Settings.Path.skin));
+                else if (file.ToLower().StartsWith("thumbs\\"))
+                    file = file.Replace("thumbs", Settings.GetPath(Settings.Path.thumbs));
+                else
+                    file = Helper.PathCombine(Settings.GetPath(Settings.Path.app), file);
+            }
+
+            foreach (char c in System.IO.Path.GetInvalidPathChars())
+                file = file.Replace(c, '_');
+
+            return file;
+        }
 
         /// <summary>
         /// Removes non-existant files from a list of filenames
@@ -502,6 +527,75 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Re-enabling native autoplay.");
                 AutoPlay.StartListening();
+            }
+        }
+
+        public static string UppercaseFirst(string s) {
+            if (string.IsNullOrEmpty(s)) {
+                return string.Empty;
+            }
+            char[] a = s.ToCharArray();
+            a[0] = char.ToUpper(a[0]);
+            return new string(a);
+        }
+
+        public static void GetEpisodeIndexesFromComposite(string compositeID, out int seasonIndex, out int episodeIndex)
+        {
+            seasonIndex = 0;
+            episodeIndex = 0;
+
+            if (string.IsNullOrEmpty(compositeID)) return;
+        
+            string[] splits = compositeID.Split(new char[] { '_' });
+            string[] epComp = splits[1].Split(new char[] { 'x' });
+
+            int.TryParse(epComp[0], out seasonIndex);
+            int.TryParse(epComp[1], out episodeIndex);
+            
+            return;
+        }
+
+        #endregion
+
+        #region Assembly methods
+        public static bool IsAssemblyAvailable(string name, Version ver) {
+            bool result = false;
+
+            MPTVSeriesLog.Write(string.Format("Checking whether assembly {0} is available and loaded...", name), MPTVSeriesLog.LogLevel.Debug);
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly a in assemblies)
+                if (a.GetName().Name == name && a.GetName().Version >= ver) {
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
+                    result = true;
+                    break;
+    }
+
+            if (!result) {
+                MPTVSeriesLog.Write(string.Format("Assembly {0} is not loaded (not available?), trying to load it manually...", name), MPTVSeriesLog.LogLevel.Debug);
+                try {
+                    //Assembly assembly = AppDomain.CurrentDomain.Reflection(new AssemblyName(name));
+                    Assembly assembly = Assembly.ReflectionOnlyLoad(name);
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded successfully.", name), MPTVSeriesLog.LogLevel.Debug);
+                    result = true;
+}
+                catch (Exception e) {
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is unavailable, load unsuccessful: {1}:{2}", name, e.GetType(), e.Message), MPTVSeriesLog.LogLevel.Debug);
+                }
+            }
+
+            return result;
+        }
+
+        public static bool IsPluginEnabled(string name) {
+            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings()) {
+                return xmlreader.GetValueAsBool("plugins", name, false);
+            }
+        }
+
+        public static bool IsSubCentralAvailableAndEnabled {
+            get {
+                return Helper.IsAssemblyAvailable("SubCentral", new Version(0, 9, 0, 0)) && IsPluginEnabled("SubCentral");
             }
         }
 

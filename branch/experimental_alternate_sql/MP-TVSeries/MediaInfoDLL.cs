@@ -218,9 +218,31 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         #region Video Properties
 
-        public string VideoCodec {
+        public string VideoCodec
+        {
             get {
-                string result = this.Get(StreamKind.Video, 0, "Codec");
+                string result = this.Get(StreamKind.Video, 0, "CodecID");
+                MPTVSeriesLog.Write("Video Codec ID: ", result, MPTVSeriesLog.LogLevel.Debug);
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string VideoCodecFormat
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Video, 0, "Format");
+                MPTVSeriesLog.Write("Video Format: ", result, MPTVSeriesLog.LogLevel.Debug);
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string VideoFormatProfile
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Video, 0, "Format_Profile");
+                MPTVSeriesLog.Write("Video Format Profile: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -228,6 +250,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string VideoBitrate{
             get {
                 string result = this.Get(StreamKind.Video, 0, "BitRate");
+                MPTVSeriesLog.Write("Video Bit Rate: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -235,6 +258,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string VideoWidth {
             get {
                 string result = this.Get(StreamKind.Video, 0, "Width");
+                MPTVSeriesLog.Write("Video Width: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -242,20 +266,23 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string VideoHeight {
             get {
                 string result = this.Get(StreamKind.Video, 0, "Height");
+                MPTVSeriesLog.Write("Video Height: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
 
         public string VideoAspectRatio {
             get {
-                string result = this.Get(StreamKind.Video, 0, "AspectRatio");
+                string result = this.Get(StreamKind.Video, 0, "DisplayAspectRatio");
+                MPTVSeriesLog.Write("Video Aspect Ratio: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
 
         public string VideoPlaytime {
             get {
-                string result = this.Get(StreamKind.Video, 0, "PlayTime");
+                string result = this.Get(StreamKind.Video, 0, "Duration");
+                MPTVSeriesLog.Write("Video Duration: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -263,6 +290,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string VideoFramesPerSecond {
             get {
                 string result = this.Get(StreamKind.Video, 0, "FrameRate");
+                MPTVSeriesLog.Write("Video Framerate: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -273,7 +301,28 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         public string AudioCodec {
             get {
-                string result = this.Get(StreamKind.Audio, 0, "Codec");
+                string result = this.Get(StreamKind.Audio, 0, "CodecID");
+                MPTVSeriesLog.Write("Audio Codec ID: ", result, MPTVSeriesLog.LogLevel.Debug);
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string AudioCodecFormat
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Audio, 0, "Format");
+                MPTVSeriesLog.Write("Audio Format: ", result, MPTVSeriesLog.LogLevel.Debug);
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        public string AudioFormatProfile
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Audio, 0, "Format_Profile");
+                MPTVSeriesLog.Write("Audio Format Profile: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -281,6 +330,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string AudioBitrate {
             get {
                 string result = this.Get(StreamKind.Audio, 0, "BitRate");
+                MPTVSeriesLog.Write("Audio Bit Rate: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -288,6 +338,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public string AudioStreamCount {
             get {
                 string result = this.Get(StreamKind.Audio, 0, "StreamCount");
+                MPTVSeriesLog.Write("Audio Stream Count: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -308,7 +359,8 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         public string SubtitleCount {
             get {
-                string result = this.Get(StreamKind.General, 0, "TextCount"); ;
+                string result = this.Get(StreamKind.General, 0, "TextCount");
+                MPTVSeriesLog.Write("Subtitle Count: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }
         }
@@ -318,7 +370,9 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         #region Audio Methods
 
         public string GetAudioChannelCount(int stream) {
-            return this.Get(StreamKind.Audio, (int)stream, "Channel(s)");
+            string result = this.Get(StreamKind.Audio, (int)stream, "Channel(s)");
+            MPTVSeriesLog.Write(string.Format("Audio Channel Count [{0}]: {1}", stream.ToString(), result), MPTVSeriesLog.LogLevel.Debug);
+            return result;
         }
 
         #endregion

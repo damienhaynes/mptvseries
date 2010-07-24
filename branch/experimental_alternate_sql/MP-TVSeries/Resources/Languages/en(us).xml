@@ -47,7 +47,7 @@
 	<string Field="special" Original="Special">Special</string>
 	<string Field="specials" Original="Specials">Specials</string>
 	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"You are about to permanently delete {0} physical file(s).\nWould you like to proceed?"</string>
-	<string Field="Force_Online_Match" Original="Force Online Match">Force Online Match</string>
+	<string Field="Force_Online_Match" Original="Force New Online Lookup For Series">Force New Online Lookup For Series</string>
 	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Load via NewsLeecher</string>
 	<string Field="Download" Original="Download">Download</string>
 	<string Field="Actions" Original="Actions">Actions</string>
@@ -262,5 +262,21 @@
 
 	<string Field="UnableToDelete" Original="Unable to Delete">Unable to Delete</string>
 	<string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Unable to Delete File: {0}</string>
+  
+	<string Field="PlaySomething" Original="Play...">Play...</string>
+	<string Field="PlayError" Original="Play error">Play error</string>
+	<string Field="RandomEpisode" Original="random episode">random episode</string>
+	<string Field="FirstUnwatchedEpisode" Original="first unwatched episode">first unwatched episode</string>
+	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">random unwatched episode</string>
+	<string Field="LatestEpisode" Original="latest episode">latest episode</string>
+	<string Field="UnableToFindAny" Original="Unable to find any {0}">Unable to find any {0}</string>
+	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Unable to find any episode</string>
+
+  <string Field="SortBy" Original="Sort By">Sort By</string>
+  <string Field="DVDOrder" Original="DVD Order">DVD Order</string>
+  <string Field="AiredOrder" Original="Aired Order">Aired Order</string>
+  <string Field="AbsoluteOrder" Original="Absolute Order">Absolute Order</string>  
+  <string Field="Title" Original="Title">Title</string>
+  <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Change Online Matching Method</string>
   
 </strings>

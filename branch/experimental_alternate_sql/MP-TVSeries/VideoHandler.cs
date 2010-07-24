@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -43,6 +44,7 @@ namespace WindowPlugins.GUITVSeries
         #region Vars
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;      
+        DBEpisode m_previousEpisode;
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
         public event rateRequest RateRequestOccured;
@@ -69,7 +71,8 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackStopped += new MediaPortal.Player.g_Player.StoppedHandler(OnPlayBackStopped);
             g_Player.PlayBackEnded += new MediaPortal.Player.g_Player.EndedHandler(OnPlayBackEnded);
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
-			//g_Player.PlayBackChanged += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
+            g_Player.PlayBackChanged += new g_Player.ChangedHandler(OnPlaybackChanged);
+            w.WorkerSupportsCancellation = true;
             w.DoWork += new System.ComponentModel.DoWorkEventHandler(w_DoWork);
         }
 
@@ -85,6 +88,7 @@ namespace WindowPlugins.GUITVSeries
                 if (episode[DBEpisode.cFilename].ToString().Length == 0)
                     return false;
 
+                m_previousEpisode = m_currentEpisode;
                 m_currentEpisode = episode;
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 
@@ -92,6 +96,47 @@ namespace WindowPlugins.GUITVSeries
                 string filename = m_currentEpisode[DBEpisode.cFilename];
                 m_bIsImageFile = Helper.IsImageFile(filename);                               
                 
+                #region Invoke Before Playback
+                // see if we have an invokeOption set up
+                string invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback);                
+                if (!string.IsNullOrEmpty(invoke))
+                {
+                    string invokeArgs = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlaybackArgs);
+                    try
+                    {
+                        // replace any placeholders in the arguments for the script if any have been supplied.
+                        if (!string.IsNullOrEmpty(invokeArgs))
+                        {
+                            invokeArgs = FieldGetter.resolveDynString(invokeArgs, m_currentEpisode, true);
+                        }
+                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
+                        
+                        // use ProcessStartInfo instead of Process.Start(string) as latter produces a "cannot find file"
+                        // error if you pass in command line arguments.
+                        // also allows us to run the script hidden, preventing, for example, a command prompt popping up.
+                        ProcessStartInfo psi = new ProcessStartInfo(invoke, invokeArgs);
+                        psi.WindowStyle = ProcessWindowStyle.Hidden;
+                        Process proc = System.Diagnostics.Process.Start(psi);
+                        MPTVSeriesLog.Write(string.Format("Sucessfully Invoked BeforeFilePlay Command: '{0}' '{1}'",  invoke, invokeArgs));
+
+                        // if not present in database this evaluates to false. If present and not a valid bool then
+                        // it evaluates to true
+                        bool waitForExit = (bool)DBOption.GetOptions(DBOption.cInvokeExtBeforePlaybackWaitForExit);
+                        
+                        // if true this thread will wait for the external user script to complete before continuing.
+                        if (waitForExit)
+                        {
+                            proc.WaitForExit();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MPTVSeriesLog.Write(string.Format("Unable to Invoke BeforeFilePlay Command: '{0}' '{1}'",  invoke, invokeArgs));
+                        MPTVSeriesLog.Write(e.Message);
+                    }
+                }
+                #endregion
+
                 #region Removable Media Handling
                 bool isOnRemovable = false;
                 if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
@@ -178,6 +223,8 @@ namespace WindowPlugins.GUITVSeries
             if (!clear)
                 System.Threading.Thread.Sleep(2000);
             
+            if (w.CancellationPending) return;
+            
             SetGUIProperties((bool)e.Argument);
         }
 
@@ -191,26 +238,89 @@ namespace WindowPlugins.GUITVSeries
         /// <param name="clear">Clears the properties instead of filling them if True</param>
         void SetGUIProperties(bool clear)
         {
-            DBSeries series = null;
-            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
-
             if (m_currentEpisode == null) return;
 
-			// Show Plot in OSD or Hide Spoilers
-            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) || m_currentEpisode[DBOnlineEpisode.cWatched])
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cEpisodeSummary]);                
-            else
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? "" : Translation._Hidden_to_prevent_spoilers_);
+            DBSeries series = null;
+            if(!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            DBSeason season = null;
+            if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
+
+			// Show Plot in OSD or Hide Spoilers (note: FieldGetter takes care of that)         
+            GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeMain, m_currentEpisode));
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
+            string osdImage = string.Empty;
+            //bool hiddenEpLogo = false;
+            if (!clear)
+            {
+                foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoOSDImages)
+                {
+                    switch (kvp.Key) 
+                    {
+                        case "episode":
 			if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])                
-                MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode)));
+                                osdImage = ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode));
+                            break;
+                        case "season":
+                            osdImage = season.Banner;
+                            break;
+                        case "series":
+                            osdImage = series.Poster;
+                            break;
+                        case "custom":
+                            string value = replaceDynamicFields(kvp.Value);
+                            string file = Helper.getCleanAbsolutePath(value);
+                            if (System.IO.File.Exists(file))
+                                osdImage = file;
+                            break;
+                    }
+
+                    osdImage = osdImage.Trim();
+                    if (string.IsNullOrEmpty(osdImage)) continue;
+                    else break;
+                }
+            }
+            GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
+
+            // double check, i don't want play images to be cleared on ended or stopped...
+            if (w.CancellationPending) return;
+
+            foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoPlayImages)
+            {
+                if (!clear)
+                {
+                    string value = replaceDynamicFields(kvp.Value);
+                    string file = Helper.getCleanAbsolutePath(value);
+                    if (System.IO.File.Exists(file))
+                    {
+                        MPTVSeriesLog.Write(string.Format("Setting play image {0} for property {1}", file, kvp.Key), MPTVSeriesLog.LogLevel.Debug);
+                        GUIPropertyManager.SetProperty(kvp.Key, clear ? " " : file);
+                    }
+                }
 			else
-				MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? "" : series.Poster);
+                {
+                    MPTVSeriesLog.Write(string.Format("Clearing play image for property {0}", kvp.Key), MPTVSeriesLog.LogLevel.Debug);
+                    GUIPropertyManager.SetProperty(kvp.Key, " ");
+                }
+            }
 			
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : m_currentEpisode.onlineEpisode.CompleteTitle);            
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : series[DBOnlineSeries.cGenre].ToString().Trim('|').Replace("|", ", "));
+            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);            
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
+            GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeSubtitle, m_currentEpisode));
+        }
+
+        string replaceDynamicFields(string value)
+        {
+            string result = value;
+
+            Regex matchRegEx = new Regex(@"\<[a-zA-Z\.]+\>");
+            foreach (Match m in matchRegEx.Matches(value))
+            {
+                string resolvedValue = FieldGetter.resolveDynString(m.Value, m_currentEpisode, false);
+                result = result.Replace(m.Value, resolvedValue);
+            }
+
+            return result;
         }
 
         void MarkEpisodeAsWatched(DBEpisode episode)
@@ -229,7 +339,7 @@ namespace WindowPlugins.GUITVSeries
             // Update Episode Counts
             DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            DBSeason.UpdatedEpisodeCounts(series, season);           
+            DBSeason.UpdateEpisodeCounts(series, season);           
         }
 
         /// <summary>
@@ -258,26 +368,18 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                // see if we have an invokeOption set up
-                string invoke;
-                if((invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtBeforePlayback)) != null && !string.IsNullOrEmpty(invoke))
-                {
-                    try
-                    {
-                        invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
-                        System.Diagnostics.Process.Start(invoke);
-                        MPTVSeriesLog.Write("Sucessfully Invoked BeforeFilePlay Command: " + invoke);
-                    }
-                    catch (Exception e)
-                    {
-                        MPTVSeriesLog.Write("Unable to Invoke BeforeFilePlay Command: " + invoke);
-                        MPTVSeriesLog.Write(e.Message);
-                    }
-                }
-                
                 // Start Listening to any External Player Events
                 listenToExternalPlayerEvents = true;
                 
+                #region Publish Play properties for InfoService plugin
+                string seriesName = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
+                string seasonID = m_currentEpisode[DBEpisode.cSeasonIndex];
+                string episodeID = m_currentEpisode[DBEpisode.cEpisodeIndex];
+                string episodeName = m_currentEpisode[DBEpisode.cEpisodeName];
+                GUIPropertyManager.SetProperty("#TVSeries.Extended.Title", string.Format("{0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                MPTVSeriesLog.Write(string.Format("#TVSeries.Extended.Title: {0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
+                #endregion
+
                 // Play File
                 result = g_Player.Play(filename, g_Player.MediaType.Video);
                 
@@ -307,6 +409,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
+                if (w.IsBusy) w.CancelAsync();
                 LogPlayBackOp("stopped", filename);
                 try
                 {
@@ -315,6 +418,8 @@ namespace WindowPlugins.GUITVSeries
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
+                        m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode.Commit();
                         PlaybackOperationEnded(true);
                     }
                     else
@@ -325,6 +430,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                     #endregion
                     
+                    m_currentEpisode = null;
+                    m_previousEpisode = null;
                 }
                 catch (Exception e)
                 {
@@ -337,15 +444,56 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
+                if (w.IsBusy) w.CancelAsync();
                 LogPlayBackOp("ended", filename);
                 try
                 {
                     m_currentEpisode[DBEpisode.cStopTime] = 0;
+                    m_currentEpisode.Commit();
                     PlaybackOperationEnded(true);
+
+                    m_currentEpisode = null;
+                    m_previousEpisode = null;
                 }
                 catch (Exception e)
                 {
                     MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlayBackEnded()\r\n" + e.ToString());
+                }
+            }
+        }
+
+        void OnPlaybackChanged(g_Player.MediaType type, int timeMovieStopped, string filename)
+        {
+            if (PlayBackOpWasOfConcern(g_Player.IsVideo? g_Player.MediaType.Video : g_Player.MediaType.Unknown, g_Player.CurrentFile))
+            {
+                if (w.IsBusy) w.CancelAsync();
+                LogPlayBackOp("changed", g_Player.CurrentFile);
+                try 
+                {
+                    #region Set Resume Point or Watched
+                    double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
+                    if (!m_previousEpisode[DBOnlineEpisode.cWatched]
+                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100) 
+                    {
+                        m_previousEpisode[DBEpisode.cStopTime] = 0;
+                        m_previousEpisode.Commit();
+                        MPTVSeriesLog.Write("This episode counts as watched");
+                        MarkEpisodeAsWatched(m_previousEpisode);
+                        SetGUIProperties(true);
+                    }
+                    else
+                    {
+                        m_previousEpisode[DBEpisode.cStopTime] = timeMovieStopped;
+                        m_previousEpisode.Commit();
+                        SetGUIProperties(true);
+                    }
+                    #endregion
+
+                    m_previousEpisode = null;
+                }
+                catch (Exception e)
+                {
+                    MPTVSeriesLog.Write("TVSeriesPlugin.VideoHandler.OnPlaybackChanged()\r\n" + e.ToString());
                 }
             }
         }
@@ -388,9 +536,19 @@ namespace WindowPlugins.GUITVSeries
         #region Helpers
         bool PlayBackOpIsOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename)
         {
+            if (string.IsNullOrEmpty(filename)) return false;
+
             return (m_currentEpisode != null && 
                     type == g_Player.MediaType.Video && 
                     m_currentEpisode[DBEpisode.cFilename] == filename);
+        }
+
+        bool PlayBackOpWasOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename) {
+            if (string.IsNullOrEmpty(filename)) return false;
+
+            return (m_previousEpisode != null &&
+                    type == g_Player.MediaType.Video &&
+                    m_previousEpisode[DBEpisode.cFilename] == filename);
         }
 
         void PlaybackOperationEnded(bool countAsWatched)
@@ -409,22 +567,45 @@ namespace WindowPlugins.GUITVSeries
             }
             SetGUIProperties(true); // clear GUI Properties
 
-            // see if we have an invokeOption set up
-            string invoke;
-            if (countAsWatched && (invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback)) != null && !string.IsNullOrEmpty(invoke))
+            #region Invoke After Playback
+            string invoke = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlayback);
+            if (countAsWatched && !string.IsNullOrEmpty(invoke))
             {
+                string invokeArgs = (string)DBOption.GetOptions(DBOption.cInvokeExtAfterPlaybackArgs);
                 try
                 {
+                    // replace any placeholders in the arguments for the script if any have been supplied.
+                    if (!string.IsNullOrEmpty(invokeArgs))
+                    {
+                        invokeArgs = FieldGetter.resolveDynString(invokeArgs, m_currentEpisode, true);
+                    }
                     invoke = FieldGetter.resolveDynString(invoke, m_currentEpisode, true);
-                    System.Diagnostics.Process.Start(invoke);
-                    MPTVSeriesLog.Write("Sucessfully Invoked AfterFilePlay Command: " + invoke);
+
+                    // use ProcessStartInfo instead of Process.Start(string) as latter produces a "cannot find file"
+                    // error if you pass in command line arguments.
+                    // also allows us to run the script hidden, preventing, for example, a command prompt popping up.
+                    ProcessStartInfo psi = new ProcessStartInfo(invoke, invokeArgs);
+                    psi.WindowStyle = ProcessWindowStyle.Hidden;
+                    Process proc = System.Diagnostics.Process.Start(psi);
+                    MPTVSeriesLog.Write(string.Format("Sucessfully Invoked AfterFilePlay Command: '{0}' '{1}'", invoke, invokeArgs));
+
+                    // if not present in database this evaluates to false. If present and not a valid bool then
+                    // it evaluates to true
+                    bool waitForExit = (bool)DBOption.GetOptions(DBOption.cInvokeExtAfterPlaybackWaitForExit);
+
+                    // if true this thread will wait for the external user script to complete before continuing.
+                    if (waitForExit)
+                    {
+                        proc.WaitForExit();
+                }
                 }
                 catch (Exception e)
                 {
-                    MPTVSeriesLog.Write("Unable to Invoke AfterFilePlay Command: " + invoke);
+                    MPTVSeriesLog.Write(string.Format("Unable to Invoke ExtAfterPlayback Command: '{0}' '{1}'", invoke, invokeArgs));
                     MPTVSeriesLog.Write(e.Message);
                 }
             }
+            #endregion
         }
 
         void LogPlayBackOp(string OperationType, string filename)

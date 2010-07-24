@@ -27,7 +27,7 @@ using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class Fanart : IDisposable
+    public class Fanart : IDisposable
     {
         #region config Constants
         

@@ -44,6 +44,8 @@
             // dataGridViewIdentifySeries
             // 
             this.dataGridViewIdentifySeries.AllowUserToAddRows = false;
+            this.dataGridViewIdentifySeries.AllowUserToDeleteRows = false;
+            this.dataGridViewIdentifySeries.AllowUserToResizeRows = false;
             this.dataGridViewIdentifySeries.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -52,6 +54,7 @@
             this.dataGridViewIdentifySeries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewIdentifySeries.Location = new System.Drawing.Point(21, 72);
             this.dataGridViewIdentifySeries.Name = "dataGridViewIdentifySeries";
+            this.dataGridViewIdentifySeries.RowHeadersVisible = false;
             this.dataGridViewIdentifySeries.Size = new System.Drawing.Size(531, 308);
             this.dataGridViewIdentifySeries.TabIndex = 0;
             // 

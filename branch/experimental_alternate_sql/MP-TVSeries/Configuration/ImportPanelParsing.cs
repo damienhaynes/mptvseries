@@ -13,6 +13,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
     public partial class ImportPanelParsing : UserControl
     {        
         public event UserFinishedEditingDelegate UserFinishedEditing;
+        public delegate void ParsingGridPopulatedDelegate();
+        public event ParsingGridPopulatedDelegate ParsingGridPopulated;
 
         public ImportPanelParsing()
         {
@@ -127,9 +129,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             this.dataGridViewReview.ResumeLayout();
 
-            dataGridViewReview.EditMode = DataGridViewEditMode.EditOnEnter;
+            // when we support custom fields in importer this can always be true
+            if (dataGridViewReview.ColumnCount < 9 && dataGridViewReview.Rows.Count > 0) lnkAdd.Visible = true;
 
             updateCount();
+
+            pictureBoxWork.Visible = false;
         }
 
         void updateCount()
@@ -143,6 +148,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         public void Init()
         {
+            lnkAdd.Visible = false;
+
             ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
 
             DoLocalParsing();
@@ -151,14 +158,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void DoLocalParsing()
         {            
             LocalParse runner = new LocalParse();
-            runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler( result => 
+            runner.LocalParseCompleted += new LocalParse.LocalParseCompletedHandler(//runner_LocalParseCompleted);
+                results => 
                 {
-                    allFoundFiles = result.Select(r => r.PathPair).ToList();
-                    OnlineParsing.RemoveFilesInDB(result);
-                    this.labelWaitParse.Text = "FileParsing is done, displaying Results...";
-                    origResults = result;
-                    FillGrid(result);
+                    allFoundFiles = results.Select(r => r.PathPair).ToList();
+                    OnlineParsing.RemoveFilesInDB(ref results);
+                    this.labelWaitParse.Text = "Local File Parsing is done, displaying Results...";
+                    MPTVSeriesLog.Write(this.labelWaitParse.Text);
+                    origResults = results.ToList<parseResult>();                    
+                    FillGrid(results);
                     this.labelWaitParse.Text = "Please make changes to the Results below, and/or add files. Click Next to continue.";
+                    // fire off event so user can click Next in wizard
+                    if (ParsingGridPopulated != null)
+                        ParsingGridPopulated();
                 });
             runner.AsyncFullParse();
         }
@@ -198,6 +210,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             List<parseResult> changes = new List<parseResult>();
 
+            Dictionary<string, parseResult> origParseResults = origResults.ToDictionary(pr => pr.full_filename, pr => pr);
+
             foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
                 if (includeDisabled || (bool)row.Cells[0].Value == true)
@@ -207,8 +221,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     {
                         if (row.Tag is parseResult)
                         {
-                            var origPR = origResults.SingleOrDefault(pr => pr.full_filename == (row.Tag as parseResult).full_filename);
-                            if (origPR != null)
+                            //var origPR = origResults.SingleOrDefault(pr => pr.full_filename == (row.Tag as parseResult).full_filename);
+                            
+                            parseResult origPR;
+                            if (origParseResults.TryGetValue((row.Tag as parseResult).full_filename, out origPR))
+                            //if (origPR != null)
                             {
                                 origPR.success = (bool)row.Cells[0].Value == true;
                                 var colname = uniqueCols[i].Name;
@@ -237,18 +254,43 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void lnkAdd_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.groupBoxAddCol.Visible = true;
-            this.textBoxAddCol.Focus();
+            this.comboBoxAddColumn.Focus();
         }
 
         private void buttonAddColOK_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.textBoxAddCol.Text))
+            if (string.IsNullOrEmpty(this.comboBoxAddColumn.Text))
                 MessageBox.Show("Please enter the name of the column");
-            else if (this.uniqueCols.Contains(this.textBoxAddCol.Text) || this.userCols.Contains(this.textBoxAddCol.Text))
+            else if (this.uniqueCols.Contains(this.comboBoxAddColumn.Text) || this.userCols.Contains(this.comboBoxAddColumn.Text))
                 MessageBox.Show("This Column already exists");
             else
             {
-                this.userCols.Add(this.textBoxAddCol.Text);
+                string colName = string.Empty;
+                switch (this.comboBoxAddColumn.Text)
+                {
+                    case "Series Name":
+                        colName = DBSeries.cParsedName;
+                        break;
+                    case "Season Index":
+                        colName = DBSeason.cIndex;
+                        break;
+                    case "Episode Index":
+                        colName = DBEpisode.cEpisodeIndex;
+                        break;
+                    case "Episode Index 2":
+                        colName = DBEpisode.cEpisodeIndex2;
+                        break;
+                    case "File Extension":
+                        colName = DBEpisode.cExtension;
+                        break;
+                    case "Episode Name":
+                        colName = DBEpisode.cEpisodeName;
+                        break;
+                    default:
+                        colName = this.comboBoxAddColumn.Text;
+                        break;
+                }
+                this.userCols.Add(colName);
                 this.groupBoxAddCol.Visible = false;
                 RefreshGrid();
             }
@@ -264,6 +306,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             foreach (DataGridViewCell cell in changes.Cells)
             {
                 var colname = dataGridViewReview.Columns[cell.ColumnIndex].Name;
+                if (colname == "Status")
+                    orig.success = (bool)cell.Value;
                 if (colname != "Filename" &&
                     colname != "Status")
                 {
@@ -286,9 +330,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         string filterDefault = "Filter by..";
-        bool clearedByClick = false;
+        //bool clearedByClick = false;
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
+            Filter();
+            /*
             if (textBoxFilter.Text == string.Empty)
             {
                 if (!clearedByClick)
@@ -299,6 +345,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else if (textBoxFilter.Text != filterDefault)
                 Filter(this.textBoxFilter.Text);
+            */
 
         }
 
@@ -306,7 +353,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (textBoxFilter.Text == filterDefault)
             {
-                clearedByClick = true;
+                //clearedByClick = true;
                 textBoxFilter.Text = string.Empty;
             }
         }
@@ -337,13 +384,56 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 });
         }
 
+        bool filteringResultForRow(DataGridViewRow row)
+        {
+            bool matches = false;
+            foreach (DataGridViewCell cell in row.Cells)
+            {
+                if (textBoxFilter.Text != filterDefault && textBoxFilter.Text != string.Empty)
+                {
+                    if (cell.Value != null && cell.Value.ToString().ToLower().Contains(textBoxFilter.Text.ToLower()))
+                    {
+                        matches = true;
+                        break;
+                    }
+                }
+                else
+                    matches = true;
+            }
+
+            bool matchesManual = false;
+            if (checkFilterMan.Checked)
+            {
+                parseResult pr = row.Tag as parseResult;
+                matchesManual = pr != null && pr.match_filename == pr.full_filename;
+            }
+            else
+                matchesManual = true;
+
+            return matches && matchesManual;
+        }
+
+        void Filter()
+        {
+            dataGridViewReview.SuspendLayout();
+
+            foreach (DataGridViewRow row in dataGridViewReview.Rows)
+            {
+                row.Visible = filteringResultForRow(row);
+            }
+            
+            dataGridViewReview.ResumeLayout();
+            updateCount();
+
+        }
+
         void Filter(Func<DataGridViewRow, bool> filter)
         {
             dataGridViewReview.SuspendLayout();
             
             foreach (DataGridViewRow row in dataGridViewReview.Rows)
             {
-                row.Visible = filter(row); ;
+                row.Visible = filter(row);
             }
             dataGridViewReview.ResumeLayout();
             updateCount();
@@ -380,7 +470,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             contextMenuStripChangeCell.Items.Clear();
             parseResult origpr = dataGridViewReview.Rows[cell.RowIndex].Tag as parseResult;
             contextMenuStripChangeCell.Items.Add("File: " + origpr.full_filename);
-            contextMenuStripChangeCell.Items.Add("Matched by: " + origpr.parser.RegexpMatched);
+            contextMenuStripChangeCell.Items.Add(string.Format("Matched using expression [{0}]:", origpr.parser.RegexpMatchedIndex));
+            contextMenuStripChangeCell.Items.Add(origpr.parser.RegexpMatched);
 
             // for enabled column simply offer to change to all
             if (cell is DataGridViewCheckBoxCell && cell.ColumnIndex == 0)
@@ -439,11 +530,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             // add them to the origlist
             if (origResults == null) origResults = new List<parseResult>();
-            origResults.AddRange(parseResult);
+            foreach (parseResult pr in parseResult)
+            {
+                if (origResults.Find(match => match.full_filename == pr.full_filename) == null)
+                    origResults.Add(pr);
+            }
 
             // now merge them with the changes
             List<parseResult> allResults = (List<parseResult>)IdentifyChanges(true);
-            allResults.AddRange(parseResult);
+            foreach (parseResult pr in parseResult)
+            {
+                if (allResults.Find(match => match.full_filename == pr.full_filename) == null)
+                    allResults.Add(pr);
+            }
 
             // and refresh the grid
             FillGrid(allResults);
@@ -463,6 +562,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void checkFilterMan_CheckedChanged(object sender, EventArgs e)
         {
+            Filter();
+            /*
             if (checkFilterMan.Checked)
             {
                 // we identify manually added as having the same fullfilename as matchfilename
@@ -474,6 +575,21 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     });
             }
             else RefreshGrid();
+            */
+        }
+
+        void dataGridViewReview_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewReview.CurrentCell.ColumnIndex == 0 && (bool)dataGridViewReview.CurrentCell.Value)
+                dataGridViewReview.CurrentRow.DefaultCellStyle.BackColor = Color.LightGreen;
+            else
+                dataGridViewReview.CurrentRow.DefaultCellStyle.BackColor = Color.LemonChiffon;
+    }
+
+        void dataGridViewReview_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewReview.CurrentCell.ColumnIndex == 0 && dataGridViewReview.IsCurrentCellDirty)
+                dataGridViewReview.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
     }

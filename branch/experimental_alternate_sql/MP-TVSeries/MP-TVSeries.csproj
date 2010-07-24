@@ -1,14 +1,4 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugGUI|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -47,7 +37,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;inclDownloaders</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -63,20 +53,6 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugConfig\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugGUI|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\DebugGUI\</OutputPath>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -85,32 +61,16 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugConfig|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\DebugConfig\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInclDownloaders|AnyCPU' ">
-    <OutputPath>bin\ReleaseInclDownloaders\</OutputPath>
-    <DefineConstants>TRACE;inclDownloaders</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInclDownloaders|x86' ">
-    <OutputPath>bin\x86\ReleaseInclDownloaders\</OutputPath>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core, Version=1.0.5.32056, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Core, Version=1.1.0.16045, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=1.0.5.32058, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Databases, Version=1.1.0.16047, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="Dialogs, Version=1.0.5.32061, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Dialogs, Version=1.1.0.16051, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
     </Reference>
@@ -118,31 +78,35 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=5.0.8.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+    <Reference Include="MySql.Data, Version=5.1.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
+    </Reference>
+    <Reference Include="SubCentral, Version=0.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubCentral.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MediaRenamer\MediaRenamer\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\SQLite.NET\bin\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utils, Version=2.2.7.32052, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Utils, Version=2.2.7.16040, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
     </Reference>
-    <Reference Include="WindowPlugins, Version=1.0.5.32072, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="WindowPlugins, Version=1.1.0.16062, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\WindowPlugins.dll</HintPath>
     </Reference>
@@ -335,9 +299,6 @@
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\DatabaseConfigurator.resx">
-      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\DeleteDialog.resx">
       <DependentUpon>DeleteDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -356,18 +317,23 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
       <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
       <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
       <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportWizard.resx">
       <DependentUpon>ImportWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ImportPanelProgress.resx">
       <DependentUpon>ImportPanelProgress.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\loadingDisplay.resx">
       <DependentUpon>loadingDisplay.cs</DependentUpon>
@@ -391,6 +357,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ProgressLabel.resx">
       <DependentUpon>ProgressLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
@@ -434,6 +401,8 @@
     <None Include="Resources\Images\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Images\busy.gif" />
+    <None Include="Resources\Images\big_spinner.gif" />
     <Content Include="Resources\Images\control_play_blue.png" />
     <Content Include="Resources\Images\folder_explore.png" />
     <None Include="Resources\Images\importaccept.png" />
@@ -443,6 +412,7 @@
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
+    <None Include="Resources\Images\tick.png" />
     <Content Include="Resources\Languages\cs.xml" />
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />
@@ -452,21 +422,17 @@
     <Content Include="Resources\Languages\fr.xml" />
     <Content Include="Resources\Languages\he.xml" />
     <Content Include="Resources\Languages\it.xml" />
+    <Content Include="Resources\Languages\ko.xml" />
     <Content Include="Resources\Languages\nl.xml" />
     <Content Include="Resources\Languages\no%28nb%29.xml" />
     <Content Include="Resources\Languages\no.xml" />
     <Content Include="Resources\Languages\pl.xml" />
+    <Content Include="Resources\Languages\pt-BR.xml" />
     <Content Include="Resources\Languages\pt_pt.xml" />
     <Content Include="Resources\Languages\ru.xml" />
     <Content Include="Resources\Languages\ru_utf8.xml" />
     <Content Include="Resources\Languages\sv.xml" />
     <None Include="Resources\Images\tv_series_logo_noreflection.png" />
-    <Compile Include="Configuration\DatabaseConfigurator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Configuration\DatabaseConfigurator.Designer.cs">
-      <DependentUpon>DatabaseConfigurator.cs</DependentUpon>
-    </Compile>
     <Compile Include="Configuration\ImportPanelEpID.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -549,11 +515,11 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>rem xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
-rem xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-rem xcopy "$(TargetDir)MediaInfo.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-rem xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
-rem xcopy "$(ProjectDir)\..\External\7z.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
-    <PreBuildEvent>rem subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)\plugins\windows" /Y
+xcopy "$(TargetDir)ICSharpCode.SharpZipLib.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)MediaInfo.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(TargetDir)SubtitleDownloader.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y
+xcopy "$(ProjectDir)\..\External\7z.dll" "..\..\..\..\mediaportal\xbmc\bin\$(ConfigurationName)" /Y</PostBuildEvent>
+    <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>

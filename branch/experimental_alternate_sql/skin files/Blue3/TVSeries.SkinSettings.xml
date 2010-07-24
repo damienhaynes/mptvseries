@@ -35,6 +35,49 @@
 		
 		Only the layouts defined below are currently supported for this skin: Blue3
 	-->
+	
+	<!-- Position of 'NEW' stamp in thumb views -->
+	<thumbstamp>
+		<widebanners>
+			<posx>668</posx>
+			<posy>-5</posy>
+		</widebanners>
+		<posters>
+			<posx>580</posx>
+			<posy>-5</posy>
+		</posters>
+	</thumbstamp>
+
+	<!-- Define the images loaded in Video OSD -->
+	<!-- Note: You can reorder the items to set priority -->
+	<!-- Values of custom tag is a path to custom image, where you could use:
+			thumbs\ relative path - <![CDATA[thumbs\Media\custom.png]]>,
+			skin\ relative path - <![CDATA[skin\*SKIN NAME*\Media\custom.png]]>,
+			absolute path - <![CDATA[C:\Media\custom.png]]>
+			with any of episode/season/series database fields (<Series.origName> for example)
+	-->
+	<videoosdimages import="true">
+		<series use="true" />		
+		<season use="true" />
+		<episode use="true" />
+		<!--<custom use="false"><![CDATA[skin\blue3wide\Media\custom.png]]></custom>-->
+	</videoosdimages>
+
+	<!-- Define the images loaded in properties during play -->
+	<!-- Values are path to custom image, where you could use:
+			thumbs\ relative path - <![CDATA[thumbs\Media\custom.png]]>,
+			skin\ relative path - <![CDATA[skin\*SKIN NAME*\Media\custom.png]]>,
+			absolute path - <![CDATA[C:\Media\custom.png]]>
+			with any of episode/season/series database fields (<Series.origName> for example)
+	-->
+	<videoplayimages import="true">
+		<property>
+			<name>TVSeries.Play.ClearArt</name>
+			<value><![CDATA[thumbs\ClearArt\<Series.ID>.png]]></value>
+		</property>
+		<!-- You can define multiple properties -->
+	</videoplayimages>
+
 	<layouts>
 		<group List="true" SmallIcons="true" />
 		<series ListPosters="true" ListBanners="true" Filmstrip="true" WideBanners="true" />
@@ -61,52 +104,52 @@
 		</episode>
 	</views>
 	<formatting import="true">
-		<![CDATA[<Enabled>1<Format><Episode.InfoPanelLine1Key><FormatAs>RUNTIME
-<Enabled>1<Format><Episode.InfoPanelLine1Value><FormatAs><Episode.PrettyLocalPlaytime>
-<Enabled>1<Format><Episode.InfoPanelLine2Key><FormatAs>AIRED
-<Enabled>1<Format><Episode.InfoPanelLine2Value><FormatAs><Episode.FirstAired>
-<Enabled>1<Format><Episode.InfoPanelLine3Key><FormatAs>RATING
-<Enabled>1<Format><Episode.InfoPanelLine3Value><FormatAs>Eval(Round(<Episode.Rating>*10)/10) / 10 (RATED: <Episode.myRating>)
-<Enabled>1<Format><Episode.InfoPanelLine4Key><FormatAs>DIRECTOR
-<Enabled>1<Format><Episode.InfoPanelLine4Value><FormatAs><Episode.Director>
-<Enabled>1<Format><Episode.InfoPanelLine5Key><FormatAs>WRITER
-<Enabled>1<Format><Episode.InfoPanelLine5Value><FormatAs><Episode.Writer>
-<Enabled>1<Format><Episode.InfoPanelLine6Key><FormatAs>FILE SIZE
-<Enabled>1<Format><Episode.InfoPanelLine6Value><FormatAs><Episode.FileSize>
-<Enabled>1<Format><Episode.InfoPanelLine7Key><FormatAs>RATIO
-<Enabled>1<Format><Episode.InfoPanelLine7Value><FormatAs>Eval(Round(<Episode.VideoAspectRatio>*100)/100)
-<Enabled>1<Format><Episode.InfoPanelLine8Key><FormatAs>VIDEO CODEC
-<Enabled>1<Format><Episode.InfoPanelLine8Value><FormatAs><Episode.VideoCodec>
-<Enabled>1<Format><Episode.InfoPanelLine9Key><FormatAs>VIDEO SIZE
-<Enabled>1<Format><Episode.InfoPanelLine9Value><FormatAs><Episode.videoWidth>x<Episode.videoHeight>
-<Enabled>1<Format><Episode.InfoPanelLine10Key><FormatAs>FPS
-<Enabled>1<Format><Episode.InfoPanelLine10Value><FormatAs>Eval(Round(<Episode.VideoFrameRate>*1000)/1000) fps
-<Enabled>1<Format><Episode.InfoPanelLine11Key><FormatAs>VIDEO BITRATE
-<Enabled>1<Format><Episode.InfoPanelLine11Value><FormatAs>Eval(Round(PrettyBytes1000(<Episode.VideoBitrate>)*10/10)-> | Kbps| Mbps| Gbps)
-<Enabled>1<Format><Episode.InfoPanelLine12Key><FormatAs>AUDIO CODEC
-<Enabled>1<Format><Episode.InfoPanelLine12Value><FormatAs><Episode.AudioCodec>
-<Enabled>1<Format><Episode.InfoPanelLine13Key><FormatAs>AUDIO BITRATE
-<Enabled>1<Format><Episode.InfoPanelLine13Value><FormatAs>Eval(Round(PrettyBytes1000(<Episode.AudioBitrate>)*10/10)-> | Kbps| Mbps| Gbps)
-<Enabled>1<Format><Episode.InfoPanelLine14Key><FormatAs>CHANNELS
-<Enabled>1<Format><Episode.InfoPanelLine14Value><FormatAs><Episode.AudioChannels> channels
+		<![CDATA[<Enabled>1<Format><Episode.DataPanelLine1Key><FormatAs>RUNTIME
+<Enabled>1<Format><Episode.DataPanelLine1Value><FormatAs><Episode.PrettyLocalPlaytime>
+<Enabled>1<Format><Episode.DataPanelLine2Key><FormatAs>AIRED
+<Enabled>1<Format><Episode.DataPanelLine2Value><FormatAs><Episode.FirstAired>
+<Enabled>1<Format><Episode.DataPanelLine3Key><FormatAs>RATING
+<Enabled>1<Format><Episode.DataPanelLine3Value><FormatAs>Eval(Round(<Episode.Rating>*10)/10) / 10 (RATED: <Episode.myRating>)
+<Enabled>1<Format><Episode.DataPanelLine4Key><FormatAs>DIRECTOR
+<Enabled>1<Format><Episode.DataPanelLine4Value><FormatAs><Episode.Director>
+<Enabled>1<Format><Episode.DataPanelLine5Key><FormatAs>WRITER
+<Enabled>1<Format><Episode.DataPanelLine5Value><FormatAs><Episode.Writer>
+<Enabled>1<Format><Episode.DataPanelLine6Key><FormatAs>FILE SIZE
+<Enabled>1<Format><Episode.DataPanelLine6Value><FormatAs><Episode.FileSize>
+<Enabled>1<Format><Episode.DataPanelLine7Key><FormatAs>RATIO
+<Enabled>1<Format><Episode.DataPanelLine7Value><FormatAs>Eval(Round(<Episode.VideoAspectRatio>*100)/100)
+<Enabled>1<Format><Episode.DataPanelLine8Key><FormatAs>VIDEO CODEC
+<Enabled>1<Format><Episode.DataPanelLine8Value><FormatAs><Episode.VideoCodec>
+<Enabled>1<Format><Episode.DataPanelLine9Key><FormatAs>VIDEO SIZE
+<Enabled>1<Format><Episode.DataPanelLine9Value><FormatAs><Episode.videoWidth>x<Episode.videoHeight>
+<Enabled>1<Format><Episode.DataPanelLine10Key><FormatAs>FPS
+<Enabled>1<Format><Episode.DataPanelLine10Value><FormatAs>Eval(Round(<Episode.VideoFrameRate>*1000)/1000) fps
+<Enabled>1<Format><Episode.DataPanelLine11Key><FormatAs>VIDEO BITRATE
+<Enabled>1<Format><Episode.DataPanelLine11Value><FormatAs>Eval(Round(PrettyBytes1000(<Episode.VideoBitrate>)*10/10)-> | Kbps| Mbps| Gbps)
+<Enabled>1<Format><Episode.DataPanelLine12Key><FormatAs>AUDIO CODEC
+<Enabled>1<Format><Episode.DataPanelLine12Value><FormatAs><Episode.AudioCodec>
+<Enabled>1<Format><Episode.DataPanelLine13Key><FormatAs>AUDIO BITRATE
+<Enabled>1<Format><Episode.DataPanelLine13Value><FormatAs>Eval(Round(PrettyBytes1000(<Episode.AudioBitrate>)*10/10)-> | Kbps| Mbps| Gbps)
+<Enabled>1<Format><Episode.DataPanelLine14Key><FormatAs>CHANNELS
+<Enabled>1<Format><Episode.DataPanelLine14Value><FormatAs><Episode.AudioChannels> channels
 <Enabled>1<Format><Episode.SeasonLabel><FormatAs>Season <Episode.SeasonIndex>
 <Enabled>1<Format><Season.SeasonLabel><FormatAs>Season <Season.SeasonIndex>
-<Enabled>1<Format><Series.InfoPanelLine1Key><FormatAs>GENRE
-<Enabled>1<Format><Series.InfoPanelLine1Value><FormatAs><Series.Genre>
-<Enabled>1<Format><Series.InfoPanelLine2Key><FormatAs>FIRST AIRED
-<Enabled>1<Format><Series.InfoPanelLine2Value><FormatAs><Series.FirstAired> (<Series.Status>)
-<Enabled>1<Format><Series.InfoPanelLine3Key><FormatAs>RATING
-<Enabled>1<Format><Series.InfoPanelLine3Value><FormatAs>Eval(Round(<Series.Rating>*10)/10) / 10 (RATED: <Series.myRating>)
-<Enabled>1<Format><Series.InfoPanelLine4Key><FormatAs>RUNTIME
-<Enabled>1<Format><Series.InfoPanelLine4Value><FormatAs><Series.Runtime> minutes
-<Enabled>1<Format><Series.InfoPanelLine5Key><FormatAs>STARING
-<Enabled>1<Format><Series.InfoPanelLine5Value><FormatAs><Series.Actors>
-<Enabled>1<Format><Series.InfoPanelLine6Key><FormatAs>STATUS
-<Enabled>1<Format><Series.InfoPanelLine6Value><FormatAs><Series.Status>
-<Enabled>1<Format><Series.InfoPanelLine7Key><FormatAs>AIRTIME
-<Enabled>1<Format><Series.InfoPanelLine7Value><FormatAs><Series.AirsTime>
-<Enabled>1<Format><Series.InfoPanelLine8Key><FormatAs>AIRS
-<Enabled>1<Format><Series.InfoPanelLine8Value><FormatAs><Series.AirsDay>
+<Enabled>1<Format><Series.DataPanelLine1Key><FormatAs>GENRE
+<Enabled>1<Format><Series.DataPanelLine1Value><FormatAs><Series.Genre>
+<Enabled>1<Format><Series.DataPanelLine2Key><FormatAs>FIRST AIRED
+<Enabled>1<Format><Series.DataPanelLine2Value><FormatAs><Series.FirstAired> (<Series.Status>)
+<Enabled>1<Format><Series.DataPanelLine3Key><FormatAs>RATING
+<Enabled>1<Format><Series.DataPanelLine3Value><FormatAs>Eval(Round(<Series.Rating>*10)/10) / 10 (RATED: <Series.myRating>)
+<Enabled>1<Format><Series.DataPanelLine4Key><FormatAs>RUNTIME
+<Enabled>1<Format><Series.DataPanelLine4Value><FormatAs><Series.Runtime> minutes
+<Enabled>1<Format><Series.DataPanelLine5Key><FormatAs>STARING
+<Enabled>1<Format><Series.DataPanelLine5Value><FormatAs><Series.Actors>
+<Enabled>1<Format><Series.DataPanelLine6Key><FormatAs>STATUS
+<Enabled>1<Format><Series.DataPanelLine6Value><FormatAs><Series.Status>
+<Enabled>1<Format><Series.DataPanelLine7Key><FormatAs>AIRTIME
+<Enabled>1<Format><Series.DataPanelLine7Value><FormatAs><Series.AirsTime>
+<Enabled>1<Format><Series.DataPanelLine8Key><FormatAs>AIRS
+<Enabled>1<Format><Series.DataPanelLine8Value><FormatAs><Series.AirsDay>
 <Enabled>1<Format>[ x  fps ]  [ channels ]  [0 bytes]<FormatAs>N / A
 <Enabled>1<Format> / 10 (RATED: )<FormatAs> / 10
 <Enabled>1<Format>2channels <FormatAs>2.0 

@@ -1,3 +1,27 @@
+#region GNU license
+// MP-TVSeries - Plugin for Mediaportal
+// http://www.team-mediaportal.com
+// Copyright (C) 2006-2007
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#endregion
+
+
 using System;
 using System.Collections.Generic;
 
@@ -38,7 +62,8 @@ namespace WindowPlugins.GUITVSeries
 		public const String cUnwatchedItems = "UnwatchedItems";
 
 		public const String cEpisodeOrders = "EpisodeOrders";
-		public const String cChoseEpisodeOrder = "choosenOrder";
+        public const String cChosenEpisodeOrder = "choosenOrder";
+        public const String cEpisodeSortOrder = "EpisodeSortOrder";
 
 		public const String cOriginalName = "origName";
 
@@ -66,6 +91,9 @@ namespace WindowPlugins.GUITVSeries
 		public const String cFanart = "fanart";
 		public const String cLastUpdated = "lastupdated";
 		public const String cPoster = "poster";
+
+        public const String cHasNewEpisodes = "HasNewEpisodes";
+
 		#endregion
 
 		public const int cDBVersion = 3;
@@ -89,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
 			s_FieldToDisplayNameMap.Add(cLanguage, "Language");
 			s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
 			s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
-			s_FieldToDisplayNameMap.Add(cChoseEpisodeOrder, "Episode Order");
+            s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
 			s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
 			s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
 			s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
@@ -163,6 +191,9 @@ namespace WindowPlugins.GUITVSeries
 			base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
 			base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
 			base.AddColumn(cActors, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeOrders, new DBField(DBField.cType.String));
+            base.AddColumn(cChosenEpisodeOrder, new DBField(DBField.cType.String));
+            base.AddColumn(cEpisodeSortOrder, new DBField(DBField.cType.String));
 			base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
 			base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
 			base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));

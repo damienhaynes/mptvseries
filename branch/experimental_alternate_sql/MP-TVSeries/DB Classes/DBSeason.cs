@@ -476,8 +476,10 @@ namespace WindowPlugins.GUITVSeries
             season.Commit();
         }
 
-        public static void UpdatedEpisodeCounts(DBSeries series, DBSeason season)
+        public static void UpdateEpisodeCounts(DBSeries series, DBSeason season)
         {
+            if (series == null || season == null) return;
+
             int epsTotal = 0;
             int epsUnWatched = 0;
 
@@ -538,6 +540,37 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            #region Facade Remote Color
+            // if we were successful at deleting all episodes of season from disk, set HasLocalFiles to false
+            // note: we only do this if the database entries still exist
+            if (resultMsg.Count == 0 && type == TVSeriesPlugin.DeleteMenuItems.disk)
+            {
+                this[cHasLocalFiles] = false;
+                this.Commit();                
+            }
+
+            // if we were successful at deleting all episodes of season from disk, 
+            // also check if any local episodes exist on disk for series and set HasLocalFiles to false
+            if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.database)
+            {
+                // Check Series for Local Files
+                SQLCondition episodeConditions = new SQLCondition();
+                episodeConditions.Add(new DBEpisode(), DBEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
+                List<DBEpisode> localEpisodes = DBEpisode.Get(episodeConditions);
+                if (localEpisodes.Count == 0 && !DBSeries.IsSeriesRemoved)
+                {
+                    DBSeries series = DBSeries.Get(this[DBSeason.cSeriesID]);                   
+                    if (series != null)
+                    {
+                        series[DBOnlineSeries.cHasLocalFiles] = false;
+                        series.Commit();
+                    }
+                }
+            }
+            #endregion
+
+            #region Cleanup
+
             // if there are no error messages and if we need to delete from db
             if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
@@ -547,10 +580,10 @@ namespace WindowPlugins.GUITVSeries
                 DBSeason.Clear(condition);
             }
 
-            #region Cleanup
+            DBSeries.IsSeriesRemoved = false;
             if (type != TVSeriesPlugin.DeleteMenuItems.disk)
             {
-                // If episode count is zero then delete the series and all seasons
+                // If local/online episode count is zero then delete the series and all seasons
                 condition = new SQLCondition();
                 condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                 episodes = DBEpisode.Get(condition, false);
@@ -570,6 +603,8 @@ namespace WindowPlugins.GUITVSeries
                     condition = new SQLCondition();
                     condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
                     DBOnlineSeries.Clear(condition);
+
+                    DBSeries.IsSeriesRemoved = true;
                 }
             }
             #endregion

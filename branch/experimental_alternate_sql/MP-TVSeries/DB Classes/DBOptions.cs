@@ -152,6 +152,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cRepeatPlaylist = "RepeatPlaylist";
         public const String cPlaylistAutoPlay = "PlaylistAutoPlay";
 		public const String cPlaylistAutoShuffle = "PlaylistAutoShuffle";
+        public const String cPlaylistUnwatchedOnly = "PlaylistUnwatchedOnly";
 
         public const String cAutoDownloadMissingArtwork = "AutoDownloadMissingArtwork";
         public const String cAutoUpdateEpisodeRatings = "AutoUpdateEpisodeRatings";
@@ -187,9 +188,30 @@ namespace WindowPlugins.GUITVSeries
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
 
         public const String cInvokeExtBeforePlayback = "InvokeExtBeforePlayback";
+        public const String cInvokeExtBeforePlaybackArgs = "InvokeExtBeforePlaybackArgs";
+        public const String cInvokeExtBeforePlaybackWaitForExit = "InvokeExtBeforePlaybackWaitForExit";
         public const String cInvokeExtAfterPlayback = "InvokeExtAfterPlayback";
+        public const String cInvokeExtAfterPlaybackArgs = "InvokeExtAfterPlaybackArgs";
+        public const String cInvokeExtAfterPlaybackWaitForExit = "InvokeExtAfterPlaybackWaitForExit";
 
         public const String cCountEmptyAndFutureAiredEps = "CountEmptyAndFutureAiredEps";
+
+        public const String cOnPlaySeriesOrSeasonAction = "OnPlaySeriesOrSeasonAction";
+
+        public const String cNewEpisodeThumbType = "NewEpisodeThumbType";
+
+        public const String cLogLevel = "logLevel";
+
+        public const String cSubCentralEnabled = "SubCentralEnabled";
+
+        public const String cSubCentralEnabledForEpisodes = "SubCentralEnabledForEpisodes";
+
+        public const String cUseFullNameInSubDialog = "UseFullNameInSubDialog";
+
+        public const String cConfigSizeHeight = "configSizeHeight";
+        public const String cConfigSizeWidth = "configSizeWidth";
+
+        public const String cDisableMediaInfo = "DisableMediaInfo";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -510,6 +532,31 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
                     SetOptions(cCountEmptyAndFutureAiredEps, 1);
+
+                if (GetOptions(cOnPlaySeriesOrSeasonAction) == null)
+                    SetOptions(cOnPlaySeriesOrSeasonAction, 2); // set first unwatched as default
+
+                if (GetOptions(cLogLevel) == null)
+                    SetOptions(cLogLevel, 0);
+
+                if (GetOptions(cNewEpisodeThumbType) == null)
+                    SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
+
+                if (GetOptions(cSubCentralEnabled) == null)
+                    SetOptions(cSubCentralEnabled, true);
+
+                if (GetOptions(cSubCentralEnabledForEpisodes) == null)
+                    SetOptions(cSubCentralEnabledForEpisodes, true);
+
+                if (GetOptions(cUseFullNameInSubDialog) == null)
+                    SetOptions(cUseFullNameInSubDialog, false);
+
+                if (GetOptions(cPlaylistUnwatchedOnly) == null)
+                    SetOptions(cPlaylistUnwatchedOnly, false);
+
+                if (GetOptions(cDisableMediaInfo) == null)
+                    SetOptions(cDisableMediaInfo, false);
+
             }
             catch (Exception ex)
             {

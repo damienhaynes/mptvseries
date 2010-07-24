@@ -70,11 +70,8 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 		}
 
 		private void checkedListBoxSeries_ItemCheck(object sender, ItemCheckEventArgs e) {
-			DBSeries item = (DBSeries)checkedListBoxSeries.SelectedItem;
-
-            if (item == null) return;
-
-            int index = checkedListBoxSeries.SelectedIndex;    
+            int index = e.Index;
+            DBSeries item = (DBSeries)checkedListBoxSeries.Items[index];
 
             // Add/Remove items from list
             if (item != null) {                
@@ -107,5 +104,13 @@ namespace WindowPlugins.GUITVSeries.Configuration {
             }
 				
 		}
+
+        private void chkBoxToggleAll_CheckedChanged(object sender, EventArgs e)
+        {                    
+            for (int i = 0; i < checkedListBoxSeries.Items.Count; i++)
+            {
+                checkedListBoxSeries.SetItemChecked(i, chkBoxToggleAll.Checked);                   
+	}
+}
 	}
 }

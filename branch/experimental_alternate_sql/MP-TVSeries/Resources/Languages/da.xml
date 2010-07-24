@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Dansk (Da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Contributed by Steffansp. Last update 9. marts 2010 -->
+<!-- Contributed by Steffansp. Last update 1. juni 2010 -->
 
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
@@ -22,13 +22,13 @@
 	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Tilføj serie til favoritter</string>
 	<string Field="Force_Local_Scan" Original="Force Local Scan ">Tving lokal scanning </string>
 	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Tving online scanning </string>
-	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(Arbejder)</string>
+	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(arbejder)</string>
 	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Vis kun lokale afsnit </string>
 	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Gem afsnittets beskrivelse ved usete afsnit</string>
-	<string Field="on" Original="on">tænd</string>
-	<string Field="off" Original="off">sluk</string>
+	<string Field="on" Original="on">til</string>
+	<string Field="off" Original="off">fra</string>
 	<string Field="Play_Random_Episode" Original="Play Random Episode">Afspil tilfældigt afsnit</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Afspil først tilfældigt uset afsnit</string>
+	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Afspil første tilfældige uset afsnit</string>
 	<string Field="Delete_that_series" Original="Delete that series?">Slet denne serie?</string>
 	<string Field="Delete_that_season" Original="Delete that season?">Slet denne sæson?</string>
 	<string Field="Delete_that_episode" Original="Delete that episode?">Slet dette afsnit?</string>
@@ -102,11 +102,11 @@
 	<string Field="CFS_Available_Seasons" Original="Available Seasons list:">Liste over tilgængelige sæsoner:</string>
 	<string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Overskriv undertekst</string>
 	<string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Gammel undertekst eksisterer: Overskriv?</string>
-	<string Field="RecentlyAdded" Original="Recently Added">For nylig tilføjet</string>
+	<string Field="RecentlyAdded" Original="Recently Added">Nyligt tilføjet</string>
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">theTVDB fejl</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Konto-indstillinger er ikke indstillet </string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Indtast dit online konto ID i konfigurationen</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Indtast dit online konto-ID i konfigurationen</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Vis Fanart ved serie oversigt</string>
 	<string Field="ChangeLayout" Original="Change Layout">Ændre layout</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Brug online favoritter</string>
@@ -157,7 +157,7 @@
 	<string Field="RateTenStarNine" Original="Superb">Fortrinlig</string>
 	<string Field="RateTenStarTen" Original="Perfect">Perfekt</string>
 	
-	<string Field="ContentRating" Original="Content Rating">Indhold vurdering</string>
+	<string Field="ContentRating" Original="Content Rating">Censur</string>
 	<string Field="ViewTags" Original="View Tags">Vis etiketter</string>
 	<string Field="AddViewTag" Original="Add Series to View Tag">Tilføj serie til overblikket</string>
 	<string Field="RemoveViewTag" Original="Remove Series from View Tag">Fjern serie fra overbliket</string>
@@ -193,7 +193,7 @@
 	<string Field="MultiAudio" Original="Multiple Audio Tracks">Flere lydspor</string>
 	<string Field="OnlineFavourites" Original="Online Favourites">Online favoritter</string>	
 	<string Field="Actors" Original="Actors">Skuespillere</string>
-	<string Field="RemovableMedia" Original="Removable Media">Removable Media</string>
+	<string Field="RemovableMedia" Original="Removable Media">Flytbar medier</string>
 	<string Field="LocalMedia" Original="Local Media">Lokalt medie</string>
 	<string Field="AdultSeries" Original="Adult Series">Voksen serie</string>
 	<string Field="KidsSeries" Original="Kids Series">Børne serie</string>
@@ -243,13 +243,13 @@
 
 	<string Field="Playlist" Original="Playlist">Playliste</string>
 	
-	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Sidste online updatering</string>
-	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Nustil ignorerede hentede filer</string>
+	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Sidste online opdatering</string>
+	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Nulstil ignorerede hentede filer</string>
 
 	<string Field="GetSubtitlesFrom" Original="Get subtitles from?">Hent undertekster fra?</string>
 	<string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Aktiverede undertekstsider:</string>
 	<string Field="PlayNow" Original="Play Now">Afspil nu</string>
-	<string Field="NoSubtitleDownload" Original="No Subtitle Download">Ingen undertekst hent</string>
+	<string Field="NoSubtitleDownload" Original="No Subtitle Download">Ingen undertekst hentning slået til</string>
   
 	<string Field="DeleteSubtitles" Original="Delete Subtitles">Slet undertekster</string>
 	<string Field="EpisodeFilenameEmpty" Original ="Episode Filename is Empty in Database">Afsnits filenavnet er tomt i databasen</string>
@@ -262,5 +262,14 @@
 
 	<string Field="UnableToDelete" Original ="Unable to Delete">Sletning mislykkedes</string>
 	<string Field="UnableToDeleteFile" Original ="Unable to Delete File: {0}">Sletning af filen mislykkedes: {0}</string>
+	
+	<string Field="PlaySomething" Original="Play...">Afspil...</string>
+	<string Field="PlayError" Original="Play error">Afspilningsfejl</string>
+	<string Field="RandomEpisode" Original="random episode">tilfældigt afsnit</string>
+	<string Field="FirstUnwatchedEpisode" Original="first unwatched episode">første usete afsnit</string>
+	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">tilfældig uset afsnit</string>
+	<string Field="LatestEpisode" Original="latest episode">sidste afsnit</string>
+	<string Field="UnableToFindAny" Original="Unable to find any {0}">Ude af stand til at finde nogen {0}</string>
+	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Ude af stand til at finde noget afsnit</string>
 	
 </strings>
