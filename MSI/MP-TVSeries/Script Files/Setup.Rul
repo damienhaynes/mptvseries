@@ -41,8 +41,8 @@
 #define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
 
 // Version Defines
-#define MEDIAPORTAL_MINNOWARN_VERSION		"1.0.1.0" // MediaInfo.dll was introduced into MP 1.0.1
-#define MEDIAPORTAL_MIN_VERSION				"1.0.0.0" // Use at your own risk, for most part should work
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.0.0"
+#define MEDIAPORTAL_MIN_VERSION				"1.0.7.0" // Use at your own risk, for most part should work
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
