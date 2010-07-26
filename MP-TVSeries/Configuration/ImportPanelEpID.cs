@@ -191,7 +191,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
 	        {
                 comboMatchOptions.Items.Add(ordering); 
 	        }
+            
+            // Always add 'Aired' as a match option
+            if (comboMatchOptions.Items.Count == 0) comboMatchOptions.Items.Add("Aired");
+            // 'Title' can also be matched against so add that
             comboMatchOptions.Items.Add("Title");
+            
             string preChosen = selectedSeries[DBOnlineSeries.cChosenEpisodeOrder];
             if (string.IsNullOrEmpty(preChosen))
                 comboMatchOptions.SelectedIndex = 0;
