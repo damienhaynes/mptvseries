@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Dansk (Da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Contributed by Steffansp. Last update 1. juni 2010 -->
+<!-- Contributed by Steffansp. Last update 29. juli 2010 -->
 
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
@@ -242,8 +242,8 @@
 	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Kontroller forbindelsen og prøv igen</string>
 
 	<string Field="Playlist" Original="Playlist">Playliste</string>
-	
 	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Sidste online opdatering</string>
+
 	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Nulstil ignorerede hentede filer</string>
 
 	<string Field="GetSubtitlesFrom" Original="Get subtitles from?">Hent undertekster fra?</string>
@@ -271,5 +271,11 @@
 	<string Field="LatestEpisode" Original="latest episode">sidste afsnit</string>
 	<string Field="UnableToFindAny" Original="Unable to find any {0}">Ude af stand til at finde nogen {0}</string>
 	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Ude af stand til at finde noget afsnit</string>
-	
+
+	<string Field="SortBy" Original="Sort By">Sorter efter</string>
+	<string Field="DVDOrder" Original="DVD Order">DVD visning</string>
+	<string Field="AiredOrder" Original="Aired Order">Sendt visning</string>
+	<string Field="AbsoluteOrder" Original="Absolute Order">Absolut visning</string>  
+	<string Field="Title" Original="Title">Title</string>
+	<string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Ændre online matching metode</string>
 </strings>
