@@ -2119,8 +2119,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case "":
                     case "Aired":
-                        int iEpIndex2 = 0;
-                        if ((int)localEpisode[DBEpisode.cEpisodeIndex2] == 0)
+                        int iEpIndex2 = (int)localEpisode[DBEpisode.cEpisodeIndex2];
+                        if (iEpIndex2 == 0)
                         {
                             // Don't want to match local episodes with no EpisodeIndex2 with an online episode index of zero
                             iEpIndex2 = -1;
