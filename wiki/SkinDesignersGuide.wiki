@@ -13,10 +13,46 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 <wiki:toc max_depth="3" />
 
 = Skinner's Change Log =
+== v2.5 - v2.6 ==
+ * A *New* Image (indicating recently added episodes or Unwatched episodes) overlayed on Series WideBanners / Posters Filmstrip, requires a new image in the skins media directory: *tvseries_newlabel.png*. The position of the image can be controlled from TVSeries.SkinSettings.xml with the following code:
+{{{
+<thumbstamp>
+	<widebanners>
+		<posx>668</posx>
+		<posy>-5</posy>
+	</widebanners>
+	<posters>
+		<posx>580</posx>
+		<posy>-5</posy>
+	</posters>
+</thumbstamp>
+}}}
+
+ * Skin can now define the images loaded in the Video OSD from TVSeries.SkinSettings.xml:
+{{{
+<videoosdimages import="true">
+	<episode use="true" />
+	<series use="true" />		
+	<season use="true" />		
+	<custom use="false"><![CDATA[skin\StreamedMP\Media\custom.png]]></custom>
+</videoosdimages>
+}}}
+
+ * Skin can define images to be loaded into skin properties when playback is started, on stopped the image property is cleared. These properties can be defined in the TVSeries.SkinSettings.xml:
+{{{
+<videoplayimages import="true">
+	<property>
+		<name>TVSeries.Play.ClearArt</name>
+		<value><![CDATA[thumbs\ClearArt\<Series.ID>.png]]></value>
+	</property>
+	<!-- You can define multiple properties -->
+</videoplayimages>
+}}}
+
 == v2.3 - v2.5 ==
  * New Skin Properties:
 || *Property* || *Description* ||
-||#TVSeries.LastOnlineUpdate||Push's the Last Date\Time an Online Update occured ||
+||#TVSeries.LastOnlineUpdate||Push's the Last Date\Time an Online Update occurred ||
 ||#TVSeries.WatchedCount||Push's the Watched Count of episodes in Episode View||
 ||#TVSeries.UnWatchedCount||Push's the UnWatched Count of episodes in Episode View||
 
