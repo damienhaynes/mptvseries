@@ -2628,6 +2628,22 @@ namespace WindowPlugins.GUITVSeries
 							
 							// Get list of series for current view
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
+                            
+                            // Sort Series List if Title has been user edited
+                            string titleField = DBOption.GetOptions(DBOption.cSeries_UseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
+                            seriesList.Sort(new Comparison<DBSeries>((x, y) => 
+                            {
+                                string seriesX = string.Empty;
+                                string seriesY = string.Empty;
+
+                                if (string.IsNullOrEmpty(seriesX = x[titleField + DBTable.cUserEditPostFix]))
+                                    seriesX = x[titleField];
+
+                                if (string.IsNullOrEmpty(seriesY = y[titleField + DBTable.cUserEditPostFix]))
+                                    seriesY = y[titleField];
+
+                                return string.Compare(seriesX, seriesY);
+                            }));
 
                             if (seriesList.Count == 0)
                                 bFacadeEmpty = true;
