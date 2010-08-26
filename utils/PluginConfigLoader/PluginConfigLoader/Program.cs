@@ -10,6 +10,7 @@ namespace PluginConfigLoader {
     static class Program {
 
         private static string pluginFile = string.Empty;
+        private static string[] assemblies = null;
 
         enum MsgBoxIcon {
             INFO,
@@ -39,24 +40,30 @@ namespace PluginConfigLoader {
             // Check if there are any arguments
             if (arguments == null || arguments.Length == 0) {
                 string message = "No Arguments were specified on the command line.\n\n";
-                message += "Usage: PluginConfigLoader /plugin=<filename>";
+                message += "Usage: PluginConfigLoader /plugin=<filename>\n\n";
+                message += "Optional Parameter: /loadassembly=<filename1>;<filename2>...";
                 ShowMessage(message, MsgBoxIcon.INFO);
                 return false;
             }
 
-            // App only supports one argument
-            string trimmedArgument = arguments[0].ToLower();
+            // App only supports two argument
+            string trimmedArgument1 = arguments[0].ToLower();
+            string trimmedArgument2 = string.Empty;
+            // 2nd argument is optional and can include a list of assemblies to load
+            // each one seperated by a semi-colon
+            if (arguments.Length == 2)            
+                trimmedArgument2 = arguments[1].ToLower();
 
             // Valid argument starts with /plugin
-            if (!trimmedArgument.StartsWith("/plugin")) {
+            if (!trimmedArgument1.StartsWith("/plugin")) {
                 string message = "Invalid argument specified on the command line.\n\n";
-                message += "Usage: PluginConfigLoader /plugin=<filename>";
+                message += "Usage: PluginConfigLoader /plugin=<filename>";                
                 ShowMessage(message, MsgBoxIcon.INFO);
                 return false;
             }
             
             // Get Filename of plugin
-            string[] subArguments = trimmedArgument.Split('=');
+            string[] subArguments = trimmedArgument1.Split('=');
 
             if (subArguments.Length < 2) {
                 string message = "No filename specified in command line argument.\n\n";
@@ -64,8 +71,17 @@ namespace PluginConfigLoader {
                 ShowMessage(message, MsgBoxIcon.INFO);
                 return false;
             }
-
             pluginFile = subArguments[1];
+            
+            // Get Optional arguments
+            // Valid argument starts with /loadassembly
+            if (trimmedArgument2.StartsWith("/loadassembly")) {
+                // Get list of assemblies to load with plugin
+                string[] assemblySplits = trimmedArgument2.Split('=');
+                if (assemblySplits.Length == 2)                
+                    assemblies = assemblySplits[1].ToString().Split(';');
+            }
+            
             return true;
         }
 
@@ -96,6 +112,21 @@ namespace PluginConfigLoader {
                     }
 
                     if (type.GetInterface("MediaPortal.GUI.Library.ISetupForm") != null) {
+                        // Load any optional assemblies to support the plugin
+                        if (assemblies != null) {
+                            foreach (string assembly in assemblies) {
+                                if (File.Exists(assembly)) {
+                                    try {
+                                        Assembly.LoadFile(assembly);
+                                    }
+                                    catch (Exception e){
+                                        string message = string.Format("Exception in plugin SetupForm loading: \n\n{0} ", e.Message);
+                                        ShowMessage(message, MsgBoxIcon.CRITICAL);                                        
+                                    }
+                                }
+                            }
+                        }
+
                         try {                           
                             // Create instance of the current type                           
                             object pluginObject = Activator.CreateInstance(type);
