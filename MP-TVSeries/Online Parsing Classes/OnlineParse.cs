@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using MediaPortal.Dialogs;
@@ -2496,32 +2497,32 @@ namespace WindowPlugins.GUITVSeries
                 onlineEpisode.Commit();
             }
 
-            // This section needs optimizing and is very slow when dealing with many episodes...see Issue #425
-
             // now go over the touched seasons & series
+            var episodes = DBEpisode.Get(new SQLCondition(new DBEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal));
+
             foreach (DBSeason season in relatedSeasons)
             {
-                DBEpisode episode = DBEpisode.GetFirstUnwatched(season[DBSeason.cSeriesID], season[DBSeason.cIndex]);
-                if (episode != null)
-                    season[DBSeason.cUnwatchedItems] = true;
-                else
-                    season[DBSeason.cUnwatchedItems] = false;
-
-                season[DBSeason.cHidden] = 0;
-                season.Commit();
+                var HasUnwatched = episodes.Any(e => e[DBSeason.cSeriesID] == season[DBSeason.cSeriesID] && e[DBEpisode.cSeasonIndex] == season[DBSeason.cIndex]);
+                if (season[DBSeason.cUnwatchedItems] != HasUnwatched || !season[DBSeason.cHidden] != false)
+                {
+                    season[DBSeason.cUnwatchedItems] = HasUnwatched;
+                    season[DBSeason.cHidden] = 0;
+                    season.Commit();
+                } // else nothing changed, so dont bother
             }
-
+            
             foreach (DBSeries series in relatedSeries)
             {
-                DBEpisode episode = DBEpisode.GetFirstUnwatched(series[DBSeries.cID]);
-                if (episode != null)
-                    series[DBOnlineSeries.cUnwatchedItems] = true;
-                else
-                    series[DBOnlineSeries.cUnwatchedItems] = false;
-
-                series[DBSeries.cHidden] = 0;
-                series.Commit();
+                var HasUnwatched = episodes.Any(e => e[DBSeries.cID] == series[DBSeries.cID]);
+                if (series[DBSeason.cUnwatchedItems] != HasUnwatched || !series[DBSeries.cHidden] != false)
+                {
+                    series[DBOnlineSeries.cUnwatchedItems] = HasUnwatched;
+                    series[DBSeries.cHidden] = 0;
+                    series.Commit();
+                } // else nothing changed, so dont bother
             }
+            
+
 
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, parsedFiles.Count));
         }
