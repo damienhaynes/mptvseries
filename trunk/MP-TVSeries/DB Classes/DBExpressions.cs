@@ -75,10 +75,9 @@ namespace WindowPlugins.GUITVSeries
         {
             DBExpression expression = new DBExpression();
             expression[DBExpression.cEnabled] = "1";
-
             expression[DBExpression.cIndex] = "0";
             expression[DBExpression.cType] = DBExpression.cType_Regexp;
-            expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)[ .-]+(?:[s]?(?<season>\d+)[ .-]?[ex](?<episode>\d+)|(?:\#|\-\s)(?<season>\d+)\.(?<episode>\d+))(?:[ex+-]*(?<episode2>\d+))?[ .-]*(?<title>(?![^\\]*?sample[ .-])[^$]*?)\.(?<ext>[^.]*)$";
+            expression[DBExpression.cExpression] = @"^.*?\\?(?<series>[^\\$]+?)[ _.\-\[]+(?:[s]?(?<season>\d+)[ _.\-\[\]]*[ex](?<episode>\d+)|(?:\#|\-\s)(?<season>\d+)\.(?<episode>\d+))(?:[ex+-]*(?<episode2>\d+)|[ _.+-]*[\#s]?\d+[ex\.](?<episode2>(?!\d+\.\d+)\d+))?[ _.\-\[\]]*(?<title>(?![^\\]*?(?<!the)[ .(-]sample[ .)-]).*?)\.(?<ext>[^.]*)$";
             expression.Commit();
 
             expression[DBExpression.cIndex] = "1";
