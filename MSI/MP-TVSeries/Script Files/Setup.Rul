@@ -100,7 +100,8 @@ STRING g_sConfigDir;
 STRING g_sSkinsDir; 
 STRING g_sDatabaseDir;
 STRING g_sLogsDir;
-STRING g_sTVSeriesPluginFileName; 
+STRING g_sTVSeriesPluginFileName;
+STRING g_sSubCentralPluginFileName; 
  
 //---------------------------------------------------------------------------
 // OnBegin
@@ -232,6 +233,7 @@ begin
 	INSTALLDIR = g_sPluginsDir;
 	
 	g_sTVSeriesPluginFileName = g_sPluginsDir ^ "Windows\\MP-TVSeries.dll";
+	g_sSubCentralPluginFileName = g_sPluginsDir ^ "Windows\\SubCentral.dll";
 	
 	if GetMediaPortalDirs("Skin",g_sSkinsDir) < 0 then
 		g_sSkinsDir = CommonAppDataFolder^"Team MediaPortal\\MediaPortal\\skin";
@@ -627,7 +629,8 @@ begin
 	    if bOpt2 then
 	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
 	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
-	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName;
+	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName + " ";
+	    	szParams = "/loadassembly=" + g_sSubCentralPluginFileName;
 	    	LaunchApp(szFileName, szParams);	    
 	    endif;
 	endif;
