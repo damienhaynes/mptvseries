@@ -741,9 +741,9 @@ namespace WindowPlugins.GUITVSeries
                             if (this[DBOnlineEpisode.cID] == 0)
                             {
                                 // online episodes with no data have id=0, so we should improve the query
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
-                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeIndex, this[DBOnlineEpisode.cEpisodeIndex], SQLConditionType.Equal);
+                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeIndex, this[DBOnlineEpisode.cEpisodeIndex], SQLConditionType.Equal);
                             }
                             DBOnlineEpisode.Clear(condition1);
                         }
