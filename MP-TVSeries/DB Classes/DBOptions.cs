@@ -528,8 +528,20 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cInvokeExtBeforePlayback) == null)
                     SetOptions(cInvokeExtBeforePlayback, string.Empty);
 
+                if (GetOptions(cInvokeExtBeforePlaybackArgs) == null)
+                    SetOptions(cInvokeExtBeforePlaybackArgs, "\"<Episode.EpisodeFilename>\"");
+
+                if (GetOptions(cInvokeExtBeforePlaybackWaitForExit) == null)
+                    SetOptions(cInvokeExtBeforePlaybackWaitForExit, 0);
+
                 if (GetOptions(cInvokeExtAfterPlayback) == null)
                     SetOptions(cInvokeExtAfterPlayback, string.Empty);
+
+                if (GetOptions(cInvokeExtAfterPlaybackArgs) == null)
+                    SetOptions(cInvokeExtAfterPlaybackArgs, "\"<Episode.EpisodeFilename>\"");
+
+                if (GetOptions(cInvokeExtAfterPlaybackWaitForExit) == null)
+                    SetOptions(cInvokeExtAfterPlaybackWaitForExit, 0);
 
                 if (GetOptions(cCountEmptyAndFutureAiredEps) == null)
                     SetOptions(cCountEmptyAndFutureAiredEps, 1);
