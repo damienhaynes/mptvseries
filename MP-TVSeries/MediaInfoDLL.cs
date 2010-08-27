@@ -138,7 +138,11 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         public static MediaInfo GetInstance()
         {
             if (_instance == null)
-                return _instance = new MediaInfo();
+            {
+                _instance = new MediaInfo();
+                _instance.Option("ParseSpeed", DBOption.GetOptions(DBOption.cMediaInfoParseSpeed));
+                return _instance;
+            }
             else return _instance;
         }
 

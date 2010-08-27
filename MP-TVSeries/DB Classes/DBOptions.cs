@@ -212,6 +212,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cConfigSizeWidth = "configSizeWidth";
 
         public const String cDisableMediaInfo = "DisableMediaInfo";
+        public const String cMediaInfoParseSpeed = "MediaInfoParseSpeed";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -569,6 +570,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cDisableMediaInfo) == null)
                     SetOptions(cDisableMediaInfo, false);
+
+                if (GetOptions(cMediaInfoParseSpeed) == null)
+                    SetOptions(cMediaInfoParseSpeed, "0.3"); // Default is 0.5 but we dont need that for TVSeries.
 
             }
             catch (Exception ex)
