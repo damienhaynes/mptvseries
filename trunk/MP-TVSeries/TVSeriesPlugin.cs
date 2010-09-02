@@ -516,20 +516,19 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
             {
                 DeviceManager.StartMonitor();
-
                 setUpFolderWatches();
+            }
 
-                // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
-                // also do an online scan if it's been more than the allocated time since the last scan
-                if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
-                {
-                    bool bUpdateScanNeeded = false;
-                    TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
-                    if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
-                        bUpdateScanNeeded = true;
+            // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
+            // also do an online scan if it's been more than the allocated time since the last scan
+            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
+            {
+                bool bUpdateScanNeeded = false;
+                TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
+                if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
+                    bUpdateScanNeeded = true;
 
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, bUpdateScanNeeded));
-                }
+                m_parserUpdaterQueue.Add(new CParsingParameters(true, bUpdateScanNeeded));
             }
             else
             {
@@ -2039,7 +2038,7 @@ namespace WindowPlugins.GUITVSeries
                                 LoadFacade();
                         }
                     }
-                }                
+                }
 
                 // Treat Resuming from Standby as a startup action, scan on startup if enabled
                 if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup)) {
