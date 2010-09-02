@@ -2014,6 +2014,11 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
 
+                // re-initialise the importer timer
+                m_timerDelegate = new TimerCallback(Clock);
+                int importDelay = DBOption.GetOptions(DBOption.cImportDelay) * 1000;
+                m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay, 1000);
+
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
                 
@@ -2045,6 +2050,10 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");                
                 
                 DeviceManager.StopMonitor();
+
+                // stop the import timer
+                m_timerDelegate = null;
+                m_scanTimer = null;
 
                 // Only disconnect from the database if file exists on the network.
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
