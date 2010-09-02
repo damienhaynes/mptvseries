@@ -800,8 +800,11 @@ namespace WindowPlugins.GUITVSeries
                     if (localEpisodes.Count == 0)
                     {
                         DBSeries series = DBSeries.Get(this[DBEpisode.cSeriesID]);
-                        series[DBOnlineSeries.cHasLocalFiles] = false;
-                        series.Commit();
+                        if (series != null)
+                        {
+                            series[DBOnlineSeries.cHasLocalFiles] = false;
+                            series.Commit();
+                        }
                     }
                 }
             }
