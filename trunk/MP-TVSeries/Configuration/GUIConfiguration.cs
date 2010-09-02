@@ -237,6 +237,14 @@ namespace WindowPlugins.GUITVSeries
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
             checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
+            if (!checkBox_ScanOnStartup.Checked)
+            {
+                lblImportDelayCaption.Enabled = false;
+                lblImportDelaySecs.Enabled = false;
+                numericUpDownImportDelay.Enabled = false;
+            }
+            numericUpDownImportDelay.Value = DBOption.GetOptions(DBOption.cImportDelay);
+
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
             checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
@@ -4451,6 +4459,9 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
+            lblImportDelaySecs.Enabled = checkBox_ScanOnStartup.Checked;
+            lblImportDelaySecs.Enabled = checkBox_ScanOnStartup.Checked;
+            numericUpDownImportDelay.Enabled = checkBox_ScanOnStartup.Checked;
         }
 
         private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
@@ -4874,6 +4885,11 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_EnableSubCentralForEpisodes_CheckedChanged(object sender, EventArgs e) {
 
             DBOption.SetOptions(DBOption.cSubCentralEnabledForEpisodes, checkBox_EnableSubCentralForEpisodes.Checked);
+        }
+
+        private void numericUpDownImportDelay_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cImportDelay, (int)numericUpDownImportDelay.Value);
         }
     }
     
