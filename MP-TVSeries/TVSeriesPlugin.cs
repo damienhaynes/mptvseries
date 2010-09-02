@@ -442,25 +442,68 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke = new Control();
             m_localControlForInvoke.CreateControl();
 
-            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ***");
+            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ****");
 
             // Get Logging Level
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
+            DBOption.LogOptions();
 
+            #region Translations
             Translation.Init();
 
+            // Push Translated Strings to skin
+            MPTVSeriesLog.Write("Setting translated strings: ", MPTVSeriesLog.LogLevel.Debug);
+            string propertyName = string.Empty;
+            string propertyValue = string.Empty;
+            foreach (string name in Translation.Strings.Keys)
+            {
+                propertyName = "#TVSeries.Translation." + name + ".Label";
+                propertyValue = Translation.Strings[name];
+                MPTVSeriesLog.Write(propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug);
+                GUIPropertyManager.SetProperty(propertyName, propertyValue);
+            }
+            #endregion
+
+            #region Misc
             Download.Monitor.Start(this);
-            m_VideoHandler = new VideoHandler();
-            m_parserUpdater = new OnlineParsing(this);
-            m_parserUpdater.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(parserUpdater_OnlineParsingProgress);
-            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+            
+            m_VideoHandler = new VideoHandler();                        
+            m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
+
+            // Setup Random Fanart Timer
+            m_FanartTimer = new System.Threading.Timer(new TimerCallback(FanartTimerEvent), null, Timeout.Infinite, Timeout.Infinite);
+            m_bFanartTimerDisabled = true;
 
             // Lock for Parental Control
             logicalView.IsLocked = true;
 
-			System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
-			Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+            // Check if MediaPortal will Show TVSeries Plugin when restarting
+            // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
+            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) {
+                m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
+                m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
+            }
+            
+            // subtitle downloader background tasks
+            BackgroundWorker subsChecker = new BackgroundWorker();
+            subsChecker.DoWork += new DoWorkEventHandler(GetSubtitleDownloaderNames);
+            subsChecker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetSubtitleDownloaderNames_Completed);
+            subsChecker.RunWorkerAsync();
+            #endregion
 
+            #region Initialize Importer
+            // timer check every second
+            m_timerDelegate = new TimerCallback(Clock);
+            int importDelay = DBOption.GetOptions(DBOption.cImportDelay) * 1000;
+            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay, 1000);
+
+            m_parserUpdater = new OnlineParsing(this);
+            m_parserUpdater.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(parserUpdater_OnlineParsingProgress);
+            m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
+
+            System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
+            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+           
             try
             {
                 m_LastUpdateScan = DateTime.Parse(DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
@@ -471,12 +514,12 @@ namespace WindowPlugins.GUITVSeries
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
 
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-            {                
+            {
                 DeviceManager.StartMonitor();
 
                 setUpFolderWatches();
 
-                // do a local scan when starting up the app if enabled - late on the watcher will monitor changes
+                // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
                 // also do an online scan if it's been more than the allocated time since the last scan
                 if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
                 {
@@ -485,7 +528,7 @@ namespace WindowPlugins.GUITVSeries
                     if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
                         bUpdateScanNeeded = true;
 
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, bUpdateScanNeeded));                    
+                    m_parserUpdaterQueue.Add(new CParsingParameters(true, bUpdateScanNeeded));
                 }
             }
             else
@@ -493,7 +536,9 @@ namespace WindowPlugins.GUITVSeries
                 // else the user has selected to always manually do local scans
                 setProcessAnimationStatus(false);
             }
-            
+            #endregion
+
+            #region Skin Settings / Load
             // Import Skin Settings
             string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
             SkinSettings.Load(xmlSkinSettings);
@@ -521,53 +566,19 @@ namespace WindowPlugins.GUITVSeries
             m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
             #endregion
 
-            // timer check every seconds
-            m_timerDelegate = new TimerCallback(Clock);
-            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, 1000, 1000);
-            m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
-
-            // Setup Random Fanart Timer
-            m_FanartTimer = new System.Threading.Timer(new TimerCallback(FanartTimerEvent), null, Timeout.Infinite, Timeout.Infinite);
-            m_bFanartTimerDisabled = true;
-
             // Load all Skin Fields being used
             string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
-            foreach (string skinFile in skinFiles) {
+            foreach (string skinFile in skinFiles)
+            {
                 MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
                 SkinSettings.GetSkinProperties(skinFile);
             }
             SkinSettings.LogSkinProperties();
 
-            // Push Translated Strings to skin
-            MPTVSeriesLog.Write("Setting translated strings: ", MPTVSeriesLog.LogLevel.Debug);
-            string propertyName = string.Empty;
-            string propertyValue = string.Empty;
-            foreach (string name in Translation.Strings.Keys) {
-                propertyName = "#TVSeries.Translation." + name + ".Label";
-                propertyValue = Translation.Strings[name];
-                MPTVSeriesLog.Write(propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug);
-                GUIPropertyManager.SetProperty(propertyName, propertyValue);
-            }
-
-            // Check if MediaPortal will Show TVSeries Plugin when restarting
-            // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
-            using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.Settings(Config.GetFile(Config.Dir.Config, "MediaPortal.xml"))) {
-                m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
-                m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
-            }
-
-            // Log Options            
-            DBOption.LogOptions();
-
-            // subtitle downloader background tasks
-            BackgroundWorker subsChecker = new BackgroundWorker();
-            subsChecker.DoWork += new DoWorkEventHandler(GetSubtitleDownloaderNames);
-            subsChecker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetSubtitleDownloaderNames_Completed);
-            subsChecker.RunWorkerAsync();
-
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
             return Load(xmlSkin);
+            #endregion
 		}
 
         public override void DeInit()

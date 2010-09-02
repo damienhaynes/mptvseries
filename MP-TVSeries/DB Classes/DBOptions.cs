@@ -214,6 +214,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cDisableMediaInfo = "DisableMediaInfo";
         public const String cMediaInfoParseSpeed = "MediaInfoParseSpeed";
 
+        public const String cImportDelay = "ImportDelay";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -573,6 +575,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cMediaInfoParseSpeed) == null)
                     SetOptions(cMediaInfoParseSpeed, "0.3"); // Default is 0.5 but we dont need that for TVSeries.
+
+                if (GetOptions(cImportDelay) == null)
+                    SetOptions(cImportDelay, 30);
 
             }
             catch (Exception ex)
