@@ -223,7 +223,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // Run an Online update when needed
             if (onlineUpdateNeeded && !wasOnlineUpdate) {
-                MPTVSeriesLog.Write("Worker completed, online update needed is set to true, needs online update!", MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Import Worker completed, online update is required.", MPTVSeriesLog.LogLevel.Normal);
                 onlineUpdateNeeded = false;                
                 Start(new CParsingParameters(false, true));
             }
