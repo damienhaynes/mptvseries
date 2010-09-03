@@ -254,9 +254,7 @@ namespace WindowPlugins.GUITVSeries
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
 
-            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
-            numericUpDown_AutoOnlineDataRefresh.Minimum = 1;
-            numericUpDown_AutoOnlineDataRefresh.Maximum = 24;
+            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);            
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
             checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
