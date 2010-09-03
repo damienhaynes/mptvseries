@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
         private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
         private DateTime m_LastLocalScan = DateTime.MinValue;
-        private DateTime m_LastUpdateScan = DateTime.MinValue;
+        public static DateTime m_LastUpdateScan = DateTime.MinValue;
 
         private int m_nInitialIconXOffset = 0;
         private int m_nInitialIconYOffset = 0;

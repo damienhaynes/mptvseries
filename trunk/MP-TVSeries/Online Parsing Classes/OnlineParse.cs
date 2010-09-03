@@ -224,7 +224,8 @@ namespace WindowPlugins.GUITVSeries
             // Run an Online update when needed
             if (onlineUpdateNeeded && !wasOnlineUpdate) {
                 MPTVSeriesLog.Write("Import Worker completed, online update is required.", MPTVSeriesLog.LogLevel.Normal);
-                onlineUpdateNeeded = false;                
+                onlineUpdateNeeded = false;
+                TVSeriesPlugin.m_LastUpdateScan = DateTime.Now;
                 Start(new CParsingParameters(false, true));
             }
             else {
