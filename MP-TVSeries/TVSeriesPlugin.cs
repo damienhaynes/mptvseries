@@ -494,8 +494,9 @@ namespace WindowPlugins.GUITVSeries
             #region Initialize Importer
             // timer check every second
             m_timerDelegate = new TimerCallback(Clock);
-            int importDelay = DBOption.GetOptions(DBOption.cImportDelay) * 1000;
-            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay, 1000);
+            int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
+            MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
+            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay*1000, 1000);
 
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(parserUpdater_OnlineParsingProgress);
@@ -519,16 +520,12 @@ namespace WindowPlugins.GUITVSeries
                 setUpFolderWatches();
             }
 
-            // do a local scan when starting up the app if enabled - later on the watcher will monitor changes
-            // also do an online scan if it's been more than the allocated time since the last scan
+            // do a local scan when starting up the app if enabled - later on the watcher will monitor changes            
             if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
             {
-                bool bUpdateScanNeeded = false;
-                TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
-                if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
-                    bUpdateScanNeeded = true;
-
-                m_parserUpdaterQueue.Add(new CParsingParameters(true, bUpdateScanNeeded));
+                // if online updates are required then this will be picked up 
+                // in clock timer where last update time is compared
+                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
             }
             else
             {
@@ -2015,8 +2012,9 @@ namespace WindowPlugins.GUITVSeries
 
                 // re-initialise the importer timer
                 m_timerDelegate = new TimerCallback(Clock);
-                int importDelay = DBOption.GetOptions(DBOption.cImportDelay) * 1000;
-                m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay, 1000);
+                int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
+                MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
+                m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay*1000, 1000);
 
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
@@ -4530,7 +4528,11 @@ namespace WindowPlugins.GUITVSeries
                 {
                     TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
                     if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
+                    {
+                        m_LastUpdateScan = DateTime.Now;
+                        MPTVSeriesLog.Write("Online Update Scan needed, last scan run @ {0}", m_LastUpdateScan);
                         bUpdateScanNeeded = true;
+                    }
                 }
                 if (bUpdateScanNeeded)
                 {
@@ -4563,8 +4565,7 @@ namespace WindowPlugins.GUITVSeries
             setProcessAnimationStatus(false);
 
             if (m_parserUpdater.UpdateScan)
-            {
-                m_LastUpdateScan = DateTime.Now;
+            {                
                 DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
