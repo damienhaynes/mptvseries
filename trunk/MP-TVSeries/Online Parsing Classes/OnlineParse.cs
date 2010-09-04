@@ -624,7 +624,9 @@ namespace WindowPlugins.GUITVSeries
                 SQLCondition condition = new SQLCondition();
                 condition.Add(new DBEpisode(), DBEpisode.cFilename, pair.m_sFull_FileName, SQLConditionType.Equal);
                 
-                if (!LocalParse.isOnRemovable(pair.m_sFull_FileName) && !LocalParse.needToKeepReference(pair.m_sFull_FileName)) /*!DBOption.GetOptions(DBOption.cImport_DontClearMissingLocalFiles)*/
+                // clear the file if we know for certain it doesnt exist anymore
+                // if removable drive or network path is offline then we dont remove
+                if (Directory.Exists(LocalParse.getImportPath(pair.m_sFull_FileName))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
                 {
                     DBEpisode.Clear(condition);
                     m_bDataUpdated = true;
@@ -750,26 +752,34 @@ namespace WindowPlugins.GUITVSeries
                 // now, remove all episodes still processed = 0, the weren't find in the scan
                 SQLCondition condition = new SQLCondition();
                 condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
+                //condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
 
-                foreach (DBEpisode localepisode in DBEpisode.Get(condition))
+                // remove references to files that we know for certain dont exist anymore
+                // if import path is not available then could be offline
+                List<DBEpisode> localepisodes = DBEpisode.Get(condition);
+                foreach (DBImportPath path in DBImportPath.GetAll())
                 {
-                    if (!LocalParse.needToKeepReference(localepisode[DBEpisode.cFilename]))
+                    string importPath = path[DBImportPath.cPath];
+                    if (path[DBImportPath.cEnabled] && !Directory.Exists(importPath)) //  && !LocalParse.needToKeepReference(importPath)
                     {
-                        DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
+                        MPTVSeriesLog.Write("Import path '{0}' is not available, ignoring database maintenance on this path until available.", importPath);
+                        localepisodes.RemoveAll(ep => ep[DBEpisode.cFilename].ToString().Contains(importPath));
                     }
                 }
 
-                // moved global set out of foreach, clear will delete episode which need to be deleted, this global set will update
-                // all other episodes left in db that weren't found in the scan to be marked as not available
-                // other way to do this is to have this lines in else condition of foreach loop:
-                // localepisode[DBEpisode.cIsAvailable] = false;
-                // localepisode.Commit;
-                // but my understanding is that executing one "big" query is quicker than executing loads of "smaller" ones
-                // added this because DBEpisode.Get fills the condition with default ones..
+                // clear local database references for files that dont exist anymore
+                foreach (DBEpisode localepisode in localepisodes)
+                {
+                    //if (!LocalParse.needToKeepReference(localepisode[DBEpisode.cFilename]))
+                    //{
+                        DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
+                    //}
+                }
+
+                // mark all remaining episodes in database as not available                
                 condition = new SQLCondition();
                 condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
+                //condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
                 DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
 
                 // and copy the HasLocalFileTemp value into the real one
@@ -2523,8 +2533,6 @@ namespace WindowPlugins.GUITVSeries
                 } // else nothing changed, so dont bother
             }
             
-
-
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, parsedFiles.Count));
         }
         #endregion

@@ -145,7 +145,7 @@
             "Episode Index",
             "Episode Index 2",
             "File Extension",
-            "Removable",
+            //"Removable",
             "Episode Name"});
             this.comboBoxAddColumn.Location = new System.Drawing.Point(6, 29);
             this.comboBoxAddColumn.Name = "comboBoxAddColumn";

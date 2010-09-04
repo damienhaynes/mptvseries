@@ -116,10 +116,17 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void AddWatchDrive(string path) {
+            AddWatchDrive(path, false);
+        }
+        public static void AddWatchDrive(string path, bool localOnly) {
             try {
                 // if the path does not point to logical volume do not add it to the drive watcher
                 if (PathIsUnc(path))
                     return;
+
+                if (localOnly) {
+                    if (PathIsOnNetwork(path)) return;
+                }
 
                 // get the driveletter
                 string driveLetter = GetDriveLetter(path);
@@ -293,13 +300,34 @@ namespace WindowPlugins.GUITVSeries
         }
         
         /// <summary>
-        /// Gets a value indicating wether the path is in UNC format.
+        /// Gets a value indicating whether the path is in UNC format.
         /// </summary>
         /// <param name="path">path to check</param>
         /// <returns>True, if it's a UNC path</returns>
         public static bool PathIsUnc(string path) {
             return (path != null && path.StartsWith(@"\\"));
    
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether volume is a drive on a network
+        /// </summary>
+        /// <param name="paht"></param>
+        /// <returns></returns>
+        public static bool PathIsOnNetwork(string path) {
+            if (PathIsUnc(path)) return true;
+            try
+            {
+                DriveInfo info = new DriveInfo(path);
+                if (info.DriveType == DriveType.Network)
+                    return true;
+            }
+            catch (ArgumentException)
+            {
+                // has to be unc path
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -458,7 +486,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         /// <summary>
-        /// Gets the volume label of the drive were the path is located.
+        /// Gets the volume label of the drive where the path is located.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>

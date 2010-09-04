@@ -98,6 +98,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Options = "Options";
         public static string updateMI = "Update Media Info";
         public static string insertDisk = "Please insert Disk";
+        public static string InsertDiskMessage = "The media for the episode you have selected\nis currently not available.\nPlease insert or connect media\nlabeled: {0}";
         public static string OK = "OK";
         public static string Cancel = "Cancel";
         public static string Ignore = "Ignore";
