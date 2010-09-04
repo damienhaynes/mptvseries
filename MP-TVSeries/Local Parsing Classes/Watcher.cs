@@ -213,7 +213,7 @@ namespace WindowPlugins.GUITVSeries
 
         public Watcher(List<String> WatchedFolders, int nScanLapse)
         {
-            MPTVSeriesLog.Write("Watcher: Creating new File System Watcher", MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("File Watcher: Creating new File System Watcher", MPTVSeriesLog.LogLevel.Normal);
 
             m_nScanLapse = nScanLapse;
 
@@ -225,23 +225,23 @@ namespace WindowPlugins.GUITVSeries
                     
                     if (info.DriveType == DriveType.CDRom) {
                         // do nothing as filesystemwatchers do nothing for cd or dvd drives
-                        MPTVSeriesLog.Write(string.Format("Watcher: Skipping CD/DVD drive: {0}", sRoot), MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write(string.Format("File Watcher: Skipping CD/DVD drive: {0}", sRoot), MPTVSeriesLog.LogLevel.Normal);
                     }
                     else if (info.DriveType==DriveType.Network) {
-                        string sUNCPath=MPR.GetUniversalName(folder);
+                        //string sUNCPath=MPR.GetUniversalName(folder);
 
-                        MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", sUNCPath), MPTVSeriesLog.LogLevel.Normal);
-                        m_ScannedFolders.Add(sUNCPath);
+                        MPTVSeriesLog.Write(string.Format("File Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
+                        m_ScannedFolders.Add(folder);
                     }
                     else {
-                        MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
+                        MPTVSeriesLog.Write(string.Format("File Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
                         m_WatchedFolders.Add(folder);
                     }
                 }
                 catch (System.ArgumentException)
                 {
                 	// this has to be a UNC path
-                    MPTVSeriesLog.Write(string.Format("Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
+                    MPTVSeriesLog.Write(string.Format("File Watcher: Adding watcher on folder: {0}", folder), MPTVSeriesLog.LogLevel.Normal);
                     m_ScannedFolders.Add(folder);
                 }
             }
@@ -283,7 +283,7 @@ namespace WindowPlugins.GUITVSeries
 
         void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            MPTVSeriesLog.Write("Watcher: Renamed event: " + e.OldFullPath + " to " + e.FullPath);
+            MPTVSeriesLog.Write("File Watcher: Renamed event: " + e.OldFullPath + " to " + e.FullPath);
 
             List<PathPair> filesToRemove = new List<PathPair>();
             List<PathPair> filesToAdd = new List<PathPair>();
@@ -338,11 +338,11 @@ namespace WindowPlugins.GUITVSeries
         void watcher_Changed(object sender, FileSystemEventArgs e)
         {
             if (!TVSeriesPlugin.IsNetworkAvailable) {
-                MPTVSeriesLog.Write("Watcher: Network not available, ignoring watcher changed event");
+                MPTVSeriesLog.Write("File Watcher: Network not available, ignoring watcher changed event");
                 return;
             }
 
-            MPTVSeriesLog.Write("Watcher: Changed event: " + e.FullPath);
+            MPTVSeriesLog.Write("File Watcher: Changed event: " + e.FullPath);
 
             List<PathPair> filesChanged = new List<PathPair>();
             bool isDirectoryChange = false;
@@ -411,7 +411,7 @@ namespace WindowPlugins.GUITVSeries
         {            
             if (m_watchersList.Count > 0) 
             {
-                MPTVSeriesLog.Write("Watcher: Cleaning up File System Watchers", MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("File Watcher: Cleaning up File System Watchers", MPTVSeriesLog.LogLevel.Normal);
 
                 // do some cleanup first, remove the existing watchers
                 foreach (FileSystemWatcher watcher in m_watchersList)
@@ -451,7 +451,7 @@ namespace WindowPlugins.GUITVSeries
 
         void watcher_Error(object sender, ErrorEventArgs e)
         {
-            MPTVSeriesLog.Write("Watcher: Error event: " + e.GetException().Message);
+            MPTVSeriesLog.Write("File Watcher: Error event: " + e.GetException().Message);
             refreshWatchers = true;
         }
 
@@ -497,7 +497,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         m_modifiedFilesList = removeDuplicates(m_modifiedFilesList);
 
-                        MPTVSeriesLog.Write("Watcher: Signaling " + m_modifiedFilesList.Count + " modified files");
+                        MPTVSeriesLog.Write("File Watcher: Signaling " + m_modifiedFilesList.Count + " modified files");
                         List<WatcherItem> outList = new List<WatcherItem>();
                        
                         // leave locked files in the m_modifiedFilesList
@@ -528,7 +528,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception exp)
             {
-                MPTVSeriesLog.Write("Watcher: Exception happened in Signal Modified Files: " + exp.Message);
+                MPTVSeriesLog.Write("File Watcher: Exception happened in Signal Modified Files: " + exp.Message);
             }
         }
         
@@ -562,7 +562,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBImportPath importPath in DBImportPath.GetAll())
             {
                 string sRoot = System.IO.Path.GetPathRoot(importPath[DBImportPath.cPath]);
-                if ((importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot) && sRoot.StartsWith(volume))
+                if ((importPath[DBImportPath.cEnabled] != 0) && !String.IsNullOrEmpty(sRoot) && sRoot.StartsWith(volume.ToLower()))
                 {                    
 					MPTVSeriesLog.Write("Adding for import or remove: " + importPath[DBImportPath.cPath]);
                     folders.Add(importPath[DBImportPath.cPath]); 
@@ -596,15 +596,15 @@ namespace WindowPlugins.GUITVSeries
         void DoFileScan(List<String> scannedFolders, ref List<PathPair> previousScan)
         {
 
-            MPTVSeriesLog.Write("Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
             if (!TVSeriesPlugin.IsNetworkAvailable) {
-                MPTVSeriesLog.Write("Watcher: Network not available, aborting file scan");
+                MPTVSeriesLog.Write("File Watcher: Network not available, aborting file scan");
                 return;
             }                    
             
             // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
             if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
-                MPTVSeriesLog.Write("Watcher: Fullscreen Video has been detected, aborting file scan");
+                MPTVSeriesLog.Write("File Watcher: Fullscreen Video has been detected, aborting file scan");
                 return;
             }
             
@@ -639,7 +639,7 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
-            MPTVSeriesLog.Write("Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
+            MPTVSeriesLog.Write("File Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
             
             System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             while (!TVSeriesPlugin.IsNetworkAvailable) {

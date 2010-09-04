@@ -138,25 +138,31 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
 
                 #region Removable Media Handling
-                bool isOnRemovable = false;
-                if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
-                else if (episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
-                {
-                    isOnRemovable = LocalParse.isOnRemovable(episode[DBEpisode.cFilename]);
-                    episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
-                    if (isOnRemovable) episode[DBEpisode.cVolumeLabel] = LocalParse.getDiskID(episode[DBEpisode.cFilename]);
-                    episode.Commit();
-                }
+                //bool isOnRemovable = false;
+                //if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
+                //else if (episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
+                //{
+                //    isOnRemovable = LocalParse.isOnRemovable(episode[DBEpisode.cFilename]);
+                //    episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
+                //    if (isOnRemovable) episode[DBEpisode.cVolumeLabel] = DeviceManager.GetVolumeLabel(episode[DBEpisode.cFilename]);
+                //    episode.Commit();
+                //}
 
-                if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                string importPath = LocalParse.getImportPath(episode[DBEpisode.cFilename]);                
+                
+                //if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                if (!System.IO.Directory.Exists(importPath))
                 {
-                    // ask the user to input cd/dvd whatever
+                    string volumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
+                    if (string.IsNullOrEmpty(volumeLabel))
+                        volumeLabel = importPath;
+
+                    // ask the user to input cd/dvd, usb disk or confirm network drive is connected
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     if (null == dlgOK)
                         return false;
                     dlgOK.SetHeading(Translation.insertDisk);
-                    dlgOK.SetLine(1, string.Empty);
-                    dlgOK.SetLine(2, m_currentEpisode[DBEpisode.cVolumeLabel].ToString());
+                    dlgOK.SetLine(1, string.Format(Translation.insertDiskMessage, volumeLabel));                    
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);
 
                     if (!System.IO.File.Exists(episode[DBEpisode.cFilename]))

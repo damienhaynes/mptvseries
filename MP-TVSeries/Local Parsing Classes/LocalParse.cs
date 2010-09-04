@@ -62,33 +62,40 @@ namespace WindowPlugins.GUITVSeries
 
         static DBImportPath[] paths = null;
 
-        public static bool isOnRemovable(string filename)
-        {
-            if (paths == null) paths = DBImportPath.GetAll();
-            foreach (DBImportPath path in paths)
-            {
-                if (path[DBImportPath.cRemovable] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
-            }
-            return false;
-        }
+        //public static bool isOnRemovable(string filename)
+        //{
+        //    if (paths == null) paths = DBImportPath.GetAll();
+        //    foreach (DBImportPath path in paths)
+        //    {
+        //        if (path[DBImportPath.cRemovable] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
+        //    }
+        //    return false;
+        //}
         
-        public static bool needToKeepReference(string filename)
+        //public static bool needToKeepReference(string filename)
+        //{
+        //    if (paths == null) paths = DBImportPath.GetAll();
+        //    foreach (DBImportPath path in paths)
+        //    {
+        //        if (path[DBImportPath.cKeepReference] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
+        //    }
+        //    return false;
+        //}
+
+        /// <summary>
+        /// Gets the corresponding Import Path that the filename is attached to
+        /// </summary>        
+        public static string getImportPath(string filename)
         {
             if (paths == null) paths = DBImportPath.GetAll();
             foreach (DBImportPath path in paths)
             {
-                if (path[DBImportPath.cKeepReference] && filename.ToLower().Contains(path[DBImportPath.cPath].ToString().ToLower())) return true;
+                string importPath = path[DBImportPath.cPath];
+                if (filename.ToLower().Contains(importPath.ToString().ToLower()))
+                    return importPath;
             }
-            return false;
-        }
-
-
-        public static string getDiskID(string filename)
-        {
-            System.IO.DriveInfo di = new System.IO.DriveInfo(filename);
-            if (di != null) return di.VolumeLabel;
-            return string.Empty;
-        }
+            return null;
+        }       
 
         public static List<parseResult> Parse(List<PathPair> files)
         {
@@ -111,20 +118,28 @@ namespace WindowPlugins.GUITVSeries
                 if (parser.Matches.ContainsKey(DBSeries.cParsedName))
                     parser.Matches[DBSeries.cParsedName] = parser.Matches[DBSeries.cParsedName].ToString().ToTitleCase();
 
-                try
-                {
-                    if (isOnRemovable(file.m_sFull_FileName))
-                    {
-                        parser.Matches.Add(DBEpisode.cIsOnRemovable, "1");
-                        parser.Matches.Add(DBEpisode.cVolumeLabel, getDiskID(file.m_sFull_FileName));
-                    }
-                    else parser.Matches.Add(DBEpisode.cIsOnRemovable, "0");
-                }
-                catch (Exception)
-                {
-                    MPTVSeriesLog.Write("Warning: Could not add Volume Label for: " + file.m_sFull_FileName);
-                    MPTVSeriesLog.Write("Ensure file exists on Removable Media, otherwise uncheck removable property");
-                }
+                //try
+                //{
+                //    if (DeviceManager.IsRemovable(file.m_sFull_FileName))
+                //    {
+                //        parser.Matches.Add(DBEpisode.cIsOnRemovable, "1");
+                //        parser.Matches.Add(DBEpisode.cVolumeLabel, DeviceManager.GetVolumeLabel(file.m_sFull_FileName));
+                //    }
+                //    else parser.Matches.Add(DBEpisode.cIsOnRemovable, "0");
+                //}
+                //catch (Exception)
+                //{
+                //    MPTVSeriesLog.Write("Warning: Could not add Volume Label for: " + file.m_sFull_FileName);
+                //    MPTVSeriesLog.Write("Ensure file exists on Removable Media, otherwise uncheck removable property");
+                //}
+
+                // set volumelabel for drive so can be prompted to insert CD/DVD disk or removable harddrive
+                // populate with import path name if can not get volume label
+                string volumeLabel = DeviceManager.GetVolumeLabel(file.m_sFull_FileName);
+                
+                // we may encounter a drive not plugged in, dont overwrite existing volume label with an empty one
+                if (!string.IsNullOrEmpty(volumeLabel))
+                    parser.Matches.Add(DBEpisode.cVolumeLabel, volumeLabel);
 
                 item = new ListViewItem(file.m_sMatch_FileName);
                 item.UseItemStyleForSubItems = true;

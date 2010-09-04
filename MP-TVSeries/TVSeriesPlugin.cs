@@ -2018,9 +2018,12 @@ namespace WindowPlugins.GUITVSeries
 
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
-                
+
                 if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+                {
                     DeviceManager.StartMonitor();
+                    setUpFolderWatches();
+                }
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
@@ -2044,9 +2047,13 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
-                MPTVSeriesLog.Write("MP-TVSeries is entering standby");                
-                
-                DeviceManager.StopMonitor();
+                MPTVSeriesLog.Write("MP-TVSeries is entering standby");
+
+                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+                {
+                    DeviceManager.StopMonitor();                
+                    m_watcherUpdater = null;
+                }
 
                 // stop the import timer
                 m_timerDelegate = null;
@@ -2761,7 +2768,7 @@ namespace WindowPlugins.GUITVSeries
 
                             bool canBeSkipped = (seasons.Count == 1) && DBOption.GetOptions(DBOption.cSkipSeasonViewOnSingleSeason);
                             if (!canBeSkipped)
-								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
+								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
 
                             bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List));
@@ -2910,7 +2917,7 @@ namespace WindowPlugins.GUITVSeries
                             int watchedCount = 0;
                             int unwatchedCount = episodesToDisplay.Count;
 
-                            MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
                             item = null;
 
 							if (episodesToDisplay.Count == 0)							

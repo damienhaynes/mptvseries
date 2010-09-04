@@ -278,5 +278,7 @@
   <string Field="AbsoluteOrder" Original="Absolute Order">Absolute Order</string>  
   <string Field="Title" Original="Title">Title</string>
   <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Change Online Matching Method</string>
+	
+	<string Field="InsertDiskMessage" Original="The media for the episode you have selected\nis currently not available.\nPlease insert or connect media\nlabeled: {0}">The media for the episode you have selected\nis currently not available.\nPlease insert or connect media\nlabeled: {0}</string>
   
 </strings>
