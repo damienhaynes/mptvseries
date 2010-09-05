@@ -2051,11 +2051,11 @@ namespace WindowPlugins.GUITVSeries
 
                 if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
                 {
-                    DeviceManager.StopMonitor();                
-                    m_watcherUpdater = null;
+                    DeviceManager.StopMonitor();
+                    stopFolderWatches();
                 }
 
-                // stop the import timer
+                // stop the import timer                
                 m_timerDelegate = null;
                 m_scanTimer = null;
 
@@ -5200,12 +5200,19 @@ namespace WindowPlugins.GUITVSeries
                         importFolders.Add(importPath[DBImportPath.cPath]);
                 }
             }
-
+                
             m_watcherUpdater = new Watcher(importFolders, DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse));
             m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
             m_watcherUpdater.StartFolderWatch();
         }
-        
+
+        private void stopFolderWatches()
+        {
+            m_watcherUpdater.StopFolderWatch();
+            m_watcherUpdater.WatcherProgress -= new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
+            m_watcherUpdater = null;
+        }
+
         public static void pushFieldsToSkin(DBTable item, string pre)
         {
             if (item == null) return;
