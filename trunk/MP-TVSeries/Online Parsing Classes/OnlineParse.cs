@@ -626,7 +626,8 @@ namespace WindowPlugins.GUITVSeries
                 
                 // clear the file if we know for certain it doesnt exist anymore
                 // if removable drive or network path is offline then we dont remove
-                if (Directory.Exists(LocalParse.getImportPath(pair.m_sFull_FileName))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
+                string importPath = LocalParse.getImportPath(pair.m_sFull_FileName);
+                if (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
                 {
                     DBEpisode.Clear(condition);
                     m_bDataUpdated = true;
@@ -764,6 +765,14 @@ namespace WindowPlugins.GUITVSeries
                     {
                         MPTVSeriesLog.Write("Import path '{0}' is not available, ignoring database maintenance on this path until available.", importPath);
                         localepisodes.RemoveAll(ep => ep[DBEpisode.cFilename].ToString().Contains(importPath));
+                    }
+                    // check if same importpath has different volume labels and keep them as well
+                    // this can occur if you have multiple DVDs or USB disks that share the same drive letter
+                    // but each removable disk have a unique volume label (volume serial should be used but we dont store that)
+                    if (path[DBImportPath.cEnabled] && Directory.Exists(importPath) && !string.IsNullOrEmpty(DeviceManager.GetVolumeLabel(importPath)))
+                    {
+                        localepisodes.RemoveAll(ep => ep[DBEpisode.cFilename].ToString().Contains(importPath) &&
+                                                      !string.Equals(ep[DBEpisode.cVolumeLabel].ToString(), DeviceManager.GetVolumeLabel(importPath)));
                     }
                 }
 
