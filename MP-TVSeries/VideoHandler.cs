@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.IO;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -148,24 +149,27 @@ namespace WindowPlugins.GUITVSeries
                 //    episode.Commit();
                 //}
 
-                string importPath = LocalParse.getImportPath(episode[DBEpisode.cFilename]);                
+                string importPath = LocalParse.getImportPath(m_currentEpisode[DBEpisode.cFilename]);
                 
+                // drive maybe mounted but not the correct disk is inserted
+                string episodeVolumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
+                string diskVolumeLabel = DeviceManager.GetVolumeLabel(importPath);
+
                 //if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
-                if (!System.IO.Directory.Exists(importPath))
+                if (!Directory.Exists(importPath) || !string.Equals(episodeVolumeLabel, diskVolumeLabel))
                 {
-                    string volumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
-                    if (string.IsNullOrEmpty(volumeLabel))
-                        volumeLabel = importPath;
+                    if (string.IsNullOrEmpty(episodeVolumeLabel))
+                        episodeVolumeLabel = importPath;
 
                     // ask the user to input cd/dvd, usb disk or confirm network drive is connected
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
                     if (null == dlgOK)
                         return false;
                     dlgOK.SetHeading(Translation.insertDisk);
-                    dlgOK.SetLine(1, string.Format(Translation.insertDiskMessage, volumeLabel));                    
+                    dlgOK.SetLine(1, string.Format(Translation.InsertDiskMessage, episodeVolumeLabel));                    
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);
 
-                    if (!System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                    if (!File.Exists(m_currentEpisode[DBEpisode.cFilename]))
                     {
                         return false; // still not found, return to list
                     }
