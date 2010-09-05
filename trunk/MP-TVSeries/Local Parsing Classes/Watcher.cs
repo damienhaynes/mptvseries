@@ -250,7 +250,9 @@ namespace WindowPlugins.GUITVSeries
             DeviceManager.OnVolumeRemoved += OnVolumeInsertedRemoved;
 
             worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_Completed);
             worker.DoWork += new DoWorkEventHandler(workerWatcher_DoWork);
         }
 
@@ -260,10 +262,22 @@ namespace WindowPlugins.GUITVSeries
                 WatcherProgress.Invoke(e.ProgressPercentage, e.UserState as List<WatcherItem>);
         }
 
+        void worker_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write("Successfully stopped File System Watchers.");
+        }
+
         public void StartFolderWatch()
         {
             // start the thread that is going to handle the addition in the db when files change
             worker.RunWorkerAsync();
+        }
+
+        public void StopFolderWatch()
+        {
+            MPTVSeriesLog.Write("Stopping File System Watchers...");
+            if (worker.IsBusy)
+                worker.CancelAsync();
         }
 
         void removeFromModifiedFilesList(string filePath, WatcherItemType type, bool isFolder)
@@ -454,7 +468,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("File Watcher: Error event: " + e.GetException().Message);
             refreshWatchers = true;
         }
-
 
         static List<WatcherItem> removeDuplicates(List<WatcherItem> inputList)
         {
@@ -669,7 +682,7 @@ namespace WindowPlugins.GUITVSeries
                 if (refreshWatchers)
                     setUpWatches();
        
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
             }
         }
     };
