@@ -2010,8 +2010,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
 
-                // re-initialise the importer timer
-                m_timerDelegate = new TimerCallback(Clock);
+                // re-initialise the importer timer                
                 int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
                 MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
                 m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay*1000, 1000);
@@ -2055,9 +2054,8 @@ namespace WindowPlugins.GUITVSeries
                     stopFolderWatches();
                 }
 
-                // stop the import timer                
-                m_timerDelegate = null;
-                m_scanTimer = null;
+                // stop the import timer
+                m_scanTimer.Dispose();
 
                 // Only disconnect from the database if file exists on the network.
                 if (DBTVSeries.IsDatabaseOnNetworkPath) {
