@@ -4458,7 +4458,7 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
             lblImportDelaySecs.Enabled = checkBox_ScanOnStartup.Checked;
-            lblImportDelaySecs.Enabled = checkBox_ScanOnStartup.Checked;
+            lblImportDelayCaption.Enabled = checkBox_ScanOnStartup.Checked;
             numericUpDownImportDelay.Enabled = checkBox_ScanOnStartup.Checked;
         }
 

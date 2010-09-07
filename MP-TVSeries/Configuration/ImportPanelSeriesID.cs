@@ -159,7 +159,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             dataGridViewIdentifySeries.EditMode = DataGridViewEditMode.EditOnEnter;
 
-            #region Grid Events        
+            #region Grid Events
             dataGridViewIdentifySeries.CellBeginEdit += new DataGridViewCellCancelEventHandler((sender, e) =>
             {
                 var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
@@ -326,9 +326,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if(lastSearch.ContainsKey(row.Index))
                 lastSearch[row.Index] = toSearch;
             else lastSearch.Add(row.Index, toSearch);
-            
+                        
             System.Threading.Interlocked.Increment(ref queuedSearches);
             setSearchStatus();
+
+            int iThreadCount = Environment.ProcessorCount;
+            if (iThreadCount < 8) iThreadCount = 8;
+            System.Threading.ThreadPool.SetMaxThreads(iThreadCount, iThreadCount);            
 
             System.Threading.ThreadPool.QueueUserWorkItem((o) =>
                 {
