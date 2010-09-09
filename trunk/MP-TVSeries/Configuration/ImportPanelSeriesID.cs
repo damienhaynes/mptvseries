@@ -459,8 +459,25 @@ namespace WindowPlugins.GUITVSeries.Configuration
             if (UserFinishedEditing == null) return;
 
             if (reqAction == UserFinishedRequestedAction.Next)
+            {
+                // check if cells are in a dirty status
+                // TODO: if so, force focus on 1st cell of active row to register changes
+                if (dataGridViewIdentifySeries.IsCurrentRowDirty)
+                {
+                    string currentCol = dataGridViewIdentifySeries.CurrentCell.OwningColumn.Name;
+
+                    // only interested in the dropdowncomboboxes
+                    if (currentCol == colOSeries || currentCol == colAction)
+                    {
+                        string message = "The series '{0}' is still in edit mode. Finish changes, then click Next again.";
+                        DialogResult result = MessageBox.Show(string.Format(message, dataGridViewIdentifySeries.CurrentRow.Cells[colSeries].Value), "Unfinished Changes", MessageBoxButtons.RetryCancel, MessageBoxIcon.Information);
+                        if (result == DialogResult.Retry) return;
+                    }
+                    
+                }
                 UserFinishedEditing(new UserInputResults(givenResults, getApprovedResults()), reqAction);
-            else           
+            }
+            else
                 UserFinishedEditing(null, reqAction);
 
             // we no longer need to listen to navigate event

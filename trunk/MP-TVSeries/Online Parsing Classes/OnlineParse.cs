@@ -1089,7 +1089,7 @@ namespace WindowPlugins.GUITVSeries
                     m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));                    
                     if (episodesParser.Results.Count > 0) 
                     {
-                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\"", episodesParser.Results.Count.ToString().PadLeft(3, '0'), series.ToString()));
+                        MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\"", episodesParser.Results.Count.ToString().PadLeft(3, '0'), series.ToString()), MPTVSeriesLog.LogLevel.Debug);
                         // look for the episodes for that series, and compare / update the values
                         if (m_params.UserEpisodeMatcher == null) // auto mode
                             matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
@@ -2116,7 +2116,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("ccid o: " + onlineEpisode[DBOnlineEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
             MPTVSeriesLog.Write("ccid on: " + localEpisode.onlineEpisode[DBOnlineEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
             localEpisode[DBOnlineEpisode.cOnlineDataImported] = 1;
-            MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified");
+            MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified", MPTVSeriesLog.LogLevel.Debug);
             localEpisode.Commit();            
         }
 
