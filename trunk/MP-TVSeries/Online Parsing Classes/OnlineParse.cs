@@ -508,7 +508,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void BroadcastRecentlyAdded()
         {            
-            MPTVSeriesLog.Write("Getting list of Recently Added episodes from Database");
+            MPTVSeriesLog.Write(bigLogMessage("Broadcasting Recently Added Episodes"));
 
             // Calculate date for querying database
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
@@ -523,7 +523,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (episodes != null)
             {
-                MPTVSeriesLog.Write("Sending most Recently Added episodes to InfoService plugin");
+                MPTVSeriesLog.Write("Sending most Recently Added episodes to InfoService plugin", MPTVSeriesLog.LogLevel.Debug);
 
                 // Infoservice only supports 3 most recent episodes
                 if (episodes.Count > 3) episodes.RemoveRange(3, episodes.Count - 3);                
@@ -1219,7 +1219,7 @@ namespace WindowPlugins.GUITVSeries
 					}
                     
 					DBSeries series = Helper.getCorrespondingSeries(seriesID);
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, null, eps.Count, episodesInDB.Count, series, null));
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, series.ToString() + " [" + eps.Count + " episodes]", i, episodesInDB.Count, series, null));
 					if (series != null) {
 						matchOnlineToLocalEpisodes(series, eps, new GetEpisodes(seriesID.ToString()));
 					}					
@@ -1267,12 +1267,12 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             if (seriesList.Count == 0) {
                 if (bUpdateNewSeries)
-                    MPTVSeriesLog.Write("All Series appear to have artwork already");
+                    MPTVSeriesLog.Write("All Series appear to have artwork already", MPTVSeriesLog.LogLevel.Debug);
                 else
                     MPTVSeriesLog.Write("Nothing to do");
                 m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, 0));
             } else
-                MPTVSeriesLog.Write("Looking for artwork on " + seriesList.Count + " Series");
+                MPTVSeriesLog.Write("Looking for artwork on " + seriesList.Count + " Series", MPTVSeriesLog.LogLevel.Debug);
 
             foreach (DBSeries series in seriesList) {
                 if (m_worker.CancellationPending)
@@ -1474,7 +1474,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for all Fanart"));
+                MPTVSeriesLog.Write(bigLogMessage("Updating Fanart"));
             }
             int nIndex = 0;
             foreach (DBSeries series in seriesList)
@@ -1515,7 +1515,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {
-            MPTVSeriesLog.Write(bigLogMessage("Get User Ratings"), MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);
             List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
 
             tUserRatings.DoWork += new DoWorkEventHandler(asyncUserRatings);
@@ -1525,7 +1525,7 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncUserRatingsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MPTVSeriesLog.Write("*****************   User Ratings Updated in Database    *******************");
+            MPTVSeriesLog.Write(bigLogMessage("User Ratings Updated in Database"), MPTVSeriesLog.LogLevel.Debug);
         }
 
         void asyncUserRatings(object sender, DoWorkEventArgs e)
@@ -1631,7 +1631,7 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
 
             if (!String.IsNullOrEmpty(sAccountID)) {
-                MPTVSeriesLog.Write(bigLogMessage("Get User Favourites"), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(bigLogMessage("Updating User Favourites"), MPTVSeriesLog.LogLevel.Normal);
 
                 GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
 
@@ -1659,7 +1659,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (DBOption.GetOptions(DBOption.cGetEpisodeSnapshots) == true) 
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for Episode Thumbnails"), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(bigLogMessage("Updating Episode Thumbnails"), MPTVSeriesLog.LogLevel.Normal);
 
                 // get a list of all the episodes with thumbnailUrl
                 //SQLCondition condition = new SQLCondition();                
@@ -1752,6 +1752,8 @@ namespace WindowPlugins.GUITVSeries
 
         void UpdateEpisodeCounts(BackgroundWorker tEpisodeCounts)
         {
+            MPTVSeriesLog.Write(bigLogMessage("Updating Episode Counts"));
+
             tEpisodeCounts.WorkerReportsProgress = true;
 
             SQLCondition condEmpty = new SQLCondition();

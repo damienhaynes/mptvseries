@@ -621,6 +621,8 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
             
+
+
             List<PathPair> newScan = Filelister.GetFiles(scannedFolders);
 
             List<PathPair> addedFiles = new List<PathPair>();
