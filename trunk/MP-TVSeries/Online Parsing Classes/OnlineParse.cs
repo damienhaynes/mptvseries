@@ -377,6 +377,10 @@ namespace WindowPlugins.GUITVSeries
                         {
                             GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);                            
                         }
+                        // at this point we have identified any new episodes
+                        // signal the facade to be reloaded.
+                        // TODO: smart way to report progress and expose as property to skins
+                        m_worker.ReportProgress(30);
                         break;
 
                     case ParsingAction.GetOnlineUpdates:
