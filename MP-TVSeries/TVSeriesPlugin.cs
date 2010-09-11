@@ -4133,9 +4133,9 @@ namespace WindowPlugins.GUITVSeries
                     m_SelectedEpisode.ReadMediaInfo();
                 }
                 LoadFacade();
-                dlgOK.SetHeading(Translation.Completed);
-                dlgOK.SetLine(1, Translation.Subtitles_download_complete);
-                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                //dlgOK.SetHeading(Translation.Completed);
+                //dlgOK.SetLine(1, Translation.Subtitles_download_complete);
+                //dlgOK.DoModal(GUIWindowManager.ActiveWindow);
             }
             else if (errorMessage != null)
             {
