@@ -4130,7 +4130,7 @@ namespace WindowPlugins.GUITVSeries
                 if (episode != null)
                 {
                     // refresh mediainfo to display subtitle logo
-                    m_SelectedEpisode.ReadMediaInfo();
+                    episode.ReadMediaInfo();
                 }
                 LoadFacade();
                 //dlgOK.SetHeading(Translation.Completed);
