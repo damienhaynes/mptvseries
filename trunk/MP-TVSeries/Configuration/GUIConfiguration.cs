@@ -3369,8 +3369,9 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
+        void downloader_SubtitleRetrievalCompleted(DBEpisode episode, bool subtitleRetrieved, string errorMessage)
         {
+            if (episode != null) episode.ReadMediaInfo();
             subtitleDownloaderWorking = false;
         }
 

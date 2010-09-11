@@ -4119,7 +4119,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_Facade != null) LoadFacade();
         }
 
-        void downloader_SubtitleRetrievalCompleted(bool subtitleRetrieved, string errorMessage)
+        void downloader_SubtitleRetrievalCompleted(DBEpisode episode, bool subtitleRetrieved, string errorMessage)
         {
             setProcessAnimationStatus(false);
             subtitleDownloaderWorking = false;
@@ -4127,6 +4127,11 @@ namespace WindowPlugins.GUITVSeries
 
             if (subtitleRetrieved)
             {
+                if (episode != null)
+                {
+                    // refresh mediainfo to display subtitle logo
+                    m_SelectedEpisode.ReadMediaInfo();
+                }
                 LoadFacade();
                 dlgOK.SetHeading(Translation.Completed);
                 dlgOK.SetLine(1, Translation.Subtitles_download_complete);
