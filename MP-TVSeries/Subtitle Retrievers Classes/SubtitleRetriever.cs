@@ -34,7 +34,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
 {
     public class SubtitleRetriever
     {
-        public delegate void SubtitleRetrievalCompletedHandler(bool bFound, string message);
+        public delegate void SubtitleRetrievalCompletedHandler(DBEpisode episode, bool bFound, string message);
 
         public event SubtitleRetrievalCompletedHandler SubtitleRetrievalCompleted;
 
@@ -107,7 +107,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
         {
             if (SubtitleRetrievalCompleted != null) // only if any subscribers exist
             {
-                SubtitleRetrievalCompleted.Invoke(_subtitleRetrieved, _errorMessage);
+                SubtitleRetrievalCompleted.Invoke(Episode, _subtitleRetrieved, _errorMessage);
             }
         }
 
