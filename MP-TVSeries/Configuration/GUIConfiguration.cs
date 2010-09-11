@@ -1540,6 +1540,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void ImportWizard_OnFinishedSeriesID(UserInputResults inputResults, UserFinishedRequestedAction requestAction)
         {
+            ParsingWizardSeriesIDPage.UserFinishedEditing -= new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
+
             ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
 
             if (requestAction == UserFinishedRequestedAction.Next)
@@ -1661,6 +1663,7 @@ namespace WindowPlugins.GUITVSeries
             TimeSpan span = DateTime.Now - m_timingStart;
             MPTVSeriesLog.Write("Online Parsing Completed in " + span);           
             m_parser = null;
+            ImportWizardParseParams = null;
             DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
 
             LoadTree();

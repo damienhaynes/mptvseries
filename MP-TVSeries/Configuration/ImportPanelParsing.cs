@@ -31,8 +31,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             dataGridViewReview.SuspendLayout();
 
-            this.dataGridViewReview.Rows.Clear();
-            this.dataGridViewReview.Columns.Clear();
             // how many cells?            
             // we have filename + status as a given
             // + all unique regex-group-matches, lets find them
@@ -143,11 +141,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
             int dis = (from DataGridViewRow row in this.dataGridViewReview.Rows
                        where row.Visible
                        select row).Count();
-            this.lblCount.Text = string.Format("{0} Files found ({1} displayed)", total, dis);
+            this.lblCount.Text = string.Format("{0} new files found ({1} displayed)", total, dis);
         }
 
         public void Init()
         {
+            this.dataGridViewReview.Columns.Clear();
+            this.dataGridViewReview.Columns.Clear();
+
             lnkAdd.Visible = false;
 
             ImportWizard.OnWizardNavigate += new ImportWizard.WizardNavigateDelegate(ImportWizard_OnWizardNavigate);
