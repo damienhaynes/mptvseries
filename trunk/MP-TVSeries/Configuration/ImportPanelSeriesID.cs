@@ -251,7 +251,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 {                    
                     // fire off a new search, if user typed something
                     string customSearch = row.Cells[ColIndexOf(colSearchTXT)].Value as string;
-                    if (!string.IsNullOrEmpty(customSearch))
+                    if (!string.IsNullOrEmpty(customSearch) && !customSearch.Equals(searchTip))
                         FireOffSearch(row.Tag as IGrouping<string, parseResult>, row, customSearch);
                 }
 
