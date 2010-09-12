@@ -147,17 +147,14 @@ namespace WindowPlugins.GUITVSeries
                 //    episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
                 //    if (isOnRemovable) episode[DBEpisode.cVolumeLabel] = DeviceManager.GetVolumeLabel(episode[DBEpisode.cFilename]);
                 //    episode.Commit();
-                //}
-
-                string importPath = LocalParse.getImportPath(m_currentEpisode[DBEpisode.cFilename]);
-                
-                // drive maybe mounted but not the correct disk is inserted
-                string episodeVolumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
-                string diskVolumeLabel = DeviceManager.GetVolumeLabel(importPath);
+                //}                                
 
                 //if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
-                if (!Directory.Exists(importPath) || !string.Equals(episodeVolumeLabel, diskVolumeLabel))
+                if (!File.Exists(m_currentEpisode[DBEpisode.cFilename]))
                 {
+                    string importPath = LocalParse.getImportPath(m_currentEpisode[DBEpisode.cFilename]);
+                    string episodeVolumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
+
                     if (string.IsNullOrEmpty(episodeVolumeLabel))
                         episodeVolumeLabel = importPath;
 
