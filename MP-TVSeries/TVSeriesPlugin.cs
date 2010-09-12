@@ -1006,12 +1006,10 @@ namespace WindowPlugins.GUITVSeries
 								pItem = new GUIListItem(Translation.Force_Local_Scan + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.actionLocalScan;
-                                
-                                // Redundant with Run Import GUI button
-								/*pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
+                                                                
+								pItem = new GUIListItem(Translation.Force_Online_Refresh + (m_parserUpdaterWorking ? Translation.In_Progress_with_Barracks : ""));
 								dlg.Add(pItem);
-								pItem.ItemId = (int)eContextItems.actionFullRefresh;							
-                                */
+								pItem.ItemId = (int)eContextItems.actionFullRefresh;
                                 
                                 pItem = new GUIListItem(Translation.Play_Random_Episode);
 								dlg.Add(pItem);
@@ -1396,7 +1394,7 @@ namespace WindowPlugins.GUITVSeries
 					case (int)eContextItems.actionFullRefresh:
 						// queue scan
 						lock (m_parserUpdaterQueue) {
-							m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
+							m_parserUpdaterQueue.Add(new CParsingParameters(false, true));
 						}
 						break;
 					#endregion
