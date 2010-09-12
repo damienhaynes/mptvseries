@@ -630,7 +630,7 @@ begin
 	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
 	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
 	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName + " ";
-	    	szParams = "/loadassembly=" + g_sSubCentralPluginFileName;
+	    	szParams = szParams + "/loadassembly=" + g_sSubCentralPluginFileName;
 	    	LaunchApp(szFileName, szParams);	    
 	    endif;
 	endif;
