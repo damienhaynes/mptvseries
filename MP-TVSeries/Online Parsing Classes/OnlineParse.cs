@@ -1073,6 +1073,7 @@ namespace WindowPlugins.GUITVSeries
                 SQLCondition conditions = new SQLCondition();               
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, 0, SQLConditionType.Equal);
+                conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
                 episodesList = DBEpisode.Get(conditions, false);
 
                 // we may already have all the online episode references
