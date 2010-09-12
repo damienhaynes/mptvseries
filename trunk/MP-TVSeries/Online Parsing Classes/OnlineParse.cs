@@ -2074,7 +2074,20 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
                 if (!bMatchFound)
-                    MPTVSeriesLog.Write(localEpisode[DBEpisode.cFilename].ToString() + " could not be matched online, check that the online database has this episode.");
+                {
+                    string filename = localEpisode[DBEpisode.cFilename];
+                    string seriesName = series[DBSeries.cParsedName];
+                    string seasonIdx = localEpisode[DBEpisode.cSeasonIndex];
+                    string episodeIdx = localEpisode[DBEpisode.cEpisodeIndex];
+                    string episodeIdx2 = localEpisode[DBEpisode.cEpisodeIndex2];
+                    string episodeId = string.IsNullOrEmpty(episodeIdx2) || episodeIdx2 == "0" ? episodeIdx : string.Concat(episodeIdx, "-", episodeIdx2);
+                    MPTVSeriesLog.Write("The following file could not be matched online: ");
+                    MPTVSeriesLog.Write("FileName: " + localEpisode[DBEpisode.cFilename]);
+                    MPTVSeriesLog.Write("Parsed Series Name: " + seriesName);
+                    MPTVSeriesLog.Write("Parsed Season Index: Season " + seasonIdx);
+                    MPTVSeriesLog.Write("Parsed Episode Index: Episode " + episodeId);
+                    MPTVSeriesLog.Write("Confirm the entry exists in the online database: http://thetvdb.com/");
+                }
             }
         }
 
