@@ -325,16 +325,16 @@
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>Forums</td><td>{B66DD604-B425-440E-BF55-6C859026407D}</td><td>WEB</td><td>8</td><td/><td>forums.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Home</td><td>{D4B8B1AA-313B-4DE4-B17D-02AC11D72823}</td><td>WEB</td><td>8</td><td/><td>home.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ICSharpCode.SharpZipLib.dll</td><td>{D34F6AB0-2068-4F66-BE68-5729679F8A5D}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>icsharpcode.sharpziplib.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ICSharpCode.SharpZipLib.dll</td><td>{D34F6AB0-2068-4F66-BE68-5729679F8A5D}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>icsharpcode.sharpziplib.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{8A4BF4FA-0DB6-4387-B076-58F050BD0D62}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Issues</td><td>{8CCBDA0E-4673-4E6E-8650-D4F52E722867}</td><td>WEB</td><td>8</td><td/><td>issues.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Wiki</td><td>{B6C9EB8C-2048-45DA-801E-A45FB97B1837}</td><td>WEB</td><td>8</td><td/><td>wiki.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>_z.dll</td><td>{50FB2E7A-ABE6-4433-A2FB-F064D4925450}</td><td>MPPROGRAMDIR</td><td>8</td><td/><td>_z.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>_z.dll</td><td>{50FB2E7A-ABE6-4433-A2FB-F064D4925450}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>_z.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3Media</td><td>{CC2C416E-AD41-4A37-AECC-F5EFCDC1FB39}</td><td>MEDIA</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1998,7 +1998,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.6.0</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.6.1</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -4126,9 +4126,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{8457C8E4-89C5-4F55-8E69-D41FEA157305}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.6.0</td><td/></row>
-		<row><td>ProductVersion</td><td>2.6.0.1157</td><td/></row>
+		<row><td>ProductCode</td><td>{77D396FC-DB0F-40C0-A55C-0200A34582F0}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.6.1</td><td/></row>
+		<row><td>ProductVersion</td><td>2.6.1.1200</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>

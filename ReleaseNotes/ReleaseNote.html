@@ -59,6 +59,46 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+	<div class="main_title">TVSeries v2.6.1 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.6.0:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 450: Fixed local episode references in database being cleared when Import path was not available e.g. share was offline due to server restart. 'Removable' and 'Keep References' have been removed and are now handled internally.</p></li>
+			<li><p>Issue 436: Fixed 'Aired' order missing from available orders in Import Wizard.</p></li>			
+			<li><p>Issue 472: Fixed issue where importer tried to match episodes that no longer exist on disk. </p></li>			
+			<li><p>Issue 471: Fixed Import Wizard running multiple imports at the same time if 'Start Import' had been clicked more than once in the same session.</p></li>
+			<li><p>Issue 439: Fixed series search being executed in Import Wizard if user didnt enter in a custom search string. This would result in no match found since no valid series had been entered.</p></li>			
+			<li><p>Issue 445: Fixed subtitle logo not appearing after succcesfully downloading subtitle.</p></li>
+			<li><p>Issue 469: Fixed series/episode listing (facade) not updating immediately after new episodes had been identified.</p></li>			
+			<li><p>Issue 466: Fixed Volume Inserted/Removed event not being fired for an import path that was entered in lower case.</p></li>
+			<li><p>Issue 468: Fixed duplicate episodes appearing after import path became available. This occured when using mapped drives.</p></li>			
+			<li><p>Issue 465: Fixed 'Online Refresh' being run twice on Startup if scheduled to run.</p></li>
+			<li><p>Issue 462: Fixed series not being removed from list when deleted from Disk.</p></li>
+			<li><p>Issue 461: Fixed navigation back to Series list when deleting last episode from Disk.</p></li>
+			<li><p>Issue 463: Fixed issue when deleting an episode that has no online-data also deleted other episodes with no-online data.</p></li>
+			<li><p>Issue 457: Fixed default fields for configurable event commands before/after playback were missing from database. Note: there exists no UI for this yet.</p></li>
+			<li><p>Issue 460: Fixed SubCentral not being accesible to be enabled from configuration if launched configuration from Installer. A new command line parameter has been added to PluginConfigLoader.exe</p></li>
+			<li><p>Issue 446: Fixed Series not being sorted according to their User Edits.</p></li>
+			<li><p>Issue 392: Fixed double episodes not being matched if the corresponding season had an episode zero.</p></li>
+			<li><p>Issue N/A: Fixed scan on startup not working unless File/Folder Watcher was also enabled.</p></li>
+			<li><p>Issue 341: Improved logging when importer can not match a local file to an online episode. This resulted in strange behaviour in the Episode Matching panel of the Import Wizard.</p></li>
+			<li><p>Issue 452: Improved the default parsing expression used to match your episodes, thanks SilentException / RoChess. Be sure to reset them in configuration if upgrading.</p></li>
+			<li><p>Issue 464: Improved MediaInfo parsing speed when importing.</p></li>			
+			<li><p>Issue 425: Improved speed of Importing especially when dealing when many series/seasons.</p></li>			
+			<li><p>Issue N/A: Improved reliability of Series lookup in Import Wizard, the online database could not keep up and often resulted in timeouts if searching many series.</p></li>			
+			<li><p>Issue N/A: Allow 'Online Refresh' scan to be scheduled up to 1 week / 168 hrs.</p></li>
+			<li><p>Issue 349: Removed the Subtitle complete dialog that appeared after successful download of subtitle.</p></li>
+			<li><p>Issue N/A: Added back the 'Force Online Refresh' menu option, fixed it so it only does an update from online and not both local scan and online update.</p></li>			
+			<li><p>Issue 470: Added a message prompt to Import Wizard when navigting away from Series Match panel and there still exists unfinished user edit.</p></li>
+			<li><p>Issue N/A: Added configurable delay for Startup scan, this can be very useful to reduce cpu load on startup. Default is 30 secs.</p></li>			
+			<li><p>Issue N/A: Updated Danish translation, thanks Steffansp.</p></li>			
+			<li><p>Issue N/A: Updated French translation, thanks ubela64.</p></li>			
+		</ul>	
+	</div>
+	
 	<div class="main_title">TVSeries v2.6 Release Highlights</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Import Process</div>
