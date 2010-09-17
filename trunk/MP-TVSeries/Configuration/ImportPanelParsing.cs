@@ -31,6 +31,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             dataGridViewReview.SuspendLayout();
 
+            this.dataGridViewReview.Columns.Clear();
+            this.dataGridViewReview.Columns.Clear();
+
             // how many cells?            
             // we have filename + status as a given
             // + all unique regex-group-matches, lets find them
