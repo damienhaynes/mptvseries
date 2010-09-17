@@ -178,6 +178,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             dataGridViewIdentifySeries.CellValueChanged += new DataGridViewCellEventHandler((sender, e) =>
             {
+                // when we exit back from a dirty state, the event gets triggered
+                if (displayedActions.Count == 0) return;
+
                 var row = dataGridViewIdentifySeries.Rows[e.RowIndex];
                 var cell = row.Cells[e.ColumnIndex];
                 
