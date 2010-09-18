@@ -627,7 +627,8 @@ begin
 	    endif;
 	    
 	    if bOpt2 then
-	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);  
+	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);
+	    	LongPathToQuote(g_sSubCentralPluginFileName,TRUE);
 	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
 	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName + " ";
 	    	szParams = szParams + "/loadassembly=" + g_sSubCentralPluginFileName;
