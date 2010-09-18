@@ -163,7 +163,10 @@ namespace WindowPlugins.GUITVSeries
                     if (null == dlgOK)
                         return false;
                     dlgOK.SetHeading(Translation.insertDisk);
-                    dlgOK.SetLine(1, string.Format(Translation.InsertDiskMessage, episodeVolumeLabel));                    
+                    dlgOK.SetLine(1, Translation.InsertDiskMessage1);
+                    dlgOK.SetLine(2, Translation.InsertDiskMessage2);
+                    dlgOK.SetLine(3, Translation.InsertDiskMessage3);
+                    dlgOK.SetLine(4, string.Format(Translation.InsertDiskMessage4, episodeVolumeLabel));                    
                     dlgOK.DoModal(GUIWindowManager.ActiveWindow);
 
                     if (!File.Exists(m_currentEpisode[DBEpisode.cFilename]))
