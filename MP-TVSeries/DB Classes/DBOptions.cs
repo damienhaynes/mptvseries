@@ -214,12 +214,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cDisableMediaInfo = "DisableMediaInfo";
         public const String cMediaInfoParseSpeed = "MediaInfoParseSpeed";
 
-        public const String cImportDelay = "ImportDelay";
+        public const String cImportDelay = "ImportDelay";        
+        public const String cDelayImportPathMonitoringValue = "DelayImportPathMonitoringValue";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
-
         
         static DBOption()
         {
@@ -578,6 +578,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cImportDelay) == null)
                     SetOptions(cImportDelay, 30);
+
+                if (GetOptions(cDelayImportPathMonitoringValue) == null)
+                    SetOptions(cDelayImportPathMonitoringValue, 20);
 
             }
             catch (Exception ex)

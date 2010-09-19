@@ -350,12 +350,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void watcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            if (!TVSeriesPlugin.IsNetworkAvailable) {
-                MPTVSeriesLog.Write("File Watcher: Network not available, ignoring watcher changed event");
-                return;
-            }
-
+        {           
             MPTVSeriesLog.Write("File Watcher: Changed event: " + e.FullPath);
 
             List<PathPair> filesChanged = new List<PathPair>();
@@ -609,11 +604,7 @@ namespace WindowPlugins.GUITVSeries
         void DoFileScan(List<String> scannedFolders, ref List<PathPair> previousScan)
         {
 
-            MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
-            if (!TVSeriesPlugin.IsNetworkAvailable) {
-                MPTVSeriesLog.Write("File Watcher: Network not available, aborting file scan");
-                return;
-            }                    
+            MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);                              
             
             // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
             if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
@@ -621,8 +612,6 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
             
-
-
             List<PathPair> newScan = Filelister.GetFiles(scannedFolders);
 
             List<PathPair> addedFiles = new List<PathPair>();
@@ -654,13 +643,17 @@ namespace WindowPlugins.GUITVSeries
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
         {
-            MPTVSeriesLog.Write("File Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
-            
             System.Threading.Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            while (!TVSeriesPlugin.IsNetworkAvailable) {
-                MPTVSeriesLog.Write("Network is not available yet, postponing Watcher setup 30 secs", MPTVSeriesLog.LogLevel.Normal);
-                Thread.Sleep(30000);
-            }
+
+            // delay the start of file monitoring for a small period
+            // this doesnt really need a config setting but can be manually overridden in DB option
+            // purpose of the delay is to allow network devices to get ready after fresh boot from windows
+            // and resume from standby...benifits UNC shares as Mapped drives are picked up from Device Manager events.
+            // also DoFileScan can be expensive, so we dont want to do this on startup while other plugins/background tasks
+            // are running as well.
+           Thread.Sleep((int)DBOption.GetOptions(DBOption.cDelayImportPathMonitoringValue)*1000);
+           
+            MPTVSeriesLog.Write("File Watcher: Starting File System Watcher Background Task", MPTVSeriesLog.LogLevel.Normal);
             setUpWatches();
 
             // do the initial scan

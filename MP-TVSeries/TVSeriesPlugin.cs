@@ -2090,9 +2090,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
-        {
-            if (!TVSeriesPlugin.IsNetworkAvailable) return;
-
+        { 
             List<PathPair> filesAdded = new List<PathPair>();
             List<PathPair> filesRemoved = new List<PathPair>();
 
