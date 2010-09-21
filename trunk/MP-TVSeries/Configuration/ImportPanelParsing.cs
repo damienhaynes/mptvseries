@@ -45,6 +45,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
             dataGridViewReview.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridViewReview.Columns[1].ReadOnly = true;
 
+            // lets help user add the current mandatory columns if no matches were found
+            // save them the trouble of clicking on the 'Add Column' link
+            if (!userCols.Contains(DBSeries.cParsedName)) this.userCols.Add(DBSeries.cParsedName);
+            if (!userCols.Contains(DBEpisode.cSeasonIndex)) this.userCols.Add(DBEpisode.cSeasonIndex);
+            if (!userCols.Contains(DBEpisode.cEpisodeIndex)) this.userCols.Add(DBEpisode.cEpisodeIndex);
+
             // this is a bit inefficient in the way it joins the the usercols with the autocols
             // but it doesn't really matter
             uniqueCols = (from result in parsingResults
@@ -54,8 +60,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                                 var complete = k.ToList();
                                 complete.AddRange(userCols);
                                 return complete;
-                            }).Distinct().Select( c => new columns(c)).ToList();           
-
+                            }).Distinct().Select( c => new columns(c)).ToList();            
 
             // now lets add the columns, but lets get a certain order
             foreach (var col in uniqueCols)
@@ -68,15 +73,23 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         break;
                     case DBEpisode.cSeasonIndex:
                         col.Importance = 98;
-                        col.Pretty = "Season Index";
+                        col.Pretty = "Season ID";
                         break;
                     case DBEpisode.cEpisodeIndex:
                         col.Importance = 97;
-                        col.Pretty = "Episode";
+                        col.Pretty = "Episode ID";
                         break;
                     case DBEpisode.cEpisodeIndex2:
                         col.Importance = 96;
-                        col.Pretty = "Episode2";
+                        col.Pretty = "Episode ID 2";
+                        break;
+                    case DBEpisode.cEpisodeName:
+                        col.Importance = 95;
+                        col.Pretty = "Episode Name";
+                        break;
+                    case DBEpisode.cExtension:
+                        col.Importance = 1;
+                        col.Pretty = "Extension";
                         break;
                     default:
                         break;
@@ -129,9 +142,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 this.dataGridViewReview.Rows.Add(r);
             }
             this.dataGridViewReview.ResumeLayout();
+            
+            if (dataGridViewReview.Rows.Count > 0)
+            {
+                if (!dataGridViewReview.Columns.Contains(DBEpisode.cEpisodeIndex2))
+                    comboBoxAddColumn.Items.Add("Episode ID 2");
+                if (!dataGridViewReview.Columns.Contains(DBEpisode.cEpisodeName))
+                    comboBoxAddColumn.Items.Add("Episode Name");
+                if (!dataGridViewReview.Columns.Contains(DBEpisode.cExtension))
+                    comboBoxAddColumn.Items.Add("Extension");
 
-            // when we support custom fields in importer this can always be true
-            if (dataGridViewReview.ColumnCount < 9 && dataGridViewReview.Rows.Count > 0) lnkAdd.Visible = true;
+                // when we support custom fields in importer this can always be true
+                lnkAdd.Visible = comboBoxAddColumn.Items.Count > 0;
+            } 
 
             updateCount();
 
@@ -258,46 +281,49 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void lnkAdd_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.groupBoxAddCol.Visible = true;
+            if (comboBoxAddColumn.Items.Count > 0)
+                comboBoxAddColumn.SelectedIndex = 0;
             this.comboBoxAddColumn.Focus();
         }
 
         private void buttonAddColOK_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(this.comboBoxAddColumn.Text))
-                MessageBox.Show("Please enter the name of the column");
-            else if (this.uniqueCols.Contains(this.comboBoxAddColumn.Text) || this.userCols.Contains(this.comboBoxAddColumn.Text))
-                MessageBox.Show("This Column already exists");
-            else
             {
-                string colName = string.Empty;
-                switch (this.comboBoxAddColumn.Text)
-                {
-                    case "Series Name":
-                        colName = DBSeries.cParsedName;
-                        break;
-                    case "Season Index":
-                        colName = DBSeason.cIndex;
-                        break;
-                    case "Episode Index":
-                        colName = DBEpisode.cEpisodeIndex;
-                        break;
-                    case "Episode Index 2":
-                        colName = DBEpisode.cEpisodeIndex2;
-                        break;
-                    case "File Extension":
-                        colName = DBEpisode.cExtension;
-                        break;
-                    case "Episode Name":
-                        colName = DBEpisode.cEpisodeName;
-                        break;
-                    default:
-                        colName = this.comboBoxAddColumn.Text;
-                        break;
-                }
-                this.userCols.Add(colName);
-                this.groupBoxAddCol.Visible = false;
-                RefreshGrid();
+                MessageBox.Show("Please enter the name of the column");
+                return;
             }
+           
+            string colName = string.Empty;
+            switch (this.comboBoxAddColumn.Text)
+            {                
+                case "Episode ID 2":
+                    colName = DBEpisode.cEpisodeIndex2;
+                    break;
+                case "Extension":
+                    colName = DBEpisode.cExtension;
+                    break;
+                case "Episode Name":
+                    colName = DBEpisode.cEpisodeName;
+                    break;
+                default:
+                    colName = this.comboBoxAddColumn.Text;
+                    break;
+            }
+
+            if (dataGridViewReview.Columns.Contains(colName))
+            {
+                MessageBox.Show("This Column already exists");
+                return;
+            }
+
+            // clear items, so we only add what we need next time
+            comboBoxAddColumn.Text = string.Empty;
+            comboBoxAddColumn.Items.Clear();
+
+            this.userCols.Add(colName);
+            this.groupBoxAddCol.Visible = false;
+            RefreshGrid();          
         }
 
         private void buttonAddColCancel_Click(object sender, EventArgs e)
