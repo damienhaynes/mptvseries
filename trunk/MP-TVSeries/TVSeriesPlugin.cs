@@ -4584,9 +4584,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     TimeSpan tsUpdate = DateTime.Now - m_LastUpdateScan;
                     if ((int)tsUpdate.TotalHours > m_nUpdateScanLapse)
-                    {
-                        m_LastUpdateScan = DateTime.Now;
+                    {                        
                         MPTVSeriesLog.Write("Online Update Scan needed, last scan run @ {0}", m_LastUpdateScan);
+                        m_LastUpdateScan = DateTime.Now;
                         bUpdateScanNeeded = true;
                     }
                 }
