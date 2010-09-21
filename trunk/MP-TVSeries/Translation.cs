@@ -53,6 +53,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Mark_all_as_watched = "Mark all as Watched";
         public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";
+        public static string UnHide = "UnHide";
         public static string Delete = "Delete";
         public static string SortBy = "Sort By";
         public static string DVDOrder = "DVD Order";
@@ -66,6 +67,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Force_Online_Refresh = "Force Online Refresh ";
         public static string In_Progress_with_Barracks = "(In Progress)";
         public static string Only_show_episodes_with_a_local_file = "Only Show Local Episodes";
+        public static string ShowHiddenItems = "Show Hidden Items";
         public static string Hide_summary_on_unwatched = "Hide Spoilers";
         public static string Hide_thumbnail_on_unwatched = "Hide Spoiler Thumbnails";
         public static string on = "on";

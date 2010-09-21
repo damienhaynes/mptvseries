@@ -743,12 +743,21 @@ namespace WindowPlugins.GUITVSeries
             }
             if (thisView.Type == type.group && thisView.groupedBy != null) // for groups always by their values (ignore user setting!)
             {
-                if(thisView.groupedBy.table.GetType() == typeof(DBSeries))
-                    thisView.conds.Add(new DBSeries(), DBSeries.cHidden, 1, SQLConditionType.NotEqual);
-                else if(thisView.groupedBy.table.GetType() == typeof(DBOnlineSeries))
-                    thisView.conds.AddCustom(" not exists ( select * from " + DBSeries.cTableName + " where id = " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " and " + DBSeries.Q(DBSeries.cHidden) + " = 1)");
+                if (thisView.groupedBy.table.GetType() == typeof(DBSeries))
+                {
+                    if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+                        thisView.conds.Add(new DBSeries(), DBSeries.cHidden, 1, SQLConditionType.NotEqual);
+                }
+                else if (thisView.groupedBy.table.GetType() == typeof(DBOnlineSeries))
+                {
+                    if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+                        thisView.conds.AddCustom(" not exists ( select * from " + DBSeries.cTableName + " where id = " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " and " + DBSeries.Q(DBSeries.cHidden) + " = 1)");
+                }
                 else if (thisView.groupedBy.table.GetType() == typeof(DBSeason))
-                    thisView.conds.Add(new DBSeason(), DBSeason.cHidden, 1, SQLConditionType.NotEqual);
+                {
+                    if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+                        thisView.conds.Add(new DBSeason(), DBSeason.cHidden, 1, SQLConditionType.NotEqual);
+                }
                 thisView.conds.AddOrderItem(thisView.groupedBy.tableField, SQLCondition.orderType.Descending); // tablefield includes tablename itself!
             }
             try

@@ -2408,23 +2408,20 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeHidden.Tag;
-                        series[DBSeries.cHidden] = !series[DBSeries.cHidden];
-                        bHidden = series[DBSeries.cHidden];
-                        series.Commit();
+                        series.HideSeries(!series[DBSeries.cHidden]);
+                        bHidden = series[DBSeries.cHidden];                        
                         break;
 
                     case DBSeason.cTableName:
                         DBSeason season = (DBSeason)nodeHidden.Tag;
-                        season[DBSeason.cHidden] = !season[DBSeason.cHidden];
-                        bHidden = season[DBSeason.cHidden];
-                        season.Commit();
+                        season.HideSeason(!season[DBSeason.cHidden]);
+                        bHidden = season[DBSeason.cHidden];                        
                         break;
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeHidden.Tag;
-                        episode[DBOnlineEpisode.cHidden] = !episode[DBOnlineEpisode.cHidden];
-                        bHidden = episode[DBOnlineEpisode.cHidden];
-                        episode.Commit();
+                        episode.HideEpisode(!episode[DBOnlineEpisode.cHidden]);
+                        bHidden = episode[DBOnlineEpisode.cHidden];                        
                         break;
                 }
 
@@ -2435,10 +2432,51 @@ namespace WindowPlugins.GUITVSeries
                     {
                         Font fontDefault = treeView_Library.Font;
                         nodeHidden.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
+                        
+                        // change season and episode nodes as well
+                        if (nodeHidden.Name == DBSeries.cTableName)
+                        {
+                            foreach (TreeNode seasonNode in nodeHidden.Nodes)
+                            {
+                                seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
+                                foreach (TreeNode episodeNode in seasonNode.Nodes)
+                                {
+                                    episodeNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
+                                }
+                            }
+                        }
+
+                        if (nodeHidden.Name == DBSeason.cTableName)
+                        {
+                            foreach (TreeNode episodeNode in nodeHidden.Nodes)
+                            {
+                                episodeNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
+                            }
+                        }
                     }
                     else
                     {
                         nodeHidden.NodeFont = treeView_Library.Font;
+                        // change season and episode nodes as well
+                        if (nodeHidden.Name == DBSeries.cTableName)
+                        {
+                            foreach (TreeNode seasonNode in nodeHidden.Nodes)
+                            {
+                                seasonNode.NodeFont = treeView_Library.Font;
+                                foreach (TreeNode episodeNode in seasonNode.Nodes)
+                                {
+                                    episodeNode.NodeFont = treeView_Library.Font;
+                                }
+                            }
+                        }
+
+                        if (nodeHidden.Name == DBSeason.cTableName)
+                        {
+                            foreach (TreeNode episodeNode in nodeHidden.Nodes)
+                            {
+                                episodeNode.NodeFont = treeView_Library.Font;
+                            }
+                        }
                     }
                 }
                 else

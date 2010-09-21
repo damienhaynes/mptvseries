@@ -583,7 +583,7 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
 
                 // include hidden?
-                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
 
                 if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
@@ -813,6 +813,27 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             return resultMsg;
+        }
+
+        public void HideSeries(bool hide)
+        {
+            MPTVSeriesLog.Write(string.Format("{0} series {1} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeries.cID])));
+            
+            // respect 'Show Local Files Only' setting
+            List<DBSeason> seasons = DBSeason.Get(this[DBSeries.cID]);
+
+            if (seasons != null)
+            {
+                foreach (DBSeason season in seasons)
+                {
+                    // Hide Seasons
+                    season.HideSeason(hide);
+                }
+            }
+
+            // Hide Series
+            this[DBSeries.cHidden] = hide;
+            this.Commit();
         }
 
     }

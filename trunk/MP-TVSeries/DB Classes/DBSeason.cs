@@ -336,7 +336,7 @@ namespace WindowPlugins.GUITVSeries
                 if(!Settings.isConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
 
                 // include hidden?
-                if (!Settings.isConfig || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
 
                 if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
@@ -606,6 +606,27 @@ namespace WindowPlugins.GUITVSeries
             
             return resultMsg;
         }
-        
+
+        public void HideSeason(bool hide)
+        {
+            MPTVSeriesLog.Write(string.Format("{0} series {1}, season {2} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]), this[DBSeason.cIndex]));
+
+            // respect 'Show Local Files Only' setting
+            List<DBEpisode> episodes = DBEpisode.Get(int.Parse(this[DBSeason.cSeriesID]), int.Parse((this[DBSeason.cIndex])));
+            
+            if (episodes != null)
+            {
+                foreach (DBEpisode episode in episodes)
+                {
+                    // Hide Episodes
+                    episode.HideEpisode(hide);
+                }
+            }
+
+            // Hide Season
+            this[DBSeason.cHidden] = hide;
+            this.Commit();
+        }
+
     }
 }

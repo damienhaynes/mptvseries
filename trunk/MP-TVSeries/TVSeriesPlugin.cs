@@ -334,6 +334,7 @@ namespace WindowPlugins.GUITVSeries
             actionLockViews,
             actionResetIgnoredDownloadedFiles,
 			optionsOnlyShowLocal,
+            optionsShowHiddenItems,
 			optionsPreventSpoilers,
 			optionsPreventSpoilerThumbnail,
 			optionsAskToRate,
@@ -966,7 +967,21 @@ namespace WindowPlugins.GUITVSeries
 										pItem.ItemId = (int)eContextItems.actionUpdate;
 									}
 
-									pItem = new GUIListItem(Translation.Hide);
+                                    // add hidden menu
+                                    // check if item is already hidden
+									pItem = new GUIListItem();
+                                    switch (listLevel)
+                                    {
+                                        case Listlevel.Series:
+                                            pItem.Label = selectedSeries[DBSeries.cHidden] ? Translation.UnHide : Translation.Hide;
+                                            break;
+                                        case Listlevel.Season:
+                                            pItem.Label = selectedSeason[DBSeries.cHidden] ? Translation.UnHide : Translation.Hide;
+                                            break;
+                                        case Listlevel.Episode:
+                                            pItem.Label = selectedEpisode[DBSeries.cHidden] ? Translation.UnHide : Translation.Hide;
+                                            break;
+                                    }
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.actionHide;
 
@@ -1303,31 +1318,26 @@ namespace WindowPlugins.GUITVSeries
 					#endregion
 
 					#region Actions
-					#region Hide
-					case (int)eContextItems.actionHide: {
-							// hide - we can only hide things for now, no unhide
-							switch (this.listLevel) {
-								case Listlevel.Series:
-									selectedSeries[DBSeries.cHidden] = true;
-									MPTVSeriesLog.Write(string.Format("Hiding episode {0} from view", m_SelectedSeries));
-									selectedSeries.Commit();
-									break;
+					
+                    #region Hide
+					case (int)eContextItems.actionHide:                         
+						switch (this.listLevel) 
+                        {
+							case Listlevel.Series:
+                                selectedSeries.HideSeries(!selectedSeries[DBSeries.cHidden]);
+								break;
 
-								case Listlevel.Season:
-									selectedSeason[DBSeason.cHidden] = true;
-									selectedSeason.Commit();
-									DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
-									break;
+							case Listlevel.Season:
+                                selectedSeason.HideSeason(!selectedSeason[DBSeason.cHidden]);
+								DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
+								break;
 
-								case Listlevel.Episode:
-									selectedEpisode[DBOnlineEpisode.cHidden] = true;
-									MPTVSeriesLog.Write(string.Format("Hiding series {0} from view", m_SelectedEpisode));
-									selectedEpisode.Commit();
-									DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
-									break;
-							}
-							LoadFacade();
+							case Listlevel.Episode:
+                                selectedEpisode.HideEpisode(!selectedEpisode[DBOnlineEpisode.cHidden]);
+								DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+								break;
 						}
+						LoadFacade();						
 						break;
 					#endregion
 
@@ -1428,6 +1438,7 @@ namespace WindowPlugins.GUITVSeries
                         logicalView.IsLocked = true;
                         break;
                     #endregion
+
                     #endregion
 
                 }
@@ -2712,6 +2723,14 @@ namespace WindowPlugins.GUITVSeries
                                     else if (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched]) == 0) {
                                         item.IsPlayed = true;
                                     }
+                                    // Set Selected property to true, if all episodes are hidden
+                                    if (series[DBSeries.cHidden] && DBOption.GetOptions(DBOption.cShowHiddenItems))
+                                    {
+                                        // remote/played property trumps selected
+                                        item.IsRemote = false;
+                                        item.IsPlayed = false;
+                                        item.Selected = true;
+                                    }
                                     #endregion
 
                                     if (this.m_SelectedSeries != null)
@@ -2820,6 +2839,13 @@ namespace WindowPlugins.GUITVSeries
                                         // Set IsPlayed property to true, if all episodes in season have been watched
                                         else if (int.Parse(season[DBSeason.cEpisodesUnWatched]) == 0) {
                                             item.IsPlayed = true;
+                                        }
+                                        // Set Selected property to true, if all episodes are hidden
+                                        if (season[DBSeason.cHidden] && DBOption.GetOptions(DBOption.cShowHiddenItems))
+                                        {
+                                            item.IsRemote = false;
+                                            item.IsPlayed = false;
+                                            item.Selected = true;
                                         }
                                         #endregion
                                     }
@@ -2968,6 +2994,14 @@ namespace WindowPlugins.GUITVSeries
                                     else if (episode[DBOnlineEpisode.cWatched]) {
                                         item.IsPlayed = true;
                                     }
+                                    // Set Selected property to true, if all episodes are hidden
+                                    if (episode[DBOnlineEpisode.cHidden] && DBOption.GetOptions(DBOption.cShowHiddenItems))
+                                    {
+                                        item.IsRemote = false;
+                                        item.IsPlayed = false;
+                                        item.Selected = true;
+                                    }
+
                                     #endregion
 
                                     if (item.IsPlayed) {
@@ -3614,6 +3648,10 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
 
+            pItem = new GUIListItem(Translation.ShowHiddenItems + " (" + (DBOption.GetOptions(DBOption.cShowHiddenItems) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.optionsShowHiddenItems;
+
             pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
@@ -3647,13 +3685,25 @@ namespace WindowPlugins.GUITVSeries
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
+                List<DBSeries> AllSeries = null;
+                SQLCondition condEmpty = null;
+
                 switch (dlg.SelectedId)
                 {
                     case (int)eContextItems.optionsOnlyShowLocal:
                         DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
                         // Update Episode counts...this is going to be expensive                        
-                        SQLCondition condEmpty = new SQLCondition();
-                        List<DBSeries> AllSeries = DBSeries.Get(condEmpty);
+                        condEmpty = new SQLCondition();
+                        AllSeries = DBSeries.Get(condEmpty);
+                        foreach (DBSeries series in AllSeries)
+                            DBSeries.UpdateEpisodeCounts(series);
+                        LoadFacade();
+                        break;
+
+                    case (int)eContextItems.optionsShowHiddenItems:
+                        DBOption.SetOptions(DBOption.cShowHiddenItems, !DBOption.GetOptions(DBOption.cShowHiddenItems));
+                        condEmpty = new SQLCondition();
+                        AllSeries = DBSeries.Get(condEmpty);
                         foreach (DBSeries series in AllSeries)
                             DBSeries.UpdateEpisodeCounts(series);
                         LoadFacade();
@@ -4679,7 +4729,8 @@ namespace WindowPlugins.GUITVSeries
                     fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
                     cond.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
                 }
-                cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");
+                if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+                    cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");
 
                 foreach (string series in DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName, cond, new DBOnlineSeries()))
                 {
