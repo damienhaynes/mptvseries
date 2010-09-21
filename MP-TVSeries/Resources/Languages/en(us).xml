@@ -282,5 +282,8 @@
   <string Field="InsertDiskMessageLine2" Original="is currently not available.">is currently not available.</string>
   <string Field="InsertDiskMessageLine3" Original="Please insert or connect media">Please insert or connect media</string>
   <string Field="InsertDiskMessageLine4" Original="labeled: {0}">labeled: {0}</string>
+  
+  <string Field="ShowHiddenItems" Original="Show Hidden Items">Show Hidden Items</string>
+  <string Field="UnHide" Original="UnHide">UnHide</string>
 
 </strings>

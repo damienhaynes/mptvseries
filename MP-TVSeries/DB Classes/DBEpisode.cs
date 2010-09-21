@@ -897,6 +897,14 @@ namespace WindowPlugins.GUITVSeries
             return resultMsg;
         }
 
+        public void HideEpisode(bool hide)
+        {
+            MPTVSeriesLog.Write(string.Format("{0} epsiode {1} from view", (hide ? "Hiding" : "UnHiding"), this));
+            this[DBOnlineEpisode.cHidden] = hide;            
+            this.Commit();
+
+            // check if last episode is hidden and hide season
+        }
 
         private void fillSubTitleExtensions()
         {
@@ -1129,7 +1137,12 @@ namespace WindowPlugins.GUITVSeries
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);           
+            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+            if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
+            {
+                //don't include hidden episodes unless the ShowHiddenItems option is set
+                cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+            }
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
@@ -1267,7 +1280,7 @@ namespace WindowPlugins.GUITVSeries
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
-                if ((!Settings.isConfig || m_bUpdateEpisodeCount) || !DBOption.GetOptions(DBOption.cShowHiddenItems))
+                if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
 
                 m_bUpdateEpisodeCount = false;
