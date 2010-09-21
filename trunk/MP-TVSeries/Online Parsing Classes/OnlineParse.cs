@@ -1520,8 +1520,8 @@ namespace WindowPlugins.GUITVSeries
 
         public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {
-            MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);
-            List<DBOnlineSeries> seriesList = DBOnlineSeries.getAllSeries();
+            MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);            
+            List<DBSeries> seriesList = DBSeries.Get(new SQLCondition());
 
             tUserRatings.DoWork += new DoWorkEventHandler(asyncUserRatings);
             tUserRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncUserRatingsCompleted);
