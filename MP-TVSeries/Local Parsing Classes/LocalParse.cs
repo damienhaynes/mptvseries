@@ -88,11 +88,14 @@ namespace WindowPlugins.GUITVSeries
         public static string getImportPath(string filename)
         {
             if (paths == null) paths = DBImportPath.GetAll();
-            foreach (DBImportPath path in paths)
+            if (paths != null)
             {
-                string importPath = path[DBImportPath.cPath];
-                if (filename.ToLower().Contains(importPath.ToString().ToLower()))
-                    return importPath;
+                foreach (DBImportPath path in paths)
+                {
+                    string importPath = path[DBImportPath.cPath];
+                    if (filename.ToLower().Contains(importPath.ToString().ToLower()))
+                        return importPath;
+                }
             }
             return null;
         }       

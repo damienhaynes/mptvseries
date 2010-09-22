@@ -87,7 +87,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubCentral.dll</HintPath>
     </Reference>
-    <Reference Include="SubtitleDownloader, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubtitleDownloader, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>

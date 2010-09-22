@@ -631,7 +631,7 @@ namespace WindowPlugins.GUITVSeries
                 // clear the file if we know for certain it doesnt exist anymore
                 // if removable drive or network path is offline then we dont remove
                 string importPath = LocalParse.getImportPath(pair.m_sFull_FileName);
-                if (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
+                if (string.IsNullOrEmpty(importPath) || (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName)))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
                 {
                     DBEpisode.Clear(condition);
                     m_bDataUpdated = true;
