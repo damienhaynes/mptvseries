@@ -493,46 +493,16 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Initialize Importer
-            // timer check every second
-            m_timerDelegate = new TimerCallback(Clock);
-            int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
-            MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
-            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay*1000, 1000);
-
             m_parserUpdater = new OnlineParsing(this);
             m_parserUpdater.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(parserUpdater_OnlineParsingProgress);
             m_parserUpdater.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(parserUpdater_OnlineParsingCompleted);
 
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
-           
-            try
-            {
-                m_LastUpdateScan = DateTime.Parse(DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
-            }
-            catch { }
 
-            if (DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData))
-                m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
+            // Setup Importer
+            InitImporter();
 
-            if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-            {
-                DeviceManager.StartMonitor();
-                setUpFolderWatches();
-            }
-
-            // do a local scan when starting up the app if enabled - later on the watcher will monitor changes            
-            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
-            {
-                // if online updates are required then this will be picked up 
-                // in clock timer where last update time is compared
-                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-            }
-            else
-            {
-                // else the user has selected to always manually do local scans
-                setProcessAnimationStatus(false);
-            }
             #endregion
 
             #region Skin Settings / Load
@@ -1270,6 +1240,8 @@ namespace WindowPlugins.GUITVSeries
 
 							// look for it again
 							m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.NoExactMatch, null, true, false));
+                            // Start Import if delayed
+                            m_scanTimer.Change(1000, 1000);
 						}
 						break;
 					#endregion
@@ -1399,6 +1371,8 @@ namespace WindowPlugins.GUITVSeries
 						lock (m_parserUpdaterQueue) {
 							m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
 						}
+                        // Start Import if delayed
+                        m_scanTimer.Change(1000, 1000);
 						break;
 
 					case (int)eContextItems.actionFullRefresh:
@@ -1406,6 +1380,8 @@ namespace WindowPlugins.GUITVSeries
 						lock (m_parserUpdaterQueue) {
 							m_parserUpdaterQueue.Add(new CParsingParameters(false, true));
 						}
+                        // Start Import if delayed
+                        m_scanTimer.Change(1000, 1000);
 						break;
 					#endregion
 
@@ -1941,6 +1917,9 @@ namespace WindowPlugins.GUITVSeries
 				lock (m_parserUpdaterQueue) {
 					m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
 				}
+                // Start Import if delayed
+                m_scanTimer.Change(1000, 1000);
+
 				ImportButton.Focus = false;
 				m_Facade.Focus = true;
 				return;
@@ -2021,19 +2000,8 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
                 IsResumeFromStandby = true;
 
-                // re-initialise the importer timer                
-                int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
-                MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
-                m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay*1000, 1000);
-
                 // Force Lock on views after resume from standby
                 logicalView.IsLocked = true;
-
-                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
-                {
-                    DeviceManager.StartMonitor();
-                    setUpFolderWatches();
-                }
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
@@ -2051,10 +2019,8 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                // Treat Resuming from Standby as a startup action, scan on startup if enabled
-                if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup)) {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
-                }
+                // Setup Importer
+                InitImporter();
             }
             else if (e.Mode == Microsoft.Win32.PowerModes.Suspend) {
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");
@@ -4572,7 +4538,39 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
         }
 
-		public void Clock(Object stateInfo)
+        private void InitImporter()
+        {
+            int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
+            MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
+
+            // Get Last Time Update Scan was run and how often it should be run
+            DateTime.TryParse(DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime).ToString(), out m_LastUpdateScan);
+            if (DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData))
+            {
+                m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
+            }
+
+            // do a local scan when starting up the app if enabled - later on the watcher will monitor changes            
+            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
+            {
+                // if online updates are required then this will be picked up 
+                // in ImporterQueueMonitor where last update time is compared
+                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+            }
+
+            // timer check every second to check for queued parsing parameters
+            if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(ImporterQueueMonitor);
+            m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay * 1000, 1000);
+
+            // Setup Disk Watcher (DeviceManager) and Folder/File Watcher
+            if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+            {
+                DeviceManager.StartMonitor();
+                setUpFolderWatches();
+            }
+        }
+
+		public void ImporterQueueMonitor(Object stateInfo)
         {
             if (!m_parserUpdaterWorking)
             {
